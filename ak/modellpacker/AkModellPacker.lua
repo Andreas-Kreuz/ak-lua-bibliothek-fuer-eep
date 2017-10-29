@@ -45,6 +45,11 @@ function AkModellInstaller:erzeugePaket(ausgabeverzeichnis)
     end
     local installation_eep_datei = string.format(installation_verzeichnis .. "\\Installation.eep")
     AkModellPacker.schreibeDatei(installation_eep_datei, inhalt)
+
+    if os.execute([[dir "C:\Program Files\7-Zip\7z.exe" > nul 2> nul]]) then
+        os.execute([[del /F "]] .. ausgabeverzeichnis .. "\\" .. self.verzeichnisname .. [[.zip"]])
+        os.execute([["C:\Program Files\7-Zip\7z.exe" a ]] .. ausgabeverzeichnis .. "\\" .. self.verzeichnisname .. [[.zip ]] .. installation_verzeichnis .. [[\*]])
+    end
 end
 
 function AkModellInstaller:erzeugeKonfigurationsAbschnitt(index, modellPaket)
