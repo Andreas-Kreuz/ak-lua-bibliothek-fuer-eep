@@ -39,3 +39,11 @@ luac.out
 *.x86_64
 *.hex
 
+# Project based settings
+AkStorageValues.txt
+AkStoredValues.txt
+output.txt
+out
+modell_installation/out
+anlagen
+*.dds

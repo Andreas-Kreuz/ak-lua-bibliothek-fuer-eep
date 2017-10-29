@@ -1,14 +1,26 @@
-# Projektstart
-* :red_circle: Dateien in EEP geeignet anordnen
-* :red_circle: Installer bauen
+# Lua-Skripte für EEP
 
-# Framework dokumentieren
-* :red_circle: README.md anpassen
-* :red_circle: API-Dokumentation
-* :red_circle: Wiki-Seite schreiben
+Die Skripte und Beispiel-Anlagen werden für die Verwendung in Eisenbahn.exe professional bereitgestellt.
 
-# Beschreibung
-_ak-lua-for-eep_ ist ein **Lua-Framework** für Eisenbahn.exe Professional ab Version 13.2.
+Es wurde darauf geachtet, dass die Klassen mit "Ak" beginnen, so dass es keine Namenskonflikte gibt.
 
-* Was ist EEP?
-  EEP ist ein Simulationsprogramm: siehe https://www.eepforum.de/ und https://www.eepshopping.de
+## Verfügbare Pakete
+* __[ak/eep](ak/eep/README.md)__ - EEP-eigene Funktionen für Testskripte
+* __[ak/eisenbahn](ak/eisenbahn/README.md)__ Steuerung für die Eisenbahn (IN ARBEIT)
+* __[ak/modellpacker](ak/modellpacker/README.md)__ - Erzeugt Installationsdateien
+* __[ak/planer](ak/planer/README.md)__ - Aufgabenplaner für EEP
+* __[ak/speicher](ak/speicher/README.md)__ - Speichern und Laden von String-Tabellen
+* __[ak/strasse](ak/strasse/README.md)__ - Steuerung für den Straßenverkehr
+
+## Beispielanlagen
+* [AmpelDemo-Grundmodelle](ak-demo-anlagen/ampel/README.md) - Anlage mit Grundmodellen aus EEP 14
+* [Lua-Test-vor-EEP](ak-demo-anlagen/testen/README.md) - Anlage, welche das Testen von Lua-Skripten außerhalb von EEP beschreibt
+
+
+## TODOs
+
+* [ ] Anlagen mit EEP-Installer bereitstellen
+* [ ] Festlegen, welche Pakete verwendet werden dürfen
+* [ ] Festlegen, welche Pakete verwendet werden dürfen
+* [ ] Festlegen, welche Pakete verwendet werden dürfen
+* [ ] Festlegen, welche Pakete verwendet werden dürfen
