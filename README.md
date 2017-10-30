@@ -6,7 +6,7 @@ Es wurde darauf geachtet, dass die Klassen mit "Ak" beginnen, so dass es keine N
 
 ## Verfügbare Pakete
 
-## Beispielanlagen in `ak-demo-anlagen` deren Skripte in `ak-demo-lua`
+### Beispielanlagen in `ak-demo-anlagen` deren Skripte in `ak-demo-lua`
 * [ak-demo-anlagen/ampel](ak-demo-anlagen/ampel/) - __Demonstration der Ampelschaltungen__ - Diese Anlage zeigt die Grundlagen anhand zweier Schaltungen (nur mit Grundmodellen aus EEP 14)
 * [ak-demo-anlagen/testen](ak-demo-anlagen/testen/) - __Demonstration des Testens__ - Der Aufbau der Skripte dieser Anlage zeigt, wie man ohne EEP testen kann, siehe [ak-demo-lua/testen](ak-demo-lua/testen/)
 
@@ -19,18 +19,18 @@ Es wurde darauf geachtet, dass die Klassen mit "Ak" beginnen, so dass es keine N
 * __[ak/strasse](ak/strasse/README.md)__ - Steuerung für den Straßenverkehr
 
 
-
-## TODOs
+## Anstehende Aufgaben
 
 * [x] Anlagen mit EEP-Installer bereitstellen
 * [ ] ak/strasse - umstellen auf deutsche Funktionsnamen
 * [ ] ak/strasse - dokumentieren, welche Funktionen öffentlich verwendet werden sollen
-* [ ] ak/strasse - Demo-Anlage mit einem Kauf-Ampelset und  Strassenbahn-Ampeln Grundmodellen
+* [ ] ak/strasse - Demo-Anlage mit einem Kauf-Ampelset und Strassenbahn-Ampeln Grundmodellen
 * [ ] ak/strasse - ausführliche Dokumentation für den Aufbau einer Ampelkreuzung
 * [ ] ak/strasse - Vorrangschaltung mit Prüfung auf Gleisbelegung in EEP (EEPRegisterTrack)
 * [ ] ak/strasse - Ausführliches Testskript, welches Kreuzungen anlegt und die Schaltungen prüft - Vorrangschaltung usw.
 * [ ] ak/planer - Ausgabe der geplanten Aufgaben in eine Text-Datei
 
-## Geplant
+
+## Geplante Aufgaben
 
 * [ ] ak/eisenbahn - Allgemein verbessern, besonders Übersetzung, Test, Verallgemeinerung der Funktionen
