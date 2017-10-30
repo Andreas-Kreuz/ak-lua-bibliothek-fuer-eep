@@ -1,5 +1,5 @@
-AkSecondsPerDay = 24 * 60 * 60
-function AkTimeH()
+local AkSekundenProTag = 24 * 60 * 60
+local function AkTimeH()
     if EEPTimeH then
         return EEPTimeH
     else
@@ -8,7 +8,7 @@ function AkTimeH()
     end
 end
 
-function AkTimeM()
+local function AkTimeM()
     if EEPTimeM then
         return EEPTimeM
     else
@@ -17,7 +17,7 @@ function AkTimeM()
     end
 end
 
-function AkTimeS()
+local function AkTimeS()
     if EEPTimeS then
         return EEPTimeS
     else
@@ -28,12 +28,12 @@ end
 
 --- Get the time from EEP or the current system
 -- @return the time of the current day in seconds
-function AkTime()
+local function AkSekundenSeitMitternacht()
     local secondsSinceMidnight
     if EEPTime then
         secondsSinceMidnight = EEPTime
     else
-        print("[AkScheduler] System time!")
+        print("[AkPlaner] System time!")
         local time = os.date("*t")
         secondsSinceMidnight = os.time { year = 1970, month = 1, day = 1, hour = time.hour, min = time.min, sec = time.sec }
     end
@@ -44,113 +44,117 @@ end
 -- Class Scheduler
 ------------------
 
-AkScheduler = { ready = true }
-AkScheduler.debug = AkDebugInit or false
-AkScheduler.actions = {}
-AkScheduler.actionsToSchedule = {} -- table to add to self.actions later
-AkScheduler.lastTime = 0
+AkPlaner = { bereit = true }
+AkPlaner.debug = AkStartMitDebug or false
+AkPlaner.eingeplanteAktionen = {}
+AkPlaner.spaetereAktionen = {} -- Wird zu self.eingeplanteAktionen hinzugefuegt
+AkPlaner.letzteAusfuehrung = 0
 
-function AkScheduler:run()
-    if self.ready then
-        self.ready = false
-        for action, plannedAtSeconds in pairs(self.actionsToSchedule) do
-            self.actions[action] = plannedAtSeconds
-            self.actionsToSchedule[action] = nil
+function AkPlaner:fuehreGeplanteAktionenAus()
+    if self.bereit then
+        self.bereit = false
+        for action, plannedAtSeconds in pairs(self.spaetereAktionen) do
+            self.eingeplanteAktionen[action] = plannedAtSeconds
+            self.spaetereAktionen[action] = nil
         end
 
-        local currentSecondsSinceMidnight = AkTime()
-        local performed = {}
-        for action, plannedAtSeconds in pairs(self.actions) do
+        local anzahlSekundenSeitLetzterMitternacht = AkSekundenSeitMitternacht()
+        local ausgefuehrteAktionen = {}
+        for action, plannedAtSeconds in pairs(self.eingeplanteAktionen) do
             -- On a day change, last time is bigger than this time and we need to wrap to the next day
-            if self.lastTime > currentSecondsSinceMidnight then
-                plannedAtSeconds = plannedAtSeconds % AkSecondsPerDay
-                self.actions[action] = plannedAtSeconds
+            if self.letzteAusfuehrung > anzahlSekundenSeitLetzterMitternacht then
+                plannedAtSeconds = plannedAtSeconds % AkSekundenProTag
+                self.eingeplanteAktionen[action] = plannedAtSeconds
             end
-            if currentSecondsSinceMidnight >= plannedAtSeconds then
-                if AkScheduler.debug then print("[AkScheduler] Call action: '" .. action.name .. "'") end
-                action:callFunction()
-                performed[action] = true
-            end
-        end
-
-        for performedAction in pairs(performed) do
-            self.actions[performedAction] = nil
-            for action, offsetSeconds in pairs(performedAction.subsequentActions) do
-                if AkScheduler.debug then print("[AkScheduler] Plan action: '" .. action.name .. "' in " .. offsetSeconds .. " seconds (at " .. AkTime() + offsetSeconds .. ")") end
-                self.actions[action] = AkTime() + offsetSeconds
+            if anzahlSekundenSeitLetzterMitternacht >= plannedAtSeconds then
+                if AkPlaner.debug then print("[AkPlaner] Starte Aktion: '" .. action.name .. "'") end
+                action:starteAktion()
+                ausgefuehrteAktionen[action] = true
             end
         end
 
-        self.lastTime = currentSecondsSinceMidnight
-        self.ready = true
+        for ausgefuehrteAktion in pairs(ausgefuehrteAktionen) do
+            self.eingeplanteAktionen[ausgefuehrteAktion] = nil
+            for action, offsetSeconds in pairs(ausgefuehrteAktion.folgeAktionen) do
+                if AkPlaner.debug then print("[AkPlaner] Plan action: '" .. action.name .. "' in " .. offsetSeconds .. " seconds (at " .. AkSekundenSeitMitternacht() + offsetSeconds .. ")") end
+                self.eingeplanteAktionen[action] = AkSekundenSeitMitternacht() + offsetSeconds
+            end
+        end
+
+        self.letzteAusfuehrung = anzahlSekundenSeitLetzterMitternacht
+        self.bereit = true
     end
 end
 
 --- the newAction will be called after offsetSeconds milliseconds of the current action
--- @param offsetSeconds delay of the newAction in milliseconds, cannot be bigger than AkSecondsPerDay
--- @param newAction the new action to be performed
--- @param previousAction the currentAction, after which the new action will be performed (optional)
---
-function AkScheduler:addAction(offsetSeconds, newAction, previousAction)
-    assert(offsetSeconds)
-    assert(newAction)
-    assert(offsetSeconds < AkSecondsPerDay)
+-- @param zeitspanneInSekunden Zeitspanne nach der die einzuplanende Aktion ausgeführt werden soll kann nicht groesser
+-- sein als AkSekundenProTag
+-- @param einzuplanendeAktion the new action to be performed
+-- @param vorgaengerAktion optional - wenn angegeben, wird die neue Aktion eingeplant, wenn die zeitspanneInSekunden
+-- nach Ausfuehren der vorgaengerAktion vergangen ist
+function AkPlaner:addAction(zeitspanneInSekunden, einzuplanendeAktion, vorgaengerAktion)
+    assert(zeitspanneInSekunden)
+    assert(einzuplanendeAktion)
+    assert(zeitspanneInSekunden < AkSekundenProTag)
 
-    local plannedAfterPrevious = false
-    if previousAction then
-        plannedAfterPrevious = planAfterPreviousAction(self.actions, newAction, offsetSeconds, previousAction)
-                or  planAfterPreviousAction(self.actionsToSchedule, newAction, offsetSeconds, previousAction)
-        if not plannedAfterPrevious then
-            print("[AkScheduler] PREVIOUS ACTION NOT FOUND: " .. previousAction.name .. " --> " .. newAction.name)
+    local vorhergehendeAktionGefunden = false
+    if vorgaengerAktion then
+        vorhergehendeAktionGefunden = planAfterPreviousAction(self.eingeplanteAktionen, einzuplanendeAktion, zeitspanneInSekunden, vorgaengerAktion)
+                or planAfterPreviousAction(self.spaetereAktionen, einzuplanendeAktion, zeitspanneInSekunden, vorgaengerAktion)
+        if not vorhergehendeAktionGefunden then
+            print("[AkPlaner] VORGAENGER-AKTION NICHT GEFUNDEN! : " .. vorgaengerAktion.name .. " --> " .. einzuplanendeAktion.name)
         end
     end
 
-    if not plannedAfterPrevious and not self.actions[newAction] then
-        self.actionsToSchedule[newAction] = AkTime() + offsetSeconds
-        if AkScheduler.debug then print("[AkScheduler] Plan action: '" .. newAction.name .. "' in " .. offsetSeconds .. " seconds (at " .. AkTime() + offsetSeconds .. ")") end
+    if not vorhergehendeAktionGefunden and not self.eingeplanteAktionen[einzuplanendeAktion] then
+        self.spaetereAktionen[einzuplanendeAktion] = AkSekundenSeitMitternacht() + zeitspanneInSekunden
+        if AkPlaner.debug then print("[AkPlaner] Plane Aktion: '" .. einzuplanendeAktion.name .. "' in " .. zeitspanneInSekunden .. " Sekunden (um " .. AkSekundenSeitMitternacht() + zeitspanneInSekunden .. ")") end
     end
 end
 
-function planAfterPreviousAction(actions, newAction, offsetSeconds, previousAction)
-    local plannedAfterPrevious = false
-    for foundAction, plannedTime in pairs(actions) do
-        if previousAction == foundAction then
-            foundAction:planSubsequentAction(newAction, offsetSeconds)
-            plannedAfterPrevious = true
+function planAfterPreviousAction(eingeplanteAktionen, einzuplanendeAktion, zeitspanneInSekunden, vorgaengerAktion)
+    local vorhergehendeAktionGefunden = false
+    for foundAction, plannedTime in pairs(eingeplanteAktionen) do
+        if vorgaengerAktion == foundAction then
+            foundAction:planeFolgeAktion(einzuplanendeAktion, zeitspanneInSekunden)
+            vorhergehendeAktionGefunden = true
         else
-            -- plan in the subsequent actions of the current actions
-            plannedAfterPrevious = planAfterPreviousAction(foundAction.subsequentActions, newAction, offsetSeconds, previousAction)
+            -- plan in the subsequent eingeplanteAktionen of the current eingeplanteAktionen
+            vorhergehendeAktionGefunden = planAfterPreviousAction(foundAction.folgeAktionen, einzuplanendeAktion, zeitspanneInSekunden, vorgaengerAktion)
         end
-        if (plannedAfterPrevious) then break end
+        if (vorhergehendeAktionGefunden) then break end
     end
-    return plannedAfterPrevious
+    return vorhergehendeAktionGefunden
 end
 
 
 ---------------------------------------
--- Class AkAction - is just a function
+-- Class AkAktion - is just a function
 ---------------------------------------
-AkAction = {}
-AkAction.__index = AkAction
+AkAktion = {}
 
 ---
--- @param f The function to call in the action
--- @param name The name of the action
+-- @param f Auszuführende Funktion (die zu startende Aktion)
+-- @param name Name der Aktion
 --
-function AkAction.new(f, name)
-    local self = setmetatable({}, AkAction)
-    self.f = f
-    self.name = name
-    self.subsequentActions = {}
-    return self
+function AkAktion:neu(f, name)
+    local o = {
+        f = f,
+        name = name,
+        folgeAktionen = {},
+    }
+    self.__index = self
+    return setmetatable(o, self)
 end
 
-function AkAction:planSubsequentAction(action, offsetSeconds)
-    self.subsequentActions[action] = offsetSeconds
+function AkAktion:planeFolgeAktion(folgeAktion, zeitspanneInSekunden)
+    self.folgeAktionen[folgeAktion] = zeitspanneInSekunden
 end
 
-function AkAction:callFunction()
+function AkAktion:starteAktion()
     self.f()
 end
 
-function AkAction:getName() return self.name end
+function AkAktion:getName()
+    return self.name
+end

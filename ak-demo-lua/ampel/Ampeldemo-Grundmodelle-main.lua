@@ -3,7 +3,7 @@
 --------------------------------
 print('Lade AkStrasse ...')
 require 'ak.strasse.AkStrasse'
-AkTrafficLightsFunctions.showAnforderungen = true
+AkAmpel.zeigeAnforderungen = true
 
 ------------------------------------------------
 -- Damit kommt wird die Variable "Zugname" automatisch durch EEP belegt
@@ -65,11 +65,11 @@ end
 --      |              |             |      +------------------ neue Ampel für diese Richtung (
 --      |              |             |      |           +------ Signal-ID dieser Ampel
 --      |              |             |      |           |   +-- Modell dieser Ampel - weiss wo rot, gelb und gruen ist
-k2_r1 = AkRichtung:new("Richtung 1", 121, { AkAmpel:new(32, Grundmodell_Ampel_3) })
-k2_r2 = AkRichtung:new("Richtung 2", 122, { AkAmpel:new(31, Grundmodell_Ampel_3) })
-k2_r3 = AkRichtung:new("Richtung 3", 123, { AkAmpel:new(34, Grundmodell_Ampel_3) })
-k2_r4 = AkRichtung:new("Richtung 4", 124, { AkAmpel:new(33, Grundmodell_Ampel_3) })
-k2_r5 = AkRichtung:new("Richtung 5", 125, { AkAmpel:new(30, Grundmodell_Ampel_3) })
+k2_r1 = AkRichtung:neu("Richtung 1", 121, { AkAmpel:neu(32, Grundmodell_Ampel_3) })
+k2_r2 = AkRichtung:neu("Richtung 2", 122, { AkAmpel:neu(31, Grundmodell_Ampel_3) })
+k2_r3 = AkRichtung:neu("Richtung 3", 123, { AkAmpel:neu(34, Grundmodell_Ampel_3) })
+k2_r4 = AkRichtung:neu("Richtung 4", 124, { AkAmpel:neu(33, Grundmodell_Ampel_3) })
+k2_r5 = AkRichtung:neu("Richtung 5", 125, { AkAmpel:neu(30, Grundmodell_Ampel_3) })
 --region K1-Schaltungen
 ----------------------------------------------------------------------------------------------------------------------
 -- Definiere alle Schaltungen fuer Kreuzung 2
@@ -77,30 +77,30 @@ k2_r5 = AkRichtung:new("Richtung 5", 125, { AkAmpel:new(30, Grundmodell_Ampel_3)
 -- Eine Schaltung bestimmt, welche Richtungen gleichzeitig auf grün geschaltet werden dürfen, alle anderen sind rot
 
 --- Kreuzung 2: Schaltung 1
-local k2_schaltung1 = AkKreuzungsSchaltung:new("Schaltung 1")
-k2_schaltung1:addRichtung(k2_r1)
-k2_schaltung1:addRichtung(k2_r2)
-k2_schaltung1:addRichtung(k2_r3)
+local k2_schaltung1 = AkKreuzungsSchaltung:neu("Schaltung 1")
+k2_schaltung1:fuegeRichtungHinzu(k2_r1)
+k2_schaltung1:fuegeRichtungHinzu(k2_r2)
+k2_schaltung1:fuegeRichtungHinzu(k2_r3)
 
 --- Kreuzung 2: Schaltung 2
-local k2_schaltung2 = AkKreuzungsSchaltung:new("Schaltung 2")
-k2_schaltung2:addRichtung(k2_r1)
-k2_schaltung2:addRichtung(k2_r2)
+local k2_schaltung2 = AkKreuzungsSchaltung:neu("Schaltung 2")
+k2_schaltung2:fuegeRichtungHinzu(k2_r1)
+k2_schaltung2:fuegeRichtungHinzu(k2_r2)
 
 --- Kreuzung 2: Schaltung 3
-local k2_schaltung3 = AkKreuzungsSchaltung:new("Schaltung 3")
-k2_schaltung3:addRichtung(k2_r3)
-k2_schaltung3:addRichtung(k2_r4)
+local k2_schaltung3 = AkKreuzungsSchaltung:neu("Schaltung 3")
+k2_schaltung3:fuegeRichtungHinzu(k2_r3)
+k2_schaltung3:fuegeRichtungHinzu(k2_r4)
 
 --- Kreuzung 2: Schaltung 4
-local k2_schaltung4 = AkKreuzungsSchaltung:new("Schaltung 4")
-k2_schaltung4:addRichtung(k2_r5)
+local k2_schaltung4 = AkKreuzungsSchaltung:neu("Schaltung 4")
+k2_schaltung4:fuegeRichtungHinzu(k2_r5)
 
-k2 = AkKreuzung:new("Kreuzung 2")
-k2:addSchaltung(k2_schaltung1)
-k2:addSchaltung(k2_schaltung2)
-k2:addSchaltung(k2_schaltung3)
-k2:addSchaltung(k2_schaltung4)
+k2 = AkKreuzung:neu("Kreuzung 2")
+k2:fuegeSchaltungHinzu(k2_schaltung1)
+k2:fuegeSchaltungHinzu(k2_schaltung2)
+k2:fuegeSchaltungHinzu(k2_schaltung3)
+k2:fuegeSchaltungHinzu(k2_schaltung4)
 --endregion
 
 -- region K1-Richtungen
@@ -115,22 +115,22 @@ k2:addSchaltung(k2_schaltung4)
 --      |              |             |      +------------------ neue Ampel für diese Richtung (
 --      |              |             |      |           +------ Signal-ID dieser Ampel
 --      |              |             |      |           |   +-- Modell dieser Ampel - weiss wo rot, gelb und gruen ist
-k1_r1 = AkRichtung:new("Richtung 1", 101, { AkAmpel:new(17, Grundmodell_Ampel_3) })
-k1_r2 = AkRichtung:new("Richtung 2", 102, { AkAmpel:new(13, Grundmodell_Ampel_3) })
-k1_r3 = AkRichtung:new("Richtung 3", 103, { AkAmpel:new(12, Grundmodell_Ampel_3) })
-k1_r4 = AkRichtung:new("Richtung 4", 104, { AkAmpel:new(11, Grundmodell_Ampel_3) })
-k1_r5 = AkRichtung:new("Richtung 5", 105, { AkAmpel:new(10, Grundmodell_Ampel_3) })
-k1_r6 = AkRichtung:new("Richtung 6", 106, { AkAmpel:new(09, Grundmodell_Ampel_3) })
-k1_r7 = AkRichtung:new("Richtung 7", 107, { AkAmpel:new(16, Grundmodell_Ampel_3) })
-k1_r8 = AkRichtung:new("Richtung 8", 108, { AkAmpel:new(15, Grundmodell_Ampel_3) })
+k1_r1 = AkRichtung:neu("Richtung 1", 101, { AkAmpel:neu(17, Grundmodell_Ampel_3) })
+k1_r2 = AkRichtung:neu("Richtung 2", 102, { AkAmpel:neu(13, Grundmodell_Ampel_3) })
+k1_r3 = AkRichtung:neu("Richtung 3", 103, { AkAmpel:neu(12, Grundmodell_Ampel_3) })
+k1_r4 = AkRichtung:neu("Richtung 4", 104, { AkAmpel:neu(11, Grundmodell_Ampel_3) })
+k1_r5 = AkRichtung:neu("Richtung 5", 105, { AkAmpel:neu(10, Grundmodell_Ampel_3) })
+k1_r6 = AkRichtung:neu("Richtung 6", 106, { AkAmpel:neu(09, Grundmodell_Ampel_3) })
+k1_r7 = AkRichtung:neu("Richtung 7", 107, { AkAmpel:neu(16, Grundmodell_Ampel_3) })
+k1_r8 = AkRichtung:neu("Richtung 8", 108, { AkAmpel:neu(15, Grundmodell_Ampel_3) })
 
-k1_r1_5_fg = AkRichtung:new("Richtung 1+5 FG", -1, { -- keine Speicher-ID fuer Fussgaenger notwendig (-1)
-    AkAmpel:new(40, Grundmodell_Ampel_3_FG), AkAmpel:new(41, Grundmodell_Ampel_3_FG),
-    AkAmpel:new(36, Grundmodell_Ampel_3_FG), AkAmpel:new(37, Grundmodell_Ampel_3_FG)
+k1_r1_5_fg = AkRichtung:neu("Richtung 1+5 FG", -1, { -- keine Speicher-ID fuer Fussgaenger notwendig (-1)
+    AkAmpel:neu(40, Grundmodell_Ampel_3_FG), AkAmpel:neu(41, Grundmodell_Ampel_3_FG),
+    AkAmpel:neu(36, Grundmodell_Ampel_3_FG), AkAmpel:neu(37, Grundmodell_Ampel_3_FG)
 })
-k1_r3_7_fg = AkRichtung:new("Richtung 3+7 FG", -1, { -- keine Speicher-ID fuer Fussgaenger notwendig (-1)
-    AkAmpel:new(38, Grundmodell_Ampel_3_FG), AkAmpel:new(39, Grundmodell_Ampel_3_FG),
-    AkAmpel:new(42, Grundmodell_Ampel_3_FG), AkAmpel:new(43, Grundmodell_Ampel_3_FG)
+k1_r3_7_fg = AkRichtung:neu("Richtung 3+7 FG", -1, { -- keine Speicher-ID fuer Fussgaenger notwendig (-1)
+    AkAmpel:neu(38, Grundmodell_Ampel_3_FG), AkAmpel:neu(39, Grundmodell_Ampel_3_FG),
+    AkAmpel:neu(42, Grundmodell_Ampel_3_FG), AkAmpel:neu(43, Grundmodell_Ampel_3_FG)
 })
 
 --endregion
@@ -141,37 +141,37 @@ k1_r3_7_fg = AkRichtung:new("Richtung 3+7 FG", -1, { -- keine Speicher-ID fuer F
 -- Eine Schaltung bestimmt, welche Richtungen gleichzeitig auf grün geschaltet werden dürfen, alle anderen sind rot
 
 --- Kreuzung 1: Schaltung 1
-local k1_schaltung1 = AkKreuzungsSchaltung:new("Schaltung 1")
-k1_schaltung1:addRichtung(k1_r1)
-k1_schaltung1:addRichtung(k1_r5)
-k1_schaltung1:addRichtungFuerFussgaenger(k1_r1_5_fg)
+local k1_schaltung1 = AkKreuzungsSchaltung:neu("Schaltung 1")
+k1_schaltung1:fuegeRichtungHinzu(k1_r1)
+k1_schaltung1:fuegeRichtungHinzu(k1_r5)
+k1_schaltung1:fuegeRichtungFuerFussgaengerHinzu(k1_r1_5_fg)
 
 --- Kreuzung 1: Schaltung 2
-local k1_schaltung2 = AkKreuzungsSchaltung:new("Schaltung 2")
-k1_schaltung2:addRichtung(k1_r2)
-k1_schaltung2:addRichtung(k1_r6)
+local k1_schaltung2 = AkKreuzungsSchaltung:neu("Schaltung 2")
+k1_schaltung2:fuegeRichtungHinzu(k1_r2)
+k1_schaltung2:fuegeRichtungHinzu(k1_r6)
 
 --- Kreuzung 1: Schaltung 3
-local k1_schaltung3 = AkKreuzungsSchaltung:new("Schaltung 3")
-k1_schaltung3:addRichtung(k1_r3)
-k1_schaltung3:addRichtung(k1_r7)
-k1_schaltung3:addRichtungFuerFussgaenger(k1_r3_7_fg)
+local k1_schaltung3 = AkKreuzungsSchaltung:neu("Schaltung 3")
+k1_schaltung3:fuegeRichtungHinzu(k1_r3)
+k1_schaltung3:fuegeRichtungHinzu(k1_r7)
+k1_schaltung3:fuegeRichtungFuerFussgaengerHinzu(k1_r3_7_fg)
 
 --- Kreuzung 1: Schaltung 4
-local k1_schaltung4 = AkKreuzungsSchaltung:new("Schaltung 4")
-k1_schaltung4:addRichtung(k1_r4)
-k1_schaltung4:addRichtung(k1_r8)
+local k1_schaltung4 = AkKreuzungsSchaltung:neu("Schaltung 4")
+k1_schaltung4:fuegeRichtungHinzu(k1_r4)
+k1_schaltung4:fuegeRichtungHinzu(k1_r8)
 
-k1 = AkKreuzung:new("Kreuzung 1")
-k1:addSchaltung(k1_schaltung1)
-k1:addSchaltung(k1_schaltung2)
-k1:addSchaltung(k1_schaltung3)
-k1:addSchaltung(k1_schaltung4)
+k1 = AkKreuzung:neu("Kreuzung 1")
+k1:fuegeSchaltungHinzu(k1_schaltung1)
+k1:fuegeSchaltungHinzu(k1_schaltung2)
+k1:fuegeSchaltungHinzu(k1_schaltung3)
+k1:fuegeSchaltungHinzu(k1_schaltung4)
 --endregion
 
 function EEPMain()
     --print("Speicher: " .. collectgarbage("count"))
     AkSchaltungStart()
-    AkScheduler:run()
+    AkPlaner:fuehreGeplanteAktionenAus()
     return 1
 end

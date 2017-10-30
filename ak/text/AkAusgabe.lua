@@ -1,6 +1,6 @@
-AkDebug = {}
-AkDebug.__index = AkDebug
-AkDebug.outputPath = ""
+AkAusgabe = {}
+AkAusgabe.__index = AkAusgabe
+AkAusgabe.outputPath = ""
 
 dbg = {
     anforderung = true,

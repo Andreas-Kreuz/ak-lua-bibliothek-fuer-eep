@@ -1,9 +1,7 @@
-print("Lade AkScheduler ...")
+print("Lade AkPlaner ...")
 require 'ak.planer.AkPlaner'
-print("Lade AkStorage ...")
+print("Lade AkSpeicherHilfe ...")
 require 'ak.speicher.AkSpeicher'
-
-AkTrafficLightsFunctions = {}
 
 --region AkPhase + AkSchaltung
 AkPhase = {}
@@ -42,26 +40,26 @@ AkAmpelModell = {}
 -- @param sigIndexRotGelb Index des gruen-gelben Signal (oder rot)
 --
 function AkAmpelModell:neu(name, sigIndexRot, sigIndexGruen, sigIndexGelb, sigIndexRotGelb, sigIndexFgGruen)
-    local o = {}
     assert(name)
     assert(sigIndexRot)
     assert(sigIndexGruen)
-    o.name = name
-    o.sigIndexRot = sigIndexRot
-    o.sigIndexGruen = sigIndexGruen
-    o.sigIndexGelb = sigIndexGelb or sigIndexRot
-    o.sigIndexRotGelb = sigIndexRotGelb or sigIndexRot
-    o.sigIndexFgGruen = sigIndexFgGruen
-    setmetatable(o, self)
+    local o = {
+        name = name,
+        sigIndexRot = sigIndexRot,
+        sigIndexGruen = sigIndexGruen,
+        sigIndexGelb = sigIndexGelb or sigIndexRot,
+        sigIndexRotGelb = sigIndexRotGelb or sigIndexRot,
+        sigIndexFgGruen = sigIndexFgGruen,
+    }
     self.__index = self
-    return o
+    return setmetatable(o, self)
 end
 
 function AkAmpelModell:print()
     print(self.name)
 end
 
-function AkAmpelModell:getSignalIndex(phase)
+function AkAmpelModell:signalIndexFuer(phase)
     assert(phase)
     if phase == AkPhase.GELB then
         return self.sigIndexGelb
@@ -92,6 +90,12 @@ Ak_Ampel_Unsichtbar = AkAmpelModell:neu("Unsichtbares Signal", 2, 1, 2, 2)
 --endregion
 --region AkStrabWeiche
 AkStrabWeiche = {}
+--- Registriert eine neue Strassenbahnweiche und schaltet das Licht der angegeben Immobilien anhand der Weichenstellung
+-- @param weiche_id ID der Weiche
+-- @param immo1 Immobilie, deren Licht bei Weichenstellung 1 leuchten soll
+-- @param immo2 Immobilie, deren Licht bei Weichenstellung 2 leuchten soll
+-- @param immo3 Immobilie, deren Licht bei Weichenstellung 3 leuchten soll
+--
 function AkStrabWeiche.new(weiche_id, immo1, immo2, immo3)
     EEPRegisterSwitch(weiche_id)
     _G["EEPOnSwitch_" .. weiche_id] = function(x)
@@ -107,40 +111,40 @@ end
 --region AkAmpel
 ------------------------------------------------------------------------------------------
 -- Klasse AkAmpel
--- Ampel mit einer festen signal_id und einem festen Ampeltyp
+-- Ampel mit einer festen signalId und einem festen Ampeltyp
 -- Optional kann die Ampel bei Immobilien Licht ein- und ausschalten (Straba - Ampelsatz)
 ------------------------------------------------------------------------------------------
 AkAmpel = {}
-AkAmpel.debug = AkDebugInit or false
+AkAmpel.debug = AkStartMitDebug or false
 ---
--- @param signal_id ID der Ampel auf der Anlage (Eine Ampel von diesem Typ sollte auf der Anlage sein
--- @param ampel_typ Typ der Ampel (AkAmpelModell)
+-- @param signalId ID der Ampel auf der Anlage (Eine Ampel von diesem Typ sollte auf der Anlage sein
+-- @param ampelTyp Typ der Ampel (AkAmpelModell)
 -- @param rotImmo Immobilie fuer Signalbild gelb (Licht an / aus)
 -- @param gruenImmo Immobilie fuer Signalbild gelb (Licht an / aus)
 -- @param gelbImmo Immobilie fuer Signalbild gelb (Licht an / aus)
--- @param activeImmo Immobilie fuer Signalbild "A" (Licht an / aus)
+-- @param anforderungImmo Immobilie fuer Signalbild "A" (Licht an / aus)
 --
-function AkAmpel:new(signal_id, ampel_typ, rotImmo, gruenImmo, gelbImmo, activeImmo)
-    EEPShowInfoSignal(signal_id, false)
-    local o = {}
-    setmetatable(o, self)
+function AkAmpel:neu(signalId, ampelTyp, rotImmo, gruenImmo, gelbImmo, anforderungImmo)
+    assert(signalId)
+    assert(ampelTyp)
+    EEPShowInfoSignal(signalId, false)
+    local o = {
+        signalId = signalId,
+        ampelTyp = ampelTyp,
+        rotImmo = rotImmo,
+        gruenImmo = gruenImmo,
+        gelbImmo = gelbImmo or rotImmo,
+        anforderungImmo = anforderungImmo,
+        phase = AkPhase.ROT,
+        anforderung = false,
+        debug = false,
+    }
     self.__index = self
-    assert(signal_id)
-    assert(ampel_typ)
-    o.signal_id = signal_id
-    o.ampel_typ = ampel_typ
-    o.rotImmo = rotImmo
-    o.gruenImmo = gruenImmo
-    o.gelbImmo = gelbImmo or rotImmo
-    o.activeImmo = activeImmo
-    o.phase = AkPhase.ROT
-    o.anforderung = false
-    o.debug = false
-    return o
+    return setmetatable(o, self)
 end
 
 ---
--- @param signal_id ID der Ampel auf der Anlage (Eine Ampel von diesem Typ sollte auf der Anlage sein)
+-- @param signalId ID der Ampel auf der Anlage (Eine Ampel von diesem Typ sollte auf der Anlage sein)
 -- @param phase AkPhase.xxx
 -- @param grund z.B. Name der Schaltung
 --
@@ -164,31 +168,31 @@ function AkAmpel:schalte(phase, grund)
         EEPStructureSetLight(self.gruenImmo, phase == AkPhase.GRUEN)
     end
 
-    local sigIndex = self.ampel_typ:getSignalIndex(phase)
-    if (self.debug or AkAmpel.debug) then print(string.format("[AkAmpel    ] Schalte Ampel %04d auf %s (%01d)", self.signal_id, phase, sigIndex) .. immoDbg) end
-    EEPSetSignal(self.signal_id, sigIndex)
-    EEPShowInfoSignal(self.signal_id, (AkKreuzung.showAnforderungenAlsInfo and self.anforderung) or (AkKreuzung.showSchaltungAlsInfo and self.phase ~= AkPhase.ROT))
+    local sigIndex = self.ampelTyp:signalIndexFuer(phase)
+    if (self.debug or AkAmpel.debug) then print(string.format("[AkAmpel    ] Schalte Ampel %04d auf %s (%01d)", self.signalId, phase, sigIndex) .. immoDbg) end
+    EEPSetSignal(self.signalId, sigIndex)
+    EEPShowInfoSignal(self.signalId, (AkKreuzung.showAnforderungenAlsInfo and self.anforderung) or (AkKreuzung.showSchaltungAlsInfo and self.phase ~= AkPhase.ROT))
     if (AkKreuzung.showSchaltungAlsInfo and self.phase ~= AkPhase.ROT) then
-        EEPChangeInfoSignal(self.signal_id, phase .. " (" .. grund .. ")")
+        EEPChangeInfoSignal(self.signalId, phase .. " (" .. grund .. ")")
     end
 end
 
-function AkAmpel:setAnforderung(anforderung, richtung, anzahl)
+function AkAmpel:setzeAnforderung(anforderung, richtung, anzahl)
     local immoDbg = ""
     self.anforderung = anforderung
-    if self.activeImmo then
-        immoDbg = immoDbg .. string.format(", Licht in %s: %s", self.activeImmo, (anforderung) and "an" or "aus")
-        EEPStructureSetLight(self.activeImmo, anforderung)
+    if self.anforderungImmo then
+        immoDbg = immoDbg .. string.format(", Licht in %s: %s", self.anforderungImmo, (anforderung) and "an" or "aus")
+        EEPStructureSetLight(self.anforderungImmo, anforderung)
     end
-    if (self.debug or AkAmpel.debug) and immoDbg ~= "" then print(string.format("[AkAmpel    ] Schalte Ampel %04d", self.signal_id) .. immoDbg) end
-    EEPShowInfoSignal(self.signal_id, (AkKreuzung.showAnforderungenAlsInfo and self.anforderung) or (AkKreuzung.showSchaltungAlsInfo and self.phase ~= AkPhase.ROT))
+    if (self.debug or AkAmpel.debug) and immoDbg ~= "" then print(string.format("[AkAmpel    ] Schalte Ampel %04d", self.signalId) .. immoDbg) end
+    EEPShowInfoSignal(self.signalId, (AkKreuzung.showAnforderungenAlsInfo and self.anforderung) or (AkKreuzung.showSchaltungAlsInfo and self.phase ~= AkPhase.ROT))
     if (AkKreuzung.showAnforderungenAlsInfo and self.anforderung) then
-        EEPChangeInfoSignal(self.signal_id, richtung.name .. " - Anzahl FZ: " .. tostring(anzahl) .. " (Warte: " .. tostring(richtung.warteZeit) .. ")")
+        EEPChangeInfoSignal(self.signalId, richtung.name .. " - Anzahl FZ: " .. tostring(anzahl) .. " (Warte: " .. tostring(richtung.warteZeit) .. ")")
     end
 end
 
 function AkAmpel:print()
-    print(string.format("[AkAmpel    ] Ampel %04d: %s (%s)", self.signal_id, self.phase, self.ampel_typ.name))
+    print(string.format("[AkAmpel    ] Ampel %04d: %s (%s)", self.signalId, self.phase, self.ampelTyp.name))
 end
 
 --endregion
@@ -198,7 +202,7 @@ end
 ------------------------------------------------------
 AkKreuzungsSchaltung = {}
 
-function AkKreuzungsSchaltung.getType()
+function AkKreuzungsSchaltung.getTyp()
     return "AkKreuzungsSchaltung"
 end
 
@@ -206,7 +210,7 @@ function AkKreuzungsSchaltung:getName()
     return self.name
 end
 
-function AkKreuzungsSchaltung:new(name)
+function AkKreuzungsSchaltung:neu(name)
     local o = {}
     setmetatable(o, self)
     self.__index = self;
@@ -221,7 +225,7 @@ function AkKreuzungsSchaltung:getRichtungen()
     return self.richtungen
 end
 
-function AkKreuzungsSchaltung:richtungenTextEineZeile()
+function AkKreuzungsSchaltung:richtungenAlsTextZeile()
     local s = ""
     for richtung in pairs(self.richtungen) do
         s = s .. ", " .. richtung.name
@@ -238,7 +242,7 @@ function AkKreuzungsSchaltung:getRichtungenMitAnforderung()
 end
 
 
-function AkKreuzungsSchaltung:addRichtung(richtung)
+function AkKreuzungsSchaltung:fuegeRichtungHinzu(richtung)
     self.richtungen[richtung] = true
 end
 
@@ -246,39 +250,45 @@ function AkKreuzungsSchaltung:addRichtungMitAnforderung(richtung)
     self.richtungenMitAnforderung[richtung] = true
 end
 
-function AkKreuzungsSchaltung:addRichtungFuerFussgaenger(richtung)
+function AkKreuzungsSchaltung:fuegeRichtungFuerFussgaengerHinzu(richtung)
     self.richtungenFuerFussgaenger[richtung] = true
 end
 
-function AkKreuzungsSchaltung:getSortedRichtungen()
-    local sortedRichtungen = {}
-    local tableSize = 0
-    local count = 0
+--- Gibt alle Richtungen nach Prioritaet zurueck, sowie deren Anzahl und deren Durchschnittspriorität
+-- @return sortierteRichtungen, anzahlDerRichtungen, durchschnittsPrio
+function AkKreuzungsSchaltung:nachPrioSortierteRichtungen()
+    local sortierteRichtungen = {}
+    local anzahlDerRichtungen = 0
+    local gesamtPrio = 0
     for richtung in pairs(self.richtungen) do
-        table.insert(sortedRichtungen, richtung)
-        tableSize = tableSize + 1
-        count = count + richtung:getPrio()
+        table.insert(sortierteRichtungen, richtung)
+        anzahlDerRichtungen = anzahlDerRichtungen + 1
+        gesamtPrio = gesamtPrio + richtung:getPrio()
     end
     for richtung in pairs(self.richtungenFuerFussgaenger) do
-        table.insert(sortedRichtungen, richtung)
-        tableSize = tableSize + 1
-        count = count + richtung:getPrio()
+        table.insert(sortierteRichtungen, richtung)
+        anzahlDerRichtungen = anzahlDerRichtungen + 1
+        gesamtPrio = gesamtPrio + richtung:getPrio()
     end
-    local avg = count / tableSize
-    local sortf = function(richtung1, richtung2)
+    local durchschnittsPrio = gesamtPrio / anzahlDerRichtungen
+    local sortierFunktion = function(richtung1, richtung2)
         if richtung1:getPrio() > richtung2:getPrio() then return true
         elseif richtung1:getPrio() < richtung2:getPrio() then return false
         end
         return (richtung1.name < richtung2.name)
     end
-    table.sort(sortedRichtungen, sortf)
-    return sortedRichtungen, tableSize, avg
+    table.sort(sortierteRichtungen, sortierFunktion)
+    return sortierteRichtungen, anzahlDerRichtungen, durchschnittsPrio
 end
 
+--- Gibt zurueck ob schaltung1 eine hoehere Prioritaet hat, als Schaltung 2
+-- @param schaltung1 erste Schaltung
+-- @param schaltung2 zweite Schaltung
+--
 function AkKreuzungsSchaltung.hoeherePrioAls(schaltung1, schaltung2)
     if schaltung1 and schaltung2 then
-        local sortedRichtungen1, tableSize1, avg1 = schaltung1:getSortedRichtungen()
-        local sortedRichtungen2, tableSize2, avg2 = schaltung2:getSortedRichtungen()
+        local sortedRichtungen1, tableSize1, avg1 = schaltung1:nachPrioSortierteRichtungen()
+        local sortedRichtungen2, tableSize2, avg2 = schaltung2:nachPrioSortierteRichtungen()
 
         if avg1 > avg2 then return true
         elseif avg1 < avg2 then return false
@@ -292,15 +302,14 @@ function AkKreuzungsSchaltung.hoeherePrioAls(schaltung1, schaltung2)
     end
 end
 
-
 function AkKreuzungsSchaltung:getPrio()
-    local _, __, prio = self:getSortedRichtungen()
+    local _, __, prio = self:nachPrioSortierteRichtungen()
     return prio
 end
 
-function AkKreuzungsSchaltung:resetWarteZeit()
+function AkKreuzungsSchaltung:setzeWartezeitZurueck()
     for richtung in pairs(self.richtungen) do
-        richtung:resetWarteZeit()
+        richtung:setzeWartezeitZurueck()
     end
 end
 
@@ -309,9 +318,9 @@ end
 --------------------
 -- Klasse Richtung
 --------------------
-AkRichtung = { fahrzeugMultiplikator = 1 }
+AkRichtung = {}
 
-function AkRichtung.getType()
+function AkRichtung.getTyp()
     return "AkRichtung"
 end
 
@@ -321,7 +330,7 @@ end
 
 function AkRichtung:aktualisiereAnforderung()
     for _, ampel in pairs(self.ampeln) do
-        ampel:setAnforderung(self.fahrzeuge > 0, self, self.fahrzeuge)
+        ampel:setzeAnforderung(self.fahrzeuge > 0, self, self.fahrzeuge)
     end
 end
 
@@ -345,25 +354,25 @@ function AkRichtung:verlasse(signalaufrot, fahrzeugName)
 
         AkSchalteAmpeln(richtungen, AkPhase.GELB, "Fahrzeug verlassen: " .. fahrzeugName)
 
-        local toRed = AkAction.new(function()
+        local toRed = AkAktion:neu(function()
             AkSchalteAmpeln(richtungen, AkPhase.ROT, "Fahrzeug verlassen: " .. fahrzeugName)
         end, "Schalte " .. self.name .. " auf rot.")
-        AkScheduler:addAction(2, toRed)
+        AkPlaner:addAction(2, toRed)
     end
 end
 
-function AkRichtung:resetFahrzeuge()
+function AkRichtung:setzeFahrzeugeZurueck()
     self.fahrzeuge = 0
     self:aktualisiereAnforderung()
     self:save()
 end
 
-function AkRichtung:increaseWarteZeit()
+function AkRichtung:erhoeheWartezeit()
     self.warteZeit = self.warteZeit + 1
     self:save()
 end
 
-function AkRichtung:resetWarteZeit()
+function AkRichtung:setzeWartezeitZurueck()
     self.warteZeit = 0
     self:save()
 end
@@ -378,18 +387,18 @@ function AkRichtung:save()
         data["f"] = tostring(self.fahrzeuge)
         data["w"] = tostring(self.warteZeit)
         data["p"] = tostring(self.phase)
-        AkStorage.storeTable(self.eepSaveId, data, "AkRichtung " .. self.name)
+        AkSpeicherHilfe.speichereTabelle(self.eepSaveId, data, "AkRichtung " .. self.name)
     end
 end
 
 function AkRichtung:load()
     if self.eepSaveId ~= -1 then
-        local data = AkStorage.loadTable(self.eepSaveId, "AkRichtung " .. self.name)
+        local data = AkSpeicherHilfe.ladeTabelle(self.eepSaveId, "AkRichtung " .. self.name)
         self.fahrzeuge = data["f"] and tonumber(data["f"]) or 0
         self.warteZeit = data["w"] and tonumber(data["w"]) or 0
         self.phase = data["p"] or AkPhase.ROT
         for _, ampel in pairs(self.ampeln) do
-            ampel:setAnforderung(self.fahrzeuge > 0, self, self.fahrzeuge)
+            ampel:setzeAnforderung(self.fahrzeuge > 0, self, self.fahrzeuge)
         end
         self:schalte(self.phase, "Neu geladen")
     else
@@ -438,21 +447,23 @@ end
 -- @param eepSaveId Id fuer das Speichern der Richtung
 -- @param ... eine oder mehrere Ampeln
 --
-function AkRichtung:new(name, eepSaveId, ...)
+function AkRichtung:neu(name, eepSaveId, ...)
     assert(name, "Bitte geben Sie den Namen \"name\" fuer diese Richtung an.")
     assert(type(name) == "string")
     assert(eepSaveId, "Bitte geben Sie den Wert \"eepSaveId\" fuer diese Richtung an.")
     assert(type(eepSaveId) == "number")
     assert(..., "Bitte geben Sie den Wert \"ampeln\" fuer diese Richtung an.")
     --assert(signalId, "Bitte geben Sie den Wert \"signalId\" fuer diese Richtung an.")
-    if eepSaveId ~= -1 then AkStorage.register(eepSaveId, name) end
 
-    local o = {}
-    setmetatable(o, self)
+    if eepSaveId ~= -1 then AkSpeicherHilfe.registriereId(eepSaveId, name) end
+    local o = {
+        fahrzeugMultiplikator = 1,
+        name = name,
+        eepSaveId = eepSaveId,
+        ampeln = ...,
+    }
     self.__index = self
-    o.name = name
-    o.eepSaveId = eepSaveId
-    o.ampeln = ...
+    setmetatable(o, self)
     o:load()
     return o
 end
@@ -465,11 +476,11 @@ local AkAllKreuzungen = {}
 -- Klasse Kreuzung
 --------------------
 AkKreuzung = {}
-AkKreuzung.debug = AkDebugInit or false
-AkKreuzung.showAnforderungenAlsInfo = AkDebugInit or false
-AkKreuzung.showSchaltungAlsInfo = AkDebugInit or false
+AkKreuzung.debug = AkStartMitDebug or false
+AkKreuzung.showAnforderungenAlsInfo = AkStartMitDebug or false
+AkKreuzung.showSchaltungAlsInfo = AkStartMitDebug or false
 
-function AkKreuzung.getType()
+function AkKreuzung.getTyp()
     return "AkKreuzung"
 end
 
@@ -481,18 +492,18 @@ function AkKreuzung:getSchaltungen()
     return self.schaltungen
 end
 
-function AkKreuzung:getCurrentSchaltung()
-    return self.currentSchaltung
+function AkKreuzung:getAktuelleSchaltung()
+    return self.aktuelleSchaltung
 end
 
-function AkKreuzung:resetWarteZeit(nextSchaltung)
+function AkKreuzung:setzeWarteZeitZurueck(nextSchaltung)
     local increaseRichtungen = {}
     for schaltung in pairs(self.schaltungen) do
-        assert(schaltung.getType() == "AkKreuzungsSchaltung", "Found: " .. schaltung:getType())
+        assert(schaltung.getTyp() == "AkKreuzungsSchaltung", "Found: " .. schaltung.getTyp())
         for richtung in pairs(schaltung:getRichtungen()) do
-            assert(richtung.getType() == "AkRichtung", "Found: " .. richtung:getType())
+            assert(richtung.getTyp() == "AkRichtung", "Found: " .. richtung.getTyp())
             if nextSchaltung:getRichtungen()[richtung] then
-                richtung:resetWarteZeit()
+                richtung:setzeWartezeitZurueck()
             else
                 increaseRichtungen[richtung] = true
             end
@@ -500,10 +511,10 @@ function AkKreuzung:resetWarteZeit(nextSchaltung)
     end
 
     for richtung in pairs(increaseRichtungen) do
-        assert(richtung.getType() == "AkRichtung", "Found: " .. richtung:getType())
-        richtung:increaseWarteZeit()
+        assert(richtung.getTyp() == "AkRichtung", "Found: " .. richtung.getTyp())
+        richtung:erhoeheWartezeit()
     end
-    self.currentSchaltung = nextSchaltung
+    self.aktuelleSchaltung = nextSchaltung
 end
 
 function AkKreuzung:getNextSchaltung()
@@ -515,16 +526,16 @@ function AkKreuzung:getNextSchaltung()
     return sortedTable[1]
 end
 
-function AkKreuzung:addSchaltung(schaltung)
+function AkKreuzung:fuegeSchaltungHinzu(schaltung)
     self.schaltungen[schaltung] = true
 end
 
-function AkKreuzung:setReady(ready)
-    self.ready = ready
+function AkKreuzung:setBereit(bereit)
+    self.bereit = bereit
 end
 
-function AkKreuzung:isReady()
-    return self.ready
+function AkKreuzung:isBereit()
+    return self.bereit
 end
 
 function AkKreuzung:getGruenZeitSekunden()
@@ -536,25 +547,29 @@ function AkKreuzung.zaehlerZuruecksetzen()
         print("[AkKreuzung ] RESET " .. kreuzung.name)
         for schaltung in pairs(kreuzung:getSchaltungen()) do
             for richtung in pairs(schaltung:getRichtungen()) do
-                richtung:resetFahrzeuge()
+                richtung:setzeFahrzeugeZurueck()
             end
             for richtung in pairs(schaltung:getRichtungenMitAnforderung()) do
-                richtung:resetFahrzeuge()
+                richtung:setzeFahrzeugeZurueck()
             end
         end
     end
 end
 
-
-function AkKreuzung:new(name)
-    local o = {}
-    setmetatable(o, self)
+--- Erzeugt eine neue Kreuzung und registriert diese automatisch fuer das automatische Schalten.
+-- Fuegen sie Schaltungen zu dieser Kreuzung hinzu.
+-- @param name
+--
+function AkKreuzung:neu(name)
+    local o = {
+        name = name,
+        aktuelleSchaltung = nil,
+        schaltungen = {},
+        bereit = true,
+        gruenZeit = 15,
+    }
     self.__index = self
-    o.name = name
-    o.currentSchaltung = nil
-    o.schaltungen = {}
-    o.ready = true
-    o.gruenZeit = 15
+    setmetatable(o, self)
     table.insert(AkAllKreuzungen, o)
     return o
 end
@@ -566,14 +581,14 @@ function AkSchaltungStart()
     -- Funktion schalteAmpeln
     ---------------------------
     local function AkSchalteKreuzung(kreuzung)
-        --if AkKreuzung.debug then print(string.format("[AkKreuzung ] Schalte Kreuzung %s: %s", kreuzung:getName(), kreuzung:isReady() and "Ja" or "Nein")) end
-        if kreuzung:isReady() then
-            kreuzung:setReady(false)
+        --if AkKreuzung.debug then print(string.format("[AkKreuzung ] Schalte Kreuzung %s: %s", kreuzung:getName(), kreuzung:isBereit() and "Ja" or "Nein")) end
+        if kreuzung:isBereit() then
+            kreuzung:setBereit(false)
             local nextSchaltung = kreuzung:getNextSchaltung()
             local nextName = kreuzung.name .. " " .. nextSchaltung:getName()
-            local currentSchaltung = kreuzung:getCurrentSchaltung()
-            local currentName = currentSchaltung
-                    and kreuzung.name .. " " .. currentSchaltung:getName()
+            local aktuelleSchaltung = kreuzung:getAktuelleSchaltung()
+            local currentName = aktuelleSchaltung
+                    and kreuzung.name .. " " .. aktuelleSchaltung:getName()
                     or kreuzung.name .. " Rot fuer alle"
             local richtungenAufRot = {}
             local richtungenAufGruen = {}
@@ -583,12 +598,12 @@ function AkSchaltungStart()
             local richtungenAktuellFussgaengerGruen = {}
 
             -- aktuelle Richtungen für alle Schaltungen auf rot schalten:
-            if currentSchaltung then
-                for richtung in pairs(currentSchaltung:getRichtungen()) do
+            if aktuelleSchaltung then
+                for richtung in pairs(aktuelleSchaltung:getRichtungen()) do
                     richtungenAktuellGruen[richtung] = true
                     richtungenAufRot[richtung] = true
                 end
-                for richtung in pairs(currentSchaltung.richtungenFuerFussgaenger) do
+                for richtung in pairs(aktuelleSchaltung.richtungenFuerFussgaenger) do
                     richtungenAktuellFussgaengerGruen[richtung] = true
                     richtungenAufFussgaengerRot[richtung] = true
                 end
@@ -644,41 +659,41 @@ function AkSchaltungStart()
                 end
             end
 
-            if AkKreuzung.debug then print("[AkKreuzung ] Schalte " .. kreuzung:getName() .. " zu " .. nextSchaltung:getName() .. " (" .. nextSchaltung:richtungenTextEineZeile() .. ")") end
-            kreuzung:resetWarteZeit(nextSchaltung)
+            if AkKreuzung.debug then print("[AkKreuzung ] Schalte " .. kreuzung:getName() .. " zu " .. nextSchaltung:getName() .. " (" .. nextSchaltung:richtungenAlsTextZeile() .. ")") end
+            kreuzung:setzeWarteZeitZurueck(nextSchaltung)
 
 
-            local fussgaengerAufRot = AkAction.new(function()
+            local fussgaengerAufRot = AkAktion:neu(function()
                 AkSchalteAmpeln(richtungenAufFussgaengerRot, AkPhase.ROT, currentName)
             end, "Schalte " .. currentName .. " auf Fussgaenger Rot")
-            AkScheduler:addAction(3, fussgaengerAufRot)
+            AkPlaner:addAction(3, fussgaengerAufRot)
 
-            local alteAmpelnAufGelb = AkAction.new(function()
+            local alteAmpelnAufGelb = AkAktion:neu(function()
                 AkSchalteAmpeln(richtungenAufRot, AkPhase.GELB, currentName)
             end, "Schalte " .. currentName .. " auf gelb")
-            AkScheduler:addAction(0, alteAmpelnAufGelb, fussgaengerAufRot)
+            AkPlaner:addAction(0, alteAmpelnAufGelb, fussgaengerAufRot)
 
-            local alteAmpelnAufRot = AkAction.new(function()
+            local alteAmpelnAufRot = AkAktion:neu(function()
                 AkSchalteAmpeln(richtungenAufRot, AkPhase.ROT, currentName)
             end, "Schalte " .. currentName .. " auf rot")
-            AkScheduler:addAction(2, alteAmpelnAufRot, alteAmpelnAufGelb)
+            AkPlaner:addAction(2, alteAmpelnAufRot, alteAmpelnAufGelb)
 
-            local neueAmpelnAufRotGelb = AkAction.new(function()
+            local neueAmpelnAufRotGelb = AkAktion:neu(function()
                 AkSchalteAmpeln(richtungenAufGruen, AkPhase.ROTGELB, nextName)
                 AkSchalteAmpeln(richtungenAufFussgaengerGruen, AkPhase.FG, nextName)
             end, "Schalte " .. nextName .. " auf rot-gelb")
-            AkScheduler:addAction(3, neueAmpelnAufRotGelb, alteAmpelnAufRot)
+            AkPlaner:addAction(3, neueAmpelnAufRotGelb, alteAmpelnAufRot)
 
-            local neueAmpelnAufGruen = AkAction.new(function()
+            local neueAmpelnAufGruen = AkAktion:neu(function()
                 AkSchalteAmpeln(richtungenAufGruen, AkPhase.GRUEN, nextName)
             end, "Schalte " .. nextName .. " auf gruen")
-            AkScheduler:addAction(1, neueAmpelnAufGruen, neueAmpelnAufRotGelb)
+            AkPlaner:addAction(1, neueAmpelnAufGruen, neueAmpelnAufRotGelb)
 
-            local kreuzungFertigschalten = AkAction.new(function()
+            local kreuzungFertigschalten = AkAktion:neu(function()
                 if AkKreuzung.debug then print("[AkKreuzung ] " .. kreuzung.name .. ": Fahrzeuge sind gefahren, kreuzung ist dann frei.") end
-                kreuzung:setReady(true)
+                kreuzung:setBereit(true)
             end, kreuzung.name .. " ist nun bereit (war " .. kreuzung:getGruenZeitSekunden() .. "s auf gruen geschaltet)")
-            AkScheduler:addAction(kreuzung:getGruenZeitSekunden(), kreuzungFertigschalten, neueAmpelnAufGruen)
+            AkPlaner:addAction(kreuzung:getGruenZeitSekunden(), kreuzungFertigschalten, neueAmpelnAufGruen)
         end
     end
 

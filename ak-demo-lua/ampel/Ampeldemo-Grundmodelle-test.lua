@@ -8,7 +8,7 @@ clearlog()
 --------------------------------------------------------------------
 -- Zeigt erweiterte Informationen waehrend der Initialisierung an --
 --------------------------------------------------------------------
-AkDebugInit = false
+AkStartMitDebug = false
 
 --------------------------------------------------------------------
 -- Zeigt erweiterte Informationen waehrend der erste Schitte an   --
@@ -19,8 +19,8 @@ require 'ak-demo-lua.ampel.Ampeldemo-Grundmodelle-main'
 --------------------------------------------------------------------
 -- Zeige erweiterte Informationen an                              --
 --------------------------------------------------------------------
-AkScheduler.debug = false
-AkStorage.debug = false
+AkPlaner.debug = false
+AkSpeicherHilfe.debug = false
 AkAmpel.debug = false
 AkKreuzung.debug = false
 AkKreuzung.showAnforderungenAlsInfo = false
