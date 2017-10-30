@@ -34,10 +34,11 @@ AkAmpelModell = {}
 
 ---
 -- @param name Name des Ampeltyps
--- @param sigIndexRot Index des roten Signals
--- @param sigIndexGruen Index des gruenen Signals
--- @param sigIndexGelb Index des gelben Signals
--- @param sigIndexRotGelb Index des gruen-gelben Signal (oder rot)
+-- @param sigIndexRot Index der Signalstellung des roten Signals
+-- @param sigIndexGruen Index der Signalstellung des gruenen Signals
+-- @param sigIndexGelb Index der Signalstellung des gelben Signals
+-- @param sigIndexRotGelb Index der Signalstellung des rot-gelben Signal (oder rot)
+-- @param sigIndexFgGruen Indes der Signalstellung in der die Fussgaenger gruen haben und die Autos rot
 --
 function AkAmpelModell:neu(name, sigIndexRot, sigIndexGruen, sigIndexGelb, sigIndexRotGelb, sigIndexFgGruen)
     assert(name)
@@ -703,5 +704,3 @@ function AkSchaltungStart()
 end
 
 --endregion
-
-
