@@ -63,7 +63,7 @@ Dieses Paket übernimmt die automatische Steuerung von Straßenkreuzungen. Die e
 
 * __Damit die Schaltung funktioniert__, muss EEPMain() mindestens folgende Befehle verwenden:
 
-    ```lua
+```lua
 function EEPMain()
     AkSchaltungStart()
     AkPlaner:fuehreGeplanteAktionenAus()
