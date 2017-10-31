@@ -12,7 +12,7 @@
 
 * Verwende eine aussagekräftige Beschreibung, die den Fehler und die Lösung beschreibt
 
-##### Hast Du eine neue Idee für eine Funktion?
+#### Hast Du eine neue Idee für eine Funktion?
 
 * Sei Dir sicher, dass Deine Änderung die zur Benutzung freigegebenen Funktionen nicht ändert.
 

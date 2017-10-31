@@ -11,7 +11,7 @@ sind noch im vollen Gange.__
 
 ## Loslegen
 
-Die bereitgestellten Funktionen sollen die _Steuerung vereinfachen_, damit Du Dich als Anlagen-Ersteller auf andere Aspekte konzentrieren kann.
+Die bereitgestellten Funktionen sollen die _Steuerung des Verkehrs vereinfachen_, damit Du Dich als Anlagen-Ersteller auf andere Aspekte konzentrieren kann.
 Natürlich musst Du trotzdem ein wenig Hand anlegen.
 
 __Bitte beachte__: Du solltest noch nicht alle Funktionen verwenden, da sich das Projekt noch im Aufbruch befindet und vieles umgebaut wird. Die Lua-Skript Dokumentation verrät, welche Funktionen Du verwenden kannst. (Schau doch mal bei [ak.strasse](LUA/ak/strasse) nach)
