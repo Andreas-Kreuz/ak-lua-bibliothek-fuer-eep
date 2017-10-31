@@ -35,8 +35,11 @@ function AkModellInstaller:erzeugePaket(ausgabeverzeichnis)
 
         -- Dateien des Modellpakets kopieren
         for pfad, dateiname in pairs(modellPaket.modellPfade) do
-            --print([[copy "]] .. pfad .. [[" "]] .. modellPaketVerzeichnis .. "\\" .. dateiname .. [["]])
-            os.execute([[copy "]] .. pfad .. [[" "]] .. modellPaketVerzeichnis .. "\\" .. dateiname .. [[" > nul]])
+            if not os.execute([[copy "]] .. pfad .. [[" "]] .. modellPaketVerzeichnis .. "\\" .. dateiname .. [[" >nul]]) then
+                print([[copy "]] .. pfad .. [[" "]] .. modellPaketVerzeichnis .. "\\" .. dateiname .. [["]])
+                os.execute([[copy "]] .. pfad .. [[" "]] .. modellPaketVerzeichnis .. "\\" .. dateiname .. [[" ]])
+                os.exit(1)
+            end
         end
 
         -- Install ini schreiben
@@ -106,12 +109,14 @@ function AkModellPaket:fuegeDateienHinzu(basisOrdner, praefix, unterOrdner, pfad
     assert(praefix)
     assert(unterOrdner)
     local neuePfade = {}
-    AkModellPacker.dateienSuchen(neuePfade, basisOrdner, unterOrdner)
+    --print(string.format("Durchsuche \"%s\" in Unterordner \"%s\"", basisOrdner, unterOrdner))
+    _, dateiGefunden = AkModellPacker.dateienSuchen(neuePfade, basisOrdner, unterOrdner)
+    assert(dateiGefunden, string.format("Keine Datei gefunden: \"%s\" in Unterordner \"%s\"", basisOrdner, unterOrdner))
 
     for pfad, datei in pairs(neuePfade) do
         if not excludePatterns and not AkModellPaket.pfadAusschliessen(pfad, pfadAusschlussMuster) then
-            self.installationsPfade[praefix .. "\\" .. pfad] = datei
-            self.modellPfade[pfad] = datei
+            self.installationsPfade[praefix .. pfad] = datei
+            self.modellPfade[basisOrdner .. "\\" .. pfad] = datei
         end
     end
 end
@@ -133,24 +138,27 @@ function AkModellPacker.schreibeDatei(dateiname, inhalt)
     io.output(file)
     io.write(inhalt)
     io.close(file)
-    print("----- Start ".. dateiname .. " --------------------------------------------------------------\n"
+    print("----- Start " .. dateiname .. " --------------------------------------------------------------\n"
             .. inhalt
-            .. "----- Ende ".. dateiname .. " --------------------------------------------------------------")
+            .. "----- Ende " .. dateiname .. " --------------------------------------------------------------")
 end
 
 function AkModellPacker.dateienSuchen(dateiPfade, basisOrdner, unterOrdner)
+    local dateiGefunden = false
     local aktuellerOrdner = basisOrdner .. "\\" .. unterOrdner
     for datei in io.popen([[dir "]] .. aktuellerOrdner .. [[" /b /a-d 2> nul]]):lines() do
         --print(currentdir .. "\\" .. file1)
         dateiPfade[unterOrdner .. "\\" .. datei] = datei
+        dateiGefunden = true
     end
     for ordner in io.popen([[dir "]] .. aktuellerOrdner .. [[" /b /ad]]):lines() do
         local sub_files = AkModellPacker.dateienSuchen(dateiPfade, basisOrdner, unterOrdner .. "\\" .. ordner)
         for pfad, datei in pairs(sub_files) do
             dateiPfade[pfad] = datei
+            dateiGefunden = true
         end
     end
-    return dateiPfade
+    return dateiPfade, dateiGefunden
 end
 
 --- Erzeugt den Inhalt von Install.ini

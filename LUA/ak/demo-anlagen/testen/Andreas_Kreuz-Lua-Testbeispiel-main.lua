@@ -1,5 +1,8 @@
 clearlog()
-print("Hey let's start, EEP Version is: ", EEPVer)
+print("Der wahre Schatz liegt in: ")
+print([[EEP\LUA\ak\demo-anlagen\testen\Andreas_Kreuz-Lua-Testbeispiel-test.lua]])
+print("")
+print("Mit der test-Datei kann man diese Datei hier ohne EEP testen!")
 
 -- Lade den aktuellen Zähler
 zaehler = 0
