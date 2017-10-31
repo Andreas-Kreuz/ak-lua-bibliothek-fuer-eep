@@ -40,10 +40,6 @@ luac.out
 *.hex
 
 # Project based settings
-AkStorageValues.txt
-AkStoredValues.txt
-output.txt
-out
-modell_installation/out
-anlagen
+/modell-pakete
+/LUA/ak/anlagen
 *.dds
