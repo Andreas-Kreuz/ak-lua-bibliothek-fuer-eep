@@ -22,18 +22,8 @@ Dieses Paket hilft dabei Modell-Installer zu erzeugen.
 
   * `AkModellPaket:neu(eepVersion, deutscherName, deutscheBeschreibung)` - erzeugt ein neues Modell-Paket mit Mindest-EEP-Version, sowie einem deutschen Namen und einer deutschen Beschreibung.
 
-  * `AkModellPaket:fuegeDateienHinzu(verzeichnis, praefix, unterverzeichnis))` - Fügt alle Dateien im Unterverzeichnis `verzeichnis\unterverzeichnis` hinzu. Die Dateien werden mit dem Namen `praefix\unterverzeichnis\...\dateiname` erzeugt.
+  * `AkModellPaket:fuegeDateienHinzu(verzeichnis, praefix, unterverzeichnis)` - Fügt alle Dateien im Unterverzeichnis `verzeichnis\unterverzeichnis` hinzu. Die Dateien werden mit dem Namen `praefix\unterverzeichnis\...\dateiname` erzeugt.
 
 ## Beispiel
-    -----------------------------------------
-    -- Paket: Skripte von Andreas Kreuz
-    -----------------------------------------
-    local aktuellerOrdner = "."
-    do
-        local paket0 = AkModellPaket:neu(14, "Skriptsammlung von Andreas Kreuz", "Diverse Lua-Skripte")
-        paket0:fuegeDateienHinzu(aktuellerOrdner, "LUA", "ak", { "README.md" })
 
-        local installer = AkModellInstaller:neu("Andreas-Kreuz-Skriptsammlung")
-        installer:fuegeModellPaketHinzu(paket0)
-        installer:erzeugePaket(aktuellerOrdner .. "\\modell_installation\\out")
-    end
+Siehe [Modellinstallation](../../ModellInstallation.lua)

@@ -8,14 +8,14 @@
 ### Verwendung:
 
 * Ein Testskript lädt zuerst die Funktionen von EEP:
-```lua
-require 'ak.eep.AkEepFunktionen'
-```
+    ```lua
+    require 'ak.eep.AkEepFunktionen'
+    ```
 
 * Danach wird das eigentliche Skript geladen:
-```lua
-require 'anlagen-script'
-```
+    ```lua
+    require 'anlagen-script'
+    ```
 
 
 ### Beispiel

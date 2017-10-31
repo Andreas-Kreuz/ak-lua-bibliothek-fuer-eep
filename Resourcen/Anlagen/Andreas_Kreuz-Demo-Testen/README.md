@@ -1,4 +1,4 @@
-# Lua Test vor EEP
+# Lua Testbeispiel
 
 Diese Anlage - oder besser deren Lua-Skripte - demonstriert folgendes:
 
@@ -6,7 +6,7 @@ Diese Anlage - oder besser deren Lua-Skripte - demonstriert folgendes:
 * Lua-Skript auf Herz und Nieren testen
 * Lua-Skript Änderungen ohne Copy & Paste in EEP übernehmen - Einfach im Lua-Fenster auf _Skript neu laden_ klicken
 
-Siehe __[ak/strasse](../../ak/eep/README.md)__
+Siehe __[ak/strasse](../../../LUA/ak/eep/)__
 
 ## Motivation
 
@@ -55,8 +55,9 @@ folgendem Link. https://sourceforge.net/projects/luabinaries/files/5.2.4/Tools%2
 
 ## Testen der Funktion
 
-In EEP ist es manchmal schlecht möglich alle Zustände einer Funktion zu prüfen, ohne diverse Rollmaterialien auf den
-Weg zu schicken. Hier kann der Test helfen:
+In EEP ist es manchmal schlecht möglich alle Zustände einer Funktion zu prüfen, ohne diverse Rollmaterialien auf den Weg zu schicken.
+
+Hier kann der Test helfen, indem er die Kontaktpunkte manuell auslöst - im Beispiel mit `zaehleHoch()` und danach den Rückgabewert von `EEPGetSignal()` prüft.
 
 ```lua
 zaehleHoch() -- simuliere ein Fahrzeug, welches in den Bereich einfährt
