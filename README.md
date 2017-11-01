@@ -14,16 +14,16 @@ sind noch im vollen Gange.__
 Die bereitgestellten Funktionen sollen die _Steuerung des Verkehrs vereinfachen_, damit Du Dich als Anlagen-Ersteller auf andere Aspekte konzentrieren kann.
 Natürlich musst Du trotzdem ein wenig Hand anlegen.
 
-__Bitte beachte__: Du solltest noch nicht alle Funktionen verwenden, da sich das Projekt noch im Aufbruch befindet und vieles umgebaut wird. Die Lua-Skript Dokumentation verrät, welche Funktionen Du verwenden kannst. (Schau doch mal bei [ak.strasse](LUA/ak/strasse) nach)
 
 * Mit __[Beispiel-Anlagen](Resourcen/Anlagen/)__ kannst Du einen guten Eindruck der Funktionalität bekommen.
 
-* Die __[Lua-Skript Dokumentation](LUA/ak/)__ hilft Dir bei der Verwendung der Funktionen.
+* Die __[Lua-Skript Dokumentation](LUA/ak/)__ hilft Dir bei der Verwendung der Funktionen. (Schau doch mal bei [ak.strasse](LUA/ak/strasse) nach)
 
 * Du willst die __[Skripte direkt aus GitHub verwenden](doc/GITHUB_NUTZEN.md)__?
 
+__Bitte beachte__: Verwende nur Funktionen, die in der LUA-Dokumentation zur Benutzung freigegebenen sind. Andere Funktionen können jederzeit geändert werden.
 
 ## Beiträge sind Willkommen
-__Bitte beachte:__ Bevor die oben beschriebenen anstehenden Aufgaben abgearbeitet sind und das Projekt noch nicht aktiv ist, könnte Deine Arbeit umsonst gewesen sein, da noch sehr viel umgebaut wird.
+__Bitte beachte__: Bevor die oben beschriebenen anstehenden Aufgaben abgearbeitet sind und das Projekt noch nicht aktiv ist, könnte Deine Arbeit umsonst gewesen sein, da noch sehr viel umgebaut wird.
 
 * [So kannst Du zum Projekt beitragen](doc/CONTRIBUTING.md)
