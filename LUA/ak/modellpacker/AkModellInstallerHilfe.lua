@@ -146,10 +146,14 @@ end
 function AkModellPacker.dateienSuchen(dateiPfade, basisOrdner, unterOrdner)
     local dateiGefunden = false
     local aktuellerOrdner = basisOrdner .. "\\" .. unterOrdner
-    for datei in io.popen([[dir "]] .. aktuellerOrdner .. [[" /b /a-d 2> nul]]):lines() do
-        --print(currentdir .. "\\" .. file1)
-        dateiPfade[unterOrdner .. "\\" .. datei] = datei
-        dateiGefunden = true
+    if os.execute([[dir ]] .. aktuellerOrdner .. [[ /b /a-d >nul]]) then
+        for datei in io.popen([[dir ]] .. aktuellerOrdner .. [[ /b /a-d ]]):lines() do
+            --print(currentdir .. "\\" .. file1)
+            dateiPfade[unterOrdner .. "\\" .. datei] = datei
+            dateiGefunden = true
+        end
+    else
+        print([[Ordner nicht gefunden: "]] .. aktuellerOrdner .. [["]])
     end
     for ordner in io.popen([[dir "]] .. aktuellerOrdner .. [[" /b /ad]]):lines() do
         local sub_files = AkModellPacker.dateienSuchen(dateiPfade, basisOrdner, unterOrdner .. "\\" .. ordner)
