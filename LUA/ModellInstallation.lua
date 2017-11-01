@@ -11,7 +11,7 @@ print("Suche Installationsdateien in Verzeichnis \"" .. aktuellerOrdner .. "\"")
 -----------------------------------------
 local paket0 = AkModellPaket:neu(14, "Skriptsammlung von Andreas Kreuz", "Diverse Lua-Skripte")
 paket0:fuegeDateienHinzu(aktuellerOrdner, "", "LUA\\ak\\eep", { "README.md" })
-paket0:fuegeDateienHinzu(aktuellerOrdner, "", "LUA\\ak\\eisenbahn", { "README.md" })
+paket0:fuegeDateienHinzu(aktuellerOrdner, "", "LUA\\ak\\schiene", { "README.md" })
 paket0:fuegeDateienHinzu(aktuellerOrdner, "", "LUA\\ak\\planer", { "README.md" })
 paket0:fuegeDateienHinzu(aktuellerOrdner, "", "LUA\\ak\\speicher", { "README.md" })
 paket0:fuegeDateienHinzu(aktuellerOrdner, "", "LUA\\ak\\strasse", { "README.md" })
