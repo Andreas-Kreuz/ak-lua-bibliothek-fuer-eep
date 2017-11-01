@@ -92,7 +92,7 @@ end
 -- @param einzuplanendeAktion the new action to be performed
 -- @param vorgaengerAktion optional - wenn angegeben, wird die neue Aktion eingeplant, wenn die zeitspanneInSekunden
 -- nach Ausfuehren der vorgaengerAktion vergangen ist
-function AkPlaner:addAction(zeitspanneInSekunden, einzuplanendeAktion, vorgaengerAktion)
+function AkPlaner:planeAktion(zeitspanneInSekunden, einzuplanendeAktion, vorgaengerAktion)
     assert(zeitspanneInSekunden)
     assert(einzuplanendeAktion)
     assert(zeitspanneInSekunden < AkSekundenProTag)

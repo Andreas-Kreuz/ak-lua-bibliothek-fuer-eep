@@ -358,7 +358,7 @@ function AkRichtung:verlasse(signalaufrot, fahrzeugName)
         local toRed = AkAktion:neu(function()
             AkSchalteAmpeln(richtungen, AkPhase.ROT, "Fahrzeug verlassen: " .. fahrzeugName)
         end, "Schalte " .. self.name .. " auf rot.")
-        AkPlaner:addAction(2, toRed)
+        AkPlaner:planeAktion(2, toRed)
     end
 end
 
@@ -667,34 +667,34 @@ function AkSchaltungStart()
             local fussgaengerAufRot = AkAktion:neu(function()
                 AkSchalteAmpeln(richtungenAufFussgaengerRot, AkPhase.ROT, currentName)
             end, "Schalte " .. currentName .. " auf Fussgaenger Rot")
-            AkPlaner:addAction(3, fussgaengerAufRot)
+            AkPlaner:planeAktion(3, fussgaengerAufRot)
 
             local alteAmpelnAufGelb = AkAktion:neu(function()
                 AkSchalteAmpeln(richtungenAufRot, AkPhase.GELB, currentName)
             end, "Schalte " .. currentName .. " auf gelb")
-            AkPlaner:addAction(0, alteAmpelnAufGelb, fussgaengerAufRot)
+            AkPlaner:planeAktion(0, alteAmpelnAufGelb, fussgaengerAufRot)
 
             local alteAmpelnAufRot = AkAktion:neu(function()
                 AkSchalteAmpeln(richtungenAufRot, AkPhase.ROT, currentName)
             end, "Schalte " .. currentName .. " auf rot")
-            AkPlaner:addAction(2, alteAmpelnAufRot, alteAmpelnAufGelb)
+            AkPlaner:planeAktion(2, alteAmpelnAufRot, alteAmpelnAufGelb)
 
             local neueAmpelnAufRotGelb = AkAktion:neu(function()
                 AkSchalteAmpeln(richtungenAufGruen, AkPhase.ROTGELB, nextName)
                 AkSchalteAmpeln(richtungenAufFussgaengerGruen, AkPhase.FG, nextName)
             end, "Schalte " .. nextName .. " auf rot-gelb")
-            AkPlaner:addAction(3, neueAmpelnAufRotGelb, alteAmpelnAufRot)
+            AkPlaner:planeAktion(3, neueAmpelnAufRotGelb, alteAmpelnAufRot)
 
             local neueAmpelnAufGruen = AkAktion:neu(function()
                 AkSchalteAmpeln(richtungenAufGruen, AkPhase.GRUEN, nextName)
             end, "Schalte " .. nextName .. " auf gruen")
-            AkPlaner:addAction(1, neueAmpelnAufGruen, neueAmpelnAufRotGelb)
+            AkPlaner:planeAktion(1, neueAmpelnAufGruen, neueAmpelnAufRotGelb)
 
             local kreuzungFertigschalten = AkAktion:neu(function()
                 if AkKreuzung.debug then print("[AkKreuzung ] " .. kreuzung.name .. ": Fahrzeuge sind gefahren, kreuzung ist dann frei.") end
                 kreuzung:setBereit(true)
             end, kreuzung.name .. " ist nun bereit (war " .. kreuzung:getGruenZeitSekunden() .. "s auf gruen geschaltet)")
-            AkPlaner:addAction(kreuzung:getGruenZeitSekunden(), kreuzungFertigschalten, neueAmpelnAufGruen)
+            AkPlaner:planeAktion(kreuzung:getGruenZeitSekunden(), kreuzungFertigschalten, neueAmpelnAufGruen)
         end
     end
 
