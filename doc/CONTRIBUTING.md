@@ -1,4 +1,4 @@
-## Wie kannst Du zu Ak-Lua beitragen?
+## So kannst Du zum Projekt beitragen
 
 ![SourceCode](../assets/headers/SourceCode.png)
 
@@ -31,3 +31,7 @@
 #### Wie benutzt Du GitHub am einfachtsten?
 
 * Jeder kann das Projekt _forken_ (eine Arbeitskopie erstellen) und seine Verbesserungen über _Pull-Requests_ dem Projekt zur Verfügung stellen (die Änderungen fließen dann direkt ein) - Am einfachsten geht das mit einem GitHub-Konto und https://desktop.github.com/ (Github und die Software sind in Englisch).
+
+* Um am Puls der Zeit zu bleiben sollte der Fork (die Arbeitskopie) ab und zu aktualisiert werden. Dazu muss man mit Git in der Kommandozeile arbeiten:
+  * Einmalig: [Verbinden des Forks mit dem Original (englisch)](https://help.github.com/articles/configuring-a-remote-for-a-fork/)
+  * Regelmäßig: [Synchronisieren des Forks mit dem Original (englisch)](https://help.github.com/articles/syncing-a-fork/)
