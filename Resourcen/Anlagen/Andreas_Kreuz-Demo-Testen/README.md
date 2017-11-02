@@ -1,5 +1,7 @@
 # Lua Testbeispiel
 
+![SourceCode](../../../assets/headers/TestDemo.png)
+
 Diese Anlage - oder besser deren Lua-Skripte - demonstriert folgendes:
 
 * Lua-Skript auf Syntax-Fehler prüfen

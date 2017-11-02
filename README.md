@@ -2,6 +2,8 @@
 
 Allgemeine Lua-Skripte zur Verkehrssteuerung in [EEP 14](https://www.eepshopping.de).
 
+![SourceCode](assets/headers/SourceCode.png)
+
 ## Anstehende Aufgaben bevor dieses Projekt aktiv wird
 
 * __Die [Vorbereitungen für dieses Projekt](https://github.com/Andreas-Kreuz/ak-lua-skripte-fuer-eep/projects/2)

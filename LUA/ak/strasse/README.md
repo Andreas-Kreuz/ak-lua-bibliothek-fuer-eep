@@ -1,8 +1,17 @@
 # Paket ak.strasse - Steuerung für den Strassenverkehr
 
+![SourceCode](../../../assets/headers/SourceCode.png)
+
 ## Motivation
 
-Dieses Paket übernimmt die automatische Steuerung von Straßenkreuzungen. Die einzig notwendige Aufgabe ist das Definieren der eigenen Kreuzungen im Skript der Anlage.
+Du willst Dich nicht mehr um die Steuerung Deiner Ampeln kümmern? - Dann beschreibe in Lua, wie Deine Kreuzung aussieht und das Skript AkStrasse übernimmt für Dich den Rest.
+
+Willst Du mehr? - Lege Kontaktpunkte für die Verkehrszählung an, damit die Ampel mit dem meisten Andrang bevorzugt geschaltet wird.
+
+Features:
+* Automatisches Schalten von Ampeln an Kreuzungen
+* Priorisiertes Schalten der Ampeln nach Verkehrsandrang
+* Optional, Ampeln nur dann schalten, wenn jemand davor wartet
 
 ## Zur Verwendung vorgesehene Klassen und Funktionen
 
