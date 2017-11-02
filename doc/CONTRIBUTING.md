@@ -28,7 +28,7 @@
 
 * Frage Andreas_Kreuz im [EEP-Forum](https://www.eepforum.de).
 
-#### Wie benutzt Du GitHub am einfachtsten?
+#### Wie benutzt Du GitHub am einfachsten?
 
 * Jeder kann das Projekt _forken_ (eine Arbeitskopie erstellen) und seine Verbesserungen über _Pull-Requests_ dem Projekt zur Verfügung stellen (die Änderungen fließen dann direkt ein) - Am einfachsten geht das mit einem GitHub-Konto und https://desktop.github.com/ (Github und die Software sind in Englisch).
 
