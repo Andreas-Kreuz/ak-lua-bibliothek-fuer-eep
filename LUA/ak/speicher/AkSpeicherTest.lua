@@ -1,5 +1,5 @@
-require 'ak.eep.AkEepFunktionen'
-require 'ak.speicher.AkSpeicher'
+require("ak.eep.AkEepFunktionen")
+require("ak.speicher.AkSpeicher")
 
 AkSpeicherHilfe.debug = false
 
@@ -86,7 +86,7 @@ do
 end
 
 
-require 'ak.speicher.AkSpeicher'
+require("ak.speicher.AkSpeicher")
 AkSpeicherHilfe.debug = false
 do
     -- Verschiedene Daten

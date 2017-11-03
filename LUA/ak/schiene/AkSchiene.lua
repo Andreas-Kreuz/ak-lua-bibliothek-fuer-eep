@@ -1,5 +1,5 @@
-require 'ak.text.AkAusgabe'
-require 'ak.speicher.AkSpeicher'
+require("ak.text.AkAusgabe")
+require("ak.speicher.AkSpeicher")
 
 local allRoutes = {}
 local allSignals = {}

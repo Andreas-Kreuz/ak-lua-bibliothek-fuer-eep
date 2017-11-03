@@ -1,11 +1,11 @@
 print("Lade AkPlaner ...")
-require 'ak.planer.AkPlaner'
+require("ak.planer.AkPlaner")
 
 print("Lade AkSpeicherHilfe ...")
-require 'ak.speicher.AkSpeicher'
+require("ak.speicher.AkSpeicher")
 
 print("Lade AkAusgabe ...")
-require 'ak.text.AkAusgabe'
+require("ak.text.AkAusgabe")
 
 --region AkPhase + AkSchaltung
 AkPhase = {}

@@ -2,7 +2,7 @@
 -- Lade Funktionen fuer Ampeln
 --------------------------------
 print('Lade AkStrasse ...')
-require 'ak.strasse.AkStrasse'
+require("ak.strasse.AkStrasse")
 AkAmpel.zeigeAnforderungen = true
 
 ------------------------------------------------

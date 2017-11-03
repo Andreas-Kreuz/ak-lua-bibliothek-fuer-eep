@@ -1,7 +1,7 @@
 --------------------------------------------------------------------------------------
 -- Erstellt Installationsverzeichnisse für Skripte und Demo-Anlagen in modell-pakete
 --------------------------------------------------------------------------------------
-require 'ak.modellpacker.AkModellInstallerHilfe'
+require("ak.modellpacker.AkModellInstallerHilfe")
 local aktuellerOrdner = ".."
 if arg and arg[1] then
     aktuellerOrdner = arg[1]

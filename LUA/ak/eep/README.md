@@ -23,7 +23,7 @@
 ### Beispiel
 
 ```lua
-require 'ak.eep.AkEepFunktionen'
+require("ak.eep.AkEepFunktionen")
 
 EEPSetSignal(32, 2)
 assert (2 == EEPGetSignal(32))
