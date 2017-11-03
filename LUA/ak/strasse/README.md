@@ -66,7 +66,7 @@ Features:
 
   * `function AkKreuzung:fuegeSchaltungHinzu(schaltung)` fügt eine Schaltung zur Kreuzung hinzu.
 
-* Funktion `function AkSchaltungStart()` muss in EEPMain() aufgerufen werden - plant die Umschaltung von Kreuzungsschaltungen
+* Funktion `function AkKreuzung:planeSchaltungenEin()` muss in EEPMain() aufgerufen werden - plant die Umschaltung von Kreuzungsschaltungen
 
 ## Wichtige Hinweise
 
@@ -74,7 +74,7 @@ Features:
 
 ```lua
 function EEPMain()
-    AkSchaltungStart()
+    AkKreuzung:planeSchaltungenEin()
     AkPlaner:fuehreGeplanteAktionenAus()
     return 1
 end

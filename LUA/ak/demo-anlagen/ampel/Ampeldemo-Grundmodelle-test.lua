@@ -19,12 +19,13 @@ require 'ak.demo-anlagen.ampel.Ampeldemo-Grundmodelle-main'
 --------------------------------------------------------------------
 -- Zeige erweiterte Informationen an                              --
 --------------------------------------------------------------------
-AkPlaner.debug = false
-AkSpeicherHilfe.debug = false
 AkAmpel.debug = false
 AkKreuzung.debug = false
-AkKreuzung.showAnforderungenAlsInfo = false
-AkKreuzung.showSchaltungAlsInfo = false
+AkKreuzung.zeigeAnforderungenAlsInfo = true
+AkKreuzung.zeigeSchaltungAlsInfo = true
+AkKreuzung.zeigeSignalIdsAllerSignale = false
+AkPlaner.debug = false
+AkSpeicherHilfe.debug = false
 
 --------------------------------------------------------------------
 -- Erste Hilfe - normalerweise nicht notwendig                    --
