@@ -1,3 +1,4 @@
+-- Laden das Haupt-Skripts
 require("ak.demo-anlagen.testen.Andreas_Kreuz-Lua-Testbeispiel-main")
 
 -- Der wahre Schatz liegt in 
