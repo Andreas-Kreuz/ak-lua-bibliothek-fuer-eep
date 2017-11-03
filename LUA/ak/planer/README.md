@@ -1,5 +1,7 @@
 # Paket ak.planer - zeitgesteuerte Planung von Aufgaben
 
+![SourceCode](../../../assets/headers/SourceCode.png)
+
 Anstehende Aufgaben:
 * [x] Funktionsnamen auf deutsch umstellen
 

@@ -1,5 +1,7 @@
 # Anlage Ampeldemo-Grundmodelle
 
+![SourceCode](../../../assets/headers/AmpelDemo.jpg)
+
 Diese Anlage wurde mit EEP 14 erstellt und demonstriert die Möglichkeiten der Steuerung für den Straßenverkehr.
 
 Siehe __[LUA/ak/strasse](../../../LUA/ak/strasse/)__

@@ -2,7 +2,7 @@
 -- Lade Funktionen fuer Ampeln
 --------------------------------
 print('Lade AkStrasse ...')
-require 'ak.strasse.AkStrasse'
+require("ak.strasse.AkStrasse")
 AkAmpel.zeigeAnforderungen = true
 
 ------------------------------------------------
@@ -45,10 +45,10 @@ Grundmodell_Ampel_3_FG = AkAmpelModell:neu("Grundmodell Ampel 3 FG", -- Name des
 
 
 -- Zeige die Signal-IDs aller Ampeln an
-for i = 1, 1000 do
-    EEPShowInfoSignal(i, true)
-    EEPChangeInfoSignal(i, "Signal " .. i)
-end
+--for i = 1, 1000 do
+--    EEPShowInfoSignal(i, true)
+--    EEPChangeInfoSignal(i, "Signal " .. i)
+--end
 
 
 
@@ -171,7 +171,7 @@ k1:fuegeSchaltungHinzu(k1_schaltung4)
 
 function EEPMain()
     --print("Speicher: " .. collectgarbage("count"))
-    AkSchaltungStart()
+    AkKreuzung:planeSchaltungenEin()
     AkPlaner:fuehreGeplanteAktionenAus()
     return 1
 end

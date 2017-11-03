@@ -1,9 +1,9 @@
-require 'ak.eep.AkEepFunktionen'
+require("ak.eep.AkEepFunktionen")
 
 EEPSaveData(1, 0) -- Speichere den Zähler auf 0 - muss vor dem Skript aufgerufen werden
 
 -- Laden das Haupt-Skripts
-require 'ak.demo-anlagen.testen.Andreas_Kreuz-Lua-Testbeispiel-main'
+require("ak.demo-anlagen.testen.Andreas_Kreuz-Lua-Testbeispiel-main")
 
 
 assert(1 == EEPMain()) -- EEPMain muss 1 zurückgeben!

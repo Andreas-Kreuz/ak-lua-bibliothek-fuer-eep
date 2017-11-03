@@ -1,5 +1,7 @@
 ## So kannst Du die Skripte aus GitHub nutzen
 
+![SourceCode](../assets/headers/GitHub.png)
+
 * Melde Dich bei [GitHub](https://github.com/) an.
 
 * Erstelle Deinen eigenen Fork (eine Kopie auf GitHub) von [ak-lua-skripte-fuer-eep](https://github.com/Andreas-Kreuz/ak-lua-skripte-fuer-eep). Dazu drückst Du rechts oben in der Ecke auf "Fork".

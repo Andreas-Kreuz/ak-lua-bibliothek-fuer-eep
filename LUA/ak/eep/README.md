@@ -1,5 +1,7 @@
 # Paket ak.eep - Funktionen für EEP
 
+![SourceCode](../../../assets/headers/EEP14.jpg)
+
 ## Skripte, Klassen und Funktionen
 * `ak.eep.AkEepFunktionen`
 
@@ -21,7 +23,7 @@
 ### Beispiel
 
 ```lua
-require 'ak.eep.AkEepFunktionen'
+require("ak.eep.AkEepFunktionen")
 
 EEPSetSignal(32, 2)
 assert (2 == EEPGetSignal(32))

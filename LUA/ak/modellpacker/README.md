@@ -1,5 +1,7 @@
 # Paket ak.modellpacker - Modell-Installer erzeugen
 
+![SourceCode](../../../assets/headers/ModellPacker.png)
+
 ## Motivation
 Dieses Paket hilft dabei Modell-Installer zu erzeugen.
 

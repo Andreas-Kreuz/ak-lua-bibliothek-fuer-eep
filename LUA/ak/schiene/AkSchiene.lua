@@ -1,5 +1,5 @@
-require 'ak.text.AkAusgabe'
-require 'ak.speicher.AkSpeicher'
+require("ak.text.AkAusgabe")
+require("ak.speicher.AkSpeicher")
 
 local allRoutes = {}
 local allSignals = {}
@@ -8,23 +8,6 @@ local allStations = {}
 local ROUTE_REQUESTS = {}
 local ROUTE_CROSSINGS_SECURE_TIME = {}
 
-
-fmt = {
-    -- <br> neue Zeile
-    -- <b> & </b> Fettschrift an/aus
-    -- <i> & </i> Kursivschrift an/aus
-    -- <j> Blocksatz aus (= linksbündig)
-    -- <c> zentriert
-    -- <r> rechtsbündig
-    -- <fgrgb=0,0,0> Schriftfarbe in 8 Bit RGB Werten
-    -- <bgrgb=0,0,0> Hintergrundfarbe in 8 Bit RGB Werten (diese Hintergrundfarbe betrifft nur die Schrift)
-    fett = function(text) return "<b>" .. text .. "</b>" end,
-    grau = function(text) return "<bgrgb=201,201,201><fgrgb=0,0,0>" .. text .. "<bgrgb=255,255,255><fgrgb=0,0,0>" end,
-    gruen = function(text) return "<bgrgb=0,128,0><fgrgb=255,255,255>" .. text .. "<bgrgb=255,255,255><fgrgb=0,0,0>" end,
-    hellgrau = function(text) return "<bgrgb=230,230,230><fgrgb=66,66,66>" .. text .. "<bgrgb=255,255,255><fgrgb=0,0,0>" end,
-    kursiv = function(text) return "<i>" .. text .. "</i>" end,
-    rot = function(text) return "<bgrgb=155,0,0><fgrgb=255,255,255>" .. text .. "<bgrgb=255,255,255><fgrgb=0,0,0>" end,
-}
 
 local function registerFahrstrasse(route)
     assert(not allRoutes[route])
