@@ -3,9 +3,18 @@
 ![SourceCode](../../../assets/headers/SourceCode.png)
 
 ## Inhalt
-* [TEST](#klasse-akampelmodell)
-* [TEST](#klasse-akrichtung)
+<!-- TOC depthFrom:2 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
 
+- [Inhalt](#inhalt)
+- [Motivation](#motivation)
+- [Zur Verwendung vorgesehene Klassen und Funktionen](#zur-verwendung-vorgesehene-klassen-und-funktionen)
+	- [Skript `AkStrasse`](#skript-akstrasse)
+		- [Klasse `AkAmpelModell`](#klasse-akampelmodell)
+		- [Klasse `AkRichtung`](#klasse-akrichtung)
+		- [Klasse `AkKreuzungsSchaltung`](#klasse-akkreuzungsschaltung)
+- [Wichtige Hinweise](#wichtige-hinweise)
+
+<!-- /TOC -->
 ## Motivation
 
 Du willst Dich nicht mehr um die Steuerung Deiner Ampeln kümmern? - Dann beschreibe in Lua, wie Deine Kreuzung aussieht und das Skript AkStrasse übernimmt für Dich den Rest.
@@ -19,11 +28,11 @@ Features:
 
 ## Zur Verwendung vorgesehene Klassen und Funktionen
 
-### Skript `ak.strasse.AkStrasse`
+### Skript `AkStrasse`
 
-#### Klasse AkAmpelModell
+#### Klasse `AkAmpelModell`
 
-Beschreibt das Modell einer Ampel mit den Schaltungen für rot, grün, gelb und rot-gelb, sowie dem Fussgaengersignal (falls vorhanden - dann hat die Verkehrsampel rot)
+Beschreibt das Modell einer Ampel mit den Schaltungen für rot, grün, gelb und rot-gelb, sowie dem Fußgängersignal (falls vorhanden - dann hat die Verkehrsampel rot)
 
 * `function AkAmpelModell:neu(name, sigIndexRot, sigIndexGruen, sigIndexGelb, sigIndexRotGelb, sigIndexFgGruen)` es müssen mindestens rot und grün angegeben werden.
 
@@ -39,14 +48,14 @@ Mitgelieferte Ampelmodelle sind:
   Siehe auch https://eepshopping.de/ - Ampel-Baukasten für mehrspurige Straßenkreuzungen (V80NJS20039)
 
 
-* Klasse `AkRichtung`
+* Klasse `AkAmpel`
 wird dazu verwendet eine Signal auf der Anlage (signalId) mit einem Modell zu verküpfen.
 
 * `function AkAmpel:neu(signalId, ampelModell, rotImmo, gruenImmo, gelbImmo, anforderungImmo)`
 
   Erforderlich sind `signalId` und `ampelModell`.
 
-  Die Einstellungen `rotImmo`, `gruenImmo`, `gelbImmo` und `anforderungImmo` sind für die Verwendung von Strassenbahn Signalen gedacht, deren Signalbilder durch das Ein- und Ausschalten von Licht in diesen Immobilien geschaltet werden. Dabei ist anforderungsImmo z.B. das Symbol "A" in der Ampel. Als Signal kann hier das ein Unsichtbares Signal verwendet werden.
+  Die Einstellungen `rotImmo`, `gruenImmo`, `gelbImmo` und `anforderungImmo` sind für die Verwendung von Straßenbahn Signalen gedacht, deren Signalbilder durch das Ein- und Ausschalten von Licht in diesen Immobilien geschaltet werden. Dabei ist `anforderungsImmo` z.B. das Symbol "A" in der Ampel. Als Signal kann hier das ein Unsichtbares Signal verwendet werden.
 
   Passende Modelle für die Steuerung der Immobilien findest Du im Modellset V10MA1F011. Download unter http://eep.euma.de/download/ - Im Modell befindet sich eine ausführliche Doku.
 
@@ -80,11 +89,11 @@ Wird dazu verwendet, mehrere Richtungen gleichzeitig zu schalten. Es muss sicher
 
   * `function AkKreuzung:fuegeSchaltungHinzu(schaltung)` fügt eine Schaltung zur Kreuzung hinzu.
 
-* Funktion `function AkKreuzung:planeSchaltungenEin()` muss in EEPMain() aufgerufen werden - plant die Umschaltung von Kreuzungsschaltungen
+* Funktion `function AkKreuzung:planeSchaltungenEin()` muss in `EEPMain()` aufgerufen werden - plant die Umschaltung von Kreuzungsschaltungen
 
 ## Wichtige Hinweise
 
-* __Damit das Ganze funktioniert__, muss EEPMain() mindestens folgende Befehle verwenden:
+* __Damit das Ganze funktioniert__, muss `EEPMain()` mindestens folgende Befehle verwenden:
 
     ```lua
     function EEPMain()
