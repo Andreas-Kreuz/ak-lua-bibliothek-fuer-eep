@@ -4,6 +4,7 @@
 
 ## Inhalt
 * [TEST](#klasse-akampelmodell)
+* [TEST](#klasse-akrichtung)
 
 ## Motivation
 
