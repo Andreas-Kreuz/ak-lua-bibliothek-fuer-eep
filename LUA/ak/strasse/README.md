@@ -10,8 +10,11 @@
 - [Zur Verwendung vorgesehene Klassen und Funktionen](#zur-verwendung-vorgesehene-klassen-und-funktionen)
 	- [Skript `AkStrasse`](#skript-akstrasse)
 		- [Klasse `AkAmpelModell`](#klasse-akampelmodell)
+		- [Klasse `AkAmpel`](#klasse-akampel)
 		- [Klasse `AkRichtung`](#klasse-akrichtung)
 		- [Klasse `AkKreuzungsSchaltung`](#klasse-akkreuzungsschaltung)
+		- [Klasse `AkKreuzung`](#klasse-akkreuzung)
+		- [Funktion `AkKreuzung:planeSchaltungenEin()`](#funktion-akkreuzungplaneschaltungenein)
 - [Wichtige Hinweise](#wichtige-hinweise)
 
 <!-- /TOC -->
@@ -48,7 +51,7 @@ Mitgelieferte Ampelmodelle sind:
   Siehe auch https://eepshopping.de/ - Ampel-Baukasten für mehrspurige Straßenkreuzungen (V80NJS20039)
 
 
-* Klasse `AkAmpel`
+#### Klasse `AkAmpel`
 wird dazu verwendet eine Signal auf der Anlage (signalId) mit einem Modell zu verküpfen.
 
 * `function AkAmpel:neu(signalId, ampelModell, rotImmo, gruenImmo, gelbImmo, anforderungImmo)`
@@ -61,7 +64,6 @@ wird dazu verwendet eine Signal auf der Anlage (signalId) mit einem Modell zu ve
 
 
 #### Klasse `AkRichtung`
-
 Wird dazu verwendet mehrere Ampeln gleichzeitig zu schalten. Die kann für eine oder mehrere Fahrspuren geschehen.
 
 * `function AkRichtung:neu(name, eepSaveId, ...)`
@@ -69,7 +71,6 @@ Wird dazu verwendet mehrere Ampeln gleichzeitig zu schalten. Die kann für eine 
     Erforderlich sind name (z.B. "Richtung 1"), eepSaveId (Speicher-ID in EEP; 1 - 1000) und eine Liste mit mindestens einer Ampel (AkAmpel).
 
 #### Klasse `AkKreuzungsSchaltung`
-
 Wird dazu verwendet, mehrere Richtungen gleichzeitig zu schalten. Es muss sichergestellt werden, dass sich die Fahrwege der Richtungen einer Schaltung nicht überlappen.
 
   * `function AkKreuzungsSchaltung:neu(name)` - legt eine neue Schaltung an
@@ -83,13 +84,15 @@ Wird dazu verwendet, mehrere Richtungen gleichzeitig zu schalten. Es muss sicher
   __Beachte:__ Eine solche Richtung wird nur dann auf Grün geschaltet, wenn eine Anforderung vorliegt. Sie schaltet sofort wieder auf Rot, wenn keine weitere Anforderung vorliegt.
 
 
-* Klasse `AkKreuzung`  - wird dazu verwendet, die Kreuzung zu verwalten, enthält mehrere Schaltungen.
+#### Klasse `AkKreuzung`
+Wird dazu verwendet, die Kreuzung zu verwalten, enthält mehrere Schaltungen.
 
   * `AkKreuzung:neu(name)` - legt eine neue Kreuzung an. Diese wird automatisch anhand ihrer Richtungen geschaltet.
 
   * `function AkKreuzung:fuegeSchaltungHinzu(schaltung)` fügt eine Schaltung zur Kreuzung hinzu.
 
-* Funktion `function AkKreuzung:planeSchaltungenEin()` muss in `EEPMain()` aufgerufen werden - plant die Umschaltung von Kreuzungsschaltungen
+#### Funktion `AkKreuzung:planeSchaltungenEin()`
+Muss in `EEPMain()` aufgerufen werden - plant die Umschaltung von Kreuzungsschaltungen.
 
 ## Wichtige Hinweise
 
