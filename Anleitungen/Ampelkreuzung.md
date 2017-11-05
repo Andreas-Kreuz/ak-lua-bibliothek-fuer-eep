@@ -39,7 +39,7 @@
 
 * **Eine Anlage mit fertigen Kreuzungen und vorinstallierten Ampeln**
 
-  Extra für diese Anleitung wurde eine Anlage erstellt:  *[Andreas_Kreuz_Anleitung_Ampel](https://github.com/Andreas-Kreuz/ak-lua-skripte-fuer-eep/releases)*. Wenn Du diese Anlage verwenden möchtest, brauchst Du folgende Modelle:
+  Extra für diese Anleitung wurde eine Anlage erstellt:  *[Installer-AK-Tutorial-Ampelkreuzung](https://github.com/Andreas-Kreuz/ak-lua-skripte-fuer-eep/releases)*. Wenn Du diese Anlage verwenden möchtest, brauchst Du folgende Modelle:
 
   * 1Spur-Großstadtstraßen-System-Grundset (V10NAS30002) - _[Download](https://eepshopping.de/1spur-gro%C3%83%C6%92%C3%82%C5%B8stadtstra%C3%83%C6%92%C3%82%C5%B8en-system-grundset%7C7656.html)_
   * 1Spur-Ergänzungsset - _[Download](https://www.eepforum.de/filebase/file/215-freeset-zu-meinem-1spur-strassensystem/)_
