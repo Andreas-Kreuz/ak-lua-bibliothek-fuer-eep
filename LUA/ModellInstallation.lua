@@ -69,6 +69,7 @@ do
     local paket1 = AkModellPaket:neu("13,2", "Tutorial - Aufbau einer Ampelkreuzung", "Eine Anlage mit einer Kreuzung, die den Aufbau der Lua-Skripte erklärt")
     paket1:fuegeDateienHinzu(aktuellerOrdner, "", "LUA\\ak\\demo-anlagen\\tutorial-ampel", { "README.md" })
     paket1:fuegeDateienHinzu(aktuellerOrdner, "", "Resourcen\\Anlagen\\Andreas_Kreuz-Tutorial-Ampelkreuzung", { ".dds", "README.md" })
+    paket1:fuegeDateienHinzu(aktuellerOrdner, "", "Resourcen\\Doc\\Andreas_Kreuz-Tutorial-Ampelkreuzung", { ".dds", "README.md" })
 
     print(paket0.deutscherName)
     print(paket1.deutscherName)
