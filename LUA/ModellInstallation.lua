@@ -12,7 +12,7 @@ print("Suche Installationsdateien in Verzeichnis \"" .. aktuellerOrdner .. "\"")
 -----------------------------------------
 -- Paket: Skripte von Andreas Kreuz
 -----------------------------------------
-local paket0 = AkModellPaket:neu(14, "Skriptsammlung von Andreas Kreuz", "Diverse Lua-Skripte")
+local paket0 = AkModellPaket:neu("13,2", "Skriptsammlung von Andreas Kreuz", "Diverse Lua-Skripte zur Verkehrssteuerung, Aufgabenplanung und Modell-Installation")
 paket0:fuegeDateienHinzu(aktuellerOrdner, "", "LUA\\ak\\eep", { "README.md" })
 paket0:fuegeDateienHinzu(aktuellerOrdner, "", "LUA\\ak\\schiene", { "README.md" })
 paket0:fuegeDateienHinzu(aktuellerOrdner, "", "LUA\\ak\\planer", { "README.md" })
@@ -21,7 +21,7 @@ paket0:fuegeDateienHinzu(aktuellerOrdner, "", "LUA\\ak\\strasse", { "README.md" 
 paket0:fuegeDateienHinzu(aktuellerOrdner, "", "LUA\\ak\\text", { "README.md" })
 
 do
-    local installer = AkModellInstaller:neu("Andreas-Kreuz-Skriptsammlung")
+    local installer = AkModellInstaller:neu("Installer-AK-Skriptsammlung")
     installer:fuegeModellPaketHinzu(paket0)
     installer:erzeugePaket(aktuellerOrdner .. "\\modell-pakete")
 end
@@ -31,14 +31,14 @@ end
 -- Paket: Demo-Anlage Ampelkreuzung
 -----------------------------------------
 do
-    local paket1 = AkModellPaket:neu(14, "Demo-Anlage Ampel (Grundmodelle)", "Eine Anlage mit Grundmodellen aus EEP 14 - mit zwei Kreuzungen und Ampel-Skripten")
+    local paket1 = AkModellPaket:neu("13,2", "Demo-Anlage Ampel (Grundmodelle)", "Eine Anlage mit Grundmodellen aus EEP 14 - mit zwei Kreuzungen und Ampel-Skripten")
     paket1:fuegeDateienHinzu(aktuellerOrdner, "", "LUA\\ak\\demo-anlagen\\ampel", { "README.md" })
     paket1:fuegeDateienHinzu(aktuellerOrdner, "", "Resourcen\\Anlagen\\Andreas_Kreuz-Demo-Ampel", { ".dds", "README.md" })
 
     print(paket0.deutscherName)
     print(paket1.deutscherName)
 
-    local installer = AkModellInstaller:neu("Demo-Anlage-Ampel-Grundmodelle")
+    local installer = AkModellInstaller:neu("Installer-AK-Demoanlage-Ampel-Grundmodelle")
     installer:fuegeModellPaketHinzu(paket0)
     installer:fuegeModellPaketHinzu(paket1)
     installer:erzeugePaket(aktuellerOrdner .. "\\modell-pakete")
@@ -49,14 +49,32 @@ end
 -- Paket: Demo-Anlage testen
 -----------------------------------------
 do
-    local paket1 = AkModellPaket:neu(14, "Demo-Anlage Testen mit EEP (Erweiterte Modelle)", "Eine Anlage mit Shop-Modellen - mit zwei komplexen Kreuzungen und Ampel-Skripten")
+    local paket1 = AkModellPaket:neu("13,2", "Demo-Anlage Testen mit EEP (Erweiterte Modelle)", "Eine Anlage mit Shop-Modellen - mit zwei komplexen Kreuzungen und Ampel-Skripten")
     paket1:fuegeDateienHinzu(aktuellerOrdner, "", "LUA\\ak\\demo-anlagen\\testen", { "README.md" })
     paket1:fuegeDateienHinzu(aktuellerOrdner, "", "Resourcen\\Anlagen\\Andreas_Kreuz-Demo-Testen", { ".dds", "README.md" })
 
     print(paket0.deutscherName)
     print(paket1.deutscherName)
 
-    local installer = AkModellInstaller:neu("Demo-Anlage-Testen-Grundmodelle")
+    local installer = AkModellInstaller:neu("Installer-AK-Demo-Lua-Testbeispiel")
+    installer:fuegeModellPaketHinzu(paket0)
+    installer:fuegeModellPaketHinzu(paket1)
+    installer:erzeugePaket(aktuellerOrdner .. "\\modell-pakete")
+end
+
+-----------------------------------------
+-- Paket: Tutorial Ampelkreuzung
+-----------------------------------------
+do
+    local paket1 = AkModellPaket:neu("13,2", "Tutorial - Aufbau einer Ampelkreuzung", "Eine Anlage mit einer Kreuzung, die den Aufbau der Lua-Skripte erklärt")
+    paket1:fuegeDateienHinzu(aktuellerOrdner, "", "LUA\\ak\\demo-anlagen\\tutorial-ampel", { "README.md" })
+    paket1:fuegeDateienHinzu(aktuellerOrdner, "", "Resourcen\\Anlagen\\Andreas_Kreuz-Tutorial-Ampelkreuzung", { ".dds", "README.md" })
+    paket1:fuegeDateienHinzu(aktuellerOrdner, "", "Resourcen\\Doc\\Andreas_Kreuz-Tutorial-Ampelkreuzung", { ".dds", "README.md" })
+
+    print(paket0.deutscherName)
+    print(paket1.deutscherName)
+
+    local installer = AkModellInstaller:neu("Installer-AK-Tutorial-Ampelkreuzung")
     installer:fuegeModellPaketHinzu(paket0)
     installer:fuegeModellPaketHinzu(paket1)
     installer:erzeugePaket(aktuellerOrdner .. "\\modell-pakete")

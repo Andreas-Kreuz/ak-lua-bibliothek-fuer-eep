@@ -82,16 +82,29 @@ end
 ---------------------
 -- Ampeln und Signale
 ---------------------
-Ak_Strab_Sig_09_LG_gerade = AkAmpelModell:neu("Strab_Sig_LG --> gerade", 1, 2, 4, 4)
-Ak_Strab_Sig_09_LG_links = AkAmpelModell:neu("Strab_Sig_LG --> links", 1, 3, 4, 4)
-Ak_Strab_Sig_06_R = AkAmpelModell:neu("Strab_Sig_R", 1, 2, 3, 3)
-Ak_Strab_Sig_05_gerade = AkAmpelModell:neu("Strab_Sig_R", 1, 2, 3, 3)
-Ak_Ampel_NP1_mit_FG = AkAmpelModell:neu("Ampel_NP1_mit_FG", 2, 4, 5, 3, 1)
-Ak_Ampel_NP1_ohne_FG = AkAmpelModell:neu("Ampel_NP1_ohne_FG", 1, 3, 4, 2)
-Ak_Ampel_2er_FG = AkAmpelModell:neu("Ak_Ampel_2er_nur_FG", 1, 1, 1, 1, 2)
-Ak_Ampel_3er_XXX = AkAmpelModell:neu("Ampel_3er_XXX_ohne_FG", 1, 3, 5, 2)
-Ak_Ampel_3er_XXX_FG = AkAmpelModell:neu("Ampel_3er_XXX_mit_FG", 1, 3, 5, 2, 6)
-Ak_Ampel_Unsichtbar = AkAmpelModell:neu("Unsichtbares Signal", 2, 1, 2, 2)
+
+-- Fuer die Strassenbahnsignale von MA1 - http://www.eep.euma.de/downloads/V80MA1F003.zip
+-- 4er Signal, Stellung 2 als grün, z.B. Strab_Sig_09_LG auf gerade schalten
+-- 4er Signal, Stellung 3 als grün, z.B. Strab_Sig_09_LG auf links schalten
+-- 3er Signal, Stellung 3 als grün, z.B. Ak_Strab_Sig_05_gerade oder
+--                                       Ak_Strab_Sig_05_gerade schalten
+AkAmpelModell.MA1_STRAB_4er_2_gruen = AkAmpelModell:neu("MA1_STRAB_4er_2_gruen", 1, 2, 4, 4)
+AkAmpelModell.MA1_STRAB_4er_3_gruen = AkAmpelModell:neu("MA1_STRAB_4er_3_gruen", 1, 3, 4, 4)
+AkAmpelModell.MA1_STRAB_3er_2_gruen = AkAmpelModell:neu("MA1_STRAB_3er_2_gruen", 1, 2, 3, 3)
+
+-- Fuer die Ampeln von NP1 - http://eepshopping.de - Ampelset 1 und Ampelset 2
+AkAmpelModell.NP1_3er_mit_FG = AkAmpelModell:neu("Ampel_NP1_mit_FG", 2, 4, 5, 3, 1)
+AkAmpelModell.NP1_3er_ohne_FG = AkAmpelModell:neu("Ampel_NP1_ohne_FG", 1, 3, 4, 2)
+
+-- Fuer die Ampeln von JS2 - http://eepshopping.de - Ampel-Baukasten (V80NJS20039)
+-- Diese Signale sind teilweise mit und ohne Fussgaenger
+AkAmpelModell.JS2_2er_nur_FG = AkAmpelModell:neu("Ak_Ampel_2er_nur_FG", 1, 1, 1, 1, 2)
+AkAmpelModell.JS2_3er_mit_FG = AkAmpelModell:neu("Ampel_3er_XXX_mit_FG", 1, 3, 5, 2, 6)
+AkAmpelModell.JS2_3er_ohne_FG = AkAmpelModell:neu("Ampel_3er_XXX_ohne_FG", 1, 3, 5, 2)
+
+-- Unsichtbare Ampeln haben "nur" rot und gruen
+AkAmpelModell.Unsichtbar_2er = AkAmpelModell:neu("Unsichtbares Signal", 2, 1, 2, 2)
+
 --endregion
 --region AkStrabWeiche
 AkStrabWeiche = {}

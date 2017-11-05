@@ -1,6 +1,6 @@
 # Paket ak.eep - Funktionen für EEP
 
-![SourceCode](../../../assets/headers/EEP14.jpg)
+![SourceCode](../../../assets/headers/Ttielbild-Simulator.jpg)
 
 ## Skripte, Klassen und Funktionen
 * `ak.eep.AkEepFunktionen`

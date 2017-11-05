@@ -44,7 +44,7 @@ function AkModellInstaller:erzeugePaket(ausgabeverzeichnis)
 
         -- Install ini schreiben
         local installIniDatei = modellPaketVerzeichnis .. "\\install.ini"
-        AkModellPacker.schreibeDatei(installIniDatei, AkModellPacker.erzeugeInstallIniInhalt(modellPaket.installationsPfade))
+        AkModellPacker.schreibeDatei(installIniDatei, AkModellPacker.erzeugeInstallIniInhalt(modellPaket.installationsPfade, modellPaket.eepVersion))
     end
     local installation_eep_datei = string.format(installation_verzeichnis .. "\\Installation.eep")
     AkModellPacker.schreibeDatei(installation_eep_datei, inhalt)
@@ -167,10 +167,10 @@ end
 
 --- Erzeugt den Inhalt von Install.ini
 -- @param dateiPfade Map von Dateipfad zu Dateiname
-function AkModellPacker.erzeugeInstallIniInhalt(dateiPfade)
+function AkModellPacker.erzeugeInstallIniInhalt(dateiPfade, eepVersion)
     local install_ini = ""
     install_ini = install_ini .. "[EEPInstall]\n"
-    install_ini = install_ini .. "EEPVersion = 14\n"
+    install_ini = install_ini .. "EEPVersion = " .. eepVersion .. "\n"
     install_ini = install_ini .. "\n"
 
     local count = 1
