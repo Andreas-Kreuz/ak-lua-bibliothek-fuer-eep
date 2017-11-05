@@ -1,4 +1,3 @@
-
 # Ampelkreuzung automatisch steuern
 
 ![Kreuzung](../assets/headers/SourceCode.png)
@@ -17,6 +16,8 @@
 	- [Die Richtungen und Signal-IDs der Kreuzung notieren](#die-richtungen-und-signal-ids-der-kreuzung-notieren)
 	- [Schreibe die Richtungen in das Haupt-Skript](#schreibe-die-richtungen-in-das-haupt-skript)
 	- [Fasse die Richtungen nun zu Schaltungen zusammen](#fasse-die-richtungen-nun-zu-schaltungen-zusammen)
+	- [Schreibe die Schaltungen in das Haupt-Skript](#schreibe-die-schaltungen-in-das-haupt-skript)
+	- [Schalte die Hilfsfunktionen wieder aus](#schalte-die-hilfsfunktionen-wieder-aus)
 - [Herzlichen Glückwunsch!](#herzlichen-glückwunsch)
 
 <!-- /TOC -->
@@ -152,26 +153,72 @@ _**Tipp:** Für jede Ampel musst Du den_ `AkAmpelModell` _kennen, da sich die Si
 
 Schreibe nun die einzelnen Richtungen in das Haupt-Skript. Jede Richtung muss dabei eine noch nicht verwendete Speicher-ID zwischen 1 und 1000 bekommen.
 
-TODO!!!
-
 ```lua
--- region K2-Richtungen
-----------------------------------------------------------------------------------------------------------------------
--- Definiere alle Richtungen fuer Kreuzung 1
-----------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- Definiere die Richtungen fuer die Kreuzung
+-------------------------------------------------------------------------------
 
---      +------------------------------------------------------ Neue Richtung
---      |              +--------------------------------------- Name der Richtung
---      |              |             +------------------------- Speicher ID - um die Anzahl der Fahrzeuge
---      |              |             |                                        und die Wartezeit zu speichern
---      |              |             |      +------------------ neue Ampel für diese Richtung (
---      |              |             |      |           +------ Signal-ID dieser Ampel
---      |              |             |      |           |   +-- Modell dieser Ampel - weiss wo rot, gelb und gruen ist
-k2_r1 = AkRichtung:neu("Richtung 1", 121, { AkAmpel:neu(32, Grundmodell_Ampel_3) })
-k2_r2 = AkRichtung:neu("Richtung 2", 122, { AkAmpel:neu(31, Grundmodell_Ampel_3) })
-k2_r3 = AkRichtung:neu("Richtung 3", 123, { AkAmpel:neu(34, Grundmodell_Ampel_3) })
-k2_r4 = AkRichtung:neu("Richtung 4", 124, { AkAmpel:neu(33, Grundmodell_Ampel_3) })
-k2_r5 = AkRichtung:neu("Richtung 5", 125, { AkAmpel:neu(30, Grundmodell_Ampel_3) })
+--   +---------------------------------------------- Neue Richtung
+--   |              +------------------------------- Name der Richtung
+--   |              |     +------------------------- Speicher ID - um die Anzahl der Fahrzeuge
+--   |              |     |                                        und die Wartezeit zu speichern
+--   |              |     |      +------------------ neue Ampel für diese Richtung
+--   |              |     |      |           +------ Signal-ID dieser Ampel
+--   |              |     |      |           |   +-- Modell kann rot, gelb, gruen und FG schalten
+n1 = AkRichtung:neu("N1", 100, { AkAmpel:neu(12, AkAmpelModell.JS2_3er_mit_FG) })
+
+-- Die Richtung N2 hat zwei Ampeln fuer's Linksabbiegen, 9 mit Fussgaengerampel und 17 ohne
+n2 = AkRichtung:neu("N2", 101, {
+    AkAmpel:neu(9, AkAmpelModell.JS2_3er_mit_FG),
+    AkAmpel:neu(17, AkAmpelModell.JS2_3er_ohne_FG)
+})
+
+-- Die Richtungen für Fussgaenger haben auch je zwei Ampeln
+fg_n1 = AkRichtung:neu("FG_N1", 102, {
+    AkAmpel:neu(9, AkAmpelModell.JS2_3er_mit_FG), -- Wird geteilt mit N2
+    AkAmpel:neu(12, AkAmpelModell.JS2_3er_mit_FG) -- Wird geteilt mit N1
+})
+fg_n2 = AkRichtung:neu("FG_N2", 103, {
+    AkAmpel:neu(20, AkAmpelModell.JS2_2er_nur_FG),
+    AkAmpel:neu(21, AkAmpelModell.JS2_2er_nur_FG),
+})
+
+-- Richtungen im Osten
+o1 = AkRichtung:neu("O1", 100, { AkAmpel:neu(14, AkAmpelModell.JS2_3er_mit_FG) })
+o2 = AkRichtung:neu("O2", 100, {
+    AkAmpel:neu(16, AkAmpelModell.JS2_3er_mit_FG),
+    AkAmpel:neu(18, AkAmpelModell.JS2_3er_ohne_FG)
+})
+fg_o = AkRichtung:neu("FG_O", 102, {
+    AkAmpel:neu(14, AkAmpelModell.JS2_3er_mit_FG), -- Wird geteilt mit O1
+    AkAmpel:neu(18, AkAmpelModell.JS2_3er_mit_FG) -- Wird geteilt mit O2
+})
+
+-- Richtungen im Sueden
+s1 = AkRichtung:neu("S1", 100, { AkAmpel:neu(11, AkAmpelModell.JS2_3er_mit_FG) })
+s2 = AkRichtung:neu("S2", 101, {
+    AkAmpel:neu(10, AkAmpelModell.JS2_3er_mit_FG),
+    AkAmpel:neu(19, AkAmpelModell.JS2_3er_ohne_FG)
+})
+fg_s1 = AkRichtung:neu("FG_S1", 102, {
+    AkAmpel:neu(10, AkAmpelModell.JS2_3er_mit_FG), -- Wird geteilt mit S2
+    AkAmpel:neu(11, AkAmpelModell.JS2_3er_mit_FG) -- Wird geteilt mit S1
+})
+fg_s2 = AkRichtung:neu("FG_S2", 103, {
+    AkAmpel:neu(22, AkAmpelModell.JS2_2er_nur_FG),
+    AkAmpel:neu(23, AkAmpelModell.JS2_2er_nur_FG),
+})
+
+-- Richtungen im Westen
+w1 = AkRichtung:neu("W1", 100, { AkAmpel:neu(13, AkAmpelModell.JS2_3er_mit_FG) })
+w2 = AkRichtung:neu("W2", 100, {
+    AkAmpel:neu(15, AkAmpelModell.JS2_3er_mit_FG),
+    AkAmpel:neu(24, AkAmpelModell.JS2_3er_ohne_FG)
+})
+fg_w = AkRichtung:neu("FG_W", 102, {
+    AkAmpel:neu(13, AkAmpelModell.JS2_3er_mit_FG), -- Wird geteilt mit O1
+    AkAmpel:neu(15, AkAmpelModell.JS2_3er_mit_FG) -- Wird geteilt mit O2
+})
 ```
 
 * Klicke danach im LUA-Editor von EEP auf "Skript neu laden" und wechsle in den 3D-Modus.
@@ -191,49 +238,93 @@ Notiere Dir, welche der _Richtungen_ zu _Schaltungen_ zusammengefasst werden sol
 Im Beispiel siehst Du, dass Richtungen in mehreren Schaltungen enthalten sein können.
 
 ### Schreibe die Schaltungen in das Haupt-Skript
-TODO!!!
 
 ```lua
 --------------------------------------------------------------
--- Definiere alle Schaltungen fuer Kreuzung 2
+-- Definiere die Schaltungen und die Kreuzung
 --------------------------------------------------------------
 -- Eine Schaltung bestimmt, welche Richtungen gleichzeitig auf
 -- grün geschaltet werden dürfen, alle anderen sind rot
 
---- Kreuzung 2: Schaltung 1
-local k2_schaltung1 = AkKreuzungsSchaltung:neu("Schaltung 1")
-k2_schaltung1:fuegeRichtungHinzu(k2_r1)
-k2_schaltung1:fuegeRichtungHinzu(k2_r2)
-k2_schaltung1:fuegeRichtungHinzu(k2_r3)
+--- Tutorial 1: Schaltung 1
+local sch1 = AkKreuzungsSchaltung:neu("Schaltung 1")
+sch1:fuegeRichtungHinzu(n1)
+sch1:fuegeRichtungHinzu(s1)
+sch1:fuegeRichtungFuerFussgaengerHinzu(fg_o)
+sch1:fuegeRichtungFuerFussgaengerHinzu(fg_w)
 
---- Kreuzung 2: Schaltung 2
-local k2_schaltung2 = AkKreuzungsSchaltung:neu("Schaltung 2")
-k2_schaltung2:fuegeRichtungHinzu(k2_r1)
-k2_schaltung2:fuegeRichtungHinzu(k2_r2)
+--- Tutorial 1: Schaltung 2
+local sch2 = AkKreuzungsSchaltung:neu("Schaltung 2")
+sch2:fuegeRichtungHinzu(n2)
+sch2:fuegeRichtungHinzu(s2)
+sch2:fuegeRichtungFuerFussgaengerHinzu(fg_n2)
+sch2:fuegeRichtungFuerFussgaengerHinzu(fg_o)
+sch2:fuegeRichtungFuerFussgaengerHinzu(fg_w)
+sch2:fuegeRichtungFuerFussgaengerHinzu(fg_s2)
 
---- Kreuzung 2: Schaltung 3
-local k2_schaltung3 = AkKreuzungsSchaltung:neu("Schaltung 3")
-k2_schaltung3:fuegeRichtungHinzu(k2_r3)
-k2_schaltung3:fuegeRichtungHinzu(k2_r4)
+--- Tutorial 1: Schaltung 3
+local sch3 = AkKreuzungsSchaltung:neu("Schaltung 3")
+sch3:fuegeRichtungHinzu(o1)
+sch3:fuegeRichtungHinzu(w1)
+sch3:fuegeRichtungFuerFussgaengerHinzu(fg_n1)
+sch3:fuegeRichtungFuerFussgaengerHinzu(fg_n2)
+sch3:fuegeRichtungFuerFussgaengerHinzu(fg_s1)
+sch3:fuegeRichtungFuerFussgaengerHinzu(fg_s2)
 
---- Kreuzung 2: Schaltung 4
-local k2_schaltung4 = AkKreuzungsSchaltung:neu("Schaltung 4")
-k2_schaltung4:fuegeRichtungHinzu(k2_r5)
+--- Tutorial 1: Schaltung 4
+local sch4 = AkKreuzungsSchaltung:neu("Schaltung 4")
+sch4:fuegeRichtungHinzu(o2)
+sch4:fuegeRichtungHinzu(w2)
+sch4:fuegeRichtungFuerFussgaengerHinzu(fg_n1)
+sch4:fuegeRichtungFuerFussgaengerHinzu(fg_s1)
 
-k2 = AkKreuzung:neu("Kreuzung 2")
-k2:fuegeSchaltungHinzu(k2_schaltung1)
-k2:fuegeSchaltungHinzu(k2_schaltung2)
-k2:fuegeSchaltungHinzu(k2_schaltung3)
-k2:fuegeSchaltungHinzu(k2_schaltung4)
+--- Tutorial 1: Schaltung 5
+local sch5 = AkKreuzungsSchaltung:neu("Schaltung 5")
+sch5:fuegeRichtungHinzu(n1)
+sch5:fuegeRichtungHinzu(n2)
+sch5:fuegeRichtungFuerFussgaengerHinzu(fg_w)
+
+--- Tutorial 1: Schaltung 6
+local sch6 = AkKreuzungsSchaltung:neu("Schaltung 6")
+sch6:fuegeRichtungHinzu(o1)
+sch6:fuegeRichtungHinzu(o2)
+sch6:fuegeRichtungFuerFussgaengerHinzu(fg_n1)
+sch6:fuegeRichtungFuerFussgaengerHinzu(fg_n2)
+sch6:fuegeRichtungFuerFussgaengerHinzu(fg_s1)
+
+--- Tutorial 1: Schaltung 7
+local sch7 = AkKreuzungsSchaltung:neu("Schaltung 7")
+sch7:fuegeRichtungHinzu(s1)
+sch7:fuegeRichtungHinzu(s2)
+sch7:fuegeRichtungFuerFussgaengerHinzu(fg_o)
+
+--- Tutorial 1: Schaltung 6
+local sch8 = AkKreuzungsSchaltung:neu("Schaltung 8")
+sch8:fuegeRichtungHinzu(o1)
+sch8:fuegeRichtungHinzu(o2)
+sch8:fuegeRichtungFuerFussgaengerHinzu(fg_n1)
+sch8:fuegeRichtungFuerFussgaengerHinzu(fg_s1)
+sch8:fuegeRichtungFuerFussgaengerHinzu(fg_s2)
+
+
+k1 = AkKreuzung:neu("Tutorial 1")
+k1:fuegeSchaltungHinzu(sch1)
+k1:fuegeSchaltungHinzu(sch2)
+k1:fuegeSchaltungHinzu(sch3)
+k1:fuegeSchaltungHinzu(sch4)
+k1:fuegeSchaltungHinzu(sch5)
+k1:fuegeSchaltungHinzu(sch6)
+k1:fuegeSchaltungHinzu(sch7)
+k1:fuegeSchaltungHinzu(sch8)
 ```
 
 * Klicke danach im LUA-Editor von EEP auf "Skript neu laden" und wechsle in den 3D-Modus.
     **Wenn Du alles richtig gemacht hast**, siehst Du plötzlich, dass die Schaltungen zum Leben erwachen.
 
-    ![BILD](../assets/tutorial/Platzhalter.png)
+    ![BILD](../assets/tutorial/kreuzung/zum-leben-erweckt.jpg)
 
 __Was ist grade passiert?__
-  * Du hast soeben die Richtungen zu Schaltungen zusammengefasst und einer Kreuzung zugewiesen. Durch die beiden am Anfang hinzugefügten Aufrufe in EEPMain() plant die Kreuzung automatisch ihre Schaltungen der Planer führt sie aus.
+  * Du hast soeben die Richtungen zu Schaltungen zusammengefasst und diese einer Kreuzung zugewiesen. Durch die beiden am Anfang hinzugefügten Aufrufe in EEPMain() plant die Kreuzung automatisch ihre Schaltungen der Planer führt sie aus.
 
 ### Schalte die Hilfsfunktionen wieder aus
 
@@ -249,14 +340,20 @@ Erinnerst Du Dich den Code, der die Info-Blasen zu den Signalen hinzugefügt hat
 * Klicke danach auf Skript neu laden und wechsle in den 3D-Modus.
     **Wenn Du alles richtig gemacht hast**, verschwinden die Info-Blasen von den Signale.
 
-**Tipp**: Setze die Werte wieder auf `true`, wenn Du
+**Tipp**: Setze die Werte wieder auf `true`, wenn Du denkst, dass Du die Signale falsch gesetzt hast.
 
 
 ## Herzlichen Glückwunsch!
 Du hast diese Anleitung abgeschlossen.
 
 So kannst Du weitermachen:
-* Füge die noch fehlenden Richtungen und Schaltungen hinzu
+* Füge noch fehlende Richtungen zu Schaltungen hinzu:
+	* Wenn `n2` geschaltet ist, kann immer auf `fg_n2` geschaltet werden.
+	* Wenn `s2` geschaltet ist, kann immer auf `fg_s2` geschaltet werden.
+
+Tipps
+* [Ampeln aufstellen](Ampel-aufstellen)
+
 
 Themen für Fortgeschrittene
 * Füge Kontaktpunkte und Zähler hinzu
