@@ -184,12 +184,11 @@ __Was ist grade passiert?__
 
 Notiere Dir, welche der _Richtungen_ zu _Schaltungen_ zusammengefasst werden sollen.
 
-**Beachte**: Eine _Schaltung_ darf nur _Richtungen_ enthalten, die sich nicht gegenseitig überlappen sollte
+**Beachte**: Eine _Schaltung_ darf nur _Richtungen_ enthalten, die sich nicht gegenseitig überlappen.
 
-![BILD](../assets/tutorial/kreuzung/kreuzungsaufbau-tutorial-richtungen.png)
+![BILD](../assets/tutorial/kreuzung/kreuzungsaufbau-tutorial-schaltungen.png)
 
 Im Beispiel siehst Du, dass Richtungen in mehreren Schaltungen enthalten sein können.
-
 
 ### Schreibe die Schaltungen in das Haupt-Skript
 TODO!!!
@@ -235,6 +234,23 @@ k2:fuegeSchaltungHinzu(k2_schaltung4)
 
 __Was ist grade passiert?__
   * Du hast soeben die Richtungen zu Schaltungen zusammengefasst und einer Kreuzung zugewiesen. Durch die beiden am Anfang hinzugefügten Aufrufe in EEPMain() plant die Kreuzung automatisch ihre Schaltungen der Planer führt sie aus.
+
+### Schalte die Hilfsfunktionen wieder aus
+
+Erinnerst Du Dich den Code, der die Info-Blasen zu den Signalen hinzugefügt hat?
+* Wenn Du möchtest, kannst Du die Info-Blasen wieder abschalten. Entferne nicht die Zeilen, sondern setze die Werte von `true` auf `false`.
+
+	```lua
+	-- Hier kommt der Code
+	AkKreuzung.zeigeSignalIdsAllerSignale = false
+	AkKreuzung.zeigeSchaltungAlsInfo = false
+	```
+
+* Klicke danach auf Skript neu laden und wechsle in den 3D-Modus.
+    **Wenn Du alles richtig gemacht hast**, verschwinden die Info-Blasen von den Signale.
+
+**Tipp**: Setze die Werte wieder auf `true`, wenn Du
+
 
 ## Herzlichen Glückwunsch!
 Du hast diese Anleitung abgeschlossen.
