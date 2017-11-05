@@ -41,12 +41,12 @@ Beschreibt das Modell einer Ampel mit den Schaltungen für rot, grün, gelb und 
 
 Mitgelieferte Ampelmodelle sind:
 
-* `Ak_Ampel_NP1_mit_FG = AkAmpelModell:neu("Ampel_NP1_mit_FG", 2, 4, 5, 3, 1)`
-* `Ak_Ampel_NP1_ohne_FG = AkAmpelModell:neu("Ampel_NP1_ohne_FG", 1, 3, 4, 2)`
-* `Ak_Ampel_2er_FG = AkAmpelModell:neu("Ak_Ampel_2er_nur_FG", 1, 1, 1, 1, 2)`
-* `Ak_Ampel_3er_XXX = AkAmpelModell:neu("Ampel_3er_XXX_ohne_FG", 1, 3, 5, 2)`
-* `Ak_Ampel_3er_XXX_FG = AkAmpelModell:neu("Ampel_3er_XXX_mit_FG", 1, 3, 5, 2, 6)`
-* `Ak_Ampel_Unsichtbar = AkAmpelModell:neu("Unsichtbares Signal", 2, 1, 2, 2)`
+* `AkAmpelModell.NP1_3er_mit_FG = AkAmpelModell:neu("Ampel_NP1_mit_FG", 2, 4, 5, 3, 1)`
+* `AkAmpelModell.NP1_3er_ohne_FG = AkAmpelModell:neu("Ampel_NP1_ohne_FG", 1, 3, 4, 2)`
+* `AkAmpelModell.JS2_2er_nur_FG = AkAmpelModell:neu("Ak_Ampel_2er_nur_FG", 1, 1, 1, 1, 2)`
+* `AkAmpelModell.JS2_3er_ohne_FG = AkAmpelModell:neu("Ampel_3er_XXX_ohne_FG", 1, 3, 5, 2)`
+* `AkAmpelModell.JS2_3er_mit_FG = AkAmpelModell:neu("Ampel_3er_XXX_mit_FG", 1, 3, 5, 2, 6)`
+* `AkAmpelModell.Unsichtbar_2er = AkAmpelModell:neu("Unsichtbares Signal", 2, 1, 2, 2)`
 
   Siehe auch https://eepshopping.de/ - Ampel-Baukasten für mehrspurige Straßenkreuzungen (V80NJS20039)
 
