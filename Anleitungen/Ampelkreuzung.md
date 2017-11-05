@@ -12,7 +12,7 @@
 - [Los geht's](#los-gehts)
 	- [Das Lua-Hauptskript anlegen](#das-lua-hauptskript-anlegen)
 	- [Notwendige Befehle in das Lua-Skript aufnehmen](#notwendige-befehle-in-das-lua-skript-aufnehmen)
-	- [Alle Signale mit Info-Blasen markieren](#alle-signale-mit-info-blasen-markieren)
+	- [Alle Signale mit Tipp-Text markieren](#alle-signale-mit-tipp-text-markieren)
 	- [Die Richtungen und Signal-IDs der Kreuzung notieren](#die-richtungen-und-signal-ids-der-kreuzung-notieren)
 	- [Schreibe die Richtungen in das Haupt-Skript](#schreibe-die-richtungen-in-das-haupt-skript)
 	- [Fasse die Richtungen nun zu Schaltungen zusammen](#fasse-die-richtungen-nun-zu-schaltungen-zusammen)
@@ -39,7 +39,7 @@
 
 * **Eine Anlage mit fertigen Kreuzungen und vorinstallierten Ampeln**
 
-  Extra für diese Anleitung wurde eine Anlage erstellt:  _[Andreas_Kreuz_Anleitung_Ampel](https://github.com/Andreas-Kreuz/ak-lua-skripte-fuer-eep)_. Wenn Du diese Anlage verwenden möchtest, brauchst Du folgende Modelle:
+  Extra für diese Anleitung wurde eine Anlage erstellt:  *[Andreas_Kreuz_Anleitung_Ampel](https://github.com/Andreas-Kreuz/ak-lua-skripte-fuer-eep/releases)*. Wenn Du diese Anlage verwenden möchtest, brauchst Du folgende Modelle:
 
   * 1Spur-Großstadtstraßen-System-Grundset (V10NAS30002) - _[Download](https://eepshopping.de/1spur-gro%C3%83%C6%92%C3%82%C5%B8stadtstra%C3%83%C6%92%C3%82%C5%B8en-system-grundset%7C7656.html)_
   * 1Spur-Ergänzungsset - _[Download](https://www.eepforum.de/filebase/file/215-freeset-zu-meinem-1spur-strassensystem/)_
@@ -112,25 +112,25 @@ _**Tipp:** Diese Anleitung geht davon aus, dass in der geöffneten Anlage noch n
 * Wichtig ist auch, dass die Funktion EEPMain mit `return 1` beendet wird, damit sie alle 200 ms aufgerufen wird.
 
 
-### Alle Signale mit Info-Blasen markieren
-_**Tipp:** Verwende diesen Code nicht, wenn Du Deine Anlagen manuelle Info-Blasen mit `EEPShowSignalInfo(...)` an Deinen Signalen anzeigst. Denn all diese Info-Blasen werden gelöscht._
+### Alle Signale mit Tipp-Text markieren
+_**Tipp:** Verwende diesen Code nicht, wenn Du Deine Anlagen manuelle Tipp-Texte mit `EEPShowSignalInfo(...)` an Deinen Signalen anzeigst. Denn all diese Tipp-Texte werden gelöscht._
 
-* Um die Signale (in dem Fall Ampeln) der Kreuzung zu bearbeiten ist es am einfachsten, wenn Du die Signal-IDs aller Signale in Info-Blasen anzeigst. - Füge die Zeile `AkKreuzung.zeigeSignalIdsAllerSignale = true` und danach `AkKreuzung.zeigeSchaltungAlsInfo = true` vor der EEPMain()-Methode hinzu:
+* Um die Signale (in dem Fall Ampeln) der Kreuzung zu bearbeiten ist es am einfachsten, wenn Du die Signal-IDs aller Signale in Tipp-Texten anzeigst. - Füge die Zeile `AkKreuzung.zeigeSignalIdsAllerSignale = true` und danach `AkKreuzung.zeigeSchaltungAlsInfo = true` vor der EEPMain()-Methode hinzu:
     ```lua
     -- Hier kommt der Code
     AkKreuzung.zeigeSignalIdsAllerSignale = true
 	AkKreuzung.zeigeSchaltungAlsInfo = true
     ```
 * Klicke danach auf Skript neu laden und wechsle in den 3D-Modus.
-    **Wenn Du alles richtig gemacht hast**, siehst Du an allen Signalen Info-Blasen mit den IDs dieser Signale.
+    **Wenn Du alles richtig gemacht hast**, siehst Du an allen Signalen Tipp-Texte mit den IDs dieser Signale.
 
     ![BILD](../assets/tutorial/kreuzung/signal-ids2.jpg)
 
 __Was ist grade passiert?__
-  * Das neu Laden der Anlage hat dafür gesorgt, dass die Lua-Skripte anhand der Variable alle Signale von 1 bis 1000 mit einer Info-Blase versehen haben.
+  * Das neu Laden der Anlage hat dafür gesorgt, dass die Lua-Skripte anhand der Variable alle Signale von 1 bis 1000 mit einem Tipp-Texten versehen haben.
 
 ### Die Richtungen und Signal-IDs der Kreuzung notieren
-_**Tipp:** Das PDF-Dokument hilft Dir deine Kreuzung zu notieren._
+_**Tipp:** Das _[PDF-Dokument Kreuzungsaufbau.pdf](../assets/Kreuzungsaufbau.pdf)_ hilft Dir deine Kreuzung zu notieren._
 
 Notiere Dir, welche _Richtungen_ es gibt und wie die IDs der zu schaltenden Ampeln heißen - merke Dir dabei, welche unterschiedlichen Ampelmodelle eingesetzt werden. In der Beispielanlage sind es:
   * Kombinierte Fußgänger- und Strassenverkehrsampeln
@@ -222,7 +222,7 @@ fg_w = AkRichtung:neu("FG_W", 102, {
 ```
 
 * Klicke danach im LUA-Editor von EEP auf "Skript neu laden" und wechsle in den 3D-Modus.
-    **Wenn Du alles richtig gemacht hast**, siehst Du weiterhin an allen Signalen Info-Blasen mit den IDs dieser Signale und keine Fehlermeldung im Log.
+    **Wenn Du alles richtig gemacht hast**, siehst Du weiterhin an allen Signalen Tipp-Texte mit den IDs dieser Signale und keine Fehlermeldung im Log.
 
 __Was ist grade passiert?__
   * Du hast soeben die Richtungen der Kreuzung festgelegt. Jede kann für sich allein geschaltet werden oder zusammen mit anderen Richtungen. Dazu dient `AkKreuzungsSchaltung`, welches im nächsten Schritt zum Einsatz kommt.
@@ -328,8 +328,8 @@ __Was ist grade passiert?__
 
 ### Schalte die Hilfsfunktionen wieder aus
 
-Erinnerst Du Dich den Code, der die Info-Blasen zu den Signalen hinzugefügt hat?
-* Wenn Du möchtest, kannst Du die Info-Blasen wieder abschalten. Entferne nicht die Zeilen, sondern setze die Werte von `true` auf `false`.
+Erinnerst Du Dich den Code, der die Tipp-Texte zu den Signalen hinzugefügt hat?
+* Wenn Du möchtest, kannst Du die Tipp-Texte wieder abschalten. Entferne nicht die Zeilen, sondern setze die Werte von `true` auf `false`.
 
 	```lua
 	-- Hier kommt der Code
@@ -338,7 +338,7 @@ Erinnerst Du Dich den Code, der die Info-Blasen zu den Signalen hinzugefügt hat
 	```
 
 * Klicke danach auf Skript neu laden und wechsle in den 3D-Modus.
-    **Wenn Du alles richtig gemacht hast**, verschwinden die Info-Blasen von den Signale.
+    **Wenn Du alles richtig gemacht hast**, verschwinden die Tipp-Texte von den Signale.
 
 **Tipp**: Setze die Werte wieder auf `true`, wenn Du denkst, dass Du die Signale falsch gesetzt hast.
 
