@@ -11,4 +11,4 @@ Hier wird Dir Schritt für Schritt erklärt, wie Du die Skripte verwendest.
 
 ## Für Fortgeschrittene
 
-* Benutzt Du andere Ampelmodelle? [Unterstütze weitere Ampeln in AkAmpelModell](../ak/strasse/README.md#klasse-akampelmodell)
+* Benutzt Du andere Ampelmodelle? [Unterstütze weitere Ampeln in AkAmpelModell](../LUA/ak/strasse/README.md#klasse-akampelmodell)
