@@ -1,6 +1,6 @@
 # Ampelkreuzung automatisch steuern
 
-![Kreuzung](../assets/headers/SourceCode.png)
+![Kreuzung](../assets/headers/tutorial1-ampel.jpg)
 
 ## Inhalt
 <!-- TOC depthFrom:2 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
