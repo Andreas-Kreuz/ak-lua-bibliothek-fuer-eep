@@ -23,7 +23,7 @@ install:
 
 script:
   - luacheck --std max+busted LUA
-  - busted --verbose --coverage -- LUA
+  - busted --verbose --coverage --
 
 after_success:
   - luacov-coveralls -e $TRAVIS_BUILD_DIR/lua_install
