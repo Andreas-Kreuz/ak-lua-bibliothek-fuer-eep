@@ -9,7 +9,21 @@ AkAmpel.zeigeAnforderungen = true
 -- Damit kommt wird die Variable "Zugname" automatisch durch EEP belegt
 -- http://emaps-eep.de/lua/code-schnipsel
 ------------------------------------------------
-setmetatable(_ENV, { __index = function(_, k) local p = load(k); if p then local f = function(z) local s = Zugname; Zugname = z; p(); Zugname = s end; _ENV[k] = f; return f end; return nil end })
+setmetatable(_ENV, {
+    __index =
+    function(_, k)
+        local p = load(k);
+        if p then
+            local f = function(z) local s = Zugname
+                Zugname = z; p()
+                Zugname = s
+            end
+            _ENV[k] = f
+            return f
+        end
+        return nil
+    end
+})
 
 --------------------------------------------
 -- Definiere Funktionen fuer Kontaktpunkte
@@ -124,11 +138,13 @@ k1_r6 = AkRichtung:neu("Richtung 6", 106, { AkAmpel:neu(09, Grundmodell_Ampel_3)
 k1_r7 = AkRichtung:neu("Richtung 7", 107, { AkAmpel:neu(16, Grundmodell_Ampel_3) })
 k1_r8 = AkRichtung:neu("Richtung 8", 108, { AkAmpel:neu(15, Grundmodell_Ampel_3) })
 
-k1_r1_5_fg = AkRichtung:neu("Richtung 1+5 FG", -1, { -- keine Speicher-ID fuer Fussgaenger notwendig (-1)
+k1_r1_5_fg = AkRichtung:neu("Richtung 1+5 FG", -1, {
+    -- keine Speicher-ID fuer Fussgaenger notwendig (-1)
     AkAmpel:neu(40, Grundmodell_Ampel_3_FG), AkAmpel:neu(41, Grundmodell_Ampel_3_FG),
     AkAmpel:neu(36, Grundmodell_Ampel_3_FG), AkAmpel:neu(37, Grundmodell_Ampel_3_FG)
 })
-k1_r3_7_fg = AkRichtung:neu("Richtung 3+7 FG", -1, { -- keine Speicher-ID fuer Fussgaenger notwendig (-1)
+k1_r3_7_fg = AkRichtung:neu("Richtung 3+7 FG", -1, {
+    -- keine Speicher-ID fuer Fussgaenger notwendig (-1)
     AkAmpel:neu(38, Grundmodell_Ampel_3_FG), AkAmpel:neu(39, Grundmodell_Ampel_3_FG),
     AkAmpel:neu(42, Grundmodell_Ampel_3_FG), AkAmpel:neu(43, Grundmodell_Ampel_3_FG)
 })

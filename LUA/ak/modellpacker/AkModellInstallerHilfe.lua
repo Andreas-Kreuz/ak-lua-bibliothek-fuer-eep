@@ -27,7 +27,7 @@ function AkModellInstaller:erzeugePaket(ausgabeverzeichnis)
     local inhalt = ""
     for index = 0, (self.index - 1) do
         local modellPaket = self.modellPakete[index]
-        inhalt = inhalt .. self:erzeugeKonfigurationsAbschnitt(index, modellPaket)
+        inhalt = inhalt .. self.erzeugeKonfigurationsAbschnitt(index, modellPaket)
 
         -- Modellpaket anlegen
         local modellPaketVerzeichnis = string.format(installation_verzeichnis .. "\\Install_%02d", index)
@@ -35,7 +35,8 @@ function AkModellInstaller:erzeugePaket(ausgabeverzeichnis)
 
         -- Dateien des Modellpakets kopieren
         for pfad, dateiname in pairs(modellPaket.modellPfade) do
-            if not os.execute([[copy "]] .. pfad .. [[" "]] .. modellPaketVerzeichnis .. "\\" .. dateiname .. [[" >nul]]) then
+            if not os.execute(
+                [[copy "]] .. pfad .. [[" "]] .. modellPaketVerzeichnis .. "\\" .. dateiname .. [[" >nul]]) then
                 print([[copy "]] .. pfad .. [[" "]] .. modellPaketVerzeichnis .. "\\" .. dateiname .. [["]])
                 os.execute([[copy "]] .. pfad .. [[" "]] .. modellPaketVerzeichnis .. "\\" .. dateiname .. [[" ]])
                 os.exit(1)
@@ -44,18 +45,21 @@ function AkModellInstaller:erzeugePaket(ausgabeverzeichnis)
 
         -- Install ini schreiben
         local installIniDatei = modellPaketVerzeichnis .. "\\install.ini"
-        AkModellPacker.schreibeDatei(installIniDatei, AkModellPacker.erzeugeInstallIniInhalt(modellPaket.installationsPfade, modellPaket.eepVersion))
+        AkModellPacker.schreibeDatei(
+            installIniDatei,
+            AkModellPacker.erzeugeInstallIniInhalt(modellPaket.installationsPfade, modellPaket.eepVersion))
     end
     local installation_eep_datei = string.format(installation_verzeichnis .. "\\Installation.eep")
     AkModellPacker.schreibeDatei(installation_eep_datei, inhalt)
 
     if os.execute([[dir "C:\Program Files\7-Zip\7z.exe" > nul 2> nul]]) then
         os.execute([[del /F "]] .. ausgabeverzeichnis .. "\\" .. self.verzeichnisname .. [[.zip"]])
-        os.execute([["C:\Program Files\7-Zip\7z.exe" a ]] .. ausgabeverzeichnis .. "\\" .. self.verzeichnisname .. [[.zip ]] .. installation_verzeichnis .. [[\*]])
+        os.execute([["C:\Program Files\7-Zip\7z.exe" a ]] .. ausgabeverzeichnis .. "\\"
+                .. self.verzeichnisname .. [[.zip ]] .. installation_verzeichnis .. [[\*]])
     end
 end
 
-function AkModellInstaller:erzeugeKonfigurationsAbschnitt(index, modellPaket)
+function AkModellInstaller.erzeugeKonfigurationsAbschnitt(index, modellPaket)
     local t = string.format("[Install_%02d]" .. "\n", index)
     t = t .. string.format([[Name_GER	 = "%s"]] .. "\n", modellPaket.deutscherName)
     t = t .. string.format([[Name_ENG	 = "%s"]] .. "\n", modellPaket.englischerName)
@@ -110,11 +114,11 @@ function AkModellPaket:fuegeDateienHinzu(basisOrdner, praefix, unterOrdner, pfad
     assert(unterOrdner)
     local neuePfade = {}
     --print(string.format("Durchsuche \"%s\" in Unterordner \"%s\"", basisOrdner, unterOrdner))
-    _, dateiGefunden = AkModellPacker.dateienSuchen(neuePfade, basisOrdner, unterOrdner)
+    local _, dateiGefunden = AkModellPacker.dateienSuchen(neuePfade, basisOrdner, unterOrdner)
     assert(dateiGefunden, string.format("Keine Datei gefunden: \"%s\" in Unterordner \"%s\"", basisOrdner, unterOrdner))
 
     for pfad, datei in pairs(neuePfade) do
-        if not excludePatterns and not AkModellPaket.pfadAusschliessen(pfad, pfadAusschlussMuster) then
+        if not pfadAusschlussMuster and not AkModellPaket.pfadAusschliessen(pfad, pfadAusschlussMuster) then
             self.installationsPfade[praefix .. pfad] = datei
             self.modellPfade[basisOrdner .. "\\" .. pfad] = datei
         end
@@ -133,7 +137,7 @@ function AkModellPaket.pfadAusschliessen(pfad, pfadAusschlussMuster)
 end
 
 function AkModellPacker.schreibeDatei(dateiname, inhalt)
-    file = io.open(dateiname, "w+")
+    local file = io.open(dateiname, "w+")
     assert(file, "Kann Datei nicht öffnen " .. dateiname)
     io.output(file)
     io.write(inhalt)

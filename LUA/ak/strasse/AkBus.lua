@@ -37,7 +37,10 @@ function AkBus.inititalisiere(fahrzeugverband)
     EEPSetTrainAxis(fahrzeugverband, "Fahrgast", 100)
 end
 
+
+-- luacheck: push ignore FAHRZEUG_INITIALISIERE
 --- Funktion fuer den Aufruf direkt in EEP
--- @param fahrzeug wird von EEP automatisch gef?llt
+-- @param fahrzeug wird von EEP automatisch gefuellt
 --
 function FAHRZEUG_INITIALISIERE(fahrzeug) AkBus.initialisiere(fahrzeug) end
+-- luacheck: pop

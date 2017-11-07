@@ -97,8 +97,9 @@ do
         prio = 7
     }
 
-    -- Zum Speichern muss eine Lua Tabelle erstellt, werden, welche nur welche als Schlüssel und Werte nur Text enthält
-    -- Es empfiehlt sich die Schlüssel kurz zu halten, da die Länge eines Speicherplatzes in EEP vermutlich begrenzt ist
+    -- Zum Speichern muss eine Lua Tabelle erstellt, werden, welche als Schlüssel und Werte nur Text enthält
+    -- Es empfiehlt sich die Schlüssel kurz zu halten, da die Länge eines Speicherplatzes in EEP vermutlich begrenzt
+    -- ist
     local daten_zum_speichern = {
         b = tostring(block.belegt),
         z = tostring(block.zugname),
@@ -108,7 +109,9 @@ do
 
     AkSpeicherHilfe.speichereTabelle(600, daten_zum_speichern, "Meine Daten")
 
-    print("-----------------------------------------\nSpeicherplatzinhalt nach dem Speichern:\n-----------------------------------------")
+    print("-----------------------------------------\n"
+    .."Speicherplatzinhalt nach dem Speichern:"
+    .."\n-----------------------------------------")
     local _, speicherplatz_inhalt = EEPLoadData(600, "Meine Daten")
     print(speicherplatz_inhalt)
 end
