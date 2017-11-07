@@ -10,13 +10,13 @@ Allgemeine Lua-Skripte zur Verkehrssteuerung in EEP 14.
 Die bereitgestellten Funktionen sollen die _Steuerung des Verkehrs vereinfachen_, damit Du Dich als Anlagen-Ersteller auf andere Aspekte konzentrieren kannst.
 Natürlich musst Du trotzdem ein wenig Hand anlegen und Deine Signale mit Lua verdrahten.
 
-* __[Anleitungen](Anleitungen/)__ helfen Dir bei den ersten Schritten mit Ak-Lua-Skripte-für-EEP.
+* __[Anleitungen](Anleitungen/README.md)__ helfen Dir bei den ersten Schritten mit Ak-Lua-Skripte-für-EEP.
 
-* Mit __[Beispiel-Anlagen](Resourcen/Anlagen/)__ kannst Du einen guten Eindruck der Funktionalität bekommen.
+* Mit __[Beispiel-Anlagen](Resourcen/Anlagen/README.md)__ kannst Du einen guten Eindruck der Funktionalität bekommen.
 
 ### Für Fortgeschrittene
 
-* Die __[Lua-Skript Dokumentation](LUA/ak/)__ hilft Dir bei der Verwendung der Funktionen. (Schau doch mal bei [ak.strasse](LUA/ak/strasse) nach)
+* Die __[Lua-Skript Dokumentation](LUA/ak/README.md)__ hilft Dir bei der Verwendung der Funktionen. (Schau doch mal bei [ak.strasse](LUA/ak/strasse) nach)
 
 * Du willst die __[Skripte direkt aus GitHub verwenden](doc/GITHUB_NUTZEN.md)__?
 
