@@ -46,3 +46,4 @@ luac.out
 
 _site
 Gemfile.lock
+.jekyll*
