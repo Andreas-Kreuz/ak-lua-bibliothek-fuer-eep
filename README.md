@@ -1,8 +1,9 @@
+# Überblick
+
+Die bereitgestellten Funktionen übernehmen für Dich die _Steuerung des Verkehrs_, damit Du Dich andere Aspekte konzentrieren kannst. Beschreibe in Lua, wie Deine Kreuzungen aussehen und die Skripte kümmern sich um den Rest der Steuerung.
+
 
 # Loslegen
-
-Die bereitgestellten Funktionen sollen die _Steuerung des Verkehrs vereinfachen_, damit Du Dich als Anlagen-Ersteller auf andere Aspekte konzentrieren kannst.
-Natürlich musst Du trotzdem ein wenig Hand anlegen und Deine Signale mit Lua verdrahten.
 
 * [**Anleitungen Schritt-für-Schritt**](Anleitungen/README.md) <br>So kannst Du die Lua-Skripte verwenden
 
