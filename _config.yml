@@ -1,3 +1,5 @@
 theme: jekyll-theme-slate
 title: "Lua-Skripte für EEP"
 description: "Verkehrssteuerung und mehr - von Andreas Kreuz"
+plugins:
+  - jemoji
