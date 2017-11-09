@@ -1,66 +1,50 @@
 # Ampelkreuzung automatisch steuern
 
-![Kreuzung](../assets/headers/tutorial1-ampel.jpg)
+Diese Anleitung zeigt Dir, wie Du in EEP eine mit Ampeln versehene Kreuzung mit dem Skript verdrahten kannst.
 
-## Inhalt
-<!-- TOC depthFrom:2 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
+# Was Du brauchst
 
-- [Inhalt](#inhalt)
-- [Was Du lernst](#was-du-lernst)
-- [Was Du brauchst](#was-du-brauchst)
-- [Checkliste](#checkliste)
-- [Los geht's](#los-gehts)
-	- [Das Lua-Hauptskript anlegen](#das-lua-hauptskript-anlegen)
-	- [Notwendige Befehle in das Lua-Skript aufnehmen](#notwendige-befehle-in-das-lua-skript-aufnehmen)
-	- [Alle Signale mit Tipp-Text markieren](#alle-signale-mit-tipp-text-markieren)
-	- [Die Richtungen und Signal-IDs der Kreuzung notieren](#die-richtungen-und-signal-ids-der-kreuzung-notieren)
-	- [Schreibe die Richtungen in das Haupt-Skript](#schreibe-die-richtungen-in-das-haupt-skript)
-	- [Fasse die Richtungen nun zu Schaltungen zusammen](#fasse-die-richtungen-nun-zu-schaltungen-zusammen)
-	- [Schreibe die Schaltungen in das Haupt-Skript](#schreibe-die-schaltungen-in-das-haupt-skript)
-	- [Schalte die Hilfsfunktionen wieder aus](#schalte-die-hilfsfunktionen-wieder-aus)
-- [Herzlichen Glückwunsch!](#herzlichen-glückwunsch)
+## Programme
 
-<!-- /TOC -->
-## Was Du lernst
-
-* Diese Anleitung zeigt Dir, wie Du in EEP eine mit Ampeln versehene Kreuzung mit dem Skript verdrahten kannst.
-
-## Was Du brauchst
-
-* **EEP 14** - das Programm - _[Download](https://www.eepshopping.de)_
-
-* **Ak-Lua-Skripte-für-EEP** - Eine Sammlung verschiedener Lua Skripte für EEP
-
-  So kannst Du die Skripte installieren - [Installation von "Ak-Lua-Skripte-für-EEP"](Installation.md)
+* **EEP 14**
 
 * **Einen Editor für Lua-Skripte** - ein Editor Deiner Wahl, z.B. Notepad++
 
-* **Zettel und Stift** - _[Download Kreuzungsaufbau.pdf](../assets/Kreuzungsaufbau.pdf)_
+## Sonstiges
 
-* **Eine Anlage mit fertigen Kreuzungen und vorinstallierten Ampeln**
+* **Zettel und Stift** - [_Download Kreuzungsaufbau.pdf_](../assets/Kreuzungsaufbau.pdf)
 
-  Extra für diese Anleitung wurde eine Anlage erstellt:  *[Installer-AK-Tutorial-Ampelkreuzung](https://github.com/Andreas-Kreuz/ak-lua-skripte-fuer-eep/releases)*. Wenn Du diese Anlage verwenden möchtest, brauchst Du folgende Modelle:
+## Lua-Skripte für EEP
 
-  * 1Spur-Großstadtstraßen-System-Grundset (V10NAS30002) - _[Download](https://eepshopping.de/1spur-gro%C3%83%C6%92%C3%82%C5%B8stadtstra%C3%83%C6%92%C3%82%C5%B8en-system-grundset%7C7656.html)_
-  * 1Spur-Ergänzungsset - _[Download](https://www.eepforum.de/filebase/file/215-freeset-zu-meinem-1spur-strassensystem/)_
-  * Ampel-Baukasten für mehrspurige Straßenkreuzungen (V80NJS20039) - _[Download](https://eepshopping.de/ampel-baukasten-f%C3%83%C6%92%C3%82%C2%BCr-mehrspurige-stra%C3%83%C6%92%C3%82%C5%B8enkreuzungen%7C6624.html)_
-  * Straßenbahnsignale als Immobilien (V80MA1F010 und V10MA1F011) -  _[Download](https://eepshopping.de/ampel-baukasten-f%C3%83%C6%92%C3%82%C2%BCr-mehrspurige-stra%C3%83%C6%92%C3%82%C5%B8enkreuzungen%7C6624.html)_
+* **Eine Anlage mit fertigen Kreuzungen und vorinstallierten Ampeln** <br>Extra für diese Anleitung wurde eine Anlage erstellt:  [_Installer-AK-Tutorial-Ampelkreuzung_](https://github.com/Andreas-Kreuz/ak-lua-skripte-fuer-eep/releases). Wenn Du diese Anlage verwenden möchtest, brauchst Du folgende Modelle:
 
-## Checkliste
+  | 1Spur-Großstadtstraßen-System-Grundset (V10NAS30002)  | _[Download](https://eepshopping.de/1spur-gro%C3%83%C6%92%C3%82%C5%B8stadtstra%C3%83%C6%92%C3%82%C5%B8en-system-grundset%7C7656.html)_  |
+  | 1Spur-Ergänzungsset  | _[Download](https://www.eepforum.de/filebase/file/215-freeset-zu-meinem-1spur-strassensystem/)_  |
+  | Ampel-Baukasten für mehrspurige Straßenkreuzungen (V80NJS20039) | _[Download](https://eepshopping.de/ampel-baukasten-f%C3%83%C6%92%C3%82%C2%BCr-mehrspurige-stra%C3%83%C6%92%C3%82%C5%B8enkreuzungen%7C6624.html)_ |
+  | Straßenbahnsignale als Immobilien (V80MA1F010 und V10MA1F011) | _[Download](https://eepshopping.de/ampel-baukasten-f%C3%83%C6%92%C3%82%C2%BCr-mehrspurige-stra%C3%83%C6%92%C3%82%C5%B8enkreuzungen%7C6624.html)_ |
+
+* **Ak-Lua-Skripte-für-EEP** - Eine Sammlung verschiedener Lua Skripte für EEP
+
+  :star: **_Tipp_**: Die Skripte sind in der Beispielanlage enthalten. Möchtest Du Deine eigene Anlage verwenden, so kannst Du die Skripte wie folgt installieren: [_Installation von "Ak-Lua-Skripte-für-EEP"_](Installation.md)
+
+
+
+# Checkliste
 * [ ] Skriptsammlung "Ak-Lua-Skripte-für-EEP" ist installiert
 * [ ] Du hast eine Anlage mit einer Ampelkreuzung oder "Andreas_Kreuz_Anleitung_Ampel" geöffnet
 
-## Los geht's
+# Los geht's
 * Öffne die Anlage in EEP
 * Öffne Deinen Editor
 
-### Das Lua-Hauptskript anlegen
-_**Tipp:** Aktiviere in EEP unter Programmeinstellungen das EEP Ereignisfenster, damit Du die Lua Meldungen lesen kannst._
+## Das Lua-Hauptskript anlegen
+:star: _**Tipp:** Aktiviere in EEP unter Programmeinstellungen das EEP Ereignisfenster, damit Du die Lua Meldungen lesen kannst._
 
-_**Tipp:** Diese Anleitung geht davon aus, dass in der geöffneten Anlage noch nichts mit LUA gemacht wurde. Verwendest Du Dein eigenes Anlagen-Skript, dann lösche es nicht, sondern ergänze es um die weiter unten aufgeführten Befehle._
+:exclamation: _**Beachte:** Diese Anleitung geht davon aus, dass in der geöffneten Anlage noch nichts mit LUA gemacht wurde. Verwendest Du Dein eigenes Anlagen-Skript, dann lösche es nicht, sondern ergänze es um die weiter unten aufgeführten Befehle._
 
+<br>
 
-* Das Editieren der Skripte findet im LUA-Verzeichnis von EEP statt, z.B. in `C:\Trend\EEP14\LUA`
+* Das Hauptskript `meine-ampel-main.lua` wirst Du im nächsten Schritt im LUA-Verzeichnis von EEP anlegen: `C:\Trend\EEP14\LUA`
 
 * Öffne den LUA-Editor in EEP, wähle alles mit `<Strg>` + `<A>` aus und ersetze es durch
 
@@ -69,23 +53,22 @@ _**Tipp:** Diese Anleitung geht davon aus, dass in der geöffneten Anlage noch n
   require("meine-ampel-main")
   ```
 
-* Klicke danach in EEP auf Skript neu laden und wechsle in den 3D-Modus.
-
-	**Wenn Du alles richtig gemacht hast**, erscheint im Log eine Fehlermeldung, dass `meine-ampel-main.lua` nicht gefunden werden kann.
+* Klicke in EEP auf _"Skript neu laden"_ und wechsle in den 3D-Modus. <br>:smiley: **Wenn Du alles richtig gemacht hast**, erscheint im Log eine Fehlermeldung, dass `meine-ampel-main.lua` nicht gefunden werden kann.
 
     ![BILD](../assets/tutorial/kreuzung/skript-nicht-gefunden.jpg)
+
+<br>
 
 * Lege nun das Haupt-Skript an `C:\Trend\EEP14\LUA\meine-ampel-main.lua` im Verzeichnis `LUA` an
 
     Dies wird das Skript werden, welches in der Anlage verwendet wird. Egal, wie Deine Anlage heißt.
 
-* Klicke danach in EEP auf Skript neu laden und wechsle in den 3D-Modus.
-    **Wenn Du alles richtig gemacht hast**, erscheint eine Fehlermeldung, dass `meine-ampel-main.lua` nicht gefunden werden kann.
+* Klicke in EEP auf _"Skript neu laden"_ und wechsle in den 3D-Modus. <br>:smiley: **Wenn Du alles richtig gemacht hast**, erscheint eine Fehlermeldung, dass `meine-ampel-main.lua` nicht gefunden werden kann.
 
     ![BILD](../assets/tutorial/kreuzung/eepmain-nicht-gefunden.jpg)
 
 
-### Notwendige Befehle in das Lua-Skript aufnehmen
+## Notwendige Befehle in das Lua-Skript aufnehmen
 
 * Ergänze das Lua-Hauptskript um die folgenden Zeilen.
     ```lua
@@ -100,8 +83,7 @@ _**Tipp:** Diese Anleitung geht davon aus, dass in der geöffneten Anlage noch n
     end
     ```
 
-* Klicke danach auf Skript neu laden und wechsle in den 3D-Modus.
-**Wenn Du alles richtig gemacht hast**, verschwindet die Fehlermeldung
+* Klicke in EEP auf _"Skript neu laden"_ und wechsle in den 3D-Modus. <br>:smiley: **Wenn Du alles richtig gemacht hast**, verschwindet die Fehlermeldung
 
     ![BILD](../assets/tutorial/kreuzung/eepmain-angelegt.jpg)
 
@@ -112,25 +94,27 @@ _**Tipp:** Diese Anleitung geht davon aus, dass in der geöffneten Anlage noch n
 * Wichtig ist auch, dass die Funktion EEPMain mit `return 1` beendet wird, damit sie alle 200 ms aufgerufen wird.
 
 
-### Alle Signale mit Tipp-Text markieren
-_**Tipp:** Verwende diesen Code nicht, wenn Du Deine Anlagen manuelle Tipp-Texte mit `EEPShowSignalInfo(...)` an Deinen Signalen anzeigst. Denn all diese Tipp-Texte werden gelöscht._
+## Alle Signale mit Tipp-Text markieren
+Um die Signale (in dem Fall Ampeln) der Kreuzung zu bearbeiten ist es am einfachsten, wenn Du die Signal-IDs aller Signale in Tipp-Texten anzeigst.
+In diesem Schritt läßt Du Dir von `AkStrasse` alle Signal-IDs in 3D anzeigen.
 
-* Um die Signale (in dem Fall Ampeln) der Kreuzung zu bearbeiten ist es am einfachsten, wenn Du die Signal-IDs aller Signale in Tipp-Texten anzeigst. - Füge die Zeile `AkKreuzung.zeigeSignalIdsAllerSignale = true` und danach `AkKreuzung.zeigeSchaltungAlsInfo = true` vor der EEPMain()-Methode hinzu:
+:exclamation: _**Beachte:** Verwende diesen Code nicht, wenn Du in Deiner Anlagen selbst Tipp-Texte mit `EEPShowSignalInfo(...)` an Deinen Signalen anzeigst. Denn all diese Tipp-Texte werden gelöscht._
+
+*  Um die Tipp-Texte anzuzeigen, füge die folgenden beiden Zeilen vor der EEPMain()-Methode hinzu:
     ```lua
     -- Hier kommt der Code
     AkKreuzung.zeigeSignalIdsAllerSignale = true
-	AkKreuzung.zeigeSchaltungAlsInfo = true
+    AkKreuzung.zeigeSchaltungAlsInfo = true
     ```
-* Klicke danach auf Skript neu laden und wechsle in den 3D-Modus.
-    **Wenn Du alles richtig gemacht hast**, siehst Du an allen Signalen Tipp-Texte mit den IDs dieser Signale.
+* Klicke in EEP auf _"Skript neu laden"_ und wechsle in den 3D-Modus. <br>:smiley: **Wenn Du alles richtig gemacht hast**, siehst Du an allen Signalen Tipp-Texte mit den IDs dieser Signale.
 
     ![BILD](../assets/tutorial/kreuzung/signal-ids2.jpg)
 
 __Was ist grade passiert?__
-  * Das neu Laden der Anlage hat dafür gesorgt, dass die Lua-Skripte anhand der Variable alle Signale von 1 bis 1000 mit einem Tipp-Texten versehen haben.
+  * Das neu Laden der Anlage hat dafür gesorgt, dass das Skript `AkStrasse` anhand der Variablen erkannt hat, dass es für alle Signale von 1 bis 1000 deren Signal-ID als Tipp-Text einblenden soll.
 
-### Die Richtungen und Signal-IDs der Kreuzung notieren
-_**Tipp:** Das _[PDF-Dokument Kreuzungsaufbau.pdf](../assets/Kreuzungsaufbau.pdf)_ hilft Dir deine Kreuzung zu notieren._
+## Die Richtungen und Signal-IDs der Kreuzung notieren
+_**Tipp:** Das [PDF-Dokument Kreuzungsaufbau.pdf](../assets/Kreuzungsaufbau.pdf) hilft Dir deine Kreuzung zu notieren._
 
 Notiere Dir, welche _Richtungen_ es gibt und wie die IDs der zu schaltenden Ampeln heißen - merke Dir dabei, welche unterschiedlichen Ampelmodelle eingesetzt werden. In der Beispielanlage sind es:
   * Kombinierte Fußgänger- und Strassenverkehrsampeln
@@ -148,8 +132,8 @@ Notiere Dir, welche _Richtungen_ es gibt und wie die IDs der zu schaltenden Ampe
 
 Erst im nächsten Schritt werden mehrere dieser _Richtungen_ zu Schaltungen zusammengefasst.
 
-### Schreibe die Richtungen in das Haupt-Skript
-_**Tipp:** Für jede Ampel musst Du den_ `AkAmpelModell` _kennen, da sich die Signalstellungen in EEP unterscheiden. Weitere Informationen findest Du unter: [Unterstütze weitere Ampeln in AkAmpelModell](../ak/strasse/README.md)_
+## Schreibe die Richtungen in das Haupt-Skript
+:star: _**Tipp:** Für jede Ampel musst Du den Typ_ `AkAmpelModell` _kennen, da sich die Signalstellungen in EEP unterscheiden. Weitere Informationen findest Du unter: [Unterstütze weitere Ampeln in AkAmpelModell](../ak/strasse/README.md)_
 
 Schreibe nun die einzelnen Richtungen in das Haupt-Skript. Jede Richtung muss dabei eine noch nicht verwendete Speicher-ID zwischen 1 und 1000 bekommen.
 
@@ -221,23 +205,26 @@ fg_w = AkRichtung:neu("FG_W", 102, {
 })
 ```
 
-* Klicke danach im LUA-Editor von EEP auf "Skript neu laden" und wechsle in den 3D-Modus.
-    **Wenn Du alles richtig gemacht hast**, siehst Du weiterhin an allen Signalen Tipp-Texte mit den IDs dieser Signale und keine Fehlermeldung im Log.
+* Klicke in EEP auf _"Skript neu laden"_ und wechsle in den 3D-Modus. <br> :smiley: **Wenn Du alles richtig gemacht hast**, siehst Du weiterhin an allen Signalen Tipp-Texte mit den IDs dieser Signale und keine Fehlermeldung im Log.
 
 __Was ist grade passiert?__
   * Du hast soeben die Richtungen der Kreuzung festgelegt. Jede kann für sich allein geschaltet werden oder zusammen mit anderen Richtungen. Dazu dient `AkKreuzungsSchaltung`, welches im nächsten Schritt zum Einsatz kommt.
 
-### Fasse die Richtungen nun zu Schaltungen zusammen
+## Fasse die Richtungen nun zu Schaltungen zusammen
 
-Notiere Dir, welche der _Richtungen_ zu _Schaltungen_ zusammengefasst werden sollen.
+Eine _Schaltung_ legt fest, welche _Richtungen_ gleichzeitig "grün" bekommen sollen. An einer Kreuzung ist immer nur eine Schaltung aktiv. Bevor eine neue Schaltung aktiv werden kann und die Richtungen auf "grün" schaltet, werden alle alten Richtungen, die in der neuen Schaltung nicht mehr enthalten sind auf rot geschaltet.
 
-**Beachte**: Eine _Schaltung_ darf nur _Richtungen_ enthalten, die sich nicht gegenseitig überlappen.
+:exclamation: _**Beachte**: Eine **Schaltung** darf nur **Richtungen** enthalten, die sich nicht gegenseitig überlappen._
+
+Notiere Dir nun, welche der _Richtungen_ zu _Schaltungen_ zusammengefasst werden sollen.
 
 ![BILD](../assets/tutorial/kreuzung/kreuzungsaufbau-tutorial-schaltungen.png)
 
+:star: _**Tipp**: Wichtig ist, das alle Richtungen in einer Schaltung enthalten sind.
 Im Beispiel siehst Du, dass Richtungen in mehreren Schaltungen enthalten sein können.
+Es würde jedoch genügen, entweder die Schaltungen 1 bis 4 oder die Schaltungen 5 bis 8 zu verwenden, da in diesen jeweils alle Richtungen enthalten sind._
 
-### Schreibe die Schaltungen in das Haupt-Skript
+## Schreibe die Schaltungen in das Haupt-Skript
 
 ```lua
 --------------------------------------------------------------
@@ -318,15 +305,14 @@ k1:fuegeSchaltungHinzu(sch7)
 k1:fuegeSchaltungHinzu(sch8)
 ```
 
-* Klicke danach im LUA-Editor von EEP auf "Skript neu laden" und wechsle in den 3D-Modus.
-    **Wenn Du alles richtig gemacht hast**, siehst Du plötzlich, dass die Schaltungen zum Leben erwachen.
+* Klicke in EEP auf _"Skript neu laden"_ und wechsle in den 3D-Modus. <br>:smiley: **Wenn Du alles richtig gemacht hast**, siehst Du plötzlich, dass die Schaltungen zum Leben erwachen.
 
     ![BILD](../assets/tutorial/kreuzung/zum-leben-erweckt.jpg)
 
 __Was ist grade passiert?__
   * Du hast soeben die Richtungen zu Schaltungen zusammengefasst und diese einer Kreuzung zugewiesen. Durch die beiden am Anfang hinzugefügten Aufrufe in EEPMain() plant die Kreuzung automatisch ihre Schaltungen der Planer führt sie aus.
 
-### Schalte die Hilfsfunktionen wieder aus
+## Schalte die Hilfsfunktionen wieder aus
 
 Erinnerst Du Dich den Code, der die Tipp-Texte zu den Signalen hinzugefügt hat?
 * Wenn Du möchtest, kannst Du die Tipp-Texte wieder abschalten. Entferne nicht die Zeilen, sondern setze die Werte von `true` auf `false`.
@@ -343,18 +329,18 @@ Erinnerst Du Dich den Code, der die Tipp-Texte zu den Signalen hinzugefügt hat?
 **Tipp**: Setze die Werte wieder auf `true`, wenn Du denkst, dass Du die Signale falsch gesetzt hast.
 
 
-## Herzlichen Glückwunsch!
-Du hast diese Anleitung abgeschlossen.
+# Herzlichen Glückwunsch!
+Du hast diese Anleitung abgeschlossen :four_leaf_clover: 
 
-So kannst Du weitermachen:
+## So kannst Du weitermachen:
 * Füge noch fehlende Richtungen zu Schaltungen hinzu:
 	* Wenn `n2` geschaltet ist, kann immer auf `fg_n2` geschaltet werden.
 	* Wenn `s2` geschaltet ist, kann immer auf `fg_s2` geschaltet werden.
 
-Tipps
+## Tipps
 * [Ampeln aufstellen](Ampel-aufstellen)
 
 
-Themen für Fortgeschrittene
+## Themen für Fortgeschrittene
 * Füge Kontaktpunkte und Zähler hinzu
 * Füge Richtungen hinzu, die nur auf Anforderung geschaltet werden

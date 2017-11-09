@@ -1,14 +1,19 @@
-# Anleitungen
-Hier wird Dir Schritt für Schritt erklärt, wie Du die Skripte verwendest.
+# Erste Schritte
 
-![](../assets/headers/SourceCode.png)
+* [**Download & Installation**](Installation.md) <br>So installierst Du das Skriptpaket
 
-## Erste Schritte
+* [**Ampelkreuzung automatisch steuern**](Ampelkreuzung.md) <br>Schritt für Schritt zur ersten Ampelkreuzung
 
-* [Installation](Installation.md) - So installierst Du das Skriptpaket.
+<br>
 
-* [Ampelkreuzung automatisch steuern](Ampelkreuzung.md) - Schritt für Schritt zur ersten Ampelkreuzung.
+# Tipps
 
-## Für Fortgeschrittene
+* [**Ampeln positionieren**](Ampel-aufstellen.md) <br>So stellst Du Ampeln am besten auf
 
-* Benutzt Du andere Ampelmodelle? [Unterstütze weitere Ampeln in AkAmpelModell](../LUA/ak/strasse/README.md#klasse-akampelmodell)
+<br>
+
+# Fortgeschrittene Themen
+
+* [**Ampelmodelle erweitern**](../LUA/ak/strasse/README.md#klasse-akampelmodell) <br>Unterstütze Deine eigenen Modelle in `AkAmpelModell`
+
+<br><br>

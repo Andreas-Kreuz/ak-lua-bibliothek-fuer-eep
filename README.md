@@ -1,38 +1,30 @@
 
-# Ak-Lua-Skripte-für-EEP
-
-Allgemeine Lua-Skripte zur Verkehrssteuerung in EEP 14.
-
-![SourceCode](assets/headers/SourceCode.png)
-
-## Loslegen
+# Loslegen
 
 Die bereitgestellten Funktionen sollen die _Steuerung des Verkehrs vereinfachen_, damit Du Dich als Anlagen-Ersteller auf andere Aspekte konzentrieren kannst.
 Natürlich musst Du trotzdem ein wenig Hand anlegen und Deine Signale mit Lua verdrahten.
 
-* __[Anleitungen](Anleitungen/README.md)__ helfen Dir bei den ersten Schritten mit Ak-Lua-Skripte-für-EEP.
+* [**Anleitungen Schritt-für-Schritt**](Anleitungen/README.md) <br>So kannst Du die Lua-Skripte verwenden
 
-* Mit __[Beispiel-Anlagen](Resourcen/Anlagen/README.md)__ kannst Du einen guten Eindruck der Funktionalität bekommen.
+* [**Beispiel-Anlagen**](Resourcen/Anlagen/README.md) <br>Schau Die die Beispielanlagen an
 
-<br>
+* [**Lua-Skript Dokumentation**](LUA/ak/README.md)  <br>Du brauchst Hilfe? - Schau doch mal bei [ak.strasse](LUA/ak/strasse) nach.
 
-## Für Fortgeschrittene
-
-* Die __[Lua-Skript Dokumentation](LUA/ak/README.md)__ hilft Dir bei der Verwendung der Funktionen. (Schau doch mal bei [ak.strasse](LUA/ak/strasse) nach)
-
-* Du willst die __[Skripte direkt aus GitHub verwenden](doc/GITHUB_NUTZEN.md)__?
-
-:gray_exclamation: __Bitte beachte__: Verwende nur Funktionen, die in der LUA-Dokumentation zur Benutzung freigegebenen sind. Andere Funktionen können jederzeit geändert werden.
+:star: **Verwende nur Funktionen, die zur Benutzung freigegebenen sind**. Andere Funktionen können jederzeit geändert werden.
 
 <br>
 
-## Beiträge sind Willkommen
-__Bitte beachte__: Bevor die oben beschriebenen anstehenden Aufgaben abgearbeitet sind und das Projekt noch nicht aktiv ist, könnte Deine Arbeit umsonst gewesen sein, da noch sehr viel umgebaut wird.
+# Für Fortgeschrittene
 
-* [So kannst Du zum Projekt beitragen](doc/CONTRIBUTING.md)
+* [**Skripte direkt aus GitHub verwenden**](Anleitungen/GitHub_verwenden.md) <br>Wenn Du Dich mit `git` auskennst, kannst Du die Skripte gleich aus GitHub verwenden
 
 <br>
 
-## Was ist EEP?
+# Beiträge sind Willkommen
+* [**Fehler gefunden, Verbesserungsvorschläge?**](CONTRIBUTING.md) <br>So kannst Du zum Projekt beitragen
+
+<br>
+
+# Was ist EEP?
 
 EEP (Eisenbahn.exe Professional) ist eine [Simulationssoftware des Trendverlags](https://trendverlag.com/was-ist-eep-eisenbahn-exe.html). Seit Version 11 wird eine Integration von Lua angeboten.

@@ -1,6 +1,4 @@
-## So kannst Du die Skripte aus GitHub nutzen
-
-![SourceCode](../assets/headers/GitHub.png)
+# So kannst Du die Skripte aus GitHub nutzen
 
 * Melde Dich bei [GitHub](https://github.com/) an.
 

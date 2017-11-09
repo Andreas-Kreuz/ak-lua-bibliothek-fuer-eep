@@ -22,6 +22,8 @@
 __Tipp:__ Das Scannen nach neuen Modellen ist nicht notwendig, da die Skripte keine 3D-Modelle enthalten.
 
 ## Glückwunsch!
-Du hast die Installation abgeschlossen. Die Skripte wurden in das  Unterverzeichnis `LUA/ak` Deiner EEP-Installation installiert, z.B. in `C:\Trend\EEP14\LUA\`.
+Du hast die Installation abgeschlossen.  :four_leaf_clover:
+
+Die Skripte wurden in das  Unterverzeichnis `LUA/ak` Deiner EEP-Installation installiert, z.B. in `C:\Trend\EEP14\LUA\`.
 
 Jetzt kannst Du die [Anleitung für eine automatische Ampelkreuzung](Ampelkreuzung.md) starten oder die [Lua-Skript Dokumentation](../LUA/ak/README.md) lesen.
