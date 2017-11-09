@@ -13,18 +13,12 @@ Die bereitgestellten Funktionen übernehmen für Dich die _Steuerung des Verkehr
 
 :star: **Verwende nur Funktionen, die zur Benutzung freigegebenen sind**. Andere Funktionen können jederzeit geändert werden.
 
-<br>
-
 # Für Fortgeschrittene
 
 * [**Skripte direkt aus GitHub verwenden**](Anleitungen/GitHub_verwenden.md) <br>Wenn Du Dich mit `git` auskennst, kannst Du die Skripte gleich aus GitHub verwenden
 
-<br>
-
 # Beiträge sind Willkommen
 * [**Fehler gefunden, Verbesserungsvorschläge?**](CONTRIBUTING.md) <br>So kannst Du zum Projekt beitragen
-
-<br>
 
 # Was ist EEP?
 
