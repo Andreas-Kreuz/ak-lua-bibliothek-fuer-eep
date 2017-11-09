@@ -43,3 +43,6 @@ luac.out
 /modell-pakete
 /LUA/ak/anlagen
 *.dds
+
+_site
+Gemfile.lock
