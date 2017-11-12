@@ -284,12 +284,18 @@ function AkBlock:addRoute(route, direction)
 end
 
 function AkBlock:getRoutesToCurrentTrainDirection()
-    if not self.trainDirection then print("ERROR: Train in Block \"" .. self.name .. "\" has no direction set in \"enterReservedBlock()\"\n" .. debug.traceback()); return {} end
+    if not self.trainDirection then
+        print("ERROR: Train in Block \"" .. self.name .. "\" has no direction set in \"enterReservedBlock()\"\n"
+                .. debug.traceback())
+        return {}
+    end
     return self.routes[self.trainDirection]
 end
 
 function AkBlock:findFreeRoute()
-    if not self.taken then print("ERROR: Block \"" .. self.name .. "\" war nicht belegt!" .. "\n" .. debug.traceback()) end
+    if not self.taken then
+        print("ERROR: Block \"" .. self.name .. "\" war nicht belegt!" .. "\n" .. debug.traceback())
+    end
     for _, route in ipairs(self:getRoutesToCurrentTrainDirection()) do
         assert(route.block1 == self)
         assert(route.block2 ~= self)
@@ -300,9 +306,7 @@ function AkBlock:findFreeRoute()
 end
 
 function AkBlock:hasRoutes()
-    local hasRoutes = false
-    for k, v in pairs(self.routes) do hasRoutes = true end
-    return hasRoutes
+    return nil ~= next(self.routes)
 end
 
 function AkBlock:reset()
@@ -338,7 +342,10 @@ end
 
 function AkBlock:reserve(trainName)
     assert(trainName)
-    if (self.taken) then print("ERROR: Block \"" .. self.name .. "\" already locked by " .. (self.trainName and self.trainName or "UNKNOWN TRAIN") .. "\n" .. debug.traceback()) end
+    if (self.taken) then
+        print("ERROR: Block \"" .. self.name .. "\" already locked by "
+                .. (self.trainName and self.trainName or "UNKNOWN TRAIN") .. "\n" .. debug.traceback())
+    end
     self.taken = true
     self.trainName = trainName
     self:save()
@@ -352,7 +359,9 @@ function AkBlock:enterReservedBlock(trainName, trainDirection)
                 .. " reserved for .: " .. (self.trainName and self.trainName or "UNKNOWN TRAIN")
                 .. " but entered by: " .. (trainName and trainName or "UNKNOWN TRAIN") .. "\n" .. debug.traceback())
     end
-    if not self.taken then print("ERROR: Block \"" .. self.name .. "\" was not reserved!" .. "\n" .. debug.traceback()) end
+    if not self.taken then
+        print("ERROR: Block \"" .. self.name .. "\" was not reserved!" .. "\n" .. debug.traceback())
+    end
     self.taken = true
     self.trainName = trainName
     self.trainDirection = trainDirection
@@ -561,7 +570,8 @@ function AkRoute:lockRoute(trainName)
     pdbg(dbg.fs_schaltung, "3) Schalte Haltetafel fuer " .. trainName)
     local stopMarker = self:stopMarkerFor(trainName)
     if stopMarker then
-        stopMarker:setDefaultPosition(trainName, self) end
+        stopMarker:setDefaultPosition(trainName, self)
+    end
     self:save()
 
     pdbg(dbg.fs_schaltung, "4) Schalte Signale:")
@@ -777,7 +787,7 @@ function AkSignalTower:showInfo()
     end
     for s in pairs(self.infoStructures) do
         --EEPChangeInfoStructure(s, "BERECHNE TEXT ...")
-        EEPShowInfoStructure(s, alwaysVisible or dbg.fs_schaltung)
+        EEPShowInfoStructure(s, self.alwaysVisible or dbg.fs_schaltung)
         EEPChangeInfoStructure(s, formattedText)
     end
 end
@@ -809,7 +819,8 @@ function AkTrainControl.clearRoutes(trainName, ...)
 
             -- Hack for the last block
             if not route.block2:hasRoutes() then
-                pdbg(dbg.fs_schaltung, "HACK: Resetting Block: \"" .. route.block2.name .. "\" because it has no routes.")
+                pdbg(dbg.fs_schaltung,
+                    "HACK: Resetting Block: \"" .. route.block2.name .. "\" because it has no routes.")
                 route.block2:reset()
             end
         end
@@ -825,7 +836,8 @@ end
 local function timeForRouteCalculation()
     local currentTime = EEPTime
     local runCalc = false
-    if lastRouteCalculation > currentTime then lastRouteCalculation = lastRouteCalculation - 86400 end -- Zeitsprung um Mitternacht (60*60*24=86400 Sekunden)
+    -- Zeitsprung um Mitternacht (60*60*24=86400 Sekunden)
+    if lastRouteCalculation > currentTime then lastRouteCalculation = lastRouteCalculation - 86400 end
     if math.abs(lastRouteCalculation - currentTime) >= ROUTE_CALCULATION_TIMEOUT_SECONDS then
         runCalc = true
         lastRouteCalculation = currentTime
@@ -837,13 +849,13 @@ end
 local function timeHasCome(currentTime, scheduledTime)
     assert(type(currentTime) == "number")
     assert(type(scheduledTime) == "number")
-    local timeHasCome = false
+    local zeitIstReif = false
     if scheduledTime >= 86400 and currentTime < 43200 and currentTime + 86400 >= scheduledTime then
-        timeHasCome = true
+        zeitIstReif = true
     elseif currentTime >= scheduledTime then
-        timeHasCome = true
+        zeitIstReif = true
     end
-    return timeHasCome
+    return zeitIstReif
 end
 
 --- Berechnet alle routen
@@ -866,7 +878,8 @@ function AkTrainControl.calculateRoutes()
             else
                 pdbg(dbg.debug, "Keine freie Fahrstrasse fuer " .. blockAnforderung.eepSaveId
                         .. " (" .. blockAnforderung.name .. " -> "
-                        .. (blockAnforderung.trainDirection and blockAnforderung.trainDirection or "NO DIRECTION!") .. ")")
+                        .. (blockAnforderung.trainDirection and blockAnforderung.trainDirection or "NO DIRECTION!")
+                        .. ")")
             end
         else
             pdbg(dbg.fs_pruefung, "Fahrstrasse fuer "
@@ -881,7 +894,8 @@ function AkTrainControl.calculateRoutes()
             route:setSecured()
             table.insert(securedRoutes, route)
         else
-            pdbg(dbg.fs_pruefung, "Fahrstrasse " .. route.name .. " gesichert in " .. scheduledTime .. " (" .. currentTime .. ")")
+            pdbg(dbg.fs_pruefung, "Fahrstrasse " .. route.name .. " gesichert in "
+                    .. scheduledTime .. " (" .. currentTime .. ")")
         end
     end
 

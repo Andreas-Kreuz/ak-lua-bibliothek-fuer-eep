@@ -1,6 +1,7 @@
 ------------------
 -- EEP Functions
 ------------------
+
 EEPVer = "Testsimulator"
 
 -- Der Inhalt des EEP-EreignisFensters wird geloescht
@@ -52,9 +53,10 @@ EEPTimeS = 0
 -------------------
 -- Neu ab EEP 11 --
 -------------------
-couplingFront = {}
-couplingRear = {}
-eepdata = {}
+local couplingFront = {}
+local couplingRear = {}
+local eepdata = {}
+local trainSpeeds = {}
 
 --- Geschwindigkeit aendern
 -- @param trainName Name des Zuges
@@ -226,12 +228,12 @@ function EEPSetTrainHorn(trainName, onoff) end
 
 --- Kupplung vorn setzen
 -- @param trainName Name des Zuges
--- @param kupplungOn true: kuppeln, false: abstoßen
+-- @param kupplungOn true: kuppeln, false: abstoï¿½en
 function EEPSetTrainCouplingFront(trainName, kupplungOn) end
 
 --- Kupplung hinten setzen
 -- @param trainName Name des Zuges
--- @param kupplungOn true: kuppeln, false: abstoßen
+-- @param kupplungOn true: kuppeln, false: abstoï¿½en
 function EEPSetTrainCouplingRear(trainName, kupplungOn) end
 
 --- Zugverband an bestimmter Stelle trennen

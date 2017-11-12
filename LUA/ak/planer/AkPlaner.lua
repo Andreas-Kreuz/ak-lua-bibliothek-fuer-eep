@@ -1,30 +1,4 @@
 local AkSekundenProTag = 24 * 60 * 60
-local function AkTimeH()
-    if EEPTimeH then
-        return EEPTimeH
-    else
-        local time = os.date("*t");
-        return time.hour
-    end
-end
-
-local function AkTimeM()
-    if EEPTimeM then
-        return EEPTimeM
-    else
-        local time = os.date("*t");
-        return time.min
-    end
-end
-
-local function AkTimeS()
-    if EEPTimeS then
-        return EEPTimeS
-    else
-        local time = os.date("*t");
-        return time.sec
-    end
-end
 
 --- Get the time from EEP or the current system
 -- @return the time of the current day in seconds
@@ -35,7 +9,9 @@ local function AkSekundenSeitMitternacht()
     else
         print("[AkPlaner] System time!")
         local time = os.date("*t")
-        secondsSinceMidnight = os.time { year = 1970, month = 1, day = 1, hour = time.hour, min = time.min, sec = time.sec }
+        secondsSinceMidnight = os.time {
+            year = 1970, month = 1, day = 1, hour = time.hour, min = time.min, sec = time.sec
+        }
     end
     return secondsSinceMidnight
 end
@@ -76,7 +52,9 @@ function AkPlaner:fuehreGeplanteAktionenAus()
         for ausgefuehrteAktion in pairs(ausgefuehrteAktionen) do
             self.eingeplanteAktionen[ausgefuehrteAktion] = nil
             for action, offsetSeconds in pairs(ausgefuehrteAktion.folgeAktionen) do
-                if AkPlaner.debug then print("[AkPlaner] Plan action: '" .. action.name .. "' in " .. offsetSeconds .. " seconds (at " .. AkSekundenSeitMitternacht() + offsetSeconds .. ")") end
+                if AkPlaner.debug then print("[AkPlaner] Plan action: '" .. action.name .. "' in " .. offsetSeconds
+                        .. " seconds (at " .. AkSekundenSeitMitternacht() + offsetSeconds .. ")")
+                end
                 self.eingeplanteAktionen[action] = AkSekundenSeitMitternacht() + offsetSeconds
             end
         end
@@ -99,28 +77,35 @@ function AkPlaner:planeAktion(zeitspanneInSekunden, einzuplanendeAktion, vorgaen
 
     local vorhergehendeAktionGefunden = false
     if vorgaengerAktion then
-        vorhergehendeAktionGefunden = planAfterPreviousAction(self.eingeplanteAktionen, einzuplanendeAktion, zeitspanneInSekunden, vorgaengerAktion)
-                or planAfterPreviousAction(self.spaetereAktionen, einzuplanendeAktion, zeitspanneInSekunden, vorgaengerAktion)
+        vorhergehendeAktionGefunden
+        = planeNachAktion(self.eingeplanteAktionen, einzuplanendeAktion, zeitspanneInSekunden, vorgaengerAktion)
+                or planeNachAktion(self.spaetereAktionen, einzuplanendeAktion,
+            zeitspanneInSekunden, vorgaengerAktion)
         if not vorhergehendeAktionGefunden then
-            print("[AkPlaner] VORGAENGER-AKTION NICHT GEFUNDEN! : " .. vorgaengerAktion.name .. " --> " .. einzuplanendeAktion.name)
+            print("[AkPlaner] VORGAENGER-AKTION NICHT GEFUNDEN! : "
+                    .. vorgaengerAktion.name .. " --> " .. einzuplanendeAktion.name)
         end
     end
 
     if not vorhergehendeAktionGefunden and not self.eingeplanteAktionen[einzuplanendeAktion] then
         self.spaetereAktionen[einzuplanendeAktion] = AkSekundenSeitMitternacht() + zeitspanneInSekunden
-        if AkPlaner.debug then print("[AkPlaner] Plane Aktion: '" .. einzuplanendeAktion.name .. "' in " .. zeitspanneInSekunden .. " Sekunden (um " .. AkSekundenSeitMitternacht() + zeitspanneInSekunden .. ")") end
+        if AkPlaner.debug then print("[AkPlaner] Plane Aktion: '" .. einzuplanendeAktion.name
+                .. "' in " .. zeitspanneInSekunden .. " Sekunden (um "
+                .. AkSekundenSeitMitternacht() + zeitspanneInSekunden .. ")")
+        end
     end
 end
 
-function planAfterPreviousAction(eingeplanteAktionen, einzuplanendeAktion, zeitspanneInSekunden, vorgaengerAktion)
+function planeNachAktion(eingeplanteAktionen, einzuplanendeAktion, zeitspanneInSekunden, vorgaengerAktion)
     local vorhergehendeAktionGefunden = false
-    for foundAction, plannedTime in pairs(eingeplanteAktionen) do
+    for foundAction in pairs(eingeplanteAktionen) do
         if vorgaengerAktion == foundAction then
             foundAction:planeFolgeAktion(einzuplanendeAktion, zeitspanneInSekunden)
             vorhergehendeAktionGefunden = true
         else
             -- plan in the subsequent eingeplanteAktionen of the current eingeplanteAktionen
-            vorhergehendeAktionGefunden = planAfterPreviousAction(foundAction.folgeAktionen, einzuplanendeAktion, zeitspanneInSekunden, vorgaengerAktion)
+            vorhergehendeAktionGefunden = planeNachAktion(foundAction.folgeAktionen, einzuplanendeAktion,
+                zeitspanneInSekunden, vorgaengerAktion)
         end
         if (vorhergehendeAktionGefunden) then break end
     end

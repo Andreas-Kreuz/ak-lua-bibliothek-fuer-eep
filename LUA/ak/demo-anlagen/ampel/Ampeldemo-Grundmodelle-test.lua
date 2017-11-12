@@ -49,17 +49,7 @@ local function run()
     EEPMain()
 end
 
-local function k1Print()
-    list = {}
-    for k, v in pairs(k1:getSchaltungen()) do table.insert(list, k) end
-    table.sort(list, AkKreuzungsSchaltung.hoeherePrioAls)
-
-    for k, v in ipairs(list) do
-        print(k .. ": " .. v:getName() .. " - Prio: " .. v:getPrio())
-    end
-end
-
-for i = 1, 10 do
+for _ = 1, 10 do
     print("Betritt Block")
     KpBetritt(k1_r8)
     run()

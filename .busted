@@ -1,0 +1,14 @@
+return {
+  _all = {
+    directory="LUA"
+  },
+  default = {
+    verbose = true
+  },
+  apiUnit = {
+    coverage=true,
+    tags = "api",
+    ROOT = {"LUA"},
+    verbose = true
+  }
+}

@@ -13,9 +13,10 @@ AkSpeicherHilfe.debug = AkStartMitDebug or false
 -- @param name optional: Name des Speicherortes fuer Debug-Anzeige
 --
 function AkSpeicherHilfe.registriereId(eepSaveId, name)
-    local name = name and name or "?"
+    name = name and name or "?"
     assert(type(eepSaveId) == "number" and eepSaveId > 0 and eepSaveId <= 1000, "Falsche eepSaveId " .. eepSaveId)
-    assert(speicherPlaetze[eepSaveId] == nil, "Speicher-ID ist bereits vergeben: " .. eepSaveId .. " (" .. (speicherPlaetze[eepSaveId] and speicherPlaetze[eepSaveId] or "nil") .. ")")
+    assert(speicherPlaetze[eepSaveId] == nil, "Speicher-ID ist bereits vergeben: "
+            .. eepSaveId .. " (" .. (speicherPlaetze[eepSaveId] and speicherPlaetze[eepSaveId] or "nil") .. ")")
     speicherPlaetze[eepSaveId] = name
 end
 
@@ -38,12 +39,14 @@ end
 -- @param name optional: Name des Speicherortes fuer Debug-Anzeige
 --
 function AkSpeicherHilfe.ladeTabelle(eepSaveId, name)
-    local name = name and name or "?"
+    name = name and name or "?"
     local hResult, data = EEPLoadData(eepSaveId)
     if hResult then
-        if AkSpeicherHilfe.debug then print("[AkSpeicherHilfe  ] Laden: [OK] - " .. eepSaveId .. " - " .. name .. " gefunden: " .. data) end
+        if AkSpeicherHilfe.debug then print("[AkSpeicherHilfe  ] Laden: [OK] - "
+                .. eepSaveId .. " - " .. name .. " gefunden: " .. data) end
     else
-        if AkSpeicherHilfe.debug then print("[AkSpeicherHilfe  ] Laden: [!!] - " .. eepSaveId .. " - " .. name .. " nicht gefunden!") end
+        if AkSpeicherHilfe.debug then print("[AkSpeicherHilfe  ] Laden: [!!] - "
+                .. eepSaveId .. " - " .. name .. " nicht gefunden!") end
     end
 
     local t = {}
@@ -87,7 +90,7 @@ end
 -- @param name optional: Name des Speicherortes fuer Debug-Anzeige
 --
 function AkSpeicherHilfe.speichereTabelle(eepSaveId, table, name)
-    local name = name and name or "?"
+    name = name and name or "?"
     local text = ""
     for k, v in pairsByKeys(table) do
         assert(type(k) == "string", "Key ist kein string: " .. tostring(v))
@@ -131,7 +134,7 @@ end
 --- Lädt
 for i = 1, 1000 do
     local hResult, data = EEPLoadData(i)
-    if hesult then
+    if hResult then
         gespeicherteWerte[i] = data
     end
     if AkSpeicherHilfe.debug then
