@@ -47,7 +47,6 @@ Diese Anleitung zeigt Dir, wie Du in EEP eine mit Ampeln versehene Kreuzung mit 
 * Das Hauptskript `meine-ampel-main.lua` wirst Du im nächsten Schritt im LUA-Verzeichnis von EEP anlegen: `C:\Trend\EEP14\LUA`
 
 * Öffne den LUA-Editor in EEP, wähle alles mit `<Strg>` + `<A>` aus und ersetze es durch
-
   ```lua
   clearlog()
   require("meine-ampel-main")
@@ -71,17 +70,17 @@ Diese Anleitung zeigt Dir, wie Du in EEP eine mit Ampeln versehene Kreuzung mit 
 ## Notwendige Befehle in das Lua-Skript aufnehmen
 
 * Ergänze das Lua-Hauptskript um die folgenden Zeilen.
-    ```lua
-    require("ak.strasse.AkStrasse")
+  ```lua
+  require("ak.strasse.AkStrasse")
 
-    -- Hier kommt der Code
+  -- Hier kommt der Code
 
-    function EEPMain()
-        AkKreuzung:planeSchaltungenEin()
-        AkPlaner:fuehreGeplanteAktionenAus()
-        return 1
-    end
-    ```
+  function EEPMain()
+      AkKreuzung:planeSchaltungenEin()
+      AkPlaner:fuehreGeplanteAktionenAus()
+      return 1
+  end
+  ```
 
 * Klicke in EEP auf _"Skript neu laden"_ und wechsle in den 3D-Modus. <br>:smiley: **Wenn Du alles richtig gemacht hast**, verschwindet die Fehlermeldung
 
@@ -100,12 +99,12 @@ In diesem Schritt läßt Du Dir von `AkStrasse` alle Signal-IDs in 3D anzeigen.
 
 :exclamation: _**Beachte:** Verwende diesen Code nicht, wenn Du in Deiner Anlagen selbst Tipp-Texte mit `EEPShowSignalInfo(...)` an Deinen Signalen anzeigst. Denn all diese Tipp-Texte werden gelöscht._
 
-*  Um die Tipp-Texte anzuzeigen, füge die folgenden beiden Zeilen vor der EEPMain()-Methode hinzu:
-    ```lua
-    -- Hier kommt der Code
-    AkKreuzung.zeigeSignalIdsAllerSignale = true
-    AkKreuzung.zeigeSchaltungAlsInfo = true
-    ```
+* Um die Tipp-Texte anzuzeigen, füge die folgenden beiden Zeilen vor der EEPMain()-Methode hinzu:
+  ```lua
+  -- Hier kommt der Code
+  AkKreuzung.zeigeSignalIdsAllerSignale = true
+  AkKreuzung.zeigeSchaltungAlsInfo = true
+  ```
 * Klicke in EEP auf _"Skript neu laden"_ und wechsle in den 3D-Modus. <br>:smiley: **Wenn Du alles richtig gemacht hast**, siehst Du an allen Signalen Tipp-Texte mit den IDs dieser Signale.
 
     ![BILD](../assets/tutorial/kreuzung/signal-ids2.jpg)
@@ -318,19 +317,18 @@ Erinnerst Du Dich den Code, der die Tipp-Texte zu den Signalen hinzugefügt hat?
 * Wenn Du möchtest, kannst Du die Tipp-Texte wieder abschalten. Entferne nicht die Zeilen, sondern setze die Werte von `true` auf `false`.
 
 	```lua
-	-- Hier kommt der Code
-	AkKreuzung.zeigeSignalIdsAllerSignale = false
-	AkKreuzung.zeigeSchaltungAlsInfo = false
+  -- Hier kommt der Code
+  AkKreuzung.zeigeSignalIdsAllerSignale = false
+  AkKreuzung.zeigeSchaltungAlsInfo = false
 	```
 
-* Klicke danach auf Skript neu laden und wechsle in den 3D-Modus.
-    **Wenn Du alles richtig gemacht hast**, verschwinden die Tipp-Texte von den Signale.
+* Klicke danach auf Skript neu laden und wechsle in den 3D-Modus.<br>:smiley: **Wenn Du alles richtig gemacht hast**, verschwinden die Tipp-Texte von den Signalen.
 
 **Tipp**: Setze die Werte wieder auf `true`, wenn Du denkst, dass Du die Signale falsch gesetzt hast.
 
 
 # Herzlichen Glückwunsch!
-Du hast diese Anleitung abgeschlossen :four_leaf_clover: 
+Du hast diese Anleitung abgeschlossen :four_leaf_clover:
 
 ## So kannst Du weitermachen:
 * Füge noch fehlende Richtungen zu Schaltungen hinzu:
