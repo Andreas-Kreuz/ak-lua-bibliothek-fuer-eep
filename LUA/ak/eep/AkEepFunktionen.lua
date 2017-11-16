@@ -7,9 +7,13 @@ EEPVer = "Testsimulator"
 -- Der Inhalt des EEP-EreignisFensters wird geloescht
 function clearlog() print("Clear ...") end
 
+AkEEPWerte = {}
+AkEEPWerte.zahlDerZuegeAnSignal = {}
+AkEEPWerte.namenDerZuegeAnSignal = {}
+AkEEPWerte.routenDerZuege = {}
+
 local signale = {}
 local switches = {}
-local trainRoutes = {}
 
 --- Setzt das Signal x auf die Stellung y. Der Wert z sollte den Wert 1 haben
 -- @param signalId Id des Signals
@@ -73,6 +77,7 @@ function EEPGetTrainSpeed(trainName) return trainSpeeds[trainName] ~= nil, train
 -- @param kupplungsStatus 1-Kupplung aktiv, 2-Kupplung inaktiv, 3-Wagen angekoppelt(nurGet),
 -- z.B.: EEPRollingstockSetCouplingRear("DB 212309", 2)
 function EEPRollingstockSetCouplingRear(rsName, kupplungsStatus) couplingRear[rsName] = kupplungsStatus end
+
 --- Abfragen der Kupplung (hinten)
 -- @param rsName Name des Rollmaterial,
 -- @param kupplungsStatus 1-Kupplung aktiv, 2-Kupplung inaktiv, 3-Wagen angekoppelt(nurGet),
@@ -204,12 +209,12 @@ end
 --- Route aendern
 -- @param trainName Name des Zuges
 -- @param route Name der Route
-function EEPSetTrainRoute(trainName, route) trainRoutes[trainName] = route end
+function EEPSetTrainRoute(trainName, route) AkEEPWerte.routenDerZuege[trainName] = route end
 
 --- Route abfragen
 -- @param trainName Name des Zuges
 -- @return ok, routeName (ok und Name der Route)
-function EEPGetTrainRoute(trainName) return true, trainRoutes[trainName] and trainRoutes[trainName] or "Alle" end
+function EEPGetTrainRoute(trainName) return true, AkEEPWerte.routenDerZuege[trainName] and AkEEPWerte.routenDerZuege[trainName] or "Alle" end
 
 --- Licht ein oder ausschalten
 -- @param trainName Name des Zuges
@@ -263,9 +268,12 @@ function EEPRegisterRailTrack(railTrackId) end
 
 --- Fragt ab, ob ein Gleis besetzt ist.
 -- @param railTrackId Id des Gleises
+-- @param returnTrainName wenn true, wird als dritter Wert der Zugname
+-- zurueckgegeben
 -- @return Erster Wert: true, wenn Gleis existiert und registriert,
--- zweiter Wert: true, wenn besetzt
-function EEPRegisterRailTrack(railTrackId) end
+-- zweiter Wert: true, wenn besetzt,
+-- dritter Wert: Name des Zuges auf dem Gleis
+function EEPIsRailTrackReserved(railTrackId, returnTrainName) end
 
 --- Registriert ein Gleis fuer die Besetztabfrage.
 -- @param roadTrackId Id des Gleises
@@ -273,9 +281,11 @@ function EEPRegisterRoadTrack(roadTrackId) end
 
 --- Fragt ab, ob ein Gleis besetzt ist.
 -- @param roadTrackId Id des Gleises
+-- @param returnTrainName wenn true, wird als dritter Wert der Zugname
 -- @return Erster Wert: true, wenn Gleis existiert und registriert,
--- zweiter Wert: true, wenn besetzt
-function EEPRegisterRoadTrack(roadTrackId) end
+-- zweiter Wert: true, wenn besetzt,
+-- dritter Wert: Name des Zuges auf dem Gleis
+function EEPIsRoadTrackReserved(roadTrackId, returnTrainName) end
 
 --- Registriert ein Gleis fuer die Besetztabfrage.
 -- @param tramTrackId Id des Gleises
@@ -283,9 +293,11 @@ function EEPRegisterTramTrack(tramTrackId) end
 
 --- Fragt ab, ob ein Gleis besetzt ist.
 -- @param tramTrackId Id des Gleises
+-- @param returnTrainName wenn true, wird als dritter Wert der Zugname
 -- @return Erster Wert: true, wenn Gleis existiert und registriert,
--- zweiter Wert: true, wenn besetzt
-function EEPRegisterTramTrack(tramTrackId) end
+-- zweiter Wert: true, wenn besetzt,
+-- dritter Wert: Name des Zuges auf dem Gleis
+function EEPIsTramTrackReserved(tramTrackId, returnTrainName) end
 
 --- Registriert ein Gleis fuer die Besetztabfrage.
 -- @param auxTrackId Id des Gleises
@@ -293,9 +305,11 @@ function EEPRegisterAuxiliaryTrack(auxTrackId) end
 
 --- Fragt ab, ob ein Gleis besetzt ist.
 -- @param auxTrackId Id des Gleises
+-- @param returnTrainName wenn true, wird als dritter Wert der Zugname
 -- @return Erster Wert: true, wenn Gleis existiert und registriert,
--- zweiter Wert: true, wenn besetzt
-function EEPRegisterAuxiliaryTrack(auxTrackId) end
+-- zweiter Wert: true, wenn besetzt,
+-- dritter Wert: Name des Zuges auf dem Gleis
+function EEPIsAuxiliaryTrackReserved(auxTrackId, returnTrainName) end
 
 --- Registriert ein Gleis fuer die Besetztabfrage.
 -- @param controlTrackId Id des Gleises
@@ -362,3 +376,61 @@ function EEPShowInfoSwitch(switchId, onOff) end
 -- @param switchId Name der Weiche als String.
 -- @param text Text fuer die Anzeige
 function EEPChangeInfoSwitch(switchId, text) end
+
+-------------------------------
+-- Neu ab EEP 13 - Plugin 2  --
+-------------------------------
+
+--- Anzahl der Fahrzeuge im Zugverband Name
+-- @param zugverband Names des Zugverbandes
+--
+function EEPGetRollingstockItemsCount(zugverband)
+end
+
+--- Name des Rollis Nummer im Zugverband Name
+-- @param zugverband Name des Zugverbandes
+-- @param Nummer
+--
+function EEPGetRollingstockItemName(zugverband, Nummer)
+end
+
+--- Anzahl der Züge, welche vom Signal Signal_ID gehalten werden
+-- @param signalId ID des Signals
+--
+function EEPGetSignalTrainsCount(signalId)
+    return AkEEPWerte.zahlDerZuegeAnSignal[signalId] or 0
+end
+
+--- Name des Zuges Zahl, der vom Signal Signal_ID gehalten wird
+-- @param signalId ID des Signals
+-- @param position Position des Zuges am Signal
+--
+function EEPGetSignalTrainName(signalId, position)
+    if AkEEPWerte.namenDerZuegeAnSignal[signalId] then
+        if AkEEPWerte.namenDerZuegeAnSignal[signalId][position] then
+            return AkEEPWerte.namenDerZuegeAnSignal[signalId][position]
+        end
+    end
+    return "DUMMY"
+end
+
+--- Anzahl der Züge, welche im Depot ZugdepotId gelistet sind
+-- @param depotId ID des Zugdepots
+--
+function EEPGetTrainyardItemsCount(depotId)
+end
+
+--- Name des Zuges am DepotPlatz im Depot depotId
+-- @param depotId ID des Zugdepots
+-- @param position Position (Zahl) des Zugverbandes im Depot
+--
+function EEPGetTrainyardItemName(depotId, position)
+end
+
+--- Status (wartet/auf Anlage) des Zuges Name am Platz im depotId
+-- @param depotId ID des Zugdepots
+-- @param zugverband Name des Zugverbandes
+-- @param position Position (Zahl) des Zugverbandes im Depot
+--
+function EEPGetTrainyardItemStatus(depotId, zugverband, position)
+end
