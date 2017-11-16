@@ -38,9 +38,9 @@ local function run()
     EEPMain()
 end
 
-AkEEPWerte.zahlDerZuegeAnSignal[14] = 1
-AkEEPWerte.namenDerZuegeAnSignal[14] = {}
-AkEEPWerte.namenDerZuegeAnSignal[14][1] = "#Zug1"
+AkEEPHilfe.zahlDerZuegeAnSignal[14] = 1
+AkEEPHilfe.namenDerZuegeAnSignal[14] = {}
+AkEEPHilfe.namenDerZuegeAnSignal[14][1] = "#Zug1"
 EEPSetTrainRoute("#Zug1", "Meine Route 1")
 
 assert(true == os:pruefeAnforderungenAnSignalen())
