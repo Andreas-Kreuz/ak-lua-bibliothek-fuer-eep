@@ -214,7 +214,9 @@ function EEPSetTrainRoute(trainName, route) AkEEPWerte.routenDerZuege[trainName]
 --- Route abfragen
 -- @param trainName Name des Zuges
 -- @return ok, routeName (ok und Name der Route)
-function EEPGetTrainRoute(trainName) return true, AkEEPWerte.routenDerZuege[trainName] and AkEEPWerte.routenDerZuege[trainName] or "Alle" end
+function EEPGetTrainRoute(trainName)
+    return true, AkEEPWerte.routenDerZuege[trainName] and AkEEPWerte.routenDerZuege[trainName] or "Alle"
+end
 
 --- Licht ein oder ausschalten
 -- @param trainName Name des Zuges
