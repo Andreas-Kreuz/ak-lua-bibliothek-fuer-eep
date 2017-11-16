@@ -6,9 +6,9 @@ AkKreuzung.zeigeSignalIdsAllerSignale = true
 AkKreuzung.zeigeSchaltungAlsInfo = true
 
 [EEPLuaData]
-DS_100 = "f=0,p=Gruen,w=1,"
+DS_100 = "f=0,p=Rot,w=3,"
 DS_102 = "f=0,p=Rot,w=0,"
 DS_104 = "f=0,p=Rot,w=0,"
-DS_105 = "f=0,p=Rot,w=3,"
+DS_105 = "f=0,p=Gruen,w=1,"
 DS_107 = "f=0,p=Rot,w=0,"
 DS_108 = "f=0,p=Rot,w=0,"
