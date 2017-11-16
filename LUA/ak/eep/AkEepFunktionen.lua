@@ -9,10 +9,15 @@ function clearlog()
     --print("Clear ...")
 end
 
-AkEEPWerte = {}
-AkEEPWerte.zahlDerZuegeAnSignal = {}
-AkEEPWerte.namenDerZuegeAnSignal = {}
-AkEEPWerte.routenDerZuege = {}
+AkEEPHilfe = {}
+AkEEPHilfe.zahlDerZuegeAnSignal = {}
+AkEEPHilfe.namenDerZuegeAnSignal = {}
+AkEEPHilfe.routenDerZuege = {}
+AkEEPHilfe.registrierteStrassen = {}
+function AkEEPHilfe.setzeZugAufStrasse(strassenId, zugname)
+    AkEEPHilfe.registrierteStrassen[strassenId] = zugname
+end
+
 
 local signale = {}
 local switches = {}
@@ -211,13 +216,13 @@ end
 --- Route aendern
 -- @param trainName Name des Zuges
 -- @param route Name der Route
-function EEPSetTrainRoute(trainName, route) AkEEPWerte.routenDerZuege[trainName] = route end
+function EEPSetTrainRoute(trainName, route) AkEEPHilfe.routenDerZuege[trainName] = route end
 
 --- Route abfragen
 -- @param trainName Name des Zuges
 -- @return ok, routeName (ok und Name der Route)
 function EEPGetTrainRoute(trainName)
-    return true, AkEEPWerte.routenDerZuege[trainName] and AkEEPWerte.routenDerZuege[trainName] or "Alle"
+    return true, AkEEPHilfe.routenDerZuege[trainName] and AkEEPHilfe.routenDerZuege[trainName] or "Alle"
 end
 
 --- Licht ein oder ausschalten
@@ -280,16 +285,27 @@ function EEPRegisterRailTrack(railTrackId) end
 function EEPIsRailTrackReserved(railTrackId, returnTrainName) end
 
 --- Registriert ein Gleis fuer die Besetztabfrage.
--- @param roadTrackId Id des Gleises
-function EEPRegisterRoadTrack(roadTrackId) end
+-- @param strassenId Id des Gleises
+function EEPRegisterRoadTrack(strassenId)
+    AkEEPHilfe.registrierteStrassen[strassenId] = false
+end
 
 --- Fragt ab, ob ein Gleis besetzt ist.
--- @param roadTrackId Id des Gleises
+-- @param strassenId Id des Gleises
 -- @param returnTrainName wenn true, wird als dritter Wert der Zugname
 -- @return Erster Wert: true, wenn Gleis existiert und registriert,
 -- zweiter Wert: true, wenn besetzt,
 -- dritter Wert: Name des Zuges auf dem Gleis
-function EEPIsRoadTrackReserved(roadTrackId, returnTrainName) end
+function EEPIsRoadTrackReserved(strassenId, returnTrainName)
+    if returnTrainName then
+        return (AkEEPHilfe.registrierteStrassen[strassenId] ~= nil and true or false),
+        (AkEEPHilfe.registrierteStrassen[strassenId] ~= false and true or false),
+        (returnTrainName and AkEEPHilfe.registrierteStrassen[strassenId] or nil)
+    else
+        return (AkEEPHilfe.registrierteStrassen[strassenId] ~= nil and true or false),
+        (AkEEPHilfe.registrierteStrassen[strassenId] ~= false and true or false)
+    end
+end
 
 --- Registriert ein Gleis fuer die Besetztabfrage.
 -- @param tramTrackId Id des Gleises
@@ -402,7 +418,7 @@ end
 -- @param signalId ID des Signals
 --
 function EEPGetSignalTrainsCount(signalId)
-    return AkEEPWerte.zahlDerZuegeAnSignal[signalId] or 0
+    return AkEEPHilfe.zahlDerZuegeAnSignal[signalId] or 0
 end
 
 --- Name des Zuges Zahl, der vom Signal Signal_ID gehalten wird
@@ -410,9 +426,9 @@ end
 -- @param position Position des Zuges am Signal
 --
 function EEPGetSignalTrainName(signalId, position)
-    if AkEEPWerte.namenDerZuegeAnSignal[signalId] then
-        if AkEEPWerte.namenDerZuegeAnSignal[signalId][position] then
-            return AkEEPWerte.namenDerZuegeAnSignal[signalId][position]
+    if AkEEPHilfe.namenDerZuegeAnSignal[signalId] then
+        if AkEEPHilfe.namenDerZuegeAnSignal[signalId][position] then
+            return AkEEPHilfe.namenDerZuegeAnSignal[signalId][position]
         end
     end
     return "DUMMY"

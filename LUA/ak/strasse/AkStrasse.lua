@@ -421,14 +421,65 @@ function AkRichtung:aktualisiereAnforderung()
     end
 end
 
-function AkRichtung:zaehleAnSignalAlle(signalId)
+function AkRichtung:zaehleAnStrasseAlle(strassenId)
+    EEPRegisterRoadTrack(strassenId)
+    if not self.zaehlStrassen[strassenId] then
+        self.zaehlStrassen[strassenId] = {}
+    end
+    return self
+end
+
+function AkRichtung:zaehleAnStrasseBeiRoute(strassenId, route)
+    EEPRegisterRoadTrack(strassenId)
+    if not self.zaehlStrassen[strassenId] then
+        self.zaehlStrassen[strassenId] = {}
+    end
+    self.zaehlStrassen[strassenId][route] = true
+    return self
+end
+
+function AkRichtung:pruefeAnforderungenAnStrassen()
+    local verwendeZaehlAmpeln = false
+    local anforderungGefunden = false
+    for strassenId, routen in pairs(self.zaehlStrassen) do
+        verwendeZaehlAmpeln = true
+
+        local ok, wartend, zugName = EEPIsRoadTrackReserved(strassenId, true)
+        assert(ok)
+
+        if wartend then
+            assert(zugName, "Kein Zug auf Strasse: " .. strassenId)
+            local found, zugRoute = EEPGetTrainRoute(zugName)
+            assert(found, "Zug nicht gefunden in EEPGetTrainRoute: " .. zugName)
+
+            local zugGefunden = false
+            local filterNachRoute = false
+            for erlaubteRoute in pairs(routen) do
+                filterNachRoute = true
+                if erlaubteRoute == zugRoute then
+                    zugGefunden = true
+                    break
+                end
+            end
+
+            anforderungGefunden = not filterNachRoute or zugGefunden
+            break
+        end
+    end
+    self.anforderungAnStrasse = anforderungGefunden
+    self:aktualisiereAnforderung()
+    return verwendeZaehlAmpeln
+end
+
+function AkRichtung:zaehleAnAmpelAlle(signalId)
+    assert(signalId, "Keine signalId angegeben")
     if not self.zaehlAmpeln[signalId] then
         self.zaehlAmpeln[signalId] = {}
     end
     return self
 end
 
-function AkRichtung:zaehleAnSignalBeiRoute(signalId, route)
+function AkRichtung:zaehleAnAmpelBeiRoute(signalId, route)
     if not self.zaehlAmpeln[signalId] then
         self.zaehlAmpeln[signalId] = {}
     end
@@ -467,6 +518,11 @@ function AkRichtung:pruefeAnforderungenAnSignalen()
     self.anforderungAnSignal = anforderungGefunden
     self:aktualisiereAnforderung()
     return verwendeZaehlAmpeln
+end
+
+function AkRichtung:pruefeAnforderungen()
+    self:pruefeAnforderungenAnStrassen()
+    self:pruefeAnforderungenAnSignalen()
 end
 
 function AkRichtung:betritt()
@@ -513,7 +569,9 @@ function AkRichtung:setzeWartezeitZurueck()
 end
 
 function AkRichtung:anforderungVorhanden()
-    return self.fahrzeuge > 0 or self.anforderungAnSignal
+    return self.fahrzeuge > 0
+            or self.anforderungAnSignal
+            or self.anforderungAnStrasse
 end
 
 function AkRichtung:save()
@@ -560,14 +618,20 @@ function AkRichtung:getRichtungsInfo()
 end
 
 function AkRichtung:getPrio()
+    local verwendeZaehlStrassen = self:pruefeAnforderungenAnStrassen()
+    if verwendeZaehlStrassen then
+        local prio = (self.anforderungAnStrasse and 1 or 0) * 3 * self.fahrzeugMultiplikator
+        return self.warteZeit > prio and self.warteZeit or prio
+    end
+
     local verwendeZaehlAmpeln = self:pruefeAnforderungenAnSignalen()
     if verwendeZaehlAmpeln then
         local prio = (self.anforderungAnSignal and 1 or 0) * 3 * self.fahrzeugMultiplikator
         return self.warteZeit > prio and self.warteZeit or prio
-    else
-        local prio = self.fahrzeuge * 3 * self.fahrzeugMultiplikator
-        return self.warteZeit > prio and self.warteZeit or prio
     end
+
+    local prio = self.fahrzeuge * 3 * self.fahrzeugMultiplikator
+    return self.warteZeit > prio and self.warteZeit or prio
 end
 
 function AkRichtung:setFahrzeugMultiplikator(fahrzeugMultiplikator)
@@ -589,7 +653,7 @@ end
 --
 function AkRichtung:neu(name, eepSaveId, ampeln)
     assert(name, "Bitte geben Sie den Namen \"name\" fuer diese Richtung an.")
-    assert(type(name) == "string")
+    assert(type(name) == "string", "Name ist kein String")
     assert(eepSaveId, "Bitte geben Sie den Wert \"eepSaveId\" fuer diese Richtung an.")
     assert(type(eepSaveId) == "number")
     assert(ampeln, "Bitte geben Sie den Wert \"ampeln\" fuer diese Richtung an.")
@@ -601,7 +665,8 @@ function AkRichtung:neu(name, eepSaveId, ampeln)
         name = name,
         eepSaveId = eepSaveId,
         ampeln = ampeln,
-        zaehlAmpeln = {}
+        zaehlAmpeln = {},
+        zaehlStrassen = {},
     }
 
     self.__index = self
@@ -736,7 +801,7 @@ function AkKreuzung.planeSchaltungenEin()
         end
 
         for richtung in pairs(alleRichtungen) do
-            richtung:pruefeAnforderungenAnSignalen()
+            richtung:pruefeAnforderungen()
         end
     end
 
