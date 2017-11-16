@@ -5,7 +5,9 @@
 EEPVer = "Testsimulator"
 
 -- Der Inhalt des EEP-EreignisFensters wird geloescht
-function clearlog() print("Clear ...") end
+function clearlog()
+    --print("Clear ...")
+end
 
 AkEEPWerte = {}
 AkEEPWerte.zahlDerZuegeAnSignal = {}
