@@ -303,14 +303,17 @@ end
 
 
 function AkKreuzungsSchaltung:fuegeRichtungHinzu(richtung)
+    assert(richtung, "Bitte ein gueltige Richtung angeben")
     self.richtungen[richtung] = true
 end
 
 function AkKreuzungsSchaltung:addRichtungMitAnforderung(richtung)
+    assert(richtung, "Bitte ein gueltige Richtung angeben")
     self.richtungenMitAnforderung[richtung] = true
 end
 
 function AkKreuzungsSchaltung:fuegeRichtungFuerFussgaengerHinzu(richtung)
+    assert(richtung, "Bitte ein gueltige Richtung angeben")
     self.richtungenFuerFussgaenger[richtung] = true
 end
 
@@ -414,8 +417,56 @@ end
 
 function AkRichtung:aktualisiereAnforderung()
     for _, ampel in pairs(self.ampeln) do
-        ampel:setzeAnforderung(self.fahrzeuge > 0, self, self.fahrzeuge)
+        ampel:setzeAnforderung(self:anforderungVorhanden(), self, self.fahrzeuge)
     end
+end
+
+function AkRichtung:zaehleAnSignalAlle(signalId)
+    if not self.zaehlAmpeln[signalId] then
+        self.zaehlAmpeln[signalId] = {}
+    end
+    return self
+end
+
+function AkRichtung:zaehleAnSignalBeiRoute(signalId, route)
+    if not self.zaehlAmpeln[signalId] then
+        self.zaehlAmpeln[signalId] = {}
+    end
+    self.zaehlAmpeln[signalId][route] = true
+    return self
+end
+
+function AkRichtung:pruefeAnforderungenAnSignalen()
+    local verwendeZaehlAmpeln = false
+    local anforderungGefunden = false
+    for signalId, routen in pairs(self.zaehlAmpeln) do
+        verwendeZaehlAmpeln = true
+
+        local wartend = EEPGetSignalTrainsCount(signalId)
+
+        if wartend > 0 then
+            local zugName = EEPGetSignalTrainName(signalId, 1)
+            assert(zugName, "Kein Zug an Signal: " .. signalId)
+            local found, zugRoute = EEPGetTrainRoute(zugName)
+            assert(found, "Zug nicht gefunden in EEPGetTrainRoute: " .. zugName)
+
+            local zugGefunden = false
+            local filterNachRoute = false
+            for erlaubteRoute in pairs(routen) do
+                filterNachRoute = true
+                if erlaubteRoute == zugRoute then
+                    zugGefunden = true
+                    break
+                end
+            end
+
+            anforderungGefunden = not filterNachRoute or zugGefunden
+            break
+        end
+    end
+    self.anforderungAnSignal = anforderungGefunden
+    self:aktualisiereAnforderung()
+    return verwendeZaehlAmpeln
 end
 
 function AkRichtung:betritt()
@@ -462,7 +513,7 @@ function AkRichtung:setzeWartezeitZurueck()
 end
 
 function AkRichtung:anforderungVorhanden()
-    return self.fahrzeuge > 0
+    return self.fahrzeuge > 0 or self.anforderungAnSignal
 end
 
 function AkRichtung:save()
@@ -482,7 +533,7 @@ function AkRichtung:load()
         self.warteZeit = data["w"] and tonumber(data["w"]) or 0
         self.phase = data["p"] or AkPhase.ROT
         for _, ampel in pairs(self.ampeln) do
-            ampel:setzeAnforderung(self.fahrzeuge > 0, self, self.fahrzeuge)
+            ampel:setzeAnforderung(self:anforderungVorhanden(), self, self.fahrzeuge)
         end
         self:schalte(self.phase, "Neu geladen")
     else
@@ -491,7 +542,6 @@ function AkRichtung:load()
         self.phase = AkPhase.ROT
     end
 end
-
 
 function AkRichtung:getWarteZeit()
     return self.warteZeit
@@ -510,8 +560,14 @@ function AkRichtung:getRichtungsInfo()
 end
 
 function AkRichtung:getPrio()
-    local prio = self.fahrzeuge * 3 * self.fahrzeugMultiplikator
-    return self.warteZeit > prio and self.warteZeit or prio
+    local verwendeZaehlAmpeln = self:pruefeAnforderungenAnSignalen()
+    if verwendeZaehlAmpeln then
+        local prio = (self.anforderungAnSignal and 1 or 0) * 3 * self.fahrzeugMultiplikator
+        return self.warteZeit > prio and self.warteZeit or prio
+    else
+        local prio = self.fahrzeuge * 3 * self.fahrzeugMultiplikator
+        return self.warteZeit > prio and self.warteZeit or prio
+    end
 end
 
 function AkRichtung:setFahrzeugMultiplikator(fahrzeugMultiplikator)
@@ -545,6 +601,7 @@ function AkRichtung:neu(name, eepSaveId, ampeln)
         name = name,
         eepSaveId = eepSaveId,
         ampeln = ampeln,
+        zaehlAmpeln = {}
     }
 
     self.__index = self
@@ -665,6 +722,24 @@ local aufbauHilfeErzeugt = false
 --region AkSchaltungStart
 
 function AkKreuzung.planeSchaltungenEin()
+
+
+    --- Diese Funktion sucht sich aus den Ampeln die mit der passenden Richtung
+    -- raus und setzt deren Texte auf die aktuelle Schaltung
+    -- @param kreuzung
+    local function aktualisiereAnforderungen(kreuzung)
+        local alleRichtungen = {}
+        for schaltung in pairs(kreuzung:getSchaltungen()) do
+            for richtung in pairs(schaltung:getRichtungen()) do
+                alleRichtungen[richtung] = true
+            end
+        end
+
+        for richtung in pairs(alleRichtungen) do
+            richtung:pruefeAnforderungenAnSignalen()
+        end
+    end
+
 
     --- Diese Funktion sucht sich aus den Ampeln die mit der passenden Richtung
     -- raus und setzt deren Texte auf die aktuelle Schaltung
@@ -905,6 +980,7 @@ function AkKreuzung.planeSchaltungenEin()
 
     for _, kreuzung in ipairs(AkAllKreuzungen) do
         AkSchalteKreuzung(kreuzung)
+        aktualisiereAnforderungen(kreuzung)
     end
 end
 
