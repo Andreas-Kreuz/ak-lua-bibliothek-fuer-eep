@@ -113,12 +113,14 @@ function AkModellPaket:fuegeDateienHinzu(basisOrdner, praefix, unterOrdner, pfad
     assert(praefix)
     assert(unterOrdner)
     local neuePfade = {}
-    --print(string.format("Durchsuche \"%s\" in Unterordner \"%s\"", basisOrdner, unterOrdner))
+    print(string.format("Durchsuche \"%s\" in Unterordner \"%s\"", basisOrdner, unterOrdner))
     local _, dateiGefunden = AkModellPacker.dateienSuchen(neuePfade, basisOrdner, unterOrdner)
     assert(dateiGefunden, string.format("Keine Datei gefunden: \"%s\" in Unterordner \"%s\"", basisOrdner, unterOrdner))
 
     for pfad, datei in pairs(neuePfade) do
-        if not pfadAusschlussMuster and not AkModellPaket.pfadAusschliessen(pfad, pfadAusschlussMuster) then
+        if pfadAusschlussMuster and AkModellPaket.pfadAusschliessen(pfad, pfadAusschlussMuster) then
+            print("Ueberspringe: " .. pfad)
+        else
             self.installationsPfade[praefix .. pfad] = datei
             self.modellPfade[basisOrdner .. "\\" .. pfad] = datei
         end
@@ -152,7 +154,7 @@ function AkModellPacker.dateienSuchen(dateiPfade, basisOrdner, unterOrdner)
     local aktuellerOrdner = basisOrdner .. "\\" .. unterOrdner
     if os.execute([[dir ]] .. aktuellerOrdner .. [[ /b /a-d >nul]]) then
         for datei in io.popen([[dir ]] .. aktuellerOrdner .. [[ /b /a-d ]]):lines() do
-            --print(currentdir .. "\\" .. file1)
+            print(unterOrdner .. "\\" .. datei)
             dateiPfade[unterOrdner .. "\\" .. datei] = datei
             dateiGefunden = true
         end
