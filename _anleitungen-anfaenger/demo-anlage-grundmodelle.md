@@ -1,6 +1,11 @@
-# Anlage Ampeldemo-Grundmodelle
-
-![SourceCode](../../../assets/headers/AmpelDemo.jpg)
+---
+layout: page
+title: Anlage Ampel-Demo 1
+description: Diese Anlage wurde ausschließlich mit Grundmodellen aus EEP 14 erstellt und demonstriert die Möglichkeiten der Steuerung für den Straßenverkehr.
+feature-img: "/assets/headers/AmpelDemo.jpg"
+img: "/assets/headers/AmpelDemo.jpg"
+date: 2017-09-07
+---
 
 Diese Anlage wurde mit EEP 14 erstellt und demonstriert die Möglichkeiten der Steuerung für den Straßenverkehr.
 

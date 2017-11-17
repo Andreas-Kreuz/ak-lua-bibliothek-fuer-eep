@@ -1,6 +1,12 @@
-# Lua-Skript Dokumentation
+---
+layout: page
+title:  Lua-Dokumentation
+permalink: lua/ak/
+feature-img: "/assets/headers/SourceCode.png"
+img: "/assets/headers/SourceCode.png"
+---
 
-![SourceCode](../../assets/headers/SourceCode.png)
+# Lua-Skript Dokumentation
 
 ## Skripte in `ak`
 * __[ak/eep](eep/README.md)__

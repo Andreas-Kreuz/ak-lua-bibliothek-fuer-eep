@@ -1,6 +1,12 @@
-# Paket ak.speicher - Hilfsfunktionen für Speichern und laden
+---
+layout: page
+title: Paket ak.speicher
+permalink: lua/ak/speicher/
+feature-img: "/assets/headers/SourceCode.png"
+img: "/assets/headers/SourceCode.png"
+---
 
-![SourceCode](../../../assets/headers/SourceCode.png)
+# Paket ak.speicher - Hilfsfunktionen für Speichern und laden
 
 Anstehende Aufgaben:
 * [ ] Funktionsnamen auf deutsch umstellen

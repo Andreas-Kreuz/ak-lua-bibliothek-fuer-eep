@@ -1,3 +1,13 @@
+---
+layout: page
+title: Ampeln aufstellen
+description: Verwende maximal eine Ampel zum Steuern jeder Fahrspur. Verwende "alte" Ampeln mit dem richtigen Abstand im 1-Spur-System.
+feature-img: "/assets/headers/Titelbild-Simulator.jpg"
+img: "/assets/headers/Titelbild-Simulator.jpg"
+date: 2017-09-02
+tags: [AkStrasse, Verwendung, Anleitung]
+---
+
 # Ampeln aufstellen
 
 ## "Alte Ampeln" im 1-spurigen System benutzen
@@ -26,4 +36,4 @@ Um Probleme durch hintereinander aufgestellte Ampeln zu vermeiden, stelle **nur 
 
 ## Wenn Fußgängerampeln Autos anhalten
 
-Einige Fußgängerampeln stoppen Autos, wenn sie grün sind. Wenn Dich das beim Abbiegen stört, dann setze auch diese Ampeln auf die Gegenfahrbahn und positioniere sie mit dem Signalabstand. 
+Einige Fußgängerampeln stoppen Autos, wenn sie grün sind. Wenn Dich das beim Abbiegen stört, dann setze auch diese Ampeln auf die Gegenfahrbahn und positioniere sie mit dem Signalabstand.

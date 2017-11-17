@@ -1,6 +1,12 @@
-# Paket ak.planer - zeitgesteuerte Planung von Aufgaben
+---
+layout: page
+title: Paket ak.planer
+permalink: lua/ak/planer/
+feature-img: "/assets/headers/SourceCode.png"
+img: "/assets/headers/SourceCode.png"
+---
 
-![SourceCode](../../../assets/headers/SourceCode.png)
+# Paket ak.planer - zeitgesteuerte Planung von Aufgaben
 
 Anstehende Aufgaben:
 * [x] Funktionsnamen auf deutsch umstellen

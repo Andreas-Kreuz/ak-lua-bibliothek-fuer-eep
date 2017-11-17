@@ -1,6 +1,12 @@
-# Paket ak.eep - Funktionen für EEP
+---
+layout: page
+title: Paket ak.eep
+permalink: lua/ak/eep/
+feature-img: "/assets/headers/SourceCode.png"
+img: "/assets/headers/SourceCode.png"
+---
 
-![SourceCode](../../../assets/headers/Ttielbild-Simulator.jpg)
+# Paket ak.eep - Funktionen für EEP
 
 ## Skripte, Klassen und Funktionen
 * `ak.eep.AkEepFunktionen`

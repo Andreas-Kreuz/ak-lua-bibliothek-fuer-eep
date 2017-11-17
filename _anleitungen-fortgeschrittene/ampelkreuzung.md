@@ -1,3 +1,13 @@
+---
+layout: page
+title: Komplexe Ampelkreuzung
+description: Steuere eine Kreuzung mit 4 Richtungen und geradeaus und Linksabbiegern
+feature-img: "/assets/headers/tutorial1-ampel.jpg"
+img: "/assets/headers/tutorial1-ampel.jpg"
+date: 2017-09-01
+tags: [AkStrasse, Verwendung, Anleitung]
+---
+
 # Ampelkreuzung automatisch steuern
 
 Diese Anleitung zeigt Dir, wie Du in EEP eine mit Ampeln versehene Kreuzung mit dem Skript verdrahten kannst.

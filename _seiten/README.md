@@ -1,3 +1,8 @@
+---
+layout: page
+title: "Liesmich"
+hide: true
+---
 # Erste Schritte
 
 * [**Download & Installation**](Installation.md) <br>So installierst Du das Skriptpaket
