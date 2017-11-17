@@ -85,9 +85,9 @@ do
     paket1:fuegeDateienHinzu(aktuellerOrdner, "", "Resourcen\\Anlagen\\Andreas_Kreuz-Tutorial-Ampelkreuzung", {
         ".dds", "README.md"
     })
-    paket1:fuegeDateienHinzu(aktuellerOrdner, "", "Resourcen\\Doc\\Andreas_Kreuz-Tutorial-Ampelkreuzung", {
-        ".dds", "README.md"
-    })
+    --paket1:fuegeDateienHinzu(aktuellerOrdner, "", "Resourcen\\Doc\\Andreas_Kreuz-Tutorial-Ampelkreuzung", {
+    --    ".dds", "README.md"
+    --})
 
     print(paket0.deutscherName)
     print(paket1.deutscherName)
