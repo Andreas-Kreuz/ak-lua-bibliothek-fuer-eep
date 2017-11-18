@@ -1,6 +1,12 @@
-# Paket ak.strasse - Steuerung für den Strassenverkehr
+---
+layout: page
+title: Paket ak.strasse
+permalink: lua/ak/strasse/
+feature-img: "/assets/headers/SourceCode.png"
+img: "/assets/headers/SourceCode.png"
+---
 
-![SourceCode](../../../assets/headers/SourceCode.png)
+# Paket ak.strasse - Steuerung für den Strassenverkehr
 
 ## Inhalt
 <!-- TOC depthFrom:2 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->

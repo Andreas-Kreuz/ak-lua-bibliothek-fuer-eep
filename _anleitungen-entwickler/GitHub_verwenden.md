@@ -1,3 +1,12 @@
+---
+layout: page
+title: Github verwenden
+description: Verwende die Skripte direkt aus GitHub.
+img: "/assets/headers/GitHub.png"
+feature-img: "/assets/headers/GitHub.png"
+date: 2017-09-03
+tags: [Fortgeschrittene, Entwickler]
+---
 # So kannst Du die Skripte aus GitHub nutzen
 
 * Melde Dich bei [GitHub](https://github.com/) an.

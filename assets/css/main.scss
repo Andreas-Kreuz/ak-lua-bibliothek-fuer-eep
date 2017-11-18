@@ -1,0 +1,28 @@
+---
+---
+
+@import "my_pages";
+.content img:not(.emoji),
+.container img:not(.emoji),
+.container-fluid img:not(.emoji) {
+  max-width: 100%;
+}
+table,
+td,
+tr {
+  border: 1px solid #111111;
+}
+
+table {
+  margin-bottom: 2rem;
+}
+
+td {
+  padding: 0.5rem;
+}
+
+div.highlight {
+  background-color: #f8f9fa;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}

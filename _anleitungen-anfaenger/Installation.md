@@ -1,3 +1,13 @@
+---
+layout: page
+title: Installation
+description: Hier erfährst Du, wie Du das Skript-Paket herunterladen und direkt in EEP installieren kannst.
+feature-img: "/assets/headers/ModellPacker.png"
+img: "/assets/headers/ModellPacker.png"
+date: 2017-09-01
+tags: [Installation]
+---
+
 # Installation von Ak-Lua-Skripte-für-EEP
 
 ## Herunterladen

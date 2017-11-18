@@ -1,6 +1,12 @@
-# Paket ak.modellpacker - Modell-Installer erzeugen
+---
+layout: page
+title: Paket ak.modellpacker
+permalink: lua/ak/modellpacker/
+feature-img: "/assets/headers/ModellPacker.png"
+img: "/assets/headers/ModellPacker.png"
+---
 
-![SourceCode](../../../assets/headers/ModellPacker.png)
+# Paket ak.modellpacker - Modell-Installer erzeugen
 
 ## Motivation
 Dieses Paket hilft dabei Modell-Installer zu erzeugen.
