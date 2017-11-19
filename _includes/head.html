@@ -1,34 +1,16 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-
-    <!-- Popper (used for bootstrap) -->
-    <script src="{{ site.baseurl }}/assets/js/popper.js" ></script>
-
-    <!-- JQuery (used for bootstrap and jekyll search) -->
-    <script src="{{ site.baseurl }}/assets/js/jquery-3.2.1.min.js" ></script>
-
-    <!-- Main JS (navbar.js and katex_init.js)-->
-    <script src="{{ site.baseurl }}/assets/js/main.min.js"></script>
-
-    <!-- Bootstrap JS -->
-    <script src="{{ site.baseurl }}/assets/js/bootstrap.min.js"></script>
-
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" type="text/css" href="{{ site.baseurl }}/assets/css/bootstrap.min.css">
-
     <!-- CSS -->
     <link rel="stylesheet" href="{{ site.baseurl }}/assets/css/main.css">
-
     <!--Favicon-->
     <link rel="shortcut icon" href="{{ site.baseurl }}/{{ site.theme_settings.favicon }}" type="image/x-icon">
-
     <!-- Canonical -->
     <link rel="canonical" href="{{ page.url | replace:'index.html','' | prepend: site.baseurl | prepend: site.url }}">
-
     <!-- RSS -->
     <link rel="alternate" type="application/atom+xml" title="{{ site.theme_settings.title }}" href="{{ site.url }}/{{ site.baseurl }}/feed.xml"/>
-
     <!-- Google Fonts -->
     {% if site.theme_settings.google_fonts %}
     <link href="//fonts.googleapis.com/css?family={{ site.theme_settings.google_fonts }}" rel="stylesheet" type="text/css">
