@@ -1,7 +1,8 @@
 ---
-layout: page
-title: Komplexe Ampelkreuzung
-description: Steuere eine Kreuzung mit 4 Richtungen und geradeaus und Linksabbiegern
+layout: page_with_toc
+title: Ampelsteuerung 1
+type: Tutorial mit Anlage
+description: Hier erfährst Du, wie Du die Ampeln einer Kreuzung mit 4 Richtungen in Lua verwendest - danach funktioniert alles automatisch.
 feature-img: "/assets/headers/tutorial1-ampel.jpg"
 img: "/assets/headers/tutorial1-ampel.jpg"
 date: 2017-09-01
@@ -10,42 +11,27 @@ tags: [AkStrasse, Verwendung, Anleitung]
 
 # Ampelkreuzung automatisch steuern
 
-Diese Anleitung zeigt Dir, wie Du in EEP eine mit Ampeln versehene Kreuzung mit dem Skript verdrahten kannst.
+<p class="lead"> Diese Anleitung zeigt Dir, wie Du in EEP eine mit Ampeln versehene Kreuzung mit dem Skript verdrahten kannst.</p>
 
-# Was Du brauchst
+<hr>
 
-## Programme
+Dafür benötigst Du folgendes:
 
-* **EEP 14**
-
-* **Einen Editor für Lua-Skripte** - ein Editor Deiner Wahl, z.B. Notepad++
-
-## Sonstiges
-
-* **Zettel und Stift** - [_Download Kreuzungsaufbau.pdf_](../assets/Kreuzungsaufbau.pdf)
-
-## Lua-Skripte für EEP
-
-* **Eine Anlage mit fertigen Kreuzungen und vorinstallierten Ampeln** <br>Extra für diese Anleitung wurde eine Anlage erstellt:  [_Installer-AK-Tutorial-Ampelkreuzung_](https://github.com/Andreas-Kreuz/ak-lua-skripte-fuer-eep/releases). Wenn Du diese Anlage verwenden möchtest, brauchst Du folgende Modelle:
+* **EEP 14** und einen **Editor für Lua-Skripte** Deiner Wahl, z.B. Notepad++
+* **Zettel und Stift** - z.B.: [_Kreuzungsaufbau.pdf_](../assets/Kreuzungsaufbau.pdf)
+* Die **Anlage Andreas_Kreuz-Tutorial-Ampelkreuzung.anl3** ([_Download_](https://github.com/Andreas-Kreuz/ak-lua-skripte-fuer-eep/releases))
+  <br>Für den Betrieb dieser Anlage brauchst Du folgende **Modelle**:
 
   | 1Spur-Großstadtstraßen-System-Grundset (V10NAS30002)  | _[Download](https://eepshopping.de/1spur-gro%C3%83%C6%92%C3%82%C5%B8stadtstra%C3%83%C6%92%C3%82%C5%B8en-system-grundset%7C7656.html)_  |
   | 1Spur-Ergänzungsset  | _[Download](https://www.eepforum.de/filebase/file/215-freeset-zu-meinem-1spur-strassensystem/)_  |
   | Ampel-Baukasten für mehrspurige Straßenkreuzungen (V80NJS20039) | _[Download](https://eepshopping.de/ampel-baukasten-f%C3%83%C6%92%C3%82%C2%BCr-mehrspurige-stra%C3%83%C6%92%C3%82%C5%B8enkreuzungen%7C6624.html)_ |
   | Straßenbahnsignale als Immobilien (V80MA1F010 und V10MA1F011) | _[Download](https://eepshopping.de/ampel-baukasten-f%C3%83%C6%92%C3%82%C2%BCr-mehrspurige-stra%C3%83%C6%92%C3%82%C5%B8enkreuzungen%7C6624.html)_ |
 
-* **Ak-Lua-Skripte-für-EEP** - Eine Sammlung verschiedener Lua Skripte für EEP
-
-  :star: **_Tipp_**: Die Skripte sind in der Beispielanlage enthalten. Möchtest Du Deine eigene Anlage verwenden, so kannst Du die Skripte wie folgt installieren: [_Installation von "Ak-Lua-Skripte-für-EEP"_](Installation.md)
-
-
-
-# Checkliste
-* [ ] Skriptsammlung "Ak-Lua-Skripte-für-EEP" ist installiert
-* [ ] Du hast eine Anlage mit einer Ampelkreuzung oder "Andreas_Kreuz_Anleitung_Ampel" geöffnet
+:star: **_Tipp_**: Die notwendigen Skripte sind bei der Installation in der Anlage enthalten. Möchtest Du Deine eigene Anlage verwenden, so kannst Du die Skripte wie folgt installieren: [_Installation von "Ak-Lua-Skripte-für-EEP"_](../anleitungen-anfaenger/installation)
 
 # Los geht's
 * Öffne die Anlage in EEP
-* Öffne Deinen Editor
+* Öffne Deinen Editor für Lua-Skripte
 
 ## Das Lua-Hauptskript anlegen
 :star: _**Tipp:** Aktiviere in EEP unter Programmeinstellungen das EEP Ereignisfenster, damit Du die Lua Meldungen lesen kannst._
@@ -142,7 +128,7 @@ Notiere Dir, welche _Richtungen_ es gibt und wie die IDs der zu schaltenden Ampe
 Erst im nächsten Schritt werden mehrere dieser _Richtungen_ zu Schaltungen zusammengefasst.
 
 ## Schreibe die Richtungen in das Haupt-Skript
-:star: _**Tipp:** Für jede Ampel musst Du den Typ_ `AkAmpelModell` _kennen, da sich die Signalstellungen in EEP unterscheiden. Weitere Informationen findest Du unter: [Unterstütze weitere Ampeln in AkAmpelModell](../ak/strasse/README.md)_
+:star: _**Tipp:** Für jede Ampel musst Du den Typ_ `AkAmpelModell` _kennen, da sich die Signalstellungen in EEP unterscheiden. Weitere Informationen findest Du unter: [Unterstütze weitere Ampeln in AkAmpelModell](../LUA/ak/strasse/)_
 
 Schreibe nun die einzelnen Richtungen in das Haupt-Skript. Jede Richtung muss dabei eine noch nicht verwendete Speicher-ID zwischen 1 und 1000 bekommen.
 
@@ -337,18 +323,18 @@ Erinnerst Du Dich den Code, der die Tipp-Texte zu den Signalen hinzugefügt hat?
 **Tipp**: Setze die Werte wieder auf `true`, wenn Du denkst, dass Du die Signale falsch gesetzt hast.
 
 
-# Herzlichen Glückwunsch!
+# Geschafft
 Du hast diese Anleitung abgeschlossen :four_leaf_clover:
 
-## So kannst Du weitermachen:
+**So kannst Du weitermachen**
 * Füge noch fehlende Richtungen zu Schaltungen hinzu:
 	* Wenn `n2` geschaltet ist, kann immer auf `fg_n2` geschaltet werden.
 	* Wenn `s2` geschaltet ist, kann immer auf `fg_s2` geschaltet werden.
 
-## Tipps
+**Tipps**
 * [Ampeln aufstellen](Ampel-aufstellen)
 
 
-## Themen für Fortgeschrittene
+**Weitere Themen**
 * Füge Kontaktpunkte und Zähler hinzu
 * Füge Richtungen hinzu, die nur auf Anforderung geschaltet werden

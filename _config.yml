@@ -1,5 +1,5 @@
 # SITE CONFIGURATION
-baseurl: "/ak-lua-skripte-fuer-eep/"
+baseurl: "/ak-lua-skripte-fuer-eep"
 url: "https://andreas-kreuz.github.io"
 
 # THEME-SPECIFIC CONFIGURATION

@@ -1,7 +1,6 @@
 ---
-layout: bootstrap
+layout: bootstrap_with_toc
 ---
-
 <article {% if page.feature-img %}class="feature-image"{% endif %}>
   <header id="main" style="background:
     linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
@@ -16,13 +15,22 @@ layout: bootstrap
   <section>
     <div class="container-fluid">
       <div class="row">
-        <div class="col-lg-10 m-auto">
+        <div class="col-lg-3 order-lg-12">
+          <aside id="navbar-example2" class="container-fluid sticky-top bg-light toc-right">
+            <nav class="navbar navbar-light bg-light">
+              <a class="navbar-brand" href="#">Inhalt</a>
+              <nav class="nav nav-pills flex-column">
+                {% include toc-bootstrap-nav-list.html html=content %}
+              </nav>
+            </nav>
+          </aside>
+        </div>
+        <div class="col-lg-9 order-lg-1">
           {{ content }}
         </div>
       </div>
     </div>
   </section>
-
   <!-- Tag list
   {% include tags_list.html tag_count=page.tags.size %}-->
 </article>

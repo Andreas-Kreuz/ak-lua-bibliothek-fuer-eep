@@ -28,3 +28,9 @@ Die bereitgestellten Funktionen übernehmen für Dich die _Steuerung des Verkehr
 # Was ist EEP?
 
 EEP (Eisenbahn.exe Professional) ist eine [Simulationssoftware des Trendverlags](https://trendverlag.com/was-ist-eep-eisenbahn-exe.html). Seit Version 11 wird eine Integration von Lua angeboten.
+
+Credits:
+* Inhaltsverzeichnis: https://github.com/allejo/jekyll-toc
+* Layout basierend auf: https://github.com/Sylhare/Type-on-Strap
+* Bootstrap: https://github.com/twbs/bootstrap
+* Popper: https://github.com/FezVrasta/popper.js

@@ -3,13 +3,16 @@
 @import 'external/syntax';
 
 // Base
+@import 'base/card_fix';
 @import 'base/variables';
 @import 'base/utility';
 
 // Posts
+@import 'layouts/bootstrap';
 @import 'layouts/posts';
 @import 'layouts/index';
 @import 'layouts/page';
+@import 'layouts/page_with_toc';
 @import 'layouts/tags';
 @import 'layouts/search';
 

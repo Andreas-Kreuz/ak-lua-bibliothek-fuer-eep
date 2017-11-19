@@ -1,7 +1,8 @@
 ---
-layout: page
-title: Demo-Anlage "Testen"
-description: Hier erfährst Du, wie Du Deine Skripte testen kannst, ohne EEP zu starten. Dabei kannst auch simulieren, dass Fahrzeuge einen Kontaktpunkt betreten.
+layout: page_with_toc
+title: Lua testen
+type: Tutorial mit Anlage
+description: Hier erfährst Du, wie Du Deine Lua-Skripte testen kannst, ohne EEP zu starten. Dabei kannst auch simulieren, dass Fahrzeuge einen Kontaktpunkt betreten.
 feature-img: "/assets/headers/TestDemo.png"
 img: "/assets/headers/TestDemo.png"
 date: 2017-09-30
@@ -15,7 +16,7 @@ Die Anlage `Andreas_Kreuz-Lua-Testbeispiel` - oder besser deren Lua-Skripte - de
 * Lua-Skript auf Herz und Nieren testen
 * Lua-Skript Änderungen ohne Copy & Paste in EEP übernehmen - Einfach im Lua-Fenster auf _Skript neu laden_ klicken
 
-Siehe __[ak/strasse](../../../LUA/ak/strasse/)__
+Siehe __[ak/strasse](../../../lua/ak/strasse/)__
 
 ## Motivation
 
