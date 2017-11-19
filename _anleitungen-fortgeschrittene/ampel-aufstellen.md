@@ -1,5 +1,5 @@
 ---
-layout: page
+layout: page_with_toc
 title: Ampeln aufstellen
 type: Tipps & Tricks
 description: Verwende maximal eine Ampel zum Steuern jeder Fahrspur. Verwende "alte" Ampeln mit dem richtigen Abstand im 1-Spur-System.

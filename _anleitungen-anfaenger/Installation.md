@@ -1,5 +1,5 @@
 ---
-layout: page
+layout: page_with_toc
 title: Installation
 description: Hier erfährst Du, wie Du das Skript-Paket herunterladen und direkt in EEP installieren kannst.
 type: Anleitung

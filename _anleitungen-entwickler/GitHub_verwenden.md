@@ -1,5 +1,5 @@
 ---
-layout: page
+layout: page_with_toc
 title: Github verwenden
 type: Anleitung
 description: Hier erfährst Du, wie Du die Skripte direkt aus GitHub verwenden kannst.

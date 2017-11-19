@@ -1,5 +1,5 @@
 ---
-layout: page
+layout: page_with_toc
 title: Ampelsteuerung 1
 type: Tutorial mit Anlage
 description: Hier erfährst Du, wie Du die Ampeln einer Kreuzung mit 4 Richtungen in Lua verwendest - danach funktioniert alles automatisch.
