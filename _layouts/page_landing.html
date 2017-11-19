@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    {% include head-content.html %}
+    <style>
+       .jumbotron {
+         background-color: transparent;
+       }
+    </style>
+  </head>
+  <body style="background:
+    url('{{ site.baseurl }}/assets/img/landing-page.jpg');
+    background-position: top right;
+    background-repeat: no-repeat;
+    ">
+    {% include navbar.html %}
+    <div class="container">
+      {{ content }}
+    </div>
+    {% include footer.html %}
+    {% include scripts.html %}
+  </body>
+</html>

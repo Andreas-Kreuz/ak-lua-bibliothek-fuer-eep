@@ -1,5 +1,5 @@
 ---
-layout: page
+layout: page_landing
 title:  Lua-Dokumentation
 permalink: lua/ak/
 feature-img: "/assets/headers/SourceCode.png"
