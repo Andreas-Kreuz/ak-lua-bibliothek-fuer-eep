@@ -26,6 +26,7 @@
     {% assign maxHeader = include.h_max | default: 6 %}
     {% assign nodes = include.html | split: '<h' %}
     {% assign firstHeader = true %}
+    {% assign currentUlLevel = minHeader | minus: 1 %}
 
     {% for node in nodes %}
         {% if node == "" %}
@@ -53,15 +54,54 @@
         {% capture _hAttrToStrip %}{{ _workspace[0] | split: '>' | first }}>{% endcapture %}
         {% assign header = _workspace[0] | replace: _hAttrToStrip, '' %}
 
+        {% comment %} Add opening <ul> tags {% endcomment %}
+        {% if indentAmount > currentUlLevel %}
+            {% assign space = '' %}
+            {% for i in(currentUlLevel..indentAmount) %}
+                {% for j in (1..i) %}
+                    {% assign space = space | prepend: '  ' %}
+                {% endfor %}
+                {% capture my_toc %}{{ my_toc }}<!-- Opening list -->
+{{ space }}<ul class="nav flex-column">{% endcapture %}
+            {% endfor %}
+        {% endif %}
+
+        {% comment %} Add closing </ul> tags {% endcomment %}
+        {% if indentAmount < currentUlLevel %}
+            {% assign space = '' %}
+            {% for i in(indentAmount..currentUlLevel) %}
+                {% for j in (1..i) %}
+                    {% assign space = space | prepend: '  ' %}
+                {% endfor %}
+                {% capture my_toc %}{{ my_toc }}<!-- Closing list -->
+{{ space }}</ul>{% endcapture %}
+            {% endfor %}
+        {% endif %}
+
         {% assign space = '' %}
         {% for i in (1..indentAmount) %}
             {% assign space = space | prepend: '  ' %}
         {% endfor %}
 
+        {% assign currentUlLevel = indentAmount %}
+
         {% capture my_toc %}{{ my_toc }}
-{{ space }}- [{% if include.sanitize %}{{ header | strip_html }}{% else %}{{ header }}{% endif %}](#{{ html_id }}){% endcapture %}
+{{ space }}  <li class="nav-item">
+{{ space }}     <a class="nav-link" href="#{{ html_id }}">{% if include.sanitize %}{{ header | strip_html }}{% else %}{{ header }}{% endif %}</a>
+{{ space }}  </li>{% endcapture %}
 
     {% endfor %}
+
+    {% comment %} Add closing </ul> tags {% endcomment %}
+    {% assign space = '' %}
+    {% for i in(minHeader..currentUlLevel) %}
+      {% for j in (1..i) %}
+          {% assign space = space | prepend: '  ' %}
+      {% endfor %}
+      {% assign space = space | append: '</ul>' %}
+    {% endfor %}
+    {% capture my_toc %}{{ my_toc }}
+{{ space }}{% endcapture %}
 
     {% if include.class %}
         {% capture my_toc %}{:.{{ include.class }}}
@@ -72,4 +112,4 @@
         {% capture my_toc %}{: #{{ include.id }}}
 {{ my_toc | lstrip }}{% endcapture %}
     {% endif %}
-{% endcapture %}{% assign tocWorkspace = '' %}{{ my_toc | markdownify | strip }}
+{% endcapture %}{% assign tocWorkspace = '' %}{{ my_toc | strip }}
