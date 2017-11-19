@@ -1,7 +1,8 @@
 ---
 layout: page
-title: Demo-Anlage "Testen"
-description: Hier erfährst Du, wie Du Deine Skripte testen kannst, ohne EEP zu starten. Dabei kannst auch simulieren, dass Fahrzeuge einen Kontaktpunkt betreten.
+title: Lua testen
+type: Tutorial mit Anlage
+description: Hier erfährst Du, wie Du Deine Lua-Skripte testen kannst, ohne EEP zu starten. Dabei kannst auch simulieren, dass Fahrzeuge einen Kontaktpunkt betreten.
 feature-img: "/assets/headers/TestDemo.png"
 img: "/assets/headers/TestDemo.png"
 date: 2017-09-30

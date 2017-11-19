@@ -1,7 +1,8 @@
 ---
 layout: page
-title: Anlage Ampel-Demo 1
+title: Ampel-Demo 1
 description: Diese Anlage wurde ausschließlich mit Grundmodellen aus EEP 14 erstellt und demonstriert die Möglichkeiten der Steuerung für den Straßenverkehr.
+type: Anlage
 feature-img: "/assets/headers/AmpelDemo.jpg"
 img: "/assets/headers/AmpelDemo.jpg"
 date: 2017-09-07

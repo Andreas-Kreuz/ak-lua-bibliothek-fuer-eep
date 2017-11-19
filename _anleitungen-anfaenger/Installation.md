@@ -2,6 +2,7 @@
 layout: page
 title: Installation
 description: Hier erfährst Du, wie Du das Skript-Paket herunterladen und direkt in EEP installieren kannst.
+type: Anleitung
 feature-img: "/assets/headers/ModellPacker.png"
 img: "/assets/headers/ModellPacker.png"
 date: 2017-09-01

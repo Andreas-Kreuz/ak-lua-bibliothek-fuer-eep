@@ -14,11 +14,12 @@ feature-img: "/assets/headers/Titelbild-Simulator.jpg"
 <div class="row equal-height">
   {% for item in site.anleitungen-anfaenger %}
   <div class="col-12 col-md-6 col-lg-4 col-xl-3">
-    <div class="card border-success mb-5">
+    <div class="card border-success mb-5 bg-light">
       <img class="card-img-top" src="{{ site.baseurl }}/{{ item.img }}" alt="{{ item.title }}">
       <div class="card-body">
         <h4 class="card-title">{{ item.title }}</h4>
-        <p class="card-text text-muted">{{ item.description }}</p>
+        <h6 class="card-subtitle mb-2 text-muted">{{ item.type }}</h6>
+        <p class="card-text">{{ item.description }}</p>
       </div>
       <div class="card-footer bg-transparent text-center">
         <a href="{{ site.baseurl }}/{{ item.url }}" class="btn btn-success">Zur Anleitung</a>
@@ -35,11 +36,12 @@ feature-img: "/assets/headers/Titelbild-Simulator.jpg"
 <div class="row equal-height">
   {% for item in site.anleitungen-fortgeschrittene %}
   <div class="col-12 col-md-6 col-lg-4 col-xl-3">
-    <div class="card border-primary mb-5">
+    <div class="card border-primary mb-5 bg-light">
       <img class="card-img-top" src="{{ site.baseurl }}/{{ item.img }}" alt="{{ item.title }}">
       <div class="card-body">
         <h4 class="card-title">{{ item.title }}</h4>
-        <p class="card-text text-muted">{{ item.description }}</p>
+        <h6 class="card-subtitle mb-2 text-muted">{{ item.type }}</h6>
+        <p class="card-text">{{ item.description }}</p>
       </div>
       <div class="card-footer bg-transparent text-center">
         <a href="{{ site.baseurl }}/{{ item.url }}" class="btn btn-primary">Zur Anleitung</a>
@@ -56,11 +58,12 @@ feature-img: "/assets/headers/Titelbild-Simulator.jpg"
 <div class="row equal-height">
   {% for item in site.anleitungen-entwickler %}
   <div class="col-12 col-md-6 col-lg-4 col-xl-3">
-    <div class="card border-warning mb-5">
+    <div class="card border-warning mb-5 bg-light">
       <img class="card-img-top" src="{{ site.baseurl }}/{{ item.img }}" alt="{{ item.title }}">
       <div class="card-body">
         <h4 class="card-title">{{ item.title }}</h4>
-        <p class="card-text text-muted">{{ item.description }}</p>
+        <h6 class="card-subtitle mb-2 text-muted">{{ item.type }}</h6>
+        <p class="card-text">{{ item.description }}</p>
       </div>
       <div class="card-footer bg-transparent text-center">
         <a href="{{ site.baseurl }}/{{ item.url }}" class="btn btn-warning">Zur Anleitung</a>

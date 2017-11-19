@@ -1,7 +1,8 @@
 ---
 layout: page
 title: Github verwenden
-description: Verwende die Skripte direkt aus GitHub.
+type: Anleitung
+description: Hier erfährst Du, wie Du die Skripte direkt aus GitHub verwenden kannst.
 img: "/assets/headers/GitHub.png"
 feature-img: "/assets/headers/GitHub.png"
 date: 2017-09-03
