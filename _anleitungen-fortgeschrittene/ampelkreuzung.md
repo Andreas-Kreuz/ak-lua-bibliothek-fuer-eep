@@ -13,6 +13,8 @@ tags: [AkStrasse, Verwendung, Anleitung]
 
 <p class="lead"> Diese Anleitung zeigt Dir, wie Du in EEP eine mit Ampeln versehene Kreuzung mit dem Skript verdrahten kannst.</p>
 
+<hr>
+
 Dafür benötigst Du folgendes:
 
 * **EEP 14** und einen **Editor für Lua-Skripte** Deiner Wahl, z.B. Notepad++
@@ -25,7 +27,7 @@ Dafür benötigst Du folgendes:
   | Ampel-Baukasten für mehrspurige Straßenkreuzungen (V80NJS20039) | _[Download](https://eepshopping.de/ampel-baukasten-f%C3%83%C6%92%C3%82%C2%BCr-mehrspurige-stra%C3%83%C6%92%C3%82%C5%B8enkreuzungen%7C6624.html)_ |
   | Straßenbahnsignale als Immobilien (V80MA1F010 und V10MA1F011) | _[Download](https://eepshopping.de/ampel-baukasten-f%C3%83%C6%92%C3%82%C2%BCr-mehrspurige-stra%C3%83%C6%92%C3%82%C5%B8enkreuzungen%7C6624.html)_ |
 
-:star: **_Tipp_**: Die notwendigen Skripte sind bei der Installation in der Anlage enthalten. Möchtest Du Deine eigene Anlage verwenden, so kannst Du die Skripte wie folgt installieren: [_Installation von "Ak-Lua-Skripte-für-EEP"_](Installation.md)
+:star: **_Tipp_**: Die notwendigen Skripte sind bei der Installation in der Anlage enthalten. Möchtest Du Deine eigene Anlage verwenden, so kannst Du die Skripte wie folgt installieren: [_Installation von "Ak-Lua-Skripte-für-EEP"_](../anleitungen-anfaenger/installation)
 
 # Los geht's
 * Öffne die Anlage in EEP
@@ -126,7 +128,7 @@ Notiere Dir, welche _Richtungen_ es gibt und wie die IDs der zu schaltenden Ampe
 Erst im nächsten Schritt werden mehrere dieser _Richtungen_ zu Schaltungen zusammengefasst.
 
 ## Schreibe die Richtungen in das Haupt-Skript
-:star: _**Tipp:** Für jede Ampel musst Du den Typ_ `AkAmpelModell` _kennen, da sich die Signalstellungen in EEP unterscheiden. Weitere Informationen findest Du unter: [Unterstütze weitere Ampeln in AkAmpelModell](../ak/strasse/README.md)_
+:star: _**Tipp:** Für jede Ampel musst Du den Typ_ `AkAmpelModell` _kennen, da sich die Signalstellungen in EEP unterscheiden. Weitere Informationen findest Du unter: [Unterstütze weitere Ampeln in AkAmpelModell](../LUA/ak/strasse/)_
 
 Schreibe nun die einzelnen Richtungen in das Haupt-Skript. Jede Richtung muss dabei eine noch nicht verwendete Speicher-ID zwischen 1 und 1000 bekommen.
 

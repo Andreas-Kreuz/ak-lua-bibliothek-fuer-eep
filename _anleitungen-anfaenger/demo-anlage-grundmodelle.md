@@ -10,7 +10,7 @@ date: 2017-09-07
 
 Diese Anlage wurde mit EEP 14 erstellt und demonstriert die Möglichkeiten der Steuerung für den Straßenverkehr.
 
-Siehe __[LUA/ak/strasse](../../../LUA/ak/strasse/)__
+Siehe __[LUA/ak/strasse](../../../lua/ak/strasse/)__
 
 
 ## Inhalt

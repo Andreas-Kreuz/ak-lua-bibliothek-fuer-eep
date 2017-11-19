@@ -16,7 +16,7 @@ Die Anlage `Andreas_Kreuz-Lua-Testbeispiel` - oder besser deren Lua-Skripte - de
 * Lua-Skript auf Herz und Nieren testen
 * Lua-Skript Änderungen ohne Copy & Paste in EEP übernehmen - Einfach im Lua-Fenster auf _Skript neu laden_ klicken
 
-Siehe __[ak/strasse](../../../LUA/ak/strasse/)__
+Siehe __[ak/strasse](../../../lua/ak/strasse/)__
 
 ## Motivation
 
