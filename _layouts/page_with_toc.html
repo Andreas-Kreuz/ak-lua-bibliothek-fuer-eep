@@ -14,17 +14,17 @@ layout: bootstrap
   </header>
   <section>
     <div class="container-fluid">
-      <div class="row ">
-        <div class="col-lg-9">
-          {{ content }}
-        </div>
-        <div class="col-lg-3">
+      <div class="row">
+        <div class="col-lg-3 order-lg-12">
           <aside class="container-fluid sticky-top bg-light toc-right">
             <h1>Inhalt</h1>
-            <div class="nav">
+            <div class="nav" id="navbar-example2">
               {% include toc.html html=content class=nav %}
             </div>
           </aside>
+        </div>
+        <div class="col-lg-9 order-lg-1">
+          {{ content }}
         </div>
       </div>
     </div>
