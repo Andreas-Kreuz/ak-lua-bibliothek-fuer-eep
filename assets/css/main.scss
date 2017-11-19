@@ -26,3 +26,16 @@ div.highlight {
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
 }
+
+.row.equal-height {
+    display: flex;
+    flex-wrap: wrap;
+}
+.row.equal-height > [class*='col-'] {
+    display: flex;
+    flex-direction: column;
+}
+
+.card {
+    flex: 1;
+}
