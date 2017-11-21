@@ -7,3 +7,21 @@
 .container-fluid img:not(.emoji) {
   max-width: 100%;
 }
+
+article h1 {
+  margin-top: 5rem;
+}
+article h2 {
+  margin-top: 3rem;
+}
+article h3 {
+  margin-top: 2.5rem;
+}
+article h1+h2,
+article h2+h3,
+article h3+h4 {
+  margin-top: 1rem;
+}
+article h1:first-of-type {
+  margin-top: inherit;
+}
