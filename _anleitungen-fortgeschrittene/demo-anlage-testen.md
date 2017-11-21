@@ -2,13 +2,17 @@
 layout: page_with_toc
 title: Lua testen
 type: Tutorial mit Anlage
-description: Hier erfährst Du, wie Du Deine Lua-Skripte testen kannst, ohne EEP zu starten. Dabei kannst auch simulieren, dass Fahrzeuge einen Kontaktpunkt betreten.
+subtitle: Hier erfährst Du, wie Du Deine Lua-Skripte testen kannst, ohne EEP zu starten. Dabei kannst auch simulieren, dass Fahrzeuge einen Kontaktpunkt betreten.
 feature-img: "/assets/headers/TestDemo.png"
 img: "/assets/headers/TestDemo.png"
 date: 2017-09-30
 ---
 
-# Lua Testbeispiel
+# Motivation
+
+Je komplexer die eigenen Lua-Skripte werden, umso mehr möchte man sie selbst testen. Am besten, ohne dass die Skripte fehlerhaft in EEP laufen und zu "Unfällen" führen.
+
+_Die Grundidee_: __Das Lua-Skript wird erst nach dem bestandenen Test in EEP geladen.__
 
 Die Anlage `Andreas_Kreuz-Lua-Testbeispiel` - oder besser deren Lua-Skripte - demonstriert folgendes:
 
@@ -16,16 +20,7 @@ Die Anlage `Andreas_Kreuz-Lua-Testbeispiel` - oder besser deren Lua-Skripte - de
 * Lua-Skript auf Herz und Nieren testen
 * Lua-Skript Änderungen ohne Copy & Paste in EEP übernehmen - Einfach im Lua-Fenster auf _Skript neu laden_ klicken
 
-Siehe __[ak/strasse](../../../lua/ak/strasse/)__
-
-## Motivation
-
-Je komplexer die eigenen Lua-Skripte werden, umso mehr möchte man sie selbst testen. Am besten, ohne dass die Skripte
-fehlerhaft in EEP laufen und zu "Unfällen" führen.
-
-_Die Grundidee_: __Das Lua-Skript wird erst nach dem bestandenen Test in EEP geladen.__
-
-## Vorbereitungen
+# Vorbereitungen
 
 * Sämtlicher Inhalt des Anlagen-Skriptes `Andreas_Kreuz-Lua-Testbeispiel.lua`, welches die `EEPMain()`-Funktion enthält, wird in ein
   Haupt-Skript, z.B. `ak-demo-lua\testen\Andreas_Kreuz-Lua-Testbeispiel-main.lua` in `C:\Trend\EEP14\LUA` abgelegt.
@@ -47,27 +42,26 @@ folgendem Link. https://sourceforge.net/projects/luabinaries/files/5.2.4/Tools%2
  diese 3 Dateien einfacherweise auch in `C:\Trend\EEP14\LUA` ablegen
 
 
-## Der Arbeitsablauf
+# Der Arbeitsablauf
 
-- Nach dem dem Editieren von `Andreas_Kreuz-Lua-Testbeispiel-main.lua` wird diese gespeichert
+- Speichere die Datei `Andreas_Kreuz-Lua-Testbeispiel-main.lua` nach einer Änderung
 
-- Danach wird `Andreas_Kreuz-Lua-Testbeispiel-test.lua` ausgeführt:
-  * In Notepad++ mit F5 folgenden Befehl ausführen:
+- Führe `Andreas_Kreuz-Lua-Testbeispiel-test.lua` auf folgende Weise aus:
+  * In Notepad++ drückst Du <kbd>F5</kbd> und führst dann folgenden Befehl aus:
     `cmd /k C:\Trend\EEP14\LUA\lua.exe Andreas_Kreuz-Lua-Testbeispiel-test.lua`
 
-  * Die Kommandozeile starten: `<Windows-Taste>` + `<R>` und dann `cmd` eintippen und starten
-    * Mit der Kommandozeile nach `C:\Trend\EEP14\LUA` wechseln: `cd C:\Trend\EEP14\LUA`
-    * Mit der Kommandozeile das Test-Skript starten: `lua.exe Andreas_Kreuz-Lua-Testbeispiel-test.lua`
+  * Alternativ kannst Du auch die Kommandozeile verwenden: Drücke <kbd><kbd>Windows</kbd> + <kbd>R</kbd></kbd> und starte dann das Programm `cmd`
+    * Gehe in der Kommandozeile in den `LUA` Ordner von EEP: `cd C:\Trend\EEP14\LUA`
+    * Starte das Test-Skript starten: `lua.exe Andreas_Kreuz-Lua-Testbeispiel-test.lua`
 
-- Ist man mit dem Ergebnis zufrieden kann man in EEP einfach auf "Skript neu laden" klicken und der Inhalt des
-  Haupt-Skriptes wird in EEP ausgeführt
+- Sobald Du mit dem Ergebnis zufrieden bist, klicke im Lua-Fenster von EEP auf "Skript neu laden" und der Inhalt des Haupt-Skriptes wird in EEP ausgeführt.
 
 
-## Testen der Funktion
+# Testen der Funktion
 
 In EEP ist es manchmal schlecht möglich alle Zustände einer Funktion zu prüfen, ohne diverse Rollmaterialien auf den Weg zu schicken.
 
-Hier kann der Test helfen, indem er die Kontaktpunkte manuell auslöst - im Beispiel mit `zaehleHoch()` und danach den Rückgabewert von `EEPGetSignal()` prüft.
+Ein Test hilft Dir, indem er die Kontaktpunkte manuell auslöst - im Beispiel wird nach `zaehleHoch()` der Rückgabewert von `EEPGetSignal()` geprüft, da sich dieses Signal nach den Hochzählen verändert haben muss.
 
 ```lua
 zaehleHoch() -- simuliere ein Fahrzeug, welches in den Bereich einfährt
