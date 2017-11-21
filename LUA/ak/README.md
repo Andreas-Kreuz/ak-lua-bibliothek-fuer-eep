@@ -5,10 +5,17 @@ permalink: lua/ak/
 feature-img: "/assets/headers/SourceCode.png"
 img: "/assets/headers/SourceCode.png"
 ---
-
-# Lua-Skript Dokumentation
-
-## Skripte in `ak`
+<div class="row">
+  <div class="col-md-6">
+    <div class="jumbotron jumbotron-fluid">
+      <h1 class="display-4">Skripte im Detail</h1>
+      <p class="lead">
+        Hier findest Du Informationen zur Programmierschnittstelle.
+      </p>
+    </div>
+  </div>
+</div>
+# Skripte in `ak`
 * __[ak/eep](eep/README.md)__
 
   EEP-eigene Funktionen für Testskripte
