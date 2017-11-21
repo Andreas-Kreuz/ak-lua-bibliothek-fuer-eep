@@ -1,5 +1,5 @@
 ---
-layout: page
+layout: page_with_toc
 title: Paket ak.eep
 permalink: lua/ak/eep/
 feature-img: "/assets/headers/SourceCode.png"

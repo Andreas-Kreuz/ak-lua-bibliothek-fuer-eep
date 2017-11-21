@@ -2,10 +2,15 @@
 <html lang="de">
   <head>
     {% include head-content.html %}
+    <style>
+       .jumbotron {
+         background-color: transparent;
+       }
+    </style>
   </head>
   <body>
     {% include navbar.html %}
-    <div>
+    <div class="container-fluid">
       {{ content }}
     </div>
     {% include footer.html %}

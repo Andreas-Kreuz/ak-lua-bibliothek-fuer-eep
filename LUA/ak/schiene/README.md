@@ -1,24 +1,13 @@
 ---
-layout: page
-title: Paket ak.schiene
+layout: page_with_toc
+title: In Arbeit
+subtitle: Zugsteuerung ist noch in Arbeit - hier ist noch viel Geduld erforderlich.
 permalink: lua/ak/schiene/
 feature-img: "/assets/headers/SourceCode.png"
 img: "/assets/headers/SourceCode.png"
 ---
-<br><br>
-<div class="row">
-  <div class="col-lg-8">
-    <div class="jumbotron">
-      <h1 class="display-4">In Arbeit</h1>
-      <p class="lead">
-        :zap: Verwende dieses Paket nicht<br>
-        :zap: Es ist einfach noch nicht gut genug.
-      </p>
-    </div>
-  </div>
-</div>
 
-# Paket ak.schiene
+Paket `ak.schiene`
 
 Anstehende Aufgaben:
 * [ ] Deutsche Namen verwenden

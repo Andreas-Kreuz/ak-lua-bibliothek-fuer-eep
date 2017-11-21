@@ -1,6 +1,7 @@
 ---
-layout: page
-title: Paket ak.speicher
+layout: page_with_toc
+title: Einfacheres Speichern
+subtitle: Packe mehrere Daten in EEPData und erkenne doppelt belegte Speicher-IDs.
 permalink: lua/ak/speicher/
 feature-img: "/assets/headers/SourceCode.png"
 img: "/assets/headers/SourceCode.png"

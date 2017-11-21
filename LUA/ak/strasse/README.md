@@ -1,33 +1,13 @@
 ---
-layout: page
-title: Paket ak.strasse
+layout: page_with_toc
+title: Ampeln? Automatisch!
+subtitle: Du willst Dich nicht mehr um die Steuerung Deiner Ampeln kümmern? - Dann beschreibe in Lua, wie Deine Kreuzung aussieht und das Skript AkStrasse übernimmt für Dich den Rest.
 permalink: lua/ak/strasse/
 feature-img: "/assets/headers/SourceCode.png"
 img: "/assets/headers/SourceCode.png"
 ---
 
-# Paket ak.strasse - Steuerung für den Strassenverkehr
-
-## Inhalt
-<!-- TOC depthFrom:2 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
-
-- [Inhalt](#inhalt)
-- [Motivation](#motivation)
-- [Zur Verwendung vorgesehene Klassen und Funktionen](#zur-verwendung-vorgesehene-klassen-und-funktionen)
-	- [Skript `AkStrasse`](#skript-akstrasse)
-		- [Klasse `AkAmpelModell`](#klasse-akampelmodell)
-		- [Klasse `AkAmpel`](#klasse-akampel)
-		- [Klasse `AkRichtung`](#klasse-akrichtung)
-		- [Klasse `AkKreuzungsSchaltung`](#klasse-akkreuzungsschaltung)
-		- [Klasse `AkKreuzung`](#klasse-akkreuzung)
-		- [Funktion `AkKreuzung:planeSchaltungenEin()`](#funktion-akkreuzungplaneschaltungenein)
-- [Wichtige Hinweise](#wichtige-hinweise)
-
-<!-- /TOC -->
-## Motivation
-
-Du willst Dich nicht mehr um die Steuerung Deiner Ampeln kümmern? - Dann beschreibe in Lua, wie Deine Kreuzung aussieht und das Skript AkStrasse übernimmt für Dich den Rest.
-
+# Motivation
 Willst Du mehr? - Lege Kontaktpunkte für die Verkehrszählung an, damit die Ampel mit dem meisten Andrang bevorzugt geschaltet wird.
 
 Features:
@@ -35,11 +15,11 @@ Features:
 * Priorisiertes Schalten der Ampeln nach Verkehrsandrang
 * Optional, Ampeln nur dann schalten, wenn jemand davor wartet
 
-## Zur Verwendung vorgesehene Klassen und Funktionen
+# Zur Verwendung vorgesehene Klassen und Funktionen
 
-### Skript `AkStrasse`
+# Skript `AkStrasse`
 
-#### Klasse `AkAmpelModell`
+## Klasse `AkAmpelModell`
 
 Beschreibt das Modell einer Ampel mit den Schaltungen für rot, grün, gelb und rot-gelb, sowie dem Fußgängersignal (falls vorhanden - dann hat die Verkehrsampel rot)
 
@@ -57,7 +37,7 @@ Mitgelieferte Ampelmodelle sind:
   Siehe auch https://eepshopping.de/ - Ampel-Baukasten für mehrspurige Straßenkreuzungen (V80NJS20039)
 
 
-#### Klasse `AkAmpel`
+## Klasse `AkAmpel`
 wird dazu verwendet eine Signal auf der Anlage (signalId) mit einem Modell zu verküpfen.
 
 * `function AkAmpel:neu(signalId, ampelModell, rotImmo, gruenImmo, gelbImmo, anforderungImmo)`
@@ -69,14 +49,14 @@ wird dazu verwendet eine Signal auf der Anlage (signalId) mit einem Modell zu ve
   Passende Modelle für die Steuerung der Immobilien findest Du im Modellset V10MA1F011. Download unter http://eep.euma.de/download/ - Im Modell befindet sich eine ausführliche Doku.
 
 
-#### Klasse `AkRichtung`
+## Klasse `AkRichtung`
 Wird dazu verwendet mehrere Ampeln gleichzeitig zu schalten. Die kann für eine oder mehrere Fahrspuren geschehen.
 
 * `function AkRichtung:neu(name, eepSaveId, ...)`
 
     Erforderlich sind name (z.B. "Richtung 1"), eepSaveId (Speicher-ID in EEP; 1 - 1000) und eine Liste mit mindestens einer Ampel (AkAmpel).
 
-#### Klasse `AkKreuzungsSchaltung`
+## Klasse `AkKreuzungsSchaltung`
 Wird dazu verwendet, mehrere Richtungen gleichzeitig zu schalten. Es muss sichergestellt werden, dass sich die Fahrwege der Richtungen einer Schaltung nicht überlappen.
 
   * `function AkKreuzungsSchaltung:neu(name)` - legt eine neue Schaltung an
@@ -90,17 +70,17 @@ Wird dazu verwendet, mehrere Richtungen gleichzeitig zu schalten. Es muss sicher
   __Beachte:__ Eine solche Richtung wird nur dann auf Grün geschaltet, wenn eine Anforderung vorliegt. Sie schaltet sofort wieder auf Rot, wenn keine weitere Anforderung vorliegt.
 
 
-#### Klasse `AkKreuzung`
+## Klasse `AkKreuzung`
 Wird dazu verwendet, die Kreuzung zu verwalten, enthält mehrere Schaltungen.
 
   * `AkKreuzung:neu(name)` - legt eine neue Kreuzung an. Diese wird automatisch anhand ihrer Richtungen geschaltet.
 
   * `function AkKreuzung:fuegeSchaltungHinzu(schaltung)` fügt eine Schaltung zur Kreuzung hinzu.
 
-#### Funktion `AkKreuzung:planeSchaltungenEin()`
+## Funktion `AkKreuzung:planeSchaltungenEin()`
 Muss in `EEPMain()` aufgerufen werden - plant die Umschaltung von Kreuzungsschaltungen.
 
-## Wichtige Hinweise
+# Wichtige Hinweise
 
 * __Damit das Ganze funktioniert__, muss `EEPMain()` mindestens folgende Befehle verwenden:
 

@@ -1,5 +1,5 @@
 ---
-layout: page
+layout: page_with_toc
 title: Paket ak.planer
 permalink: lua/ak/planer/
 feature-img: "/assets/headers/SourceCode.png"

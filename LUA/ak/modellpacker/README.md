@@ -1,5 +1,5 @@
 ---
-layout: page
+layout: page_with_toc
 title: Paket ak.modellpacker
 permalink: lua/ak/modellpacker/
 feature-img: "/assets/headers/ModellPacker.png"
