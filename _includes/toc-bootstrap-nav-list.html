@@ -44,7 +44,7 @@
             {% assign minHeader = headerLevel %}
         {% endif %}
 
-        {% assign indentAmount = headerLevel | minus: minHeader | add: 1 %}
+        {% assign indentAmount = headerLevel | minus: minHeader %}
         {% assign _workspace = node | split: '</h' %}
 
         {% assign _idWorkspace = _workspace[0] | split: 'id="' %}
@@ -54,27 +54,32 @@
         {% capture _hAttrToStrip %}{{ _workspace[0] | split: '>' | first }}>{% endcapture %}
         {% assign header = _workspace[0] | replace: _hAttrToStrip, '' %}
 
+        {% capture my_toc %}{{ my_toc }}{% endcapture %}
+
         {% comment %} Add opening <ul> tags {% endcomment %}
         {% if indentAmount > currentUlLevel %}
+            {% assign loopStart = currentUlLevel | plus: 1 %}
             {% assign space = '' %}
-            {% for i in(currentUlLevel..indentAmount) %}
+            {% for i in(loopStart..indentAmount) %}
+                {% capture my_toc %}{{ my_toc }}{% endcapture %}
                 {% for j in (1..i) %}
                     {% assign space = space | prepend: '  ' %}
                 {% endfor %}
-                {% capture my_toc %}{{ my_toc }}<!-- Opening list -->
+                {% capture my_toc %}{{ my_toc }}
 {{ space }}<ul class="nav flex-column">{% endcapture %}
             {% endfor %}
         {% endif %}
 
         {% comment %} Add closing </ul> tags {% endcomment %}
         {% if indentAmount < currentUlLevel %}
+            {% assign loopStart = indentAmount | plus: 1 %}
             {% assign space = '' %}
-            {% for i in(indentAmount..currentUlLevel) %}
+            {% for i in(currentUlLevel..loopStart) %}
                 {% for j in (1..i) %}
                     {% assign space = space | prepend: '  ' %}
                 {% endfor %}
-                {% capture my_toc %}{{ my_toc }}<!-- Closing list -->
-{{ space }}</ul>{% endcapture %}
+                {% capture my_toc %}{{ my_toc }}
+{{ space }}</ul><!-- Closing list {{ i }}-->{% endcapture %}
             {% endfor %}
         {% endif %}
 
@@ -112,4 +117,4 @@
         {% capture my_toc %}{: #{{ include.id }}}
 {{ my_toc | lstrip }}{% endcapture %}
     {% endif %}
-{% endcapture %}{% assign tocWorkspace = '' %}{{ my_toc | strip }}
+{% endcapture %}{% assign tocWorkspace = '' %}{{ my_toc }}
