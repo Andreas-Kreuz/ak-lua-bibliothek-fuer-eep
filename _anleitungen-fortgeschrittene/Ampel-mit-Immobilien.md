@@ -1,3 +1,9 @@
+---
+layout: page_with_toc
+title: Ampelsteuerung 2
+type: Tutorial mit Anlage
+subtitle: Erfahre, wie Du Immobilien-Ampeln verwendest und wie Du die automatische Ampelschaltung anhand des Verkehrs priorisierst.
+---
 # Ampel mit Immobilien und Zählern
 
 Diese Anleitung zeigt Dir, wie Du unsichtbare Ampeln zusammen mit Ampel-Baukästen verwenden kannst, bei denen die Lichtfunktion die Ampelschaltung steuert.
