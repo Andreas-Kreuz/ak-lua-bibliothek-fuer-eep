@@ -1,0 +1,2 @@
+*.lua		text eol=crlf
+*.anl3		-diff text eol=crlf
