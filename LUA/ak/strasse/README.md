@@ -56,7 +56,42 @@ Wird dazu verwendet mehrere Ampeln gleichzeitig zu schalten. Die kann für eine 
 
     Erforderlich sind name (z.B. "Richtung 1"), eepSaveId (Speicher-ID in EEP; 1 - 1000) und eine Liste mit mindestens einer Ampel (AkAmpel).
 
+### Fahrzeuge erkennen
+Es gibt drei Möglichkeiten Fahrzeuge zu erkennen:
+
+1. **Fahrzeuge am roten Signal zählen**
+
+    Über diese Funktion wird erkannt, wie viele Fahrzeuge zwischen einem bestimmten Vor- und Hauptsignal auf dem Straßenstück warten.
+
+    * Um die Richtung zu priorisieren, wenn sich **ein beliebiges Fahrzeug** auf der Straße vor der Ampel befindet, muss die signalID der Ampel einmalig hinterlegt werden: `meineRichtung:zaehleAnAmpelAlle(signalId)``
+
+    * Um die Richtung nur dann zu Priorisieren, wenn ein bestimmtes Fahrzeug an der Ampel wartet, kann stattdessen die Funktion mit Route verwendet werden: `meineRichtung:zaehleAnStrasseBeiRoute(strassenId, route)`<br>
+    Diese Funktion prüft, ob das erste Fahrzeug an der Ampel die passende Route hat.
+
+2. **Fahrzeuge auf der Straße vor dem Signal erkennen**
+
+    Über diese Funktion wird erkannt, ob sich _ein_ Fahrzeuge auf dem Straßenstück befindet.
+
+    * Um die Richtung zu priorisieren, wenn sich **ein beliebiges Fahrzeug** auf der Straße vor der Ampel befindet, muss die ID des Straßenstücks einmalig hinterlegt werden: `meineRichtung:zaehleAnStrasseAlle(strassenId)``
+
+    * Um die Richtung nur dann zu Priorisieren, wenn sich ein bestimmtes Fahrzeug auf der Straße vor der Ampel befindet, kann stattdessen die Funktion mit Route verwendet werden: `meineRichtung:zaehleAnStrasseBeiRoute(strassenId, route)`
+
+
+3. **Fahrzeuge mit Kontaktpunkten zählen**
+
+    Das Zählen mit Kontaktpunkten hinterlegt die Anzahl der Fahrzeuge in der Richtung und führt dazu, dass Richtungen mit mehr Fahrzeugen bevorzugt werden.
+
+    Es werden zwei Kontaktpunkte benötigt:
+
+    1. _Richtung betreten_<br> Rufe im Kontaktpunkt die Funktion `meineRichtung:betritt()` auf, wenn ein Fahrzeug den Bereich betritt.
+
+    2. _Richtung verlassen_<br> Rufe im Kontaktpunkt die Funktion `meineRichtung:verlasse(signalaufrot, fahrzeugName)` auf, wenn ein Fahrzeug den Bereich verläßt.
+
+        Wenn das Fahrzeug die Richtung verläßt, dann kann es die Ampel auf rot setzen, wenn gewünscht.
+
+
 ## Klasse `AkKreuzungsSchaltung`
+
 Wird dazu verwendet, mehrere Richtungen gleichzeitig zu schalten. Es muss sichergestellt werden, dass sich die Fahrwege der Richtungen einer Schaltung nicht überlappen.
 
   * `function AkKreuzungsSchaltung:neu(name)` - legt eine neue Schaltung an
