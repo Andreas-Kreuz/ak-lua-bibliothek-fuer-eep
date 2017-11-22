@@ -13,6 +13,7 @@ feature-img: "/assets/headers/Titelbild-Simulator.jpg"
 </div>
 <div class="row equal-height">
   {% for item in site.anleitungen-anfaenger %}
+  {% unless item.hide%}
   <div class="col-12 col-md-6 col-lg-4 col-xl-3">
     <div class="card border-success mb-5 bg-light">
       <img class="card-img-top" src="{{ site.baseurl }}/{{ item.img }}" alt="{{ item.title }}">
@@ -29,6 +30,7 @@ feature-img: "/assets/headers/Titelbild-Simulator.jpg"
       </div>
     </div>
   </div>
+  {% endunless %}
   {% endfor %}
 </div>
 <div class="row">
@@ -38,6 +40,7 @@ feature-img: "/assets/headers/Titelbild-Simulator.jpg"
 </div>
 <div class="row equal-height">
   {% for item in site.anleitungen-fortgeschrittene %}
+  {% unless item.hide %}
   <div class="col-12 col-md-6 col-lg-4 col-xl-3">
     <div class="card border-primary mb-5 bg-light">
       <img class="card-img-top" src="{{ site.baseurl }}/{{ item.img }}" alt="{{ item.title }}">
@@ -54,6 +57,7 @@ feature-img: "/assets/headers/Titelbild-Simulator.jpg"
       </div>
     </div>
   </div>
+  {% endunless %}
   {% endfor %}
 </div>
 <div class="row">
@@ -63,6 +67,7 @@ feature-img: "/assets/headers/Titelbild-Simulator.jpg"
 </div>
 <div class="row equal-height">
   {% for item in site.anleitungen-entwickler %}
+  {% unless item.hide %}
   <div class="col-12 col-md-6 col-lg-4 col-xl-3">
     <div class="card border-warning mb-5 bg-light">
       <img class="card-img-top" src="{{ site.baseurl }}/{{ item.img }}" alt="{{ item.title }}">
@@ -79,5 +84,6 @@ feature-img: "/assets/headers/Titelbild-Simulator.jpg"
       </div>
     </div>
   </div>
+  {% endunless %}
   {% endfor %}
 </div>
