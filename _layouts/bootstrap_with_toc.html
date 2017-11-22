@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    {% include head-content.html %}
+    <style>
+       .jumbotron {
+         background-color: transparent;
+       }
+    </style>
+  </head>
+  <body data-spy="scroll" data-target="#navbar-example2" data-offset="10"
+  style="background:
+   url('{{ site.baseurl }}/assets/img/landing-page.jpg');
+   background-size: 66%;
+   background-position: top right;
+   background-repeat: no-repeat;
+   ">
+    {% include navbar.html %}
+    <div class="container-fluid">
+      <div class="container">
+        <div class="row">
+          <div class="col col-sm-8 col-md-6 m-0">
+            <div class="jumbotron jumbotron-fluid">
+              <h1 class="display-4">{{ page.title }}</h1>
+              {% if page.subtitle %}<p class="lead">{{ page.subtitle }}</p>{% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {{ content }}
+    </div>
+    {% include footer.html %}
+    {% include scripts.html %}
+  </body>
+</html>

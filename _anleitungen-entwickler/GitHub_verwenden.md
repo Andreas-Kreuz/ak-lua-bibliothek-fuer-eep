@@ -1,3 +1,13 @@
+---
+layout: page_with_toc
+title: Github verwenden
+type: Anleitung
+subtitle: Hier erfährst Du, wie Du die Skripte direkt aus GitHub verwenden kannst.
+img: "/assets/headers/GitHub.png"
+feature-img: "/assets/headers/GitHub.png"
+date: 2017-09-03
+tags: [Fortgeschrittene, Entwickler]
+---
 # So kannst Du die Skripte aus GitHub nutzen
 
 * Melde Dich bei [GitHub](https://github.com/) an.
@@ -14,4 +24,4 @@
 
     `mklink /D C:\Trend\EEP14\LUA\ak C:\GitHub\ak-lua-skripte-fuer-eep\LUA\ak\`
 
-* Fertig: Nun sind alle Skripte im Ordner `ak` auch in EEP unter `ak` verfügbar und Du kannst nun eine Demo-Anlage aus `C:\GitHub\ak-lua-skripte-fuer-eep\Resourcen\Anlagen\` öffnen. Wenn alles geklappt hat, wird die Steuerung funktionieren.
+* Fertig: Nun sind alle Skripte im Ordner `ak` auch in EEP unter `ak` verfügbar und Du kannst nun eine Demo-Anlage aus `C:\GitHub\ak-lua-skripte-fuer-eep\Resourcen\Anlagen\` öffnen. Wenn alles geklappt hat, wird die automatische Steuerung der Demo-Anlage funktionieren.

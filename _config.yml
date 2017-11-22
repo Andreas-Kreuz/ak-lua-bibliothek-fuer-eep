@@ -1,5 +1,102 @@
-theme: jekyll-theme-slate
-title: "Lua-Skripte für EEP"
-description: "Verkehrssteuerung und mehr - von Andreas Kreuz"
+# SITE CONFIGURATION
+baseurl: "/ak-lua-skripte-fuer-eep"
+url: "https://andreas-kreuz.github.io"
+
+# THEME-SPECIFIC CONFIGURATION
+theme_settings:
+  # Meta
+  title: Lua-Skripte für EEP
+  avatar: assets/img/Avatar-Andreas-Kreuz.png
+  favicon: assets/favicon.ico
+  gravatar: b3d6b9ea43f1401c06bf20a38fa3ba91 # Email MD5 hash
+  description: "Lua für EEP - Verkehrssteuerung und mehr" # used by search engines
+
+  # Header and footer text
+  header_text: >
+     <p>Lua Skripte und mehr für EEP</p>
+
+     <p>Unterstützt EEP 14</p>
+  header_text_feature_image: assets/headers/Titelbild-Simulator.jpg
+  footer_text: >
+   Präsentiert von Andreas Kreuz
+
+  # Icons
+  rss: false
+  email_address: # Full email address, e.g. "sam@example.com"
+  behance:
+  bitbucket:
+  dribbble:
+  facebook:
+  flickr:
+  gitlab:
+  github: "Andreas-Kreuz"
+  google_plus:
+  instagram:
+  linkedin:  # Full URL
+  pinterest:
+  reddit:
+  soundcloud:
+  stack_exchange:  # Full URL
+  steam:
+  tumblr:
+  twitter:
+  wordpress:
+  youtube:
+
+  # Scripts
+  google_analytics: # Tracking ID, e.g. "UA-000000-01"
+  disqus_shortname:
+  katex: # Enable if using math markup
+
+  # Localization strings
+  str_follow_on: "Folgen"
+  str_rss_follow: "RSS-Feed abonieren"
+  str_email: "Email"
+  str_next_post: "Nächster Beitrag"
+  str_previous_post: "Vorheriger Beitrag"
+  str_next_page: "Weiter"
+  str_previous_page: "Zurück"
+  str_continue_reading: "Weiterlesen"
+  str_javascript_required_disqus: "Bitte Javascript einschalten, um die Kommentare zu lesen."
+
+  # Colours, typography and padding
+  # Open the "_sass > base" folder, and open "_variables.scss"
+  google_fonts: "Source+Sans+Pro:400,700,700italic,400italic"
+
+  # Post navigation
+  post_navigation: false
+
+# PAGINATION
+paginate: 5
+paginate_path: "blog/page:num"
+
+# PORTFOLIO
+collections:
+  anleitungen-anfaenger:
+    output: true
+    title: Erster Eindruck
+    permalink: /:collection/:name
+  anleitungen-fortgeschrittene:
+    output: true
+    title: Schritt-für-Schritt-Anleitungen
+    permalink: /:collection/:name
+  anleitungen-entwickler:
+    output: true
+    title: Für Entwickler
+    permalink: /:collection/:name
+  seiten:
+    output: true
+    title: Seiten
+    permalink: /:name
+
+# BUILD SETTINGS
+markdown: kramdown
+highlighter: rouge
+sass:
+  sass_dir: _sass
+  style: :compressed
 plugins:
+  - jekyll-paginate
+  - jekyll-seo-tag
   - jemoji
+exclude: ["Gemfile", "Gemfile.lock", "*.gem", "*.lua", "LICENSE", "screenshot.png"]

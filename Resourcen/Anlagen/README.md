@@ -1,3 +1,11 @@
+---
+layout: page
+title: Demo-Anlage Grundmodelle
+feature-img: "/assets/headers/AmpelDemo.jpg"
+img: "/assets/headers/AmpelDemo.jpg"
+---
+
+
 ## Beispielanlagen in `ak-demo-anlagen` deren Skripte in `ak-demo-lua`
 
 # Demo Anlage Ampel

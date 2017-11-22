@@ -1,0 +1,32 @@
+---
+---
+
+@import "my_pages";
+.content img:not(.emoji),
+.container img:not(.emoji),
+.container-fluid img:not(.emoji) {
+  max-width: 100%;
+}
+
+pre.highlight {
+  background-color: #f8f9fa;
+}
+
+/* Abstände der Überschriften */
+article h1 {
+  margin-top: 5rem;
+}
+article h2 {
+  margin-top: 3rem;
+}
+article h3 {
+  margin-top: 2.5rem;
+}
+article h1+h2,
+article h2+h3,
+article h3+h4 {
+  margin-top: 1rem;
+}
+article h1:first-of-type {
+  margin-top: inherit;
+}

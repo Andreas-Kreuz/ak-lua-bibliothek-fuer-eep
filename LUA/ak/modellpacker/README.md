@@ -1,17 +1,22 @@
-# Paket ak.modellpacker - Modell-Installer erzeugen
+---
+layout: page_with_toc
+title: EEP-Installer selbst gemacht
+subtitle: Baue eine eigene ZIP-Datei, die jeder mit EEP installieren kann.  
+permalink: lua/ak/modellpacker/
+feature-img: "/assets/headers/ModellPacker.png"
+img: "/assets/headers/ModellPacker.png"
+---
 
-![SourceCode](../../../assets/headers/ModellPacker.png)
+# Motivation
+Dieses Paket hilft dabei Modell-Installer für EEP zu erzeugen.
 
-## Motivation
-Dieses Paket hilft dabei Modell-Installer zu erzeugen.
-
-* Die gewünschten Dateien werden automatisch in die Unterordner `Install_xx` kopiert und es wird eine zu den Dateien passende `Install_xx\install.ini` angelegt
+* Die von Dir gewünschten Dateien werden automatisch in die Unterordner `Install_xx` kopiert und es wird eine zu den Dateien passende `Install_xx\install.ini` angelegt
 * Es wird eine Datei `Installation.eep` mit der Beschreibung der Installation angelegt.
+* Im Anschluss wird die Datei mit 7-zip gepackt, wenn installiert.
 
+# Skript `AkModellPacker`
+Das Skriot liegt in `ak.modellpacker.AkModellPacker`.
 
-## Zur Verwendung vorgesehene Klassen und Funktionen
-
-### Skript `ak.modellpacker.AkModellPacker`
 * Klasse `AkModellInstaller` - legt einen Modell-Installer an, welchem Modell-Pakete hinzugefügt werden können.
 
   * `AkModellInstaller:neu(verzeichnisname)` - Legt einen neuen Modell-Installer an. Der Modell-Installer kann mehrere Modell-Pakete enthalten. Der `verzeichnisname` bestimmt, in welches Unterverzeichnis das Modellpaket installiert werden soll - dieses Verzeichnis wird neu angelegt.
@@ -26,6 +31,9 @@ Dieses Paket hilft dabei Modell-Installer zu erzeugen.
 
   * `AkModellPaket:fuegeDateienHinzu(verzeichnis, praefix, unterverzeichnis)` - Fügt alle Dateien im Unterverzeichnis `verzeichnis\unterverzeichnis` hinzu. Die Dateien werden mit dem Namen `praefix\unterverzeichnis\...\dateiname` erzeugt.
 
-## Beispiel
+# Beispiel
 
-Siehe [Modellinstallation](../../ModellInstallation.lua)
+Alle Anlagen und Skripte dieser Webseite werden automatisch verpackt - Siehe [Modellinstallation.lua](https://github.com/Andreas-Kreuz/ak-lua-skripte-fuer-eep/blob/neue-startseite/LUA/ModellInstallation.lua)
+
+Du benötigst ein in Windows installiertes Lua - siehe:
+[Demo-Anlage-Testen](../../../_anleitungen-fortgeschrittene/demo-anlage-testen.md)

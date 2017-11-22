@@ -1,0 +1,83 @@
+---
+layout: page_landing
+title : Anleitungen
+subtitle: Schrittweise Erklärungen helfen Dir bei der Verwendung der Lua-Skripte.
+permalink: anleitungen/
+feature-img: "/assets/headers/Titelbild-Simulator.jpg"
+---
+
+<div class="row">
+  <div class="col-lg-12">
+    <h1>Verwendung kennenlernen</h1>
+  </div>
+</div>
+<div class="row equal-height">
+  {% for item in site.anleitungen-anfaenger %}
+  <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+    <div class="card border-success mb-5 bg-light">
+      <img class="card-img-top" src="{{ site.baseurl }}/{{ item.img }}" alt="{{ item.title }}">
+      <div class="card-header text-white bg-success">
+        Kennenlernen
+      </div>
+      <div class="card-body">
+        <h4 class="card-title">{{ item.title }}</h4>
+        <h6 class="card-subtitle mb-2 text-muted">{{ item.type }}</h6>
+        <p class="card-text">{{ item.subtitle }}</p>
+      </div>
+      <div class="card-footer bg-transparent text-center">
+        <a href="{{ site.baseurl }}/{{ item.url }}" class="btn btn-success">Zur Anleitung</a>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+<div class="row">
+  <div class="col-12">
+    <h1>Skripte verwenden</h1>
+  </div>
+</div>
+<div class="row equal-height">
+  {% for item in site.anleitungen-fortgeschrittene %}
+  <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+    <div class="card border-primary mb-5 bg-light">
+      <img class="card-img-top" src="{{ site.baseurl }}/{{ item.img }}" alt="{{ item.title }}">
+      <div class="card-header text-white bg-primary">
+        Verwenden
+      </div>
+      <div class="card-body">
+        <h4 class="card-title">{{ item.title }}</h4>
+        <h6 class="card-subtitle mb-2 text-muted">{{ item.type }}</h6>
+        <p class="card-text">{{ item.subtitle }}</p>
+      </div>
+      <div class="card-footer bg-transparent text-center">
+        <a href="{{ site.baseurl }}/{{ item.url }}" class="btn btn-primary">Zur Anleitung</a>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+<div class="row">
+  <div class="col-12">
+    <h1>Skripte weiterentwickeln</h1>
+  </div>
+</div>
+<div class="row equal-height">
+  {% for item in site.anleitungen-entwickler %}
+  <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+    <div class="card border-warning mb-5 bg-light">
+      <img class="card-img-top" src="{{ site.baseurl }}/{{ item.img }}" alt="{{ item.title }}">
+      <div class="card-header bg-warning">
+        Weiterentwickeln
+      </div>
+      <div class="card-body">
+        <h4 class="card-title">{{ item.title }}</h4>
+        <h6 class="card-subtitle mb-2 text-muted">{{ item.type }}</h6>
+        <p class="card-text">{{ item.subtitle }}</p>
+      </div>
+      <div class="card-footer bg-transparent text-center">
+        <a href="{{ site.baseurl }}/{{ item.url }}" class="btn btn-warning">Zur Anleitung</a>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>

@@ -1,10 +1,13 @@
-# Paket ak.schiene - In Arbeit
+---
+layout: page_with_toc
+title: In Arbeit
+subtitle: Zugsteuerung ist noch in Arbeit - hier ist noch viel Geduld erforderlich.
+permalink: lua/ak/schiene/
+feature-img: "/assets/headers/SourceCode.png"
+img: "/assets/headers/SourceCode.png"
+---
 
-![SourceCode](../../../assets/headers/SourceCode.png)
-
-:zap: __DIESES PAKET SOLLTEST DU NOCH NICHT VERWENDEN__ :zap:
-
-Es ist einfach noch nicht gut genug.
+Paket `ak.schiene`
 
 Anstehende Aufgaben:
 * [ ] Deutsche Namen verwenden

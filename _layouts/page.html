@@ -1,0 +1,28 @@
+---
+layout: bootstrap
+---
+
+<article {% if page.feature-img %}class="feature-image"{% endif %}>
+  <header id="main" style="background:
+    linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
+    url('{{ site.baseurl }}/{{ page.feature-img }}');">
+    <h1 id="{{ page.title | default: "" | cgi_escape }}" class="title">
+      {{ page.title }}
+    </h1>
+    {% if page.subtitle %}
+    <h2 class="subtitle"><strong>{{ page.subtitle }}</strong></h2>
+    {% endif %}
+  </header>
+  <section>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-10 m-auto">
+          {{ content }}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tag list
+  {% include tags_list.html tag_count=page.tags.size %}-->
+</article>

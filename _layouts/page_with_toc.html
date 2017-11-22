@@ -1,0 +1,24 @@
+---
+layout: bootstrap_with_toc
+---
+
+<article>
+  <div class="row">
+  <div class="col-lg-3 order-lg-12 br-lg-0 pr-lg-0">
+    <aside id="navbar-example2" class="container-fluid sticky-top bg-light toc-right">
+      <nav class="navbar navbar-light bg-light">
+        <a class="navbar-brand flex-column" href="#">Inhalt</a>
+        <nav class="nav nav-pills flex-column text-truncate">
+          {% include toc-bootstrap-nav-list.html html=content %}
+        </nav>
+      </nav>
+    </aside>
+  </div>
+  <div class="col-lg-9 order-lg-1">
+    {{ content }}
+  </div>
+</div>
+
+  <!-- Tag list
+  {% include tags_list.html tag_count=page.tags.size %}-->
+</article>
