@@ -16,8 +16,7 @@ theme_settings:
      <p>Lua Bibliothek für EEP 14</p>
   header_text_feature_image: assets/headers/Titelbild-Simulator.jpg
   footer_text: >
-   Präsentiert von Andreas Kreuz
-
+    <p>Präsentiert von <a href="http://andreas-kreuz.github.io/">Andreas Kreuz</a> - Diskussion bitte in <a href="http://www.eepforum.de">Mein EEP Forum</a>.</p>
   # Icons
   rss: false
   email_address: # Full email address, e.g. "sam@example.com"
