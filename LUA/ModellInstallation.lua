@@ -12,8 +12,8 @@ print("Suche Installationsdateien in Verzeichnis \"" .. aktuellerOrdner .. "\"")
 -----------------------------------------
 -- Paket: Skripte von Andreas Kreuz
 -----------------------------------------
-local paket0 = AkModellPaket:neu("13,2", "Skriptsammlung von Andreas Kreuz",
-    "Diverse Lua-Skripte zur Verkehrssteuerung, Aufgabenplanung und Modell-Installation")
+local paket0 = AkModellPaket:neu("13,2", "Lua-Bibliothek von Andreas Kreuz",
+    "Lua-Bibliothek mit Verkehrssteuerung, Aufgabenplanung und Modell-Installation")
 paket0:fuegeDateienHinzu(aktuellerOrdner, "", "LUA\\ak\\eep", { "README.md" })
 paket0:fuegeDateienHinzu(aktuellerOrdner, "", "LUA\\ak\\schiene", { "README.md" })
 paket0:fuegeDateienHinzu(aktuellerOrdner, "", "LUA\\ak\\planer", { "README.md" })
@@ -22,7 +22,7 @@ paket0:fuegeDateienHinzu(aktuellerOrdner, "", "LUA\\ak\\strasse", { "README.md" 
 paket0:fuegeDateienHinzu(aktuellerOrdner, "", "LUA\\ak\\text", { "README.md" })
 
 do
-    local installer = AkModellInstaller:neu("Installer-AK-Skriptsammlung")
+    local installer = AkModellInstaller:neu("Installer-AK-Bibliothek-fuer-EEP")
     installer:fuegeModellPaketHinzu(paket0)
     installer:erzeugePaket(aktuellerOrdner .. "\\modell-pakete")
 end
@@ -78,7 +78,7 @@ end
 -----------------------------------------
 do
     local paket1 = AkModellPaket:neu("13,2", "Tutorial - Aufbau einer Ampelkreuzung",
-        "Eine Anlage mit einer Kreuzung, die den Aufbau der Lua-Skripte erklärt")
+        "Eine Anlage mit einer Kreuzung, die die Verwendung der Lua-Bibliothek erklärt")
     paket1:fuegeDateienHinzu(aktuellerOrdner, "", "LUA\\ak\\demo-anlagen\\tutorial-ampel", {
         "README.md"
     })

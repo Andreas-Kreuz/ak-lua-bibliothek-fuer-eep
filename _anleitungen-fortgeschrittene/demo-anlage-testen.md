@@ -37,7 +37,7 @@ Die Anlage `Andreas_Kreuz-Lua-Testbeispiel` - oder besser deren Lua-Skripte - de
   Dieses muss in `ak-demo-lua\testen\Andreas_Kreuz-Lua-Testbeispiel-test.lua` an erster Stelle eingebunden werden:
   `require 'ak.eep.AkEepFunktionen'`
 
-* Zum Ausführen des Testskriptes ohne EEP ist Lua 5.2 erforderlich - z.B. `lua.exe`, `lua52.dll` und `luac.exe` aus
+* Zum Ausführen des Test-Skriptes ohne EEP ist Lua 5.2 erforderlich - z.B. `lua.exe`, `lua52.dll` und `luac.exe` aus
 folgendem Link. [https://sourceforge.net/projects/luabinaries/files/5.2.4/Tools%20Executables/lua-5.2.4_Win64_bin.zip/download](https://sourceforge.net/projects/luabinaries/files/5.2.4/Tools%20Executables/lua-5.2.4_Win64_bin.zip/download)
  diese 3 Dateien einfacherweise auch in `C:\Trend\EEP14\LUA` ablegen
 

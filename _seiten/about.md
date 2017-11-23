@@ -7,5 +7,4 @@ img: "/assets/headers/Titelbild-Simulator.jpg"
 hide: true
 ---
 
-Lua-Skripte für EEP ist ein freies Open-Source Projekt, welches unter der
-MIT Licence veröffentlicht wird.
+<em>Andreas Kreuz' Lua-Bibliothek für EEP</em> ist ein freies Open-Source Projekt, welches unter der MIT Licence veröffentlicht wird.

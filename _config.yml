@@ -13,9 +13,7 @@ theme_settings:
 
   # Header and footer text
   header_text: >
-     <p>Lua Skripte und mehr für EEP</p>
-
-     <p>Unterstützt EEP 14</p>
+     <p>Lua Bibliothek für EEP 14</p>
   header_text_feature_image: assets/headers/Titelbild-Simulator.jpg
   footer_text: >
    Präsentiert von Andreas Kreuz

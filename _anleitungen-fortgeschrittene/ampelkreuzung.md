@@ -11,7 +11,7 @@ tags: [AkStrasse, Verwendung, Anleitung]
 
 # Ampelkreuzung automatisch steuern
 
-<p class="lead"> Diese Anleitung zeigt Dir, wie Du in EEP eine mit Ampeln versehene Kreuzung mit dem Skript verdrahten kannst.</p>
+<p class="lead"> Diese Anleitung zeigt Dir, wie Du in EEP eine mit Ampeln versehene Kreuzung mit der Lua-Bibliothek verdrahten kannst.</p>
 
 <hr>
 
@@ -27,20 +27,20 @@ Dafür benötigst Du folgendes:
   | Ampel-Baukasten für mehrspurige Straßenkreuzungen (V80NJS20039) | _[Download](https://eepshopping.de/ampel-baukasten-f%C3%83%C6%92%C3%82%C2%BCr-mehrspurige-stra%C3%83%C6%92%C3%82%C5%B8enkreuzungen%7C6624.html)_ |
   | Straßenbahnsignale als Immobilien (V80MA1F010 und V10MA1F011) | _[Download](https://eepshopping.de/ampel-baukasten-f%C3%83%C6%92%C3%82%C2%BCr-mehrspurige-stra%C3%83%C6%92%C3%82%C5%B8enkreuzungen%7C6624.html)_ |
 
-:star: **_Tipp_**: Die notwendigen Skripte sind bei der Installation in der Anlage enthalten. Möchtest Du Deine eigene Anlage verwenden, so kannst Du die Skripte wie folgt installieren: [_Installation von "Ak-Lua-Skripte-für-EEP"_](../anleitungen-anfaenger/installation)
+:star: **_Tipp_**: Die Lua-Bibliothek ist in der Installation der Anlage enthalten. Möchtest Du Deine eigene Anlage verwenden, so kannst Du die Bibliothek wie folgt installieren: [_Installation der Lua-Bibliothek von Andreas Kreuz_](../anleitungen-anfaenger/installation)
 
 # Los geht's
 * Öffne die Anlage in EEP
 * Öffne Deinen Editor für Lua-Skripte
 
-## Das Lua-Hauptskript anlegen
+## Das Lua-Haupt-Skript anlegen
 :star: _**Tipp:** Aktiviere in EEP unter Programmeinstellungen das EEP Ereignisfenster, damit Du die Lua Meldungen lesen kannst._
 
 :exclamation: _**Beachte:** Diese Anleitung geht davon aus, dass in der geöffneten Anlage noch nichts mit LUA gemacht wurde. Verwendest Du Dein eigenes Anlagen-Skript, dann lösche es nicht, sondern ergänze es um die weiter unten aufgeführten Befehle._
 
 <br>
 
-* Das Hauptskript `meine-ampel-main.lua` wirst Du im nächsten Schritt im LUA-Verzeichnis von EEP anlegen: `C:\Trend\EEP14\LUA`
+* Das Haupt-Skript `meine-ampel-main.lua` wirst Du im nächsten Schritt im LUA-Verzeichnis von EEP anlegen: `C:\Trend\EEP14\LUA`
 
 * Öffne den LUA-Editor in EEP, wähle alles mit `<Strg>` + `<A>` aus und ersetze es durch
   ```lua
@@ -65,7 +65,7 @@ Dafür benötigst Du folgendes:
 
 ## Notwendige Befehle in das Lua-Skript aufnehmen
 
-* Ergänze das Lua-Hauptskript um die folgenden Zeilen.
+* Ergänze das Lua-Haupt-Skript um die folgenden Zeilen.
   ```lua
   require("ak.strasse.AkStrasse")
 

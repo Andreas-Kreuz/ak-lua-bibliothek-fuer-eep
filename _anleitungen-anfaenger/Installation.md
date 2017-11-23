@@ -1,7 +1,7 @@
 ---
 layout: page_with_toc
-title: Installation
-subtitle: Hier erfährst Du, wie Du das Skript-Paket herunterladen und direkt in EEP installieren kannst.
+title: Bibliothek installieren
+subtitle: Hier erfährst Du, wie Du die Lua-Bibliothek von Andreas Kreuz herunterladen und direkt in EEP installieren kannst.
 type: Anleitung
 feature-img: "/assets/headers/ModellPacker.png"
 img: "/assets/headers/ModellPacker.png"
@@ -9,15 +9,15 @@ date: 2017-09-01
 tags: [Installation]
 ---
 
-# Installation von Ak-Lua-Skripte-für-EEP
+# Installieren der Lua-Bibliothek
 
 ## Herunterladen
-* Lade Dir die Datei `Installer-AK-Skriptsammlung.zip` herunter: _[Releases von Ak-Lua-Skripte-für-EEP](https://github.com/Andreas-Kreuz/ak-lua-bibliothek-fuer-eep/releases)_
+* Lade Dir die Datei `Installer-AK-Bibliothek-fuer-EEP.zip` herunter: _[Releases der Lua-Bibliothek von Andreas Kreuz](https://github.com/Andreas-Kreuz/ak-lua-bibliothek-fuer-eep/releases)_
 
     ![BILD](../assets/tutorial/installation/InstallationDownload.png)
 
 ## Installieren
-Öffne EEP und verwende den Modell-Installer, um die Skripte zu installieren
+Öffne EEP und verwende den Modell-Installer, um die Lua-Bibliothek zu installieren
 * Klicke auf Modell-Installer
 
     ![BILD](../assets/tutorial/installation/Installation-Modell-Installer.png)
@@ -30,11 +30,11 @@ tags: [Installation]
 
     ![BILD](../assets/tutorial/installation/Installation-Modell-installieren.png)
 
-__Tipp:__ Das Scannen nach neuen Modellen ist nicht notwendig, da die Skripte keine 3D-Modelle enthalten.
+__Tipp:__ Das Scannen nach neuen Modellen ist nicht notwendig, da die Bibliothek keine 3D-Modelle enthalten.
 
 ## Geschafft :four_leaf_clover:
 Du hast die Installation abgeschlossen.
 
-Die Skripte wurden in das  Unterverzeichnis `LUA/ak` Deiner EEP-Installation installiert, z.B. in `C:\Trend\EEP14\LUA\`.
+Die Bibliothek wurde in das  Unterverzeichnis `LUA/ak` Deiner EEP-Installation installiert, z.B. in `C:\Trend\EEP14\LUA\`.
 
-Jetzt kannst Du die [Anleitung für eine automatische Ampelkreuzung](../anleitungen-fortgeschrittene/ampelkreuzung) starten oder die [Lua-Skript Dokumentation](../LUA/ak/) lesen.
+Jetzt kannst Du die [Anleitung für eine automatische Ampelkreuzung](../anleitungen-fortgeschrittene/ampelkreuzung) starten oder die [Dokumentation der Bibliothek](../LUA/ak/) lesen.
