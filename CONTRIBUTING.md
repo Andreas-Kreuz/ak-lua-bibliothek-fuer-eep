@@ -4,9 +4,9 @@
 
 #### Hast Du einen Fehler gefunden?
 
-* Schau unter [Issues](https://github.com/Andreas-Kreuz/ak-lua-skripte-fuer-eep/issues) nach, dass der Fehler nicht schon gemeldet wurde
+* Schau unter [Issues](https://github.com/Andreas-Kreuz/ak-lua-bibliothek-fuer-eep/issues) nach, dass der Fehler nicht schon gemeldet wurde
 
-* Findest Du Fehler nicht unter [Issues](https://github.com/Andreas-Kreuz/ak-lua-skripte-fuer-eep/issues), erstelle einen neuen mit aussagekräftigem Titel und Beschreibung.
+* Findest Du Fehler nicht unter [Issues](https://github.com/Andreas-Kreuz/ak-lua-bibliothek-fuer-eep/issues), erstelle einen neuen mit aussagekräftigem Titel und Beschreibung.
 
 #### Hast Du einen Patch geschrieben, der einen Fehler behebt?
 

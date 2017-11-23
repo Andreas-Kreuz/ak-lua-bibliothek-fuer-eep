@@ -33,7 +33,7 @@ Das Skriot liegt in `ak.modellpacker.AkModellPacker`.
 
 # Beispiel
 
-Alle Anlagen und Skripte dieser Webseite werden automatisch verpackt - Siehe [Modellinstallation.lua](https://github.com/Andreas-Kreuz/ak-lua-skripte-fuer-eep/blob/neue-startseite/LUA/ModellInstallation.lua)
+Alle Anlagen und Skripte dieser Webseite werden automatisch verpackt - Siehe [Modellinstallation.lua](https://github.com/Andreas-Kreuz/ak-lua-bibliothek-fuer-eep/blob/neue-startseite/LUA/ModellInstallation.lua)
 
 Du benötigst ein in Windows installiertes Lua - siehe:
 [Demo-Anlage-Testen](../../../_anleitungen-fortgeschrittene/demo-anlage-testen.md)

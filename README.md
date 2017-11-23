@@ -1,6 +1,6 @@
 # Informiere Dich auf der Webseite
 
-http://andreas-kreuz.github.io/ak-lua-skripte-fuer-eep
+http://andreas-kreuz.github.io/ak-lua-bibliothek-fuer-eep
 
 
 # Überblick

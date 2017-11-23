@@ -1,11 +1,11 @@
 # SITE CONFIGURATION
-baseurl: "/ak-lua-skripte-fuer-eep"
+baseurl: "/ak-lua-bibliothek-fuer-eep"
 url: "https://andreas-kreuz.github.io"
 
 # THEME-SPECIFIC CONFIGURATION
 theme_settings:
   # Meta
-  title: Lua-Skripte für EEP
+  title: Lua-Bibliothek für EEP
   avatar: assets/img/Avatar-Andreas-Kreuz.png
   favicon: assets/favicon.ico
   gravatar: b3d6b9ea43f1401c06bf20a38fa3ba91 # Email MD5 hash

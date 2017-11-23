@@ -12,7 +12,7 @@ tags: [Installation]
 # Installation von Ak-Lua-Skripte-für-EEP
 
 ## Herunterladen
-* Lade Dir die Datei `Installer-AK-Skriptsammlung.zip` herunter: _[Releases von Ak-Lua-Skripte-für-EEP](https://github.com/Andreas-Kreuz/ak-lua-skripte-fuer-eep/releases)_
+* Lade Dir die Datei `Installer-AK-Skriptsammlung.zip` herunter: _[Releases von Ak-Lua-Skripte-für-EEP](https://github.com/Andreas-Kreuz/ak-lua-bibliothek-fuer-eep/releases)_
 
     ![BILD](../assets/tutorial/installation/InstallationDownload.png)
 
