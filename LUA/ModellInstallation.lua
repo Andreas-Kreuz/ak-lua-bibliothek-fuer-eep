@@ -22,7 +22,7 @@ paket0:fuegeDateienHinzu(aktuellerOrdner, "", "LUA\\ak\\strasse", { "README.md" 
 paket0:fuegeDateienHinzu(aktuellerOrdner, "", "LUA\\ak\\text", { "README.md" })
 
 do
-    local installer = AkModellInstaller:neu("Installer-AK-Bibliothek-fuer-EEP")
+    local installer = AkModellInstaller:neu("Installer-AK-Lua-Bibliothek-fuer-EEP")
     installer:fuegeModellPaketHinzu(paket0)
     installer:erzeugePaket(aktuellerOrdner .. "\\modell-pakete")
 end
