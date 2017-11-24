@@ -6,6 +6,7 @@ subtitle: Hier erfährst Du, wie Du die Ampeln einer Kreuzung mit 4 Richtungen i
 feature-img: "/assets/headers/tutorial1-ampel.jpg"
 img: "/assets/headers/tutorial1-ampel.jpg"
 date: 2017-09-01
+permalink: anleitungen-fortgeschrittene/ampelkreuzung
 tags: [AkStrasse, Verwendung, Anleitung]
 ---
 

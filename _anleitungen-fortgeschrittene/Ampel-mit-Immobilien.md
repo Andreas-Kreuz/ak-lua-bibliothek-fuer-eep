@@ -3,6 +3,7 @@ layout: page_with_toc
 title: Ampelsteuerung 2
 type: Tutorial mit Anlage
 subtitle: Erfahre, wie Du Immobilien-Ampeln verwendest und wie Du die automatische Ampelschaltung anhand des Verkehrs priorisierst.
+permalink: anleitungen-fortgeschrittene/ampel-aufstellen
 hide: true
 ---
 # Ampel mit Immobilien und Zählern

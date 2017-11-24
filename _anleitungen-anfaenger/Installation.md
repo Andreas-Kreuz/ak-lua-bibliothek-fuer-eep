@@ -6,6 +6,7 @@ type: Anleitung
 feature-img: "/assets/headers/ModellPacker.png"
 img: "/assets/headers/ModellPacker.png"
 date: 2017-09-01
+permalink: anleitungen-anfaenger/installation
 tags: [Installation]
 ---
 
