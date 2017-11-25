@@ -2,7 +2,7 @@
 layout: page_with_toc
 title: Ampelsteuerung 3
 type: Tutorial mit Anlage
-subtitle: Erfahre wie Du anliegenden Verkehr erkennen kannst, und wie dieser die Schaltungen beeinflusst.  
+subtitle: Erfahre wie Du anliegenden Verkehr erkennen kannst und wie dieser die Schaltungen beeinflusst.  
 img: "/assets/thumbnails/tutorial3-verkehr-erkennen.jpg"
 permalink: anleitungen-fortgeschrittene/tutorial3-priorisierung
 hide: false
