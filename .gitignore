@@ -48,3 +48,4 @@ _site
 Gemfile.lock
 .sass-cache
 .jekyll*
+.DS_Store
