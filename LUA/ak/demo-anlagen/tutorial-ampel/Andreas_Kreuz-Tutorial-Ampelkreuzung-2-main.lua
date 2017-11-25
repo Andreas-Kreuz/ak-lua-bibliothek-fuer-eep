@@ -84,7 +84,8 @@ os = AkRichtung:neu("OS", 107, {
         "#28_Straba Signal geradeaus", --  gruen schaltet das Licht dieser Immobilie ein
         "#27_Straba Signal anhalten", --   gelb  schaltet das Licht dieser Immobilie ein
         "#26_Straba Signal A") --    Anforderung schaltet das Licht dieser Immobilie ein
-}):zaehleAnAmpelAlle(14) -- Erfasst Anforderungen, wenn ein Fahrzeug an Signal 14 steht
+})
+os:zaehleAnAmpelAlle(14) -- Erfasst Anforderungen, wenn ein Fahrzeug an Signal 14 steht
 
 ws = AkRichtung:neu("WS", 108, {
     AkAmpel:neu(15, AkAmpelModell.Unsichtbar_2er,
@@ -92,7 +93,8 @@ ws = AkRichtung:neu("WS", 108, {
         "#30_Straba Signal geradeaus", --  gruen schaltet das Licht dieser Immobilie ein
         "#31_Straba Signal anhalten", --   gelb  schaltet das Licht dieser Immobilie ein
         "#33_Straba Signal A") --    Anforderung schaltet das Licht dieser Immobilie ein
-}):zaehleAnStrasseAlle(2) -- Erfasst Anforderungen, wenn ein Fahrzeug auf Strasse 2 steht
+})
+ws:zaehleAnStrasseAlle(2) -- Erfasst Anforderungen, wenn ein Fahrzeug auf Strasse 2 steht
 
 
 --------------------------------------------------------------
