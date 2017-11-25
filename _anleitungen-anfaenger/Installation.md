@@ -3,8 +3,7 @@ layout: page_with_toc
 title: Bibliothek installieren
 subtitle: Hier erfährst Du, wie Du die Lua-Bibliothek von Andreas Kreuz herunterladen und direkt in EEP installieren kannst.
 type: Anleitung
-feature-img: "/assets/headers/ModellPacker.png"
-img: "/assets/headers/ModellPacker.png"
+img: "/assets/thumbnails/ModellPacker.png"
 date: 2017-09-01
 permalink: anleitungen-anfaenger/installation
 tags: [Installation]
