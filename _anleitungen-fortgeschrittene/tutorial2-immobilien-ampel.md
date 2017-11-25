@@ -6,6 +6,7 @@ subtitle: Erfahre wie Du Immobilien-Ampeln verwenden kannst - wenn diese auf Lic
 img: "/assets/thumbnails/tutorial2-immo-ampel.jpg"
 permalink: anleitungen-fortgeschrittene/tutorial2-immobilien-ampel
 hide: false
+date: 2017-09-02
 ---
 # Immobilien mit Lichtfunktion als Ampel
 

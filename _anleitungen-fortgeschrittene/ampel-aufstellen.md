@@ -4,7 +4,7 @@ title: Ampeln aufstellen
 type: Tipps & Tricks
 subtitle: Verwende maximal eine Ampel zum Steuern jeder Fahrspur. Verwende "alte" Ampeln mit dem richtigen Abstand im 1-Spur-System.
 img: "/assets/thumbnails/ampel-aufstellen.jpg"
-date: 2017-09-02
+date: 2017-09-30
 permalink: anleitungen-fortgeschrittene/ampel-aufstellen
 tags: [AkStrasse, Verwendung, Anleitung]
 ---

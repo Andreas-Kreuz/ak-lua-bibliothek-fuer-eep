@@ -6,6 +6,7 @@ subtitle: Erfahre wie Du anliegenden Verkehr erkennen kannst und wie dieser die 
 img: "/assets/thumbnails/tutorial3-verkehr-erkennen.jpg"
 permalink: anleitungen-fortgeschrittene/tutorial3-priorisierung
 hide: false
+date: 2017-09-03
 ---
 # Priorisierung an der Ampel
 
