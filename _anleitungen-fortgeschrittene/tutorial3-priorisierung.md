@@ -194,7 +194,7 @@ Setze für jeder Richtung zwei Kontaktpunkte:
     Dieser Kontaktpunkt muss die Funktion `richtung:betritt()` aufrufen - in der Demo-Anlage wird in den Kontaktpunkten `KpBetritt(richtung)` verwendet.
 
     :star: Achte darauf, dass nur Fahrzeuge den Kontaktpunkt aufrufen, die diese Richtung betreten.<br>
-    :star: Achte darauf, dass der Kontaktpunkt hinter entsprechenden Verzweigungen liegt.
+    :star: Achte darauf, dass der Kontaktpunkt nicht vor einer Verzweigungen liegt, die die Fahrzeuge auf andere Richtungen verteilt.
 
 2. Hinter dem Signal der Richtung
 
