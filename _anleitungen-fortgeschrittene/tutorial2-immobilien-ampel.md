@@ -21,7 +21,7 @@ hide: false
   | Ampel-Baukasten für mehrspurige Straßenkreuzungen (V80NJS20039) | _[Download](https://eepshopping.de/ampel-baukasten-f%C3%83%C6%92%C3%82%C2%BCr-mehrspurige-stra%C3%83%C6%92%C3%82%C5%B8enkreuzungen%7C6624.html)_ |
   | Straßenbahnsignale als Immobilien (V80MA1F010 und V10MA1F011) | _[Download](http://www.eep.euma.de/download/)_ |
 
-# Beispielanlage öffnen
+# Beispielanlage verwenden
 
 * Lade und installiere Dir die Beispielanlagen für die Ampeln "Installer-AK-Tutorial-Ampelkreuzung.zip"
 * Öffne die Beispielanlage "*Andreas_Kreuz_Tutorial_Ampelkreuzung-2.anl3*" in EEP
