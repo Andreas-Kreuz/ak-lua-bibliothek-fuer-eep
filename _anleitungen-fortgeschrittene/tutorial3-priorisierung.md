@@ -3,7 +3,7 @@ layout: page_with_toc
 title: Ampelsteuerung 3
 type: Tutorial mit Anlage
 subtitle: Erfahre wie Du anliegenden Verkehr erkennen kannst, und wie dieser die Schaltungen beeinflusst.  
-img: "/assets/thumbnails/tutorial2-ampel.jpg"
+img: "/assets/thumbnails/tutorial3-verkehr-erkennen.jpg"
 permalink: anleitungen-fortgeschrittene/tutorial3-priorisierung
 hide: false
 ---
@@ -184,8 +184,6 @@ Die Erkennung erfolgt ähnlich wie bei der Straße (Details siehe oben).
     Wenn Du die Anzahl der Fahrzeuge einer Richtung mit Kontaktpunkten zählst, bekommst Du die bestmögliche Erkennung für mehrere Fahrzeuge.
   </div>
 </div>
-
-
 
 Setze für jeder Richtung zwei Kontaktpunkte:
 

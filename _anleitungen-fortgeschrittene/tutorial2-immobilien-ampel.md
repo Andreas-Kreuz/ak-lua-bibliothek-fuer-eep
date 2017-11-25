@@ -3,7 +3,7 @@ layout: page_with_toc
 title: Ampelsteuerung 2
 type: Tutorial mit Anlage
 subtitle: Erfahre wie Du Immobilien-Ampeln verwenden kannst - wenn diese auf Licht ein- und ausschalten basieren.
-img: "/assets/thumbnails/tutorial2-ampel.jpg"
+img: "/assets/thumbnails/tutorial2-immo-ampel.jpg"
 permalink: anleitungen-fortgeschrittene/tutorial2-immobilien-ampel
 hide: false
 ---
