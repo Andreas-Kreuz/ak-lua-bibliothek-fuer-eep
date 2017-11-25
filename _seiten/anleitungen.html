@@ -16,7 +16,7 @@ feature-img: "/assets/headers/Titelbild-Simulator.jpg"
   {% unless item.hide%}
   <div class="col-12 col-md-6 col-lg-4 col-xl-3">
     <div class="card border-success mb-5 bg-light">
-      <img class="card-img-top" src="{{ site.baseurl }}/{{ item.img }}" alt="{{ item.title }}">
+      <img class="card-img-top" src="{{ site.baseurl }}{{ item.img }}" alt="{{ item.title }}">
       <div class="card-header text-white bg-success">
         Kennenlernen
       </div>
@@ -26,7 +26,7 @@ feature-img: "/assets/headers/Titelbild-Simulator.jpg"
         <p class="card-text">{{ item.subtitle }}</p>
       </div>
       <div class="card-footer bg-transparent text-center">
-        <a href="{{ site.baseurl }}/{{ item.url }}" class="btn btn-success">Zur Anleitung</a>
+        <a href="{{ site.baseurl }}{{ item.url }}" class="btn btn-success">Zur Anleitung</a>
       </div>
     </div>
   </div>
@@ -43,7 +43,7 @@ feature-img: "/assets/headers/Titelbild-Simulator.jpg"
   {% unless item.hide %}
   <div class="col-12 col-md-6 col-lg-4 col-xl-3">
     <div class="card border-primary mb-5 bg-light">
-      <img class="card-img-top" src="{{ site.baseurl }}/{{ item.img }}" alt="{{ item.title }}">
+      <img class="card-img-top" src="{{ site.baseurl }}{{ item.img }}" alt="{{ item.title }}">
       <div class="card-header text-white bg-primary">
         Verwenden
       </div>
@@ -53,7 +53,7 @@ feature-img: "/assets/headers/Titelbild-Simulator.jpg"
         <p class="card-text">{{ item.subtitle }}</p>
       </div>
       <div class="card-footer bg-transparent text-center">
-        <a href="{{ site.baseurl }}/{{ item.url }}" class="btn btn-primary">Zur Anleitung</a>
+        <a href="{{ site.baseurl }}{{ item.url }}" class="btn btn-primary">Zur Anleitung</a>
       </div>
     </div>
   </div>
@@ -70,7 +70,7 @@ feature-img: "/assets/headers/Titelbild-Simulator.jpg"
   {% unless item.hide %}
   <div class="col-12 col-md-6 col-lg-4 col-xl-3">
     <div class="card border-warning mb-5 bg-light">
-      <img class="card-img-top" src="{{ site.baseurl }}/{{ item.img }}" alt="{{ item.title }}">
+      <img class="card-img-top" src="{{ site.baseurl }}{{ item.img }}" alt="{{ item.title }}">
       <div class="card-header bg-warning">
         Weiterentwickeln
       </div>
@@ -80,7 +80,7 @@ feature-img: "/assets/headers/Titelbild-Simulator.jpg"
         <p class="card-text">{{ item.subtitle }}</p>
       </div>
       <div class="card-footer bg-transparent text-center">
-        <a href="{{ site.baseurl }}/{{ item.url }}" class="btn btn-warning">Zur Anleitung</a>
+        <a href="{{ site.baseurl }}{{ item.url }}" class="btn btn-warning">Zur Anleitung</a>
       </div>
     </div>
   </div>

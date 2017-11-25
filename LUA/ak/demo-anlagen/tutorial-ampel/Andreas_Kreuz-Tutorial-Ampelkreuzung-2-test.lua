@@ -43,7 +43,8 @@ AkEEPHilfe.namenDerZuegeAnSignal[14] = {}
 AkEEPHilfe.namenDerZuegeAnSignal[14][1] = "#Zug1"
 EEPSetTrainRoute("#Zug1", "Meine Route 1")
 
-assert(true == os:pruefeAnforderungenAnSignalen())
+assert(true == os.verwendeZaehlAmpeln)
+os:pruefeAnforderungenAnSignalen()
 assert(true == os.anforderungAnSignal)
 
 for i = 1, 10 do

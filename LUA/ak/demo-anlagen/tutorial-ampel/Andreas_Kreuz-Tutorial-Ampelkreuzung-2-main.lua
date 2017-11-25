@@ -1,7 +1,37 @@
 clearlog()
 require("ak.strasse.AkStrasse")
 
+------------------------------------------------
+-- Damit kommt wird die Variable "Zugname" automatisch durch EEP belegt
+-- http://emaps-eep.de/lua/code-schnipsel
+------------------------------------------------
+setmetatable(_ENV, {
+    __index = function(_, k)
+        local p = load(k)
+        if p then
+            local f = function(z)
+                local s = Zugname
+                Zugname = z
+                p()
+                Zugname = s end
+            _ENV[k] = f
+            return f end
+        return nil
+    end
+})
 
+--------------------------------------------
+-- Definiere Funktionen fuer Kontaktpunkte
+--------------------------------------------
+function KpBetritt(richtung)
+    assert(richtung, "richtung darf nicht nil sein. Richtige Lua-Funktion im Kontaktpunkt?")
+    richtung:betritt()
+end
+
+function KpVerlasse(richtung, signalaufrot)
+    assert(richtung, "richtung darf nicht nil sein. Richtige Lua-Funktion im Kontaktpunkt?")
+    richtung:verlasse(signalaufrot, Zugname)
+end
 
 -------------------------------------------------------------------------------
 -- Definiere die Richtungen fuer die Kreuzung
@@ -54,7 +84,8 @@ os = AkRichtung:neu("OS", 107, {
         "#28_Straba Signal geradeaus", --  gruen schaltet das Licht dieser Immobilie ein
         "#27_Straba Signal anhalten", --   gelb  schaltet das Licht dieser Immobilie ein
         "#26_Straba Signal A") --    Anforderung schaltet das Licht dieser Immobilie ein
-}):zaehleAnAmpelAlle(14) -- Erfasst Anforderungen, wenn ein Fahrzeug am Signal steht
+})
+os:zaehleAnAmpelAlle(14) -- Erfasst Anforderungen, wenn ein Fahrzeug an Signal 14 steht
 
 ws = AkRichtung:neu("WS", 108, {
     AkAmpel:neu(15, AkAmpelModell.Unsichtbar_2er,
@@ -62,7 +93,8 @@ ws = AkRichtung:neu("WS", 108, {
         "#30_Straba Signal geradeaus", --  gruen schaltet das Licht dieser Immobilie ein
         "#31_Straba Signal anhalten", --   gelb  schaltet das Licht dieser Immobilie ein
         "#33_Straba Signal A") --    Anforderung schaltet das Licht dieser Immobilie ein
-}):zaehleAnStrasseAlle(2) -- Erfasst Anforderungen, wenn ein Fahrzeug am Signal steht
+})
+ws:zaehleAnStrasseAlle(2) -- Erfasst Anforderungen, wenn ein Fahrzeug auf Strasse 2 steht
 
 
 --------------------------------------------------------------

@@ -3,9 +3,10 @@ layout: page_with_toc
 title: Github verwenden
 type: Anleitung
 subtitle: Hier erfährst Du, wie Du die Lua-Bibliothek direkt aus GitHub verwenden kannst.
-img: "/assets/headers/GitHub.png"
+img: "/assets/thumbnails/GitHub.png"
 feature-img: "/assets/headers/GitHub.png"
 date: 2017-09-03
+permalink: anleitungen-entwickler/github-verwenden
 tags: [Fortgeschrittene, Entwickler]
 ---
 # Bibliothek aus GitHub nutzen

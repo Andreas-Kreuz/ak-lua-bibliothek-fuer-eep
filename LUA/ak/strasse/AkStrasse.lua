@@ -156,7 +156,10 @@ function AkAmpel:neu(signalId, ampelTyp, rotImmo, gruenImmo, gelbImmo, anforderu
         phase = AkPhase.ROT,
         anforderung = false,
         debug = false,
-        aufbauInfo = "" .. tostring(signalId)
+        richtungsInfo = "",
+        schaltungsInfo = "",
+        aufbauInfo = "" .. tostring(signalId),
+        richtungen = {},
     }
     self.__index = self
     return setmetatable(o, self)
@@ -165,35 +168,44 @@ end
 ---
 --
 --
-function AkAmpel:setzeSchaltungsInfo(schaltungsZeile)
-    self.schaltungsInfo = schaltungsZeile
+function AkAmpel:setzeSchaltungsInfo(schaltungsInfo)
+    self.schaltungsInfo = schaltungsInfo
+end
+
+---
+--
+--
+function AkAmpel:setzeRichtungsInfo(richtungsInfo)
+    self.richtungsInfo = richtungsInfo
 end
 
 ---
 --
 --
 function AkAmpel:aktualisiereInfo()
-    local infoFuerAnforderung = AkKreuzung.zeigeAnforderungenAlsInfo and self.anforderung
-    local infoFuerAktuelleSchaltung = AkKreuzung.zeigeSchaltungAlsInfo and self.phase ~= AkPhase.ROT
+    local infoFuerAnforderung = AkKreuzung.zeigeAnforderungenAlsInfo
+    local infoFuerAktuelleSchaltung = AkKreuzung.zeigeSchaltungAlsInfo --and self.phase ~= AkPhase.ROT
     local zeigeInfo = AkKreuzung.zeigeSchaltungAlsInfo or infoFuerAnforderung or infoFuerAktuelleSchaltung
 
     EEPShowInfoSignal(self.signalId, zeigeInfo)
     if zeigeInfo then
-        local infoText = ""
+        local infoText = "<j><b>Ampel ID: " .. fmt.hintergrund_grau(self.signalId) .. "</b></j>"
 
         if AkKreuzung.zeigeSchaltungAlsInfo then
-            infoText = infoText .. self.schaltungsInfo .. "<br>"
+            if infoText:len() > 0 then infoText = infoText .. "<br>___________________________<br>" end
+            infoText = infoText .. self.schaltungsInfo
         end
 
         if infoFuerAktuelleSchaltung and self.phase and self.grund then
-            infoText = infoText .. " " .. self.phase .. " (" .. self.grund .. ")" .. "<br>"
+            if infoText:len() > 0 then infoText = infoText .. "<br><br>" end
+            infoText = infoText .. " " .. self.phase .. " (" .. self.grund .. ")"
         end
 
-        if infoFuerAnforderung and self.richtung and self.anzahl then
-            infoText = infoText .. self.richtung.name .. " - Anzahl FZ: " .. tostring(self.anzahl)
-                    .. " (Warte: " .. tostring(self.richtung.warteZeit) .. ")" .. "<br>"
+        if infoFuerAnforderung then
+            if infoText:len() > 0 then infoText = infoText .. "<br>___________________________<br>" end
+            infoText = infoText .. self.richtungsInfo
         end
-
+        assert(infoText:len() < 1023)
         EEPChangeInfoSignal(self.signalId, infoText)
     end
 end
@@ -235,12 +247,10 @@ end
 --- Setzt die Anforderung fuer eine Ampel (damit sie weiß, ob eine Anforderung vorliegt)
 -- @param anforderung - true oder false
 -- @param richtung - AkRichtung, für welche die Anforderung vorliegt
--- @param anzahl - Anzahl der Fahrzeuge die eine Anforderung für diese Richtung haben
-function AkAmpel:setzeAnforderung(anforderung, richtung, anzahl)
+function AkAmpel:aktualisiereAnforderung(richtung)
     local immoDbg = ""
-    self.anforderung = anforderung
-    self.richtung = richtung
-    self.anzahl = anzahl
+    self.richtungen[richtung] = true
+    local anforderung = richtung:anforderungVorhanden()
     if self.anforderungImmo then
         immoDbg = immoDbg .. string.format(", Licht in %s: %s", self.anforderungImmo, (anforderung) and "an" or "aus")
         EEPStructureSetLight(self.anforderungImmo, anforderung)
@@ -249,6 +259,7 @@ function AkAmpel:setzeAnforderung(anforderung, richtung, anzahl)
         print(string.format("[AkAmpel    ] Schalte Ampel %04d", self.signalId) .. immoDbg)
         print(self.debug)
     end
+    self:aktualisiereInfo()
 end
 
 function AkAmpel:print()
@@ -304,16 +315,19 @@ end
 
 function AkKreuzungsSchaltung:fuegeRichtungHinzu(richtung)
     assert(richtung, "Bitte ein gueltige Richtung angeben")
+    richtung:setSchaltungsTyp(AkRichtung.SchaltungsTyp.NORMAL)
     self.richtungen[richtung] = true
 end
 
 function AkKreuzungsSchaltung:addRichtungMitAnforderung(richtung)
     assert(richtung, "Bitte ein gueltige Richtung angeben")
+    richtung:setSchaltungsTyp(AkRichtung.SchaltungsTyp.ANFORDERUNG)
     self.richtungenMitAnforderung[richtung] = true
 end
 
 function AkKreuzungsSchaltung:fuegeRichtungFuerFussgaengerHinzu(richtung)
     assert(richtung, "Bitte ein gueltige Richtung angeben")
+    richtung:setSchaltungsTyp(AkRichtung.SchaltungsTyp.FUSSGAENGER)
     self.richtungenFuerFussgaenger[richtung] = true
 end
 
@@ -406,6 +420,11 @@ end
 -- Klasse Richtung
 --------------------
 AkRichtung = {}
+AkRichtung.SchaltungsTyp = {}
+AkRichtung.SchaltungsTyp.NICHT_VERWENDET = "NICHT VERWENDET"
+AkRichtung.SchaltungsTyp.ANFORDERUNG = "ANFORDERUNG"
+AkRichtung.SchaltungsTyp.NORMAL = "NORMAL"
+AkRichtung.SchaltungsTyp.FUSSGAENGER = "FUSSGAENGER"
 
 function AkRichtung.getTyp()
     return "AkRichtung"
@@ -415,13 +434,82 @@ function AkRichtung:getName()
     return self.name
 end
 
+function AkRichtung:getSchaltungsTyp()
+    return self.schaltungsTyp
+end
+
+function AkRichtung:setSchaltungsTyp(schaltungsTyp)
+    assert(schaltungsTyp)
+    assert(self.schaltungsTyp == AkRichtung.SchaltungsTyp.NICHT_VERWENDET or
+            self.schaltungsTyp == schaltungsTyp,
+        "Diese Richtung hatte schon den Schaltungstyp: '" .. self.schaltungsTyp
+                .. "' und kann daher nicht auf '" .. schaltungsTyp .. "' gesetzt werden.")
+
+    self.schaltungsTyp = schaltungsTyp
+end
+
+function AkRichtung:pruefeAnforderungen()
+    self:pruefeAnforderungenAnStrassen()
+    self:pruefeAnforderungenAnSignalen()
+
+    local text = ""
+    if self.schaltungsTyp == AkRichtung.SchaltungsTyp.NORMAL then
+        text = text .. fmt.hintergrund_gruen(self.name)
+    elseif self.schaltungsTyp == AkRichtung.SchaltungsTyp.FUSSGAENGER then
+        text = text .. fmt.hintergrund_gelb(self.name)
+    elseif self.schaltungsTyp == AkRichtung.SchaltungsTyp.ANFORDERUNG then
+        text = text .. fmt.hintergrund_blau(self.name)
+    else
+        text = text .. fmt.rot(self.name)
+    end
+
+    text = text .. ": "
+            .. (self:anforderungVorhanden()
+            and fmt.hellgrau("BELEGT")
+            or fmt.hellgrau("-FREI-"))
+            .. " "
+    if self.verwendeZaehlStrassen then
+        text = text .. "(Strasse)"
+    elseif self.verwendeZaehlAmpeln then
+        text = text .. "(Ampel)"
+    else
+        text = text .. "(" .. self.fahrzeuge .. " gezaehlt)"
+    end
+
+    self.anforderungsText = text
+    self:aktualisiereAnforderung()
+end
+
 function AkRichtung:aktualisiereAnforderung()
     for _, ampel in pairs(self.ampeln) do
-        ampel:setzeAnforderung(self:anforderungVorhanden(), self, self.fahrzeuge)
+        ampel:aktualisiereAnforderung(self)
     end
 end
 
+function AkRichtung:getPrio()
+    local verwendeZaehlStrassen = self:pruefeAnforderungenAnStrassen()
+    if verwendeZaehlStrassen then
+        local prio = (self.anforderungAnStrasse and 1 or 0) * 3 * self.fahrzeugMultiplikator
+        return self.warteZeit > prio and self.warteZeit or prio
+    end
+
+    local verwendeZaehlAmpeln = self:pruefeAnforderungenAnSignalen()
+    if verwendeZaehlAmpeln then
+        local prio = (self.anforderungAnSignal and 1 or 0) * 3 * self.fahrzeugMultiplikator
+        return self.warteZeit > prio and self.warteZeit or prio
+    end
+
+    local prio = self.fahrzeuge * 3 * self.fahrzeugMultiplikator
+    return self.warteZeit > prio and self.warteZeit or prio
+end
+
+function AkRichtung:getAnforderungsText()
+    return self.anforderungsText or "KEINE ANFORDERUNG"
+end
+
+
 function AkRichtung:zaehleAnStrasseAlle(strassenId)
+    self.verwendeZaehlStrassen = true
     EEPRegisterRoadTrack(strassenId)
     if not self.zaehlStrassen[strassenId] then
         self.zaehlStrassen[strassenId] = {}
@@ -430,6 +518,7 @@ function AkRichtung:zaehleAnStrasseAlle(strassenId)
 end
 
 function AkRichtung:zaehleAnStrasseBeiRoute(strassenId, route)
+    self.verwendeZaehlStrassen = true
     EEPRegisterRoadTrack(strassenId)
     if not self.zaehlStrassen[strassenId] then
         self.zaehlStrassen[strassenId] = {}
@@ -439,10 +528,8 @@ function AkRichtung:zaehleAnStrasseBeiRoute(strassenId, route)
 end
 
 function AkRichtung:pruefeAnforderungenAnStrassen()
-    local verwendeZaehlAmpeln = false
     local anforderungGefunden = false
     for strassenId, routen in pairs(self.zaehlStrassen) do
-        verwendeZaehlAmpeln = true
 
         local ok, wartend, zugName = EEPIsRoadTrackReserved(strassenId, true)
         assert(ok)
@@ -467,11 +554,10 @@ function AkRichtung:pruefeAnforderungenAnStrassen()
         end
     end
     self.anforderungAnStrasse = anforderungGefunden
-    self:aktualisiereAnforderung()
-    return verwendeZaehlAmpeln
 end
 
 function AkRichtung:zaehleAnAmpelAlle(signalId)
+    self.verwendeZaehlAmpeln = true
     assert(signalId, "Keine signalId angegeben")
     if not self.zaehlAmpeln[signalId] then
         self.zaehlAmpeln[signalId] = {}
@@ -480,6 +566,7 @@ function AkRichtung:zaehleAnAmpelAlle(signalId)
 end
 
 function AkRichtung:zaehleAnAmpelBeiRoute(signalId, route)
+    self.verwendeZaehlAmpeln = true
     if not self.zaehlAmpeln[signalId] then
         self.zaehlAmpeln[signalId] = {}
     end
@@ -488,10 +575,8 @@ function AkRichtung:zaehleAnAmpelBeiRoute(signalId, route)
 end
 
 function AkRichtung:pruefeAnforderungenAnSignalen()
-    local verwendeZaehlAmpeln = false
     local anforderungGefunden = false
     for signalId, routen in pairs(self.zaehlAmpeln) do
-        verwendeZaehlAmpeln = true
 
         local wartend = EEPGetSignalTrainsCount(signalId)
 
@@ -516,13 +601,6 @@ function AkRichtung:pruefeAnforderungenAnSignalen()
         end
     end
     self.anforderungAnSignal = anforderungGefunden
-    self:aktualisiereAnforderung()
-    return verwendeZaehlAmpeln
-end
-
-function AkRichtung:pruefeAnforderungen()
-    self:pruefeAnforderungenAnStrassen()
-    self:pruefeAnforderungenAnSignalen()
 end
 
 function AkRichtung:betritt()
@@ -590,9 +668,7 @@ function AkRichtung:load()
         self.fahrzeuge = data["f"] and tonumber(data["f"]) or 0
         self.warteZeit = data["w"] and tonumber(data["w"]) or 0
         self.phase = data["p"] or AkPhase.ROT
-        for _, ampel in pairs(self.ampeln) do
-            ampel:setzeAnforderung(self:anforderungVorhanden(), self, self.fahrzeuge)
-        end
+        self:pruefeAnforderungen()
         self:schalte(self.phase, "Neu geladen")
     else
         self.fahrzeuge = 0
@@ -615,23 +691,6 @@ end
 
 function AkRichtung:getRichtungsInfo()
     return self.richtungsInfo
-end
-
-function AkRichtung:getPrio()
-    local verwendeZaehlStrassen = self:pruefeAnforderungenAnStrassen()
-    if verwendeZaehlStrassen then
-        local prio = (self.anforderungAnStrasse and 1 or 0) * 3 * self.fahrzeugMultiplikator
-        return self.warteZeit > prio and self.warteZeit or prio
-    end
-
-    local verwendeZaehlAmpeln = self:pruefeAnforderungenAnSignalen()
-    if verwendeZaehlAmpeln then
-        local prio = (self.anforderungAnSignal and 1 or 0) * 3 * self.fahrzeugMultiplikator
-        return self.warteZeit > prio and self.warteZeit or prio
-    end
-
-    local prio = self.fahrzeuge * 3 * self.fahrzeugMultiplikator
-    return self.warteZeit > prio and self.warteZeit or prio
 end
 
 function AkRichtung:setFahrzeugMultiplikator(fahrzeugMultiplikator)
@@ -665,9 +724,13 @@ function AkRichtung:neu(name, eepSaveId, ampeln)
         name = name,
         eepSaveId = eepSaveId,
         ampeln = ampeln,
+        schaltungsTyp = AkRichtung.SchaltungsTyp.NICHT_VERWENDET;
+        verwendeZaehlAmpeln = false,
         zaehlAmpeln = {},
+        verwendeZaehlStrassen = false,
         zaehlStrassen = {},
     }
+
 
     self.__index = self
     setmetatable(o, self)
@@ -798,6 +861,12 @@ function AkKreuzung.planeSchaltungenEin()
             for richtung in pairs(schaltung:getRichtungen()) do
                 alleRichtungen[richtung] = true
             end
+            for richtung in pairs(schaltung:getRichtungenMitAnforderung()) do
+                alleRichtungen[richtung] = true
+            end
+            for richtung in pairs(schaltung:getRichtungFuerFussgaenger()) do
+                alleRichtungen[richtung] = true
+            end
         end
 
         for richtung in pairs(alleRichtungen) do
@@ -810,6 +879,8 @@ function AkKreuzung.planeSchaltungenEin()
     -- raus und setzt deren Texte auf die aktuelle Schaltung
     -- @param kreuzung
     local function zeigeSchaltung(kreuzung)
+        aktualisiereAnforderungen(kreuzung)
+
         local kreuzungsAmpeln = {}
         local kreuzungsAmpelSchaltungen = {}
 
@@ -857,41 +928,44 @@ function AkKreuzung.planeSchaltungenEin()
 
         for ampel in pairs(kreuzungsAmpeln) do
             local sortierteNamen = {}
-            local text = "<j>ID: " .. fmt.hintergrund_grau(ampel.signalId) .. ", Richtung: "
-            local richtungsText = ""
-            for richtung, akphase in pairs(kreuzungsAmpelSchaltungen[ampel.signalId]["richtungen"]) do
-                richtungsText = richtungsText .. ", " .. (akphase == AkPhase.FG and fmt.hintergrund_gelb(richtung.name)
-                        or fmt.hintergrund_grau(richtung.name))
-            end
-            text = text .. string.sub(richtungsText, 3)
-
             for k in pairs(kreuzung:getSchaltungen()) do table.insert(sortierteNamen, k) end
-
-            -- sort the keys
             table.sort(sortierteNamen, function(schaltung1, schaltung2) return (schaltung1.name < schaltung2.name) end)
 
-            for _, schaltung in ipairs(sortierteNamen) do
-                local farbig = schaltung == kreuzung:getAktuelleSchaltung()
-                if kreuzungsAmpelSchaltungen[ampel.signalId][schaltung] then
-                    if kreuzungsAmpelSchaltungen[ampel.signalId][schaltung] == AkPhase.GRUEN then
-                        text = text .. "<br> <j>" .. (farbig and fmt.hintergrund_gruen(schaltung.name .. " (Gruen)")
-                                or (schaltung.name .. " " .. fmt.hintergrund_gruen("(Gruen)")))
-                    elseif kreuzungsAmpelSchaltungen[ampel.signalId][schaltung] == AkPhase.GELB then
-                        text = text .. "<br> <j>" .. (farbig and fmt.hintergrund_blau(schaltung.name .. " (Anf)")
-                                or (schaltung.name .. " " .. fmt.hintergrund_blau("(Anf)")))
-                    elseif kreuzungsAmpelSchaltungen[ampel.signalId][schaltung] == AkPhase.FG then
-                        text = text .. "<br> <j>" .. (farbig and fmt.hintergrund_gelb(schaltung.name .. " (FG)")
-                                or (schaltung.name .. " " .. fmt.hintergrund_gelb("(FG)")))
+            do
+                local text = "<j><b>Schaltung:</b></j>"
+                for _, schaltung in ipairs(sortierteNamen) do
+                    local farbig = schaltung == kreuzung:getAktuelleSchaltung()
+                    if kreuzungsAmpelSchaltungen[ampel.signalId][schaltung] then
+                        if kreuzungsAmpelSchaltungen[ampel.signalId][schaltung] == AkPhase.GRUEN then
+                            text = text .. "<br><j>" .. (farbig and fmt.hintergrund_gruen(schaltung.name .. " (Gruen)")
+                                    or (schaltung.name .. " " .. fmt.hintergrund_gruen("(Gruen)")))
+                        elseif kreuzungsAmpelSchaltungen[ampel.signalId][schaltung] == AkPhase.GELB then
+                            text = text .. "<br><j>" .. (farbig and fmt.hintergrund_blau(schaltung.name .. " (Anf)")
+                                    or (schaltung.name .. " " .. fmt.hintergrund_blau("(Anf)")))
+                        elseif kreuzungsAmpelSchaltungen[ampel.signalId][schaltung] == AkPhase.FG then
+                            text = text .. "<br><j>" .. (farbig and fmt.hintergrund_gelb(schaltung.name .. " (FG)")
+                                    or (schaltung.name .. " " .. fmt.hintergrund_gelb("(FG)")))
+                        else
+                            assert(false)
+                        end
                     else
-                        assert(false)
+                        text = text .. "<br><j>" .. (farbig and fmt.hintergrund_rot(schaltung.name .. " (Rot)")
+                                or (schaltung.name .. " " .. fmt.hintergrund_rot("(Rot)")))
                     end
-                else
-                    text = text .. "<br> <j>" .. (farbig and fmt.hintergrund_rot(schaltung.name .. " (Rot)")
-                            or (schaltung.name .. " " .. fmt.hintergrund_rot("(Rot)")))
                 end
+                ampel:setzeSchaltungsInfo(text)
             end
-            --print(text)
-            ampel:setzeSchaltungsInfo(text)
+
+            do
+                local text = "<j><b>Richtung / Wartezeit</b></j>"
+                for richtung in pairs(kreuzungsAmpelSchaltungen[ampel.signalId]["richtungen"]) do
+                    text = text
+                            .. "<br>"
+                            .. richtung:getAnforderungsText() .. " / " .. richtung.warteZeit
+                end
+                ampel:setzeRichtungsInfo(text)
+            end
+
             ampel:aktualisiereInfo()
         end
     end
@@ -1017,7 +1091,6 @@ function AkKreuzung.planeSchaltungenEin()
 
             local alteAmpelnAufRot = AkAktion:neu(function()
                 AkSchalteAmpeln(richtungenAufRot, AkPhase.ROT, currentName)
-                zeigeSchaltung(kreuzung)
             end, "Schalte " .. currentName .. " auf rot")
             AkPlaner:planeAktion(2, alteAmpelnAufRot, alteAmpelnAufGelb)
 
@@ -1045,7 +1118,7 @@ function AkKreuzung.planeSchaltungenEin()
 
     for _, kreuzung in ipairs(AkAllKreuzungen) do
         AkSchalteKreuzung(kreuzung)
-        aktualisiereAnforderungen(kreuzung)
+        zeigeSchaltung(kreuzung)
     end
 end
 

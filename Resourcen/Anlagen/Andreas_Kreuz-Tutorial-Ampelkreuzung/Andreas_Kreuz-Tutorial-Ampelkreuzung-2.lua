@@ -4,8 +4,9 @@ require("ak.demo-anlagen.tutorial-ampel.Andreas_Kreuz-Tutorial-Ampelkreuzung-2-m
 -- Hier kommt der Code
 AkKreuzung.zeigeSignalIdsAllerSignale = true
 AkKreuzung.zeigeSchaltungAlsInfo = true
+AkKreuzung.zeigeAnforderungenAlsInfo = true
 [EEPLuaData]
-DS_100 = "f=0,p=Rot,w=3,"
+DS_100 = "f=2,p=Rot,w=2,"
 DS_102 = "f=0,p=Rot,w=0,"
 DS_104 = "f=0,p=Rot,w=0,"
 DS_105 = "f=0,p=Gruen,w=1,"

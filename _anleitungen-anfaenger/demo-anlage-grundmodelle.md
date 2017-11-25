@@ -3,9 +3,9 @@ layout: page_landing
 title: Ampel-Demo 1
 subtitle: Schau Dir an, wie die vollautomatische Steuerung funktioniert. Diese Anlage wurde ausschließlich mit Grundmodellen aus EEP&nbsp;14 erstellt.
 type: Anlage
-feature-img: "/assets/headers/AmpelDemo.jpg"
-img: "/assets/headers/AmpelDemo.jpg"
+img: "/assets/thumbnails/AmpelDemo.jpg"
 date: 2017-09-07
+permalink: anleitungen-anfaenger/demo-anlage-grundmodelle
 ---
 
 # Beschreibung
