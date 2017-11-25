@@ -1,7 +1,5 @@
 ## So kannst Du zum Projekt beitragen
 
-![SourceCode](../assets/headers/SourceCode.png)
-
 #### Hast Du einen Fehler gefunden?
 
 * Schau unter [Issues](https://github.com/Andreas-Kreuz/ak-lua-bibliothek-fuer-eep/issues) nach, dass der Fehler nicht schon gemeldet wurde
