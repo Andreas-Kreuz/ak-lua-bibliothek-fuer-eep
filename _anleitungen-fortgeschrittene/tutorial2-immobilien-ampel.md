@@ -5,7 +5,7 @@ type: Tutorial mit Anlage
 subtitle: Erfahre wie Du Immobilien-Ampeln verwenden kannst - wenn diese auf Licht ein- und ausschalten basieren.
 img: "/assets/thumbnails/tutorial2-ampel.jpg"
 permalink: anleitungen-fortgeschrittene/tutorial2-immobilien-ampel
-hide: true
+hide: false
 ---
 # Immobilien mit Lichtfunktion als Ampel
 

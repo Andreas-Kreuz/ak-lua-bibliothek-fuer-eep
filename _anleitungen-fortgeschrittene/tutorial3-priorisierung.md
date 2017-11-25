@@ -5,7 +5,7 @@ type: Tutorial mit Anlage
 subtitle: Erfahre wie Du anliegenden Verkehr erkennen kannst, und wie dieser die Schaltungen beeinflusst.  
 img: "/assets/thumbnails/tutorial2-ampel.jpg"
 permalink: anleitungen-fortgeschrittene/tutorial3-priorisierung
-hide: true
+hide: false
 ---
 # Priorisierung an der Ampel
 
