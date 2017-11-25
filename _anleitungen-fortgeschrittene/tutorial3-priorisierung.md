@@ -180,7 +180,7 @@ Die Erkennung erfolgt ähnlich wie bei der Straße (Details siehe oben).
 ![]({{ site.baseurl }}/assets/tutorial/tutorial3/reservierung-zaehler.jpg)
 
 <div class="media mb-5">
-  <img class="img-thumbnail mr-3" src="{{ site.baseurl }}/assets/tutorial/tutorial3/erkennung-signal.png" width="128" height="128" alt="Priorisierung nach Wartezeit">
+  <img class="img-thumbnail mr-3" src="{{ site.baseurl }}/assets/tutorial/tutorial3/erkennung-kontaktpunkt.png" width="128" height="128" alt="Priorisierung nach Wartezeit">
   <div class="media-body">
     Wenn Du die Anzahl der Fahrzeuge einer Richtung mit Kontaktpunkten zählst, bekommst Du die bestmögliche Erkennung für mehrere Fahrzeuge.
   </div>
