@@ -6,7 +6,7 @@
   <h3 align="center">Lua-Bibliothek für EEP</h3>
 
   <p align="center">
-    Eine Sammlung von Lua-Skripten für die einfache Verkehrsteuerung in EEP.
+    Eine Sammlung von Lua-Skripten für die einfache Verkehrssteuerung in EEP.
     <br>
     <a href="http://andreas-kreuz.github.io/ak-lua-bibliothek-fuer-eep"><strong>Anleitungen und Dokumentation</strong></a>
   </p>
@@ -14,7 +14,7 @@
 
 <br>
 
-
+<hr>
 
 # Überblick
 
@@ -23,20 +23,10 @@ Die bereitgestellte Bibliothek übernimmt für Dich die _Steuerung des Verkehrs_
 
 # Loslegen
 
-* [**Anleitungen Schritt-für-Schritt**](Anleitungen/README.md) <br>So kannst Du die Lua-Bibliothek verwenden
-
-* [**Beispiel-Anlagen**](Resourcen/Anlagen/README.md) <br>Schau Die die Beispielanlagen an
-
-* [**Dokumentation der Lua-Bibliothek**](LUA/ak/README.md)  <br>Du brauchst Hilfe? - Schau doch mal bei [ak.strasse](LUA/ak/strasse) nach.
-
-:star: **Verwende nur Funktionen, die zur Benutzung freigegebenen sind**. Andere Funktionen können jederzeit geändert werden.
-
-# Für Fortgeschrittene
-
-* [**Lua-Bibliothek direkt aus GitHub verwenden**](Anleitungen/GitHub_verwenden.md) <br>Wenn Du Dich mit `git` auskennst, kannst Du die Bibliothek gleich aus GitHub verwenden
+* Die Webseite enthält [Anleitungen und Dokumentation](http://andreas-kreuz.github.io/ak-lua-bibliothek-fuer-eep) zur Verwendung der Skript-Sammlung.
 
 # Beiträge sind Willkommen
-* [**Fehler gefunden, Verbesserungsvorschläge?**](CONTRIBUTING.md) <br>So kannst Du zum Projekt beitragen
+* [Fehler gefunden, Verbesserungsvorschläge?](CONTRIBUTING.md) <br>So kannst Du zum Projekt beitragen
 
 # Was ist EEP?
 
