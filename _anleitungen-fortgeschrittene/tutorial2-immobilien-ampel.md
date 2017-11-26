@@ -27,6 +27,8 @@ date: 2017-09-02
 * Lade und installiere Dir die Beispielanlagen für die Ampeln "Installer-AK-Tutorial-Ampelkreuzung.zip"
 * Öffne die Beispielanlage "*Andreas_Kreuz_Tutorial_Ampelkreuzung-2.anl3*" in EEP
 * Öffne die Datei `Andreas_Kreuz-Tutorial-Ampelkreuzung-2-main.lua` in einem Editor - Du findest sie unter `C:\Trend\EEP\LUA\ak\demo-anlagen\tutorial-ampel\`.
+* So sieht die Kreuzung dieser Anlagen aus: <br>
+  ![Aufbau der Kreuzung]({{ site.baseurl }}/assets/tutorial/tutorial2/kreuzungsaufbau-tutorial2.png)
 
 
 # Immobilien-Ampel
