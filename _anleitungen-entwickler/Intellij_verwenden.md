@@ -26,7 +26,10 @@ Mit einem Plugin ist IntelliJ auch für Lua geeignet.</p>
 * Die Software wirkt sehr komplex
 * Die Einrichtung eines Lua-Projektes ist nicht ganz einfach
 
-# Das Programm
+# Das Programm IntelliJ
+* Gesamtansicht des Hauptfensters<br>
+<img src="../assets/tutorial/intellij/44.png" class="img-fluid img-thumbnail" style="border: 1 solid #aaaaaa;" alt="">
+
 Das Programm ist in mehrere Bereiche unterteilt.
 * Das Menü<br>
   <img src="../assets/tutorial/intellij/44-menu.png" class="img-fluid img-thumbnail" style="border: 1 solid #aaaaaa;" alt="">
@@ -40,8 +43,6 @@ Das Programm ist in mehrere Bereiche unterteilt.
 * Bereich für die Ausgabe "Run"<br>
 <img src="../assets/tutorial/intellij/44-ausgabefenster.png" class="img-fluid img-thumbnail" style="border: 1 solid #aaaaaa;" alt="">
 
-* Gesamtansicht des Hauptfensters<br>
-<img src="../assets/tutorial/intellij/44.png" class="img-fluid img-thumbnail" style="border: 1 solid #aaaaaa;" alt="">
 
 
 # Herunterladen
@@ -202,4 +203,4 @@ Das liegt daran, das die Lua-Laufzeitumgebung noch nicht konfiguriert ist. <br>
 <br>
 :four_leaf_clover: Herzlichen Glückwunsch, Du hast es bis hierhin geschafft!
 <br><br>
-<p class="lead">Nun kannst Du Deine Anlagen ohne EEP in IntelliJ testen. Bei Erfolg, kannst Du sie in EEP übernehmen. Genaueres findest Du in der Anleitung [Testen vor EEP](../anleitungen-fortgeschrittene/demo-anlage-testen)</p>
+<p class="lead">Nun kannst Du Deine Anlagen ohne EEP in IntelliJ testen. Bei Erfolg, kannst Du sie in EEP übernehmen. Eine Beschreibung findest Du in der Anleitung <a href="../anleitungen-fortgeschrittene/demo-anlage-testen">Testen vor EEP</a></p>
