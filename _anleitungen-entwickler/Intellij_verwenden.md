@@ -1,6 +1,6 @@
 ---
 layout: page_with_toc
-title: Github verwenden
+title: IntelliJ verwenden
 type: Anleitung
 subtitle: Hier erfährst Du, wie Du Lua mit IntelliJ verwenden kannst. Dazu wird die Testanlage dieser Bibliothek verwendet.
 img: "/assets/thumbnails/intellij.png"
@@ -15,8 +15,10 @@ tags: [Fortgeschrittene, Entwickler]
 Es wurde für die Programmiersprache JAVA entworfen.
 Mit einem Plugin ist IntelliJ auch für Lua geeignet.</p>
 
+:star: Diese Anleitung richtet sich an fortgeschrittene Benutzer.
+
 **Vorteile von IntelliJ**
-* Man kann Programme auf Knopfdruck starten
+* Du kannst Programme auf Knopfdruck starten
 * Beim Programmieren werden Variablen und Funktionen erkannt
 
 **Nachteile von IntelliJ**
@@ -43,38 +45,38 @@ Das Programm ist in mehrere Bereiche unterteilt.
 
 
 # Herunterladen
-IntelliJ kann hier heruntergeladen werden: https://www.jetbrains.com/idea/download/#section=windows
+IntelliJ kannst hier herunterladen: [https://www.jetbrains.com/idea/download/#section=windows](https://www.jetbrains.com/idea/download/#section=windows)
 
 Die Community Edition ist kostenlos verfügbar.
 
 <img src="../assets/tutorial/intellij/download.png" class="img-fluid img-thumbnail" style="border: 1 solid #aaaaaa;" alt="">
 
-Nach dem Download muss das Programm installiert werden.
+Nach dem Download muss Du das Programm installieren.
 
 
 # Starten
 
-Beim ersten Starten wird man nach diversen Einstellungen gefragt:
+Beim ersten Starten wirst Du nach diversen Einstellungen gefragt:
 
-* Programm über das Icon auf dem Desktop starten<br>
+* Starte das Programm über das Icon auf dem Desktop<br>
 <img src="../assets/tutorial/intellij/01.png" class="img-fluid img-thumbnail" style="border: 1 solid #aaaaaa;" alt="">
 
-* **Do not import settings** wählen<br>
+* Wähle **Do not import settings**<br>
 <img src="../assets/tutorial/intellij/02.png" class="img-fluid img-thumbnail" style="border: 1 solid #aaaaaa;" alt="">
 
-* **Accept** um die Lizenz zu akzeptieren<br>
+* Akzeptiere die Lizenz mit **Accept**<br>
 <img src="../assets/tutorial/intellij/03.png" class="img-fluid img-thumbnail" style="border: 1 solid #aaaaaa;" alt="">
 
-* Das helle oder dunkle Design wählen<br>
+* Wähle das helle oder das dunkle Design<br>
 <img src="../assets/tutorial/intellij/04.png" class="img-fluid img-thumbnail" style="border: 1 solid #aaaaaa;" alt="">
 
-* Alle Plugins auf **Disable** setzen<br>
+* Setze alle Plugins auf **Disable**<br>
 <img src="../assets/tutorial/intellij/06.png" class="img-fluid img-thumbnail" style="border: 1 solid #aaaaaa;" alt="">
 
-* **AUF WUNSCH:** Bei Version Controls mit **Customize** _Git_ und _GitHub_ aktivieren, danach **Save Changes and Go Back**<br>
+* **Wenn Du Dich mit Git auskennst:** Aktiviere bei Version Controls mit **Customize** die beiden Haken _Git_ und _GitHub_, danach **Save Changes and Go Back**<br>
 <img src="../assets/tutorial/intellij/07.png" class="img-fluid img-thumbnail" style="border: 1 solid #aaaaaa;" alt="">
 
-* **Start using IntelliJ IDEA**<br>
+* Wähle **Start using IntelliJ IDEA**<br>
 <img src="../assets/tutorial/intellij/08.png" class="img-fluid img-thumbnail" style="border: 1 solid #aaaaaa;" alt="">
 
 * IntelliJ wird gestartet<br>
@@ -82,30 +84,30 @@ Beim ersten Starten wird man nach diversen Einstellungen gefragt:
 
 # Lua-Plugin installieren
 
-Nun müssen wir das Lua-Plugin installieren, da die IDE eigentlich für JAVA gedacht ist.
+Nun müsst Du das Lua-Plugin installieren. Erst nach dieser Installation kann IntelliJ die Sprache `Lua` verstehen, da es eigentlich für `JAVA` gedacht ist.
 
 * **Configure** - **Plugins** wählen <br>
 <img src="../assets/tutorial/intellij/09.png" class="img-fluid img-thumbnail" style="border: 1 solid #aaaaaa;" alt="">
 
-* **Browse Repositories** wählen<br>
+* Wähle **Browse Repositories**<br>
 <img src="../assets/tutorial/intellij/10.png" class="img-fluid img-thumbnail" style="border: 1 solid #aaaaaa;" alt="">
 
-* Im Suchfeld `lua` eintippen, das Plugin **Lua** auswählen und **Install** klicken<br>
+* Tippe im Suchfeld `lua` ein, wähle das Plugin **Lua** aus und klicke auf **Install**<br>
 <img src="../assets/tutorial/intellij/11.png" class="img-fluid img-thumbnail" style="border: 1 solid #aaaaaa;" alt="">
 
-* Auf **Restart IntelliJ IDEA** klicken <br>
+* Nach dem Download klicke auf **Restart IntelliJ IDEA** <br>
 <img src="../assets/tutorial/intellij/12.png" class="img-fluid img-thumbnail" style="border: 1 solid #aaaaaa;" alt="">
 
-* Auf **Restart** klicken <br>
+* Klicke auf **Restart** <br>
 <img src="../assets/tutorial/intellij/13.png" class="img-fluid img-thumbnail" style="border: 1 solid #aaaaaa;" alt="">
 
 # Lua-Projekt anlegen
-Nun kannst Du das Projekt anlegen.
+Nun kannst Du das Projekt mit den Lua-Skripten anlegen. Der Einfachheit halber verwendest Du das `LUA`-Verzeichnis Deiner EEP-Installation.
 
 * **Create New Project**<br>
 <img src="../assets/tutorial/intellij/15.png" class="img-fluid img-thumbnail" style="border: 1 solid #aaaaaa;" alt="">
 
-* **Lua** auswählen und **Next** klicken <br>
+* Wähle **Lua** aus und klicke **Next** <br>
 <img src="../assets/tutorial/intellij/16.png" class="img-fluid img-thumbnail" style="border: 1 solid #aaaaaa;" alt="">
 
 * Wähle **LuaJ** <br>
@@ -125,7 +127,7 @@ Nun kannst Du das Projekt anlegen.
 # Test-Skripte Herunterladen
 Laden Dir nun die Testanlage aus dem EEP-Shop, damit das Projekt ein paar Dateien erhält.
 
-* **Lade Dir die Anlage **Lua testen vor EEP** herunter: https://www.eepforum.de/filebase/file/262-andreas-kreuz-lua-testen-vor-eep/ <br>
+* Lade Dir die Anlage **Lua testen vor EEP** herunter: [https://www.eepforum.de/filebase/file/262-andreas-kreuz-lua-testen-vor-eep/](https://www.eepforum.de/filebase/file/262-andreas-kreuz-lua-testen-vor-eep/) <br>
 <img src="../assets/tutorial/intellij/22.png" class="img-fluid img-thumbnail" style="border: 1 solid #aaaaaa;" alt="">
 
 * Starte EEP und wähle **Modell-Installer** <br>
@@ -137,13 +139,13 @@ Laden Dir nun die Testanlage aus dem EEP-Shop, damit das Projekt ein paar Dateie
 * Wähle **Installieren** und **OK** <br>
 <img src="../assets/tutorial/intellij/25.png" class="img-fluid img-thumbnail" style="border: 1 solid #aaaaaa;" alt="">
 
-* **Wechsele zurück zu IntelliJ** - dort findest Du den Ordner `ak`<br>
+* Wechsele zurück zu IntelliJ - dort findest Du den Ordner `ak`<br>
 <img src="../assets/tutorial/intellij/27.png" class="img-fluid img-thumbnail" style="border: 1 solid #aaaaaa;" alt="">
 
 # Lua-Laufzeitumgebung installieren
 
-Wir versuchen zunächst das Lua-Skript auszuführen.
-Das wird noch nicht funktionieren, da die Lua-Umgebung noch fehlt.
+Nun versuchst Du das Lua-Skript auszuführen.
+Das wird voraussichtlich noch nicht funktionieren, da die Lua-Umgebung noch fehlt.
 
 * Klappe nun den Ordner `ak.demo-anlagen.testen` auf und öffne die Datei `Andreas_Kreuz-Lua-Testbeispiel-test.lua` <br>
 <img src="../assets/tutorial/intellij/29.png" class="img-fluid img-thumbnail" style="border: 1 solid #aaaaaa;" alt="">
@@ -174,7 +176,7 @@ Das liegt daran, das die Lua-Laufzeitumgebung noch nicht konfiguriert ist. <br>
 <!--* **** <br>
 <img src="../assets/tutorial/intellij/34.png" class="img-fluid img-thumbnail" style="border: 1 solid #aaaaaa;" alt="">-->
 
-* Wähle **SDK** und dann LuaJ - wähle mit **...** nun den Download-Ordner **lua-5.3.4-Win64_bin** <br>
+* Wähle **SDK** und dann LuaJ - wähle mit "**...**" nun den Download-Ordner **lua-5.3.4-Win64_bin** <br>
 <img src="../assets/tutorial/intellij/35.png" class="img-fluid img-thumbnail" style="border: 1 solid #aaaaaa;" alt="">
 
 * Wenn Du dieses Verzeichnis auswählst, dann kommt die Fehlermeldung, dass dieses nicht als Lua-Laufzeitumgebung (Lua-SDK) verwendbar ist. <br>
@@ -198,8 +200,6 @@ Das liegt daran, das die Lua-Laufzeitumgebung noch nicht konfiguriert ist. <br>
 <img src="../assets/tutorial/intellij/44.png" class="img-fluid img-thumbnail" style="border: 1 solid #aaaaaa;" alt="">
 
 <br>
-:cloverleaf: Herzlichen Glückwunsch, wenn Du es bis hierhin geschafft hast!
+:four_leaf_clover: Herzlichen Glückwunsch, Du hast es bis hierhin geschafft!
 <br><br>
-<p class="lead">Nun kannst Du Deine Anlagen ohne EEP in IntelliJ testen. Bei Erfolg, kannst Du sie in EEP übernehmen.</p>
-
-
+<p class="lead">Nun kannst Du Deine Anlagen ohne EEP in IntelliJ testen. Bei Erfolg, kannst Du sie in EEP übernehmen. Genaueres findest Du in der Anleitung [Testen vor EEP](../anleitungen-fortgeschrittene/demo-anlage-testen)</p>
