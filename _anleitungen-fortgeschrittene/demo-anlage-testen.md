@@ -44,17 +44,21 @@ folgendem Link. [https://sourceforge.net/projects/luabinaries/files/5.2.4/Tools%
 
 # Der Arbeitsablauf
 
-- Speichere die Datei `Andreas_Kreuz-Lua-Testbeispiel-main.lua` nach einer Änderung
+1. Speichere die Datei `Andreas_Kreuz-Lua-Testbeispiel-main.lua` nach einer Änderung
 
-- Führe `Andreas_Kreuz-Lua-Testbeispiel-test.lua` auf folgende Weise aus:
-  * In Notepad++ drückst Du <kbd>F5</kbd> und führst dann folgenden Befehl aus:
+2. Führe `Andreas_Kreuz-Lua-Testbeispiel-test.lua` auf eine der folgenden drei Arten aus:
+
+    * **Starte das Test-Skript in IntelliJ** (Für Fortgeschrittene: [so verwendest Du IntelliJ mit Lua](../anleitungen-entwickler/intellij-verwenden))
+
+    * **In Notepad++** drückst Du <kbd>F5</kbd> und führst dann folgenden Befehl aus:
     `cmd /k C:\Trend\EEP14\LUA\lua.exe Andreas_Kreuz-Lua-Testbeispiel-test.lua`
 
-  * Alternativ kannst Du auch die Kommandozeile verwenden: Drücke <kbd><kbd>Windows</kbd> + <kbd>R</kbd></kbd> und starte dann das Programm `cmd`
-    * Gehe in der Kommandozeile in den `LUA` Ordner von EEP: `cd C:\Trend\EEP14\LUA`
-    * Starte das Test-Skript starten: `lua.exe Andreas_Kreuz-Lua-Testbeispiel-test.lua`
+    * **Auf der Kommandozeile**: Drücke <kbd><kbd>Windows</kbd> + <kbd>R</kbd></kbd> und starte dann das Programm `cmd`
+      * Gehe in der Kommandozeile in den `LUA` Ordner von EEP: `cd C:\Trend\EEP14\LUA`
+      * Starte das Test-Skript starten: `lua.exe Andreas_Kreuz-Lua-Testbeispiel-test.lua`
 
-- Sobald Du mit dem Ergebnis zufrieden bist, klicke im Lua-Fenster von EEP auf "Skript neu laden" und der Inhalt des Haupt-Skriptes wird in EEP ausgeführt.
+
+3. Sobald Du mit dem Ergebnis zufrieden bist, klicke im Lua-Fenster von EEP auf "Skript neu laden" und der Inhalt des Haupt-Skriptes wird in EEP ausgeführt.
 
 
 # Testen der Funktion
