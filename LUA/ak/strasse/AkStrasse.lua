@@ -326,14 +326,21 @@ end
 function AkAmpel:schalte(phase, grund)
     assert(phase)
     self.phase = phase
-    self:schalteImmoLicht()
-    self:schalteImmoAchsen()
-    self:schalteSignal()
+    local immoLichtDbg = self:schalteImmoLicht()
+    local immoAchseDbg = self:schalteImmoAchsen()
+    self:schalteSignal(grund)
+
+    local sigIndex = self.ampelTyp:signalIndexFuer(self.phase)
+    if (self.debug or AkAmpel.debug) then
+        print(string.format("[AkAmpel    ] Schalte Ampel %04d auf %s (%01d)",
+            self.signalId, self.phase, sigIndex) .. immoLichtDbg .. immoAchseDbg .. " - " .. grund)
+        print(self.debug)
+    end
 end
 
 function AkAmpel:schalteImmoLicht()
+    local immoDbg = ""
     for lichtAmpel in pairs(self.lichtImmos) do
-        local immoDbg = ""
         if lichtAmpel.rotImmo then
             immoDbg = immoDbg .. string.format(", Licht in %s: %s", lichtAmpel.rotImmo,
                 (self.phase == AkPhase.ROT or self.phase == AkPhase.ROTGELB) and "an" or "aus")
@@ -350,9 +357,11 @@ function AkAmpel:schalteImmoLicht()
             EEPStructureSetLight(lichtAmpel.gruenImmo, self.phase == AkPhase.GRUEN)
         end
     end
+    return immoDbg
 end
 
 function AkAmpel:schalteImmoAchsen()
+    local immoDbg = ""
     for achsenAmpel in pairs(self.achsenImmos) do
         local achsStellung = achsenAmpel.grundStellung
 
@@ -368,17 +377,14 @@ function AkAmpel:schalteImmoAchsen()
             achsStellung = achsenAmpel.stellungFG
         end
 
+        immoDbg = immoDbg .. string.format(", Achse %s in %s auf: %d",
+        achsenAmpel.achse, achsenAmpel.immoName, achsStellung)
         EEPStructureSetAxis(achsenAmpel.immoName, achsenAmpel.achse, achsStellung)
     end
+    return immoDbg
 end
 
-function AkAmpel:schalteSignal()
-    local sigIndex = self.ampelTyp:signalIndexFuer(self.phase)
-    if (self.debug or AkAmpel.debug) then
-        print(string.format("[AkAmpel    ] Schalte Ampel %04d auf %s (%01d)",
-            self.signalId, self.phase, sigIndex) .. immoDbg .. " - " .. grund)
-        print(self.debug)
-    end
+function AkAmpel:schalteSignal(sigIndex)
     EEPSetSignal(self.signalId, sigIndex)
 end
 
