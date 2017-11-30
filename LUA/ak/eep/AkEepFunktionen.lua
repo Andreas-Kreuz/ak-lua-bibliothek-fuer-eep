@@ -68,6 +68,7 @@ local couplingFront = {}
 local couplingRear = {}
 local eepdata = {}
 local trainSpeeds = {}
+local structureAxis = {}
 
 --- Geschwindigkeit aendern
 -- @param trainName Name des Zuges
@@ -141,73 +142,77 @@ function EEPSaveData(slot, data) eepdata[slot] = data end
 -- Neu ab EEP 11 - Plugin 1 --
 ------------------------------
 --- Rauch einschalten
--- @param structureName Name der Immobilie als String.
+-- @param immoName Name der Immobilie als String.
 -- @param onoff true oder false
-function EEPStructureSetSmoke(structureName, onoff)
+function EEPStructureSetSmoke(immoName, onoff)
 end
 
 --- Rauch abfreagen
--- @param structureName Name der Immobilie als String.
-function EEPStructureGetSmoke(structureName)
+-- @param immoName Name der Immobilie als String.
+function EEPStructureGetSmoke(immoName)
 end
 
 --- Licht einschalten
--- @param structureName Name der Immobilie als String.
+-- @param immoName Name der Immobilie als String.
 -- @param onoff true oder false
-function EEPStructureSetLight(structureName, onoff)
+function EEPStructureSetLight(immoName, onoff)
 end
 
---- Licht abfreagen
--- @param structureName Name der Immobilie als String.
-function EEPStructureGetLight(structureName)
+--- Licht abfragen
+-- @param immoName Name der Immobilie als String.
+function EEPStructureGetLight(immoName)
+    return true, true
 end
 
 --- Feuer einschalten
--- @param structureName Name der Immobilie als String.
+-- @param immoName Name der Immobilie als String.
 -- @param onoff true oder false
-function EEPStructureSetFire(structureName, onoff)
+function EEPStructureSetFire(immoName, onoff)
 end
 
 --- Feuer abfragen
--- @param structureName Name der Immobilie als String.
-function EEPStructureGetFire(structureName)
+-- @param immoName Name der Immobilie als String.
+function EEPStructureGetFire(immoName)
 end
 
 --- Setzen einer Achse einer Immobilie.
--- @param structureName Name der Immobilie als String.
+-- @param immoName Name der Immobilie als String.
 -- @param achse Name der Achse
 -- @param schritte 1000 bzw. -1000: endlos, 0: Stopp, sonst Schritte
-function EEPStructureAnimateAxis(structureName, achse, schritte)
+function EEPStructureAnimateAxis(immoName, achse, schritte)
 end
 
 --- Setzen einer Achse einer Immobilie
--- @param structureName Name der Immobilie als String.
+-- @param immoName Name der Immobilie als String.
 -- @param achse Name der Achse
 -- @param stellung position der Achse
-function EEPStructureSetAxis(structureName, achse, stellung)
+function EEPStructureSetAxis(immoName, achse, stellung)
+    if not structureAxis[immoName] then structureAxis[immoName] = {} end
+    structureAxis[immoName][achse] = stellung
 end
 
 --- Gibt die Stellung der Achse am Rollmaterial zurueck.
 -- z.B.: EEPRollingstockSetAxis("Bekohlungskranbruecke 1", "Drehung links", 50)
--- @param structureName Name der Immobilie als String.
+-- @param immoName Name der Immobilie als String.
 -- @param achse Name der Achse
-function EEPStructureGetAxis(structureName, achse)
+function EEPStructureGetAxis(immoName, achse)
+    return true, structureAxis[immoName] and structureAxis[immoName][achse] or 0
 end
 
 --- Setzen der Position einer Immobilie
--- @param structureName Name der Immobilie als String.
+-- @param immoName Name der Immobilie als String.
 -- @param posX x-Position
 -- @param posY y-Position
 -- @param posZ z-Position
-function EEPStructureSetPosition(structureName, posX, posY, posZ)
+function EEPStructureSetPosition(immoName, posX, posY, posZ)
 end
 
 --- Setzen der Rotation einer Immobilie
--- @param structureName Name der Immobilie als String.
+-- @param immoName Name der Immobilie als String.
 -- @param rotX x-Position
 -- @param rotY y-Position
 -- @param rotZ z-Position
-function EEPStructureSetPosition(structureName, rotX, rotY, rotZ)
+function EEPStructureSetPosition(immoName, rotX, rotY, rotZ)
 end
 
 ------------------------------
@@ -364,14 +369,14 @@ function EEPGetTrainFromTrainyard(depotId, trainName, trainNumber) end
 -- Neu ab EEP 13             --
 -------------------------------
 --- Zeigen / Verstecken des Tipp-Textes einer Immobilie
--- @param structureName Name der Immobilie als String.
+-- @param immoName Name der Immobilie als String.
 -- @param onOff true: einschalten
-function EEPShowInfoStructure(structureName, onOff) end
+function EEPShowInfoStructure(immoName, onOff) end
 
 --- Setzen des Tipp-Textes einer Immobilie
--- @param structureName Name der Immobilie als String.
+-- @param immoName Name der Immobilie als String.
 -- @param text Text fuer die Anzeige
-function EEPChangeInfoStructure(structureName, text) end
+function EEPChangeInfoStructure(immoName, text) end
 
 --- Zeigen / Verstecken des Tipp-Textes einer Immobilie
 -- @param switchId Name der Immobilie als String.
