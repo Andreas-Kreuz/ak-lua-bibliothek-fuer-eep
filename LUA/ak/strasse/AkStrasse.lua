@@ -328,14 +328,13 @@ function AkAmpel:schalte(phase, grund)
     self.phase = phase
     local immoLichtDbg = self:schalteImmoLicht()
     local immoAchseDbg = self:schalteImmoAchsen()
-    self:schalteSignal(grund)
 
     local sigIndex = self.ampelTyp:signalIndexFuer(self.phase)
     if (self.debug or AkAmpel.debug) then
         print(string.format("[AkAmpel    ] Schalte Ampel %04d auf %s (%01d)",
             self.signalId, self.phase, sigIndex) .. immoLichtDbg .. immoAchseDbg .. " - " .. grund)
-        print(self.debug)
     end
+    self:schalteSignal(sigIndex)
 end
 
 function AkAmpel:schalteImmoLicht()
@@ -401,7 +400,6 @@ function AkAmpel:aktualisiereAnforderung(richtung)
     end
     if (self.debug or AkAmpel.debug) and immoDbg ~= "" then
         print(string.format("[AkAmpel    ] Schalte Ampel %04d", self.signalId) .. immoDbg)
-        print(self.debug)
     end
     self:aktualisiereInfo()
 end
