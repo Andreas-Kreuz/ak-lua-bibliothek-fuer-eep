@@ -22,7 +22,7 @@ end
 local signale = {}
 local switches = {}
 
---- Setzt das Signal x auf die Stellung y. Der Wert z sollte den Wert 1 haben
+--- Setzt das Signal signalId auf die Stellung signalStellung. Der Wert z sollte den Wert 1 haben
 -- @param signalId Id des Signals
 -- @param signalStellung Stellung des Signals
 function EEPSetSignal(signalId, signalStellung, z)
