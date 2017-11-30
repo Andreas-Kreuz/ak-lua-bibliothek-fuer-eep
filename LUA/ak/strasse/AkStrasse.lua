@@ -79,6 +79,28 @@ function AkAmpelModell:signalIndexFuer(phase)
     end
 end
 
+
+--region AkStrabWeiche
+AkStrabWeiche = {}
+--- Registriert eine neue Strassenbahnweiche und schaltet das Licht der angegeben Immobilien anhand der Weichenstellung
+-- @param weiche_id ID der Weiche
+-- @param immo1 Immobilie, deren Licht bei Weichenstellung 1 leuchten soll
+-- @param immo2 Immobilie, deren Licht bei Weichenstellung 2 leuchten soll
+-- @param immo3 Immobilie, deren Licht bei Weichenstellung 3 leuchten soll
+--
+function AkStrabWeiche.new(weiche_id, immo1, immo2, immo3)
+    EEPRegisterSwitch(weiche_id)
+    _G["EEPOnSwitch_" .. weiche_id] = function(_)
+        local stellung = EEPGetSwitch(weiche_id)
+        if immo1 then EEPStructureSetLight(immo1, stellung == 1) end
+        if immo2 then EEPStructureSetLight(immo2, stellung == 2) end
+        if immo3 then EEPStructureSetLight(immo3, stellung == 3) end
+    end
+    _G["EEPOnSwitch_" .. weiche_id]()
+end
+
+--endregion
+
 ---------------------
 -- Ampeln und Signale
 ---------------------
@@ -106,23 +128,73 @@ AkAmpelModell.JS2_3er_ohne_FG = AkAmpelModell:neu("Ampel_3er_XXX_ohne_FG", 1, 3,
 AkAmpelModell.Unsichtbar_2er = AkAmpelModell:neu("Unsichtbares Signal", 2, 1, 2, 2)
 
 --endregion
---region AkStrabWeiche
-AkStrabWeiche = {}
---- Registriert eine neue Strassenbahnweiche und schaltet das Licht der angegeben Immobilien anhand der Weichenstellung
--- @param weiche_id ID der Weiche
--- @param immo1 Immobilie, deren Licht bei Weichenstellung 1 leuchten soll
--- @param immo2 Immobilie, deren Licht bei Weichenstellung 2 leuchten soll
--- @param immo3 Immobilie, deren Licht bei Weichenstellung 3 leuchten soll
+--region AkAmpelLichtImmo
+local AkLichtImmoAmpel = {}
+--- Schaltet das Licht der angegebenen Immobilien beim Schalten der Ampel auf rot, gelb, grün oder Anforderung
+-- @param rotImmo Immo deren Licht eingeschaltet wird, wenn die Ampel rot oder rot-gelb ist
+-- @param gruenImmo Immo deren Licht eingeschaltet wird, wenn die Ampel grün ist
+-- @param gelbImmo Immo deren Licht eingeschaltet wird, wenn die Ampel gelb oder rot-gelb ist
+-- @param anforderungImmo Immo deren Licht eingeschaltet wird, wenn die Ampel eine Anforderung erkennt
 --
-function AkStrabWeiche.new(weiche_id, immo1, immo2, immo3)
-    EEPRegisterSwitch(weiche_id)
-    _G["EEPOnSwitch_" .. weiche_id] = function(_)
-        local stellung = EEPGetSwitch(weiche_id)
-        if immo1 then EEPStructureSetLight(immo1, stellung == 1) end
-        if immo2 then EEPStructureSetLight(immo2, stellung == 2) end
-        if immo3 then EEPStructureSetLight(immo3, stellung == 3) end
+function AkLichtImmoAmpel:neu(rotImmo, gruenImmo, gelbImmo, anforderungImmo)
+    assert(rotImmo)
+    assert(type(rotImmo) == "string")
+    assert(EEPStructureGetLight(gruenImmo))
+    assert(gruenImmo)
+    assert(type(gruenImmo) == "string")
+    assert(EEPStructureGetLight(gruenImmo))
+    if gelbImmo then
+        assert(type(gelbImmo) == "string")
+        assert(EEPStructureGetLight(gelbImmo))
     end
-    _G["EEPOnSwitch_" .. weiche_id]()
+    if anforderungImmo then
+        assert(type(anforderungImmo) == "string")
+        assert(EEPStructureGetLight(anforderungImmo))
+    end
+    local o = {
+        rotImmo = rotImmo,
+        gruenImmo = gruenImmo,
+        gelbImmo = gelbImmo or rotImmo,
+        anforderungImmo = anforderungImmo,
+    }
+    self.__index = self
+    o = setmetatable(o, self)
+    return o
+end
+
+local AkAchsenImmoAmpel = {}
+--- Ändert die Achsstellung der angegebenen Immobilien beim Schalten der Ampel auf rot, gelb, grün oder Fußgänger
+-- @param immoName Name der Immobilie, deren Achse gesteuert werden soll
+-- @param achsName Name der Achse in der Immobilie, die gesteuert werden soll
+-- @param grundStellung Grundstellung der Achse (wird eingestellt, wenn eine Stellung nicht angegeben wurde
+-- @param stellungRot Achsstellung bei rot
+-- @param stellungGruen Achsstellung bei grün
+-- @param stellungGelb Achsstellung bei gelb
+-- @param stellungFG Achsstellung bei FG
+--
+function AkAchsenImmoAmpel:neu(immoName, achse, grundStellung, stellungRot, stellungGruen, stellungGelb, stellungFG)
+    assert(immoName)
+    assert(type(immoName) == "string")
+    assert(achse)
+    assert(type(achse) == "string")
+    assert(EEPStructureGetAxis(immoName, achse))
+    assert(type(grundStellung) == "number")
+    if stellungRot then assert(type(stellungRot) == "number") end
+    if stellungGruen then assert(type(stellungGruen) == "number") end
+    if stellungGelb then assert(type(stellungGelb) == "number") end
+    if stellungFG then assert(type(stellungFG) == "number") end
+    local o = {
+        immoName = immoName,
+        achse = achse,
+        grundStellung = grundStellung,
+        stellungRot = stellungRot,
+        stellungGruen = stellungGruen,
+        stellungGelb = stellungGelb or stellungRot,
+        stellungFG = stellungFG,
+    }
+    self.__index = self
+    o = setmetatable(o, self)
+    return o
 end
 
 --endregion
@@ -160,9 +232,45 @@ function AkAmpel:neu(signalId, ampelTyp, rotImmo, gruenImmo, gelbImmo, anforderu
         schaltungsInfo = "",
         aufbauInfo = "" .. tostring(signalId),
         richtungen = {},
+        lichtImmos = {},
+        achsenImmos = {},
     }
     self.__index = self
-    return setmetatable(o, self)
+    o = setmetatable(o, self)
+
+    if rotImmo or gruenImmo or gelbImmo or anforderungImmo then
+        o:fuegeLichtImmoHinzu(rotImmo, gruenImmo, gelbImmo, anforderungImmo)
+    end
+    return o
+end
+
+--- Schaltet das Licht der angegebenen Immobilien beim Schalten der Ampel auf rot, gelb, grün oder Anforderung
+-- @param rotImmo Name der Immobilie, deren Licht eingeschaltet wird, wenn die Ampel rot oder rot-gelb ist
+-- @param gruenImmo Name der Immobilie,  deren Licht eingeschaltet wird, wenn die Ampel grün ist
+-- @param gelbImmo Name der Immobilie,  deren Licht eingeschaltet wird, wenn die Ampel gelb oder rot-gelb ist
+-- @param anforderungImmo Name der Immobilie,  deren Licht eingeschaltet wird, wenn die Ampel eine Anforderung erkennt
+--
+function AkAmpel:fuegeLichtImmoHinzu(rotImmo, gruenImmo, gelbImmo, anforderungImmo)
+    local lichtAmpel = AkLichtImmoAmpel:neu(rotImmo, gruenImmo, gelbImmo, anforderungImmo)
+    self.lichtImmos[lichtAmpel] = true
+    return self
+end
+
+--- Ändert die Achsstellung der angegebenen Immobilien beim Schalten der Ampel auf rot, gelb, grün oder Fußgänger
+-- @param immoName Name der Immobilie, deren Achse gesteuert werden soll
+-- @param achsName Name der Achse in der Immobilie, die gesteuert werden soll
+-- @param grundStellung Grundstellung der Achse (wird eingestellt, wenn eine Stellung nicht angegeben wurde
+-- @param stellungRot Achsstellung bei rot
+-- @param stellungGruen Achsstellung bei grün
+-- @param stellungGelb Achsstellung bei gelb
+-- @param stellungFG Achsstellung bei FG
+--
+function AkAmpel:fuegeAchsenImmoHinzu(immoName, achsName, grundStellung,
+stellungRot, stellungGruen, stellungGelb, stellungFG)
+    local achsAmpel = AkAchsenImmoAmpel:neu(immoName, achsName, grundStellung,
+        stellungRot, stellungGruen, stellungGelb, stellungFG)
+    self.achsenImmos[achsAmpel] = true
+    return self
 end
 
 ---
@@ -218,27 +326,57 @@ end
 function AkAmpel:schalte(phase, grund)
     assert(phase)
     self.phase = phase
-    local immoDbg = ""
-    if self.rotImmo then
-        immoDbg = immoDbg .. string.format(", Licht in %s: %s", self.rotImmo,
-            (phase == AkPhase.ROT or phase == AkPhase.ROTGELB) and "an" or "aus")
-        EEPStructureSetLight(self.rotImmo, phase == AkPhase.ROT or phase == AkPhase.ROTGELB)
-    end
-    if self.gelbImmo then
-        immoDbg = immoDbg .. string.format(", Licht in %s: %s", self.gelbImmo,
-            (phase == AkPhase.GELB or phase == AkPhase.ROTGELB) and "an" or "aus")
-        EEPStructureSetLight(self.gelbImmo, phase == AkPhase.GELB or phase == AkPhase.ROTGELB)
-    end
-    if self.gruenImmo then
-        immoDbg = immoDbg .. string.format(", Licht in %s: %s", self.gruenImmo,
-            (phase == AkPhase.GRUEN) and "an" or "aus")
-        EEPStructureSetLight(self.gruenImmo, phase == AkPhase.GRUEN)
-    end
+    self:schalteImmoLicht()
+    self:schalteImmoAchsen()
+    self:schalteSignal()
+end
 
-    local sigIndex = self.ampelTyp:signalIndexFuer(phase)
+function AkAmpel:schalteImmoLicht()
+    for lichtAmpel in pairs(self.lichtImmos) do
+        local immoDbg = ""
+        if lichtAmpel.rotImmo then
+            immoDbg = immoDbg .. string.format(", Licht in %s: %s", lichtAmpel.rotImmo,
+                (self.phase == AkPhase.ROT or self.phase == AkPhase.ROTGELB) and "an" or "aus")
+            EEPStructureSetLight(lichtAmpel.rotImmo, self.phase == AkPhase.ROT or self.phase == AkPhase.ROTGELB)
+        end
+        if lichtAmpel.gelbImmo then
+            immoDbg = immoDbg .. string.format(", Licht in %s: %s", lichtAmpel.gelbImmo,
+                (self.phase == AkPhase.GELB or self.phase == AkPhase.ROTGELB) and "an" or "aus")
+            EEPStructureSetLight(lichtAmpel.gelbImmo, self.phase == AkPhase.GELB or self.phase == AkPhase.ROTGELB)
+        end
+        if lichtAmpel.gruenImmo then
+            immoDbg = immoDbg .. string.format(", Licht in %s: %s", lichtAmpel.gruenImmo,
+                (self.phase == AkPhase.GRUEN) and "an" or "aus")
+            EEPStructureSetLight(lichtAmpel.gruenImmo, self.phase == AkPhase.GRUEN)
+        end
+    end
+end
+
+function AkAmpel:schalteImmoAchsen()
+    for achsenAmpel in pairs(self.achsenImmos) do
+        local achsStellung = achsenAmpel.grundStellung
+
+        if achsenAmpel.stellungGelb and
+                (self.phase == AkPhase.GELB or self.phase == AkPhase.ROTGELB) then
+            achsStellung = achsenAmpel.stellungGelb
+        elseif achsenAmpel.stellungRot and
+                self.phase == AkPhase.ROT then
+            achsStellung = achsenAmpel.stellungRot
+        elseif achsenAmpel.stellungGruen and self.phase == AkPhase.GRUEN then
+            achsStellung = achsenAmpel.stellungGruen
+        elseif achsenAmpel.stellungFG and self.phase == AkPhase.FG then
+            achsStellung = achsenAmpel.stellungFG
+        end
+
+        EEPStructureSetAxis(achsenAmpel.immoName, achsenAmpel.achse, achsStellung)
+    end
+end
+
+function AkAmpel:schalteSignal()
+    local sigIndex = self.ampelTyp:signalIndexFuer(self.phase)
     if (self.debug or AkAmpel.debug) then
         print(string.format("[AkAmpel    ] Schalte Ampel %04d auf %s (%01d)",
-            self.signalId, phase, sigIndex) .. immoDbg .. " - " .. grund)
+            self.signalId, self.phase, sigIndex) .. immoDbg .. " - " .. grund)
         print(self.debug)
     end
     EEPSetSignal(self.signalId, sigIndex)
