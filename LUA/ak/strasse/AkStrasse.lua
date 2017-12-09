@@ -130,6 +130,14 @@ AkAmpelModell.Unsichtbar_2er = AkAmpelModell:neu("Unsichtbares Signal", 2, 1, 2,
 --endregion
 --region AkAmpelLichtImmo
 local AkLichtImmoAmpel = {}
+function AkLichtImmoAmpel.neuAusTabelle(tabelle)
+    return AkLichtImmoAmpel:neu(
+        tabelle.rotImmo,
+        tabelle.gruenImmo,
+        tabelle.gelbImmo,
+        tabelle.anforderungImmo)
+end
+
 --- Schaltet das Licht der angegebenen Immobilien beim Schalten der Ampel auf rot, gelb, grün oder Anforderung
 -- @param rotImmo Immo deren Licht eingeschaltet wird, wenn die Ampel rot oder rot-gelb ist
 -- @param gruenImmo Immo deren Licht eingeschaltet wird, wenn die Ampel grün ist
@@ -163,6 +171,18 @@ function AkLichtImmoAmpel:neu(rotImmo, gruenImmo, gelbImmo, anforderungImmo)
 end
 
 local AkAchsenImmoAmpel = {}
+function AkAchsenImmoAmpel.neuAusTabelle(tabelle)
+    return AkAchsenImmoAmpel:neu(
+        tabelle.immoName,
+        tabelle.achse,
+        tabelle.grundStellung,
+        tabelle.stellungRot,
+        tabelle.stellungGruen,
+        tabelle.stellungGelb,
+        tabelle.stellungFG,
+        tabelle.stellungRotGelb)
+end
+
 --- Ändert die Achsstellung der angegebenen Immobilien beim Schalten der Ampel auf rot, gelb, grün oder Fußgänger
 -- @param immoName Name der Immobilie, deren Achse gesteuert werden soll
 -- @param achsName Name der Achse in der Immobilie, die gesteuert werden soll
@@ -172,7 +192,8 @@ local AkAchsenImmoAmpel = {}
 -- @param stellungGelb Achsstellung bei gelb
 -- @param stellungFG Achsstellung bei FG
 --
-function AkAchsenImmoAmpel:neu(immoName, achse, grundStellung, stellungRot, stellungGruen, stellungGelb, stellungFG)
+function AkAchsenImmoAmpel:neu(immoName, achse, grundStellung, stellungRot, stellungGruen,
+   stellungGelb, stellungFG, stellungRotGelb)
     assert(immoName)
     assert(type(immoName) == "string")
     assert(achse)
@@ -191,6 +212,7 @@ function AkAchsenImmoAmpel:neu(immoName, achse, grundStellung, stellungRot, stel
         stellungGruen = stellungGruen,
         stellungGelb = stellungGelb or stellungRot,
         stellungFG = stellungFG,
+        stellungRotGelb = stellungRotGelb
     }
     self.__index = self
     o = setmetatable(o, self)
@@ -221,10 +243,6 @@ function AkAmpel:neu(signalId, ampelTyp, rotImmo, gruenImmo, gelbImmo, anforderu
     local o = {
         signalId = signalId,
         ampelTyp = ampelTyp,
-        rotImmo = rotImmo,
-        gruenImmo = gruenImmo,
-        gelbImmo = gelbImmo or rotImmo,
-        anforderungImmo = anforderungImmo,
         phase = AkPhase.ROT,
         anforderung = false,
         debug = false,
@@ -273,27 +291,26 @@ stellungRot, stellungGruen, stellungGelb, stellungFG)
     return self
 end
 
----
---
+--- Aktualisiert den Text für die aktuellen Schaltung dieser Ampel
+-- @param schaltungsInfo TippText für die Schaltung
 --
 function AkAmpel:setzeSchaltungsInfo(schaltungsInfo)
     self.schaltungsInfo = schaltungsInfo
 end
 
----
---
+--- Aktualsisiert den Text für die Richtungen dieser Ampel
+-- @param richtungsInfo TippText für die Richtung
 --
 function AkAmpel:setzeRichtungsInfo(richtungsInfo)
     self.richtungsInfo = richtungsInfo
 end
 
----
---
+--- Stellt die vorher gesetzten Tipp-Texte dar.
 --
 function AkAmpel:aktualisiereInfo()
     local infoFuerAnforderung = AkKreuzung.zeigeAnforderungenAlsInfo
-    local infoFuerAktuelleSchaltung = AkKreuzung.zeigeSchaltungAlsInfo --and self.phase ~= AkPhase.ROT
-    local zeigeInfo = AkKreuzung.zeigeSchaltungAlsInfo or infoFuerAnforderung or infoFuerAktuelleSchaltung
+    local infoFuerAktuelleSchaltung = AkKreuzung.zeigeSchaltungAlsInfo
+    local zeigeInfo = infoFuerAnforderung or infoFuerAktuelleSchaltung
 
     EEPShowInfoSignal(self.signalId, zeigeInfo)
     if zeigeInfo then
@@ -364,7 +381,10 @@ function AkAmpel:schalteImmoAchsen()
     for achsenAmpel in pairs(self.achsenImmos) do
         local achsStellung = achsenAmpel.grundStellung
 
-        if achsenAmpel.stellungGelb and
+        if achsenAmpel.stellungRotGelb and
+                self.phase == AkPhase.ROTGELB then
+            achsStellung = achsenAmpel.stellungRotGelb
+        elseif achsenAmpel.stellungGelb and
                 (self.phase == AkPhase.GELB or self.phase == AkPhase.ROTGELB) then
             achsStellung = achsenAmpel.stellungGelb
         elseif achsenAmpel.stellungRot and
