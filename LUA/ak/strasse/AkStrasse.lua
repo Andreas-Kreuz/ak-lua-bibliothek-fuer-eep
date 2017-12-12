@@ -42,9 +42,12 @@ AkAmpelModell = {}
 -- @param sigIndexGruen Index der Signalstellung des gruenen Signals
 -- @param sigIndexGelb Index der Signalstellung des gelben Signals
 -- @param sigIndexRotGelb Index der Signalstellung des rot-gelben Signal (oder rot)
--- @param sigIndexFgGruen Indes der Signalstellung in der die Fussgaenger gruen haben und die Autos rot
+-- @param sigIndexFgGruen Index der Signalstellung in der die Fussgaenger gruen haben und die Autos rot
+-- @param sigIndexKomplettAus Index der Signalstellung in der die Ampel komplett aus ist
+-- @param sigIndexGelbBlinkenAus Index der Signalstellung in der die Ampel gelb blinkt ohne den Verkehr zu beeinflussen
 --
-function AkAmpelModell:neu(name, sigIndexRot, sigIndexGruen, sigIndexGelb, sigIndexRotGelb, sigIndexFgGruen)
+function AkAmpelModell:neu(name, sigIndexRot, sigIndexGruen, sigIndexGelb, sigIndexRotGelb, sigIndexFgGruen,
+sigIndexKomplettAus, sigIndexGelbBlinkenAus)
     assert(name)
     assert(sigIndexRot)
     assert(sigIndexGruen)
@@ -55,6 +58,8 @@ function AkAmpelModell:neu(name, sigIndexRot, sigIndexGruen, sigIndexGelb, sigIn
         sigIndexGelb = sigIndexGelb or sigIndexRot,
         sigIndexRotGelb = sigIndexRotGelb or sigIndexRot,
         sigIndexFgGruen = sigIndexFgGruen,
+        sigIndexKomplettAus = sigIndexKomplettAus,
+        sigIndexGelbBlinkenAus = sigIndexGelbBlinkenAus,
     }
     self.__index = self
     return setmetatable(o, self)
@@ -179,8 +184,8 @@ function AkAchsenImmoAmpel.neuAusTabelle(tabelle)
         tabelle.stellungRot,
         tabelle.stellungGruen,
         tabelle.stellungGelb,
-        tabelle.stellungFG,
-        tabelle.stellungRotGelb)
+        tabelle.stellungRotGelb,
+        tabelle.stellungFG)
 end
 
 --- Ändert die Achsstellung der angegebenen Immobilien beim Schalten der Ampel auf rot, gelb, grün oder Fußgänger
@@ -193,7 +198,7 @@ end
 -- @param stellungFG Achsstellung bei FG
 --
 function AkAchsenImmoAmpel:neu(immoName, achse, grundStellung, stellungRot, stellungGruen,
-   stellungGelb, stellungFG, stellungRotGelb)
+   stellungGelb, stellungRotGelb, stellungFG)
     assert(immoName)
     assert(type(immoName) == "string")
     assert(achse)
@@ -203,9 +208,10 @@ function AkAchsenImmoAmpel:neu(immoName, achse, grundStellung, stellungRot, stel
     if stellungRot then assert(type(stellungRot) == "number") end
     if stellungGruen then assert(type(stellungGruen) == "number") end
     if stellungGelb then assert(type(stellungGelb) == "number") end
+    if stellungRotGelb then assert(type(stellungRotGelb) == "number") end
     if stellungFG then assert(type(stellungFG) == "number") end
     local o = {
-        immoName = immoName,
+    immoName = immoName,
         achse = achse,
         grundStellung = grundStellung,
         stellungRot = stellungRot,
