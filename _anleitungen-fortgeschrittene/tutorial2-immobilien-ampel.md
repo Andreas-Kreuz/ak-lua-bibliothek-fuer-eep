@@ -61,18 +61,18 @@ Du kannst die Straßenbahnsignale mit unsichtbaren Signalen koppeln, so dass die
 Eine neue Ampel kannst Du wie folgt anlegen:
 
 * **Ohne Immobilien**: <br>
-  `AkAmpel:neu(signalId, modell)`<br>
+  `AkAmpel:neu(id, modell)`<br>
   Für "normale" Ampeln ohne Kopplung an Immobilien mit Lichtschaltung. Das ist der Standard.
 
 * **"rot" und "grün"**:<br>
-  `AkAmpel:neu(signalId, modell, immoRot, immoGruen)`<br>
+  `AkAmpel:neu(id, modell, immoRot, immoGruen)`<br>
   Für Zweier-Ampeln mit Lichtschaltung der Immobilien "rot" und "grün" (die gelbe Schaltphase zeigt dann "rot").
 
 * **"rot" "gelb" und "grün"**:<br>
-  `AkAmpel:neu(signalId, modell, immoRot, immoGruen, immoGelb, immoAnforderung)`<br>Für Dreier-Ampeln mit Lichtschaltung der Immobilien "rot" "gelb" und "grün".
+  `AkAmpel:neu(id, modell, immoRot, immoGruen, immoGelb, immoAnforderung)`<br>Für Dreier-Ampeln mit Lichtschaltung der Immobilien "rot" "gelb" und "grün".
 
 * **"rot" "gelb", "grün" und "Anforderung"**:<br>
-  `AkAmpel:neu(signalId, modell, immoRot, immoGruen, immoGelb, immoAnforderung)`<br>Für Vierer-Ampeln mit Lichtschaltung der Immobilien "rot" "gelb", "grün" und "Anforderung". Für die Anforderung musst Du die Fahrzeuge erkennen oder zählen - wie das geht, erfährst Du in [Tutorial 3 - Priorisierung]({{ site.baseurl }}/anleitungen-fortgeschrittene/tutorial3-priorisierung).
+  `AkAmpel:neu(id, modell, immoRot, immoGruen, immoGelb, immoAnforderung)`<br>Für Vierer-Ampeln mit Lichtschaltung der Immobilien "rot" "gelb", "grün" und "Anforderung". Für die Anforderung musst Du die Fahrzeuge erkennen oder zählen - wie das geht, erfährst Du in [Tutorial 3 - Priorisierung]({{ site.baseurl }}/anleitungen-fortgeschrittene/tutorial3-priorisierung).
 
 Die Werte von `immoRot`, `immoGruen`, `immoGelb` und `immoAnforderung` kannst Du ganz einfach über den Eigenschaften-Dialog der Immobilie herausfinden. Dort findest Du den kompletten Namen der Immobilie heraus, den Du in den Code übernimmst.
 

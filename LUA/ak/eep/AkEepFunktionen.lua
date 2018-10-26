@@ -14,8 +14,13 @@ AkEEPHilfe.zahlDerZuegeAnSignal = {}
 AkEEPHilfe.namenDerZuegeAnSignal = {}
 AkEEPHilfe.routenDerZuege = {}
 AkEEPHilfe.registrierteStrassen = {}
-function AkEEPHilfe.setzeZugAufStrasse(strassenId, zugname)
-    AkEEPHilfe.registrierteStrassen[strassenId] = zugname
+function AkEEPHilfe.setzeZugAufStrasse(trackId, zugname)
+    AkEEPHilfe.registrierteStrassen[trackId] = zugname
+end
+
+AkEEPHilfe.registrierteGleise = {}
+function AkEEPHilfe.setzeZugAufGleis(trackId, zugname)
+    AkEEPHilfe.registrierteGleise[trackId] = zugname
 end
 
 
@@ -277,38 +282,55 @@ function EEPSetTrainAxis(trainName, achse, stellung) end
 ------------------------------
 
 --- Registriert ein Gleis fuer die Besetztabfrage.
--- @param railTrackId Id des Gleises
-function EEPRegisterRailTrack(railTrackId) end
+-- @param trackId Id des Gleises
+function EEPRegisterRailTrack(trackId)
+    if AkEEPHilfe.registrierteGleise[trackId] == nil then
+        AkEEPHilfe.registrierteGleise[trackId] = false
+    end
+    if (trackId <= 11) then return true end
+end
 
 --- Fragt ab, ob ein Gleis besetzt ist.
--- @param railTrackId Id des Gleises
+-- @param trackId Id des Gleises
 -- @param returnTrainName wenn true, wird als dritter Wert der Zugname
 -- zurueckgegeben
 -- @return Erster Wert: true, wenn Gleis existiert und registriert,
 -- zweiter Wert: true, wenn besetzt,
 -- dritter Wert: Name des Zuges auf dem Gleis
-function EEPIsRailTrackReserved(railTrackId, returnTrainName) end
+function EEPIsRailTrackReserved(trackId, returnTrainName)
+    if returnTrainName then
+        return (AkEEPHilfe.registrierteGleise[trackId] ~= nil and true or false),
+        (AkEEPHilfe.registrierteGleise[trackId] ~= false and true or false),
+        (returnTrainName and AkEEPHilfe.registrierteGleise[trackId] or nil)
+    else
+        return (AkEEPHilfe.registrierteGleise[trackId] ~= nil and true or false),
+        (AkEEPHilfe.registrierteGleise[trackId] ~= false and true or false)
+    end
+end
 
 --- Registriert ein Gleis fuer die Besetztabfrage.
--- @param strassenId Id des Gleises
-function EEPRegisterRoadTrack(strassenId)
-    AkEEPHilfe.registrierteStrassen[strassenId] = false
+-- @param trackId Id des Gleises
+function EEPRegisterRoadTrack(trackId)
+    if AkEEPHilfe.registrierteStrassen[trackId] == nil then
+        AkEEPHilfe.registrierteStrassen[trackId] = false
+    end
+    if (trackId <= 11) then return true end
 end
 
 --- Fragt ab, ob ein Gleis besetzt ist.
--- @param strassenId Id des Gleises
+-- @param trackId Id des Gleises
 -- @param returnTrainName wenn true, wird als dritter Wert der Zugname
 -- @return Erster Wert: true, wenn Gleis existiert und registriert,
 -- zweiter Wert: true, wenn besetzt,
 -- dritter Wert: Name des Zuges auf dem Gleis
-function EEPIsRoadTrackReserved(strassenId, returnTrainName)
+function EEPIsRoadTrackReserved(trackId, returnTrainName)
     if returnTrainName then
-        return (AkEEPHilfe.registrierteStrassen[strassenId] ~= nil and true or false),
-        (AkEEPHilfe.registrierteStrassen[strassenId] ~= false and true or false),
-        (returnTrainName and AkEEPHilfe.registrierteStrassen[strassenId] or nil)
+        return (AkEEPHilfe.registrierteStrassen[trackId] ~= nil and true or false),
+        (AkEEPHilfe.registrierteStrassen[trackId] ~= false and true or false),
+        (returnTrainName and AkEEPHilfe.registrierteStrassen[trackId] or nil)
     else
-        return (AkEEPHilfe.registrierteStrassen[strassenId] ~= nil and true or false),
-        (AkEEPHilfe.registrierteStrassen[strassenId] ~= false and true or false)
+        return (AkEEPHilfe.registrierteStrassen[trackId] ~= nil and true or false),
+        (AkEEPHilfe.registrierteStrassen[trackId] ~= false and true or false)
     end
 end
 

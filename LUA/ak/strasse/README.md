@@ -38,11 +38,11 @@ Mitgelieferte Ampelmodelle sind:
 
 
 ## Klasse `AkAmpel`
-wird dazu verwendet eine Signal auf der Anlage (signalId) mit einem Modell zu verküpfen.
+wird dazu verwendet eine Signal auf der Anlage (id) mit einem Modell zu verküpfen.
 
-* `function AkAmpel:neu(signalId, ampelModell, rotImmo, gruenImmo, gelbImmo, anforderungImmo)`
+* `function AkAmpel:neu(id, ampelModell, rotImmo, gruenImmo, gelbImmo, anforderungImmo)`
 
-  Erforderlich sind `signalId` und `ampelModell`.
+  Erforderlich sind `id` und `ampelModell`.
 
   Die Einstellungen `rotImmo`, `gruenImmo`, `gelbImmo` und `anforderungImmo` sind für die Verwendung von Straßenbahn Signalen gedacht, deren Signalbilder durch das Ein- und Ausschalten von Licht in diesen Immobilien geschaltet werden. Dabei ist `anforderungsImmo` z.B. das Symbol "A" in der Ampel. Als Signal kann hier das ein Unsichtbares Signal verwendet werden.
 
@@ -63,7 +63,7 @@ Es gibt drei Möglichkeiten Fahrzeuge zu erkennen:
 
     Über diese Funktion wird erkannt, wie viele Fahrzeuge zwischen einem bestimmten Vor- und Hauptsignal auf dem Straßenstück warten.
 
-    * Um die Richtung zu priorisieren, wenn sich **ein beliebiges Fahrzeug** auf der Straße vor der Ampel befindet, muss die signalID der Ampel einmalig hinterlegt werden: `meineRichtung:zaehleAnAmpelAlle(signalId)``
+    * Um die Richtung zu priorisieren, wenn sich **ein beliebiges Fahrzeug** auf der Straße vor der Ampel befindet, muss die signalID der Ampel einmalig hinterlegt werden: `meineRichtung:zaehleAnAmpelAlle(id)``
 
     * Um die Richtung nur dann zu Priorisieren, wenn ein bestimmtes Fahrzeug an der Ampel wartet, kann stattdessen die Funktion mit Route verwendet werden: `meineRichtung:zaehleAnStrasseBeiRoute(strassenId, route)`<br>
     Diese Funktion prüft, ob das erste Fahrzeug an der Ampel die passende Route hat.

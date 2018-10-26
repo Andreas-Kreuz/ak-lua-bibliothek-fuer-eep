@@ -42,6 +42,8 @@ luac.out
 # Project based settings
 /modell-pakete
 /LUA/ak/anlagen
+/LUA/ak/ext
+/LUA/comm_*
 *.dds
 
 _site
