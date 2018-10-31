@@ -1306,7 +1306,7 @@ function AkKreuzung.planeSchaltungenEin()
     for _, kreuzung in ipairs(AkAllKreuzungen) do
         AkSchalteKreuzung(kreuzung)
         zeigeSchaltung(kreuzung)
-        --AkStatistik.writeLater("crossroads_single_" .. kreuzung.name, json.encode(kreuzung:toJsonObject()))
+        --AkStatistik.writeLater("intersections_single_" .. kreuzung.name, json.encode(kreuzung:toJsonObject()))
     end
 
     updateStatistics()
@@ -1314,28 +1314,38 @@ end
 
 
 function updateStatistics()
-    local crossroads = {}
-    local crossroadDirections = {}
-    local crossroadSwitchings = {}
-    local crossroadTrafficLights = {}
+    local intersections = {}
+    local intersectionDirections = {}
+    local intersectionSwitchings = {}
+    local intersectionTrafficLights = {}
     local alleRichtungen = {}
     for _, kreuzung in ipairs(AkAllKreuzungen) do
         local crossing = {}
         crossing.id = kreuzung.name
-        crossing.crossingName = kreuzung.name
+        crossing.name = kreuzung.name
         crossing.currentCurcuit = kreuzung.schaltung and kreuzung.schaltung.name or nil
         crossing.ready = kreuzung.bereit
         crossing.timeForGreen = kreuzung.gruenZeit
-        table.insert(crossroads, crossing)
+        table.insert(intersections, crossing)
 
         for schaltung in pairs(kreuzung:getSchaltungen()) do
             local switching = {}
             switching.id = kreuzung.name .. "-" .. schaltung.name
             switching.crossingId = kreuzung.name
-            table.insert(crossroadSwitchings, switching)
+            table.insert(intersectionSwitchings, switching)
 
             for richtung in pairs(schaltung:getAlleRichtungen()) do
                 alleRichtungen[richtung] = kreuzung.name
+
+                for _, ampel in pairs(richtung.ampeln) do
+                    local trafficLight = {
+                        id = ampel.signalId,
+                        signalId = ampel.signalId,
+                        modelId = ampel.ampelTyp.name,
+                        currentPhase = ampel.phase,
+                    }
+                    table.insert(intersectionTrafficLights, trafficLight)
+                end
             end
         end
     end
@@ -1353,14 +1363,22 @@ function updateStatistics()
             waitingCarCount = richtung.fahrzeuge,
             waitingForGreenCyclesCount = richtung.warteZeit,
         }
-        table.insert(crossroadDirections, richtung)
+        table.insert(intersectionDirections, richtung)
     end
 
+    table.sort(intersections,
+        function(int1, int2)
+            return int1.name < int2.name
+        end)
+    for i, intersection in pairs(intersections) do
+        intersection.id = i
+    end
 
-    AkStatistik.writeLater("crossroads", crossroads)
-    AkStatistik.writeLater("crossroad_directions", crossroadDirections)
-    AkStatistik.writeLater("crossroad_switchings", crossroadSwitchings)
-    AkStatistik.writeLater("crossroad_traffic_lights", crossroadTrafficLights)
+    AkStatistik.writeLater("intersections", intersections)
+    AkStatistik.writeLater("intersection_directions", intersectionDirections)
+    AkStatistik.writeLater("intersection_switchings", intersectionSwitchings)
+    AkStatistik.writeLater("intersection_switchings", intersectionSwitchings)
+    AkStatistik.writeLater("signal_types", intersectionTrafficLights)
 
 
     local trafficLightModels = {}
@@ -1368,68 +1386,20 @@ function updateStatistics()
         local o = {
             id = ampelModel.name,
             name = ampelModel.name,
-            sigIndexRot = ampelModel.sigIndexRot,
-            sigIndexGruen = ampelModel.sigIndexGruen,
-            sigIndexGelb = ampelModel.sigIndexGelb,
-            sigIndexRotGelb = ampelModel.sigIndexRotGelb,
-            sigIndexFgGruen = ampelModel.sigIndexFgGruen,
-            sigIndexKomplettAus = ampelModel.sigIndexKomplettAus,
-            sigIndexGelbBlinkenAus = ampelModel.sigIndexGelbBlinkenAus,
+            type = 'road',
+            positions = {
+                positionRed = ampelModel.sigIndexRot,
+                positionGreen = ampelModel.sigIndexGruen,
+                positionYellow = ampelModel.sigIndexGelb,
+                positionRedYellow = ampelModel.sigIndexRotGelb,
+                positionPedestrians = ampelModel.sigIndexFgGruen,
+                positionOff = ampelModel.sigIndexKomplettAus,
+                positionOffBlinking = ampelModel.sigIndexGelbBlinkenAus,
+            },
         }
         table.insert(trafficLightModels, o)
     end
-    AkStatistik.writeLater("traffic_light_models", trafficLightModels)
+    AkStatistik.writeLater("signal_type_definitions", trafficLightModels)
 end
-
-function AkKreuzung:toJsonObject()
-    local o = {}
-    o.crossingName = self.name
-    o.currentCurcuit = self.schaltung and self.schaltung.name or nil
-    o.ready = self.bereit
-    o.timeForGreen = self.gruenZeit
-    o.curcuits = {}
-    for schaltung in pairs(self:getSchaltungen()) do
-        o.curcuits[schaltung.name] = { schaltung:toJsonObject() }
-    end
-
-    return o
-end
-
-function AkAmpel:toJsonObject()
-    local o = {}
-    o.eepModel = self.ampelTyp.name
-    o.signalId = self.signalId
-    o.currentPhase = self.phase
-    return o
-end
-
-function AkKreuzungsSchaltung:toJsonObject()
-    local o = {}
-    o['circuit'] = self.name
-    o.directions = {}
-    for richtung in pairs(self:getNormaleRichtungen()) do
-        o.directions[richtung.name] = { richtung:toJsonObject() }
-    end
-    o.pedestrianDirections = {}
-    for richtung in pairs(self.richtungenFuerFussgaenger) do
-        o.pedestrianDirections[richtung.name] = { richtung:toJsonObject() }
-    end
-    return o
-end
-
-function AkRichtung:toJsonObject()
-    local o = {}
-    o.directionName = self.name
-    o.eepSaveId = self.eepSaveId
-    o.waitingCarCount = self.fahrzeuge
-    o.waitingForGreenCount = self.warteZeit
-    o.trafficLights = {}
-    for i, ampel in pairs(self.ampeln) do
-        o.trafficLights[i] = { ampel:toJsonObject() }
-    end
-    return o
-end
-
-
 
 --endregion

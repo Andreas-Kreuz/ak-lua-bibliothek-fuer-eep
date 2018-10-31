@@ -22,6 +22,7 @@ function AkCommunicator.send(type, inhalt, verzeichnis)
     if not pcall(writeFile, dateiname, inhalt) then
         print("CANNOT WRITE TO " .. dateiname)
     end
+    print("Schreibe " .. dateiname)
 end
 
 ---
