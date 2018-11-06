@@ -1,5 +1,4 @@
 AkCommunicator = {}
-json = require("ak.io.json")
 
 
 local ausgabeVerzeichnis = "."

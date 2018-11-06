@@ -440,6 +440,7 @@ end
 -- @param Nummer
 --
 function EEPGetRollingstockItemName(zugverband, Nummer)
+    return zugverband .. '-Wagen-' .. Nummer
 end
 
 --- Anzahl der Zuege, welche vom Signal Signal_ID gehalten werden
@@ -557,7 +558,7 @@ function EEPStructureGetPosition(name)
     end
 
     if (i < 5) then
-        return true, 0,0,0
+        return true, 0, 0, 0
     else
         return false
     end

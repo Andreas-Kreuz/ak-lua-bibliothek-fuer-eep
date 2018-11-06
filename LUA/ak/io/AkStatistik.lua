@@ -1,31 +1,32 @@
 require "ak.io.AkCommunicator"
 require "os"
 
+local AkEepTime = require 'ak.model.ak_eep_time'
+local AkEepVersion = require 'ak.model.ak_eep_version'
+
 
 AkStatistik = {}
 local MAX_SIGNALS = 1000
 local MAX_TRACKS = 50000
 local MAX_STRUCTURES = 50000
-local list = {}
+local data = {}
 
 local function fillTime()
-    list.time = {
-        time = EEPTime,
-        timeH = EEPTimeH,
-        timeM = EEPTimeM,
-        timeS = EEPTimeS,
-    }
+    data.time = AkEepTime.new(
+        EEPTime,
+        EEPTimeH,
+        EEPTimeM,
+        EEPTimeS)
 end
 
 local function fillEEPVersion()
-    list.eepVersion = {
-        EEPVer
-    }
+    data.eepVersion = AkEepVersion.new(
+        EEPVer)
 end
 
 local function fillSignals()
-    list.signals = {}
-    list.waitingOnSignals = {}
+    data.signals = {}
+    data.waitingOnSignals = {}
     for i = 1, MAX_SIGNALS do
         local val = EEPGetSignal(i)
         if val > 0 then
@@ -34,17 +35,19 @@ local function fillSignals()
             o.id = i
             o.position = val
             o.waitingVehiclesCount = waitingVehiclesCount
-            table.insert(list.signals, o)
+            table.insert(data.signals, o)
 
             if (waitingVehiclesCount > 0) then
                 for position = 1, waitingVehiclesCount do
                     local vehicleName = EEPGetSignalTrainName(i, position)
-                    table.insert(list.waitingOnSignals, {
+                    local waiting = {
+                        id = o.id .. "-" .. position,
                         signalId = o.id,
                         waitingPosition = position,
                         vehicleName = vehicleName,
                         waitingCount = waitingVehiclesCount
-                    })
+                    }
+                    table.insert(data.waitingOnSignals, waiting)
                 end
             end
         end
@@ -52,27 +55,27 @@ local function fillSignals()
 end
 
 local function fillSwitches()
-    list.switches = {}
+    data.switches = {}
     for i = 1, MAX_SIGNALS do
         local val = EEPGetSignal(i)
         if val > 0 then
             local o = {}
             o.id = i
             o.position = val
-            table.insert(list.switches, o)
+            table.insert(data.switches, o)
         end
     end
 end
 
 local function registerTracksBy(registerFunktion, trackName)
-    list[trackName] = {}
+    data[trackName] = {}
     for i = 1, MAX_TRACKS do
         local exists = registerFunktion(i)
         if exists then
             local o = {}
             o.id = i
             --o.position = val
-            table.insert(list[trackName], o)
+            data[trackName][tostring(o.id)] = o
         end
     end
 end
@@ -92,7 +95,7 @@ local function fillTracksBy(besetztFunktion, trackName, trainList, rollingStockL
     local belegte = {}
     belegte.tracks = {}
 
-    for _, track in pairs(list[trackName]) do
+    for _, track in pairs(data[trackName]) do
         local trackId = track.id
         local exists, occupied, trainName = besetztFunktion(trackId, true)
         track.occupied = occupied
@@ -108,12 +111,12 @@ local function fillTracksBy(besetztFunktion, trackName, trainList, rollingStockL
             trains[trainName].trackType = trackName
             trains[trainName].onTrack = trackId
             trains[trainName].occupiedTacks = trains[trainName].occupiedTacks or {}
-            table.insert(trains[trainName].occupiedTacks, trackId)
+            trains[trainName].occupiedTacks[tostring(trackId)] = trackId
         end
     end
 
-    list[trainList] = {}
-    list[rollingStockList] = {}
+    data[trainList] = {}
+    data[rollingStockList] = {}
     for trainName, train in pairs(trains) do
         haveSpeed, speed = EEPGetTrainSpeed(trainName)
         haveRoute, route = EEPGetTrainRoute(trainName)
@@ -128,7 +131,7 @@ local function fillTracksBy(besetztFunktion, trackName, trainList, rollingStockL
             route = haveRoute and route or '',
             rollingStockCount = rollingStockCount,
         }
-        table.insert(list[trainList], o)
+        data[trainList][tostring(o.id)] = o
 
         for i = 0, (rollingStockCount - 1) do
             local rollingStockName = EEPGetRollingstockItemName(trainName, i)
@@ -163,7 +166,7 @@ local function fillTracksBy(besetztFunktion, trackName, trainList, rollingStockL
                 trackSystem = trackSystem,
                 modelType = modelType,
             }
-            table.insert(list[rollingStockList], o)
+            data[rollingStockList][o.name] = o
         end
     end
 end
@@ -177,7 +180,7 @@ local function fillTracks()
 end
 
 local function fillStructures()
-    list.structures = {}
+    data.structures = {}
     for i = 0, MAX_STRUCTURES do
         local name = "#" .. tostring(i)
         local t = true
@@ -193,8 +196,6 @@ local function fillStructures()
             local t, smoke = EEPStructureGetSmoke(name)
             local t, fire = EEPStructureGetFire(name)
 
-
-
             local o = {
                 name = name,
                 light = light,
@@ -205,7 +206,7 @@ local function fillStructures()
                 pos_z = pos_z,
                 modelType = modelType,
             }
-            table.insert(list.structures, o)
+            table.insert(data.structures, o)
         end
     end
 end
@@ -241,10 +242,16 @@ function AkStatistik.statistikAusgabe()
         fillTrainYards()
 
         for key, value in pairs(writeLater) do
-            list[key] = value
+            data[key] = value
         end
 
-        AkCommunicator.send("db", json.encode(list))
+        local sortedKeys = {}
+        for k in pairs(data) do
+            table.insert(sortedKeys, k)
+        end
+        table.sort(sortedKeys)
+
+        AkCommunicator.send("db", json.encode(data, { keyorder = sortedKeys }))
         writeLater = {}
         local t2 = os.time()
         print(os.difftime(t2,t1))
