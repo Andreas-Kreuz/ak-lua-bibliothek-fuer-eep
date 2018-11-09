@@ -21,11 +21,9 @@ Features:
 
 ## Klasse `AkAmpelModell`
 
-Beschreibt das Modell einer Ampel mit den Schaltungen für rot, grün, gelb und rot-gelb, sowie dem Fußgängersignal (falls vorhanden - dann hat die Verkehrsampel rot)
+Beschreibt das Modell einer Ampel mit den Schaltungen für rot, grün, gelb und rot-gelb, sowie dem Fußgängersignal (falls vorhanden - dann hat die Ampel für den Straßenverkehr rot)
 
-* `function AkAmpelModell:neu(name, sigIndexRot, sigIndexGruen, sigIndexGelb, sigIndexRotGelb, sigIndexFgGruen)` es müssen mindestens rot und grün angegeben werden.
-
-Mitgelieferte Ampelmodelle sind:
+### Mitgelieferte Ampelmodelle
 
 * `AkAmpelModell.NP1_3er_mit_FG = AkAmpelModell:neu("Ampel_NP1_mit_FG", 2, 4, 5, 3, 1)`
 * `AkAmpelModell.NP1_3er_ohne_FG = AkAmpelModell:neu("Ampel_NP1_ohne_FG", 1, 3, 4, 2)`
@@ -36,25 +34,97 @@ Mitgelieferte Ampelmodelle sind:
 
   Siehe auch https://eepshopping.de/ - Ampel-Baukasten für mehrspurige Straßenkreuzungen (V80NJS20039)
 
+### Ampelmodell anlegen
+`function AkAmpelModell:neu(name, sigIndexRot, sigIndexGruen, sigIndexGelb, sigIndexRotGelb, sigIndexFgGruen)`
+
+_Beschreibung:_
+* Legt eine neues Ampelmodell an, welches in `AkAmpel` verwendet werden kann.
+
+_Parameter:_
+* `name` Name des Modells für die Ausgabe im Log
+* `sigIndexRot` ist der Index der Signalstellung der Stellung **rot** (erforderlich)
+* `sigIndexGruen` ist der Index der Signalstellung der Stellung **grün** (erforderlich)
+* `sigIndexGelb` ist der Index der Signalstellung der Stellung **gelb** (optional, wenn nicht vorhanden wird rot verwendet)
+* `sigIndexRotGelb` ist der Index der Signalstellung der Stellung **rot-gelb** (optional, wenn nicht vorhanden wird rot verwendet)
+* `sigIndexFgGruen` ist der Index der Signalstellung der Stellung **Fußgänger grün** (optional, wenn nicht vorhanden, werden Fußgänger nicht auf grün geschaltet)
+
+_Rückgabewert_
+* Die Ampel (Typ `AkAmpel`)
 
 ## Klasse `AkAmpel`
-wird dazu verwendet eine Signal auf der Anlage (id) mit einem Modell zu verküpfen.
+Diese Klasse wird dazu verwendet eine Signal auf der Anlage (signalId) mit einem Modell zu verknüpfen. Eine so verknüpfte Ampel kann dann einer Richtung zugewiesen werden.
 
-* `function AkAmpel:neu(id, ampelModell, rotImmo, gruenImmo, gelbImmo, anforderungImmo)`
+### Neue Ampel erzeugen
 
-  Erforderlich sind `id` und `ampelModell`.
+`function AkAmpel:neu(signalId, ampelModell)`
 
-  Die Einstellungen `rotImmo`, `gruenImmo`, `gelbImmo` und `anforderungImmo` sind für die Verwendung von Straßenbahn Signalen gedacht, deren Signalbilder durch das Ein- und Ausschalten von Licht in diesen Immobilien geschaltet werden. Dabei ist `anforderungsImmo` z.B. das Symbol "A" in der Ampel. Als Signal kann hier das ein Unsichtbares Signal verwendet werden.
+_Beschreibung:_
+* Legt eine neue Ampel an, welche einer Richtung hinzugefügt werden kann.
+* Normalerweise wird jede in der Anlage eingesetzte Ampel mit ihrer `signalId` nur einmal verwendet, da es für jede Ampel normalerweise nur eine Richtung gibt. Folgende Ausnahmen beschreiben, wann man eine Ampel für mehrere Richtungen benötigt:
+  * Soll eine unsichtbare Ampel für mehrere Richtungen an unterschiedliche Immobilien gekoppelt werden, dann ist es notwendig diese Ampel für jede Richtung einzeln anzulegen, da sonst die Umschaltung der Ampel die falschen Immobilien schalten würde.
 
-  Passende Modelle für die Steuerung der Immobilien findest Du im Modellset V10MA1F011. Download unter http://eep.euma.de/download/ - Im Modell befindet sich eine ausführliche Doku.
+_Parameter:_
+* `signalId` ist die Signal-ID der zu steuernden Ampel in EEP
+* `ampelModell` muss vom Typ `AkAmpelModell` sein
+
+_Rückgabewert_
+* Die Ampel (Typ `AkAmpel`)
+
+### Lichtsteuerung von Immobilien
+
+`function AkAmpel:fuegeLichtImmoHinzu(rotImmo, gruenImmo, gelbImmo, anforderungImmo)`
+
+_Beschreibung:_
+* Fügt bis zu vier Immobilien hinzu, deren Licht ein oder ausgeschaltet wird, sobald die Ampel auf rot, gelb oder grün geschaltet wird bzw. wenn sich die Anforderung an der Ampel ändert.
+
+_Parameter:_
+* `rotImmo` Name der Immobilie, deren Licht eingeschaltet wird, wenn die Ampel rot oder rot-gelb ist
+* `gruenImmo` Name der Immobilie,  deren Licht eingeschaltet wird, wenn die Ampel grün ist
+* `gelbImmo` Name der Immobilie,  deren Licht eingeschaltet wird, wenn die Ampel gelb oder rot-gelb ist
+* `anforderungImmo` Name der Immobilie,  deren Licht eingeschaltet wird, wenn die Ampel eine Anforderung erkennt
+
+_Rückgabewert_
+* Die Ampel (Typ `AkAmpel`)
+
+Passende Modelle für die Steuerung der Immobilien mit Licht findest Du im Modellset V10MA1F011. Download unter http://eep.euma.de/download/ - Im Modell befindet sich eine ausführliche Doku.
+
+### Achssteuerung einer Immobilie
+
+`function AkAmpel:fuegeAchsenImmoHinzu(immoName, achsName, grundStellung,
+stellungRot, stellungGruen, stellungGelb, stellungFG)`
+
+_Beschreibung:_
+* Ändert die Achsstellung der angegebenen Immobilien beim Schalten der Ampel auf rot, gelb, grün oder Fußgänger
+
+_Parameter:_
+* `immoName` Name der Immobilie, deren Achse gesteuert werden soll
+* `achsName` Name der Achse in der Immobilie, die gesteuert werden soll
+* `grundStellung` Grundstellung der Achse (wird eingestellt, wenn eine Stellung nicht angegeben wurde
+* `stellungRot` Achsstellung bei rot
+* `stellungGruen` Achsstellung bei grün
+* `stellungGelb` Achsstellung bei gelb
+* `stellungFG` Achsstellung bei FG
+
+_Rückgabewert_
+* Die Ampel (Typ `AkAmpel`)
 
 
 ## Klasse `AkRichtung`
 Wird dazu verwendet mehrere Ampeln gleichzeitig zu schalten. Die kann für eine oder mehrere Fahrspuren geschehen.
 
-* `function AkRichtung:neu(name, eepSaveId, ...)`
+### Neue Richtung anlegen
+`function AkRichtung:neu(name, eepSaveId, ...)`
 
-    Erforderlich sind name (z.B. "Richtung 1"), eepSaveId (Speicher-ID in EEP; 1 - 1000) und eine Liste mit mindestens einer Ampel (AkAmpel).
+_Beschreibung:_
+* Legt eine neue Richtung mit den dazu passenden Ampeln an
+
+_Parameter:_
+* `name` Name der Richtung (z.B. "Richtung 1")
+* `eepSaveId` Freie EEP-Speicher-ID (1 - 1000)
+* `...` List von Ampeln (Typ `AkAmpel`), mindestens eine
+
+_Rückgabewert_
+* Die Ampel (Typ `AkRichtung`)
 
 ### Fahrzeuge erkennen
 Es gibt drei Möglichkeiten Fahrzeuge zu erkennen:
@@ -63,9 +133,9 @@ Es gibt drei Möglichkeiten Fahrzeuge zu erkennen:
 
     Über diese Funktion wird erkannt, wie viele Fahrzeuge zwischen einem bestimmten Vor- und Hauptsignal auf dem Straßenstück warten.
 
-    * Um die Richtung zu priorisieren, wenn sich **ein beliebiges Fahrzeug** auf der Straße vor der Ampel befindet, muss die signalID der Ampel einmalig hinterlegt werden: `meineRichtung:zaehleAnAmpelAlle(id)``
+    * Um die Richtung zu priorisieren, wenn sich **ein beliebiges Fahrzeug** auf der Straße vor der Ampel befindet, muss die signalID der Ampel einmalig hinterlegt werden: `meineRichtung:zaehleAnAmpelAlle(signalId)`
 
-    * Um die Richtung nur dann zu Priorisieren, wenn ein bestimmtes Fahrzeug an der Ampel wartet, kann stattdessen die Funktion mit Route verwendet werden: `meineRichtung:zaehleAnStrasseBeiRoute(strassenId, route)`<br>
+    * Um die Richtung nur dann zu Priorisieren, wenn ein bestimmtes Fahrzeug an der Ampel wartet, kann stattdessen die Funktion mit Route verwendet werden: `meineRichtung:zaehleAnAmpelBeiRoute(strassenId, route)`<br>
     Diese Funktion prüft, ob das erste Fahrzeug an der Ampel die passende Route hat.
 
 2. **Fahrzeuge auf der Straße vor dem Signal erkennen**
