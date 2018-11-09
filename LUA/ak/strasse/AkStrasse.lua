@@ -901,7 +901,7 @@ end
 -- @param eepSaveId Id fuer das Speichern der Richtung
 -- @param ... eine oder mehrere Ampeln
 --
-function AkRichtung:neu(name, eepSaveId, ampeln)
+function AkRichtung:neu(name, eepSaveId, ampeln, richtungen, trafficType)
     assert(name, "Bitte geben Sie den Namen \"name\" fuer diese Richtung an.")
     assert(type(name) == "string", "Name ist kein String")
     assert(eepSaveId, "Bitte geben Sie den Wert \"eepSaveId\" fuer diese Richtung an.")
@@ -920,6 +920,8 @@ function AkRichtung:neu(name, eepSaveId, ampeln)
         zaehlAmpeln = {},
         verwendeZaehlStrassen = false,
         zaehlStrassen = {},
+        richtungen = richtungen or { 'LEFT', 'STRAIGHT', 'RIGHT', },
+        trafficType = trafficType or 'NORMAL',
     }
 
 
@@ -1033,6 +1035,10 @@ function AkKreuzung:neu(name)
     self.__index = self
     setmetatable(o, self)
     table.insert(AkAllKreuzungen, o)
+    table.sort(AkAllKreuzungen,
+        function(int1, int2)
+            return int1.name < int2.name
+        end)
     return o
 end
 
@@ -1319,103 +1325,136 @@ end
 
 function updateStatistics()
     local intersections = {}
-    local intersectionDirections = {}
-    local intersectionSwitchings = {}
+    local intersectionLanes = {}
+    local intersectionSwitching = {}
     local intersectionTrafficLights = {}
     local alleRichtungen = {}
+
+
+    local i = 0
     for _, kreuzung in ipairs(AkAllKreuzungen) do
-        local crossing = {}
-        crossing.id = kreuzung.name
-        crossing.name = kreuzung.name
-        crossing.currentCurcuit = kreuzung.schaltung and kreuzung.schaltung.name or nil
-        crossing.ready = kreuzung.bereit
-        crossing.timeForGreen = kreuzung.gruenZeit
-        table.insert(intersections, crossing)
+        i = i + 1
+        local intersection = {}
+        intersection.id = i
+        intersection.name = kreuzung.name
+        intersection.currentCurcuit = kreuzung.schaltung and kreuzung.schaltung.name or nil
+        intersection.ready = kreuzung.bereit
+        intersection.timeForGreen = kreuzung.gruenZeit
+        table.insert(intersections, intersection)
 
         for schaltung in pairs(kreuzung:getSchaltungen()) do
-            local switching = {}
-            switching.id = kreuzung.name .. "-" .. schaltung.name
-            switching.crossingId = kreuzung.name
-            switching.name = schaltung.name
-            table.insert(intersectionSwitchings, switching)
+            local switching = {
+                id = kreuzung.name .. "-" .. schaltung.name,
+                intersectionId = kreuzung.name,
+                name = schaltung.name,
+            }
+            table.insert(intersectionSwitching, switching)
 
             for richtung, type in pairs(schaltung:getAlleRichtungen()) do
-                alleRichtungen[richtung] = kreuzung.name
-
-                for _, ampel in pairs(richtung.ampeln) do
-                    local trafficLight = {
-                        id = ampel.signalId,
-                        type = type,
-                        signalId = ampel.signalId,
-                        modelId = ampel.ampelTyp.name,
-                        currentPhase = ampel.phase,
-                        switchingId = switching.id,
-                        crossingId = crossing.crossingId,
-                        lightStructures = {},
-                        axisStructures = {},
-                    }
-
-                    for axisStructure in pairs(ampel.achsenImmos) do
-                        local o = {
-                            structureName = axisStructure.immoName,
-                            axis = axisStructure.achse,
-                            positionDefault = axisStructure.grundStellung,
-                            positionRed = axisStructure.stellungRot,
-                            positionGreen = axisStructure.stellungGruen,
-                            positionYellow = axisStructure.stellungGelb,
-                            positionPedestrants = axisStructure.stellungFG,
-                            positionRedYellow = axisStructure.stellungRotGelb,
-                        }
-                        table.insert(trafficLight.axisStructures, o)
-                    end
-
-                    local i = 0;
-                    for lightStructure in pairs(ampel.lichtImmos) do
-                        local o = {
-                            structureRed = lightStructure.rotImmo,
-                            structureGreen = lightStructure.gruenImmo,
-                            structureYellow = lightStructure.gelbImmo or lightStructure.rotImmo,
-                            structureRequest = lightStructure.anforderungImmo,
-                        }
-                        trafficLight.axisStructures[tostring(i)] = o
-                        i = i + 1
-                    end
-
-                    table.insert(intersectionTrafficLights, trafficLight)
-                end
+                alleRichtungen[richtung] = intersection.id
             end
         end
     end
 
-    for richtung, crossingId in pairs(alleRichtungen) do
-        local richtung = {
-            id = crossingId .. "-" .. richtung.name,
-            crossingId = crossingId,
-            name = richtung.name,
-            vehicleMultiplier = richtung.fahrzeugMultiplikator,
-            eepSaveId = richtung.eepSaveId,
-            type = richtung.schaltungsTyp,
-            countByTrafficLights = richtung.verwendeZaehlAmpeln,
-            countByRoads = richtung.verwendeZaehlStrassen,
-            waitingCarCount = richtung.fahrzeuge,
-            waitingForGreenCyclesCount = richtung.warteZeit,
+    for lane, intersectionId in pairs(alleRichtungen) do
+        local type
+        if (lane.schaltungsTyp == AkRichtung.SchaltungsTyp.FUSSGAENGER) then
+            type = "PEDESTRIAN"
+        elseif (lane.trafficType == 'TRAM') then
+            type = "TRAM"
+        else
+            type = "NORMAL"
+        end
+
+        local phase = "NONE"
+        if lane.phase == AkPhase.GELB then
+            phase = "YELLOW"
+        elseif lane.phase == AkPhase.ROT then
+            phase = "RED"
+        elseif lane.phase == AkPhase.ROTGELB then
+            phase = "RED_YELLOW"
+        elseif lane.phase == AkPhase.GRUEN then
+            phase = "GREEN"
+        elseif lane.phase == AkPhase.FG then
+            phase = "PEDESTRIAN"
+        end
+
+        local o = {
+            id = intersectionId .. "-" .. lane.name,
+            intersectionId = intersectionId,
+            name = lane.name,
+            phase = phase,
+            vehicleMultiplier = lane.fahrzeugMultiplikator,
+            eepSaveId = lane.eepSaveId,
+            type = type,
+            countByTrafficLights = lane.verwendeZaehlAmpeln,
+            countByRoads = lane.verwendeZaehlStrassen,
+            waitingVehiclesCount = lane.fahrzeuge,
+            waitingForGreenCyclesCount = lane.warteZeit,
+            directions = lane.richtungen,
         }
-        table.insert(intersectionDirections, richtung)
+        table.insert(intersectionLanes, o)
+
+        for _, ampel in pairs(lane.ampeln) do
+            local trafficLight = {
+                id = ampel.signalId,
+                type = type,
+                signalId = ampel.signalId,
+                modelId = ampel.ampelTyp.name,
+                currentPhase = ampel.phase,
+                laneId = lane.name,
+                intersectionId = intersectionId,
+                lightStructures = {},
+                axisStructures = {},
+            }
+
+            for axisStructure in pairs(ampel.achsenImmos) do
+                local o = {
+                    structureName = axisStructure.immoName,
+                    axis = axisStructure.achse,
+                    positionDefault = axisStructure.grundStellung,
+                    positionRed = axisStructure.stellungRot,
+                    positionGreen = axisStructure.stellungGruen,
+                    positionYellow = axisStructure.stellungGelb,
+                    positionPedestrants = axisStructure.stellungFG,
+                    positionRedYellow = axisStructure.stellungRotGelb,
+                }
+                table.insert(trafficLight.axisStructures, o)
+            end
+
+            local i = 0;
+            for lightStructure in pairs(ampel.lichtImmos) do
+                local o = {
+                    structureRed = lightStructure.rotImmo,
+                    structureGreen = lightStructure.gruenImmo,
+                    structureYellow = lightStructure.gelbImmo or lightStructure.rotImmo,
+                    structureRequest = lightStructure.anforderungImmo,
+                }
+                trafficLight.lightStructures[tostring(i)] = o
+                i = i + 1
+            end
+
+            table.insert(intersectionTrafficLights, trafficLight)
+        end
     end
 
-    table.sort(intersections,
-        function(int1, int2)
-            return int1.name < int2.name
-        end)
-    for i, intersection in pairs(intersections) do
-        intersection.id = i
+    local function padnum(d) local dec, n = string.match(d, "(%.?)0*(.+)")
+        return #dec > 0 and ("%.12f"):format(d) or ("%s%03d%s"):format(dec, #n, n)
     end
+
+    table.sort(intersectionLanes, function(o1, o2)
+        local a = o1.name
+        local b = o2.name
+
+        return tostring(a):gsub("%.?%d+", padnum) .. ("%3d"):format(#b)
+                < tostring(b):gsub("%.?%d+", padnum) .. ("%3d"):format(#a)
+    end)
+
 
     AkStatistik.writeLater("intersections", intersections)
-    AkStatistik.writeLater("intersection_directions", intersectionDirections)
-    AkStatistik.writeLater("intersection_switchings", intersectionSwitchings)
-    -- AkStatistik.writeLater("intersection_traffic_lights", intersectionTrafficLights)
-    AkStatistik.writeLater("signal_types", intersectionTrafficLights)
+    AkStatistik.writeLater("intersection_lanes", intersectionLanes)
+    AkStatistik.writeLater("intersection_switchings", intersectionSwitching)
+    AkStatistik.writeLater("intersection_traffic_lights", intersectionTrafficLights)
 
 
     local trafficLightModels = {}
