@@ -425,10 +425,14 @@ function AkAmpel:aktualisiereAnforderung(richtung)
     local immoDbg = ""
     self.richtungen[richtung] = true
     local anforderung = richtung:anforderungVorhanden()
-    if self.anforderungImmo then
-        immoDbg = immoDbg .. string.format(", Licht in %s: %s", self.anforderungImmo, (anforderung) and "an" or "aus")
-        EEPStructureSetLight(self.anforderungImmo, anforderung)
+
+    for lichtAmpel in pairs(self.lichtImmos) do
+        if lichtAmpel.anforderungImmo then
+            immoDbg = immoDbg .. string.format(", Licht in %s: %s", lichtAmpel.anforderungImmo, (anforderung) and "an" or "aus")
+            EEPStructureSetLight(lichtAmpel.anforderungImmo, anforderung)
+        end
     end
+
     if (self.debug or AkAmpel.debug) and immoDbg ~= "" then
         print(string.format("[AkAmpel    ] Schalte Ampel %04d", self.signalId) .. immoDbg)
     end
