@@ -12,16 +12,28 @@ local MAX_STRUCTURES = 50000
 local data = {}
 
 local function fillTime()
-    data.time = AkEepTime.new(
-        EEPTime,
+    data.time = AkEepTime.new(EEPTime,
         EEPTimeH,
         EEPTimeM,
         EEPTimeS)
 end
 
 local function fillEEPVersion()
-    data.eepVersion = AkEepVersion.new(
-        EEPVer)
+    data.eepVersion = AkEepVersion.new(EEPVer)
+end
+
+local function fillSaveSlots()
+    data.saveSlots = {}
+    for i = 1, 1000 do
+        local hResult, saved = EEPLoadData(i)
+        if hResult then
+            local o = {
+                id = i,
+                data = saved,
+            }
+            table.insert(data.saveSlots, o)
+        end
+    end
 end
 
 local function fillSignals()
@@ -241,6 +253,8 @@ function AkStatistik.statistikAusgabe()
         fillTracks()
         fillTrainYards()
 
+        fillSaveSlots()
+
         for key, value in pairs(writeLater) do
             data[key] = value
         end
@@ -254,7 +268,7 @@ function AkStatistik.statistikAusgabe()
         AkCommunicator.send("db", json.encode(data, { keyorder = sortedKeys }))
         writeLater = {}
         local t2 = os.time()
-        print(os.difftime(t2,t1))
+        print(os.difftime(t2, t1))
     end
 end
 
