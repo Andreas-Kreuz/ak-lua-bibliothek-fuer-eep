@@ -45,6 +45,7 @@ luac.out
 /LUA/ak/ext
 /LUA/comm_*
 *.dds
+ak_out_eep-web-server.json
 
 _site
 Gemfile.lock
