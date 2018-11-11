@@ -130,9 +130,9 @@ local function fillTracksBy(besetztFunktion, trackName, trainList, rollingStockL
     data[trainList] = {}
     data[rollingStockList] = {}
     for trainName, train in pairs(trains) do
-        haveSpeed, speed = EEPGetTrainSpeed(trainName)
-        haveRoute, route = EEPGetTrainRoute(trainName)
-        rollingStockCount = EEPGetRollingstockItemsCount(trainName)
+        local haveSpeed, speed = EEPGetTrainSpeed(trainName)
+        local haveRoute, route = EEPGetTrainRoute(trainName)
+        local rollingStockCount = EEPGetRollingstockItemsCount(trainName)
 
         local o = {
             id = trainName,
@@ -147,21 +147,20 @@ local function fillTracksBy(besetztFunktion, trackName, trainList, rollingStockL
 
         for i = 0, (rollingStockCount - 1) do
             local rollingStockName = EEPGetRollingstockItemName(trainName, i)
-            t, couplingFront = EEPRollingstockGetCouplingFront(rollingStockName)
-            t, couplingRear = EEPRollingstockGetCouplingRear(rollingStockName)
-            if EEPVer < 15 then
-                length = -1
-                propelled = true
-                trackId = -1
-                trackDistance = -1
-                trackDirection = -1
-                trackSystem = -1
-                modelType = -1
-            else
-                t, length = EEPRollingstockGetLength(rollingStockName)
-                t, propelled = EEPRollingstockGetMotor(rollingStockName)
-                t, trackId, trackDistance, trackDirection, trackSystem = EEPRollingstockGetTrack(rollingStockName)
-                t, modelType = EEPRollingstockGetModelType(rollingStockName)
+            local _, couplingFront = EEPRollingstockGetCouplingFront(rollingStockName)
+            local _, couplingRear = EEPRollingstockGetCouplingRear(rollingStockName)
+                local length = -1
+                local propelled = true
+                local trackId = -1
+                local trackDistance = -1
+                local trackDirection = -1
+                local trackSystem = -1
+                local modelType = -1
+            if EEPVer >= 15 then
+                _, length = EEPRollingstockGetLength(rollingStockName)
+                _, propelled = EEPRollingstockGetMotor(rollingStockName)
+                _, trackId, trackDistance, trackDirection, trackSystem = EEPRollingstockGetTrack(rollingStockName)
+                _, modelType = EEPRollingstockGetModelType(rollingStockName)
             end
 
             local o = {
@@ -265,7 +264,7 @@ function AkStatistik.statistikAusgabe()
         end
         table.sort(sortedKeys)
 
-        AkCommunicator.send("db", json.encode(data, { keyorder = sortedKeys }))
+        AkCommunicator.send("eep-web-server", json.encode(data, { keyorder = sortedKeys }))
         writeLater = {}
         local t2 = os.time()
         print(os.difftime(t2, t1))
