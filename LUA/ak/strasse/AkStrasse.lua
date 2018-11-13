@@ -1329,7 +1329,7 @@ function updateStatistics()
     local intersectionSwitching = {}
     local intersectionTrafficLights = {}
     local alleRichtungen = {}
-
+    local richtungsSchaltungen = {}
 
     local i = 0
     for _, kreuzung in ipairs(AkAllKreuzungen) do
@@ -1337,7 +1337,7 @@ function updateStatistics()
         local intersection = {}
         intersection.id = i
         intersection.name = kreuzung.name
-        intersection.currentCurcuit = kreuzung.schaltung and kreuzung.schaltung.name or nil
+        intersection.currentSwitching = kreuzung.aktuelleSchaltung and kreuzung.aktuelleSchaltung.name or nil
         intersection.ready = kreuzung.bereit
         intersection.timeForGreen = kreuzung.gruenZeit
         table.insert(intersections, intersection)
@@ -1350,8 +1350,11 @@ function updateStatistics()
             }
             table.insert(intersectionSwitching, switching)
 
+
             for richtung, type in pairs(schaltung:getAlleRichtungen()) do
                 alleRichtungen[richtung] = intersection.id
+                richtungsSchaltungen[richtung] = richtungsSchaltungen[richtung] or {}
+                table.insert(richtungsSchaltungen[richtung], schaltung.name);
             end
         end
     end
@@ -1379,6 +1382,13 @@ function updateStatistics()
             phase = "PEDESTRIAN"
         end
 
+        local countType = 'CONTACTS'
+        if lane.verwendeZaehlAmpeln then
+            countType = 'SIGNALS'
+        elseif lane.verwendeZaehlStrassen then
+            countType = 'TRACKS'
+        end
+
         local o = {
             id = intersectionId .. "-" .. lane.name,
             intersectionId = intersectionId,
@@ -1387,12 +1397,15 @@ function updateStatistics()
             vehicleMultiplier = lane.fahrzeugMultiplikator,
             eepSaveId = lane.eepSaveId,
             type = type,
-            countByTrafficLights = lane.verwendeZaehlAmpeln,
-            countByRoads = lane.verwendeZaehlStrassen,
-            waitingVehiclesCount = lane.fahrzeuge,
+            countType = countType,
+            waitingTrains = {},
             waitingForGreenCyclesCount = lane.warteZeit,
             directions = lane.richtungen,
+            switchings = richtungsSchaltungen[lane] or {}
         }
+        for i=1,lane.fahrzeuge or 1,1 do
+            o.waitingTrains[i] = '?'
+        end
         table.insert(intersectionLanes, o)
 
         for _, ampel in pairs(lane.ampeln) do
