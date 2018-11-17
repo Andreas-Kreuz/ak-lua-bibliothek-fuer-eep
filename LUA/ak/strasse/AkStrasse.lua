@@ -9,7 +9,6 @@ require("ak.text.AkAusgabe")
 
 print("Lade AkCommunicator ...")
 require("ak.io.AkCommunicator")
-json = require("ak.io.dkjson")
 
 --region AkPhase + AkSchaltung
 local AkPhase = {}
