@@ -7,8 +7,8 @@ require("ak.speicher.AkSpeicher")
 print("Lade AkAusgabe ...")
 require("ak.text.AkAusgabe")
 
-print("Lade AkWebServerIo ...")
-require("ak.io.AkWebServerIo")
+print("Lade AkStatistik ...")
+require("ak.io.AkStatistik")
 
 --region AkPhase + AkSchaltung
 local AkPhase = {}
