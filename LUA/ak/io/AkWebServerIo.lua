@@ -1,6 +1,6 @@
-AkCommunicator = {}
+AkWebServerIo = {}
 
-local ausgabeVerzeichnis = "."
+local ausgabeVerzeichnis = "../LUA/ak/io/exchange"
 local writing = false
 
 local function fileExists(name)
@@ -22,9 +22,9 @@ end
 -- Sendet Inhalte als Ausgabe "type"
 -- @param type - Inhaltstyp
 -- @param inhalt - Dateiinhalt
-function AkCommunicator.send(type, inhalt, verzeichnis)
+function AkWebServerIo.send(type, inhalt, verzeichnis)
     local dir = verzeichnis and verzeichnis or ausgabeVerzeichnis
-    if fileExists(dir .. "//ak_out_eep-web-server.on-sync-only")
+    if fileExists(dir .. "/ak_out_eep-web-server.on-sync-only")
             and fileExists(dir .. "/ak_out_eep-web-server.lua-is-finished-writing-data") then
         print("SKIPPING - server not ready")
         return
@@ -47,7 +47,7 @@ end
 ---
 -- Liest Inhalte von der Eingabe "type"
 -- @param type
-function AkCommunicator.receive(type, verzeichnis)
+function AkWebServerIo.receive(type, verzeichnis)
     local dir = verzeichnis and verzeichnis or ausgabeVerzeichnis
     local dateiname = dir .. "/" .. "ak_in_" .. type .. ".json"
     -- local file = io.open(dateiname, "r")
@@ -59,7 +59,7 @@ function AkCommunicator.receive(type, verzeichnis)
     return inhalt;
 end
 
-function AkCommunicator.setOutputDirectory(verzeichnis)
+function AkWebServerIo.setOutputDirectory(verzeichnis)
     assert(verzeichnis, "Verzeichnis angeben!")
     --ret = os.execute("dir " .. verzeichnis)
     --assert(ret, verzeichnis .. " existiert nicht")

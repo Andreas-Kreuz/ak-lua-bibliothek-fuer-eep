@@ -1,4 +1,4 @@
-require "ak.io.AkCommunicator"
+require "ak.io.AkWebServerIo"
 os = require "os"
 json = require("ak.io.dkjson")
 
@@ -265,7 +265,7 @@ function AkStatistik.statistikAusgabe()
         end
         table.sort(sortedKeys)
 
-        AkCommunicator.send("eep-web-server", json.encode(data, {
+        AkWebServerIo.send("eep-web-server", json.encode(data, {
             keyorder = sortedKeys,
         }))
         writeLater = {}
