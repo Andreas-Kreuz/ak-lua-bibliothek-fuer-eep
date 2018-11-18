@@ -1464,9 +1464,9 @@ function updateStatistics()
 
 
     AkStatistik.writeLater("intersections", intersections)
-    AkStatistik.writeLater("intersection_lanes", intersectionLanes)
-    AkStatistik.writeLater("intersection_switchings", intersectionSwitching)
-    AkStatistik.writeLater("intersection_traffic_lights", intersectionTrafficLights)
+    AkStatistik.writeLater("intersection-lanes", intersectionLanes)
+    AkStatistik.writeLater("intersection-switchings", intersectionSwitching)
+    AkStatistik.writeLater("intersection-traffic-lights", intersectionTrafficLights)
 
 
     local trafficLightModels = {}
@@ -1487,7 +1487,7 @@ function updateStatistics()
         }
         table.insert(trafficLightModels, o)
     end
-    AkStatistik.writeLater("signal_type_definitions", trafficLightModels)
+    AkStatistik.writeLater("signal-type-definitions", trafficLightModels)
 end
 
 --endregion

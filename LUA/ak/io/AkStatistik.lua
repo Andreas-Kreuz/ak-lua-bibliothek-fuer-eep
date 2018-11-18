@@ -1,5 +1,6 @@
 require "ak.io.AkCommunicator"
-require "os"
+os = require "os"
+json = require("ak.io.dkjson")
 
 local AkEepTime = require 'ak.model.ak_eep_time'
 local AkEepVersion = require 'ak.model.ak_eep_version'
@@ -12,18 +13,18 @@ local MAX_STRUCTURES = 50000
 local data = {}
 
 local function fillTime()
-    data.time = AkEepTime.new(EEPTime,
+    data["time"] = AkEepTime.new(EEPTime,
         EEPTimeH,
         EEPTimeM,
         EEPTimeS)
 end
 
 local function fillEEPVersion()
-    data.eepVersion = AkEepVersion.new(EEPVer)
+    data["eep-version"] = AkEepVersion.new(EEPVer)
 end
 
 local function fillSaveSlots()
-    data.saveSlots = {}
+    data["save-slots"] = {}
     for i = 1, 1000 do
         local hResult, saved = EEPLoadData(i)
         if hResult then
@@ -31,14 +32,14 @@ local function fillSaveSlots()
                 id = i,
                 data = saved,
             }
-            table.insert(data.saveSlots, o)
+            table.insert(data["save-slots"], o)
         end
     end
 end
 
 local function fillSignals()
-    data.signals = {}
-    data.waitingOnSignals = {}
+    data["signals"] = {}
+    data["waiting-on-signals"] = {}
     for i = 1, MAX_SIGNALS do
         local val = EEPGetSignal(i)
         if val > 0 then
@@ -47,7 +48,7 @@ local function fillSignals()
             o.id = i
             o.position = val
             o.waitingVehiclesCount = waitingVehiclesCount
-            table.insert(data.signals, o)
+            table.insert(data["signals"], o)
 
             if (waitingVehiclesCount > 0) then
                 for position = 1, waitingVehiclesCount do
@@ -59,7 +60,7 @@ local function fillSignals()
                         vehicleName = vehicleName,
                         waitingCount = waitingVehiclesCount
                     }
-                    table.insert(data.waitingOnSignals, waiting)
+                    table.insert(data["waiting-on-signals"], waiting)
                 end
             end
         end
@@ -67,14 +68,14 @@ local function fillSignals()
 end
 
 local function fillSwitches()
-    data.switches = {}
+    data["switches"] = {}
     for i = 1, MAX_SIGNALS do
         local val = EEPGetSignal(i)
         if val > 0 then
             local o = {}
             o.id = i
             o.position = val
-            table.insert(data.switches, o)
+            table.insert(data["switches"], o)
         end
     end
 end
@@ -93,11 +94,11 @@ local function registerTracksBy(registerFunktion, trackName)
 end
 
 local function registerTracks()
-    registerTracksBy(EEPRegisterAuxiliaryTrack, "auxiliaryTracks")
-    registerTracksBy(EEPRegisterControlTrack, "controlTracks")
-    registerTracksBy(EEPRegisterRoadTrack, "roadTracks")
-    registerTracksBy(EEPRegisterRailTrack, "railTracks")
-    registerTracksBy(EEPRegisterTramTrack, "tramTracks")
+    registerTracksBy(EEPRegisterAuxiliaryTrack, "auxiliary-tracks")
+    registerTracksBy(EEPRegisterControlTrack, "control-tracks")
+    registerTracksBy(EEPRegisterRoadTrack, "road-tracks")
+    registerTracksBy(EEPRegisterRailTrack, "rail-tracks")
+    registerTracksBy(EEPRegisterTramTrack, "tram-tracks")
 end
 
 
@@ -183,15 +184,15 @@ local function fillTracksBy(besetztFunktion, trackName, trainList, rollingStockL
 end
 
 local function fillTracks()
-    fillTracksBy(EEPIsAuxiliaryTrackReserved, "auxiliaryTracks", "auxiliaryTrain", "auxiliaryRollingStock")
-    fillTracksBy(EEPIsControlTrackReserved, "controlTracks", "controlTrain", "controlRollingStock")
-    fillTracksBy(EEPIsRoadTrackReserved, "roadTracks", "roadTrain", "roadRollingStock")
-    fillTracksBy(EEPIsRailTrackReserved, "railTracks", "railTrain", "railRollingStock")
-    fillTracksBy(EEPIsTramTrackReserved, "tramTracks", "tramTrain", "tramRollingStock")
+    fillTracksBy(EEPIsAuxiliaryTrackReserved, "auxiliary-tracks", "auxiliary-trains", "auxiliary-rolling-stock")
+    fillTracksBy(EEPIsControlTrackReserved, "control-tracks", "control-trains", "control-rolling-stock")
+    fillTracksBy(EEPIsRoadTrackReserved, "road-tracks", "road-trains", "road-rolling-stock")
+    fillTracksBy(EEPIsRailTrackReserved, "rail-tracks", "rail-trains", "rail-rolling-stock")
+    fillTracksBy(EEPIsTramTrackReserved, "tram-tracks", "tram-trains", "tram-rolling-stock")
 end
 
 local function fillStructures()
-    data.structures = {}
+    data["structures"] = {}
     for i = 0, MAX_STRUCTURES do
         local name = "#" .. tostring(i)
         local t = true
@@ -217,7 +218,7 @@ local function fillStructures()
                 pos_z = pos_z,
                 modelType = modelType,
             }
-            table.insert(data.structures, o)
+            table.insert(data["structures"], o)
         end
     end
 end
@@ -264,7 +265,9 @@ function AkStatistik.statistikAusgabe()
         end
         table.sort(sortedKeys)
 
-        AkCommunicator.send("eep-web-server", json.encode(data, { keyorder = sortedKeys }))
+        AkCommunicator.send("eep-web-server", json.encode(data, {
+            keyorder = sortedKeys,
+        }))
         writeLater = {}
         local t2 = os.time()
         print(os.difftime(t2, t1))
