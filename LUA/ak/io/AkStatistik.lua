@@ -2,10 +2,6 @@ require "ak.io.AkWebServerIo"
 os = require "os"
 json = require("ak.io.dkjson")
 
-local AkEepTime = require 'ak.model.ak_eep_time'
-local AkEepVersion = require 'ak.model.ak_eep_version'
-
-
 AkStatistik = {}
 local MAX_SIGNALS = 1000
 local MAX_TRACKS = 50000
@@ -13,14 +9,18 @@ local MAX_STRUCTURES = 50000
 local data = {}
 
 local function fillTime()
-    data["time"] = AkEepTime.new(EEPTime,
-        EEPTimeH,
-        EEPTimeM,
-        EEPTimeS)
+    data["time"] = {
+        timeComplete = EEPTime;
+        timeH = EEPTimeH;
+        timeM = EEPTimeM;
+        timeS = EEPTimeS;
+    }
 end
 
 local function fillEEPVersion()
-    data["eep-version"] = AkEepVersion.new(EEPVer)
+    data["eep-version"] = {
+        versionNumber = EEPVer
+    }
 end
 
 local function fillSaveSlots()
