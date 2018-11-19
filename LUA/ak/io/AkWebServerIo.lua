@@ -1,6 +1,23 @@
 AkWebServerIo = {}
 
-local ausgabeVerzeichnis = "../LUA/ak/io/exchange"
+local function dirExists(dir)
+    local file = io.open(dir .. "/" .. "tmp.txt", "w")
+    io.output(file)
+    io.write(EEPVer)
+    io.flush()
+    io.close(file)
+    return true
+end
+
+local function existingDirOf(...)
+    for _, dir in pairs(...) do
+        if pcall(dirExists, dir) then return dir end
+    end
+    return nil;
+end
+
+local ausgabeVerzeichnis = existingDirOf(--{"."}
+    { "../LUA/ak/io/exchange", "./LUA/ak/io/exchange" }) or "."
 local writing = false
 
 local function fileExists(name)
@@ -30,7 +47,7 @@ function AkWebServerIo.send(type, inhalt, verzeichnis)
         return
     end
 
-    local dateiname = dir .. "\\" .. "ak_out_" .. type .. ".json"
+    local dateiname = dir .. "/" .. "ak_out_" .. type .. ".json"
     if not writing then
         writing = true
         if not pcall(writeFile, dateiname, inhalt) then
@@ -39,7 +56,7 @@ function AkWebServerIo.send(type, inhalt, verzeichnis)
         writing = false
     end
 
-    if fileExists(dir .. "//ak_out_eep-web-server.on-sync-only") then
+    if fileExists(dir .. "/ak_out_eep-web-server.on-sync-only") then
         writeFile(dir .. "/ak_out_eep-web-server.lua-is-finished-writing-data", "")
     end
 end
