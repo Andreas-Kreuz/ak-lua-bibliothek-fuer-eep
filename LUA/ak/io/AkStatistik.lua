@@ -43,7 +43,10 @@ local function fillSignals()
     for i = 1, MAX_SIGNALS do
         local val = EEPGetSignal(i)
         if val > 0 then
-            local waitingVehiclesCount = EEPGetSignalTrainsCount(i)
+            local waitingVehiclesCount = 0;
+            if EEPVer >= 13 then
+                waitingVehiclesCount = EEPGetSignalTrainsCount(i)
+            end
             local o = {}
             o.id = i
             o.position = val
@@ -133,7 +136,10 @@ local function fillTracksBy(besetztFunktion, trackName, trainList, rollingStockL
     for trainName, train in pairs(trains) do
         local haveSpeed, speed = EEPGetTrainSpeed(trainName)
         local haveRoute, route = EEPGetTrainRoute(trainName)
-        local rollingStockCount = EEPGetRollingstockItemsCount(trainName)
+        local rollingStockCount = 1
+        if EEPVer >= 13.2 then
+            rollingStockCount = EEPGetRollingstockItemsCount(trainName)
+        end
 
         local o = {
             id = trainName,
@@ -147,16 +153,24 @@ local function fillTracksBy(besetztFunktion, trackName, trainList, rollingStockL
         data[trainList][tostring(o.id)] = o
 
         for i = 0, (rollingStockCount - 1) do
-            local rollingStockName = EEPGetRollingstockItemName(trainName, i)
-            local _, couplingFront = EEPRollingstockGetCouplingFront(rollingStockName)
-            local _, couplingRear = EEPRollingstockGetCouplingRear(rollingStockName)
-                local length = -1
-                local propelled = true
-                local trackId = -1
-                local trackDistance = -1
-                local trackDirection = -1
-                local trackSystem = -1
-                local modelType = -1
+            local rollingStockName = "?"
+            local couplingFront = true
+            local couplingRear = true
+            local _
+            if EEPVer >= 13.2 then
+                rollingStockName = EEPGetRollingstockItemName(trainName, i)
+                _, couplingFront = EEPRollingstockGetCouplingFront(rollingStockName)
+                _, couplingRear = EEPRollingstockGetCouplingRear(rollingStockName)
+            end
+
+            local length = -1
+            local propelled = true
+            local trackId = -1
+            local trackDistance = -1
+            local trackDirection = -1
+            local trackSystem = -1
+            local modelType = -1
+
             if EEPVer >= 15 then
                 _, length = EEPRollingstockGetLength(rollingStockName)
                 _, propelled = EEPRollingstockGetMotor(rollingStockName)
