@@ -1,3 +1,5 @@
+print("Lade AkWebServerIo ...")
+
 AkWebServerIo = {}
 
 local function dirExists(dir)

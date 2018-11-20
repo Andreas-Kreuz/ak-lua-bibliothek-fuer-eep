@@ -1,13 +1,8 @@
-print("Lade AkPlaner ...")
+print("Lade AkStrasse ...")
+
 require("ak.planer.AkPlaner")
-
-print("Lade AkSpeicherHilfe ...")
 require("ak.speicher.AkSpeicher")
-
-print("Lade AkAusgabe ...")
 require("ak.text.AkAusgabe")
-
-print("Lade AkStatistik ...")
 require("ak.io.AkStatistik")
 
 --region AkPhase + AkSchaltung

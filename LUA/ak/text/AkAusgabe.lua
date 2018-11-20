@@ -1,3 +1,5 @@
+print("Lade AkAusgabe ...")
+
 AkAusgabe = {}
 AkAusgabe.__index = AkAusgabe
 AkAusgabe.outputPath = ""

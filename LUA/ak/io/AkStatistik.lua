@@ -1,3 +1,5 @@
+print("Lade AkStatistik ...")
+
 require "ak.io.AkWebServerIo"
 os = require "os"
 json = require("ak.io.dkjson")
@@ -254,16 +256,19 @@ end
 
 local i = -1
 local writeLater = {}
-function AkStatistik.statistikAusgabe()
+function AkStatistik.statistikAusgabe(modulus)
     if i == -1 then
         initialize();
     end
 
     -- Increase
     i = i + 1
+    if not modulus or type(modulus) ~= "number" then
+        modulus = 5
+    end
 
     -- Do nothing
-    if i % 5 == 0 then
+    if i % modulus == 0 then
         local t1 = os.time()
         fillTime()
         fillEEPVersion()
@@ -291,7 +296,10 @@ function AkStatistik.statistikAusgabe()
         }))
         writeLater = {}
         local t2 = os.time()
-        print(os.difftime(t2, t1))
+        local timeDiff = os.difftime(t2, t1)
+        if timeDiff > 1 then
+            print("WARNUNG: AkStatistik.statistikAusgabe schreiben dauerte " .. timeDiff .. " Sekunden.")
+        end
     end
 end
 
