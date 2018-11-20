@@ -60,13 +60,13 @@ date: 2018-11-19
 
     ![Kommandozeile starten](../assets/tutorial/eep-web-installation/07-kommandozeile-starten.png)
 
-    Ziel: `C:\Spiele\jdk-11.0.1\bin\java.exe -jar C:\Spiele\EEP15\LUA\ak\eep-web.jar C:\Spiele\EEP15\LUA\ak\io\exchange`
+    Ziel: `C:\Spiele\jdk-11.0.1\bin\java.exe -jar C:\Spiele\EEP15\LUA\ak\ak-eep-web.jar C:\Spiele\EEP15\LUA\ak\io\exchange`
 
     Diese Zeile besteht aus 4 Teilen:
 
     1. Das Java-Programm: `C:\Spiele\jdk-11.0.1\bin\java.exe`
     2. Die Option `-jar`
-    3. Der Pfad zu EEP-Web: `C:\Spiele\EEP15\LUA\ak\eep-web.jar`
+    3. Der Pfad zu EEP-Web: `C:\Spiele\EEP15\LUA\ak\ak-eep-web.jar`
     4. Der Pfad zu zum Austausch mit EEP: `C:\Spiele\EEP15\LUA\ak\io\exchange`
 
     :bulb: Den Pfad musst Du entsprechend Deiner EEP-Version anpassen.
