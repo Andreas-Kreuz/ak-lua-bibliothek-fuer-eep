@@ -1,8 +1,8 @@
 describe("EepFunktionen.lua", function()
   require("ak.eep.AkEepFunktionen")
 
-  it("EEPVer steht auf \"Testsimulator\"", function()
-    assert.are.equals("Testsimulator", EEPVer)
+    it("EEPVer steht auf \"15\"", function()
+        assert.are.equals("15", EEPVer)
   end)
 
   it("print() Funktion ", function()
