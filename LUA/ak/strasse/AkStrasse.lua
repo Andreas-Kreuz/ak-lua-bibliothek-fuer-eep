@@ -1326,11 +1326,11 @@ function updateStatistics()
     local alleRichtungen = {}
     local richtungsSchaltungen = {}
 
-    local intersectionId = 0
+    local intersectionIdCounter = 0
     for _, kreuzung in ipairs(AkAllKreuzungen) do
-        intersectionId = intersectionId + 1
+        intersectionIdCounter = intersectionIdCounter + 1
         local intersection = {
-            id = intersectionId,
+            id = intersectionIdCounter,
             name = kreuzung.name,
             currentSwitching = kreuzung.aktuelleSchaltung and kreuzung.aktuelleSchaltung.name or nil,
             ready = kreuzung.bereit,

@@ -63,20 +63,20 @@ function AkWebServerIo.send(type, inhalt, verzeichnis)
     end
 end
 
----
--- Liest Inhalte von der Eingabe "type"
--- @param type
-function AkWebServerIo.receive(type, verzeichnis)
-    -- local dir = verzeichnis and verzeichnis or ausgabeVerzeichnis
-    -- local dateiname = dir .. "/" .. "ak_in_" .. type .. ".json"
-    -- local file = io.open(dateiname, "r")
-    -- assert(file, "Kann Datei nicht öffnen " .. dateiname)
-    -- inhalt = io.read(file)
-    -- io.close(file)
-    local inhalt = "Hello World!"
-
-    return inhalt;
-end
+-----
+---- Liest Inhalte von der Eingabe "type"
+---- @param type
+-- function AkWebServerIo.receive(type, verzeichnis)
+-- -- local dir = verzeichnis and verzeichnis or ausgabeVerzeichnis
+-- -- local dateiname = dir .. "/" .. "ak_in_" .. type .. ".json"
+-- -- local file = io.open(dateiname, "r")
+-- -- assert(file, "Kann Datei nicht öffnen " .. dateiname)
+-- -- inhalt = io.read(file)
+-- -- io.close(file)
+-- local inhalt = "Hello World!"
+--
+-- return inhalt;
+-- end
 
 function AkWebServerIo.setOutputDirectory(verzeichnis)
     assert(verzeichnis, "Verzeichnis angeben!")

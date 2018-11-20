@@ -110,8 +110,8 @@ end
 
 local function fillTracksBy(besetztFunktion, trackName, trainList, rollingStockList)
     local trains = {}
-    local belegte = {}
-    belegte.tracks = {}
+    --local belegte = {}
+    --belegte.tracks = {}
 
     for _, track in pairs(data[trackName]) do
         local trackId = track.id
@@ -126,11 +126,11 @@ local function fillTracksBy(besetztFunktion, trackName, trainList, rollingStockL
         track.occupied = occupied
         track.occupiedBy = trainName
         if occupied then
-            local key = trackName .. "_track_" .. trackId
-            belegte.tracks[key] = {}
-            belegte.tracks[key].trackId = trackId
-            belegte.tracks[key].occupied = occupied
-            belegte.tracks[key].vehicle = trainName or "?"
+            --local key = trackName .. "_track_" .. trackId
+            --belegte.tracks[key] = {}
+            --belegte.tracks[key].trackId = trackId
+            --belegte.tracks[key].occupied = occupied
+            --belegte.tracks[key].vehicle = trainName or "?"
 
             if trainName then
                 trains[trainName] = trains[trainName] or {}
