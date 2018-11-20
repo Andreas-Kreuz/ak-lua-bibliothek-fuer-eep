@@ -1329,12 +1329,13 @@ function updateStatistics()
     local intersectionId = 0
     for _, kreuzung in ipairs(AkAllKreuzungen) do
         intersectionId = intersectionId + 1
-        local intersection = {}
-        intersection.id = intersectionId
-        intersection.name = kreuzung.name
-        intersection.currentSwitching = kreuzung.aktuelleSchaltung and kreuzung.aktuelleSchaltung.name or nil
-        intersection.ready = kreuzung.bereit
-        intersection.timeForGreen = kreuzung.gruenZeit
+        local intersection = {
+            id = intersectionId,
+            name = kreuzung.name,
+            currentSwitching = kreuzung.aktuelleSchaltung and kreuzung.aktuelleSchaltung.name or nil,
+            ready = kreuzung.bereit,
+            timeForGreen = kreuzung.gruenZeit,
+        }
         table.insert(intersections, intersection)
 
         for schaltung in pairs(kreuzung:getSchaltungen()) do
@@ -1346,7 +1347,7 @@ function updateStatistics()
             table.insert(intersectionSwitching, switching)
 
 
-            for richtung, type in pairs(schaltung:getAlleRichtungen()) do
+            for richtung in pairs(schaltung:getAlleRichtungen()) do
                 alleRichtungen[richtung] = intersection.id
                 richtungsSchaltungen[richtung] = richtungsSchaltungen[richtung] or {}
                 table.insert(richtungsSchaltungen[richtung], schaltung.name);
@@ -1398,7 +1399,7 @@ function updateStatistics()
             directions = lane.richtungen,
             switchings = richtungsSchaltungen[lane] or {}
         }
-        for i=1,lane.fahrzeuge or 1,1 do
+        for i = 1, lane.fahrzeuge or 1, 1 do
             o.waitingTrains[i] = '?'
         end
         table.insert(intersectionLanes, o)

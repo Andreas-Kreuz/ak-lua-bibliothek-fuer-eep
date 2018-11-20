@@ -115,11 +115,13 @@ local function fillTracksBy(besetztFunktion, trackName, trainList, rollingStockL
 
     for _, track in pairs(data[trackName]) do
         local trackId = track.id
-        local exists, occupied, trainName;
+        local occupied, trainName;
         if EEPVer >= 13.2 then
-            exists, occupied, trainName = besetztFunktion(trackId, true)
+            local _
+            _, occupied, trainName = besetztFunktion(trackId, true)
         else
-            exists, occupied, trainName = besetztFunktion(trackId)
+            local _
+            _, occupied, trainName = besetztFunktion(trackId)
         end
         track.occupied = occupied
         track.occupiedBy = trainName
@@ -221,6 +223,7 @@ local function fillStructures()
         local pos_x, pos_y, pos_z = 0, 0, 0
         local t, modelType = false, 0
         if (EEPVer >= 15) then
+            local _
             _, pos_x, pos_y, pos_z = EEPStructureGetPosition(name)
             t, modelType = EEPStructureGetModelType(name)
         end
