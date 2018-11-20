@@ -113,7 +113,12 @@ local function fillTracksBy(besetztFunktion, trackName, trainList, rollingStockL
 
     for _, track in pairs(data[trackName]) do
         local trackId = track.id
-        local exists, occupied, trainName = besetztFunktion(trackId, true)
+        local exists, occupied, trainName;
+        if EEPVer >= 13.2 then
+            exists, occupied, trainName = besetztFunktion(trackId, true)
+        else
+            exists, occupied, trainName = besetztFunktion(trackId)
+        end
         track.occupied = occupied
         track.occupiedBy = trainName
         if occupied then
@@ -121,13 +126,15 @@ local function fillTracksBy(besetztFunktion, trackName, trainList, rollingStockL
             belegte.tracks[key] = {}
             belegte.tracks[key].trackId = trackId
             belegte.tracks[key].occupied = occupied
-            belegte.tracks[key].vehicle = trainName
+            belegte.tracks[key].vehicle = trainName or "?"
 
-            trains[trainName] = trains[trainName] or {}
-            trains[trainName].trackType = trackName
-            trains[trainName].onTrack = trackId
-            trains[trainName].occupiedTacks = trains[trainName].occupiedTacks or {}
-            trains[trainName].occupiedTacks[tostring(trackId)] = trackId
+            if trainName then
+                trains[trainName] = trains[trainName] or {}
+                trains[trainName].trackType = trackName
+                trains[trainName].onTrack = trackId
+                trains[trainName].occupiedTacks = trains[trainName].occupiedTacks or {}
+                trains[trainName].occupiedTacks[tostring(trackId)] = trackId
+            end
         end
     end
 
