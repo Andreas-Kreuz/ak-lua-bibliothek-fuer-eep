@@ -47,6 +47,7 @@ luac.out
 *.dds
 /LUA/ak/io/exchange/ak*
 /LUA/ak/io/exchange/tmp*
+LUA/**/*.jar
 
 _site
 Gemfile.lock
