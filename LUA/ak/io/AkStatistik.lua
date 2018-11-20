@@ -150,7 +150,7 @@ local function fillTracksBy(besetztFunktion, trackName, trainList, rollingStockL
             rollingStockCount = EEPGetRollingstockItemsCount(trainName)
         end
 
-        local o = {
+        local currentTrain = {
             id = trainName,
             occupiedTracks = train.occupiedTracks,
             trackType = train.trackType,
@@ -159,7 +159,7 @@ local function fillTracksBy(besetztFunktion, trackName, trainList, rollingStockL
             route = haveRoute and route or '',
             rollingStockCount = rollingStockCount,
         }
-        data[trainList][tostring(o.id)] = o
+        data[trainList][tostring(currentTrain.id)] = currentTrain
 
         for i = 0, (rollingStockCount - 1) do
             local rollingStockName = "?"
@@ -187,7 +187,7 @@ local function fillTracksBy(besetztFunktion, trackName, trainList, rollingStockL
                 _, modelType = EEPRollingstockGetModelType(rollingStockName)
             end
 
-            local o = {
+            local currentRollingStock = {
                 name = rollingStockName,
                 trainName = trainName,
                 positionInTrain = i,
@@ -201,7 +201,7 @@ local function fillTracksBy(besetztFunktion, trackName, trainList, rollingStockL
                 trackSystem = trackSystem,
                 modelType = modelType,
             }
-            data[rollingStockList][o.name] = o
+            data[rollingStockList][currentRollingStock.name] = currentRollingStock
         end
     end
 end
@@ -218,18 +218,17 @@ local function fillStructures()
     data["structures"] = {}
     for i = 0, MAX_STRUCTURES do
         local name = "#" .. tostring(i)
-        local t = true
-        local t, pos_x, pos_y, pos_z = false, 0, 0, 0
+        local pos_x, pos_y, pos_z = 0, 0, 0
         local t, modelType = false, 0
         if (EEPVer >= 15) then
-            t, pos_x, pos_y, pos_z = EEPStructureGetPosition(name)
+            _, pos_x, pos_y, pos_z = EEPStructureGetPosition(name)
             t, modelType = EEPStructureGetModelType(name)
         end
 
         if (t) then
-            local t, light = EEPStructureGetLight(name)
-            local t, smoke = EEPStructureGetSmoke(name)
-            local t, fire = EEPStructureGetFire(name)
+            local _, light = EEPStructureGetLight(name)
+            local _, smoke = EEPStructureGetSmoke(name)
+            local _, fire = EEPStructureGetFire(name)
 
             local o = {
                 name = name,

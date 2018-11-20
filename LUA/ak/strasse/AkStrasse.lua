@@ -422,7 +422,8 @@ function AkAmpel:aktualisiereAnforderung(richtung)
 
     for lichtAmpel in pairs(self.lichtImmos) do
         if lichtAmpel.anforderungImmo then
-            immoDbg = immoDbg .. string.format(", Licht in %s: %s", lichtAmpel.anforderungImmo, (anforderung) and "an" or "aus")
+            immoDbg = immoDbg ..
+                    string.format(", Licht in %s: %s", lichtAmpel.anforderungImmo, (anforderung) and "an" or "aus")
             EEPStructureSetLight(lichtAmpel.anforderungImmo, anforderung)
         end
     end
@@ -1325,11 +1326,11 @@ function updateStatistics()
     local alleRichtungen = {}
     local richtungsSchaltungen = {}
 
-    local i = 0
+    local intersectionId = 0
     for _, kreuzung in ipairs(AkAllKreuzungen) do
-        i = i + 1
+        intersectionId = intersectionId + 1
         local intersection = {}
-        intersection.id = i
+        intersection.id = intersectionId
         intersection.name = kreuzung.name
         intersection.currentSwitching = kreuzung.aktuelleSchaltung and kreuzung.aktuelleSchaltung.name or nil
         intersection.ready = kreuzung.bereit
@@ -1416,7 +1417,7 @@ function updateStatistics()
             }
 
             for axisStructure in pairs(ampel.achsenImmos) do
-                local o = {
+                local as = {
                     structureName = axisStructure.immoName,
                     axis = axisStructure.achse,
                     positionDefault = axisStructure.grundStellung,
@@ -1426,19 +1427,19 @@ function updateStatistics()
                     positionPedestrants = axisStructure.stellungFG,
                     positionRedYellow = axisStructure.stellungRotGelb,
                 }
-                table.insert(trafficLight.axisStructures, o)
+                table.insert(trafficLight.axisStructures, as)
             end
 
-            local i = 0;
+            local lsId = 0;
             for lightStructure in pairs(ampel.lichtImmos) do
-                local o = {
+                local ls = {
                     structureRed = lightStructure.rotImmo,
                     structureGreen = lightStructure.gruenImmo,
                     structureYellow = lightStructure.gelbImmo or lightStructure.rotImmo,
                     structureRequest = lightStructure.anforderungImmo,
                 }
-                trafficLight.lightStructures[tostring(i)] = o
-                i = i + 1
+                trafficLight.lightStructures[tostring(lsId)] = ls
+                lsId = lsId + 1
             end
 
             table.insert(intersectionTrafficLights, trafficLight)

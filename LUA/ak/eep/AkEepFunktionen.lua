@@ -368,7 +368,7 @@ function EEPRegisterControlTrack(controlTrackId) end
 -- @param controlTrackId Id des Gleises
 -- @return Erster Wert: true, wenn Gleis existiert und registriert,
 -- zweiter Wert: true, wenn besetzt
-function EEPRegisterControlTrack(controlTrackId) end
+function EEPIsControlTrackReserved(controlTrackId, returnTrainName) end
 
 --- Waehlen einer Kamera
 -- @param camType 0: statisch, 1: dynamisch, 2: mobile Kamera
@@ -553,6 +553,8 @@ end
 -- Rueckgabewert 4 ist die Z-Position des Objekts.
 function EEPStructureGetPosition(name)
     local underscoreIndex = string.find(name, '_')
+    local i
+
     if underscoreIndex then
         i = tonumber(string.sub(name, 2, underscoreIndex - 1))
     else
@@ -579,6 +581,8 @@ end
 -- 23 = Landschaftselemente/Fauna
 function EEPStructureGetModelType(name)
     local underscoreIndex = string.find(name, '_')
+    local i
+
     if underscoreIndex then
         i = tonumber(string.sub(name, 2, underscoreIndex - 1))
     else
@@ -586,7 +590,7 @@ function EEPStructureGetModelType(name)
     end
 
     if (i < 5) then
-        return true, 0,0,0
+        return true, 0, 0, 0
     else
         return false
     end
