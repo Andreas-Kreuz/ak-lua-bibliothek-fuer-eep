@@ -1,10 +1,16 @@
 return {
-    default = {
-        coverage = true,
-        loaders = { 'lua' },
-        output = 'utfTerminal',
-        pattern = '.spec.lua',
-        ROOT = { 'LUA' },
-        verbose = true
-    }
+  _all = {
+    directory="LUA"
+  },
+  default = {
+    verbose = true,
+    loaders = { 'lua' },
+    output = 'utfTerminal',
+  },
+  apiUnit = {
+    coverage=true,
+    tags = "api",
+    ROOT = {"LUA"},
+    verbose = true
+  }
 }
