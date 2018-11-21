@@ -5,6 +5,7 @@ os = require "os"
 json = require("ak.io.dkjson")
 
 AkStatistik = {}
+AkStatistik.programVersion = "0.1.0"
 local MAX_SIGNALS = 1000
 local MAX_TRACKS = 50000
 local MAX_STRUCTURES = 50000
@@ -21,7 +22,11 @@ end
 
 local function fillEEPVersion()
     data["eep-version"] = {
-        versionNumber = EEPVer
+        eepVersion = EEPVer,
+        luaVersion = AkStatistik.programVersion,
+        singleVersion = {
+            AkStatistik = AkStatistik.programVersion,
+        },
     }
 end
 
