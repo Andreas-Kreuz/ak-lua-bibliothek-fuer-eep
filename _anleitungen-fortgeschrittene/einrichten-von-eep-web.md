@@ -76,7 +76,8 @@ date: 2018-11-19
 
     ![Firewall](../assets/tutorial/eep-web-installation/09-windows-firewall.png)
 
-    :star: Du hast es bis hierhin geschafft lege im nächsten Schritt gleich eine Verknüpfung an.
+    :star: Du hast es bis hierhin geschafft.
+    Lege im nächsten Schritt eine Verknüpfung an, damit Du nicht die Kommandzeile verwenden musst.
 
 2. Erstelle eine Verknüpfung um EEP-Web zu starten
 
@@ -88,7 +89,8 @@ date: 2018-11-19
 
       ![Verknüpfung Eigenschaften](../assets/tutorial/eep-web-installation/05-verknuepfung-eigenschaften.png)
 
-    * Schreibe die Kommandozeile von oben in das Feld "Ziel".
+    * Schreibe die Kommandozeile von oben in das Feld "Ziel", also die komplette Zeile:
+      `C:\Spiele\jdk-11.0.1\bin\java.exe -jar C:\Spiele\EEP15\LUA\ak\ak-eep-web.jar C:\Spiele\EEP15\LUA\ak\io\exchange`
 
       ![Verknüpfung bearbeiten](../assets/tutorial/eep-web-installation/06-verknuepfung-bearbeiten.png)
 
@@ -96,3 +98,6 @@ date: 2018-11-19
 
 
 :four_leaf_clover: Du hast es bis hierhin geschafft, nun wünsche ich viel Spaß beim Benutzen von http://localhost:3000.
+
+:star: Wenn Du den Server von einem anderen PC erreichen möchtest, benutze statt `localhost` Deine IP-Address
+z.B. `http://192.168.0.99:3000` oder Deinen Rechnernmamen, z.B. `http://deinrechnername:3000`. 
