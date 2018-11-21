@@ -4,10 +4,9 @@ AkWebServerIo = {}
 
 local function dirExists(dir)
     local file = io.open(dir .. "/" .. "tmp.txt", "w")
-    io.output(file)
-    io.write(EEPVer)
-    io.flush()
-    io.close(file)
+    file:write(EEPVer)
+    file:flush()
+    file:close()
     return true
 end
 
@@ -30,11 +29,9 @@ end
 local function writeFile(dateiname, inhalt)
     local file = io.open(dateiname, "w")
     assert(file, "Kann Datei nicht öffnen " .. dateiname)
-    file:setvbuf("full", 2 * 1024 * 1024)
-    io.output(file)
-    io.write(inhalt)
-    io.flush()
-    io.close(file)
+    file:write(inhalt)
+    file:flush()
+    file:close()
 end
 
 ---
