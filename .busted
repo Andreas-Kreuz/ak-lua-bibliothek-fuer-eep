@@ -3,12 +3,14 @@ return {
     directory="LUA"
   },
   default = {
-    verbose = true
+    verbose = true,
+    output = 'utfTerminal'
   },
   apiUnit = {
     coverage=true,
     tags = "api",
-    ROOT = {"LUA"},
+    ROOT = { "LUA" },
+    pattern = '.spec.lua',
     verbose = true
   }
 }
