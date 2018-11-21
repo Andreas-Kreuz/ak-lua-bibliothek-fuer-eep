@@ -1,7 +1,22 @@
 print("Lade ak.schiene.AkSchiene ...")
 local AkSpeicherHilfe = require("ak.speicher.AkSpeicher")
+local fmt = require("ak.text.AkFormat")
 
-require("ak.text.AkAusgabe")
+local dbg = {
+    anforderung = true,
+    bahnhof = false,
+    error = true,
+    fs_pruefung = true,
+    fs_schaltung = true,
+    signal_aenderung = false,
+    weiche_aenderung = false,
+    ampel = false,
+    types = false,
+}
+
+local function pdbg(level, msg)
+    if (level) then print(msg) end
+end
 
 local allRoutes = {}
 local allSignals = {}

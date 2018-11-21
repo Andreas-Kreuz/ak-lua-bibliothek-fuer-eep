@@ -1,22 +1,6 @@
-print("Lade ak.text.AkAusgabe ...")
+print ("Lade ak.text.AkFormat ...")
 
-AkAusgabe = {}
-AkAusgabe.__index = AkAusgabe
-AkAusgabe.outputPath = ""
-
-dbg = {
-    anforderung = true,
-    bahnhof = false,
-    error = true,
-    fs_pruefung = true,
-    fs_schaltung = true,
-    signal_aenderung = false,
-    weiche_aenderung = false,
-    ampel = false,
-    types = false,
-}
-
-fmt = {
+local AkFormat = {
     -- <br> neue Zeile
     -- <b> & </b> Fettschrift an/aus
     -- <i> & </i> Kursivschrift an/aus
@@ -60,6 +44,4 @@ fmt = {
     end,
 }
 
-function pdbg(level, msg)
-    if (level) then print(msg) end
-end
+return AkFormat

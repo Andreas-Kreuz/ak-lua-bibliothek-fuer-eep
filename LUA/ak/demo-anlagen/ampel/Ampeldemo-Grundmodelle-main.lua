@@ -1,8 +1,13 @@
 --------------------------------
 -- Lade Funktionen fuer Ampeln
 --------------------------------
-print('Lade AkStrasse ...')
-require("ak.strasse.AkStrasse")
+-- Planer
+local AkPlaner = require("ak.planer.AkPlaner")
+local AkAmpelModell = require("ak.strasse.AkAmpelModell")
+local AkAmpel = require("ak.strasse.AkAmpel")
+local AkRichtung = require("ak.strasse.AkRichtung")
+local AkKreuzung = require("ak.strasse.AkKreuzung")
+local AkKreuzungsSchaltung = require("ak.strasse.AkKreuzungsSchaltung")
 AkAmpel.zeigeAnforderungen = true
 
 ------------------------------------------------

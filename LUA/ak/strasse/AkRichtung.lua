@@ -1,8 +1,10 @@
 print("Lade ak.strasse.AkRichtung ...")
 
 local AkAktion = require("ak.planer.AkAktion")
+local AkPlaner = require("ak.planer.AkPlaner")
 local AkSpeicherHilfe = require("ak.speicher.AkSpeicher")
 local AkPhase = require("ak.strasse.AkPhase")
+local fmt = require("ak.text.AkFormat")
 
 --------------------
 -- Klasse Richtung

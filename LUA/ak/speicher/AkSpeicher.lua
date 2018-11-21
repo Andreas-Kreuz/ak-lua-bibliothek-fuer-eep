@@ -122,7 +122,7 @@ function AkSpeicherHilfe.toboolean(value)
 end
 
 function AkSpeicherHilfe.aktualisiereDebugDatei()
-    local datei = assert(io.open((AkAusgabe and AkAusgabe.outputPath or "") .. AkSpeicherHilfe.debugDatei, "w"))
+    local datei = assert(io.open(AkSpeicherHilfe.debugDatei, "w"))
     local ausgabe = ""
     for i = 1, 1000 do
         if gespeicherteWerte[i] then

@@ -1,8 +1,13 @@
 print("Lade ak.strasse.AkKreuzung ...")
 
+local AkAktion = require("ak.planer.AkAktion")
+local AkPlaner = require("ak.planer.AkPlaner")
+local AkAmpelModell = require("ak.strasse.AkAmpelModell")
+local AkKreuzungsSchaltung = require("ak.strasse.AkKreuzungsSchaltung")
+local AkRichtung = require("ak.strasse.AkRichtung")
 local AkPhase = require("ak.strasse.AkPhase")
 local AkStatistik = require("ak.io.AkStatistik")
-local AkAktion = require("ak.planer.AkAktion")
+local fmt = require("ak.text.AkFormat")
 
 --------------------
 -- Klasse Kreuzung

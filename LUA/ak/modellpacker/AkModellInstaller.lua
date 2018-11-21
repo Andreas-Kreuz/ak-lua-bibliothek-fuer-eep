@@ -35,7 +35,8 @@ function AkModellInstaller:erzeugePaket(ausgabeverzeichnis)
 
         -- Dateien des Modellpakets kopieren
         for pfad, dateiname in pairs(modellPaket.modellPfade) do
-            if not os.execute([[copy "]] .. pfad .. [[" "]] .. modellPaketVerzeichnis .. "\\" .. dateiname .. [[" >nul]]) then
+            if not os.execute(
+                [[copy "]] .. pfad .. [[" "]] .. modellPaketVerzeichnis .. "\\" .. dateiname .. [[" >nul]]) then
                 print([[copy "]] .. pfad .. [[" "]] .. modellPaketVerzeichnis .. "\\" .. dateiname .. [["]])
                 os.execute([[copy "]] .. pfad .. [[" "]] .. modellPaketVerzeichnis .. "\\" .. dateiname .. [[" ]])
                 os.exit(1)

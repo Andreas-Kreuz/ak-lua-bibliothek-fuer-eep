@@ -20,6 +20,7 @@ local AkKreuzung = require("ak.strasse.AkKreuzung")
 local AkKreuzungsSchaltung = require("ak.strasse.AkKreuzungsSchaltung")
 -- Speicher
 local AkSpeicherHilfe = require("ak.speicher.AkSpeicher")
+local fmt = require("ak.text.AkFormat")
 ############################################################################################
 ]])
 
@@ -34,6 +35,5 @@ AkLichtImmoAmpel = require("ak.strasse.AkLichtImmoAmpel")
 AkRichtung = require("ak.strasse.AkRichtung")
 AkStrabWeiche = require("ak.strasse.AkStrabWeiche")
 AkSpeicherHilfe = require("ak.speicher.AkSpeicher")
-require("ak.text.AkAusgabe")
 
-return AkStrasse
+-- return AkStrasse
