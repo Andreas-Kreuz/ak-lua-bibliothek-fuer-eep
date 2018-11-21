@@ -42,7 +42,12 @@ luac.out
 # Project based settings
 /modell-pakete
 /LUA/ak/anlagen
+/LUA/ak/ext
+/LUA/comm_*
 *.dds
+/LUA/ak/io/exchange/ak*
+/LUA/ak/io/exchange/tmp*
+LUA/**/*.jar
 
 _site
 Gemfile.lock
@@ -50,3 +55,24 @@ Gemfile.lock
 .jekyll*
 .DS_Store
 /scratch.lua
+LUA/ak/model/api_response.lua
+LUA/ak/model/ak_traffic_type.lua
+LUA/ak/model/ak_track_type.lua
+LUA/ak/model/ak_road_signal_phase.lua
+LUA/ak/model/ak_road_signal_model.lua
+LUA/ak/model/ak_road_signal_lights.lua
+LUA/ak/model/ak_road_signal_axis_model.lua
+LUA/ak/model/ak_road_signal_axis.lua
+LUA/ak/model/ak_road_signal.lua
+LUA/ak/model/ak_lane_switching_type.lua
+LUA/ak/model/ak_intersection_switching.lua
+LUA/ak/model/ak_intersection_lane.lua
+LUA/ak/model/ak_intersection.lua
+LUA/ak/model/ak_eep_version.lua
+LUA/ak/model/ak_eep_train.lua
+LUA/ak/model/ak_eep_track_type.lua
+LUA/ak/model/ak_eep_track.lua
+LUA/ak/model/ak_eep_time.lua
+LUA/ak/model/ak_eep_signal.lua
+LUA/ak/model/ak_eep_rolling_stock.lua
+LUA/ak/model/ak_direction.lua

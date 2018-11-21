@@ -3,7 +3,9 @@ return {
     directory="LUA"
   },
   default = {
-    verbose = true
+    verbose = true,
+    loaders = { 'lua' },
+    output = 'utfTerminal',
   },
   apiUnit = {
     coverage=true,

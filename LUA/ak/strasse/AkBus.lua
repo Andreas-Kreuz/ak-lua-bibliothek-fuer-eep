@@ -1,4 +1,4 @@
-
+print("Lade AkBus ...")
 
 -----------------------
 -- Bushaltestellen

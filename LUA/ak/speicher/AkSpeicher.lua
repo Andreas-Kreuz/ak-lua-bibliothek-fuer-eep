@@ -1,3 +1,5 @@
+print("Lade AkSpeicherHilfe ...")
+
 local speicherPlaetze = {}
 local gespeicherteWerte = {}
 AkSpeicherHilfe = {}

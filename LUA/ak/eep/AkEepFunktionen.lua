@@ -1,8 +1,10 @@
+print("Lade AkEepFunktionen ...")
+
 ------------------
 -- EEP Functions
 ------------------
 
-EEPVer = "Testsimulator"
+EEPVer = 15
 
 -- Der Inhalt des EEP-EreignisFensters wird geloescht
 function clearlog()
@@ -14,8 +16,13 @@ AkEEPHilfe.zahlDerZuegeAnSignal = {}
 AkEEPHilfe.namenDerZuegeAnSignal = {}
 AkEEPHilfe.routenDerZuege = {}
 AkEEPHilfe.registrierteStrassen = {}
-function AkEEPHilfe.setzeZugAufStrasse(strassenId, zugname)
-    AkEEPHilfe.registrierteStrassen[strassenId] = zugname
+function AkEEPHilfe.setzeZugAufStrasse(trackId, zugname)
+    AkEEPHilfe.registrierteStrassen[trackId] = zugname
+end
+
+AkEEPHilfe.registrierteGleise = {}
+function AkEEPHilfe.setzeZugAufGleis(trackId, zugname)
+    AkEEPHilfe.registrierteGleise[trackId] = zugname
 end
 
 
@@ -277,38 +284,55 @@ function EEPSetTrainAxis(trainName, achse, stellung) end
 ------------------------------
 
 --- Registriert ein Gleis fuer die Besetztabfrage.
--- @param railTrackId Id des Gleises
-function EEPRegisterRailTrack(railTrackId) end
+-- @param trackId Id des Gleises
+function EEPRegisterRailTrack(trackId)
+    if AkEEPHilfe.registrierteGleise[trackId] == nil then
+        AkEEPHilfe.registrierteGleise[trackId] = false
+    end
+    if (trackId <= 11) then return true end
+end
 
 --- Fragt ab, ob ein Gleis besetzt ist.
--- @param railTrackId Id des Gleises
+-- @param trackId Id des Gleises
 -- @param returnTrainName wenn true, wird als dritter Wert der Zugname
 -- zurueckgegeben
 -- @return Erster Wert: true, wenn Gleis existiert und registriert,
 -- zweiter Wert: true, wenn besetzt,
 -- dritter Wert: Name des Zuges auf dem Gleis
-function EEPIsRailTrackReserved(railTrackId, returnTrainName) end
+function EEPIsRailTrackReserved(trackId, returnTrainName)
+    if returnTrainName then
+        return (AkEEPHilfe.registrierteGleise[trackId] ~= nil and true or false),
+        (AkEEPHilfe.registrierteGleise[trackId] ~= false and true or false),
+        (returnTrainName and AkEEPHilfe.registrierteGleise[trackId] or nil)
+    else
+        return (AkEEPHilfe.registrierteGleise[trackId] ~= nil and true or false),
+        (AkEEPHilfe.registrierteGleise[trackId] ~= false and true or false)
+    end
+end
 
 --- Registriert ein Gleis fuer die Besetztabfrage.
--- @param strassenId Id des Gleises
-function EEPRegisterRoadTrack(strassenId)
-    AkEEPHilfe.registrierteStrassen[strassenId] = false
+-- @param trackId Id des Gleises
+function EEPRegisterRoadTrack(trackId)
+    if AkEEPHilfe.registrierteStrassen[trackId] == nil then
+        AkEEPHilfe.registrierteStrassen[trackId] = false
+    end
+    if (trackId <= 11) then return true end
 end
 
 --- Fragt ab, ob ein Gleis besetzt ist.
--- @param strassenId Id des Gleises
+-- @param trackId Id des Gleises
 -- @param returnTrainName wenn true, wird als dritter Wert der Zugname
 -- @return Erster Wert: true, wenn Gleis existiert und registriert,
 -- zweiter Wert: true, wenn besetzt,
 -- dritter Wert: Name des Zuges auf dem Gleis
-function EEPIsRoadTrackReserved(strassenId, returnTrainName)
+function EEPIsRoadTrackReserved(trackId, returnTrainName)
     if returnTrainName then
-        return (AkEEPHilfe.registrierteStrassen[strassenId] ~= nil and true or false),
-        (AkEEPHilfe.registrierteStrassen[strassenId] ~= false and true or false),
-        (returnTrainName and AkEEPHilfe.registrierteStrassen[strassenId] or nil)
+        return (AkEEPHilfe.registrierteStrassen[trackId] ~= nil and true or false),
+        (AkEEPHilfe.registrierteStrassen[trackId] ~= false and true or false),
+        (returnTrainName and AkEEPHilfe.registrierteStrassen[trackId] or nil)
     else
-        return (AkEEPHilfe.registrierteStrassen[strassenId] ~= nil and true or false),
-        (AkEEPHilfe.registrierteStrassen[strassenId] ~= false and true or false)
+        return (AkEEPHilfe.registrierteStrassen[trackId] ~= nil and true or false),
+        (AkEEPHilfe.registrierteStrassen[trackId] ~= false and true or false)
     end
 end
 
@@ -344,7 +368,7 @@ function EEPRegisterControlTrack(controlTrackId) end
 -- @param controlTrackId Id des Gleises
 -- @return Erster Wert: true, wenn Gleis existiert und registriert,
 -- zweiter Wert: true, wenn besetzt
-function EEPRegisterControlTrack(controlTrackId) end
+function EEPIsControlTrackReserved(controlTrackId, returnTrainName) end
 
 --- Waehlen einer Kamera
 -- @param camType 0: statisch, 1: dynamisch, 2: mobile Kamera
@@ -410,6 +434,7 @@ function EEPChangeInfoSwitch(switchId, text) end
 -- @param zugverband Names des Zugverbandes
 --
 function EEPGetRollingstockItemsCount(zugverband)
+    return 2
 end
 
 --- Name des Rollis Nummer im Zugverband Name
@@ -417,9 +442,10 @@ end
 -- @param Nummer
 --
 function EEPGetRollingstockItemName(zugverband, Nummer)
+    return zugverband .. '-Wagen-' .. Nummer
 end
 
---- Anzahl der Züge, welche vom Signal Signal_ID gehalten werden
+--- Anzahl der Zuege, welche vom Signal Signal_ID gehalten werden
 -- @param signalId ID des Signals
 --
 function EEPGetSignalTrainsCount(signalId)
@@ -439,7 +465,7 @@ function EEPGetSignalTrainName(signalId, position)
     return "DUMMY"
 end
 
---- Anzahl der Züge, welche im Depot ZugdepotId gelistet sind
+--- Anzahl der Zuege, welche im Depot ZugdepotId gelistet sind
 -- @param depotId ID des Zugdepots
 --
 function EEPGetTrainyardItemsCount(depotId)
@@ -458,4 +484,114 @@ end
 -- @param position Position (Zahl) des Zugverbandes im Depot
 --
 function EEPGetTrainyardItemStatus(depotId, zugverband, position)
+end
+
+
+-------------------------------
+-- Neu ab EEP 15  --
+-------------------------------
+
+--- Argument ist der Name des Fahrzeugs.
+-- Rueckgabewert 1 ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
+-- Rueckgabewert 2 ist die Länge des Fahrzeugs von Kupplung zu Kupplung in Metern.
+function EEPRollingstockGetLength(rollingStockName)
+    return true, 5
+end
+
+--- Argument ist der Name des Fahrzeugs.
+-- Rueckgabewert 1 ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
+-- Rueckgabewert 2 ist true, wenn das angegebene Fahrzeug einen Antrieb besitzt, sonst false.
+function EEPRollingstockGetMotor(rollingStockName)
+    return true, 5
+end
+
+--- Argument ist der Name des Fahrzeugs.
+-- Rueckgabewert 1 ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
+-- Rückgabewert 2 ist die ID des Gleisstücks, auf dem sich das Fahrzeug befindet.
+-- Rueckgabewert 3 ist der Abstand (in Metern) zum Anfang des Gleisstücks, auf dem sich das
+-- Fahrzeug befindet.
+-- Rueckgabewert 4 ist die Ausrichtung relativ zur Fahrtrichtung des Gleisstücks, auf dem sich das
+-- Fahrzeug befindet. 1 = in Fahrtrichtung, 0 = entgegen der Fahrtrichtung
+-- Rueckgabewert 5 ist die Nummer des Gleissystems, auf dem das Fahrzeug unterwegs ist.
+-- 1 = Bahngleise
+-- 2 = Straßen
+-- 3 = Tramgleise
+-- 4 = sonstige Splines/Wasserwege
+function EEPRollingstockGetTrack(rollingStockName)
+    return true, 5, 5, 1, 1
+end
+
+--- • Argument ist der Fahrzeugname.
+-- Rueckgabewert 1 ist true, wenn die Ausführung erfolgreich war, sonst false.
+-- Rueckgabewert 2 ist die Kategorie, welche der Konstrukteur im Modell eingetragen hat:
+-- 1 = Tenderlok
+-- 2 = Schlepptenderlok
+-- 3 = Tender
+-- 4 = Elektrolok
+-- 5 = Diesellok
+-- 6 = Triebwagen
+-- 7 = U- oder S-Bahn
+-- 8 = Strassenbahn
+-- 9 = Gueterwaggons
+-- 10 = Personenwaggons
+-- 11 = Luftfahrzeuge
+-- 12 = Maschinen (z.B. Kraene)
+-- 13 = Wasserfahrzeuge
+-- 14 = LKW
+-- 15 = PKW
+function EEPRollingstockGetModelType(rollingStockName)
+    return true, 1
+end
+
+
+--- Argument ist der Lua-Name der Immobilie oder des LS-Elements.
+-- Es genuegt die Nummer mit vorangestelltem #-Zeichen.
+-- @return
+-- Rueckgabewert 1 ist true, wenn die Ausfuehrung erfolgreich war, ansonsten false.
+-- Rueckgabewert 2 ist die X-Position des Objekts.
+-- Rueckgabewert 3 ist die Y-Position des Objekts.
+-- Rueckgabewert 4 ist die Z-Position des Objekts.
+function EEPStructureGetPosition(name)
+    local underscoreIndex = string.find(name, '_')
+    local i
+
+    if underscoreIndex then
+        i = tonumber(string.sub(name, 2, underscoreIndex - 1))
+    else
+        i = tonumber(string.sub(name, 2))
+    end
+
+    if (i < 5) then
+        return true, 0, 0, 0
+    else
+        return false
+    end
+end
+
+--- Argument ist der Lua-Name der Immobilie oder des LS-Elements.
+-- Es genuegt die Nummer mit vorangestelltem #-Zeichen.
+-- @return
+-- Rueckgabewert 1 ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
+-- Rueckgabewert 2 ist die Kategorie, welche der Konstrukteur im Modell eingetragen hat:
+-- 16 = Gleise/Gleisobjekte
+-- 17 = Schiene/Gleisobjekte
+-- 18 = Strassen/Gleisobjekte
+-- 19 = Sonstiges/Gleisobjekte
+-- 22 = Immobilien
+-- 23 = Landschaftselemente/Fauna
+function EEPStructureGetModelType(name)
+    local underscoreIndex = string.find(name, '_')
+    local i
+
+    if underscoreIndex then
+        i = tonumber(string.sub(name, 2, underscoreIndex - 1))
+    else
+        i = tonumber(string.sub(name, 2))
+    end
+
+    if (i < 5) then
+        return true, 0, 0, 0
+    else
+        return false
+    end
 end

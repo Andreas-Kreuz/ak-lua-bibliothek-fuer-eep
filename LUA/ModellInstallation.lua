@@ -14,12 +14,14 @@ print("Suche Installationsdateien in Verzeichnis \"" .. aktuellerOrdner .. "\"")
 -----------------------------------------
 local paket0 = AkModellPaket:neu("13,2", "Lua-Bibliothek von Andreas Kreuz",
     "Lua-Bibliothek mit Verkehrssteuerung, Aufgabenplanung und Modell-Installation")
-paket0:fuegeDateienHinzu(aktuellerOrdner, "", "LUA\\ak\\eep", { "README.md" })
-paket0:fuegeDateienHinzu(aktuellerOrdner, "", "LUA\\ak\\schiene", { "README.md" })
-paket0:fuegeDateienHinzu(aktuellerOrdner, "", "LUA\\ak\\planer", { "README.md" })
-paket0:fuegeDateienHinzu(aktuellerOrdner, "", "LUA\\ak\\speicher", { "README.md" })
-paket0:fuegeDateienHinzu(aktuellerOrdner, "", "LUA\\ak\\strasse", { "README.md" })
-paket0:fuegeDateienHinzu(aktuellerOrdner, "", "LUA\\ak\\text", { "README.md" })
+--paket0:fuegeDateienHinzu(aktuellerOrdner, "", "LUA\\ak\\eep", { "README.md" })
+--paket0:fuegeDateienHinzu(aktuellerOrdner, "", "LUA\\ak\\schiene", { "README.md" })
+--paket0:fuegeDateienHinzu(aktuellerOrdner, "", "LUA\\ak\\planer", { "README.md" })
+--paket0:fuegeDateienHinzu(aktuellerOrdner, "", "LUA\\ak\\io", { "README.md" })
+--paket0:fuegeDateienHinzu(aktuellerOrdner, "", "LUA\\ak\\speicher", { "README.md" })
+--paket0:fuegeDateienHinzu(aktuellerOrdner, "", "LUA\\ak\\strasse", { "README.md" })
+--paket0:fuegeDateienHinzu(aktuellerOrdner, "", "LUA\\ak\\text", { "README.md" })
+paket0:fuegeDateienHinzu(aktuellerOrdner, "", "LUA\\ak", { "README.md", "ak_out_eep", "anlagen", "tmp.txt" })
 
 do
     local installer = AkModellInstaller:neu("Installer-AK-Lua-Bibliothek-fuer-EEP")

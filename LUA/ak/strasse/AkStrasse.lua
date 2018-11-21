@@ -1,14 +1,12 @@
-print("Lade AkPlaner ...")
+print("Lade AkStrasse ...")
+
 require("ak.planer.AkPlaner")
-
-print("Lade AkSpeicherHilfe ...")
 require("ak.speicher.AkSpeicher")
-
-print("Lade AkAusgabe ...")
 require("ak.text.AkAusgabe")
+require("ak.io.AkStatistik")
 
 --region AkPhase + AkSchaltung
-AkPhase = {}
+local AkPhase = {}
 AkPhase.ROT = "Rot"
 AkPhase.ROTGELB = "Rot-Gelb"
 AkPhase.GELB = "Gelb"
@@ -34,6 +32,7 @@ end
 -- Klasse AkAmpelModell
 -- Weiss, welche Signalstellung fuer rot, gelb und gruen geschaltet werden muessen.
 ------------------------------------------------------------------------------------------
+local alleAmpelModelle = {}
 AkAmpelModell = {}
 
 ---
@@ -62,7 +61,9 @@ sigIndexKomplettAus, sigIndexGelbBlinkenAus)
         sigIndexGelbBlinkenAus = sigIndexGelbBlinkenAus,
     }
     self.__index = self
-    return setmetatable(o, self)
+    local x = setmetatable(o, self)
+    table.insert(alleAmpelModelle, o)
+    return x
 end
 
 function AkAmpelModell:print()
@@ -136,8 +137,7 @@ AkAmpelModell.Unsichtbar_2er = AkAmpelModell:neu("Unsichtbares Signal", 2, 1, 2,
 --region AkAmpelLichtImmo
 local AkLichtImmoAmpel = {}
 function AkLichtImmoAmpel.neuAusTabelle(tabelle)
-    return AkLichtImmoAmpel:neu(
-        tabelle.rotImmo,
+    return AkLichtImmoAmpel:neu(tabelle.rotImmo,
         tabelle.gruenImmo,
         tabelle.gelbImmo,
         tabelle.anforderungImmo)
@@ -177,8 +177,7 @@ end
 
 local AkAchsenImmoAmpel = {}
 function AkAchsenImmoAmpel.neuAusTabelle(tabelle)
-    return AkAchsenImmoAmpel:neu(
-        tabelle.immoName,
+    return AkAchsenImmoAmpel:neu(tabelle.immoName,
         tabelle.achse,
         tabelle.grundStellung,
         tabelle.stellungRot,
@@ -198,7 +197,7 @@ end
 -- @param stellungFG Achsstellung bei FG
 --
 function AkAchsenImmoAmpel:neu(immoName, achse, grundStellung, stellungRot, stellungGruen,
-   stellungGelb, stellungRotGelb, stellungFG)
+stellungGelb, stellungRotGelb, stellungFG)
     assert(immoName)
     assert(type(immoName) == "string")
     assert(achse)
@@ -211,7 +210,7 @@ function AkAchsenImmoAmpel:neu(immoName, achse, grundStellung, stellungRot, stel
     if stellungRotGelb then assert(type(stellungRotGelb) == "number") end
     if stellungFG then assert(type(stellungFG) == "number") end
     local o = {
-    immoName = immoName,
+        immoName = immoName,
         achse = achse,
         grundStellung = grundStellung,
         stellungRot = stellungRot,
@@ -403,7 +402,7 @@ function AkAmpel:schalteImmoAchsen()
         end
 
         immoDbg = immoDbg .. string.format(", Achse %s in %s auf: %d",
-        achsenAmpel.achse, achsenAmpel.immoName, achsStellung)
+            achsenAmpel.achse, achsenAmpel.immoName, achsStellung)
         EEPStructureSetAxis(achsenAmpel.immoName, achsenAmpel.achse, achsStellung)
     end
     return immoDbg
@@ -420,10 +419,15 @@ function AkAmpel:aktualisiereAnforderung(richtung)
     local immoDbg = ""
     self.richtungen[richtung] = true
     local anforderung = richtung:anforderungVorhanden()
-    if self.anforderungImmo then
-        immoDbg = immoDbg .. string.format(", Licht in %s: %s", self.anforderungImmo, (anforderung) and "an" or "aus")
-        EEPStructureSetLight(self.anforderungImmo, anforderung)
+
+    for lichtAmpel in pairs(self.lichtImmos) do
+        if lichtAmpel.anforderungImmo then
+            immoDbg = immoDbg ..
+                    string.format(", Licht in %s: %s", lichtAmpel.anforderungImmo, (anforderung) and "an" or "aus")
+            EEPStructureSetLight(lichtAmpel.anforderungImmo, anforderung)
+        end
     end
+
     if (self.debug or AkAmpel.debug) and immoDbg ~= "" then
         print(string.format("[AkAmpel    ] Schalte Ampel %04d", self.signalId) .. immoDbg)
     end
@@ -454,19 +458,33 @@ function AkKreuzungsSchaltung:neu(name)
     setmetatable(o, self)
     self.__index = self;
     o.name = name
-    o.richtungen = {}
+    o.richtungenNormal = {}
     o.richtungenMitAnforderung = {}
     o.richtungenFuerFussgaenger = {}
     return o
 end
 
-function AkKreuzungsSchaltung:getRichtungen()
-    return self.richtungen
+function AkKreuzungsSchaltung:getAlleRichtungen()
+    local alle = {}
+    for richtung in pairs(self.richtungenNormal) do
+        alle[richtung] = "NORMAL"
+    end
+    for richtung in pairs(self.richtungenMitAnforderung) do
+        alle[richtung] = "REQUEST"
+    end
+    for richtung in pairs(self.richtungenFuerFussgaenger) do
+        alle[richtung] = "PEDESTRIANTS"
+    end
+    return alle
+end
+
+function AkKreuzungsSchaltung:getNormaleRichtungen()
+    return self.richtungenNormal
 end
 
 function AkKreuzungsSchaltung:richtungenAlsTextZeile()
     local s = ""
-    for richtung in pairs(self.richtungen) do
+    for richtung in pairs(self.richtungenNormal) do
         s = s .. ", " .. richtung.name
     end
     for richtung in pairs(self.richtungenMitAnforderung) do
@@ -484,7 +502,7 @@ end
 function AkKreuzungsSchaltung:fuegeRichtungHinzu(richtung)
     assert(richtung, "Bitte ein gueltige Richtung angeben")
     richtung:setSchaltungsTyp(AkRichtung.SchaltungsTyp.NORMAL)
-    self.richtungen[richtung] = true
+    self.richtungenNormal[richtung] = true
 end
 
 function AkKreuzungsSchaltung:addRichtungMitAnforderung(richtung)
@@ -509,7 +527,7 @@ function AkKreuzungsSchaltung:nachPrioSortierteRichtungen()
     local sortierteRichtungen = {}
     local anzahlDerRichtungen = 0
     local gesamtPrio = 0
-    for richtung in pairs(self.richtungen) do
+    for richtung in pairs(self.richtungenNormal) do
         table.insert(sortierteRichtungen, richtung)
         anzahlDerRichtungen = anzahlDerRichtungen + 1
         gesamtPrio = gesamtPrio + richtung:getPrio()
@@ -534,7 +552,7 @@ end
 -- @return sortierteRichtungen
 function AkKreuzungsSchaltung:nachNameSortierteRichtungen()
     local sortierteRichtungen = {}
-    for richtung in pairs(self.richtungen) do
+    for richtung in pairs(self.richtungenNormal) do
         table.insert(sortierteRichtungen, richtung)
     end
     for richtung in pairs(self.richtungenMitAnforderung) do
@@ -577,7 +595,7 @@ function AkKreuzungsSchaltung:getPrio()
 end
 
 function AkKreuzungsSchaltung:setzeWartezeitZurueck()
-    for richtung in pairs(self.richtungen) do
+    for richtung in pairs(self.richtungenNormal) do
         richtung:setzeWartezeitZurueck()
     end
 end
@@ -878,7 +896,7 @@ end
 -- @param eepSaveId Id fuer das Speichern der Richtung
 -- @param ... eine oder mehrere Ampeln
 --
-function AkRichtung:neu(name, eepSaveId, ampeln)
+function AkRichtung:neu(name, eepSaveId, ampeln, richtungen, trafficType)
     assert(name, "Bitte geben Sie den Namen \"name\" fuer diese Richtung an.")
     assert(type(name) == "string", "Name ist kein String")
     assert(eepSaveId, "Bitte geben Sie den Wert \"eepSaveId\" fuer diese Richtung an.")
@@ -897,6 +915,8 @@ function AkRichtung:neu(name, eepSaveId, ampeln)
         zaehlAmpeln = {},
         verwendeZaehlStrassen = false,
         zaehlStrassen = {},
+        richtungen = richtungen or { 'LEFT', 'STRAIGHT', 'RIGHT', },
+        trafficType = trafficType or 'NORMAL',
     }
 
 
@@ -939,9 +959,9 @@ function AkKreuzung:setzeWarteZeitZurueck(nextSchaltung)
     local increaseRichtungen = {}
     for schaltung in pairs(self.schaltungen) do
         assert(schaltung.getTyp() == "AkKreuzungsSchaltung", "Found: " .. schaltung.getTyp())
-        for richtung in pairs(schaltung:getRichtungen()) do
+        for richtung in pairs(schaltung:getNormaleRichtungen()) do
             assert(richtung.getTyp() == "AkRichtung", "Found: " .. richtung.getTyp())
-            if nextSchaltung:getRichtungen()[richtung] then
+            if nextSchaltung:getNormaleRichtungen()[richtung] then
                 richtung:setzeWartezeitZurueck()
             else
                 increaseRichtungen[richtung] = true
@@ -985,7 +1005,7 @@ function AkKreuzung.zaehlerZuruecksetzen()
     for _, kreuzung in ipairs(AkAllKreuzungen) do
         print("[AkKreuzung ] SETZE ZURUECK: " .. kreuzung.name)
         for schaltung in pairs(kreuzung:getSchaltungen()) do
-            for richtung in pairs(schaltung:getRichtungen()) do
+            for richtung in pairs(schaltung:getNormaleRichtungen()) do
                 richtung:setzeFahrzeugeZurueck()
             end
             for richtung in pairs(schaltung:getRichtungenMitAnforderung()) do
@@ -1010,6 +1030,10 @@ function AkKreuzung:neu(name)
     self.__index = self
     setmetatable(o, self)
     table.insert(AkAllKreuzungen, o)
+    table.sort(AkAllKreuzungen,
+        function(int1, int2)
+            return int1.name < int2.name
+        end)
     return o
 end
 
@@ -1026,7 +1050,7 @@ function AkKreuzung.planeSchaltungenEin()
     local function aktualisiereAnforderungen(kreuzung)
         local alleRichtungen = {}
         for schaltung in pairs(kreuzung:getSchaltungen()) do
-            for richtung in pairs(schaltung:getRichtungen()) do
+            for richtung in pairs(schaltung:getNormaleRichtungen()) do
                 alleRichtungen[richtung] = true
             end
             for richtung in pairs(schaltung:getRichtungenMitAnforderung()) do
@@ -1059,7 +1083,7 @@ function AkKreuzung.planeSchaltungenEin()
         table.sort(tnames, function(schaltung1, schaltung2) return (schaltung1.name < schaltung2.name) end)
 
         for _, schaltung in ipairs(tnames) do
-            for richtung in pairs(schaltung:getRichtungen()) do
+            for richtung in pairs(schaltung:getNormaleRichtungen()) do
                 for _, ampel in pairs(richtung.ampeln) do
                     --print(schaltung.name, richtung.name, ampel.signalId, AkPhase.GRUEN)
                     kreuzungsAmpelSchaltungen[ampel.signalId] = kreuzungsAmpelSchaltungen[ampel.signalId] or {}
@@ -1175,7 +1199,7 @@ function AkKreuzung.planeSchaltungenEin()
 
             -- aktuelle Richtungen für alle Schaltungen auf rot schalten:
             if aktuelleSchaltung then
-                for richtung in pairs(aktuelleSchaltung:getRichtungen()) do
+                for richtung in pairs(aktuelleSchaltung:getNormaleRichtungen()) do
                     richtungenAktuellGruen[richtung] = true
                     richtungenAufRot[richtung] = true
                 end
@@ -1189,7 +1213,7 @@ function AkKreuzung.planeSchaltungenEin()
                     print("[AkKreuzung ] Setze alle Richtungen fuer " .. kreuzung.name .. " auf rot")
                 end
                 for schaltung in pairs(kreuzung:getSchaltungen()) do
-                    for richtung in pairs(schaltung:getRichtungen()) do
+                    for richtung in pairs(schaltung:getNormaleRichtungen()) do
                         richtungenAufRot[richtung] = true
                         richtungenAufFussgaengerRot[richtung] = true
                     end
@@ -1216,7 +1240,7 @@ function AkKreuzung.planeSchaltungenEin()
             end
 
             -- "Normale" Richtungen werden immer geschaltet
-            for richtungDanachGruen in pairs(nextSchaltung:getRichtungen()) do
+            for richtungDanachGruen in pairs(nextSchaltung:getNormaleRichtungen()) do
                 if richtungenAktuellGruen[richtungDanachGruen] then
                     -- Ampel nicht auf rot schalten, da sie in der naechsten Schaltung enthalten ist
                     richtungenAufRot[richtungDanachGruen] = nil
@@ -1287,7 +1311,180 @@ function AkKreuzung.planeSchaltungenEin()
     for _, kreuzung in ipairs(AkAllKreuzungen) do
         AkSchalteKreuzung(kreuzung)
         zeigeSchaltung(kreuzung)
+        --AkStatistik.writeLater("intersections_single_" .. kreuzung.name, json.encode(kreuzung:toJsonObject()))
     end
+
+    updateStatistics()
+end
+
+
+function updateStatistics()
+    local intersections = {}
+    local intersectionLanes = {}
+    local intersectionSwitching = {}
+    local intersectionTrafficLights = {}
+    local alleRichtungen = {}
+    local richtungsSchaltungen = {}
+
+    local intersectionIdCounter = 0
+    for _, kreuzung in ipairs(AkAllKreuzungen) do
+        intersectionIdCounter = intersectionIdCounter + 1
+        local intersection = {
+            id = intersectionIdCounter,
+            name = kreuzung.name,
+            currentSwitching = kreuzung.aktuelleSchaltung and kreuzung.aktuelleSchaltung.name or nil,
+            ready = kreuzung.bereit,
+            timeForGreen = kreuzung.gruenZeit,
+        }
+        table.insert(intersections, intersection)
+
+        for schaltung in pairs(kreuzung:getSchaltungen()) do
+            local switching = {
+                id = kreuzung.name .. "-" .. schaltung.name,
+                intersectionId = kreuzung.name,
+                name = schaltung.name,
+            }
+            table.insert(intersectionSwitching, switching)
+
+
+            for richtung in pairs(schaltung:getAlleRichtungen()) do
+                alleRichtungen[richtung] = intersection.id
+                richtungsSchaltungen[richtung] = richtungsSchaltungen[richtung] or {}
+                table.insert(richtungsSchaltungen[richtung], schaltung.name);
+            end
+        end
+    end
+
+    for lane, intersectionId in pairs(alleRichtungen) do
+        local type
+        if (lane.schaltungsTyp == AkRichtung.SchaltungsTyp.FUSSGAENGER) then
+            type = "PEDESTRIAN"
+        elseif (lane.trafficType == 'TRAM') then
+            type = "TRAM"
+        else
+            type = "NORMAL"
+        end
+
+        local phase = "NONE"
+        if lane.phase == AkPhase.GELB then
+            phase = "YELLOW"
+        elseif lane.phase == AkPhase.ROT then
+            phase = "RED"
+        elseif lane.phase == AkPhase.ROTGELB then
+            phase = "RED_YELLOW"
+        elseif lane.phase == AkPhase.GRUEN then
+            phase = "GREEN"
+        elseif lane.phase == AkPhase.FG then
+            phase = "PEDESTRIAN"
+        end
+
+        local countType = 'CONTACTS'
+        if lane.verwendeZaehlAmpeln then
+            countType = 'SIGNALS'
+        elseif lane.verwendeZaehlStrassen then
+            countType = 'TRACKS'
+        end
+
+        local o = {
+            id = intersectionId .. "-" .. lane.name,
+            intersectionId = intersectionId,
+            name = lane.name,
+            phase = phase,
+            vehicleMultiplier = lane.fahrzeugMultiplikator,
+            eepSaveId = lane.eepSaveId,
+            type = type,
+            countType = countType,
+            waitingTrains = {},
+            waitingForGreenCyclesCount = lane.warteZeit,
+            directions = lane.richtungen,
+            switchings = richtungsSchaltungen[lane] or {}
+        }
+        for i = 1, lane.fahrzeuge or 1, 1 do
+            o.waitingTrains[i] = '?'
+        end
+        table.insert(intersectionLanes, o)
+
+        for _, ampel in pairs(lane.ampeln) do
+            local trafficLight = {
+                id = ampel.signalId,
+                type = type,
+                signalId = ampel.signalId,
+                modelId = ampel.ampelTyp.name,
+                currentPhase = ampel.phase,
+                laneId = lane.name,
+                intersectionId = intersectionId,
+                lightStructures = {},
+                axisStructures = {},
+            }
+
+            for axisStructure in pairs(ampel.achsenImmos) do
+                local as = {
+                    structureName = axisStructure.immoName,
+                    axis = axisStructure.achse,
+                    positionDefault = axisStructure.grundStellung,
+                    positionRed = axisStructure.stellungRot,
+                    positionGreen = axisStructure.stellungGruen,
+                    positionYellow = axisStructure.stellungGelb,
+                    positionPedestrants = axisStructure.stellungFG,
+                    positionRedYellow = axisStructure.stellungRotGelb,
+                }
+                table.insert(trafficLight.axisStructures, as)
+            end
+
+            local lsId = 0;
+            for lightStructure in pairs(ampel.lichtImmos) do
+                local ls = {
+                    structureRed = lightStructure.rotImmo,
+                    structureGreen = lightStructure.gruenImmo,
+                    structureYellow = lightStructure.gelbImmo or lightStructure.rotImmo,
+                    structureRequest = lightStructure.anforderungImmo,
+                }
+                trafficLight.lightStructures[tostring(lsId)] = ls
+                lsId = lsId + 1
+            end
+
+            table.insert(intersectionTrafficLights, trafficLight)
+        end
+    end
+
+    local function padnum(d) local dec, n = string.match(d, "(%.?)0*(.+)")
+        return #dec > 0 and ("%.12f"):format(d) or ("%s%03d%s"):format(dec, #n, n)
+    end
+
+    table.sort(intersectionLanes, function(o1, o2)
+        local a = o1.name
+        local b = o2.name
+
+        return tostring(a):gsub("%.?%d+", padnum) .. ("%3d"):format(#b)
+                < tostring(b):gsub("%.?%d+", padnum) .. ("%3d"):format(#a)
+    end)
+
+
+    AkStatistik.writeLater("intersections", intersections)
+    AkStatistik.writeLater("intersection-lanes", intersectionLanes)
+    AkStatistik.writeLater("intersection-switchings", intersectionSwitching)
+    AkStatistik.writeLater("intersection-traffic-lights", intersectionTrafficLights)
+
+
+    local trafficLightModels = {}
+    for _, ampelModel in pairs(alleAmpelModelle) do
+        local o = {
+            id = ampelModel.name,
+            name = ampelModel.name,
+            type = 'road',
+            positions = {
+                positionRed = ampelModel.sigIndexRot,
+                positionGreen = ampelModel.sigIndexGruen,
+                positionYellow = ampelModel.sigIndexGelb,
+                positionRedYellow = ampelModel.sigIndexRotGelb,
+                positionPedestrians = ampelModel.sigIndexFgGruen,
+                positionOff = ampelModel.sigIndexKomplettAus,
+                positionOffBlinking = ampelModel.sigIndexGelbBlinkenAus,
+            },
+        }
+        table.insert(trafficLightModels, o)
+    end
+    AkStatistik.writeLater("signal-type-definitions", trafficLightModels)
 end
 
 --endregion

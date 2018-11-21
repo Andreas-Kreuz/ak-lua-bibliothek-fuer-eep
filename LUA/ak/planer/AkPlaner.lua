@@ -1,3 +1,5 @@
+print("Lade AkPlaner ...")
+
 local AkSekundenProTag = 24 * 60 * 60
 
 --- Get the time from EEP or the current system

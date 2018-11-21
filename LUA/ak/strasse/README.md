@@ -52,7 +52,6 @@ _Rückgabewert_
 * Die Ampel (Typ `AkAmpel`)
 
 ## Klasse `AkAmpel`
-
 Diese Klasse wird dazu verwendet eine Signal auf der Anlage (signalId) mit einem Modell zu verknüpfen. Eine so verknüpfte Ampel kann dann einer Richtung zugewiesen werden.
 
 ### Neue Ampel erzeugen

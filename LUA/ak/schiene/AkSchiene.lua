@@ -1,3 +1,5 @@
+print("Lade AkSchiene ...")
+
 require("ak.text.AkAusgabe")
 require("ak.speicher.AkSpeicher")
 

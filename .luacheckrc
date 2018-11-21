@@ -28,3 +28,8 @@ read_globals = {
 
 allow_defined_top = true
 files["LUA/ak/eep"].ignore = {"212","131"}
+
+exclude_files = {
+    "LUA/ak/io/dkjson.lua",
+    "LUA/ak/io/json.lua",
+}
