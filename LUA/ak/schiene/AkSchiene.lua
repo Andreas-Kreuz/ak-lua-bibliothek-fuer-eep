@@ -1,7 +1,7 @@
-print("Lade AkSchiene ...")
+print("Lade ak.schiene.AkSchiene ...")
+local AkSpeicherHilfe = require("ak.speicher.AkSpeicher")
 
 require("ak.text.AkAusgabe")
-require("ak.speicher.AkSpeicher")
 
 local allRoutes = {}
 local allSignals = {}

@@ -1,6 +1,6 @@
-print("Lade AkWebServerIo ...")
+print("Lade ak.io.AkWebServerIo ...")
 
-AkWebServerIo = {}
+local AkWebServerIo = {}
 
 local function dirExists(dir)
     local file = io.open(dir .. "/" .. "tmp.txt", "w")
@@ -81,3 +81,5 @@ function AkWebServerIo.setOutputDirectory(verzeichnis)
     --assert(ret, verzeichnis .. " existiert nicht")
     ausgabeVerzeichnis = verzeichnis
 end
+
+return AkWebServerIo

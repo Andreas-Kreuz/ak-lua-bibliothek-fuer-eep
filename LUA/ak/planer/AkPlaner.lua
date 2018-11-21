@@ -1,4 +1,4 @@
-print("Lade AkPlaner ...")
+print("Lade ak.planer.AkPlaner ...")
 
 local AkSekundenProTag = 24 * 60 * 60
 
@@ -22,7 +22,7 @@ end
 -- Class Scheduler
 ------------------
 
-AkPlaner = { bereit = true }
+local AkPlaner = { bereit = true }
 AkPlaner.debug = AkStartMitDebug or false
 AkPlaner.eingeplanteAktionen = {}
 AkPlaner.spaetereAktionen = {} -- Wird zu self.eingeplanteAktionen hinzugefuegt
@@ -115,33 +115,6 @@ function planeNachAktion(eingeplanteAktionen, einzuplanendeAktion, zeitspanneInS
 end
 
 
----------------------------------------
--- Class AkAktion - is just a function
----------------------------------------
-AkAktion = {}
 
----
--- @param f Auszuführende Funktion (die zu startende Aktion)
--- @param name Name der Aktion
---
-function AkAktion:neu(f, name)
-    local o = {
-        f = f,
-        name = name,
-        folgeAktionen = {},
-    }
-    self.__index = self
-    return setmetatable(o, self)
-end
 
-function AkAktion:planeFolgeAktion(folgeAktion, zeitspanneInSekunden)
-    self.folgeAktionen[folgeAktion] = zeitspanneInSekunden
-end
-
-function AkAktion:starteAktion()
-    self.f()
-end
-
-function AkAktion:getName()
-    return self.name
-end
+return AkPlaner

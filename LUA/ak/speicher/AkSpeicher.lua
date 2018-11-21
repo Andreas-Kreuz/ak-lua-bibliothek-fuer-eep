@@ -1,8 +1,8 @@
-print("Lade AkSpeicherHilfe ...")
+print("Lade ak.speicher.AkSpeicher ...")
 
 local speicherPlaetze = {}
 local gespeicherteWerte = {}
-AkSpeicherHilfe = {}
+local AkSpeicherHilfe = {}
 AkSpeicherHilfe.debugDatei = "AkSpeicherWerte.txt"
 AkSpeicherHilfe.debug = AkStartMitDebug or false
 
@@ -143,3 +143,5 @@ for i = 1, 1000 do
         AkSpeicherHilfe.aktualisiereDebugDatei()
     end
 end
+
+return AkSpeicherHilfe

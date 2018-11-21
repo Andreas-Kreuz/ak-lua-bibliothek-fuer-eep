@@ -1,10 +1,10 @@
-print("Lade AkStatistik ...")
+print("Lade ak.io.AkStatistik ...")
 
-require "ak.io.AkWebServerIo"
-os = require "os"
-json = require("ak.io.dkjson")
+local AkWebServerIo = require("ak.io.AkWebServerIo")
+local os = require("os")
+local json = require("ak.io.dkjson")
 
-AkStatistik = {}
+local AkStatistik = {}
 AkStatistik.programVersion = "0.1.0"
 local MAX_SIGNALS = 1000
 local MAX_TRACKS = 50000
@@ -170,13 +170,16 @@ local function fillTracksBy(besetztFunktion, trackName, trainList, rollingStockL
 
         for i = 0, (rollingStockCount - 1) do
             local rollingStockName = "?"
-            local couplingFront = true
-            local couplingRear = true
+            local couplingFront
+            local couplingRear
             local _
             if EEPVer >= 13.2 then
                 rollingStockName = EEPGetRollingstockItemName(trainName, i)
                 _, couplingFront = EEPRollingstockGetCouplingFront(rollingStockName)
                 _, couplingRear = EEPRollingstockGetCouplingRear(rollingStockName)
+            else
+                couplingFront = true
+                couplingRear = true
             end
 
             local length = -1
@@ -313,3 +316,5 @@ end
 function AkStatistik.writeLater(key, value)
     writeLater[key] = value
 end
+
+return AkStatistik

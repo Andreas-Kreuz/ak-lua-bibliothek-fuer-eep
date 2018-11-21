@@ -1,4 +1,4 @@
-print("Lade AkAusgabe ...")
+print("Lade ak.text.AkAusgabe ...")
 
 AkAusgabe = {}
 AkAusgabe.__index = AkAusgabe
