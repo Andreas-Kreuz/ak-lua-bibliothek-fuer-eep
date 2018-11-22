@@ -22,10 +22,14 @@ date: 2018-11-19
 2. **Lua einrichten**
 
    Wenn Du die Bibliothek installiert hast, dann nimm den Aufruf von ```AkStatistik:statistikAusgabe()``` in die vorhandene Funtion ```EEPMain()``` auf:
-    ```
+    ```lua
+    local AkStatistik = require("ak.io.AkStatistik")
+ 
+    -- anderer Code
+    
     function EEPMain()
-        -- Dein bisheriger Code
-        AkStatistik:statistikAusgabe()
+        -- Dein bisheriger Code in EEPMain
+        AkStatistik.statistikAusgabe()
 
         return 1
     end
