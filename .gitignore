@@ -49,6 +49,7 @@ luac.out
 /LUA/ak/io/exchange/tmp*
 LUA/**/AkSpeicherWerte.txt
 LUA/**/*.jar
+LUA/SlotNames_BH2.lua
 
 _site
 Gemfile.lock

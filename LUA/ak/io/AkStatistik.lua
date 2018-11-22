@@ -1,5 +1,6 @@
 print("Lade ak.io.AkStatistik ...")
 
+local AkDataSlots = require("ak.data.AkDataSlots")
 local AkWebServerIo = require("ak.io.AkWebServerIo")
 local os = require("os")
 local json = require("ak.io.dkjson")
@@ -31,17 +32,7 @@ local function fillEEPVersion()
 end
 
 local function fillSaveSlots()
-    data["save-slots"] = {}
-    for i = 1, 1000 do
-        local hResult, saved = EEPLoadData(i)
-        if hResult then
-            local o = {
-                id = i,
-                data = saved,
-            }
-            table.insert(data["save-slots"], o)
-        end
-    end
+    data["save-slots"] = AkDataSlots.fillApiV1()
 end
 
 local function fillSignals()
