@@ -2,7 +2,7 @@ print("Lade ak.schiene.AkSchiene ...")
 local AkSpeicherHilfe = require("ak.speicher.AkSpeicher")
 local fmt = require("ak.text.AkFormat")
 
-local dbg = {
+dbg = {
     anforderung = true,
     bahnhof = false,
     error = true,
@@ -14,7 +14,7 @@ local dbg = {
     types = false,
 }
 
-local function pdbg(level, msg)
+function pdbg(level, msg)
     if (level) then print(msg) end
 end
 

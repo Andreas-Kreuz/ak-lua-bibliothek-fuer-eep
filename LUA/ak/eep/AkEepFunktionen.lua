@@ -11,7 +11,7 @@ function clearlog()
     --print("Clear ...")
 end
 
-AkEEPHilfe = {}
+local AkEEPHilfe = {}
 AkEEPHilfe.zahlDerZuegeAnSignal = {}
 AkEEPHilfe.namenDerZuegeAnSignal = {}
 AkEEPHilfe.routenDerZuege = {}
@@ -595,3 +595,5 @@ function EEPStructureGetModelType(name)
         return false
     end
 end
+
+return AkEEPHilfe

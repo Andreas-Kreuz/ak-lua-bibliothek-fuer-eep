@@ -328,6 +328,10 @@ Erinnerst Du Dich den Code, der die Tipp-Texte zu den Signalen hinzugefügt hat?
 **Tipp**: Setze die Werte wieder auf `true`, wenn Du denkst, dass Du die Signale falsch gesetzt hast.
 
 
+## Vergleiche Deine Schaltungen in EEP-Web
+
+    ![BILD](../assets/tutorial/kreuzung/zum-leben-erweckt.jpg)
+
 # Geschafft
 Du hast diese Anleitung abgeschlossen :four_leaf_clover:
 

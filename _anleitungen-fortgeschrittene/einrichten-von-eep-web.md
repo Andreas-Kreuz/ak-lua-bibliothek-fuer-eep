@@ -1,9 +1,9 @@
 ---
 layout: page_with_toc
-title: Einrichten von EEP-Web
+title: EEP-Web einrichten
 type: Tutorial
 subtitle: Erfahre wie Du EEP-Web einrichtest und benutzt.  
-img: "/assets/thumbnails/tutorial3-verkehr-erkennen.jpg"
+img: "/assets/thumbnails/eep-web-startseite.png"
 permalink: anleitungen-fortgeschrittene/einrichten-von-eep-web
 hide: false
 date: 2018-11-19
@@ -17,7 +17,7 @@ date: 2018-11-19
 
 1. **Du brauchst für Lua**
 
-   Eine aktuelle Version der Lua-Bibliothek von Andreas Kreuz - mindestens Version 0.5.0 ([siehe Installation](../_anleitungen-anfaenger/installation))
+   Eine aktuelle Version der Lua-Bibliothek von Andreas Kreuz - mindestens Version 0.5.0 ([siehe Installation](../anleitungen-anfaenger/installation))
 
 2. **Lua einrichten**
 

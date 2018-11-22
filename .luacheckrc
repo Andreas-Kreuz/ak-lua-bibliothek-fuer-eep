@@ -6,6 +6,8 @@ read_globals = {
     "AkTimeH",
     "AkTimeM",
     "AkTimeS",
+    "clearlog",
+    "EEPVer"
     "EEPChangeInfoSignal",
     "EEPChangeInfoSwitch",
     "EEPStructureGetLight",
@@ -21,8 +23,10 @@ read_globals = {
     "EEPSetSignal",
     "EEPSetSwitch",
     "EEPSetTrainAxis",
+    "EEPSetTrainRoute",
     "EEPShowInfoSignal",
     "EEPShowInfoSwitch",
+    "Zugname",
 }
 
 allow_defined_top = true

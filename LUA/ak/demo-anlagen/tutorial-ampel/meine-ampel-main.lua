@@ -24,12 +24,14 @@ AkKreuzung.zeigeSchaltungAlsInfo = false
 --   |              |     |      |           +------ Signal-ID dieser Ampel
 --   |              |     |      |           |   +-- Modell kann rot, gelb, gruen und FG schalten
 n1 = AkRichtung:neu("N1", 100, { AkAmpel:neu(12, AkAmpelModell.JS2_3er_mit_FG) })
+n1:setRichtungen({ 'STRAIGHT', 'RIGHT' })
 
 -- Die Richtung N2 hat zwei Ampeln fuer's Linksabbiegen, 9 mit Fussgaengerampel und 17 ohne
 n2 = AkRichtung:neu("N2", 101, {
     AkAmpel:neu(9, AkAmpelModell.JS2_3er_mit_FG),
     AkAmpel:neu(17, AkAmpelModell.JS2_3er_ohne_FG)
 })
+n2:setRichtungen({ 'LEFT' })
 
 -- Die Richtungen für Fussgaenger haben auch je zwei Ampeln
 fg_n1 = AkRichtung:neu("FG_N1", 102, {
@@ -40,6 +42,8 @@ fg_n2 = AkRichtung:neu("FG_N2", 103, {
     AkAmpel:neu(20, AkAmpelModell.JS2_2er_nur_FG),
     AkAmpel:neu(21, AkAmpelModell.JS2_2er_nur_FG),
 })
+fg_n1:setTrafficType('PEDESTRIAN')
+fg_n2:setTrafficType('PEDESTRIAN')
 
 -- Richtungen im Osten
 o1 = AkRichtung:neu("O1", 104, { AkAmpel:neu(14, AkAmpelModell.JS2_3er_mit_FG) })
@@ -47,10 +51,13 @@ o2 = AkRichtung:neu("O2", 105, {
     AkAmpel:neu(16, AkAmpelModell.JS2_3er_mit_FG),
     AkAmpel:neu(18, AkAmpelModell.JS2_3er_ohne_FG)
 })
+o1:setRichtungen({ 'STRAIGHT', 'RIGHT' })
+o2:setRichtungen({ 'LEFT' })
 fg_o = AkRichtung:neu("FG_O", 106, {
     AkAmpel:neu(14, AkAmpelModell.JS2_3er_mit_FG), -- Wird geteilt mit O1
     AkAmpel:neu(16, AkAmpelModell.JS2_3er_mit_FG) -- Wird geteilt mit O2
 })
+fg_o:setTrafficType('PEDESTRIAN')
 
 -- Richtungen im Sueden
 s1 = AkRichtung:neu("S1", 107, { AkAmpel:neu(11, AkAmpelModell.JS2_3er_mit_FG) })
@@ -58,6 +65,9 @@ s2 = AkRichtung:neu("S2", 108, {
     AkAmpel:neu(10, AkAmpelModell.JS2_3er_mit_FG),
     AkAmpel:neu(19, AkAmpelModell.JS2_3er_ohne_FG)
 })
+s1:setRichtungen({ 'STRAIGHT', 'RIGHT' })
+s2:setRichtungen({ 'LEFT' })
+
 fg_s1 = AkRichtung:neu("FG_S1", 109, {
     AkAmpel:neu(10, AkAmpelModell.JS2_3er_mit_FG), -- Wird geteilt mit S2
     AkAmpel:neu(11, AkAmpelModell.JS2_3er_mit_FG) -- Wird geteilt mit S1
@@ -66,6 +76,9 @@ fg_s2 = AkRichtung:neu("FG_S2", 110, {
     AkAmpel:neu(22, AkAmpelModell.JS2_2er_nur_FG),
     AkAmpel:neu(23, AkAmpelModell.JS2_2er_nur_FG),
 })
+fg_s1:setTrafficType('PEDESTRIAN')
+fg_s2:setTrafficType('PEDESTRIAN')
+
 
 -- Richtungen im Westen
 w1 = AkRichtung:neu("W1", 111, { AkAmpel:neu(13, AkAmpelModell.JS2_3er_mit_FG) })
@@ -73,10 +86,14 @@ w2 = AkRichtung:neu("W2", 112, {
     AkAmpel:neu(15, AkAmpelModell.JS2_3er_mit_FG),
     AkAmpel:neu(24, AkAmpelModell.JS2_3er_ohne_FG)
 })
+w1:setRichtungen({ 'STRAIGHT', 'RIGHT' })
+w2:setRichtungen({ 'LEFT' })
 fg_w = AkRichtung:neu("FG_W", 113, {
     AkAmpel:neu(13, AkAmpelModell.JS2_3er_mit_FG), -- Wird geteilt mit O1
     AkAmpel:neu(15, AkAmpelModell.JS2_3er_mit_FG) -- Wird geteilt mit O2
 })
+fg_w:setTrafficType('PEDESTRIAN')
+
 
 --------------------------------------------------------------
 -- Definiere die Schaltungen und die Kreuzung

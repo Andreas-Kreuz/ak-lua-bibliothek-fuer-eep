@@ -307,6 +307,18 @@ function AkRichtung:schalte(phase, grund)
     self.phase = phase
 end
 
+function AkRichtung:setRichtungen(...)
+    self.richtungen = ... or { 'LEFT', 'STRAIGHT', 'RIGHT', }
+end
+
+function AkRichtung:setTrafficType(trafficType)
+    if trafficType ~= "TRAM" and trafficType ~= "PEDESTRIAN" and trafficType ~= "NORMAL" then
+        print("No such traffic type: " .. trafficType)
+    else
+        self.trafficType = trafficType
+    end
+end
+
 --- Erzeugt eine Richtung, welche durch eine Ampel gesteuert wird.
 -- @param name Name der Richtung einer Kreuzung
 -- @param eepSaveId Id fuer das Speichern der Richtung

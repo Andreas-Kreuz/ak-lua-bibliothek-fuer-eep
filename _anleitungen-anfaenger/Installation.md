@@ -37,4 +37,7 @@ Du hast die Installation abgeschlossen.
 
 Die Bibliothek wurde in das  Unterverzeichnis `LUA/ak` Deiner EEP-Installation installiert, z.B. in `C:\Trend\EEP14\LUA\`.
 
-Jetzt kannst Du die [Anleitung für eine automatische Ampelkreuzung](../anleitungen-fortgeschrittene/ampelkreuzung) starten oder die [Dokumentation der Bibliothek](../LUA/ak/) lesen.
+Jetzt kannst Du:
+* [EEP-Web einrichten](../anleitungen-fortgeschrittene/einrichten-von-eep-web)
+* die [Anleitung für eine automatische Ampelkreuzung](../anleitungen-fortgeschrittene/ampelkreuzung) starten
+* die [Dokumentation der Bibliothek](../LUA/ak/) lesen.

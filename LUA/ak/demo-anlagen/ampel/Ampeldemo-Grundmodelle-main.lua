@@ -90,6 +90,14 @@ k2_r2 = AkRichtung:neu("Richtung 2", 122, { AkAmpel:neu(31, Grundmodell_Ampel_3)
 k2_r3 = AkRichtung:neu("Richtung 3", 123, { AkAmpel:neu(34, Grundmodell_Ampel_3) })
 k2_r4 = AkRichtung:neu("Richtung 4", 124, { AkAmpel:neu(33, Grundmodell_Ampel_3) })
 k2_r5 = AkRichtung:neu("Richtung 5", 125, { AkAmpel:neu(30, Grundmodell_Ampel_3) })
+
+k2_r1:setRichtungen({ 'RIGHT' })
+k2_r2:setRichtungen({ 'STRAIGHT' })
+k2_r3:setRichtungen({ 'STRAIGHT' })
+k2_r4:setRichtungen({ 'LEFT' })
+k2_r5:setRichtungen({ 'LEFT', 'RIGHT' })
+
+
 --region K1-Schaltungen
 ----------------------------------------------------------------------------------------------------------------------
 -- Definiere alle Schaltungen fuer Kreuzung 2
@@ -144,16 +152,28 @@ k1_r6 = AkRichtung:neu("Richtung 6", 106, { AkAmpel:neu(09, Grundmodell_Ampel_3)
 k1_r7 = AkRichtung:neu("Richtung 7", 107, { AkAmpel:neu(16, Grundmodell_Ampel_3) })
 k1_r8 = AkRichtung:neu("Richtung 8", 108, { AkAmpel:neu(15, Grundmodell_Ampel_3) })
 
-k1_r1_5_fg = AkRichtung:neu("Richtung 1+5 FG", -1, {
+k1_r1:setRichtungen({ 'STRAIGHT', 'RIGHT' })
+k1_r2:setRichtungen({ 'LEFT' })
+k1_r3:setRichtungen({ 'STRAIGHT', 'RIGHT' })
+k1_r4:setRichtungen({ 'LEFT' })
+k1_r5:setRichtungen({ 'STRAIGHT', 'RIGHT' })
+k1_r6:setRichtungen({ 'LEFT' })
+k1_r7:setRichtungen({ 'STRAIGHT', 'RIGHT' })
+k1_r8:setRichtungen({ 'LEFT' })
+
+local k1_r1_5_fg = AkRichtung:neu("Richtung 1+5 FG", -1, {
     -- keine Speicher-ID fuer Fussgaenger notwendig (-1)
     AkAmpel:neu(40, Grundmodell_Ampel_3_FG), AkAmpel:neu(41, Grundmodell_Ampel_3_FG),
     AkAmpel:neu(36, Grundmodell_Ampel_3_FG), AkAmpel:neu(37, Grundmodell_Ampel_3_FG)
 })
-k1_r3_7_fg = AkRichtung:neu("Richtung 3+7 FG", -1, {
+local k1_r3_7_fg = AkRichtung:neu("Richtung 3+7 FG", -1, {
     -- keine Speicher-ID fuer Fussgaenger notwendig (-1)
     AkAmpel:neu(38, Grundmodell_Ampel_3_FG), AkAmpel:neu(39, Grundmodell_Ampel_3_FG),
     AkAmpel:neu(42, Grundmodell_Ampel_3_FG), AkAmpel:neu(43, Grundmodell_Ampel_3_FG)
 })
+
+k1_r1_5_fg:setTrafficType('PEDESTRIAN')
+k1_r3_7_fg:setTrafficType('PEDESTRIAN')
 
 --endregion
 --region K1-Schaltungen
