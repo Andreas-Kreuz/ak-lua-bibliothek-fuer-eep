@@ -66,17 +66,22 @@ Dafür benötigst Du folgendes:
 ## Notwendige Befehle in das Lua-Skript aufnehmen
 
 * Ergänze das Lua-Haupt-Skript um die folgenden Zeilen.
-  ```lua
-  require("ak.strasse.AkStrasse")
+    ```lua
+    local AkPlaner = require("ak.planer.AkPlaner")
+    local AkAmpel = require("ak.strasse.AkAmpel")
+    local AkAmpelModell = require("ak.strasse.AkAmpelModell")
+    local AkKreuzung = require("ak.strasse.AkKreuzung")
+    local AkKreuzungsSchaltung = require("ak.strasse.AkKreuzungsSchaltung")
+    local AkRichtung = require("ak.strasse.AkRichtung")
 
-  -- Hier kommt der Code
+    -- Hier kommt der Code
 
-  function EEPMain()
-      AkKreuzung:planeSchaltungenEin()
-      AkPlaner:fuehreGeplanteAktionenAus()
-      return 1
-  end
-  ```
+    function EEPMain()
+        AkKreuzung:planeSchaltungenEin()
+        AkPlaner:fuehreGeplanteAktionenAus()
+        return 1
+    end
+    ```
 
 * Klicke in EEP auf _"Skript neu laden"_ und wechsle in den 3D-Modus. <br>😀 **Wenn Du alles richtig gemacht hast**, verschwindet die Fehlermeldung
 
@@ -322,6 +327,10 @@ Erinnerst Du Dich den Code, der die Tipp-Texte zu den Signalen hinzugefügt hat?
 
 **Tipp**: Setze die Werte wieder auf `true`, wenn Du denkst, dass Du die Signale falsch gesetzt hast.
 
+
+## Vergleiche Deine Schaltungen in EEP-Web
+
+    ![BILD](../assets/tutorial/kreuzung/zum-leben-erweckt.jpg)
 
 # Geschafft
 Du hast diese Anleitung abgeschlossen 🍀

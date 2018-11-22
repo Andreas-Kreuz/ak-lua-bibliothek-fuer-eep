@@ -3,7 +3,10 @@ describe("AkStrasse.lua", function()
         describe(".zaehleAnAmpelAlle()", function()
             insulate("ohne Zähler", function()
                 require("ak.eep.AkEepFunktionen")
-                require("ak.strasse.AkStrasse")
+                local AkAmpelModell = require("ak.strasse.AkAmpelModell")
+                local AkAmpel = require("ak.strasse.AkAmpel")
+                local AkRichtung = require("ak.strasse.AkRichtung")
+
                 EEPSetTrainRoute("#Auto1", "Meine Route 1")
 
                 local richtung1 = AkRichtung:neu("Richtung 1", 34, {
@@ -21,7 +24,10 @@ describe("AkStrasse.lua", function()
 
             insulate("mit Zähler, ohne Anforderung", function()
                 require("ak.eep.AkEepFunktionen")
-                require("ak.strasse.AkStrasse")
+                local AkAmpelModell = require("ak.strasse.AkAmpelModell")
+                local AkAmpel = require("ak.strasse.AkAmpel")
+                local AkRichtung = require("ak.strasse.AkRichtung")
+
                 EEPSetTrainRoute("#Auto1", "Meine Route 1")
 
                 local richtung1 = AkRichtung:neu("Richtung 1", 34, {
@@ -41,8 +47,11 @@ describe("AkStrasse.lua", function()
             end)
 
             insulate("mit Zähler, mit Anforderung", function()
-                require("ak.eep.AkEepFunktionen")
-                require("ak.strasse.AkStrasse")
+                local AkEEPHilfe = require("ak.eep.AkEepFunktionen")
+                local AkAmpelModell = require("ak.strasse.AkAmpelModell")
+                local AkAmpel = require("ak.strasse.AkAmpel")
+                local AkRichtung = require("ak.strasse.AkRichtung")
+
                 EEPSetTrainRoute("#Auto1", "Meine Route 1")
                 AkEEPHilfe.zahlDerZuegeAnSignal[55] = 0
                 AkEEPHilfe.namenDerZuegeAnSignal[55] = {}
@@ -66,7 +75,9 @@ describe("AkStrasse.lua", function()
     describe(".zaehleAnStrasseAlle()", function()
         insulate("ohne Zähler", function()
             require("ak.eep.AkEepFunktionen")
-            require("ak.strasse.AkStrasse")
+            local AkAmpelModell = require("ak.strasse.AkAmpelModell")
+            local AkAmpel = require("ak.strasse.AkAmpel")
+            local AkRichtung = require("ak.strasse.AkRichtung")
             EEPSetTrainRoute("#Auto1", "Meine Route 1")
 
             local richtung1 = AkRichtung:neu("Richtung 1", 34, {
@@ -84,7 +95,10 @@ describe("AkStrasse.lua", function()
 
         insulate("mit Zähler, ohne Anforderung", function()
             require("ak.eep.AkEepFunktionen")
-            require("ak.strasse.AkStrasse")
+            local AkAmpelModell = require("ak.strasse.AkAmpelModell")
+            local AkAmpel = require("ak.strasse.AkAmpel")
+            local AkRichtung = require("ak.strasse.AkRichtung")
+
             EEPSetTrainRoute("#Auto1", "Meine Route 1")
 
             local richtung1 = AkRichtung:neu("Richtung 1", 34, {
@@ -104,8 +118,11 @@ describe("AkStrasse.lua", function()
         end)
 
         insulate("mit Zähler, mit Anforderung", function()
-            require("ak.eep.AkEepFunktionen")
-            require("ak.strasse.AkStrasse")
+            local AkEEPHilfe = require("ak.eep.AkEepFunktionen")
+            local AkAmpelModell = require("ak.strasse.AkAmpelModell")
+            local AkAmpel = require("ak.strasse.AkAmpel")
+            local AkRichtung = require("ak.strasse.AkRichtung")
+
             EEPSetTrainRoute("#Auto1", "Meine Route 1")
 
             local richtung1 = AkRichtung:neu("Richtung 1", 35, {
@@ -123,8 +140,11 @@ describe("AkStrasse.lua", function()
 
     describe(".zaehleAnStrasseRoute()", function()
         insulate("mit Zähler, mit Anforderung", function()
-            require("ak.eep.AkEepFunktionen")
-            require("ak.strasse.AkStrasse")
+            local AkEEPHilfe = require("ak.eep.AkEepFunktionen")
+            local AkAmpelModell = require("ak.strasse.AkAmpelModell")
+            local AkAmpel = require("ak.strasse.AkAmpel")
+            local AkRichtung = require("ak.strasse.AkRichtung")
+
             EEPSetTrainRoute("#Auto1", "Meine Route 1")
             EEPSetTrainRoute("#Auto2", "Meine Route 2")
 
@@ -141,8 +161,11 @@ describe("AkStrasse.lua", function()
         end)
 
         insulate("mit Zähler, mit Anforderung", function()
-            require("ak.eep.AkEepFunktionen")
-            require("ak.strasse.AkStrasse")
+            local AkEEPHilfe = require("ak.eep.AkEepFunktionen")
+            local AkAmpelModell = require("ak.strasse.AkAmpelModell")
+            local AkAmpel = require("ak.strasse.AkAmpel")
+            local AkRichtung = require("ak.strasse.AkRichtung")
+
             EEPSetTrainRoute("#Auto1", "Meine Route 1")
             EEPSetTrainRoute("#Auto2", "Meine Route 2")
 

@@ -1,9 +1,9 @@
 ---
 layout: page_with_toc
-title: Einrichten von EEP-Web
+title: EEP-Web einrichten
 type: Tutorial
 subtitle: Erfahre wie Du EEP-Web einrichtest und benutzt.  
-img: "/assets/thumbnails/tutorial3-verkehr-erkennen.jpg"
+img: "/assets/thumbnails/eep-web-startseite.png"
 permalink: anleitungen-fortgeschrittene/einrichten-von-eep-web
 hide: false
 date: 2018-11-19
@@ -17,15 +17,19 @@ date: 2018-11-19
 
 1. **Du brauchst für Lua**
 
-   Eine aktuelle Version der Lua-Bibliothek von Andreas Kreuz - mindestens Version 0.5.0 ([siehe Installation](../_anleitungen-anfaenger/installation))
+   Eine aktuelle Version der Lua-Bibliothek von Andreas Kreuz - mindestens Version 0.5.0 ([siehe Installation](../anleitungen-anfaenger/installation))
 
 2. **Lua einrichten**
 
    Wenn Du die Bibliothek installiert hast, dann nimm den Aufruf von ```AkStatistik:statistikAusgabe()``` in die vorhandene Funtion ```EEPMain()``` auf:
-    ```
+    ```lua
+    local AkStatistik = require("ak.io.AkStatistik")
+ 
+    -- anderer Code
+    
     function EEPMain()
-        -- Dein bisheriger Code
-        AkStatistik:statistikAusgabe()
+        -- Dein bisheriger Code in EEPMain
+        AkStatistik.statistikAusgabe()
 
         return 1
     end

@@ -1,5 +1,10 @@
 print("Lade AkEepFunctions ...")
-require("ak.eep.AkEepFunktionen")
+local AkEEPHilfe = require("ak.eep.AkEepFunktionen")
+
+local AkPlaner = require("ak.planer.AkPlaner")
+local AkAmpel = require("ak.strasse.AkAmpel")
+local AkKreuzung = require("ak.strasse.AkKreuzung")
+local AkSpeicherHilfe = require("ak.speicher.AkSpeicher")
 
 clearlog()
 --------------------------------------------------------------------
@@ -17,7 +22,7 @@ require("ak.demo-anlagen.tutorial-ampel.Andreas_Kreuz-Tutorial-Ampelkreuzung-2-m
 -- Zeige erweiterte Informationen an                              --
 --------------------------------------------------------------------
 AkPlaner.debug = true
-AkSpeicherHilfe.debug = false
+AkSpeicherHilfe.debug = true
 AkAmpel.debug = false
 AkKreuzung.debug = false
 AkKreuzung.zeigeSignalIdsAllerSignale = false

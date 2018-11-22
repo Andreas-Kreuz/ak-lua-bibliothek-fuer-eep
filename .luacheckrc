@@ -6,6 +6,8 @@ read_globals = {
     "AkTimeH",
     "AkTimeM",
     "AkTimeS",
+    "clearlog",
+    "EEPVer",
     "EEPChangeInfoSignal",
     "EEPChangeInfoSwitch",
     "EEPStructureGetLight",
@@ -21,13 +23,19 @@ read_globals = {
     "EEPSetSignal",
     "EEPSetSwitch",
     "EEPSetTrainAxis",
+    "EEPSetTrainRoute",
     "EEPShowInfoSignal",
     "EEPShowInfoSwitch",
-    "FAHRZEUG_INITIALISIERE",
+    "Zugname",
 }
 
 allow_defined_top = true
+
+-- See https://luacheck.readthedocs.io/en/stable/warnings.html
+-- 131 - global assignment
+-- 212 - unused variables
 files["LUA/ak/eep"].ignore = {"212","131"}
+files["LUA/ak/strasse/AkStrasse.lua"].ignore = {"131"}
 
 exclude_files = {
     "LUA/ak/io/dkjson.lua",

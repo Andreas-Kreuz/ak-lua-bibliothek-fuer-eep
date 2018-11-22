@@ -1,5 +1,11 @@
 clearlog()
-require("ak.strasse.AkStrasse")
+local AkPlaner = require("ak.planer.AkPlaner")
+local AkAmpelModell = require("ak.strasse.AkAmpelModell")
+local AkAmpel = require("ak.strasse.AkAmpel")
+local AkRichtung = require("ak.strasse.AkRichtung")
+local AkKreuzung = require("ak.strasse.AkKreuzung")
+local AkKreuzungsSchaltung = require("ak.strasse.AkKreuzungsSchaltung")
+local AkStatistik = require("ak.io.AkStatistik")
 
 ------------------------------------------------
 -- Damit kommt wird die Variable "Zugname" automatisch durch EEP belegt
@@ -131,5 +137,6 @@ k1:fuegeSchaltungHinzu(sch3)
 function EEPMain()
     AkKreuzung:planeSchaltungenEin()
     AkPlaner:fuehreGeplanteAktionenAus()
+    AkStatistik.statistikAusgabe()
     return 1
 end

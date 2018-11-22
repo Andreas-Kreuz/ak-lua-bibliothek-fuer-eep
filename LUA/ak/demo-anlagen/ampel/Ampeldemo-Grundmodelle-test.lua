@@ -1,7 +1,11 @@
 Zugname = "#PLATZHALTER"
 
-print("Lade AkEepFunctions ...")
 require("ak.eep.AkEepFunktionen")
+
+local AkPlaner = require("ak.planer.AkPlaner")
+local AkAmpel = require("ak.strasse.AkAmpel")
+local AkKreuzung = require("ak.strasse.AkKreuzung")
+local AkSpeicherHilfe = require("ak.speicher.AkSpeicher")
 -- endregion
 
 clearlog()
