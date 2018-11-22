@@ -42,7 +42,7 @@ local function fillSignals()
         local val = EEPGetSignal(i)
         if val > 0 then
             local waitingVehiclesCount = 0;
-            if EEPVer >= 13 then
+            if EEPVer >= 13.2 then
                 waitingVehiclesCount = EEPGetSignalTrainsCount(i)
             end
             local o = {}
