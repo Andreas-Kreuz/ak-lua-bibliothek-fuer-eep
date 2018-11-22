@@ -15,7 +15,7 @@ tags: [Fortgeschrittene, Entwickler]
 Es wurde für die Programmiersprache JAVA entworfen.
 Mit einem Plugin ist IntelliJ auch für Lua geeignet.</p>
 
-:star: Diese Anleitung richtet sich an fortgeschrittene Benutzer.
+⭐ Diese Anleitung richtet sich an fortgeschrittene Benutzer.
 
 **Vorteile von IntelliJ**
 * Du kannst Programme auf Knopfdruck starten
@@ -201,6 +201,6 @@ Das liegt daran, das die Lua-Laufzeitumgebung noch nicht konfiguriert ist. <br>
 <img src="../assets/tutorial/intellij/44.png" class="img-fluid img-thumbnail" style="border: 1 solid #aaaaaa;" alt="">
 
 <br>
-:four_leaf_clover: Herzlichen Glückwunsch, Du hast es bis hierhin geschafft!
+🍀 Herzlichen Glückwunsch, Du hast es bis hierhin geschafft!
 <br><br>
 <p class="lead">Nun kannst Du Deine Anlagen ohne EEP in IntelliJ testen. Bei Erfolg, kannst Du sie in EEP übernehmen. Eine Beschreibung findest Du in der Anleitung <a href="../anleitungen-fortgeschrittene/demo-anlage-testen">Testen vor EEP</a></p>

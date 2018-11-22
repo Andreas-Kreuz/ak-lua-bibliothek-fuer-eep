@@ -69,14 +69,14 @@ date: 2018-11-19
     3. Der Pfad zu EEP-Web: `C:\Spiele\EEP15\LUA\ak\ak-eep-web.jar`
     4. Der Pfad zu zum Austausch mit EEP: `C:\Spiele\EEP15\LUA\ak\io\exchange`
 
-    :bulb: Den Pfad musst Du entsprechend Deiner EEP-Version anpassen.
+    💡 Den Pfad musst Du entsprechend Deiner EEP-Version anpassen.
     z.B. Wenn Dein EEP nicht in C:\Spiele, sondern in C:\Trend liegt, oder wenn Du nicht EEP15 sondern eine frühere Version installiert hast.
 
     ![Kommandozeile ausführen](../assets/tutorial/eep-web-installation/08-server-starten.png)
 
     ![Firewall](../assets/tutorial/eep-web-installation/09-windows-firewall.png)
 
-    :star: Du hast es bis hierhin geschafft.
+    ⭐ Du hast es bis hierhin geschafft.
     Lege im nächsten Schritt eine Verknüpfung an, damit Du nicht die Kommandzeile verwenden musst.
 
 2. Erstelle eine Verknüpfung um EEP-Web zu starten
@@ -97,7 +97,7 @@ date: 2018-11-19
     * Nun kannst Du die Verknüpfung auf den Desktop ziehen und umbenennen, z.B. in EEP-Web.
 
 
-:four_leaf_clover: Du hast es bis hierhin geschafft, nun wünsche ich viel Spaß beim Benutzen von http://localhost:3000.
+🍀 Du hast es bis hierhin geschafft, nun wünsche ich viel Spaß beim Benutzen von http://localhost:3000.
 
-:star: Wenn Du den Server von einem anderen PC erreichen möchtest, benutze statt `localhost` Deine IP-Address
+⭐ Wenn Du den Server von einem anderen PC erreichen möchtest, benutze statt `localhost` Deine IP-Address
 z.B. `http://192.168.0.99:3000` oder Deinen Rechnernmamen, z.B. `http://deinrechnername:3000`. 

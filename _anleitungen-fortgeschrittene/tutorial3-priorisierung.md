@@ -60,7 +60,7 @@ Es gibt 4 Arten von Priorisierungen für Richtungen. Nur eine davon kann  verwen
   </li>
 </ul>
 
-:star: **Bitte beachte**: Pro Richtung kann nur ein Mechanismus verwendet werden. Bei mehreren Mechanismen, gewinnt der erste in der folgenden Liste:
+⭐ **Bitte beachte**: Pro Richtung kann nur ein Mechanismus verwendet werden. Bei mehreren Mechanismen, gewinnt der erste in der folgenden Liste:
 1. Erkennen von Fahrzeugen auf Straßen
 2. Erkennen von Fahrzeugen an Signalen
 3. Zählen mit Kontaktpunkten
@@ -73,7 +73,7 @@ Die nächste Schaltung wird immer durch die höchsten Durchschnittspriorität al
 
 Durch das Einbeziehen der Wartezeit wird sichergestellt, dass jede Richtung berücksichtigt wird.
 
-:star: Am besten verwendest Du die Priorisierung für alle Richtungen einer Kreuzung - oder für gar keine.
+⭐ Am besten verwendest Du die Priorisierung für alle Richtungen einer Kreuzung - oder für gar keine.
 
 
 # Erkennung mit Strassen
@@ -92,7 +92,7 @@ Durch das Einbeziehen der Wartezeit wird sichergestellt, dass jede Richtung ber�
 
   ```lua
   richtung = AkRichtung:neu("WS", 108, {
-      AkAmpel:neu(15, AkAmpelModell.Unsichtbar_2er
+      AkAmpel:neu(15, AkAmpelModell.Unsichtbar_2er)
   })
   richtung:zaehleAnStrasseAlle(2) -- Erfasst Anforderungen, wenn ein Fahrzeug auf Strasse 2 steht
   ```
@@ -122,7 +122,7 @@ Auf Wunsch kann die Priorisierung nur dann erfolgen, wenn Fahrzeuge einer bestim
 
   ```lua
   richtung = AkRichtung:neu("WS", 108, {
-      AkAmpel:neu(15, AkAmpelModell.Unsichtbar_2er
+      AkAmpel:neu(15, AkAmpelModell.Unsichtbar_2er)
   })
   richtung:zaehleAnStrasseBeiRoute(2, "Linie 1")
   ```
@@ -133,13 +133,13 @@ Auf Wunsch kann die Priorisierung nur dann erfolgen, wenn Fahrzeuge einer bestim
 
   ```lua
   richtung = AkRichtung:neu("WS", 108, {
-      AkAmpel:neu(15, AkAmpelModell.Unsichtbar_2er
+      AkAmpel:neu(15, AkAmpelModell.Unsichtbar_2er)
   })
   richtung:zaehleAnStrasseBeiRoute(2, "Linie 1")
   richtung:zaehleAnStrasseBeiRoute(2, "Linie 4")
   ```
 
-:star: **Bitte beachte**: Die Kombination der Erkennung von Fahrzeugen jeder Route und Fahrzeugen bestimmter Routen ist nicht sinnvoll.
+⭐ **Bitte beachte**: Die Kombination der Erkennung von Fahrzeugen jeder Route und Fahrzeugen bestimmter Routen ist nicht sinnvoll.
 
 
 # Erkennung mit Signalen
@@ -172,7 +172,7 @@ Die Erkennung erfolgt ähnlich wie bei der Straße (Details siehe oben).
   richtung:zaehleAnAmpelBeiRoute(14, "Linie 2")
   ```
 
-:star: Die Erkennung funktioniert nur, wenn die Ampel rot ist.
+⭐ Die Erkennung funktioniert nur, wenn die Ampel rot ist.
 
 
 # Erkennung mit Kontaktpunkten
@@ -192,12 +192,12 @@ Setze für jeder Richtung zwei Kontaktpunkte:
 
     Dieser Kontaktpunkt muss die Funktion `richtung:betritt()` aufrufen - in der Demo-Anlage wird in den Kontaktpunkten `KpBetritt(richtung)` verwendet.
 
-    :star: Achte darauf, dass nur Fahrzeuge den Kontaktpunkt aufrufen, die diese Richtung betreten.<br>
-    :star: Achte darauf, dass der Kontaktpunkt nicht vor einer Verzweigungen liegt, die die Fahrzeuge auf andere Richtungen verteilt.
+    ⭐ Achte darauf, dass nur Fahrzeuge den Kontaktpunkt aufrufen, die diese Richtung betreten.<br>
+    ⭐ Achte darauf, dass der Kontaktpunkt nicht vor einer Verzweigungen liegt, die die Fahrzeuge auf andere Richtungen verteilt.
 
 2. Hinter dem Signal der Richtung
 
     Dieser Kontaktpunkt muss die Funktion `richtung:verlasse()` aufrufen - in der Demo-Anlage wird in den Kontaktpunkten `KpVerlasse(richtung)` verwendet.
 
-    :star: Achte darauf, dass nur Fahrzeuge den Kontaktpunkt aufrufen, die die korrekte Richtung verlassen.<br>
-    :star: Achte darauf, dass der Kontaktpunkt hinter der Haltelinie liegt.
+    ⭐ Achte darauf, dass nur Fahrzeuge den Kontaktpunkt aufrufen, die die korrekte Richtung verlassen.<br>
+    ⭐ Achte darauf, dass der Kontaktpunkt hinter der Haltelinie liegt.

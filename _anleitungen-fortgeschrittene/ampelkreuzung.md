@@ -27,16 +27,16 @@ Dafür benötigst Du folgendes:
   | Ampel-Baukasten für mehrspurige Straßenkreuzungen (V80NJS20039) | _[Download](https://eepshopping.de/ampel-baukasten-f%C3%83%C6%92%C3%82%C2%BCr-mehrspurige-stra%C3%83%C6%92%C3%82%C5%B8enkreuzungen%7C6624.html)_ |
   | Straßenbahnsignale als Immobilien (V80MA1F010 und V10MA1F011) | _[Download](http://www.eep.euma.de/download/)_ |
 
-:star: **_Tipp_**: Die Lua-Bibliothek ist in der Installation der Anlage enthalten. Möchtest Du Deine eigene Anlage verwenden, so kannst Du die Bibliothek wie folgt installieren: [_Installation der Lua-Bibliothek von Andreas Kreuz_](../anleitungen-anfaenger/installation)
+⭐ **_Tipp_**: Die Lua-Bibliothek ist in der Installation der Anlage enthalten. Möchtest Du Deine eigene Anlage verwenden, so kannst Du die Bibliothek wie folgt installieren: [_Installation der Lua-Bibliothek von Andreas Kreuz_](../anleitungen-anfaenger/installation)
 
 # Los geht's
 * Öffne die Anlage in EEP
 * Öffne Deinen Editor für Lua-Skripte
 
 ## Das Lua-Haupt-Skript anlegen
-:star: _**Tipp:** Aktiviere in EEP unter Programmeinstellungen das EEP Ereignisfenster, damit Du die Lua Meldungen lesen kannst._
+⭐ _**Tipp:** Aktiviere in EEP unter Programmeinstellungen das EEP Ereignisfenster, damit Du die Lua Meldungen lesen kannst._
 
-:exclamation: _**Beachte:** Diese Anleitung geht davon aus, dass in der geöffneten Anlage noch nichts mit LUA gemacht wurde. Verwendest Du Dein eigenes Anlagen-Skript, dann lösche es nicht, sondern ergänze es um die weiter unten aufgeführten Befehle._
+❗ _**Beachte:** Diese Anleitung geht davon aus, dass in der geöffneten Anlage noch nichts mit LUA gemacht wurde. Verwendest Du Dein eigenes Anlagen-Skript, dann lösche es nicht, sondern ergänze es um die weiter unten aufgeführten Befehle._
 
 <br>
 
@@ -48,7 +48,7 @@ Dafür benötigst Du folgendes:
   require("meine-ampel-main")
   ```
 
-* Klicke in EEP auf _"Skript neu laden"_ und wechsle in den 3D-Modus. <br>:smiley: **Wenn Du alles richtig gemacht hast**, erscheint im Log eine Fehlermeldung, dass `meine-ampel-main.lua` nicht gefunden werden kann.
+* Klicke in EEP auf _"Skript neu laden"_ und wechsle in den 3D-Modus. <br>😀 **Wenn Du alles richtig gemacht hast**, erscheint im Log eine Fehlermeldung, dass `meine-ampel-main.lua` nicht gefunden werden kann.
 
     ![BILD](../assets/tutorial/kreuzung/skript-nicht-gefunden.jpg)
 
@@ -58,7 +58,7 @@ Dafür benötigst Du folgendes:
 
     Dies wird das Skript werden, welches in der Anlage verwendet wird. Egal, wie Deine Anlage heißt.
 
-* Klicke in EEP auf _"Skript neu laden"_ und wechsle in den 3D-Modus. <br>:smiley: **Wenn Du alles richtig gemacht hast**, erscheint eine Fehlermeldung, dass `meine-ampel-main.lua` nicht gefunden werden kann.
+* Klicke in EEP auf _"Skript neu laden"_ und wechsle in den 3D-Modus. <br>😀 **Wenn Du alles richtig gemacht hast**, erscheint eine Fehlermeldung, dass `meine-ampel-main.lua` nicht gefunden werden kann.
 
     ![BILD](../assets/tutorial/kreuzung/eepmain-nicht-gefunden.jpg)
 
@@ -78,7 +78,7 @@ Dafür benötigst Du folgendes:
   end
   ```
 
-* Klicke in EEP auf _"Skript neu laden"_ und wechsle in den 3D-Modus. <br>:smiley: **Wenn Du alles richtig gemacht hast**, verschwindet die Fehlermeldung
+* Klicke in EEP auf _"Skript neu laden"_ und wechsle in den 3D-Modus. <br>😀 **Wenn Du alles richtig gemacht hast**, verschwindet die Fehlermeldung
 
     ![BILD](../assets/tutorial/kreuzung/eepmain-angelegt.jpg)
 
@@ -93,7 +93,7 @@ Dafür benötigst Du folgendes:
 Um die Signale (in dem Fall Ampeln) der Kreuzung zu bearbeiten ist es am einfachsten, wenn Du die Signal-IDs aller Signale in Tipp-Texten anzeigst.
 In diesem Schritt läßt Du Dir von `AkStrasse` alle Signal-IDs in 3D anzeigen.
 
-:exclamation: _**Beachte:** Verwende diesen Code nicht, wenn Du in Deiner Anlagen selbst Tipp-Texte mit `EEPShowSignalInfo(...)` an Deinen Signalen anzeigst. Denn all diese Tipp-Texte werden gelöscht._
+❗ _**Beachte:** Verwende diesen Code nicht, wenn Du in Deiner Anlagen selbst Tipp-Texte mit `EEPShowSignalInfo(...)` an Deinen Signalen anzeigst. Denn all diese Tipp-Texte werden gelöscht._
 
 * Um die Tipp-Texte anzuzeigen, füge die folgenden beiden Zeilen vor der EEPMain()-Methode hinzu:
   ```lua
@@ -101,7 +101,7 @@ In diesem Schritt läßt Du Dir von `AkStrasse` alle Signal-IDs in 3D anzeigen.
   AkKreuzung.zeigeSignalIdsAllerSignale = true
   AkKreuzung.zeigeSchaltungAlsInfo = true
   ```
-* Klicke in EEP auf _"Skript neu laden"_ und wechsle in den 3D-Modus. <br>:smiley: **Wenn Du alles richtig gemacht hast**, siehst Du an allen Signalen Tipp-Texte mit den IDs dieser Signale.
+* Klicke in EEP auf _"Skript neu laden"_ und wechsle in den 3D-Modus. <br>😀 **Wenn Du alles richtig gemacht hast**, siehst Du an allen Signalen Tipp-Texte mit den IDs dieser Signale.
 
     ![BILD](../assets/tutorial/kreuzung/signal-ids2.jpg)
 
@@ -128,7 +128,7 @@ Notiere Dir, welche _Richtungen_ es gibt und wie die IDs der zu schaltenden Ampe
 Erst im nächsten Schritt werden mehrere dieser _Richtungen_ zu Schaltungen zusammengefasst.
 
 ## Schreibe die Richtungen in das Haupt-Skript
-:star: _**Tipp:** Für jede Ampel musst Du den Typ_ `AkAmpelModell` _kennen, da sich die Signalstellungen in EEP unterscheiden. Weitere Informationen findest Du unter: [Unterstütze weitere Ampeln in AkAmpelModell](../LUA/ak/strasse/)_
+⭐ _**Tipp:** Für jede Ampel musst Du den Typ_ `AkAmpelModell` _kennen, da sich die Signalstellungen in EEP unterscheiden. Weitere Informationen findest Du unter: [Unterstütze weitere Ampeln in AkAmpelModell](../LUA/ak/strasse/)_
 
 Schreibe nun die einzelnen Richtungen in das Haupt-Skript. Jede Richtung muss dabei eine noch nicht verwendete Speicher-ID zwischen 1 und 1000 bekommen.
 
@@ -200,7 +200,7 @@ fg_w = AkRichtung:neu("FG_W", 102, {
 })
 ```
 
-* Klicke in EEP auf _"Skript neu laden"_ und wechsle in den 3D-Modus. <br> :smiley: **Wenn Du alles richtig gemacht hast**, siehst Du weiterhin an allen Signalen Tipp-Texte mit den IDs dieser Signale und keine Fehlermeldung im Log.
+* Klicke in EEP auf _"Skript neu laden"_ und wechsle in den 3D-Modus. <br> 😀 **Wenn Du alles richtig gemacht hast**, siehst Du weiterhin an allen Signalen Tipp-Texte mit den IDs dieser Signale und keine Fehlermeldung im Log.
 
 __Was ist grade passiert?__
   * Du hast soeben die Richtungen der Kreuzung festgelegt. Jede kann für sich allein geschaltet werden oder zusammen mit anderen Richtungen. Dazu dient `AkKreuzungsSchaltung`, welches im nächsten Schritt zum Einsatz kommt.
@@ -209,13 +209,13 @@ __Was ist grade passiert?__
 
 Eine _Schaltung_ legt fest, welche _Richtungen_ gleichzeitig "grün" bekommen sollen. An einer Kreuzung ist immer nur eine Schaltung aktiv. Bevor eine neue Schaltung aktiv werden kann und die Richtungen auf "grün" schaltet, werden alle alten Richtungen, die in der neuen Schaltung nicht mehr enthalten sind auf rot geschaltet.
 
-:exclamation: _**Beachte**: Eine **Schaltung** darf nur **Richtungen** enthalten, die sich nicht gegenseitig überlappen._
+❗ _**Beachte**: Eine **Schaltung** darf nur **Richtungen** enthalten, die sich nicht gegenseitig überlappen._
 
 Notiere Dir nun, welche der _Richtungen_ zu _Schaltungen_ zusammengefasst werden sollen.
 
 ![BILD](../assets/tutorial/kreuzung/kreuzungsaufbau-tutorial-schaltungen.png)
 
-:star: _**Tipp**: Wichtig ist, das alle Richtungen in einer Schaltung enthalten sind.
+⭐ _**Tipp**: Wichtig ist, das alle Richtungen in einer Schaltung enthalten sind.
 Im Beispiel siehst Du, dass Richtungen in mehreren Schaltungen enthalten sein können.
 Es würde jedoch genügen, entweder die Schaltungen 1 bis 4 oder die Schaltungen 5 bis 8 zu verwenden, da in diesen jeweils alle Richtungen enthalten sind._
 
@@ -300,7 +300,7 @@ k1:fuegeSchaltungHinzu(sch7)
 k1:fuegeSchaltungHinzu(sch8)
 ```
 
-* Klicke in EEP auf _"Skript neu laden"_ und wechsle in den 3D-Modus. <br>:smiley: **Wenn Du alles richtig gemacht hast**, siehst Du plötzlich, dass die Schaltungen zum Leben erwachen.
+* Klicke in EEP auf _"Skript neu laden"_ und wechsle in den 3D-Modus. <br>😀 **Wenn Du alles richtig gemacht hast**, siehst Du plötzlich, dass die Schaltungen zum Leben erwachen.
 
     ![BILD](../assets/tutorial/kreuzung/zum-leben-erweckt.jpg)
 
@@ -318,13 +318,13 @@ Erinnerst Du Dich den Code, der die Tipp-Texte zu den Signalen hinzugefügt hat?
   AkKreuzung.zeigeSchaltungAlsInfo = false
 	```
 
-* Klicke danach auf Skript neu laden und wechsle in den 3D-Modus.<br>:smiley: **Wenn Du alles richtig gemacht hast**, verschwinden die Tipp-Texte von den Signalen.
+* Klicke danach auf Skript neu laden und wechsle in den 3D-Modus.<br>😀 **Wenn Du alles richtig gemacht hast**, verschwinden die Tipp-Texte von den Signalen.
 
 **Tipp**: Setze die Werte wieder auf `true`, wenn Du denkst, dass Du die Signale falsch gesetzt hast.
 
 
 # Geschafft
-Du hast diese Anleitung abgeschlossen :four_leaf_clover:
+Du hast diese Anleitung abgeschlossen 🍀
 
 **So kannst Du weitermachen**
 * Füge noch fehlende Richtungen zu Schaltungen hinzu:

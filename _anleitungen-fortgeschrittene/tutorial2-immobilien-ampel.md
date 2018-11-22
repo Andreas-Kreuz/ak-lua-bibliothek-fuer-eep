@@ -48,7 +48,7 @@ Hier siehst Du nebeneinander die Signalbilder:
 
 Rechts daneben befindet sich ein leeres Gehäuse, in dass diese 4 Signalbilder nacheinander eingefügt werden. Ganz rechts, siehst Du, wie die fertige Straßenbahnampel aussieht
 
-:star: **_Tipp_**: Die Anleitung des Modellsets zeigt Dir, wie Du die Signale am besten aufstellst.
+⭐ **_Tipp_**: Die Anleitung des Modellsets zeigt Dir, wie Du die Signale am besten aufstellst.
 
 ![]({{ site.baseurl }}/assets/tutorial/tutorial2/immo-ampel.jpg)
 
@@ -90,7 +90,7 @@ So sieht das fertige Beispiel für eine Vierer-Ampel mit Anforderung aus:
   })
   ```
 
-:star: **Beachte bitte**: Die Anforderung wird nur aktiv, wenn Du Anforderungen an dieser Richtung erkennst. Wie das geht, steht in [Tutorial 3 - Priorisierung]({{ site.baseurl }}/anleitungen-fortgeschrittene/tutorial3-priorisierung).
+⭐ **Beachte bitte**: Die Anforderung wird nur aktiv, wenn Du Anforderungen an dieser Richtung erkennst. Wie das geht, steht in [Tutorial 3 - Priorisierung]({{ site.baseurl }}/anleitungen-fortgeschrittene/tutorial3-priorisierung).
 
 ## Beispiel Dreier-Ampel
 

@@ -11,7 +11,7 @@ tags: [Fortgeschrittene, Entwickler]
 ---
 # Bibliothek aus GitHub nutzen
 
-:star: Für weniger versierte Anwender wird die Installation mit dem EEP-Installer empfohlen.
+⭐ Für weniger versierte Anwender wird die Installation mit dem EEP-Installer empfohlen.
 
 * Melde Dich bei [GitHub](https://github.com/) an.
 

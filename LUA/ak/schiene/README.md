@@ -14,4 +14,4 @@ Anstehende Aufgaben:
 * [ ] Lua-Skript in allgemeingültige Klassen aufteilen
 * [ ] Vorbereiten einer Beispielanlage
 
-:exclamation: Möchtest Du dieses Paket trotzdem verwenden, lege eine Kopie der Datei mit eigenem Namen an.
+❗ Möchtest Du dieses Paket trotzdem verwenden, lege eine Kopie der Datei mit eigenem Namen an.
