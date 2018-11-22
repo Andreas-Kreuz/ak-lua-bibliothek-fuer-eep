@@ -330,7 +330,10 @@ Erinnerst Du Dich den Code, der die Tipp-Texte zu den Signalen hinzugefügt hat?
 
 ## Vergleiche Deine Schaltungen in EEP-Web
 
-    ![BILD](../assets/tutorial/kreuzung/zum-leben-erweckt.jpg)
+   ![BILD](../assets/tutorial/kreuzung/eep-web.png)
+   
+   Funktioniert nicht? [EEP-Web einrichten](../anleitungen-fortgeschrittene/einrichten-von-eep-web)
+
 
 # Geschafft
 Du hast diese Anleitung abgeschlossen 🍀
