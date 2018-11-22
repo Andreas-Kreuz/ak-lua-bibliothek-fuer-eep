@@ -7,7 +7,7 @@ read_globals = {
     "AkTimeM",
     "AkTimeS",
     "clearlog",
-    "EEPVer"
+    "EEPVer",
     "EEPChangeInfoSignal",
     "EEPChangeInfoSwitch",
     "EEPStructureGetLight",
