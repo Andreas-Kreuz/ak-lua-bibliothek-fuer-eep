@@ -17,9 +17,11 @@ end
 
 local namesToSlots = {}
 local slotTable
+local _
+local SlotFuncs
 
 function SlotNamesParser.updateSlotNames()
-    function recursiveLookup(currentSlotTable, prefix, ...)
+    local function recursiveLookup(currentSlotTable, prefix, ...)
         for k, v in pairs(currentSlotTable) do
             local path = ... and { table.unpack(...) } or {}
             table.insert(path, k)
@@ -28,10 +30,10 @@ function SlotNamesParser.updateSlotNames()
                 -- print(pathString .. '> Lookup Table '  .. pathString)
                 recursiveLookup(v, prefix .. "--", path)
             else
-                s = SlotFuncs.lookupSlotNr(table.unpack(path))
+                local slotNumber = SlotFuncs.lookupSlotNr(table.unpack(path))
                 -- print(pathString .. '> Found Slot: ' .. tostring(s))
 
-                namesToSlots[tostring(s)] = pathString
+                namesToSlots[tostring(slotNumber)] = pathString
             end
         end
     end
@@ -40,7 +42,7 @@ function SlotNamesParser.updateSlotNames()
 end
 
 if isModuleAvailable('SlotNames_BH2') then
-    slotTable, SlotMapping, SlotFuncs = require('SlotNames_BH2')()
+    slotTable, _, SlotFuncs = require('SlotNames_BH2')()
     SlotNamesParser.updateSlotNames()
 end
 

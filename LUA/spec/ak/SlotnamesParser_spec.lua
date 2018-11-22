@@ -3,7 +3,7 @@ describe("AkSlotNamesParser.lua", function()
         describe(".getSlotNames()", function()
             insulate("Slot 1", function()
                 require("ak.eep.AkEepFunktionen")
-                slotTable, SlotMapping, SlotFuncs = require('SlotNames_BH2')()
+                local _, SlotMapping, SlotFuncs = require('SlotNames_BH2')()
                 SlotMapping.Slot1 = 34
                 --SlotMapping.Liste = { 36, 37, 38 }
                 SlotMapping.Zaehler1 = 1
@@ -17,8 +17,8 @@ describe("AkSlotNamesParser.lua", function()
                 --SlotMapping.Gleis = { 201, 202, 203, 204 }
 
                 SlotFuncs.checkMapping()
-                p = require("ak.data.AkSlotNamesParser")
-                slotName = p.getSlotName(34)
+                local p = require("ak.data.AkSlotNamesParser")
+                local slotName = p.getSlotName(34)
                 it("slotname 34 müsste Slot1 sein", function()
                     assert.is_true(slotName == "Slot1")
                 end)
