@@ -21,24 +21,26 @@ local _
 local SlotFuncs
 
 function SlotNamesParser.updateSlotNames()
-    local function recursiveLookup(currentSlotTable, prefix, ...)
-        for k, v in pairs(currentSlotTable) do
-            local path = ... and { table.unpack(...) } or {}
-            table.insert(path, k)
-            local pathString = table.concat(path, ".")
-            if type(v) == 'table' then
-                -- print(pathString .. '> Lookup Table '  .. pathString)
-                recursiveLookup(v, prefix .. "--", path)
-            else
-                local slotNumber = SlotFuncs.lookupSlotNr(table.unpack(path))
-                -- print(pathString .. '> Found Slot: ' .. tostring(s))
+    if slotTable then
+        local function recursiveLookup(currentSlotTable, prefix, ...)
+            for k, v in pairs(currentSlotTable) do
+                local path = ... and { table.unpack(...) } or {}
+                table.insert(path, k)
+                local pathString = table.concat(path, ".")
+                if type(v) == 'table' then
+                    -- print(pathString .. '> Lookup Table '  .. pathString)
+                    recursiveLookup(v, prefix .. "--", path)
+                else
+                    local slotNumber = SlotFuncs.lookupSlotNr(table.unpack(path))
+                    -- print(pathString .. '> Found Slot: ' .. tostring(s))
 
-                namesToSlots[tostring(slotNumber)] = pathString
+                    namesToSlots[tostring(slotNumber)] = pathString
+                end
             end
         end
-    end
 
-    recursiveLookup(slotTable, '#', {})
+        recursiveLookup(slotTable, '#', {})
+    end
 end
 
 if isModuleAvailable('SlotNames_BH2') then
@@ -47,7 +49,7 @@ if isModuleAvailable('SlotNames_BH2') then
 end
 
 function SlotNamesParser.getSlotName(slot)
-    if (slotTable) then
+    if slotTable then
         return namesToSlots[tostring(slot)]
     else
         return '?'
