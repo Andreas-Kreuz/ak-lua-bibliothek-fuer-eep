@@ -251,6 +251,34 @@ local function fillTrainYards()
     -- TODO
 end
 
+local checksum = 0
+local function fillApiV1(dataKeys)
+    checksum = checksum + 1
+    local dataEntries = {}
+    local apiEntry
+    for k, v in ipairs(dataKeys) do
+        local count = 0
+        for _ in pairs(data[v]) do
+            count = count + 1
+        end
+
+        local o = {
+            name = v,
+            url = '/api/v1/' .. v,
+            count = count,
+            checksum = checksum,
+            updated = true,
+        }
+        table.insert(dataEntries, o)
+
+        if name == 'api-entries' then apiEntry = o end
+    end
+
+    if apiEntry then apiEntry.count = #dataEntries end
+
+    data["api-entries"] = dataEntries
+end
+
 local function initialize()
     registerTracks()
 end
