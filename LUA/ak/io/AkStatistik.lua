@@ -314,20 +314,22 @@ function AkStatistik.statistikAusgabe(modulus)
             data[key] = value
         end
 
-        local sortedKeys = {}
+        data["api-entries"] = {}
+        local topLevelEntries = {}
         for k in pairs(data) do
-            table.insert(sortedKeys, k)
+            table.insert(topLevelEntries, k)
         end
-        table.sort(sortedKeys)
+        table.sort(topLevelEntries)
+        data.apiV1 = fillApiV1(topLevelEntries)
 
         AkWebServerIo.send("eep-web-server", json.encode(data, {
-            keyorder = sortedKeys,
+            keyorder = topLevelEntries,
         }))
         writeLater = {}
         local t2 = os.time()
         local timeDiff = os.difftime(t2, t1)
         if timeDiff > 1 then
-            print("WARNUNG: AkStatistik.statistikAusgabe schreiben dauerte " .. timeDiff .. " Sekunden.")
+            print("WARNUNG: AkStatistik.statistikAusgabe schreiben dauerte " .. timeDiff .. " Sekunden (nur interessant, wenn EEP nicht pausiert wurde)")
         end
     end
 end
