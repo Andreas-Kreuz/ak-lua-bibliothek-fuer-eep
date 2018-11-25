@@ -256,7 +256,7 @@ local function fillApiV1(dataKeys)
     checksum = checksum + 1
     local dataEntries = {}
     local apiEntry
-    for k, v in ipairs(dataKeys) do
+    for _, v in ipairs(dataKeys) do
         local count = 0
         for _ in pairs(data[v]) do
             count = count + 1
@@ -271,7 +271,7 @@ local function fillApiV1(dataKeys)
         }
         table.insert(dataEntries, o)
 
-        if name == 'api-entries' then apiEntry = o end
+        if o.name == 'api-entries' then apiEntry = o end
     end
 
     if apiEntry then apiEntry.count = #dataEntries end
@@ -329,7 +329,8 @@ function AkStatistik.statistikAusgabe(modulus)
         local t2 = os.time()
         local timeDiff = os.difftime(t2, t1)
         if timeDiff > 1 then
-            print("WARNUNG: AkStatistik.statistikAusgabe schreiben dauerte " .. timeDiff .. " Sekunden (nur interessant, wenn EEP nicht pausiert wurde)")
+            print("WARNUNG: AkStatistik.statistikAusgabe schreiben dauerte " .. timeDiff
+                    .. " Sekunden (nur interessant, wenn EEP nicht pausiert wurde)")
         end
     end
 end
