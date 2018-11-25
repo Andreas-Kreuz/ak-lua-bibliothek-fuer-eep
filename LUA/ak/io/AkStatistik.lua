@@ -251,6 +251,34 @@ local function fillTrainYards()
     -- TODO
 end
 
+local checksum = 0
+local function fillApiV1(dataKeys)
+    checksum = checksum + 1
+    local dataEntries = {}
+    local apiEntry
+    for _, v in ipairs(dataKeys) do
+        local count = 0
+        for _ in pairs(data[v]) do
+            count = count + 1
+        end
+
+        local o = {
+            name = v,
+            url = '/api/v1/' .. v,
+            count = count,
+            checksum = checksum,
+            updated = true,
+        }
+        table.insert(dataEntries, o)
+
+        if o.name == 'api-entries' then apiEntry = o end
+    end
+
+    if apiEntry then apiEntry.count = #dataEntries end
+
+    data["api-entries"] = dataEntries
+end
+
 local function initialize()
     registerTracks()
 end
@@ -286,20 +314,23 @@ function AkStatistik.statistikAusgabe(modulus)
             data[key] = value
         end
 
-        local sortedKeys = {}
+        data["api-entries"] = {}
+        local topLevelEntries = {}
         for k in pairs(data) do
-            table.insert(sortedKeys, k)
+            table.insert(topLevelEntries, k)
         end
-        table.sort(sortedKeys)
+        table.sort(topLevelEntries)
+        data.apiV1 = fillApiV1(topLevelEntries)
 
         AkWebServerIo.send("eep-web-server", json.encode(data, {
-            keyorder = sortedKeys,
+            keyorder = topLevelEntries,
         }))
         writeLater = {}
         local t2 = os.time()
         local timeDiff = os.difftime(t2, t1)
         if timeDiff > 1 then
-            print("WARNUNG: AkStatistik.statistikAusgabe schreiben dauerte " .. timeDiff .. " Sekunden.")
+            print("WARNUNG: AkStatistik.statistikAusgabe schreiben dauerte " .. timeDiff
+                    .. " Sekunden (nur interessant, wenn EEP nicht pausiert wurde)")
         end
     end
 end

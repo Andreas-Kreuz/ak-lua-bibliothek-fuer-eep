@@ -39,6 +39,7 @@ files["LUA/ak/data/AkSlotNamesParser.lua"].ignore = { "212" }
 files["LUA/ak/strasse/AkStrasse.lua"].ignore = { "131" }
 
 exclude_files = {
+    "LUA/ak/io/crc32lua.lua",
     "LUA/ak/io/dkjson.lua",
     "LUA/ak/io/json.lua",
 }
