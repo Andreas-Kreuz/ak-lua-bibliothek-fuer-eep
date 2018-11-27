@@ -16,7 +16,7 @@ print("Suche Installationsdateien in Verzeichnis \"" .. aktuellerOrdner .. "\"")
 -----------------------------------------
 local paket0 = AkModellPaket:neu("13,2", "Lua-Bibliothek von Andreas Kreuz",
     "Lua-Bibliothek mit Verkehrssteuerung, Aufgabenplanung und Modell-Installation")
-paket0:fuegeDateienHinzu(aktuellerOrdner, "", "LUA\\ak", { "README.md", "ak_out_eep", "anlagen", "tmp.txt" })
+paket0:fuegeDateienHinzu(aktuellerOrdner, "", "LUA\\ak", { "README.md", "ak-eep-", "ak-server-", "anlagen" })
 
 do
     local installer = AkModellInstaller:neu("Installer-AK-Lua-Bibliothek-fuer-EEP")

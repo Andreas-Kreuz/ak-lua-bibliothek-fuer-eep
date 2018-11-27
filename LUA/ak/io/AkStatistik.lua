@@ -1,7 +1,7 @@
+local AkWebServerIo = require("ak.io.AkWebServerIo")
 print("Lade ak.io.AkStatistik ...")
 
 local AkDataSlots = require("ak.data.AkDataSlots")
-local AkWebServerIo = require("ak.io.AkWebServerIo")
 local os = require("os")
 local json = require("ak.io.dkjson")
 
@@ -322,7 +322,7 @@ function AkStatistik.statistikAusgabe(modulus)
         table.sort(topLevelEntries)
         data.apiV1 = fillApiV1(topLevelEntries)
 
-        AkWebServerIo.send("eep-web-server", json.encode(data, {
+        AkWebServerIo.updateJsonFile(json.encode(data, {
             keyorder = topLevelEntries,
         }))
         writeLater = {}

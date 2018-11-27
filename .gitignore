@@ -46,7 +46,6 @@ luac.out
 /LUA/comm_*
 *.dds
 /LUA/ak/io/exchange/ak*
-/LUA/ak/io/exchange/tmp*
 LUA/**/AkSpeicherWerte.txt
 LUA/**/*.jar
 LUA/SlotNames_BH2.lua
