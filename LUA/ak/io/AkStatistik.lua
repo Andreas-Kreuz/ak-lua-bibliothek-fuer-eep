@@ -286,6 +286,7 @@ end
 local i = -1
 local writeLater = {}
 function AkStatistik.statistikAusgabe(modulus)
+    AkWebServerIo.processNewCommands()
     if i == -1 then
         initialize();
     end

@@ -1,4 +1,5 @@
 print("Lade ak.io.AkWebServerIo ...")
+local AkCommandExecutor = require('ak.io.AkCommandExecutor')
 
 local AkWebServerIo = {}
 
@@ -58,6 +59,28 @@ function AkWebServerIo.setOutputDirectory(dirName)
     inFileCommands = io.open(inFileNameCommands, "r")
 end
 
+local _print = print
+function print(...)
+    -- print the output to the file
+    local file = assert(io.open(outFileNameLog, "a"))
+    local args = table.pack(...)
+    local text = ""
+    for i = 1, args.n do
+        text = text .. tostring(args[i])
+    end
+    file:write(text .. "\n")
+    file:close()
+
+    -- use the original print function
+    _print(...)
+end
+
+local _clearlog = clearlog
+function clearlog()
+    _clearlog()
+    io.open(outFileNameLog, "w+"):close()
+end
+
 AkWebServerIo.setOutputDirectory(existingDirOf({ "../LUA/ak/io/exchange", "./LUA/ak/io/exchange" }) or ".")
 
 local writing = false
@@ -89,32 +112,10 @@ end
 --- Liest Inhalte von der Eingabe "type"
 --- @param type
 function AkWebServerIo.processNewCommands()
-    local commands = io.read(inFileCommands)
+    local commands = inFileCommands:read()
     if (commands) then
-        print("RECEIVED COMMANDS: " .. commands)
+        AkCommandExecutor.execute(commands)
     end
-end
-
-local _print = print
-function print(...)
-    -- use the original print function
-    _print(...)
-
-    -- print the output to the file
-    local file = assert(io.open(outFileNameLog, "a"))
-    local args = table.pack(...)
-    local text = ""
-    for i = 1, args.n do
-        text = text .. tostring(args[i])
-    end
-    file:write(text .. "\n")
-    file:close()
-end
-
-local _clearlog = clearlog
-function clearlog()
-    _clearlog()
-    io.open(outFileNameLog, "w+"):close()
 end
 
 return AkWebServerIo
