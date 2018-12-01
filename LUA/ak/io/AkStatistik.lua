@@ -13,21 +13,21 @@ local MAX_STRUCTURES = 50000
 local data = {}
 
 local function fillTime()
-    data["time"] = {
+    data["time"] = { times = {
         timeComplete = EEPTime;
         timeH = EEPTimeH;
         timeM = EEPTimeM;
         timeS = EEPTimeS;
-    }
+    } }
 end
 
 local function fillEEPVersion()
-    data["eep-version"] = {
+    data["eep-version"] = { versionInfo = {
         eepVersion = EEPVer,
         luaVersion = AkStatistik.programVersion,
         singleVersion = {
             AkStatistik = AkStatistik.programVersion,
-        },
+        } },
     }
 end
 
@@ -81,7 +81,8 @@ local function fillSwitches()
     end
 end
 
-local function registerTracksBy(registerFunktion, trackName)
+local function registerTracksBy(registerFunktion, trackType)
+    local trackName = trackType .. "-tracks"
     data[trackName] = {}
     for i = 1, MAX_TRACKS do
         local exists = registerFunktion(i)
@@ -95,16 +96,22 @@ local function registerTracksBy(registerFunktion, trackName)
 end
 
 local function registerTracks()
-    registerTracksBy(EEPRegisterAuxiliaryTrack, "auxiliary-tracks")
-    registerTracksBy(EEPRegisterControlTrack, "control-tracks")
-    registerTracksBy(EEPRegisterRoadTrack, "road-tracks")
-    registerTracksBy(EEPRegisterRailTrack, "rail-tracks")
-    registerTracksBy(EEPRegisterTramTrack, "tram-tracks")
+    registerTracksBy(EEPRegisterAuxiliaryTrack, "auxiliary")
+    registerTracksBy(EEPRegisterControlTrack, "control")
+    registerTracksBy(EEPRegisterRoadTrack, "road")
+    registerTracksBy(EEPRegisterRailTrack, "rail")
+    registerTracksBy(EEPRegisterTramTrack, "tram")
 end
 
 
 
-local function fillTracksBy(besetztFunktion, trackName, trainList, rollingStockList)
+local function fillTracksBy(besetztFunktion, trackType)
+    local trackName = trackType .. '-tracks'
+    local trainList = trackType .. '-trains'
+    local rollingStockList = trackType .. '-rolling-stocks'
+    local trainInfos = trackType .. '-train-infos-dynamic'
+    local rollingStockInfos = trackType .. '-rolling-stock-infos-dynamic'
+
     local trains = {}
     --local belegte = {}
     --belegte.tracks = {}
@@ -138,8 +145,11 @@ local function fillTracksBy(besetztFunktion, trackName, trainList, rollingStockL
         end
     end
 
+
     data[trainList] = {}
     data[rollingStockList] = {}
+    data[trainInfos] = {}
+    data[rollingStockInfos] = {}
     for trainName, train in pairs(trains) do
         local haveSpeed, speed = EEPGetTrainSpeed(trainName)
         local haveRoute, route = EEPGetTrainRoute(trainName)
@@ -150,14 +160,17 @@ local function fillTracksBy(besetztFunktion, trackName, trainList, rollingStockL
 
         local currentTrain = {
             id = trainName,
-            occupiedTracks = train.occupiedTracks,
-            trackType = train.trackType,
-            onTrackId = train.onTrack,
-            speed = haveSpeed and speed or 0,
             route = haveRoute and route or '',
             rollingStockCount = rollingStockCount,
         }
         data[trainList][tostring(currentTrain.id)] = currentTrain
+        local trainsInfo = {
+            id = trainName,
+            speed = haveSpeed and speed or 0,
+            onTrackId = train.onTrack,
+            occupiedTacks = train.occupiedTacks,
+        }
+        data[trainInfos][tostring(trainsInfo.id)] = trainsInfo
 
         for i = 0, (rollingStockCount - 1) do
             local rollingStockName = "?"
@@ -180,12 +193,14 @@ local function fillTracksBy(besetztFunktion, trackName, trainList, rollingStockL
             local trackDirection = -1
             local trackSystem = -1
             local modelType = -1
+            local tag = ''
 
             if EEPVer >= 15 then
                 _, length = EEPRollingstockGetLength(rollingStockName)
                 _, propelled = EEPRollingstockGetMotor(rollingStockName)
                 _, trackId, trackDistance, trackDirection, trackSystem = EEPRollingstockGetTrack(rollingStockName)
                 _, modelType = EEPRollingstockGetModelType(rollingStockName)
+                _, tag = EEPRollingstockGetTagText(rollingStockName)
             end
 
             local currentRollingStock = {
@@ -196,23 +211,28 @@ local function fillTracksBy(besetztFunktion, trackName, trainList, rollingStockL
                 couplingRear = couplingRear,
                 length = length,
                 propelled = propelled,
+                trackSystem = trackSystem,
+                modelType = modelType,
+                tag = tag,
+            }
+            data[rollingStockList][currentRollingStock.name] = currentRollingStock
+            local rollingStockInfo = {
+                name = rollingStockName,
                 trackId = trackId,
                 trackDistance = trackDistance,
                 trackDirection = trackDirection,
-                trackSystem = trackSystem,
-                modelType = modelType,
             }
-            data[rollingStockList][currentRollingStock.name] = currentRollingStock
+            data[rollingStockInfos][tostring(rollingStockInfo.name)] = rollingStockInfo
         end
     end
 end
 
 local function fillTracks()
-    fillTracksBy(EEPIsAuxiliaryTrackReserved, "auxiliary-tracks", "auxiliary-trains", "auxiliary-rolling-stock")
-    fillTracksBy(EEPIsControlTrackReserved, "control-tracks", "control-trains", "control-rolling-stock")
-    fillTracksBy(EEPIsRoadTrackReserved, "road-tracks", "road-trains", "road-rolling-stock")
-    fillTracksBy(EEPIsRailTrackReserved, "rail-tracks", "rail-trains", "rail-rolling-stock")
-    fillTracksBy(EEPIsTramTrackReserved, "tram-tracks", "tram-trains", "tram-rolling-stock")
+    fillTracksBy(EEPIsAuxiliaryTrackReserved, "auxiliary")
+    fillTracksBy(EEPIsControlTrackReserved, "control")
+    fillTracksBy(EEPIsRoadTrackReserved, "road")
+    fillTracksBy(EEPIsRailTrackReserved, "rail")
+    fillTracksBy(EEPIsTramTrackReserved, "tram")
 end
 
 local function fillStructures()
@@ -221,10 +241,12 @@ local function fillStructures()
         local name = "#" .. tostring(i)
         local pos_x, pos_y, pos_z = 0, 0, 0
         local t, modelType = false, 0
+        local tag = ''
         if (EEPVer >= 15) then
             local _
             _, pos_x, pos_y, pos_z = EEPStructureGetPosition(name)
-            t, modelType = EEPStructureGetModelType(name)
+            _, modelType = EEPStructureGetModelType(name)
+            t, tag = EEPStructureGetTagText(name)
         end
 
         if (t) then
@@ -241,6 +263,7 @@ local function fillStructures()
                 pos_y = pos_y,
                 pos_z = pos_z,
                 modelType = modelType,
+                tag = tag,
             }
             table.insert(data["structures"], o)
         end

@@ -25,7 +25,6 @@ function AkEEPHilfe.setzeZugAufGleis(trackId, zugname)
     AkEEPHilfe.registrierteGleise[trackId] = zugname
 end
 
-
 local signale = {}
 local switches = {}
 
@@ -80,34 +79,46 @@ local structureAxis = {}
 --- Geschwindigkeit aendern
 -- @param trainName Name des Zuges
 -- @param speed Geschwindigkeit
-function EEPSetTrainSpeed(trainName, speed) trainSpeeds[trainName] = speed end
+function EEPSetTrainSpeed(trainName, speed)
+    trainSpeeds[trainName] = speed
+end
 
 --- Geschwindigkeit aendern
 -- @param trainName Name des Zuges
 -- @return Geschwindigkeit
-function EEPGetTrainSpeed(trainName) return trainSpeeds[trainName] ~= nil, trainSpeeds[trainName] end
+function EEPGetTrainSpeed(trainName)
+    return trainSpeeds[trainName] ~= nil, trainSpeeds[trainName]
+end
 
 --- Setzen der Kupplung (hinten)
 -- @param rsName Name des Rollmaterial,
 -- @param kupplungsStatus 1-Kupplung aktiv, 2-Kupplung inaktiv, 3-Wagen angekoppelt(nurGet),
 -- z.B.: EEPRollingstockSetCouplingRear("DB 212309", 2)
-function EEPRollingstockSetCouplingRear(rsName, kupplungsStatus) couplingRear[rsName] = kupplungsStatus end
+function EEPRollingstockSetCouplingRear(rsName, kupplungsStatus)
+    couplingRear[rsName] = kupplungsStatus
+end
 
 --- Abfragen der Kupplung (hinten)
 -- @param rsName Name des Rollmaterial,
 -- @param kupplungsStatus 1-Kupplung aktiv, 2-Kupplung inaktiv, 3-Wagen angekoppelt(nurGet),
-function EEPRollingstockGetCouplingRear(rsName) return couplingRear[rsName] end
+function EEPRollingstockGetCouplingRear(rsName)
+    return couplingRear[rsName]
+end
 
 --- Setzen der Kupplung (vorn)
 -- @param rsName Name des Rollmaterial,
 -- @param kupplungsStatus 1-Kupplung aktiv, 2-Kupplung inaktiv, 3-Wagen angekoppelt(nurGet),
 -- z.B.: EEPRollingstockSetCouplingFront("DB212 309", 2)
-function EEPRollingstockSetCouplingFront(rsName, kupplungsStatus) couplingFront[rsName] = kupplungsStatus end
+function EEPRollingstockSetCouplingFront(rsName, kupplungsStatus)
+    couplingFront[rsName] = kupplungsStatus
+end
 
 --- Abfragen der Kupplung (vorn)
 -- @param rsName Name des Rollmaterial,
 -- @param kupplungsStatus 1-Kupplung aktiv, 2-Kupplung inaktiv, 3-Wagen angekoppelt(nurGet),
-function EEPRollingstockGetCouplingFront(rsName) return couplingFront[rsName] end
+function EEPRollingstockGetCouplingFront(rsName)
+    return couplingFront[rsName]
+end
 
 --------------------------------------------------------------------------
 -- Siehe hierzu auch Handbuch EEP 11(Achsgruppen) Setzen einer Achsgruppe,
@@ -138,12 +149,16 @@ end
 --- Laedt Daten aus Slot
 -- @param slot Slot 1 bis 1000
 -- @return true (wenn gefunden), Boolean|Zahl|"String"| nil
-function EEPLoadData(slot) return (eepdata[slot] and true or false), eepdata[slot] end
+function EEPLoadData(slot)
+    return (eepdata[slot] and true or false), eepdata[slot]
+end
 
 --- Speichert Daten in Slot
 -- @param slot Slot 1 bis 1000
 -- @param data Boolean|Zahl|"String"| nil
-function EEPSaveData(slot, data) eepdata[slot] = data end
+function EEPSaveData(slot, data)
+    eepdata[slot] = data
+end
 
 ------------------------------
 -- Neu ab EEP 11 - Plugin 1 --
@@ -194,7 +209,9 @@ end
 -- @param achse Name der Achse
 -- @param stellung position der Achse
 function EEPStructureSetAxis(immoName, achse, stellung)
-    if not structureAxis[immoName] then structureAxis[immoName] = {} end
+    if not structureAxis[immoName] then
+        structureAxis[immoName] = {}
+    end
     structureAxis[immoName][achse] = stellung
 end
 
@@ -228,7 +245,9 @@ end
 --- Route aendern
 -- @param trainName Name des Zuges
 -- @param route Name der Route
-function EEPSetTrainRoute(trainName, route) AkEEPHilfe.routenDerZuege[trainName] = route end
+function EEPSetTrainRoute(trainName, route)
+    AkEEPHilfe.routenDerZuege[trainName] = route
+end
 
 --- Route abfragen
 -- @param trainName Name des Zuges
@@ -240,44 +259,52 @@ end
 --- Licht ein oder ausschalten
 -- @param trainName Name des Zuges
 -- @param onoff true: ein, false: aus
-function EEPSetTrainLight(trainName, onoff) end
+function EEPSetTrainLight(trainName, onoff)
+end
 
 --- Rauch ein oder ausschalten
 -- @param trainName Name des Zuges
 -- @param onoff true: ein, false: aus
-function EEPSetTrainSmoke(trainName, onfoff) end
+function EEPSetTrainSmoke(trainName, onfoff)
+end
 
 --- Hupen
 -- @param trainName Name des Zuges
 -- @param onoff true: signal starten, false: signal beenden
-function EEPSetTrainHorn(trainName, onoff) end
+function EEPSetTrainHorn(trainName, onoff)
+end
 
 --- Kupplung vorn setzen
 -- @param trainName Name des Zuges
 -- @param kupplungOn true: kuppeln, false: absto�en
-function EEPSetTrainCouplingFront(trainName, kupplungOn) end
+function EEPSetTrainCouplingFront(trainName, kupplungOn)
+end
 
 --- Kupplung hinten setzen
 -- @param trainName Name des Zuges
 -- @param kupplungOn true: kuppeln, false: absto�en
-function EEPSetTrainCouplingRear(trainName, kupplungOn) end
+function EEPSetTrainCouplingRear(trainName, kupplungOn)
+end
 
 --- Zugverband an bestimmter Stelle trennen
 -- @param trainName Name des Zuges
 -- @param countFromFront true: von vorne zaehlen, false: von hinten zaehlen
 -- @param position Stelle, die getrennt wird
-function EEPSetTrainLooseCoupling(trainName, countFromFront, position) end
+function EEPSetTrainLooseCoupling(trainName, countFromFront, position)
+end
 
 --- Setzen des Gueterhakens an allen Wagen eines Zuges
 -- @param trainName Name des Zuges als String
 -- @param hookOn true: Haken fuer alle an
-function EEPSetTrainHook(trainName, gueteran) end
+function EEPSetTrainHook(trainName, gueteran)
+end
 
 --- Setzen einer Achse an allen Wagen eines Zuges
 -- @param trainName Name des Zuges als String
 -- @param achse Name der Achse
 -- @param stellung 0 - 100 - Achsstellung
-function EEPSetTrainAxis(trainName, achse, stellung) end
+function EEPSetTrainAxis(trainName, achse, stellung)
+end
 
 ------------------------------
 -- Neu ab EEP 11 - Plugin 2 --
@@ -289,7 +316,9 @@ function EEPRegisterRailTrack(trackId)
     if AkEEPHilfe.registrierteGleise[trackId] == nil then
         AkEEPHilfe.registrierteGleise[trackId] = false
     end
-    if (trackId <= 11) then return true end
+    if (trackId <= 11) then
+        return true
+    end
 end
 
 --- Fragt ab, ob ein Gleis besetzt ist.
@@ -316,7 +345,9 @@ function EEPRegisterRoadTrack(trackId)
     if AkEEPHilfe.registrierteStrassen[trackId] == nil then
         AkEEPHilfe.registrierteStrassen[trackId] = false
     end
-    if (trackId <= 11) then return true end
+    if (trackId <= 11) then
+        return true
+    end
 end
 
 --- Fragt ab, ob ein Gleis besetzt ist.
@@ -338,7 +369,8 @@ end
 
 --- Registriert ein Gleis fuer die Besetztabfrage.
 -- @param tramTrackId Id des Gleises
-function EEPRegisterTramTrack(tramTrackId) end
+function EEPRegisterTramTrack(tramTrackId)
+end
 
 --- Fragt ab, ob ein Gleis besetzt ist.
 -- @param tramTrackId Id des Gleises
@@ -346,11 +378,13 @@ function EEPRegisterTramTrack(tramTrackId) end
 -- @return Erster Wert: true, wenn Gleis existiert und registriert,
 -- zweiter Wert: true, wenn besetzt,
 -- dritter Wert: Name des Zuges auf dem Gleis
-function EEPIsTramTrackReserved(tramTrackId, returnTrainName) end
+function EEPIsTramTrackReserved(tramTrackId, returnTrainName)
+end
 
 --- Registriert ein Gleis fuer die Besetztabfrage.
 -- @param auxTrackId Id des Gleises
-function EEPRegisterAuxiliaryTrack(auxTrackId) end
+function EEPRegisterAuxiliaryTrack(auxTrackId)
+end
 
 --- Fragt ab, ob ein Gleis besetzt ist.
 -- @param auxTrackId Id des Gleises
@@ -358,36 +392,42 @@ function EEPRegisterAuxiliaryTrack(auxTrackId) end
 -- @return Erster Wert: true, wenn Gleis existiert und registriert,
 -- zweiter Wert: true, wenn besetzt,
 -- dritter Wert: Name des Zuges auf dem Gleis
-function EEPIsAuxiliaryTrackReserved(auxTrackId, returnTrainName) end
+function EEPIsAuxiliaryTrackReserved(auxTrackId, returnTrainName)
+end
 
 --- Registriert ein Gleis fuer die Besetztabfrage.
 -- @param controlTrackId Id des Gleises
-function EEPRegisterControlTrack(controlTrackId) end
+function EEPRegisterControlTrack(controlTrackId)
+end
 
 --- Fragt ab, ob ein Gleis besetzt ist.
 -- @param controlTrackId Id des Gleises
 -- @return Erster Wert: true, wenn Gleis existiert und registriert,
 -- zweiter Wert: true, wenn besetzt
-function EEPIsControlTrackReserved(controlTrackId, returnTrainName) end
+function EEPIsControlTrackReserved(controlTrackId, returnTrainName)
+end
 
 --- Waehlen einer Kamera
 -- @param camType 0: statisch, 1: dynamisch, 2: mobile Kamera
 -- @param camName Name der Kamera
 -- @return true, wenn die Kamera existiert
-function EEPSetCamera(camType, camName) end
+function EEPSetCamera(camType, camName)
+end
 
 --- Waehlen einer Kameraperspektive
 -- @param camPosition Tasten 1 - 9 fuer die Kameraposition
 -- @param trainName Name des Zuges
 -- @return true, wenn die Kamera existiert
-function EEPSetCamera(camPosition, trainName) end
+function EEPSetCamera(camPosition, trainName)
+end
 
 --- Zug aus Depot starten
 -- @param depotId Id des Depots (Eigenschaftenfenster)
 -- @param trainName Name des Zuges
 -- @param trainNumber Wenn kein Zugname angegeben ist, dann die Nummer des Zugs im Depot
 -- @return true, wenn der Zug existiert
-function EEPGetTrainFromTrainyard(depotId, trainName, trainNumber) end
+function EEPGetTrainFromTrainyard(depotId, trainName, trainNumber)
+end
 
 -------------------------------
 -- Neu ab EEP 13             --
@@ -395,12 +435,14 @@ function EEPGetTrainFromTrainyard(depotId, trainName, trainNumber) end
 --- Zeigen / Verstecken des Tipp-Textes einer Immobilie
 -- @param immoName Name der Immobilie als String.
 -- @param onOff true: einschalten
-function EEPShowInfoStructure(immoName, onOff) end
+function EEPShowInfoStructure(immoName, onOff)
+end
 
 --- Setzen des Tipp-Textes einer Immobilie
 -- @param immoName Name der Immobilie als String.
 -- @param text Text fuer die Anzeige
-function EEPChangeInfoStructure(immoName, text) end
+function EEPChangeInfoStructure(immoName, text)
+end
 
 --- Zeigen / Verstecken des Tipp-Textes einer Immobilie
 -- @param switchId Name der Immobilie als String.
@@ -419,12 +461,14 @@ end
 --- Zeigen / Verstecken des Tipp-Textes einer Weiche
 -- @param switchId Name der Weiche als String.
 -- @param onOff true: einschalten
-function EEPShowInfoSwitch(switchId, onOff) end
+function EEPShowInfoSwitch(switchId, onOff)
+end
 
 --- Setzen des Tipp-Textes einer Weiche
 -- @param switchId Name der Weiche als String.
 -- @param text Text fuer die Anzeige
-function EEPChangeInfoSwitch(switchId, text) end
+function EEPChangeInfoSwitch(switchId, text)
+end
 
 -------------------------------
 -- Neu ab EEP 13 - Plugin 2  --
@@ -594,6 +638,74 @@ function EEPStructureGetModelType(name)
     else
         return false
     end
+end
+
+local tags = {
+    structures = {},
+    rollingStock = {},
+}
+
+--- Ändert den Tag-Text einer Immobilie. Jede Immobilie kann jetzt einen individuellen String von
+--- maximal 1024 Zeichen Länge mitführen. Diese Strings werden mit der Anlage gespeichert und
+--- geladen.
+--- Bemerkungen • Argument 1 ist der Lua-Name der Immobilie oder des LS-Elements.
+--- Es genügt die Nummer mit vorangestelltem #-Zeichen.
+--- • Argument 2 ist der gewünschte Text.
+--- • Rückgabewert ist true, wenn die Ausführung erfolgreich war, sonst false
+function EEPStructureGetTagText(name, tag)
+    tags.structures[name] = tag
+    return true
+end
+
+--- Liest den Tag-Text einer Immobilie aus. Mittels Tag-Texten können Immobilien als permanente
+--- Speicher für relevante Informationen genutzt werden.
+--- Bemerkungen
+--- • Argument 1 ist der Lua-Name der Immobilie oder des LS-Elements.
+--- Es genügt die Nummer mit vorangestelltem #-Zeichen.
+--- • Rückgabewert 1 ist true, wenn die Ausführung erfolgreich war, sonst false.
+--- • Rückgabewert 2 ist der Tag-Text, welcher der Immobilie mitgegeben wurde
+function EEPStructureGetTagText(name)
+    return true, tags.structures[name]
+end
+
+--- Ändert den Tag-Text eines Fahrzeugs. Jedes Fahrzeug kann jetzt einen eigenen String von
+--- maximal 1024 Zeichen Länge mitführen. Diese Strings werden mit der Anlage gespeichert und
+--- geladen. Da die Texte individuell jedem Fahrzeug zugeordnet sind, gehen sie im Gegensatz zu
+--- Routen nicht durch Rangiermanöver etc. verloren.
+--- Bemerkungen
+--- • Argument 1 ist der Name des Fahrzeugs.
+--- • Argument 2 ist der gewünschte Text.
+--- • Rückgabewert ist true, wenn die Ausführung erfolgreich war, sonst false.
+function EEPRollingstockSetTagText(name, tag)
+    tags.rollingStock[name] = tag
+    return true
+end
+
+--- Liest den Tag-Text eines Fahrzeugs aus. Mittels Tag-Texten können Fahrzeuge jetzt kategorisiert
+--- werden. Beispielsweise kann man dort Waggontypen speichern oder Bestimmungsorte.
+--- Bemerkungen
+--- • Argument 1 ist der Name des Fahrzeugs.
+--- • Rückgabewert 1 ist true, wenn die Ausführung erfolgreich war, sonst false.
+--- • Rückgabewert 2 ist der Tag-Text, welcher dem Waggon mitgegeben wurde.
+function EEPRollingstockGetTagText(name)
+    return true, tags.rollingStock[name]
+end
+
+function EEPStructureSetTextureText(name, flaeche, text)
+end
+function EEPRollingstockSetTextureText(name, flaeche, text)
+end
+function EEPSignalSetTextureText(id, flaeche, text)
+end
+function EEPGoodsSetTextureText(name, flaeche, text)
+end
+function EEPRailTrackSetTextureText(id, flaeche, text)
+end
+function EEPRoadTrackSetTextureText(id, flaeche, text)
+end
+function EEPTramTrackSetTextureText(id, flaeche, text)
+end
+function EEPAuxiliaryTrackSetTextureText(id, flaeche, text)
 end
 
 return AkEEPHilfe
