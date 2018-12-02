@@ -126,8 +126,8 @@ local function fillTracksBy(besetztFunktion, trackType)
             local _
             _, occupied, trainName = besetztFunktion(trackId)
         end
-        track.occupied = occupied
-        track.occupiedBy = trainName
+        -- track.occupied = occupied
+        -- track.occupiedBy = trainName
         if occupied then
             --local key = trackName .. "_track_" .. trackId
             --belegte.tracks[key] = {}
