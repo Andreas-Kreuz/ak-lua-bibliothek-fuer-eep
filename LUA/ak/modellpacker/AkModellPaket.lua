@@ -47,6 +47,7 @@ function AkModellPaket:fuegeDateienHinzu(basisOrdner, praefix, unterOrdner, pfad
         if pfadAusschlussMuster and AkModellPaket.pfadAusschliessen(pfad, pfadAusschlussMuster) then
             print("Ueberspringe: " .. pfad)
         else
+            print("Fuege Datei hinzu: " .. pfad)
             self.installationsPfade[praefix .. pfad] = datei
             self.modellPfade[basisOrdner .. "\\" .. pfad] = datei
         end
@@ -57,7 +58,7 @@ function AkModellPaket.pfadAusschliessen(pfad, pfadAusschlussMuster)
     if not pfadAusschlussMuster then return false end
 
     for _, muster in ipairs(pfadAusschlussMuster) do
-        if string.find(pfad, muster) then
+        if string.find(pfad, muster, 1, true) then
             return true
         end
     end
