@@ -163,14 +163,17 @@ local function fillTracksBy(besetztFunktion, trackType)
             route = haveRoute and route or '',
             rollingStockCount = rollingStockCount,
         }
-        data[trainList][tostring(currentTrain.id)] = currentTrain
+
+        table.insert(data[trainList], currentTrain)
+        -- data[trainList][tostring(currentTrain.id)] = currentTrain
         local trainsInfo = {
             id = trainName,
             speed = haveSpeed and speed or 0,
             onTrackId = train.onTrack,
             occupiedTacks = train.occupiedTacks,
         }
-        data[trainInfos][tostring(trainsInfo.id)] = trainsInfo
+        table.insert(data[trainInfos], trainsInfo)
+        -- data[trainInfos][tostring(trainsInfo.id)] = trainsInfo
 
         for i = 0, (rollingStockCount - 1) do
             local rollingStockName = "?"
@@ -215,14 +218,16 @@ local function fillTracksBy(besetztFunktion, trackType)
                 modelType = modelType,
                 tag = tag,
             }
-            data[rollingStockList][currentRollingStock.name] = currentRollingStock
+            table.insert(data[rollingStockList], currentRollingStock)
+            -- data[rollingStockList][currentRollingStock.name] = currentRollingStock
             local rollingStockInfo = {
                 name = rollingStockName,
                 trackId = trackId,
                 trackDistance = trackDistance,
                 trackDirection = trackDirection,
             }
-            data[rollingStockInfos][tostring(rollingStockInfo.name)] = rollingStockInfo
+            table.insert(data[rollingStockInfos], rollingStockInfo)
+            -- data[rollingStockInfos][tostring(rollingStockInfo.name)] = rollingStockInfo
         end
     end
 end
