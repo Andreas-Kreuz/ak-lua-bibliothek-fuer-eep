@@ -15,9 +15,26 @@ local fmt = require("ak.text.AkFormat")
 local AkAllKreuzungen = {}
 local AkKreuzung = {}
 AkKreuzung.debug = AkStartMitDebug or false
+AkKreuzung.alleKreuzungen = {}
 AkKreuzung.zeigeAnforderungenAlsInfo = AkStartMitDebug or false
 AkKreuzung.zeigeSchaltungAlsInfo = AkStartMitDebug or false
 AkKreuzung.zeigeSignalIdsAllerSignale = false
+
+function AkKreuzungSchalteManuell(nameDerKreuzung, nameDerSchaltung)
+    print('schalteManuell:' .. nameDerKreuzung .. '/' .. nameDerSchaltung)
+    local k = AkKreuzung.alleKreuzungen[nameDerKreuzung]
+    if k then
+        k:setManuelleSchaltung(nameDerSchaltung)
+    end
+end
+
+function AkKreuzungSchalteAutomatisch(nameDerKreuzung)
+    print('schalteAutomatisch:' .. nameDerKreuzung)
+    local k = AkKreuzung.alleKreuzungen[nameDerKreuzung]
+    if k then
+        k:setAutomatikModus()
+    end
+end
 
 function AkKreuzung.getTyp()
     return "AkKreuzung"
@@ -57,12 +74,37 @@ function AkKreuzung:setzeWarteZeitZurueck(nextSchaltung)
 end
 
 function AkKreuzung:getNextSchaltung()
-    local sortedTable = {}
-    for schaltung in pairs(self.schaltungen) do
-        table.insert(sortedTable, schaltung)
+    return self.nextSchaltung
+end
+
+function AkKreuzung:calculateNextSchaltung()
+    if self.manuelleSchaltung then
+        self.nextSchaltung = self.manuelleSchaltung
+    else
+        local sortedTable = {}
+        for schaltung in pairs(self.schaltungen) do
+            table.insert(sortedTable, schaltung)
+        end
+        table.sort(sortedTable, AkKreuzungsSchaltung.hoeherePrioAls)
+        self.nextSchaltung = sortedTable[1]
     end
-    table.sort(sortedTable, AkKreuzungsSchaltung.hoeherePrioAls)
-    return sortedTable[1]
+    return self.nextSchaltung
+end
+
+function AkKreuzung:setManuelleSchaltung(nameDerSchaltung)
+    for schaltung in pairs(self.schaltungen) do
+        if schaltung.name == nameDerSchaltung then
+            self.manuelleSchaltung = schaltung
+            print('Manuell geschaltet auf: ' .. nameDerSchaltung .. ' (' .. self.name .. "')")
+            self:setBereit(true)
+        end
+    end
+end
+
+function AkKreuzung:setAutomatikModus()
+    self.manuelleSchaltung = nil
+    self:setBereit(true)
+    print('Automatikmodus aktiviert. (' .. self.name .. "')")
 end
 
 function AkKreuzung:fuegeSchaltungHinzu(schaltung)
@@ -75,6 +117,14 @@ end
 
 function AkKreuzung:isBereit()
     return self.bereit
+end
+
+function AkKreuzung:setGeschaltet(geschaltet)
+    self.geschaltet = geschaltet
+end
+
+function AkKreuzung:isGeschaltet()
+    return self.geschaltet
 end
 
 function AkKreuzung:getGruenZeitSekunden()
@@ -105,21 +155,21 @@ function AkKreuzung:neu(name)
         aktuelleSchaltung = nil,
         schaltungen = {},
         bereit = true,
+        geschaltet = true,
         gruenZeit = 15,
     }
     self.__index = self
     setmetatable(o, self)
     table.insert(AkAllKreuzungen, o)
     table.sort(AkAllKreuzungen,
-        function(int1, int2)
-            return int1.name < int2.name
-        end)
+            function(int1, int2)
+                return int1.name < int2.name
+            end)
+    AkKreuzung.alleKreuzungen[name] = o
     return o
 end
 
 local aufbauHilfeErzeugt = false
---endregion
---region AkSchaltungStart
 
 function AkKreuzung.planeSchaltungenEin()
 
@@ -157,10 +207,14 @@ function AkKreuzung.planeSchaltungenEin()
         local kreuzungsAmpelSchaltungen = {}
 
         local tnames = {}
-        for k in pairs(kreuzung:getSchaltungen()) do table.insert(tnames, k) end
+        for k in pairs(kreuzung:getSchaltungen()) do
+            table.insert(tnames, k)
+        end
 
         -- sort the keys
-        table.sort(tnames, function(schaltung1, schaltung2) return (schaltung1.name < schaltung2.name) end)
+        table.sort(tnames, function(schaltung1, schaltung2)
+            return (schaltung1.name < schaltung2.name)
+        end)
 
         for _, schaltung in ipairs(tnames) do
             for richtung in pairs(schaltung:getNormaleRichtungen()) do
@@ -168,8 +222,7 @@ function AkKreuzung.planeSchaltungenEin()
                     --print(schaltung.name, richtung.name, ampel.signalId, AkPhase.GRUEN)
                     kreuzungsAmpelSchaltungen[ampel.signalId] = kreuzungsAmpelSchaltungen[ampel.signalId] or {}
                     kreuzungsAmpelSchaltungen[ampel.signalId][schaltung] = AkPhase.GRUEN
-                    kreuzungsAmpelSchaltungen[ampel.signalId]["richtungen"]
-                    = kreuzungsAmpelSchaltungen[ampel.signalId]["richtungen"] or {}
+                    kreuzungsAmpelSchaltungen[ampel.signalId]["richtungen"] = kreuzungsAmpelSchaltungen[ampel.signalId]["richtungen"] or {}
                     kreuzungsAmpelSchaltungen[ampel.signalId]["richtungen"][richtung] = AkPhase.GRUEN
                     kreuzungsAmpeln[ampel] = true
                 end
@@ -179,8 +232,7 @@ function AkKreuzung.planeSchaltungenEin()
                     --print(schaltung.name, ampel.signalId, AkPhase.GELB)
                     kreuzungsAmpelSchaltungen[ampel.signalId] = kreuzungsAmpelSchaltungen[ampel.signalId] or {}
                     kreuzungsAmpelSchaltungen[ampel.signalId][schaltung] = AkPhase.GELB
-                    kreuzungsAmpelSchaltungen[ampel.signalId]["richtungen"]
-                    = kreuzungsAmpelSchaltungen[ampel.signalId]["richtungen"] or {}
+                    kreuzungsAmpelSchaltungen[ampel.signalId]["richtungen"] = kreuzungsAmpelSchaltungen[ampel.signalId]["richtungen"] or {}
                     kreuzungsAmpelSchaltungen[ampel.signalId]["richtungen"][richtung] = AkPhase.GELB
                     kreuzungsAmpeln[ampel] = true
                 end
@@ -190,8 +242,7 @@ function AkKreuzung.planeSchaltungenEin()
                     --print(schaltung.name, ampel.signalId, AkPhase.FG)
                     kreuzungsAmpelSchaltungen[ampel.signalId] = kreuzungsAmpelSchaltungen[ampel.signalId] or {}
                     kreuzungsAmpelSchaltungen[ampel.signalId][schaltung] = AkPhase.FG
-                    kreuzungsAmpelSchaltungen[ampel.signalId]["richtungen"]
-                    = kreuzungsAmpelSchaltungen[ampel.signalId]["richtungen"] or {}
+                    kreuzungsAmpelSchaltungen[ampel.signalId]["richtungen"] = kreuzungsAmpelSchaltungen[ampel.signalId]["richtungen"] or {}
                     kreuzungsAmpelSchaltungen[ampel.signalId]["richtungen"][richtung] = AkPhase.FG
                     kreuzungsAmpeln[ampel] = true
                 end
@@ -200,8 +251,12 @@ function AkKreuzung.planeSchaltungenEin()
 
         for ampel in pairs(kreuzungsAmpeln) do
             local sortierteNamen = {}
-            for k in pairs(kreuzung:getSchaltungen()) do table.insert(sortierteNamen, k) end
-            table.sort(sortierteNamen, function(schaltung1, schaltung2) return (schaltung1.name < schaltung2.name) end)
+            for k in pairs(kreuzung:getSchaltungen()) do
+                table.insert(sortierteNamen, k)
+            end
+            table.sort(sortierteNamen, function(schaltung1, schaltung2)
+                return (schaltung1.name < schaltung2.name)
+            end)
 
             do
                 local text = "<j><b>Schaltung:</b></j>"
@@ -262,9 +317,10 @@ function AkKreuzung.planeSchaltungenEin()
     local function AkSchalteKreuzung(kreuzung)
         --if AkKreuzung.debug then print(string.format("[AkKreuzung ] Schalte Kreuzung %s: %s",
         -- kreuzung:getName(), kreuzung:isBereit() and "Ja" or "Nein")) end
-        if kreuzung:isBereit() then
+        if kreuzung:isBereit() and kreuzung:isGeschaltet() then
+            kreuzung:setGeschaltet(false)
             kreuzung:setBereit(false)
-            local nextSchaltung = kreuzung:getNextSchaltung()
+            local nextSchaltung = kreuzung:calculateNextSchaltung()
             local nextName = kreuzung.name .. " " .. nextSchaltung:getName()
             local aktuelleSchaltung = kreuzung:getAktuelleSchaltung()
             local currentName = aktuelleSchaltung
@@ -325,8 +381,9 @@ function AkKreuzung.planeSchaltungenEin()
                     -- Ampel nicht auf rot schalten, da sie in der naechsten Schaltung enthalten ist
                     richtungenAufRot[richtungDanachGruen] = nil
                 else
-                    if AkKreuzung.debug then print("[AkKreuzung ] Richtung " .. richtungDanachGruen:getName()
-                            .. " wird fuer Autos auf gruen geschaltet.")
+                    if AkKreuzung.debug then
+                        print("[AkKreuzung ] Richtung " .. richtungDanachGruen:getName()
+                                .. " wird fuer Autos auf gruen geschaltet.")
                     end
                     richtungenAufGruen[richtungDanachGruen] = true
                 end
@@ -339,17 +396,17 @@ function AkKreuzung.planeSchaltungenEin()
                     richtungenAufFussgaengerRot[richtungDanachGruen] = nil
                 else
                     richtungenAufFussgaengerGruen[richtungDanachGruen] = true
-                    if AkKreuzung.debug then print("[AkKreuzung ] Richtung " .. richtungDanachGruen:getName()
-                            .. " wird fuer FG auf gruen geschaltet.")
+                    if AkKreuzung.debug then
+                        print("[AkKreuzung ] Richtung " .. richtungDanachGruen:getName()
+                                .. " wird fuer FG auf gruen geschaltet.")
                     end
                 end
             end
 
-            if AkKreuzung.debug then print("[AkKreuzung ] Schalte " .. kreuzung:getName() .. " zu "
-                    .. nextSchaltung:getName() .. " (" .. nextSchaltung:richtungenAlsTextZeile() .. ")")
+            if AkKreuzung.debug then
+                print("[AkKreuzung ] Schalte " .. kreuzung:getName() .. " zu "
+                        .. nextSchaltung:getName() .. " (" .. nextSchaltung:richtungenAlsTextZeile() .. ")")
             end
-            kreuzung:setzeWarteZeitZurueck(nextSchaltung)
-
 
             local fussgaengerAufRot = AkAktion:neu(function()
                 AkRichtung.schalteAmpeln(richtungenAufFussgaengerRot, AkPhase.ROT, currentName)
@@ -363,6 +420,7 @@ function AkKreuzung.planeSchaltungenEin()
 
             local alteAmpelnAufRot = AkAktion:neu(function()
                 AkRichtung.schalteAmpeln(richtungenAufRot, AkPhase.ROT, currentName)
+                kreuzung:setzeWarteZeitZurueck(nextSchaltung)
             end, "Schalte " .. currentName .. " auf rot")
             AkPlaner:planeAktion(2, alteAmpelnAufRot, alteAmpelnAufGelb)
 
@@ -374,17 +432,19 @@ function AkKreuzung.planeSchaltungenEin()
 
             local neueAmpelnAufGruen = AkAktion:neu(function()
                 AkRichtung.schalteAmpeln(richtungenAufGruen, AkPhase.GRUEN, nextName)
+                kreuzung:setGeschaltet(true)
             end, "Schalte " .. nextName .. " auf gruen")
             AkPlaner:planeAktion(1, neueAmpelnAufGruen, neueAmpelnAufRotGelb)
 
-            local kreuzungFertigschalten = AkAktion:neu(function()
-                if AkKreuzung.debug then print("[AkKreuzung ] " .. kreuzung.name
-                        .. ": Fahrzeuge sind gefahren, kreuzung ist dann frei.")
+            local kreuzungFertigSchalten = AkAktion:neu(function()
+                if AkKreuzung.debug then
+                    print("[AkKreuzung ] " .. kreuzung.name
+                            .. ": Fahrzeuge sind gefahren, kreuzung ist dann frei.")
                 end
                 kreuzung:setBereit(true)
             end, kreuzung.name .. " ist nun bereit (war " .. kreuzung:getGruenZeitSekunden()
                     .. "s auf gruen geschaltet)")
-            AkPlaner:planeAktion(kreuzung:getGruenZeitSekunden(), kreuzungFertigschalten, neueAmpelnAufGruen)
+            AkPlaner:planeAktion(kreuzung:getGruenZeitSekunden(), kreuzungFertigSchalten, neueAmpelnAufGruen)
         end
     end
 
@@ -412,6 +472,8 @@ function AkKreuzung.updateStatistics()
             id = intersectionIdCounter,
             name = kreuzung.name,
             currentSwitching = kreuzung.aktuelleSchaltung and kreuzung.aktuelleSchaltung.name or nil,
+            manualSwitching = kreuzung.manuelleSchaltung and kreuzung.manuelleSchaltung.name or nil,
+            nextSwitching = kreuzung.nextSchaltung and kreuzung.nextSchaltung.name or nil,
             ready = kreuzung.bereit,
             timeForGreen = kreuzung.gruenZeit,
         }
@@ -422,9 +484,9 @@ function AkKreuzung.updateStatistics()
                 id = kreuzung.name .. "-" .. schaltung.name,
                 intersectionId = kreuzung.name,
                 name = schaltung.name,
+                prio = schaltung.prio,
             }
             table.insert(intersectionSwitching, switching)
-
 
             for richtung in pairs(schaltung:getAlleRichtungen()) do
                 alleRichtungen[richtung] = intersection.id
@@ -526,7 +588,8 @@ function AkKreuzung.updateStatistics()
         end
     end
 
-    local function padnum(d) local dec, n = string.match(d, "(%.?)0*(.+)")
+    local function padnum(d)
+        local dec, n = string.match(d, "(%.?)0*(.+)")
         return #dec > 0 and ("%.12f"):format(d) or ("%s%03d%s"):format(dec, #n, n)
     end
 
@@ -538,12 +601,10 @@ function AkKreuzung.updateStatistics()
                 < tostring(b):gsub("%.?%d+", padnum) .. ("%3d"):format(#a)
     end)
 
-
     AkStatistik.writeLater("intersections", intersections)
     AkStatistik.writeLater("intersection-lanes", intersectionLanes)
     AkStatistik.writeLater("intersection-switchings", intersectionSwitching)
     AkStatistik.writeLater("intersection-traffic-lights", intersectionTrafficLights)
-
 
     local trafficLightModels = {}
     for _, ampelModel in pairs(AkAmpelModell.alleAmpelModelle) do
@@ -565,6 +626,5 @@ function AkKreuzung.updateStatistics()
     end
     AkStatistik.writeLater("signal-type-definitions", trafficLightModels)
 end
-
 
 return AkKreuzung

@@ -20,6 +20,7 @@ function AkKreuzungsSchaltung:neu(name)
     setmetatable(o, self)
     self.__index = self;
     o.name = name
+    o.prio = 0
     o.richtungenNormal = {}
     o.richtungenMitAnforderung = {}
     o.richtungenFuerFussgaenger = {}
@@ -107,6 +108,7 @@ function AkKreuzungsSchaltung:nachPrioSortierteRichtungen()
         return (richtung1.name < richtung2.name)
     end
     table.sort(sortierteRichtungen, sortierFunktion)
+    self.prio = durchschnittsPrio
     return sortierteRichtungen, anzahlDerRichtungen, durchschnittsPrio
 end
 
