@@ -1,6 +1,12 @@
  
 # Versionshinweise   
 
+## Version 0.7.0
+
+### EEP-Web
+* ⭐ Manuelle Schaltung von Kreuzungen
+
+
 ## Version 0.6.0
 
 * `AkStrasse` sollte nicht mehr importiert werden.
