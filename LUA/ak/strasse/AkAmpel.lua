@@ -189,7 +189,7 @@ function AkAmpel:schalteImmoAchsen()
 end
 
 function AkAmpel:schalteSignal(sigIndex)
-    EEPSetSignal(self.signalId, sigIndex)
+    EEPSetSignal(self.signalId, sigIndex, 1)
 end
 
 --- Setzt die Anforderung fuer eine Ampel (damit sie weiß, ob eine Anforderung vorliegt)

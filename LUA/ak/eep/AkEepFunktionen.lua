@@ -31,7 +31,7 @@ local switches = {}
 --- Setzt das Signal signalId auf die Stellung signalStellung. Der Wert z sollte den Wert 1 haben
 -- @param signalId Id des Signals
 -- @param signalStellung Stellung des Signals
-function EEPSetSignal(signalId, signalStellung, z)
+function EEPSetSignal(signalId, signalStellung, informiereEepOnSignal)
     signale[signalId] = signalStellung
 end
 

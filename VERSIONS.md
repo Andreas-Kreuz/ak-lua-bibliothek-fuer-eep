@@ -1,11 +1,18 @@
  
 # Versionshinweise   
 
+## Version 0.8.0
+
+* Startseite nun im Material Design
+
+* Bugfixes:
+  
+  * EEPSetSignal informiert nun Lua, dass geschaltet wurde
+
 ## Version 0.7.0
 
 ### EEP-Web
 * ⭐ Manuelle Schaltung von Kreuzungen
-
 
 ## Version 0.6.0
 
