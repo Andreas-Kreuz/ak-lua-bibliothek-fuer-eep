@@ -72,7 +72,7 @@ function AkCommandExecutor.execute(commands)
 
     for _, command in ipairs(commands) do
         print('Command: ' .. command)
-        local functionAndArgs = command:split(',')
+        local functionAndArgs = command:split('|')
 
         AkCommandExecutor.callSave(functionAndArgs)
     end
