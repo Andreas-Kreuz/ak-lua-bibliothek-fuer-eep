@@ -6,7 +6,7 @@ local os = require("os")
 local json = require("ak.io.dkjson")
 
 local AkStatistik = {}
-AkStatistik.programVersion = "0.7.0"
+AkStatistik.programVersion = "0.8.0"
 local MAX_SIGNALS = 1000
 local MAX_TRACKS = 50000
 local MAX_STRUCTURES = 50000

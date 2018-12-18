@@ -131,6 +131,10 @@ function AkKreuzung:getGruenZeitSekunden()
     return self.gruenZeit
 end
 
+function AkKreuzung:fuegeStatischeKameraHinzu(kameraName)
+    table.insert(self.staticCams, kameraName)
+end
+
 function AkKreuzung.zaehlerZuruecksetzen()
     for _, kreuzung in ipairs(AkAllKreuzungen) do
         print("[AkKreuzung ] SETZE ZURUECK: " .. kreuzung.name)
@@ -157,6 +161,7 @@ function AkKreuzung:neu(name)
         bereit = true,
         geschaltet = true,
         gruenZeit = 15,
+        staticCams = {},
     }
     self.__index = self
     setmetatable(o, self)
@@ -476,6 +481,7 @@ function AkKreuzung.updateStatistics()
             nextSwitching = kreuzung.nextSchaltung and kreuzung.nextSchaltung.name or nil,
             ready = kreuzung.bereit,
             timeForGreen = kreuzung.gruenZeit,
+            staticCams = kreuzung.staticCams,
         }
         table.insert(intersections, intersection)
 

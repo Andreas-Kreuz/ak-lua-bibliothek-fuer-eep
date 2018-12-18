@@ -22,6 +22,7 @@ local allowedFunctions = {
     'print',
     'AkKreuzungSchalteManuell',
     'AkKreuzungSchalteAutomatisch',
+    'EEPSetCamera',
 }
 
 function AkCommandExecutor.callSave(functionAndArgs)
