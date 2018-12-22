@@ -2,8 +2,9 @@
 
 ## v0.8.3
 
+* ⭐ Neu: Ausgabe der ersten 20 Speicherplätze in EEP-Web unter Speicher
 * ⭐ Neu: Ausgabe an EEP-Web enthält nun auch Fehlermeldungen die mit assert ausgegeben werden.
-* ⭐ Neu: Der Name wird nun auch für Speicherplätze angezeigt, die mit AkSpeicherHilfe.registriereId(id, name) angelegt 
+* ⭐ Neu: Der Name wird nun auch für Speicherplätze angezeigt, die mit AkSpeicherHilfe.registriereId(id, name) angelegt
   wurden
 
 ## v0.8.2
