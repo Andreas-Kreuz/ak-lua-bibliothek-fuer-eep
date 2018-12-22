@@ -19,8 +19,12 @@ function AkSpeicherHilfe.registriereId(eepSaveId, name)
     assert(type(eepSaveId) == "number" and eepSaveId > 0 and eepSaveId <= 1000, "Falsche eepSaveId " .. eepSaveId)
     assert(speicherPlaetze[eepSaveId] == nil, "Speicher-ID ist bereits vergeben: "
             .. eepSaveId .. " (" .. (speicherPlaetze[eepSaveId] and speicherPlaetze[eepSaveId] or "nil") .. ")"
-            .. "\nAugetreten in:\n" .. debug.traceback())
+            .. "\n" .. debug.traceback())
     speicherPlaetze[eepSaveId] = name
+end
+
+function AkSpeicherHilfe.getName(eepSaveId)
+    return speicherPlaetze[eepSaveId]
 end
 
 --- Laedt die Daten aus dem Speicherslot in eine neue Tabelle.

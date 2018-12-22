@@ -52,7 +52,7 @@ function SlotNamesParser.getSlotName(slot)
     if slotTable then
         return namesToSlots[tostring(slot)]
     else
-        return '?'
+        return nil
     end
 end
 

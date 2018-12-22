@@ -279,7 +279,7 @@ AkBlock.__index = AkBlock
 function AkBlock.new(name, eepSaveId)
     assert(type(name) == "string")
     assert(type(eepSaveId) == "number")
-    AkSpeicherHilfe.registriereId(eepSaveId)
+    AkSpeicherHilfe.registriereId(eepSaveId, name)
     local self = setmetatable({}, AkBlock)
     self.name = name
     self.eepSaveId = eepSaveId
@@ -450,7 +450,7 @@ function AkRoute.new(eepSaveId, direction, block1, block2, signals, switches, cr
     assert(type(signals) == "table")
     assert(type(switches) == "table")
     if (crossings) then assert(type(crossings) == "table") end
-    AkSpeicherHilfe.registriereId(eepSaveId)
+    AkSpeicherHilfe.registriereId(eepSaveId, block1.name .. " -> " .. direction .. " -> " .. block2.name)
 
     local self = setmetatable({}, AkRoute)
     self.eepSaveId = eepSaveId

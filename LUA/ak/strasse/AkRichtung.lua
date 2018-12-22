@@ -332,7 +332,7 @@ function AkRichtung:neu(name, eepSaveId, ampeln, richtungen, trafficType)
     assert(ampeln, "Bitte geben Sie den Wert \"ampeln\" fuer diese Richtung an.")
     --assert(signalId, "Bitte geben Sie den Wert \"signalId\" fuer diese Richtung an.")
 
-    if eepSaveId ~= -1 then AkSpeicherHilfe.registriereId(eepSaveId, name) end
+    if eepSaveId ~= -1 then AkSpeicherHilfe.registriereId(eepSaveId, 'Richtung ' .. name) end
     local o = {
         fahrzeugMultiplikator = 1,
         name = name,

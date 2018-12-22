@@ -33,6 +33,7 @@ end
 
 local function fillSaveSlots()
     data["save-slots"] = AkDataSlots.fillApiV1()
+    data["free-slots"] = AkDataSlots.fillFreeSlotsApiV1()
 end
 
 local function fillSignals()
