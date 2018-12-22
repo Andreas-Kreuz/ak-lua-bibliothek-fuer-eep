@@ -59,10 +59,11 @@ function AkWebServerIo.setOutputDirectory(dirName)
     inFileCommands = io.open(inFileNameCommands, "r")
 end
 
+local _assert = assert
 local _print = print
 function print(...)
     -- print the output to the file
-    local file = assert(io.open(outFileNameLog, "a"))
+    local file = _assert(io.open(outFileNameLog, "a"))
     local args = table.pack(...)
     local text = ""
     for i = 1, args.n do
@@ -73,6 +74,19 @@ function print(...)
 
     -- use the original print function
     _print(...)
+end
+
+function assert(v, message)
+    -- print the output to the file
+    if not v then
+        local file = _assert(io.open(outFileNameLog, "a"))
+        local text = message or "Assertion failed!"
+        file:write(text .. "\n")
+        file:close()
+    end
+
+    -- use the original print function
+    _assert(v, message)
 end
 
 local _clearlog = clearlog
