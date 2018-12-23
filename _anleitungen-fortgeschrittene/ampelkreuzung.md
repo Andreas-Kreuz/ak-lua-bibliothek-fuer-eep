@@ -168,38 +168,38 @@ fg_n2 = AkRichtung:neu("FG_N2", 103, {
 })
 
 -- Richtungen im Osten
-o1 = AkRichtung:neu("O1", 100, { AkAmpel:neu(14, AkAmpelModell.JS2_3er_mit_FG) })
-o2 = AkRichtung:neu("O2", 100, {
+o1 = AkRichtung:neu("O1", 104, { AkAmpel:neu(14, AkAmpelModell.JS2_3er_mit_FG) })
+o2 = AkRichtung:neu("O2", 105, {
     AkAmpel:neu(16, AkAmpelModell.JS2_3er_mit_FG),
     AkAmpel:neu(18, AkAmpelModell.JS2_3er_ohne_FG)
 })
-fg_o = AkRichtung:neu("FG_O", 102, {
+fg_o = AkRichtung:neu("FG_O", 106, {
     AkAmpel:neu(14, AkAmpelModell.JS2_3er_mit_FG), -- Wird geteilt mit O1
     AkAmpel:neu(18, AkAmpelModell.JS2_3er_mit_FG) -- Wird geteilt mit O2
 })
 
 -- Richtungen im Sueden
-s1 = AkRichtung:neu("S1", 100, { AkAmpel:neu(11, AkAmpelModell.JS2_3er_mit_FG) })
-s2 = AkRichtung:neu("S2", 101, {
+s1 = AkRichtung:neu("S1", 107, { AkAmpel:neu(11, AkAmpelModell.JS2_3er_mit_FG) })
+s2 = AkRichtung:neu("S2", 108, {
     AkAmpel:neu(10, AkAmpelModell.JS2_3er_mit_FG),
     AkAmpel:neu(19, AkAmpelModell.JS2_3er_ohne_FG)
 })
-fg_s1 = AkRichtung:neu("FG_S1", 102, {
+fg_s1 = AkRichtung:neu("FG_S1", 109, {
     AkAmpel:neu(10, AkAmpelModell.JS2_3er_mit_FG), -- Wird geteilt mit S2
     AkAmpel:neu(11, AkAmpelModell.JS2_3er_mit_FG) -- Wird geteilt mit S1
 })
-fg_s2 = AkRichtung:neu("FG_S2", 103, {
+fg_s2 = AkRichtung:neu("FG_S2", 110, {
     AkAmpel:neu(22, AkAmpelModell.JS2_2er_nur_FG),
     AkAmpel:neu(23, AkAmpelModell.JS2_2er_nur_FG),
 })
 
 -- Richtungen im Westen
-w1 = AkRichtung:neu("W1", 100, { AkAmpel:neu(13, AkAmpelModell.JS2_3er_mit_FG) })
-w2 = AkRichtung:neu("W2", 100, {
+w1 = AkRichtung:neu("W1", 111, { AkAmpel:neu(13, AkAmpelModell.JS2_3er_mit_FG) })
+w2 = AkRichtung:neu("W2", 112, {
     AkAmpel:neu(15, AkAmpelModell.JS2_3er_mit_FG),
     AkAmpel:neu(24, AkAmpelModell.JS2_3er_ohne_FG)
 })
-fg_w = AkRichtung:neu("FG_W", 102, {
+fg_w = AkRichtung:neu("FG_W", 113, {
     AkAmpel:neu(13, AkAmpelModell.JS2_3er_mit_FG), -- Wird geteilt mit O1
     AkAmpel:neu(15, AkAmpelModell.JS2_3er_mit_FG) -- Wird geteilt mit O2
 })
