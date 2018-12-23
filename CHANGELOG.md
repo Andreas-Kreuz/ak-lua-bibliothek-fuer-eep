@@ -1,8 +1,12 @@
 # Änderungen an der Software
 
+## v0.8.4
+
+* ⭐ Neu: Umbenannt: Es werden nun die ersten 20 "**Leeren**" Speicherplätze in EEP-Web unter Speicher angezeigt
+
 ## v0.8.3
 
-* ⭐ Neu: Ausgabe der ersten 20 Speicherplätze in EEP-Web unter Speicher
+* ⭐ Neu: Ausgabe der ersten 20 leeren Speicherplätze in EEP-Web unter Speicher
 * ⭐ Neu: Ausgabe an EEP-Web enthält nun auch Fehlermeldungen die mit assert ausgegeben werden.
 * ⭐ Neu: Der Name wird nun auch für Speicherplätze angezeigt, die mit AkSpeicherHilfe.registriereId(id, name) angelegt
   wurden
