@@ -1,9 +1,9 @@
 <p align="center">
   <a href="http://andreas-kreuz.github.io/ak-lua-bibliothek-fuer-eep">
-    <img src="assets/img/avatar-andreas-kreuz-128.png" alt="" width=72 height=72>
+    <img src="assets/img/eep-web-logo-shadow-72.png" alt="" width=72 height=72>
   </a>
 
-  <h3 align="center">Lua-Bibliothek für EEP</h3>
+  <h3 align="center">Lua-Bibliothek für EEP-Web</h3>
 
   <p align="center">
     Eine Sammlung von Lua-Skripten für die einfache Verkehrssteuerung in EEP.
@@ -11,9 +11,7 @@
     <a href="http://andreas-kreuz.github.io/ak-lua-bibliothek-fuer-eep"><strong>Anleitungen und Dokumentation</strong></a>
   </p>
 </p>
-
 <br>
-
 <hr>
 
 # Überblick
