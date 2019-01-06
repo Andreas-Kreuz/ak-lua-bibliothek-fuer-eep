@@ -56,4 +56,5 @@ Gemfile.lock
 .jekyll*
 .DS_Store
 /scratch.lua
+/scratch.md
 /LUA/ModellInstallationPrivat.lua
