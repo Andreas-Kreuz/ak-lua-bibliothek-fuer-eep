@@ -5,7 +5,7 @@ local AkWebServerIo = {}
 
 local function dirExists(dir)
     local file = io.open(dir .. "/" .. "ak-eep-version.txt", "w")
-    file:write(EEPVer)
+    file:write( string.format("%.1f", EEPVer) ) 
     file:flush()
     file:close()
     return true
@@ -48,13 +48,13 @@ local inFileCommands
 function AkWebServerIo.setOutputDirectory(dirName)
     assert(dirName, "Verzeichnis angeben!")
 
-    ioDirectoryName = dirName
-    outFileNameLog = ioDirectoryName .. '/ak-eep-out.socket'
-    outFileNameJson = ioDirectoryName .. '/ak-eep-out.json'
-    watchFileNameServer = ioDirectoryName .. '/ak-server.iswatching'
-    watchFileNameLua = ioDirectoryName .. '/ak-eep-out-json.isfinished'
+	ioDirectoryName 			= dirName
+	outFileNameLog 				= ioDirectoryName .. '/ak-eep-out.socket'
+	outFileNameJson 			= ioDirectoryName .. '/ak-eep-out.json'
+	watchFileNameServer 		= ioDirectoryName .. '/ak-server.iswatching'
+	watchFileNameLua 			= ioDirectoryName .. '/ak-eep-out-json.isfinished'
 
-    local inFileNameCommands = ioDirectoryName .. '/ak-eep-in.commands'
+    local inFileNameCommands 	= ioDirectoryName .. '/ak-eep-in.commands'
     writeFile(inFileNameCommands, "")
     inFileCommands = io.open(inFileNameCommands, "r")
 end
@@ -95,7 +95,10 @@ function clearlog()
     io.open(outFileNameLog, "w+"):close()
 end
 
-AkWebServerIo.setOutputDirectory(existingDirOf({ "../LUA/ak/io/exchange", "./LUA/ak/io/exchange" }) or ".")
+AkWebServerIo.setOutputDirectory(existingDirOf({ 
+	"../LUA/ak/io/exchange", 
+	"./LUA/ak/io/exchange" 
+}) or ".")
 
 local writing = false
 ---
@@ -103,22 +106,22 @@ local writing = false
 --- @param type - Inhaltstyp
 --- @param jsonData - Dateiinhalt
 function AkWebServerIo.updateJsonFile(jsonData)
-    if fileExists(watchFileNameServer)
-            and fileExists(watchFileNameLua) then
+	if fileExists(watchFileNameServer)								-- file: ak-server.iswatching
+		and fileExists(watchFileNameLua) then						-- file: ak-eep-out-json.isfinished
         print("SKIPPING - server not ready")
         return
     end
 
     if not writing then
         writing = true
-        if not pcall(writeFile, outFileNameJson, jsonData) then
+        if not pcall(writeFile, outFileNameJson, jsonData) then		-- file: ak-eep-out.json
             print("CANNOT WRITE TO " .. outFileNameJson)
         end
         writing = false
     end
 
-    if fileExists(watchFileNameServer) then
-        writeFile(watchFileNameLua, "")
+    if fileExists(watchFileNameServer) then							-- file: ak-server.iswatching
+        writeFile(watchFileNameLua, "")								-- file: ak-eep-out-json.isfinished
     end
 end
 
@@ -126,7 +129,7 @@ end
 --- Liest Inhalte von der Eingabe "type"
 --- @param type
 function AkWebServerIo.processNewCommands()
-    local commands = inFileCommands:read()
+    local commands = inFileCommands:read()							-- file: ak-eep-in.commands
     if (commands) then
         AkCommandExecutor.execute(commands)
     end
