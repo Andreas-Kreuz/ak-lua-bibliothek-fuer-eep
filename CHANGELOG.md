@@ -2,7 +2,7 @@
 
 ## v0.8.4
 
-* ⭐ Neu: Umbenannt: Es werden nun die ersten 20 "**Leeren**" Speicherplätze in EEP-Web unter Speicher angezeigt
+* ⭐ Neu: Umbenannt: Es werden nun die ersten 20 "**leeren**" Speicherplätze in EEP-Web unter Speicher angezeigt
 
 ## v0.8.3
 
@@ -43,6 +43,7 @@
     **Import vor Version 0.6.0:**
 
     👎 **schlecht!**
+
     ```lua
     require("ak.planer.AkStrasse")
     ```
@@ -50,6 +51,7 @@
     **Import ab Version 0.6.0:**
 
     👍 **Besser!**
+
     ```lua
     local AkPlaner = require("ak.planer.AkPlaner")
     local AkAmpelModell = require("ak.strasse.AkAmpelModell")
@@ -103,14 +105,19 @@
     * Gib an, welcher Verkehrstyp die Fahrspur benutzt. So kannst Du in EEP-Web besser unterscheiden, welche Richtung grade geschaltet wird:
 
     * Verwende `PEDESTRIAN` für Fussgänger 🚶:
+
         ```lua
         richtung1:setTrafficType('PEDESTRIAN')
         ```
+
     * Verwende `TRAM` für Straßenbahnen 🚋:
+
         ```lua
         richtung2:setTrafficType('TRAM')
         ```
+
     * Verwende `NORMAL` für normalen Verkehr 🚗:
+
         ```lua
         richtung3:setTrafficType('NORMAL')
         ```
