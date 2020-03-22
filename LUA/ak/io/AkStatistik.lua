@@ -31,7 +31,7 @@ function EEPMain()
 end 
 --]]
 -- @author Andreas Kreuz
--- @release 0.8.3 mod
+-- @release 0.8.4
 local AkWebServerIo = require("ak.io.AkWebServerIo")
 print("Lade ak.io.AkStatistik ...")
 
@@ -41,7 +41,7 @@ local os = require("os")
 local json = require("ak.io.dkjson")
 
 local AkStatistik = {}
-AkStatistik.programVersion = "0.8.3 mod"
+AkStatistik.programVersion = "0.8.4"
 
 -- checkServerStatus: 
 -- false: Update json file without checking if the EEP-Web Server is ready

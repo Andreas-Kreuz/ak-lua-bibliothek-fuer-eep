@@ -3,6 +3,7 @@
 ## v0.8.4
 
 * ⭐ Neu: Umbenannt: Es werden nun die ersten 20 "**leeren**" Speicherplätze in EEP-Web unter Speicher angezeigt
+* ⭐ Neu: Performance: Das Einlesen von nicht veränderlichen Daten erfolgt nun nur noch einmal (beigesteuert von [FrankBucholz](https://github.com/FrankBuchholz) - Danke!)
 
 ## v0.8.3
 
