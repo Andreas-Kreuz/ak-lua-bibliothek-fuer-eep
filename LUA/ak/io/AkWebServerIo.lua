@@ -136,14 +136,14 @@ function AkWebServerIo.checkWebServer()
     if fileExists(watchFileNameServer) then -- file: ak-server.iswatching
         if fileExists(watchFileNameLua) then -- file: ak-eep-out-json.isfinished
             print("SKIPPING - server not ready")
-            return 0
+            return false
         else
             --print("server ready")
-            return 1
+            return true
         end
     else
         print("SKIPPING - server not listening")
-        return -1
+        return false
     end
 end
 
@@ -151,11 +151,6 @@ local writing = false
 --- Schreibe Datei.
 -- @param jsonData Dateiinhalt
 function AkWebServerIo.updateJsonFile(jsonData)
-    -- The caller (AkStatistik) performs this check
-    --if (AkWebServerIo.checkWebServer() ~= 1) then    -- -1: not listening, 0: not ready, 1: ready
-    --    return
-    --end
-
     if not writing then
         writing = true
         if not pcall(writeFile, outFileNameJson, jsonData) then -- file: ak-eep-out.json

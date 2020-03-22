@@ -23,10 +23,10 @@ AkStatistik.fillTrains            = true    -- trains and rolling stocks
 AkStatistik.fillStructures        = false
 AkStatistik.fillTrainYards        = false
 
-local frequency = 1
+local repeatCycles = 1
 function EEPMain()
-  --AkStatistik.writeLater(key, value) -- add additiuonal data to output file
-  AkStatistik.statistikAusgabe(frequency) -- optional parameter
+  --AkStatistik.writeLater(key, value) -- add additional data to output file
+  AkStatistik.statistikAusgabe(repeatCycles) -- optional parameter
   return 1
 end 
 --]]
@@ -64,11 +64,28 @@ local data = {}
 local tracks = {}
 
 --- Create dummy functions for EEP functions which are not yet available depending of the version of EEP  
--- The minimal required version is EEP 11.3 Plug-In 3 which suppoirts some quite important functions
+-- The minimal required version is EEP 11.3 Plug-In 3 which supports some quite important functions
 EEPGetSignalTrainsCount      = EEPGetSignalTrainsCount       or function () return end -- EEP 13.2
 EEPGetSignalTrainName        = EEPGetSignalTrainName         or function () return end -- EEP 13.2
 
-EEPGetRollingstockItemsCount = EEPGetRollingstockItemsCount  or function () return end -- EEP 13.2 Plug-In 2
+-- Based on this concept we can redefine the functions, e.g. to collect some statistics data 
+--EEPGetRollingstockItemsCount = EEPGetRollingstockItemsCount  or function () return end -- EEP 13.2 Plug-In 2
+local _EEPGetRollingstockItemsCount = EEPGetRollingstockItemsCount
+local function _EEPGetRollingstockItemsCount(...)
+    if not _EEPGetRollingstockItemsCount then return end
+
+    local t0 = os.clock()
+
+	local result = {_EEPGetRollingstockItemsCount(...)}
+
+    local t1 = os.clock()
+	local runTime = data["times"][1].EEPGetRollingstockItemsCount or { n = 0, t = 0, }
+	runTime.n = runTime.n + 1
+	runTime.t = runTime.t + t1 - t0
+	
+	return unpack(result)
+end
+
 EEPGetRollingstockItemName   = EEPGetRollingstockItemName    or function () return end -- EEP 13.2 Plug-In 2
 EEPGetTrainLength            = EEPGetTrainLength             or function () return end -- EEP 15.1 Plug-In 1
 
@@ -98,7 +115,7 @@ end
 --- Get EEP version and store it.
 -- do it once
 local function fillEEPVersion()
-    data["eep-version"] = { versionInfo = {         -- EEP-Web expects an named entry here 
+    data["eep-version"] = { versionInfo = {         -- EEP-Web expects a named entry here 
         name = "versionInfo",                       -- EEP-Web requires that data entries have an id or name tag 
         eepVersion = string.format("%.1f", EEPVer), -- show string instead of float
         luaVersion = _VERSION,
@@ -520,15 +537,8 @@ function AkStatistik.statistikAusgabe(modulus)
     AkWebServerIo.processNewCommands()
 
     -- export data regularly
-    if i % modulus == 0 then
+    if i % modulus == 0 and ( not AkStatistik.checkServerStatus or AkWebServerIo.checkWebServer() ) then
         local t0 = os.clock() -- milliseconds precision
-        
-        -- Skip if the Web Server is not ready
-        -- Should be accept "ready" only or should be accept "not ready" too? 
-        -- (The Web Server might have finished reading the previous version of the file until filling the data structures again.)
-        if (AkStatistik.checkServerStatus and AkWebServerIo.checkWebServer() == 1) then    -- -1: not listening, 0: not ready, 1: ready
-            return
-        end
         
         fillTime()
         fillStructures()
@@ -556,10 +566,6 @@ function AkStatistik.statistikAusgabe(modulus)
 
         local t1 = os.clock()
 
-        -- check if the Web Server is ready
-        if (AkStatistik.checkServerStatus and AkWebServerIo.checkWebServer() == 1) then    -- -1: not listening, 0: not ready, 1: ready
-            return
-        end
         -- export data
         AkWebServerIo.updateJsonFile(json.encode(data, {
             keyorder = topLevelEntries,
