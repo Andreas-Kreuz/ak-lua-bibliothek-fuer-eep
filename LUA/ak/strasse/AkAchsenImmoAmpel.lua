@@ -2,14 +2,16 @@ print("Lade ak.strasse.AkAchsenImmoAmpel ...")
 
 local AkAchsenImmoAmpel = {}
 function AkAchsenImmoAmpel.neuAusTabelle(tabelle)
-    return AkAchsenImmoAmpel:neu(tabelle.immoName,
+    return AkAchsenImmoAmpel:neu(
+        tabelle.immoName,
         tabelle.achse,
         tabelle.grundStellung,
         tabelle.stellungRot,
         tabelle.stellungGruen,
         tabelle.stellungGelb,
         tabelle.stellungRotGelb,
-        tabelle.stellungFG)
+        tabelle.stellungFG
+    )
 end
 
 --- Ändert die Achsstellung der angegebenen Immobilien beim Schalten der Ampel auf rot, gelb, grün oder Fußgänger
@@ -21,19 +23,36 @@ end
 -- @param stellungGelb Achsstellung bei gelb
 -- @param stellungFG Achsstellung bei FG
 --
-function AkAchsenImmoAmpel:neu(immoName, achse, grundStellung, stellungRot, stellungGruen,
-stellungGelb, stellungRotGelb, stellungFG)
+function AkAchsenImmoAmpel:neu(
+    immoName,
+    achse,
+    grundStellung,
+    stellungRot,
+    stellungGruen,
+    stellungGelb,
+    stellungRotGelb,
+    stellungFG)
     assert(immoName)
     assert(type(immoName) == "string")
     assert(achse)
     assert(type(achse) == "string")
     assert(EEPStructureGetAxis(immoName, achse))
     assert(type(grundStellung) == "number")
-    if stellungRot then assert(type(stellungRot) == "number") end
-    if stellungGruen then assert(type(stellungGruen) == "number") end
-    if stellungGelb then assert(type(stellungGelb) == "number") end
-    if stellungRotGelb then assert(type(stellungRotGelb) == "number") end
-    if stellungFG then assert(type(stellungFG) == "number") end
+    if stellungRot then
+        assert(type(stellungRot) == "number")
+    end
+    if stellungGruen then
+        assert(type(stellungGruen) == "number")
+    end
+    if stellungGelb then
+        assert(type(stellungGelb) == "number")
+    end
+    if stellungRotGelb then
+        assert(type(stellungRotGelb) == "number")
+    end
+    if stellungFG then
+        assert(type(stellungFG) == "number")
+    end
     local o = {
         immoName = immoName,
         achse = achse,

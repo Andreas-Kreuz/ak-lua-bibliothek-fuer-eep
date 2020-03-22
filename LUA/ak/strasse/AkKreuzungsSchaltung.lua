@@ -18,7 +18,7 @@ end
 function AkKreuzungsSchaltung:neu(name)
     local o = {}
     setmetatable(o, self)
-    self.__index = self;
+    self.__index = self
     o.name = name
     o.prio = 0
     o.richtungenNormal = {}
@@ -61,7 +61,6 @@ function AkKreuzungsSchaltung:getRichtungenMitAnforderung()
     return self.richtungenMitAnforderung
 end
 
-
 function AkKreuzungsSchaltung:fuegeRichtungHinzu(richtung)
     assert(richtung, "Bitte ein gueltige Richtung angeben")
     richtung:setSchaltungsTyp(AkRichtung.SchaltungsTyp.NORMAL)
@@ -102,8 +101,10 @@ function AkKreuzungsSchaltung:nachPrioSortierteRichtungen()
     end
     local durchschnittsPrio = gesamtPrio / anzahlDerRichtungen
     local sortierFunktion = function(richtung1, richtung2)
-        if richtung1:getPrio() > richtung2:getPrio() then return true
-        elseif richtung1:getPrio() < richtung2:getPrio() then return false
+        if richtung1:getPrio() > richtung2:getPrio() then
+            return true
+        elseif richtung1:getPrio() < richtung2:getPrio() then
+            return false
         end
         return (richtung1.name < richtung2.name)
     end
@@ -141,12 +142,16 @@ function AkKreuzungsSchaltung.hoeherePrioAls(schaltung1, schaltung2)
         local _, tableSize1, avg1 = schaltung1:nachPrioSortierteRichtungen()
         local _, tableSize2, avg2 = schaltung2:nachPrioSortierteRichtungen()
 
-        if avg1 > avg2 then return true
-        elseif avg1 < avg2 then return false
+        if avg1 > avg2 then
+            return true
+        elseif avg1 < avg2 then
+            return false
         end
 
-        if tableSize1 > tableSize2 then return true
-        elseif tableSize1 < tableSize2 then return false
+        if tableSize1 > tableSize2 then
+            return true
+        elseif tableSize1 < tableSize2 then
+            return false
         end
 
         return (schaltung1.name > schaltung2.name)
@@ -164,6 +169,4 @@ function AkKreuzungsSchaltung:setzeWartezeitZurueck()
     end
 end
 
-
 return AkKreuzungsSchaltung
-

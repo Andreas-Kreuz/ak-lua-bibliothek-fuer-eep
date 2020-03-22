@@ -1,5 +1,6 @@
 print("Lade ak.strasse.AkStrasse ...")
-print([[
+print(
+    [[
 ############################################################################################
 # require("ak.planer.AkStrasse") wird nicht mehr unterstützt!!!
 # Bitte stattdessen unbedingt die notwendigen Dinge einzeln mittels zuweisen:
@@ -22,7 +23,8 @@ local AkKreuzungsSchaltung = require("ak.strasse.AkKreuzungsSchaltung")
 local AkSpeicherHilfe = require("ak.speicher.AkSpeicher")
 local fmt = require("ak.text.AkFormat")
 ############################################################################################
-]])
+]]
+)
 
 -- LEGACY SUPPORT -- ALL THESE REQUIRES SHOULD BE local !!!
 AkPlaner = require("ak.planer.AkPlaner")

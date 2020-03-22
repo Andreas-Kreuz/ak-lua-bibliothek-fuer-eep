@@ -1,13 +1,13 @@
 print("Lade ak.io.AkWebServerIo ...")
-local AkCommandExecutor = require('ak.io.AkCommandExecutor')
+local AkCommandExecutor = require("ak.io.AkCommandExecutor")
 
 local AkWebServerIo = {}
 
 --- Prüfe ob das Verzeichnis existiert und Dateien geschrieben werden können.
--- Call this function via pcall to catch any exceptions 
+-- Call this function via pcall to catch any exceptions
 local function dirExists(dir)
     local file = io.open(dir .. "/" .. "ak-eep-version.txt", "w")
-    file:write( string.format("%.1f", EEPVer) ) 
+    file:write(string.format("%.1f", EEPVer))
     file:flush()
     file:close()
     return true
@@ -20,7 +20,7 @@ local function existingDirOf(...)
             return dir
         end
     end
-    return nil;
+    return nil
 end
 
 --- Prüfe ob Datei existiert.
@@ -55,39 +55,45 @@ function AkWebServerIo.setOutputDirectory(dirName)
     assert(dirName, "Verzeichnis angeben!")
 
     ioDirectoryName = dirName
-    
+
     -- EEP appends the log to this file
-    outFileNameLog = ioDirectoryName .. '/ak-eep-out.socket'
-    
+    outFileNameLog = ioDirectoryName .. "/ak-eep-out.socket"
+
     -- EEP writes it's status to this file regularly
     -- but only if the Web Server is listening and has finished reading the previous version of the file
-    outFileNameJson = ioDirectoryName .. '/ak-eep-out.json'
-    
+    outFileNameJson = ioDirectoryName .. "/ak-eep-out.json"
+
     -- The Web Server creates this file at start and deletes it on exit
-    -- Conclusion: The server is listening while this file exists 
-    watchFileNameServer = ioDirectoryName .. '/ak-server.iswatching'
-    
-    -- EEP creates this empty file after updating the json file to indicate that the Web Server can now read the json file 
+    -- Conclusion: The server is listening while this file exists
+    watchFileNameServer = ioDirectoryName .. "/ak-server.iswatching"
+
+    -- EEP creates this empty file after updating the json file to indicate that the Web Server
+    -- can now read the json file
     -- The Web Server should delete this file after reading the json file
-    -- Conclusion: The server is busy while this file exists 
-    watchFileNameLua = ioDirectoryName .. '/ak-eep-out-json.isfinished'
+    -- Conclusion: The server is busy while this file exists
+    watchFileNameLua = ioDirectoryName .. "/ak-eep-out-json.isfinished"
     -- Delete the file during initialization to trigger the creation of the json file once
     --assert(os.remove(watchFileNameLua))
     -- Howe ver, this is not possible because within EEP, the library os contains only the following functions:
     -- setlocale date time difftime clock getenv tmpname
 
     -- EEP reads commands from this file
-    local inFileNameCommands = ioDirectoryName .. '/ak-eep-in.commands'
+    local inFileNameCommands = ioDirectoryName .. "/ak-eep-in.commands"
     -- clear content of commands file
     writeFile(inFileNameCommands, "")
     inFileCommands = io.open(inFileNameCommands, "r")
 end
 
 --- Bestimme Dafault-Dateipfade.
-AkWebServerIo.setOutputDirectory(existingDirOf({ -- default value 
-    "../LUA/ak/io/exchange", 
-    "./LUA/ak/io/exchange" 
-}) or ".")
+AkWebServerIo.setOutputDirectory(
+    existingDirOf(
+        {
+            -- default value
+            "../LUA/ak/io/exchange",
+            "./LUA/ak/io/exchange"
+        }
+    ) or "."
+)
 
 local _assert = assert
 local _print = print

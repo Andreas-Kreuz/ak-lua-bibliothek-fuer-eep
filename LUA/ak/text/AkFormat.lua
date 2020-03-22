@@ -1,4 +1,4 @@
-print ("Lade ak.text.AkFormat ...")
+print("Lade ak.text.AkFormat ...")
 
 local AkFormat = {
     -- <br> neue Zeile
@@ -41,7 +41,7 @@ local AkFormat = {
     end,
     rot = function(text)
         return "<bgrgb=155,0,0><fgrgb=255,255,255>" .. text .. "<bgrgb=255,255,255><fgrgb=0,0,0>"
-    end,
+    end
 }
 
 return AkFormat

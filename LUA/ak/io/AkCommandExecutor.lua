@@ -3,7 +3,7 @@ local json = require("ak.io.dkjson")
 
 -- split a string
 function string:split(delimiter)
-    local result = { }
+    local result = {}
     local from = 1
     local delim_from, delim_to = string.find(self, delimiter, from, true)
     while delim_from do
@@ -18,26 +18,27 @@ end
 local AkCommandExecutor = {}
 
 local allowedFunctions = {
-    'clearlog',
-    'print',
-    'AkKreuzungSchalteManuell',
-    'AkKreuzungSchalteAutomatisch',
-    'EEPPause',
+    "clearlog",
+    "print",
+    "AkKreuzungSchalteManuell",
+    "AkKreuzungSchalteAutomatisch",
+    "EEPPause"
 }
 
 function AkCommandExecutor.callSave(functionAndArgs)
     local fName = table.remove(functionAndArgs, 1)
     local args = functionAndArgs
     local accepted = false
-    
-    if fName == "" then return end -- ignore empty commands
+
+    if fName == "" then -- ignore empty commands
+        return
+    end
 
     --for i, arg in ipairs(args) do
     --    print(i .. "-" .. arg)
     --end
-    
-    if string.find(fName, "^EEP.*Set") -- Accept all EEP-Set-functions 
-    then
+
+    if string.find(fName, "^EEP.*Set") then -- Accept all EEP-Set-functions
         accepted = true
     else
         for _, allowedName in ipairs(allowedFunctions) do
@@ -49,14 +50,6 @@ function AkCommandExecutor.callSave(functionAndArgs)
     end
 
     if accepted then
-        --print("Calling >" .. fName .. "<(...)")
-        if pcall(_G[fName], table.unpack(args)) 
-        then
-            print("Aufruf von " .. fName)
-        else
-            print("Aufruf von " .. fName .. " fehlgeschlagen")
-        end
-
         --local functionWithTable = fName:split(".")
         --local t = functionWithTable[2] and functionWithTable[1] or nil
         --local f = functionWithTable[2] and functionWithTable[2] or functionWithTable[1]
@@ -81,17 +74,23 @@ function AkCommandExecutor.callSave(functionAndArgs)
         --    print('Cannot execute "' .. fName .. '(' ..  table.concat(args, ', ') .. ')"')
         --    print(error)
         --end
+        --print("Calling >" .. fName .. "<(...)")
+        if pcall(_G[fName], table.unpack(args)) then
+            print("Aufruf von " .. fName)
+        else
+            print("Aufruf von " .. fName .. " fehlgeschlagen")
+        end
     else
         print("Aufruf von " .. fName .. " nicht erlaubt")
-    end    
+    end
 end
 
 function AkCommandExecutor.execute(commands)
-    commands = commands:split('\n')
+    commands = commands:split("\n")
 
     for _, command in ipairs(commands) do
-        print('Command: ' .. command)
-        local functionAndArgs = command:split('|')
+        print("Command: " .. command)
+        local functionAndArgs = command:split("|")
 
         AkCommandExecutor.callSave(functionAndArgs)
     end

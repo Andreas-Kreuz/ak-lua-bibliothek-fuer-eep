@@ -18,8 +18,15 @@ AkAmpelModell.alleAmpelModelle = {}
 -- @param sigIndexKomplettAus Index der Signalstellung in der die Ampel komplett aus ist
 -- @param sigIndexGelbBlinkenAus Index der Signalstellung in der die Ampel gelb blinkt ohne den Verkehr zu beeinflussen
 --
-function AkAmpelModell:neu(name, sigIndexRot, sigIndexGruen, sigIndexGelb, sigIndexRotGelb, sigIndexFgGruen,
-sigIndexKomplettAus, sigIndexGelbBlinkenAus)
+function AkAmpelModell:neu(
+    name,
+    sigIndexRot,
+    sigIndexGruen,
+    sigIndexGelb,
+    sigIndexRotGelb,
+    sigIndexFgGruen,
+    sigIndexKomplettAus,
+    sigIndexGelbBlinkenAus)
     assert(name)
     assert(sigIndexRot)
     assert(sigIndexGruen)
@@ -31,7 +38,7 @@ sigIndexKomplettAus, sigIndexGelbBlinkenAus)
         sigIndexRotGelb = sigIndexRotGelb or sigIndexRot,
         sigIndexFgGruen = sigIndexFgGruen,
         sigIndexKomplettAus = sigIndexKomplettAus,
-        sigIndexGelbBlinkenAus = sigIndexGelbBlinkenAus,
+        sigIndexGelbBlinkenAus = sigIndexGelbBlinkenAus
     }
     self.__index = self
     local x = setmetatable(o, self)
@@ -58,7 +65,6 @@ function AkAmpelModell:signalIndexFuer(phase)
     end
 end
 
-
 ---------------------
 -- Ampeln und Signale
 ---------------------
@@ -84,6 +90,5 @@ AkAmpelModell.JS2_3er_ohne_FG = AkAmpelModell:neu("Ampel_3er_XXX_ohne_FG", 1, 3,
 
 -- Unsichtbare Ampeln haben "nur" rot und gruen
 AkAmpelModell.Unsichtbar_2er = AkAmpelModell:neu("Unsichtbares Signal", 2, 1, 2, 2)
-
 
 return AkAmpelModell
