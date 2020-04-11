@@ -75,7 +75,7 @@ EEPGetSignalTrainName = EEPGetSignalTrainName or function()
 -- Based on this concept we can redefine the functions, e.g. to collect some statistics data
 --EEPGetRollingstockItemsCount = EEPGetRollingstockItemsCount  or function () return end -- EEP 13.2 Plug-In 2
 local _EEPGetRollingstockItemsCount = EEPGetRollingstockItemsCount
-local function _EEPGetRollingstockItemsCount(...)
+local function EEPGetRollingstockItemsCount(...)
     if not _EEPGetRollingstockItemsCount then
         return
     end
@@ -395,24 +395,24 @@ local function fillTracksBy(besetztFunktion, trackType)
                 -- EEP 14.2
 
                 local _, modelType = EEPRollingstockGetModelType(rollingStockName) -- EEP 14.2
-                local EEPRollingstockModelTypeText = {
-                    -- not used yet
-                    ["1"] = "Tenderlok",
-                    ["2"] = "Schlepptenderlok",
-                    ["3"] = "Tender",
-                    ["4"] = "Elektrolok",
-                    ["5"] = "Diesellok",
-                    ["6"] = "Triebwagen",
-                    ["7"] = "U- oder S-Bahn",
-                    ["8"] = "Straßenbahn",
-                    ["9"] = "Güterwaggon",
-                    ["10"] = "Personenwaggon",
-                    ["11"] = "Luftfahrzeug",
-                    ["12"] = "Maschine",
-                    ["13"] = "Wasserfahrzeug",
-                    ["14"] = "LKW",
-                    ["15"] = "PKW"
-                }
+                -- local EEPRollingstockModelTypeText = {
+                --     -- not used yet
+                --     ["1"] = "Tenderlok",
+                --     ["2"] = "Schlepptenderlok",
+                --     ["3"] = "Tender",
+                --     ["4"] = "Elektrolok",
+                --     ["5"] = "Diesellok",
+                --     ["6"] = "Triebwagen",
+                --     ["7"] = "U- oder S-Bahn",
+                --     ["8"] = "Straßenbahn",
+                --     ["9"] = "Güterwaggon",
+                --     ["10"] = "Personenwaggon",
+                --     ["11"] = "Luftfahrzeug",
+                --     ["12"] = "Maschine",
+                --     ["13"] = "Wasserfahrzeug",
+                --     ["14"] = "LKW",
+                --     ["15"] = "PKW"
+                -- }
 
                 local _, tag = EEPRollingstockGetTagText(rollingStockName) -- EEP 14.2
 
@@ -482,18 +482,18 @@ local function registerStructures()
 
             local _, pos_x, pos_y, pos_z = EEPStructureGetPosition(name)
             local _, modelType = EEPStructureGetModelType(name)
-            local EEPStructureModelTypeText = {
-                -- not used yet
-                ["16"] = "Gleis/Gleisobjekt",
-                ["17"] = "Schiene/Gleisobjekt",
-                ["18"] = "Straße/Gleisobjekt",
-                ["19"] = "Sonstiges/Gleisobjekt",
-                ["22"] = "Immobilie",
-                ["23"] = "Landschaftselement/Fauna",
-                ["24"] = "Landschaftselement/Flora",
-                ["25"] = "Landschaftselement/Terra",
-                ["38"] = "Landschaftselement/Instancing"
-            }
+            -- local EEPStructureModelTypeText = {
+            --     -- not used yet
+            --     ["16"] = "Gleis/Gleisobjekt",
+            --     ["17"] = "Schiene/Gleisobjekt",
+            --     ["18"] = "Straße/Gleisobjekt",
+            --     ["19"] = "Sonstiges/Gleisobjekt",
+            --     ["22"] = "Immobilie",
+            --     ["23"] = "Landschaftselement/Fauna",
+            --     ["24"] = "Landschaftselement/Flora",
+            --     ["25"] = "Landschaftselement/Terra",
+            --     ["38"] = "Landschaftselement/Instancing"
+            -- }
             local _, tag = EEPStructureGetTagText(name)
 
             structure.pos_x = pos_x or 0 --string.format("%.2f", pos_x)
