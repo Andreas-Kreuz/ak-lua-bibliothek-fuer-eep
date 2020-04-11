@@ -1,16 +1,16 @@
 print("Lade ak.io.AkCommandExecutor ...")
 
 -- split a string
-function string:split(delimiter)
+local function split(text, delimiter)
     local result = {}
     local from = 1
-    local delim_from, delim_to = string.find(self, delimiter, from, true)
+    local delim_from, delim_to = string.find(text, delimiter, from, true)
     while delim_from do
-        table.insert(result, string.sub(self, from, delim_from - 1))
+        table.insert(result, string.sub(text, from, delim_from - 1))
         from = delim_to + 1
-        delim_from, delim_to = string.find(self, delimiter, from, true)
+        delim_from, delim_to = string.find(text, delimiter, from, true)
     end
-    table.insert(result, string.sub(self, from))
+    table.insert(result, string.sub(text, from))
     return result
 end
 
@@ -60,11 +60,11 @@ function AkCommandExecutor.callSave(functionAndArgs)
 end
 
 function AkCommandExecutor.execute(commands)
-    commands = commands:split("\n")
+    commands = split(commands, "\n")
 
     for _, command in ipairs(commands) do
         print("Command: " .. command)
-        local functionAndArgs = command:split("|")
+        local functionAndArgs = split(command, "|")
 
         AkCommandExecutor.callSave(functionAndArgs)
     end
