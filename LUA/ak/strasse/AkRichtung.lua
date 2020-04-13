@@ -17,11 +17,10 @@ AkRichtung.SchaltungsTyp.NORMAL = "NORMAL"
 AkRichtung.SchaltungsTyp.FUSSGAENGER = "FUSSGAENGER"
 
 function AkRichtung.schalteAmpeln(ampeln, phase, grund)
-    assert(phase == AkPhase.GRUEN
-            or phase == AkPhase.ROTGELB
-            or phase == AkPhase.GELB
-            or phase == AkPhase.ROT
-            or phase == AkPhase.FG)
+    assert(
+        phase == AkPhase.GRUEN or phase == AkPhase.ROTGELB or phase == AkPhase.GELB or phase == AkPhase.ROT or
+            phase == AkPhase.FG
+    )
 
     for richtung in pairs(ampeln) do
         richtung:schalte(phase, grund)
@@ -42,10 +41,11 @@ end
 
 function AkRichtung:setSchaltungsTyp(schaltungsTyp)
     assert(schaltungsTyp)
-    assert(self.schaltungsTyp == AkRichtung.SchaltungsTyp.NICHT_VERWENDET or
-            self.schaltungsTyp == schaltungsTyp,
-        "Diese Richtung hatte schon den Schaltungstyp: '" .. self.schaltungsTyp
-                .. "' und kann daher nicht auf '" .. schaltungsTyp .. "' gesetzt werden.")
+    assert(
+        self.schaltungsTyp == AkRichtung.SchaltungsTyp.NICHT_VERWENDET or self.schaltungsTyp == schaltungsTyp,
+        "Diese Richtung hatte schon den Schaltungstyp: '" ..
+            self.schaltungsTyp .. "' und kann daher nicht auf '" .. schaltungsTyp .. "' gesetzt werden."
+    )
 
     self.schaltungsTyp = schaltungsTyp
 end
@@ -65,11 +65,7 @@ function AkRichtung:pruefeAnforderungen()
         text = text .. fmt.rot(self.name)
     end
 
-    text = text .. ": "
-            .. (self:anforderungVorhanden()
-            and fmt.hellgrau("BELEGT")
-            or fmt.hellgrau("-FREI-"))
-            .. " "
+    text = text .. ": " .. (self:anforderungVorhanden() and fmt.hellgrau("BELEGT") or fmt.hellgrau("-FREI-")) .. " "
     if self.verwendeZaehlStrassen then
         text = text .. "(Strasse)"
     elseif self.verwendeZaehlAmpeln then
@@ -109,7 +105,6 @@ function AkRichtung:getAnforderungsText()
     return self.anforderungsText or "KEINE ANFORDERUNG"
 end
 
-
 function AkRichtung:zaehleAnStrasseAlle(strassenId)
     self.verwendeZaehlStrassen = true
     EEPRegisterRoadTrack(strassenId)
@@ -132,7 +127,6 @@ end
 function AkRichtung:pruefeAnforderungenAnStrassen()
     local anforderungGefunden = false
     for strassenId, routen in pairs(self.zaehlStrassen) do
-
         local ok, wartend, zugName = EEPIsRoadTrackReserved(strassenId, true)
         assert(ok)
 
@@ -179,7 +173,6 @@ end
 function AkRichtung:pruefeAnforderungenAnSignalen()
     local anforderungGefunden = false
     for signalId, routen in pairs(self.zaehlAmpeln) do
-
         local wartend = EEPGetSignalTrainsCount(signalId)
 
         if wartend > 0 then
@@ -225,9 +218,13 @@ function AkRichtung:verlasse(signalaufrot, fahrzeugName)
 
         AkRichtung.schalteAmpeln(richtungen, AkPhase.GELB, "Fahrzeug verlassen: " .. fahrzeugName)
 
-        local toRed = AkAktion:neu(function()
-            AkRichtung.schalteAmpeln(richtungen, AkPhase.ROT, "Fahrzeug verlassen: " .. fahrzeugName)
-        end, "Schalte " .. self.name .. " auf rot.")
+        local toRed =
+            AkAktion:neu(
+            function()
+                AkRichtung.schalteAmpeln(richtungen, AkPhase.ROT, "Fahrzeug verlassen: " .. fahrzeugName)
+            end,
+            "Schalte " .. self.name .. " auf rot."
+        )
         AkPlaner:planeAktion(2, toRed)
     end
 end
@@ -249,9 +246,7 @@ function AkRichtung:setzeWartezeitZurueck()
 end
 
 function AkRichtung:anforderungVorhanden()
-    return self.fahrzeuge > 0
-            or self.anforderungAnSignal
-            or self.anforderungAnStrasse
+    return self.fahrzeuge > 0 or self.anforderungAnSignal or self.anforderungAnStrasse
 end
 
 function AkRichtung:save()
@@ -308,7 +303,7 @@ function AkRichtung:schalte(phase, grund)
 end
 
 function AkRichtung:setRichtungen(...)
-    self.richtungen = ... or { 'LEFT', 'STRAIGHT', 'RIGHT', }
+    self.richtungen = ... or {"LEFT", "STRAIGHT", "RIGHT"}
 end
 
 function AkRichtung:setTrafficType(trafficType)
@@ -325,28 +320,29 @@ end
 -- @param ... eine oder mehrere Ampeln
 --
 function AkRichtung:neu(name, eepSaveId, ampeln, richtungen, trafficType)
-    assert(name, "Bitte geben Sie den Namen \"name\" fuer diese Richtung an.")
+    assert(name, 'Bitte geben Sie den Namen "name" fuer diese Richtung an.')
     assert(type(name) == "string", "Name ist kein String")
-    assert(eepSaveId, "Bitte geben Sie den Wert \"eepSaveId\" fuer diese Richtung an.")
+    assert(eepSaveId, 'Bitte geben Sie den Wert "eepSaveId" fuer diese Richtung an.')
     assert(type(eepSaveId) == "number")
-    assert(ampeln, "Bitte geben Sie den Wert \"ampeln\" fuer diese Richtung an.")
+    assert(ampeln, 'Bitte geben Sie den Wert "ampeln" fuer diese Richtung an.')
     --assert(signalId, "Bitte geben Sie den Wert \"signalId\" fuer diese Richtung an.")
 
-    if eepSaveId ~= -1 then AkSpeicherHilfe.registriereId(eepSaveId, 'Richtung ' .. name) end
+    if eepSaveId ~= -1 then
+        AkSpeicherHilfe.registriereId(eepSaveId, "Richtung " .. name)
+    end
     local o = {
         fahrzeugMultiplikator = 1,
         name = name,
         eepSaveId = eepSaveId,
         ampeln = ampeln,
-        schaltungsTyp = AkRichtung.SchaltungsTyp.NICHT_VERWENDET;
+        schaltungsTyp = AkRichtung.SchaltungsTyp.NICHT_VERWENDET,
         verwendeZaehlAmpeln = false,
         zaehlAmpeln = {},
         verwendeZaehlStrassen = false,
         zaehlStrassen = {},
-        richtungen = richtungen or { 'LEFT', 'STRAIGHT', 'RIGHT', },
-        trafficType = trafficType or 'NORMAL',
+        richtungen = richtungen or {"LEFT", "STRAIGHT", "RIGHT"},
+        trafficType = trafficType or "NORMAL"
     }
-
 
     self.__index = self
     setmetatable(o, self)
@@ -354,6 +350,4 @@ function AkRichtung:neu(name, eepSaveId, ampeln, richtungen, trafficType)
     return o
 end
 
-
 return AkRichtung
-

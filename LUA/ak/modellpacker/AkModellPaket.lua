@@ -4,7 +4,7 @@ local AkModellPaket = {}
 function AkModellPaket:neu(eepVersion, deutscherName, deutscheBeschreibung)
     local o = {}
     setmetatable(o, self)
-    self.__index = self;
+    self.__index = self
     o.eepVersion = eepVersion
     o.deutscherName = deutscherName
     o.deutscheBeschreibung = deutscheBeschreibung
@@ -39,9 +39,9 @@ function AkModellPaket:fuegeDateienHinzu(basisOrdner, praefix, unterOrdner, pfad
     assert(praefix)
     assert(unterOrdner)
     local neuePfade = {}
-    print(string.format("Durchsuche \"%s\" in Unterordner \"%s\"", basisOrdner, unterOrdner))
+    print(string.format('Durchsuche "%s" in Unterordner "%s"', basisOrdner, unterOrdner))
     local _, dateiGefunden = AkModellPacker.dateienSuchen(neuePfade, basisOrdner, unterOrdner)
-    assert(dateiGefunden, string.format("Keine Datei gefunden: \"%s\" in Unterordner \"%s\"", basisOrdner, unterOrdner))
+    assert(dateiGefunden, string.format('Keine Datei gefunden: "%s" in Unterordner "%s"', basisOrdner, unterOrdner))
 
     for pfad, datei in pairs(neuePfade) do
         if pfadAusschlussMuster and AkModellPaket.pfadAusschliessen(pfad, pfadAusschlussMuster) then
@@ -55,7 +55,9 @@ function AkModellPaket:fuegeDateienHinzu(basisOrdner, praefix, unterOrdner, pfad
 end
 
 function AkModellPaket.pfadAusschliessen(pfad, pfadAusschlussMuster)
-    if not pfadAusschlussMuster then return false end
+    if not pfadAusschlussMuster then
+        return false
+    end
 
     for _, muster in ipairs(pfadAusschlussMuster) do
         if string.find(pfad, muster, 1, true) then

@@ -65,68 +65,103 @@ local tracks = {}
 
 --- Create dummy functions for EEP functions which are not yet available depending of the version of EEP
 -- The minimal required version is EEP 11.3 Plug-In 3 which supports some quite important functions
-EEPGetSignalTrainsCount      = EEPGetSignalTrainsCount       or function () return end -- EEP 13.2
-EEPGetSignalTrainName        = EEPGetSignalTrainName         or function () return end -- EEP 13.2
+EEPGetSignalTrainsCount = EEPGetSignalTrainsCount or function()
+        return
+    end -- EEP 13.2
+EEPGetSignalTrainName = EEPGetSignalTrainName or function()
+        return
+    end -- EEP 13.2
 
 -- Based on this concept we can redefine the functions, e.g. to collect some statistics data
 --EEPGetRollingstockItemsCount = EEPGetRollingstockItemsCount  or function () return end -- EEP 13.2 Plug-In 2
 local _EEPGetRollingstockItemsCount = EEPGetRollingstockItemsCount
-local function _EEPGetRollingstockItemsCount(...)
-    if not _EEPGetRollingstockItemsCount then return end
+local function EEPGetRollingstockItemsCount(...)
+    if not _EEPGetRollingstockItemsCount then
+        return
+    end
 
     local t0 = os.clock()
 
-	local result = {_EEPGetRollingstockItemsCount(...)}
+    local result = {_EEPGetRollingstockItemsCount(...)}
 
     local t1 = os.clock()
-	local runTime = data["times"][1].EEPGetRollingstockItemsCount or { n = 0, t = 0, }
-	runTime.n = runTime.n + 1
-	runTime.t = runTime.t + t1 - t0
+    local runTime = data["times"][1].EEPGetRollingstockItemsCount or {n = 0, t = 0}
+    runTime.n = runTime.n + 1
+    runTime.t = runTime.t + t1 - t0
 
-	return table.unpack(result)
+    return table.unpack(result)
 end
 
-EEPGetRollingstockItemName   = EEPGetRollingstockItemName    or function () return end -- EEP 13.2 Plug-In 2
-EEPGetTrainLength            = EEPGetTrainLength             or function () return end -- EEP 15.1 Plug-In 1
+EEPGetRollingstockItemName = EEPGetRollingstockItemName or function()
+        return
+    end -- EEP 13.2 Plug-In 2
+EEPGetTrainLength = EEPGetTrainLength or function()
+        return
+    end -- EEP 15.1 Plug-In 1
 
-EEPRollingstockGetPosition   = EEPRollingstockGetPosition    or function () return end -- EEP 16.1
-EEPRollingstockGetLength     = EEPRollingstockGetLength      or function () return end -- EEP 14.2
-EEPRollingstockGetMotor      = EEPRollingstockGetMotor       or function () return end -- EEP 14.2
-EEPRollingstockGetTrack      = EEPRollingstockGetTrack       or function () return end -- EEP 14.2
-EEPRollingstockGetModelType  = EEPRollingstockGetModelType   or function () return end -- EEP 14.2
-EEPRollingstockGetTagText    = EEPRollingstockGetTagText     or function () return end -- EEP 14.2
+EEPRollingstockGetPosition = EEPRollingstockGetPosition or function()
+        return
+    end -- EEP 16.1
+EEPRollingstockGetLength = EEPRollingstockGetLength or function()
+        return
+    end -- EEP 14.2
+EEPRollingstockGetMotor = EEPRollingstockGetMotor or function()
+        return
+    end -- EEP 14.2
+EEPRollingstockGetTrack = EEPRollingstockGetTrack or function()
+        return
+    end -- EEP 14.2
+EEPRollingstockGetModelType = EEPRollingstockGetModelType or function()
+        return
+    end -- EEP 14.2
+EEPRollingstockGetTagText = EEPRollingstockGetTagText or function()
+        return
+    end -- EEP 14.2
 
-EEPStructureGetPosition      = EEPStructureGetPosition       or function () return end -- EEP 14.2
-EEPStructureGetModelType     = EEPStructureGetModelType      or function () return end -- EEP 14.2
-EEPStructureGetTagText       = EEPStructureGetTagText        or function () return end -- EEP 14.2
+EEPStructureGetPosition = EEPStructureGetPosition or function()
+        return
+    end -- EEP 14.2
+EEPStructureGetModelType = EEPStructureGetModelType or function()
+        return
+    end -- EEP 14.2
+EEPStructureGetTagText = EEPStructureGetTagText or function()
+        return
+    end -- EEP 14.2
 
 --- Get EEP time and store it.
 -- do it frequently
 local function fillTime()
-    data["times"] = { {
-        name = "times",                    -- EEP-Web requires that data entries have an id or name tag
-        timeComplete = EEPTime,            -- seconds since midnight
-        timeH = EEPTimeH,
-        timeM = EEPTimeM,
-        timeS = EEPTimeS,
-    }}
+    data["times"] = {
+        {
+            name = "times", -- EEP-Web requires that data entries have an id or name tag
+            timeComplete = EEPTime, -- seconds since midnight
+            timeH = EEPTimeH,
+            timeM = EEPTimeM,
+            timeS = EEPTimeS
+        }
+    }
 end
 
 --- Get EEP version and store it.
 -- do it once
 local function fillEEPVersion()
-    data["eep-version"] = { versionInfo = {         -- EEP-Web expects a named entry here
-        name = "versionInfo",                       -- EEP-Web requires that data entries have an id or name tag
-        eepVersion = string.format("%.1f", EEPVer), -- show string instead of float
-        luaVersion = _VERSION,
-        singleVersion = { AkStatistik = AkStatistik.programVersion, }, -- Web-EEP does not show this object value
-    }}
+    data["eep-version"] = {
+        versionInfo = {
+            -- EEP-Web expects a named entry here
+            name = "versionInfo", -- EEP-Web requires that data entries have an id or name tag
+            eepVersion = string.format("%.1f", EEPVer), -- show string instead of float
+            luaVersion = _VERSION,
+            singleVersion = {AkStatistik = AkStatistik.programVersion} -- Web-EEP does not show this object value
+        }
+    }
 end
 
 --- Get EEP slots and store them.
 -- do it frequently
 local function fillSaveSlots()
-    if not AkStatistik.fillSaveSlots then return end
+    if not AkStatistik.fillSaveSlots then
+        return
+    end
 
     data["save-slots"] = AkDataSlots.fillApiV1()
     data["free-slots"] = AkDataSlots.fillFreeSlotsApiV1() -- you may want to omit free slots to save space
@@ -135,9 +170,11 @@ end
 --- Register EEP signals.
 -- do it once
 local function registerSignals()
-     if not AkStatistik.fillSignals then return end
+    if not AkStatistik.fillSignals then
+        return
+    end
 
-   data["signals"] = {}
+    data["signals"] = {}
     for i = 1, MAX_SIGNALS do
         local val = EEPGetSignal(i)
         if val > 0 then -- yes, this is a signal
@@ -151,7 +188,9 @@ end
 --- Get EEP signals and store them.
 -- do it frequently
 local function fillSignals()
-    if not AkStatistik.fillSignals then return end
+    if not AkStatistik.fillSignals then
+        return
+    end
 
     data["waiting-on-signals"] = {}
     for i = 1, #data["signals"] do
@@ -167,7 +206,7 @@ local function fillSignals()
                     id = signal.id .. "-" .. position,
                     signalId = signal.id,
                     waitingPosition = position,
-                    vehicleName = vehicleName or '',
+                    vehicleName = vehicleName or "",
                     waitingCount = waitingVehiclesCount
                 }
                 table.insert(data["waiting-on-signals"], waiting)
@@ -179,7 +218,9 @@ end
 --- Register EEP switches.
 -- do it once
 local function registerSwitches()
-    if not AkStatistik.fillSwitches then return end
+    if not AkStatistik.fillSwitches then
+        return
+    end
 
     data["switches"] = {}
     for id = 1, MAX_SWITCHES do
@@ -195,7 +236,9 @@ end
 --- Get EEP switches and store them.
 -- do it frequently
 local function fillSwitches()
-    if not AkStatistik.fillSwitches then return end
+    if not AkStatistik.fillSwitches then
+        return
+    end
 
     for i = 1, #data["switches"] do
         local switch = data["switches"][i]
@@ -209,7 +252,9 @@ end
 local function registerTracksBy(registerFunktion, trackType)
     local trackName = trackType .. "-tracks"
     tracks[trackName] = {}
-    if (AkStatistik.fillTracks) then data[trackName] = tracks[trackName] end
+    if (AkStatistik.fillTracks) then
+        data[trackName] = tracks[trackName]
+    end
     for id = 1, MAX_TRACKS do
         local exists = registerFunktion(id)
         if exists then
@@ -222,9 +267,11 @@ local function registerTracksBy(registerFunktion, trackType)
 end
 
 local function registerTracks()
-    if not (AkStatistik.fillTracks or AkStatistik.fillTrains) then return end
+    if not (AkStatistik.fillTracks or AkStatistik.fillTrains) then
+        return
+    end
 
--- do it once
+    -- do it once
     registerTracksBy(EEPRegisterAuxiliaryTrack, "auxiliary")
     registerTracksBy(EEPRegisterControlTrack, "control")
     registerTracksBy(EEPRegisterRoadTrack, "road")
@@ -235,12 +282,11 @@ end
 --- Get EEP rolling stocks and trains located on tracks.
 -- do it frequently
 local function fillTracksBy(besetztFunktion, trackType)
-    local _
-    local trackName = trackType .. '-tracks'
-    local trainList = trackType .. '-trains'
-    local rollingStockList = trackType .. '-rolling-stocks'
-    local trainInfos = trackType .. '-train-infos-dynamic'
-    local rollingStockInfos = trackType .. '-rolling-stock-infos-dynamic'
+    local trackName = trackType .. "-tracks"
+    local trainList = trackType .. "-trains"
+    local rollingStockList = trackType .. "-rolling-stocks"
+    local trainInfos = trackType .. "-train-infos-dynamic"
+    local rollingStockInfos = trackType .. "-rolling-stock-infos-dynamic"
 
     -- Find trains on occupied tracks
     -- Limitation: only the first train on a track is found
@@ -271,23 +317,24 @@ local function fillTracksBy(besetztFunktion, trackType)
         end
     end
 
-    -- Add previously known trains which are not found by EEPIs..TrackReserved which happens if there are multiple trains on a track
+    -- Add previously known trains which are not found by EEPIs..TrackReserved which happens
+    -- if there are multiple trains on a track
     if data[trainInfos] then
-    for i, trainsInfo in ipairs(data[trainInfos]) do
-        local trainName = trainsInfo.id
-        if not trains[trainName] then
-            -- Does the train exists?
-            local haveSpeed, speed = EEPGetTrainSpeed(trainName) -- EEP 11.0
-            if haveSpeed then
-                -- print('Train not found by EEPIs..TrackReserved: ' .. trainName)
-                trains[trainName] = {
-                    trackType = trackName,
-                    onTrack = trainsInfo.onTrackId,
-                    occupiedTacks = trainsInfo.occupiedTacks,
-                }
+        for _, trainsInfo in ipairs(data[trainInfos]) do
+            local trainName = trainsInfo.id
+            if not trains[trainName] then
+                -- Does the train exists?
+                local haveSpeed = EEPGetTrainSpeed(trainName) -- EEP 11.0
+                if haveSpeed then
+                    -- print('Train not found by EEPIs..TrackReserved: ' .. trainName)
+                    trains[trainName] = {
+                        trackType = trackName,
+                        onTrack = trainsInfo.onTrackId,
+                        occupiedTacks = trainsInfo.occupiedTacks
+                    }
+                end
             end
         end
-    end
     end
 
     -- Get and store additional information about trains and rolling stocks
@@ -304,62 +351,68 @@ local function fillTracksBy(besetztFunktion, trackType)
         local haveRoute, route = EEPGetTrainRoute(trainName) -- EEP 11.2 Plugin 2
 
         local rollingStockCount = EEPGetRollingstockItemsCount(trainName) -- EEP 13.2 Plug-In 2
-        local hasTrainLength, trainLength =  EEPGetTrainLength(trainName) -- EEP 15.1 Plug-In 1
+        local hasTrainLength, trainLength = EEPGetTrainLength(trainName) -- EEP 15.1 Plug-In 1
 
         local currentTrain = {
             id = trainName,
-            route = haveRoute and route or '',
+            route = haveRoute and route or "",
             rollingStockCount = rollingStockCount or 0,
-            length = trainLength or 0,
+            length = trainLength or 0
         }
 
         table.insert(data[trainList], currentTrain)
         -- data[trainList][tostring(currentTrain.id)] = currentTrain
         local trainsInfo = {
             id = trainName,
-            speed = haveSpeed and speed --string.format("%.2f", speed)
-                        or 0,
+            speed = haveSpeed and speed or --string.format("%.2f", speed)
+                0,
             onTrackId = train.onTrack,
-            occupiedTacks = train.occupiedTacks,
+            occupiedTacks = train.occupiedTacks
         }
         table.insert(data[trainInfos], trainsInfo)
         -- data[trainInfos][tostring(trainsInfo.id)] = trainsInfo
 
         -- Store rolling stocks
-        if not rollingStockCount then return end
+        if not rollingStockCount then
+            return
+        end
 
         for i = 0, (rollingStockCount - 1) do
             local rollingStockName = EEPGetRollingstockItemName(trainName, i) -- EEP 13.2 Plug-In 2
             if rollingStockName then
                 local _, couplingFront = EEPRollingstockGetCouplingFront(rollingStockName) -- EEP 11.0
                 local _, couplingRear = EEPRollingstockGetCouplingRear(rollingStockName) -- EEP 11.0
-                    -- 1 Kupplung scharf, 2 Abstoßen, 3 Gekuppelt
+                -- 1 Kupplung scharf, 2 Abstoßen, 3 Gekuppelt
                 local hasPos, PosX, PosY, PosZ = EEPRollingstockGetPosition(rollingStockName) -- EEP 16.1
 
                 local hasLength, length = EEPRollingstockGetLength(rollingStockName) -- EEP 15
-                if not hasTrainLength and hasLength then currentTrain.length = currentTrain.length + length end
+                if not hasTrainLength and hasLength then
+                    currentTrain.length = currentTrain.length + length
+                end
 
                 local _, propelled = EEPRollingstockGetMotor(rollingStockName) -- EEP 14.2
-                local _, trackId, trackDistance, trackDirection, trackSystem = EEPRollingstockGetTrack(rollingStockName) -- EEP 14.2
+                local _, trackId, trackDistance, trackDirection, trackSystem = EEPRollingstockGetTrack(rollingStockName)
+                -- EEP 14.2
 
                 local _, modelType = EEPRollingstockGetModelType(rollingStockName) -- EEP 14.2
-                local EEPRollingstockModelTypeText = { -- not used yet
-                        ['1'] = 'Tenderlok',
-                        ['2'] = 'Schlepptenderlok',
-                        ['3'] = 'Tender',
-                        ['4'] = 'Elektrolok',
-                        ['5'] = 'Diesellok',
-                        ['6'] = 'Triebwagen',
-                        ['7'] = 'U- oder S-Bahn',
-                        ['8'] = 'Straßenbahn',
-                        ['9'] = 'Güterwaggon',
-                        ['10'] = 'Personenwaggon',
-                        ['11'] = 'Luftfahrzeug',
-                        ['12'] = 'Maschine',
-                        ['13'] = 'Wasserfahrzeug',
-                        ['14'] = 'LKW',
-                        ['15'] = 'PKW',
-                    }
+                -- local EEPRollingstockModelTypeText = {
+                --     -- not used yet
+                --     ["1"] = "Tenderlok",
+                --     ["2"] = "Schlepptenderlok",
+                --     ["3"] = "Tender",
+                --     ["4"] = "Elektrolok",
+                --     ["5"] = "Diesellok",
+                --     ["6"] = "Triebwagen",
+                --     ["7"] = "U- oder S-Bahn",
+                --     ["8"] = "Straßenbahn",
+                --     ["9"] = "Güterwaggon",
+                --     ["10"] = "Personenwaggon",
+                --     ["11"] = "Luftfahrzeug",
+                --     ["12"] = "Maschine",
+                --     ["13"] = "Wasserfahrzeug",
+                --     ["14"] = "LKW",
+                --     ["15"] = "PKW"
+                -- }
 
                 local _, tag = EEPRollingstockGetTagText(rollingStockName) -- EEP 14.2
 
@@ -373,7 +426,7 @@ local function fillTracksBy(besetztFunktion, trackType)
                     propelled = propelled or true,
                     trackSystem = trackSystem or -1,
                     modelType = modelType or -1,
-                    tag = tag or '',
+                    tag = tag or ""
                 }
                 if hasPos then
                     currentRollingStock.PosX = PosX
@@ -386,17 +439,19 @@ local function fillTracksBy(besetztFunktion, trackType)
                     name = rollingStockName,
                     trackId = trackId or -1,
                     trackDistance = trackDistance or -1, --string.format("%.2f", trackDistance),
-                    trackDirection = trackDirection or -1,
+                    trackDirection = trackDirection or -1
                 }
                 table.insert(data[rollingStockInfos], rollingStockInfo)
-                -- data[rollingStockInfos][tostring(rollingStockInfo.name)] = rollingStockInfo
+            -- data[rollingStockInfos][tostring(rollingStockInfo.name)] = rollingStockInfo
             end
         end
     end
 end
 
 local function fillTracks()
-    if not (AkStatistik.fillTracks or AkStatistik.fillTrains) then return end
+    if not (AkStatistik.fillTracks or AkStatistik.fillTrains) then
+        return
+    end
 
     fillTracksBy(EEPIsAuxiliaryTrackReserved, "auxiliary")
     fillTracksBy(EEPIsControlTrackReserved, "control")
@@ -409,15 +464,17 @@ end
 -- Filter them for structures which offer light, smore or fire actions.
 -- do it once
 local function registerStructures()
-    if not AkStatistik.fillStructures then return end
+    if not AkStatistik.fillStructures then
+        return
+    end
 
     data["structures"] = {}
     for i = 0, MAX_STRUCTURES do
         local name = "#" .. tostring(i)
 
-        local hasLight, light = EEPStructureGetLight(name) -- EEP 11.1 Plug-In 1
-        local hasSmoke, smoke = EEPStructureGetSmoke(name) -- EEP 11.1 Plug-In 1
-        local hasFire, fire = EEPStructureGetFire(name) -- EEP 11.1 Plug-In 1
+        local hasLight = EEPStructureGetLight(name) -- EEP 11.1 Plug-In 1
+        local hasSmoke = EEPStructureGetSmoke(name) -- EEP 11.1 Plug-In 1
+        local hasFire = EEPStructureGetFire(name) -- EEP 11.1 Plug-In 1
 
         if hasLight or hasSmoke or hasFire then
             local structure = {}
@@ -425,24 +482,25 @@ local function registerStructures()
 
             local _, pos_x, pos_y, pos_z = EEPStructureGetPosition(name)
             local _, modelType = EEPStructureGetModelType(name)
-            local EEPStructureModelTypeText = { -- not used yet
-                    ['16'] = 'Gleis/Gleisobjekt',
-                    ['17'] = 'Schiene/Gleisobjekt',
-                    ['18'] = 'Straße/Gleisobjekt',
-                    ['19'] = 'Sonstiges/Gleisobjekt',
-                    ['22'] = 'Immobilie',
-                    ['23'] = 'Landschaftselement/Fauna',
-                    ['24'] = 'Landschaftselement/Flora',
-                    ['25'] = 'Landschaftselement/Terra',
-                    ['38'] = 'Landschaftselement/Instancing',
-                }
+            -- local EEPStructureModelTypeText = {
+            --     -- not used yet
+            --     ["16"] = "Gleis/Gleisobjekt",
+            --     ["17"] = "Schiene/Gleisobjekt",
+            --     ["18"] = "Straße/Gleisobjekt",
+            --     ["19"] = "Sonstiges/Gleisobjekt",
+            --     ["22"] = "Immobilie",
+            --     ["23"] = "Landschaftselement/Fauna",
+            --     ["24"] = "Landschaftselement/Flora",
+            --     ["25"] = "Landschaftselement/Terra",
+            --     ["38"] = "Landschaftselement/Instancing"
+            -- }
             local _, tag = EEPStructureGetTagText(name)
 
             structure.pos_x = pos_x or 0 --string.format("%.2f", pos_x)
             structure.pos_y = pos_y or 0 --string.format("%.2f", pos_y)
             structure.pos_z = pos_z or 0 --string.format("%.2f", pos_z)
             structure.modelType = modelType or 0
-            structure.tag = tag or ''
+            structure.tag = tag or ""
             table.insert(data["structures"], structure)
         end
     end
@@ -451,14 +509,16 @@ end
 --- Get status of EEP structures.
 -- do it frequently
 local function fillStructures()
-    if not AkStatistik.fillStructures then return end
+    if not AkStatistik.fillStructures then
+        return
+    end
 
     for i = 1, #data["structures"] do
         local structure = data["structures"][i]
 
-        local _, light = EEPStructureGetLight(structure.name)
-        local _, smoke = EEPStructureGetSmoke(structure.name)
-        local _, fire = EEPStructureGetFire(structure.name)
+        local _, light = EEPStructureGetLight(structure.name) -- EEP 11.1 Plug-In 1
+        local _, smoke = EEPStructureGetSmoke(structure.name) -- EEP 11.1 Plug-In 1
+        local _, fire = EEPStructureGetFire(structure.name) -- EEP 11.1 Plug-In 1
 
         structure.light = light
         structure.smoke = smoke
@@ -467,7 +527,9 @@ local function fillStructures()
 end
 
 local function fillTrainYards()
-    if not AkStatistik.fillTrainYards then return end
+    if not AkStatistik.fillTrainYards then
+        return
+    end
 
     -- TODO
 end
@@ -485,17 +547,21 @@ local function fillApiV1(dataKeys)
 
         local o = {
             name = v,
-            url = '/api/v1/' .. v,
+            url = "/api/v1/" .. v,
             count = count,
             checksum = checksum,
-            updated = true,
+            updated = true
         }
         table.insert(dataEntries, o)
 
-        if o.name == 'api-entries' then apiEntry = o end
+        if o.name == "api-entries" then
+            apiEntry = o
+        end
     end
 
-    if apiEntry then apiEntry.count = #dataEntries end
+    if apiEntry then
+        apiEntry.count = #dataEntries
+    end
 
     data["api-entries"] = dataEntries
 end
@@ -522,14 +588,14 @@ local writeLater = {}
 -- do it frequently
 -- @param modulus Repetion frequency (1: every 200 ms, 5: every second, ...)
 function AkStatistik.statistikAusgabe(modulus)
-   -- default value for optional parameter
-   if not modulus or type(modulus) ~= "number" then
+    -- default value for optional parameter
+    if not modulus or type(modulus) ~= "number" then
         modulus = 5
     end
 
     -- initialization in first call
     if i == -1 then
-        initialize();
+        initialize()
     end
     i = i + 1
 
@@ -537,7 +603,7 @@ function AkStatistik.statistikAusgabe(modulus)
     AkWebServerIo.processNewCommands()
 
     -- export data regularly
-    if i % modulus == 0 and ( not AkStatistik.checkServerStatus or AkWebServerIo.checkWebServer() ) then
+    if i % modulus == 0 and (not AkStatistik.checkServerStatus or AkWebServerIo.checkWebServer()) then
         local t0 = os.clock() -- milliseconds precision
 
         fillTime()
@@ -545,8 +611,8 @@ function AkStatistik.statistikAusgabe(modulus)
 
         fillSignals()
         fillSwitches()
-        fillTracks()        -- tracks, trains, and rolling stocks
-        fillTrainYards()     -- not implemented yet
+        fillTracks() -- tracks, trains, and rolling stocks
+        fillTrainYards() -- not implemented yet
 
         fillSaveSlots()
 
@@ -567,9 +633,14 @@ function AkStatistik.statistikAusgabe(modulus)
         local t1 = os.clock()
 
         -- export data
-        AkWebServerIo.updateJsonFile(json.encode(data, {
-            keyorder = topLevelEntries,
-        }))
+        AkWebServerIo.updateJsonFile(
+            json.encode(
+                data,
+                {
+                    keyorder = topLevelEntries
+                }
+            )
+        )
 
         -- clear additional data
         writeLater = {}
@@ -578,12 +649,16 @@ function AkStatistik.statistikAusgabe(modulus)
 
         local timeDiff = t2 - t0
         if timeDiff > 1 then
-            print("AkStatistik:"
-            .. " fill: "  .. string.format("%.2f", t1-t0) .. " sec,"
-            .. " store: " .. string.format("%.2f", t2-t1) .. " sec"
+            print(
+                "AkStatistik:" ..
+                    " fill: " ..
+                        string.format("%.2f", t1 - t0) ..
+                            " sec," .. " store: " .. string.format("%.2f", t2 - t1) .. " sec"
             )
-            print("WARNUNG: AkStatistik.statistikAusgabe schreiben dauerte " .. string.format("%.2f", timeDiff)
-                    .. " Sekunden (nur interessant, wenn EEP nicht pausiert wurde)")
+            print(
+                "WARNUNG: AkStatistik.statistikAusgabe schreiben dauerte " ..
+                    string.format("%.2f", timeDiff) .. " Sekunden (nur interessant, wenn EEP nicht pausiert wurde)"
+            )
         end
     end
 end

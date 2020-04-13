@@ -2,10 +2,7 @@ print("Lade ak.strasse.AkLichtImmoAmpel ...")
 
 local AkLichtImmoAmpel = {}
 function AkLichtImmoAmpel.neuAusTabelle(tabelle)
-    return AkLichtImmoAmpel:neu(tabelle.rotImmo,
-        tabelle.gruenImmo,
-        tabelle.gelbImmo,
-        tabelle.anforderungImmo)
+    return AkLichtImmoAmpel:neu(tabelle.rotImmo, tabelle.gruenImmo, tabelle.gelbImmo, tabelle.anforderungImmo)
 end
 
 --- Schaltet das Licht der angegebenen Immobilien beim Schalten der Ampel auf rot, gelb, grün oder Anforderung
@@ -33,7 +30,7 @@ function AkLichtImmoAmpel:neu(rotImmo, gruenImmo, gelbImmo, anforderungImmo)
         rotImmo = rotImmo,
         gruenImmo = gruenImmo,
         gelbImmo = gelbImmo or rotImmo,
-        anforderungImmo = anforderungImmo,
+        anforderungImmo = anforderungImmo
     }
     self.__index = self
     o = setmetatable(o, self)

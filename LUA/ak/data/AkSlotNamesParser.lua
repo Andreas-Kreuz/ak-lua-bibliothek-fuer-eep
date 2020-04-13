@@ -4,9 +4,9 @@ local function isModuleAvailable(name)
     if package.loaded[name] then
         return true
     else
-        for _, searcher in ipairs(package.searchers or package.loaders) do
+        for _, searcher in ipairs(package.searchers) do
             local loader = searcher(name)
-            if type(loader) == 'function' then
+            if type(loader) == "function" then
                 package.preload[name] = loader
                 return true
             end
@@ -24,10 +24,10 @@ function SlotNamesParser.updateSlotNames()
     if slotTable then
         local function recursiveLookup(currentSlotTable, prefix, ...)
             for k, v in pairs(currentSlotTable) do
-                local path = ... and { table.unpack(...) } or {}
+                local path = ... and {table.unpack(...)} or {}
                 table.insert(path, k)
                 local pathString = table.concat(path, ".")
-                if type(v) == 'table' then
+                if type(v) == "table" then
                     -- print(pathString .. '> Lookup Table '  .. pathString)
                     recursiveLookup(v, prefix .. "--", path)
                 else
@@ -39,12 +39,12 @@ function SlotNamesParser.updateSlotNames()
             end
         end
 
-        recursiveLookup(slotTable, '#', {})
+        recursiveLookup(slotTable, "#", {})
     end
 end
 
-if isModuleAvailable('SlotNames_BH2') then
-    slotTable, _, SlotFuncs = require('SlotNames_BH2')()
+if isModuleAvailable("SlotNames_BH2") then
+    slotTable, _, SlotFuncs = require("SlotNames_BH2")()
     SlotNamesParser.updateSlotNames()
 end
 

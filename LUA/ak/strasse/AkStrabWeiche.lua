@@ -11,9 +11,15 @@ function AkStrabWeiche.new(weiche_id, immo1, immo2, immo3)
     EEPRegisterSwitch(weiche_id)
     _G["EEPOnSwitch_" .. weiche_id] = function(_)
         local stellung = EEPGetSwitch(weiche_id)
-        if immo1 then EEPStructureSetLight(immo1, stellung == 1) end
-        if immo2 then EEPStructureSetLight(immo2, stellung == 2) end
-        if immo3 then EEPStructureSetLight(immo3, stellung == 3) end
+        if immo1 then
+            EEPStructureSetLight(immo1, stellung == 1)
+        end
+        if immo2 then
+            EEPStructureSetLight(immo2, stellung == 2)
+        end
+        if immo3 then
+            EEPStructureSetLight(immo3, stellung == 3)
+        end
     end
     _G["EEPOnSwitch_" .. weiche_id]()
 end
