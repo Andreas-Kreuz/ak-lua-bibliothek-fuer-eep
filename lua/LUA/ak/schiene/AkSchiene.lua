@@ -1,6 +1,6 @@
 print("Lade ak.schiene.AkSchiene ...")
 local AkSpeicherHilfe = require("ak.speicher.AkSpeicher")
-local fmt = require("ak.text.AkFormat")
+local fmt = require("ak.core.eep.AkTippTextFormat")
 
 dbg = {
     anforderung = true,

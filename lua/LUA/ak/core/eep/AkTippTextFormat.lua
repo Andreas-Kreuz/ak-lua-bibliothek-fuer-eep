@@ -1,6 +1,6 @@
-print("Lade ak.text.AkFormat ...")
+print("Lade ak.core.eep.AkTippTextFormat ...")
 
-local AkFormat = {
+local AkTippTextFormat = {
     -- <br> neue Zeile
     -- <b> & </b> Fettschrift an/aus
     -- <i> & </i> Kursivschrift an/aus
@@ -44,4 +44,4 @@ local AkFormat = {
     end
 }
 
-return AkFormat
+return AkTippTextFormat

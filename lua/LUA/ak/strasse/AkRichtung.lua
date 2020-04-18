@@ -4,7 +4,7 @@ local AkAktion = require("ak.planer.AkAktion")
 local AkPlaner = require("ak.planer.AkPlaner")
 local AkSpeicherHilfe = require("ak.speicher.AkSpeicher")
 local AkPhase = require("ak.strasse.AkPhase")
-local fmt = require("ak.text.AkFormat")
+local fmt = require("ak.core.eep.AkTippTextFormat")
 
 --------------------
 -- Klasse Richtung

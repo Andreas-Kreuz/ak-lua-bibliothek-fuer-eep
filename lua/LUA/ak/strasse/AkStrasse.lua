@@ -21,7 +21,7 @@ local AkKreuzung = require("ak.strasse.AkKreuzung")
 local AkKreuzungsSchaltung = require("ak.strasse.AkKreuzungsSchaltung")
 -- Speicher
 local AkSpeicherHilfe = require("ak.speicher.AkSpeicher")
-local fmt = require("ak.text.AkFormat")
+local fmt = require("ak.core.eep.AkTippTextFormat")
 ############################################################################################
 ]]
 )

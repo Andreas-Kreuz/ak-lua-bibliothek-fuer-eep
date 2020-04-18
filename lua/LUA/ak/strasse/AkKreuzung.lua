@@ -7,7 +7,7 @@ local AkKreuzungsSchaltung = require("ak.strasse.AkKreuzungsSchaltung")
 local AkRichtung = require("ak.strasse.AkRichtung")
 local AkPhase = require("ak.strasse.AkPhase")
 local AkStatistik = require("ak.io.AkStatistik")
-local fmt = require("ak.text.AkFormat")
+local fmt = require("ak.core.eep.AkTippTextFormat")
 
 --------------------
 -- Klasse Kreuzung

@@ -4,7 +4,7 @@ local AkKreuzung = require("ak.strasse.AkKreuzung")
 local AkAchsenImmoAmpel = require("ak.strasse.AkAchsenImmoAmpel")
 local AkLichtImmoAmpel = require("ak.strasse.AkLichtImmoAmpel")
 local AkPhase = require("ak.strasse.AkPhase")
-local fmt = require("ak.text.AkFormat")
+local fmt = require("ak.core.eep.AkTippTextFormat")
 
 ------------------------------------------------------------------------------------------
 -- Klasse AkAmpel
