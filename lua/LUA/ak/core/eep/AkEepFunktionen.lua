@@ -1,4 +1,4 @@
-print("Lade ak.eep.AkEepFunktionen ...")
+print("Lade ak.core.eep.AkEepFunktionen ...")
 
 ------------------
 -- EEP Functions

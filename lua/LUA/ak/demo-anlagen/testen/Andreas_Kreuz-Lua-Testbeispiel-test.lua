@@ -1,4 +1,4 @@
-require("ak.eep.AkEepFunktionen")
+require("ak.core.eep.AkEepFunktionen")
 
 EEPSaveData(1, 0) -- Speichere den Zähler auf 0 - muss vor dem Skript aufgerufen werden
 

@@ -1,6 +1,6 @@
 Zugname = "#PLATZHALTER"
 
-require("ak.eep.AkEepFunktionen")
+require("ak.core.eep.AkEepFunktionen")
 
 local AkPlaner = require("ak.planer.AkPlaner")
 local AkAmpel = require("ak.strasse.AkAmpel")

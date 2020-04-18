@@ -16,7 +16,7 @@ Das Skript `AkEepFunktionen` stellt alle dokumentierten Funktionen von EEP zur V
 # Verwendung:
 
 * Ein Testskript lädt zuerst die Funktionen von EEP:<br>
-  `require 'ak.eep.AkEepFunktionen'`
+  `require 'ak.core.eep.AkEepFunktionen'`
 
 * Danach wird das eigentliche Skript geladen:<br>
   `require 'anlagen-script'`
@@ -27,7 +27,7 @@ Ein ausführlicheres Tutorial zu dem Thema findest Du hier: **[Demo-Anlage-Teste
 
 Prüfe, ob ein Signal gesetzt wurde:
 ```lua
-require("ak.eep.AkEepFunktionen")
+require("ak.core.eep.AkEepFunktionen")
 
 EEPSetSignal(32, 2)
 assert (2 == EEPGetSignal(32))

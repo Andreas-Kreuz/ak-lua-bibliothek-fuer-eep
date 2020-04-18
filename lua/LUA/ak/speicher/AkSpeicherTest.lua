@@ -1,4 +1,4 @@
-require("ak.eep.AkEepFunktionen")
+require("ak.core.eep.AkEepFunktionen")
 local AkSpeicherHilfe = require("ak.speicher.AkSpeicher")
 
 AkSpeicherHilfe.debug = false

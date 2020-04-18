@@ -1,5 +1,5 @@
 describe("EepFunktionen.lua", function()
-    require("ak.eep.AkEepFunktionen")
+    require("ak.core.eep.AkEepFunktionen")
 
     it("EEPVer steht auf \"15\"", function()
         assert.are.equals(15, EEPVer)
