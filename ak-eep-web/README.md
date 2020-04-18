@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/img/eep-web-logo-shadow-72.png" alt="" width=72 height=72>
+  <img src="/docs/assets/img/eep-web-logo-shadow-72.png" alt="" width=72 height=72>
   <h3 align="center">EEP Web App</h3>
   <p align="center">
     Web-Applikation der Lua-Bibliothek für EEP-Web.
