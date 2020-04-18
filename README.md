@@ -14,30 +14,30 @@
 <br>
 <hr>
 
-# Überblick
+## Überblick
 
 Die bereitgestellte Bibliothek übernimmt für Dich die _Steuerung des Verkehrs_, damit Du Dich andere Aspekte konzentrieren kannst. Beschreibe in Lua, wie Deine Kreuzungen aussehen und die Skripte kümmern sich um den Rest der Steuerung.
 
-# Loslegen
+## Loslegen
 
 * Die Webseite enthält [Anleitungen und Dokumentation](http://andreas-kreuz.github.io/ak-lua-bibliothek-fuer-eep) zur Verwendung der Skript-Sammlung.
 
-# Beiträge sind Willkommen
+## Beiträge sind Willkommen
 
 * [Fehler gefunden, Verbesserungsvorschläge?](CONTRIBUTING.md) <br>So kannst Du zum Projekt beitragen
 
-# Was ist EEP
+## Was ist EEP
 
 EEP (Eisenbahn.exe Professional) ist eine [Simulationssoftware des Trendverlags](https://trendverlag.com/was-ist-eep-eisenbahn-exe.html). Seit Version 11 wird eine Integration von Lua angeboten.
 
-# Danke
+## Danke
 
 * [FrankBucholz](https://github.com/FrankBuchholz)
   für Performance-Optimierungen und kleine Verbesserungen
 * [Damian-Rutkowski](https://github.com/Damian-Rutkowski)
   für die Langzeitmotivation
 
-# Danksagungen an andere Projekte
+## Danksagungen an andere Projekte
 
 Teile der Webseite basieren auf folgenden anderen Projekten:
 
