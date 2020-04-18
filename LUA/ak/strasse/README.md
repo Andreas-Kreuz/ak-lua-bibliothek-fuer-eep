@@ -3,8 +3,8 @@ layout: page_with_toc
 title: Ampeln? Automatisch!
 subtitle: Du willst Dich nicht mehr um die Steuerung Deiner Ampeln kümmern? - Dann beschreibe in Lua, wie Deine Kreuzung aussieht und das Skript AkStrasse übernimmt für Dich den Rest.
 permalink: lua/ak/strasse/
-feature-img: "/assets/headers/SourceCode.png"
-img: "/assets/headers/SourceCode.png"
+feature-img: "/docs/assets/headers/SourceCode.png"
+img: "/docs/assets/headers/SourceCode.png"
 ---
 
 # Motivation
