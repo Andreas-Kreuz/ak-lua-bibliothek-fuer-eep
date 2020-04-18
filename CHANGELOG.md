@@ -170,7 +170,7 @@ Neue Funktionen:
 * ⭐ Neu: Die Achssteuerung unterstützt z.B. Modelle von Kju
 
   * Warnblinklichter <http://www.eep.euma.de/downloads/V80MA1F016.zip>
-    ![Ampel mit Achsensteuerung](assets/web/immo-achsen.png)
+    ![Ampel mit Achsensteuerung](/docs/assets/web/immo-achsen.png)
 
 ## v0.4.0
 

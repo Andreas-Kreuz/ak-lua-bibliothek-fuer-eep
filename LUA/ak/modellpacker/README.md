@@ -3,8 +3,8 @@ layout: page_with_toc
 title: EEP-Installer selbst gemacht
 subtitle: Baue eine eigene ZIP-Datei, die jeder mit EEP installieren kann.  
 permalink: lua/ak/modellpacker/
-feature-img: "/assets/headers/ModellPacker.png"
-img: "/assets/headers/ModellPacker.png"
+feature-img: "/docs/assets/headers/ModellPacker.png"
+img: "/docs/assets/headers/ModellPacker.png"
 ---
 
 # Motivation

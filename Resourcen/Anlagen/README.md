@@ -1,8 +1,8 @@
 ---
 layout: page
 title: Demo-Anlage Grundmodelle
-feature-img: "/assets/headers/AmpelDemo.jpg"
-img: "/assets/headers/AmpelDemo.jpg"
+feature-img: "/docs/assets/headers/AmpelDemo.jpg"
+img: "/docs/assets/headers/AmpelDemo.jpg"
 ---
 
 

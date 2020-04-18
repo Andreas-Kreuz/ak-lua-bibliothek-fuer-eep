@@ -3,8 +3,8 @@ layout: page_landing
 title:  Dokumentation der Lua-Bibliothek
 subtitle: Hier findest Du Informationen zum Verwenden der Programmierschnittstelle
 permalink: lua/ak/
-feature-img: "/assets/headers/SourceCode.png"
-img: "/assets/headers/SourceCode.png"
+feature-img: "/docs/assets/headers/SourceCode.png"
+img: "/docs/assets/headers/SourceCode.png"
 ---
 
 <table class="table flex" style="width: 35em; max-width: inherit;">
