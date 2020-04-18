@@ -97,3 +97,10 @@ plugins:
   - jekyll-seo-tag
   - jemoji
 exclude: ["Gemfile", "Gemfile.lock", "*.gem", "*.lua", "LICENSE", "screenshot.png"]
+
+defaults:
+  - 
+    scope:
+      path: "../LUA"
+    values:
+      layout: "default"
