@@ -1,6 +1,6 @@
 <p align="center">
   <a href="http://andreas-kreuz.github.io/ak-lua-bibliothek-fuer-eep">
-    <img src="assets/img/eep-web-logo-shadow-72.png" alt="" width=72 height=72>
+    <img src="/docs/assets/img/eep-web-logo-shadow-72.png" alt="" width=72 height=72>
   </a>
 
   <h3 align="center">Lua-Bibliothek für EEP-Web</h3>
