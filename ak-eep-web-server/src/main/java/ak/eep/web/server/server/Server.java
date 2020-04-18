@@ -17,12 +17,8 @@ public class Server {
 
     public Server(boolean testMode) {
         app = Javalin.create();
-        // app.enableStaticFiles("C:\\Spiele\\Andreas_Kreuz\\ak-eep-web-server\\target\\classes\\public\\ak-eep-web",
-        // Location.EXTERNAL)
-        if (!testMode) {
-            app.enableStaticFiles("/public/ak-eep-web", Location.CLASSPATH).enableSinglePageMode("/",
-                    "/public/ak-eep-web/index.html");
-        }
+        app.enableStaticFiles("/public/ak-eep-web", Location.CLASSPATH).enableSinglePageMode("/",
+                "/public/ak-eep-web/index.html");
         if (testMode) {
             app.enableCorsForAllOrigins();
         }
