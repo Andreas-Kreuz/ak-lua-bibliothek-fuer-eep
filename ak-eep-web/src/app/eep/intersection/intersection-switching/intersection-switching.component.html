@@ -1,0 +1,29 @@
+<ng-container *ngIf="(intersection$ | async) as intersection">
+  <p class="mat-small mat-caption mb-4">Automatik</p>
+  <p>
+    <mat-slide-toggle
+      class="my-vertical-list"
+      [checked]="!intersection.manualSwitching"
+      (click)="onChangeManualSwitching(intersection, intersection.nextSwitching)">
+      Automatisch Schalten
+    </mat-slide-toggle>
+  </p>
+  <mat-divider class="mt-4"
+               [inset]="true"></mat-divider>
+  <p class="mat-small mat-caption mt-3 mb-4">Nächste Schaltung</p>
+  <p>
+    <mat-radio-group *ngIf="(switching$ | async) as switchings"
+                     name="next_switching"
+                     [value]="intersection.nextSwitching">
+      <div *ngFor="let switching of switchings">
+        <mat-radio-button
+          class="my-vertical-list"
+          (change)="switchTo(intersection, switching)"
+          [disabled]="!intersection.manualSwitching"
+          [value]="switching.name">{{ switching.name }}
+          <span *ngIf="switching.name === intersection.currentSwitching"> (aktiv)</span>
+        </mat-radio-button>
+      </div>
+    </mat-radio-group>
+  </p>
+</ng-container>

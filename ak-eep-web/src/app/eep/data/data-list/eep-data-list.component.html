@@ -1,0 +1,36 @@
+<div class="mat-typography">
+  <h1 class="app-mute-on-light-bg material-icons">
+    Speicherplätze
+  </h1>
+</div>
+
+<mat-card class="app-card">
+  <mat-card-header class="app-fg-primary">
+    <mat-card-title>Leere Speicherplätze</mat-card-title>
+  </mat-card-header>
+  <mat-divider></mat-divider>
+  <mat-card-content>
+    <p class="mat-caption">Die ersten 20 leeren Slots</p>
+    <p>
+      <ng-container *ngFor="let slot of (firstFreeSlots$ | async); let last = last">
+        {{ slot.id }}
+        <ng-container *ngIf="!last">,</ng-container>
+      </ng-container>
+    </p>
+  </mat-card-content>
+</mat-card>
+
+<mat-card class="mt-5 app-card">
+  <mat-card-header class="app-fg-primary">
+    <mat-card-title>Belegte Speicherplätze</mat-card-title>
+  </mat-card-header>
+  <mat-divider></mat-divider>
+  <mat-card-content>
+    <p class="mat-caption">Slots mit Inhalt</p>
+    <app-filtered-table [columnNames]="columnNames"
+                        [columnsToDisplay]="columnsToDisplay"
+                        [tableData]="tableData$">
+    </app-filtered-table>
+  </mat-card-content>
+</mat-card>
+

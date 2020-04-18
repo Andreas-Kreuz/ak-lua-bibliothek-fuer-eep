@@ -1,0 +1,73 @@
+<p [ngClass]="{hidden: (this.data$ | async)}"
+   class="mat-typography">Daten werden geladen.</p>
+<mat-progress-bar [ngClass]="{hidden: (this.data$ | async)}"
+                  mode="query"></mat-progress-bar>
+<p *ngIf="(data$ | async)?.length === 0"
+   class="mat-typography">Es sind keine Daten vorhanden.</p>
+<mat-form-field *ngIf="(data$ | async)?.length > 0">
+  <input matInput
+         (keyup)="applyFilter($event.target.value)"
+         placeholder="Filter">
+</mat-form-field>
+
+<table
+  mat-table
+  matSort
+  multiTemplateDataRows
+  class="mat-elevation-z0"
+  [dataSource]="dataSource"
+  [trackBy]="myTrackById"
+  [ngClass]="{hidden: (this.filteredRows$ | async)?.length === 0}">
+
+  <ng-container
+    matColumnDef="{{column}}"
+    *ngFor="let column of columnsToDisplay; let first = first">
+    <th mat-header-cell
+        mat-sort-header
+        *matHeaderCellDef> {{ columnNames[column] ? columnNames[column] : column }} </th>
+    <td mat-cell
+        *matCellDef="let element"
+        [style.text-align]="getAlignment(column)">
+      <!-- Display icon if a second column is to be shown for the selection -->
+      <mat-icon *ngIf="first && detailsItem"
+                class="app-mute-light-bg">
+        {{ element == expandedElement ? 'arrow_drop_down' : 'arrow_right' }}
+      </mat-icon>
+      {{ textFor(element, column) }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="expandedDetail">
+    <td mat-cell
+        *matCellDef="let element"
+        [attr.colspan]="columnsToDisplay.length">
+      <div class="example-element-detail"
+           [@detailExpand]="element === expandedElement ? 'expanded' : 'collapsed'"
+           (@detailExpand.start)="setExpandedElement()">
+        <ng-container *ngIf="element === expandedElement">
+          <ng-template appDetails></ng-template>
+        </ng-container>
+        <ng-container *ngIf="element === oldExpandedElement">
+          <ng-template appOldDetails></ng-template>
+        </ng-container>
+      </div>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row
+      *matHeaderRowDef="columnsToDisplay"></tr>
+  <tr mat-row
+      *matRowDef="let element; columns: columnsToDisplay;"
+      class="example-element-row"
+      [class.example-expanded-row]="expandedElement === element"
+      (click)="onExpandedElement(element)">
+  </tr>
+  <tr mat-row
+      *matRowDef="let row; columns: ['expandedDetail']"
+      class="example-detail-row"></tr>
+</table>
+
+<p *ngIf="(data$ | async)?.length > 0 && (filteredRows$ | async)?.length === 0"
+   class="mat-typography">
+  Es passen keine Daten zum Filter.
+</p>

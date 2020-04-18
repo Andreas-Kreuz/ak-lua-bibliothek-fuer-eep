@@ -1,3 +1,36 @@
+# Andreas Kreuz's projects
+/ak-lua-bibliothek-fuer-eep-grafiken
+/ak-privat
+/andreas-kreuz.github.io
+/eep-lua-out-dir.txt
+/eep-web.github.io
+
+# Project based settings
+/lua/LUA/**/AkSpeicherWerte.txt
+/lua/LUA/**/*.jar
+/lua/LUA/ak/anlagen
+/lua/LUA/ak/ext
+/lua/LUA/comm_*
+/lua/LUA/ak/io/exchange/ak*
+/lua/LUA/SlotNames_BH2.lua
+/lua/LUA/ModellInstallationPrivat.lua
+/lua/modell-pakete
+
+# EEP Files to ignore
+*.dds
+
+# General files
+scratch.*
+
+# Mac files
+.DS_Store
+
+# Jekyll documentation files
+_site
+Gemfile.lock
+.sass-cache
+.jekyll*
+
 # Compiled Lua sources
 luac.out
 
@@ -39,22 +72,3 @@ luac.out
 *.x86_64
 *.hex
 
-# Project based settings
-/modell-pakete
-/LUA/ak/anlagen
-/LUA/ak/ext
-/LUA/comm_*
-*.dds
-/LUA/ak/io/exchange/ak*
-LUA/**/AkSpeicherWerte.txt
-LUA/**/*.jar
-LUA/SlotNames_BH2.lua
-
-_site
-Gemfile.lock
-.sass-cache
-.jekyll*
-.DS_Store
-/scratch.lua
-/scratch.md
-/LUA/ModellInstallationPrivat.lua

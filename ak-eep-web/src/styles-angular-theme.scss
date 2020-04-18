@@ -1,0 +1,47 @@
+// Custom Theming for Angular Material
+// For more information: https://material.angular.io/guide/theming
+@import '~@angular/material/theming';
+// Plus imports for other components in your app.
+
+// Define a custom typography config that overrides the font-family as well as the
+// `headlines` and `body-1` levels.
+$custom-typography: mat-typography-config(
+  $font-family: 'Roboto, Helvetiva neue, sans-serif',
+  $display-4: mat-typography-level(96px, 96px, 300, 'Roboto', -0.0156em),
+  $display-3: mat-typography-level(60px, 60px, 300, 'Roboto', -0.0083em),
+  $display-2: mat-typography-level(48px, 52px, 400, 'Roboto', 0.0000em),
+  $display-1: mat-typography-level(34px, 40px, 400, 'Roboto', 0.0074em),
+  $headline: mat-typography-level(24px, 32px, 400, 'Roboto', 0.0000em),
+  $title: mat-typography-level(20px, 20px, 500, 'Roboto', 0.0125em),
+  $subheading-2: mat-typography-level(16px, 28px, 400, 'Roboto', 0.0094em),
+  $subheading-1: mat-typography-level(15px, 24px, 500, 'Roboto', 0.0067em),
+  $body-2: mat-typography-level(14px, 24px, 400, 'Roboto', 0.0179em),
+  $body-1: mat-typography-level(16px, 20px, 400, 'Roboto', 0.0094em),
+  $button: mat-typography-level(14px, 14px, 500, 'Roboto', 0.0893em),
+  $caption: mat-typography-level(12px, 20px, 400, 'Roboto', 0.0333em),
+  $input: mat-typography-level(inherits, 1.125, 400, 'Roboto', 1.5px)
+);
+
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+@include mat-core($custom-typography);
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue. Available color palettes: https://material.io/design/color/
+$ak-eep-web-accent: mat-palette($mat-blue, 600, A200, A400);
+$ak-eep-web-primary: mat-palette($mat-green, 600);
+
+// The warn palette is optional (defaults to red).
+$ak-eep-web-warn: mat-palette($mat-red);
+
+// Create the theme object (a Sass map containing all of the palettes).
+$ak-eep-web-theme: mat-light-theme($ak-eep-web-primary, $ak-eep-web-accent, $ak-eep-web-warn);
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include angular-material-theme($ak-eep-web-theme);
+
+
