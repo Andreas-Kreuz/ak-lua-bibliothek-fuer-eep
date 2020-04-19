@@ -17,17 +17,21 @@ end
 local AkCommandExecutor = {}
 
 local allowedFunctions = {
-    "clearlog",
-    "print",
-    "AkKreuzungSchalteManuell",
-    "AkKreuzungSchalteAutomatisch",
-    "EEPPause"
+    ["clearlog"] = true,
+    ["print"] = true,
+    ["AkKreuzungSchalteManuell"] = true,
+    ["AkKreuzungSchalteAutomatisch"] = true,
+    ["EEPPause"] = true
 }
 
-function AkCommandExecutor.callSave(functionAndArgs)
+function AkCommandExecutor.addAllowedFunction(fName)
+    allowedFunctions[fName] = true
+end
+
+function AkCommandExecutor.callSavely(functionAndArgs)
     local fName = table.remove(functionAndArgs, 1)
     local args = functionAndArgs
-    local accepted = false
+    local accepted
 
     if fName == "" then -- ignore empty commands
         return
@@ -40,17 +44,12 @@ function AkCommandExecutor.callSave(functionAndArgs)
     if string.find(fName, "^EEP.*Set") then -- Accept all EEP-Set-functions
         accepted = true
     else
-        for _, allowedName in ipairs(allowedFunctions) do
-            if fName == allowedName then
-                accepted = true
-                break
-            end
-        end
+        accepted = allowedFunctions[fName]
     end
 
     if accepted then
         if pcall(_G[fName], table.unpack(args)) then
-            print("Aufruf von " .. fName)
+            -- print("Aufruf von " .. fName)
         else
             print("Aufruf von " .. fName .. " fehlgeschlagen")
         end
@@ -63,10 +62,12 @@ function AkCommandExecutor.execute(commands)
     commands = split(commands, "\n")
 
     for _, command in ipairs(commands) do
-        print("Command: " .. command)
-        local functionAndArgs = split(command, "|")
+        if command ~= "" then
+            -- print("Command: " .. command)
+            local functionAndArgs = split(command, "|")
 
-        AkCommandExecutor.callSave(functionAndArgs)
+            AkCommandExecutor.callSavely(functionAndArgs)
+        end
     end
 end
 
