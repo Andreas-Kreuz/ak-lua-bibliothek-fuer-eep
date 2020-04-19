@@ -50,5 +50,6 @@
         "EEPVer"
     ],
     "editor.minimap.maxColumn": 160,
-    "git-assistant.checkForRemote": "disabled"
+    "git-assistant.checkForRemote": "disabled",
+    "editor.wordWrapColumn": 120
 }

@@ -114,18 +114,18 @@ function print(...)
 end
 
 --- Schreibe log zusätzlich in Datei.
-function assert(v, message)
-    -- print the output to the file
-    if not v then
-        local file = _assert(io.open(outFileNameLog, "a"))
-        local text = message or "Assertion failed!"
-        file:write(text .. "\n")
-        file:close()
-    end
+-- function assert(v, message)
+--     -- print the output to the file
+--     if not v then
+--         local file = _assert(io.open(outFileNameLog, "a"))
+--         local text = message or "Assertion failed!"
+--         file:write(text .. "\n")
+--         file:close()
+--     end
 
-    -- call the original assert function
-    _assert(v, message)
-end
+--     -- call the original assert function
+--     _assert(v, message)
+-- end
 
 local _clearlog = clearlog
 --- Lösche Inhalt der log-Datei.
@@ -137,18 +137,30 @@ function clearlog()
     file:close()
 end
 
+local serverWasReadyLastTime = true
+local serverWasListeningLastTime = true
 --- Prüfe Status des Web Servers.
 function AkWebServerIo.checkWebServer()
     if fileExists(watchFileNameServer) then -- file: ak-server.iswatching
         if fileExists(watchFileNameLua) then -- file: ak-eep-out-json.isfinished
-            print("SKIPPING - server not ready")
+            if serverWasReadyLastTime then
+                print("SERVER IS NOT READY")
+            end
+            serverWasReadyLastTime = false
             return false
         else
-            --print("server ready")
+            if not serverWasReadyLastTime or not serverWasListeningLastTime then
+                print("SERVER IS READY AND LISTENING")
+            end
+            serverWasReadyLastTime = true
+            serverWasListeningLastTime = true
             return true
         end
     else
-        print("SKIPPING - server not listening")
+        if serverWasListeningLastTime then
+            print("SERVER IS NOT LISTENING")
+        end
+        serverWasListeningLastTime = false
         return false
     end
 end
