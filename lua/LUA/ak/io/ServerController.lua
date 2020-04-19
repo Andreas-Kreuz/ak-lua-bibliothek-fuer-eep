@@ -10,6 +10,7 @@ local ServerController = require("ak.io.ServerController")
 -- @release 0.8.4
 print("Lade ak.io.ServerController ...")
 local AkWebServerIo = require("ak.io.AkWebServerIo")
+local AkCommandExecutor = require("ak.io.AkCommandExecutor")
 local os = require("os")
 local json = require("ak.io.dkjson")
 
@@ -25,6 +26,10 @@ local registeredJsonCollectors = {}
 local collectedData = {}
 local checksum = 0
 local initialized = false
+
+function ServerController.addAllowedFunction(fName)
+    AkCommandExecutor.addAllowedFunction(fName)
+end
 
 local function fillApiEntriesV1(orderedKeys)
     collectedData["api-entries"] = {}
