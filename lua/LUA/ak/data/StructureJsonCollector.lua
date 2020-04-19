@@ -1,9 +1,8 @@
-print"Lade ak.data.StructurePublisher ..."
-StructurePublisher = {}
-local AkStatistik = require("ak.io.AkStatistik")
+print "Lade ak.data.StructureJsonCollector ..."
+StructureJsonCollector = {}
 local enabled = true
 local initialized = false
-StructurePublisher.name = "ak.data.StructurePublisher"
+StructureJsonCollector.name = "ak.data.StructureJsonCollector"
 
 local MAX_STRUCTURES = 50000
 local structures = {}
@@ -18,7 +17,7 @@ EEPStructureGetTagText = EEPStructureGetTagText or function()
         return
     end -- EEP 14.2
 
-function StructurePublisher.initialize()
+function StructureJsonCollector.initialize()
     if not enabled or initialized then
         return
     end
@@ -62,13 +61,13 @@ function StructurePublisher.initialize()
     initialized = true
 end
 
-function StructurePublisher.updateData()
+function StructureJsonCollector.collectData()
     if not enabled then
         return
     end
 
     if not initialized then
-        StructurePublisher.initialize()
+        StructureJsonCollector.initialize()
     end
 
     for i = 1, #structures do
@@ -83,7 +82,7 @@ function StructurePublisher.updateData()
         structure.fire = fire
     end
 
-    AkStatistik.writeLater("structures", structures)
+    return {["structures"] = structures}
 end
 
-return StructurePublisher
+return StructureJsonCollector

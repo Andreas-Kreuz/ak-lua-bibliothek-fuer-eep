@@ -1,15 +1,13 @@
-print"Lade ak.data.SwitchPublisher ..."
-SwitchPublisher = {}
-local AkStatistik = require("ak.io.AkStatistik")
+print "Lade ak.data.SwitchJsonCollector ..."
+SwitchJsonCollector = {}
 local enabled = true
 local initialized = false
-SwitchPublisher.name = "ak.data.SwitchPublisher"
-
+SwitchJsonCollector.name = "ak.data.SwitchJsonCollector"
 
 local MAX_SWITCHES = 1000
 local switches = {}
 
-function SwitchPublisher.initialize()
+function SwitchJsonCollector.initialize()
     if not enabled or initialized then
         return
     end
@@ -26,13 +24,13 @@ function SwitchPublisher.initialize()
     initialized = true
 end
 
-function SwitchPublisher.updateData()
+function SwitchJsonCollector.collectData()
     if not enabled then
         return
     end
 
     if not initialized then
-        SwitchPublisher.initialize()
+        SwitchJsonCollector.initialize()
     end
 
     for i = 1, #switches do
@@ -40,7 +38,7 @@ function SwitchPublisher.updateData()
         switch.position = EEPGetSwitch(switch.id)
     end
 
-    AkStatistik.writeLater("switches", switches)
+    return {["switches"] = switches}
 end
 
-return SwitchPublisher
+return SwitchJsonCollector

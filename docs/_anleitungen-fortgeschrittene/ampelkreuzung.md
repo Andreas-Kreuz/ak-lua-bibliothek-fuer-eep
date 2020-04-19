@@ -30,10 +30,12 @@ Dafür benötigst Du folgendes:
 ⭐ **_Tipp_**: Die Lua-Bibliothek ist in der Installation der Anlage enthalten. Möchtest Du Deine eigene Anlage verwenden, so kannst Du die Bibliothek wie folgt installieren: [_Installation der Lua-Bibliothek von Andreas Kreuz_](../anleitungen-anfaenger/installation)
 
 # Los geht's
+
 * Öffne die Anlage in EEP
 * Öffne Deinen Editor für Lua-Skripte
 
 ## Das Lua-Haupt-Skript anlegen
+
 ⭐ _**Tipp:** Aktiviere in EEP unter Programmeinstellungen das EEP Ereignisfenster, damit Du die Lua Meldungen lesen kannst._
 
 ❗ _**Beachte:** Diese Anleitung geht davon aus, dass in der geöffneten Anlage noch nichts mit LUA gemacht wurde. Verwendest Du Dein eigenes Anlagen-Skript, dann lösche es nicht, sondern ergänze es um die weiter unten aufgeführten Befehle._
@@ -43,6 +45,7 @@ Dafür benötigst Du folgendes:
 * Das Haupt-Skript `meine-ampel-main.lua` wirst Du im nächsten Schritt im LUA-Verzeichnis von EEP anlegen: `C:\Trend\EEP14\LUA`
 
 * Öffne den LUA-Editor in EEP, wähle alles mit `<Strg>` + `<A>` aus und ersetze es durch
+
   ```lua
   clearlog()
   require("meine-ampel-main")
@@ -62,10 +65,10 @@ Dafür benötigst Du folgendes:
 
     ![BILD](../assets/tutorial/kreuzung/eepmain-nicht-gefunden.jpg)
 
-
 ## Notwendige Befehle in das Lua-Skript aufnehmen
 
 * Ergänze das Lua-Haupt-Skript um die folgenden Zeilen.
+
     ```lua
     local AkPlaner = require("ak.planer.AkPlaner")
     local AkAmpel = require("ak.strasse.AkAmpel")
@@ -76,9 +79,14 @@ Dafür benötigst Du folgendes:
 
     -- Hier kommt der Code
 
+    local ModuleRegistry = require("ak.core.ModuleRegistry")
+    ModuleRegistry.registerModules(
+        require("ak.core.CoreLuaModule"),
+        require("ak.strasse.KreuzungLuaModul")
+    )
+
     function EEPMain()
-        AkKreuzung:planeSchaltungenEin()
-        AkPlaner:fuehreGeplanteAktionenAus()
+        ModuleRegistry.runTasks()
         return 1
     end
     ```
@@ -88,51 +96,60 @@ Dafür benötigst Du folgendes:
     ![BILD](../assets/tutorial/kreuzung/eepmain-angelegt.jpg)
 
 **Was ist grade passiert?**
-* Die Zeile `require("ak.strasse.AkStrasse")` sorgt dafür, daß die Datei `ak/strasse/AkStrasse.lua` einmal eingelesen wird. Nach diesem Aufruf stehen Dir alle Funktionen dieser Datei zur Verfügung.
-* Die Zeile `AkKreuzung:planeSchaltungenEin()` ist für das Einplanen aller Schaltvorgänge der Kreuzungen notwendig. Diese Vorgänge werden als Aktionen im Planer hinterlegt.
-* Die Zeile `AkPlaner:fuehreGeplanteAktionenAus()` ist für das Ausführen aller geplanten Aktionen notwendig.
+
+* Die ersten Zeilen `local XXX = require("ak.strasse.XXX")` sorgt dafür, daß die einzelnen Dateien z.B. `ak/strasse/AkStrasse.lua` einmal eingelesen wird. Nach diesem Aufruf stehen Dir alle Funktionen dieser Datei zur Verfügung.
+* Die Zeile `local ModuleRegistry = require("ak.core.ModuleRegistry")` ist für das Laden der Modulverwaltung notwendig.
+* Mit den Zeilen `ModuleRegistry.registerModules(require("ak.core.CoreLuaModule"), require("ak.strasse.KreuzungLuaModul"))` werden das "CoreLuaModul" und das "KreuzungLuaModul" in der Anwendung bekannt gemacht.
+* Die Zeile `ModuleRegistry.runTasks()` ist für das wiederkehrende Ausführen aller Aufgaben, dadurch werden die Kreuzungsschaltungen und die geplanten Aktionen durchgeführt.
 * Wichtig ist auch, dass die Funktion EEPMain mit `return 1` beendet wird, damit sie alle 200 ms aufgerufen wird.
 
-
 ## Alle Signale mit Tipp-Text markieren
+
 Um die Signale (in dem Fall Ampeln) der Kreuzung zu bearbeiten ist es am einfachsten, wenn Du die Signal-IDs aller Signale in Tipp-Texten anzeigst.
 In diesem Schritt läßt Du Dir von `AkStrasse` alle Signal-IDs in 3D anzeigen.
 
 ❗ _**Beachte:** Verwende diesen Code nicht, wenn Du in Deiner Anlagen selbst Tipp-Texte mit `EEPShowSignalInfo(...)` an Deinen Signalen anzeigst. Denn all diese Tipp-Texte werden gelöscht._
 
 * Um die Tipp-Texte anzuzeigen, füge die folgenden beiden Zeilen vor der EEPMain()-Methode hinzu:
+
   ```lua
   -- Hier kommt der Code
   AkKreuzung.zeigeSignalIdsAllerSignale = true
   AkKreuzung.zeigeSchaltungAlsInfo = true
   ```
+
 * Klicke in EEP auf _"Skript neu laden"_ und wechsle in den 3D-Modus. <br>😀 **Wenn Du alles richtig gemacht hast**, siehst Du an allen Signalen Tipp-Texte mit den IDs dieser Signale.
 
     ![BILD](../assets/tutorial/kreuzung/signal-ids2.jpg)
 
 __Was ist grade passiert?__
-  * Das neu Laden der Anlage hat dafür gesorgt, dass das Skript `AkStrasse` anhand der Variablen erkannt hat, dass es für alle Signale von 1 bis 1000 deren Signal-ID als Tipp-Text einblenden soll.
+
+* Das neu Laden der Anlage hat dafür gesorgt, dass das Skript `AkStrasse` anhand der Variablen erkannt hat, dass es für alle Signale von 1 bis 1000 deren Signal-ID als Tipp-Text einblenden soll.
 
 ## Die Richtungen und Signal-IDs der Kreuzung notieren
+
 _**Tipp:** Das [PDF-Dokument Kreuzungsaufbau.pdf](../assets/Kreuzungsaufbau.pdf) hilft Dir deine Kreuzung zu notieren._
 
 Notiere Dir, welche _Richtungen_ es gibt und wie die IDs der zu schaltenden Ampeln heißen - merke Dir dabei, welche unterschiedlichen Ampelmodelle eingesetzt werden. In der Beispielanlage sind es:
-  * Kombinierte Fußgänger- und Strassenverkehrsampeln
-  * Reine Fußgängerampeln _(die sind in der Skizze bei "FG" unterstrichen)_
-  * Strassenverkehrsampeln _(die sind in der Skizze bei "Richtung" unterstrichen)_
+
+* Kombinierte Fußgänger- und Strassenverkehrsampeln
+* Reine Fußgängerampeln _(die sind in der Skizze bei "FG" unterstrichen)_
+* Strassenverkehrsampeln _(die sind in der Skizze bei "Richtung" unterstrichen)_
 
 ![BILD](../assets/tutorial/kreuzung/kreuzungsaufbau-tutorial-richtungen.png)
 
 **Was ist eine _Richtung_**: In diesem Abschnitt wird viel von _Richtungen_ geredet. So eine _Richtung_ fasst mehrere Fahrspuren, die den selben Weg nehmen zusammen und schaltet alle Ampeln, die diesen Weg freigeben.
+
 * **Fasse mehrere Fahrspuren in die den selben Weg nehmen immer zu einer _Richtung_ zusammen** (also mehrere Linksabbieger-, Geradeaus- **oder** Rechtsabbieger-Spuren), denn Spuren in die selbe _Richtung_ werden immer gemeinsam geschaltet.
 * **Erstelle immer eigene Fahrspuren und _Richtungen_ für Linksabbieger, denn diese achten nicht auf den Gegenverkehr**. Darum solltest Du den Linksabbieger-Fahrspuren immer eine eigene _Richtung_ geben und diese nur dann auf grün schalten, wenn der Gegenverkehr den Fahrweg der Linksabbieger nicht kreuzen kann.
-	* **Alternative:** Du kannst auch mit unsichtbaren Ampeln arbeiten, die bei Gegenverkehr auf rot schalten. Dies musst Du jedoch selbst machen.
+  * **Alternative:** Du kannst auch mit unsichtbaren Ampeln arbeiten, die bei Gegenverkehr auf rot schalten. Dies musst Du jedoch selbst machen.
 * **Du kannst getrennte Rechtsabbieger-Fahrspuren und Geradeaus-Fahrspuren zu einer _Richtung_ zusammenfassen.**
 * Spendiere Deinen Fußgängerampeln eigene _Richtungen_, denn diese werden von der Automatik eher auf rot geschaltet.
 
 Erst im nächsten Schritt werden mehrere dieser _Richtungen_ zu Schaltungen zusammengefasst.
 
 ## Schreibe die Richtungen in das Haupt-Skript
+
 ⭐ _**Tipp:** Für jede Ampel musst Du den Typ_ `AkAmpelModell` _kennen, da sich die Signalstellungen in EEP unterscheiden. Weitere Informationen findest Du unter: [Unterstütze weitere Ampeln in AkAmpelModell](../LUA/ak/strasse/)_
 
 Schreibe nun die einzelnen Richtungen in das Haupt-Skript. Jede Richtung muss dabei eine noch nicht verwendete Speicher-ID zwischen 1 und 1000 bekommen.
@@ -208,7 +225,8 @@ fg_w = AkRichtung:neu("FG_W", 113, {
 * Klicke in EEP auf _"Skript neu laden"_ und wechsle in den 3D-Modus. <br> 😀 **Wenn Du alles richtig gemacht hast**, siehst Du weiterhin an allen Signalen Tipp-Texte mit den IDs dieser Signale und keine Fehlermeldung im Log.
 
 __Was ist grade passiert?__
-  * Du hast soeben die Richtungen der Kreuzung festgelegt. Jede kann für sich allein geschaltet werden oder zusammen mit anderen Richtungen. Dazu dient `AkKreuzungsSchaltung`, welches im nächsten Schritt zum Einsatz kommt.
+
+* Du hast soeben die Richtungen der Kreuzung festgelegt. Jede kann für sich allein geschaltet werden oder zusammen mit anderen Richtungen. Dazu dient `AkKreuzungsSchaltung`, welches im nächsten Schritt zum Einsatz kommt.
 
 ## Fasse die Richtungen nun zu Schaltungen zusammen
 
@@ -310,43 +328,46 @@ k1:fuegeSchaltungHinzu(sch8)
     ![BILD](../assets/tutorial/kreuzung/zum-leben-erweckt.jpg)
 
 __Was ist grade passiert?__
-  * Du hast soeben die Richtungen zu Schaltungen zusammengefasst und diese einer Kreuzung zugewiesen. Durch die beiden am Anfang hinzugefügten Aufrufe in EEPMain() plant die Kreuzung automatisch ihre Schaltungen der Planer führt sie aus.
+
+* Du hast soeben die Richtungen zu Schaltungen zusammengefasst und diese einer Kreuzung zugewiesen. Durch die beiden am Anfang hinzugefügten Aufrufe in EEPMain() plant die Kreuzung automatisch ihre Schaltungen der Planer führt sie aus.
 
 ## Schalte die Hilfsfunktionen wieder aus
 
 Erinnerst Du Dich den Code, der die Tipp-Texte zu den Signalen hinzugefügt hat?
+
 * Wenn Du möchtest, kannst Du die Tipp-Texte wieder abschalten. Entferne nicht die Zeilen, sondern setze die Werte von `true` auf `false`.
 
-	```lua
-  -- Hier kommt der Code
-  AkKreuzung.zeigeSignalIdsAllerSignale = false
-  AkKreuzung.zeigeSchaltungAlsInfo = false
-	```
+    ```lua
+    -- Hier kommt der Code
+    AkKreuzung.zeigeSignalIdsAllerSignale = false
+    AkKreuzung.zeigeSchaltungAlsInfo = false
+    ```
 
 * Klicke danach auf Skript neu laden und wechsle in den 3D-Modus.<br>😀 **Wenn Du alles richtig gemacht hast**, verschwinden die Tipp-Texte von den Signalen.
 
 **Tipp**: Setze die Werte wieder auf `true`, wenn Du denkst, dass Du die Signale falsch gesetzt hast.
 
-
 ## Vergleiche Deine Schaltungen in EEP-Web
 
    ![BILD](../assets/tutorial/kreuzung/eep-web.png)
-   
+
    Funktioniert nicht? [EEP-Web einrichten](../anleitungen-fortgeschrittene/einrichten-von-eep-web)
 
-
 # Geschafft
+
 Du hast diese Anleitung abgeschlossen 🍀
 
-**So kannst Du weitermachen**
-* Füge noch fehlende Richtungen zu Schaltungen hinzu:
-	* Wenn `n2` geschaltet ist, kann immer auf `fg_n2` geschaltet werden.
-	* Wenn `s2` geschaltet ist, kann immer auf `fg_s2` geschaltet werden.
+**So kannst Du weitermachen**:
 
-**Tipps**
+* Füge noch fehlende Richtungen zu Schaltungen hinzu:
+  * Wenn `n2` geschaltet ist, kann immer auf `fg_n2` geschaltet werden.
+  * Wenn `s2` geschaltet ist, kann immer auf `fg_s2` geschaltet werden.
+
+**Tipps**:
+
 * [Ampeln aufstellen](Ampel-aufstellen)
 
+**Weitere Themen**:
 
-**Weitere Themen**
 * Füge Kontaktpunkte und Zähler hinzu
 * Füge Richtungen hinzu, die nur auf Anforderung geschaltet werden

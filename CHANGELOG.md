@@ -5,11 +5,36 @@
 - ⭐ Neu: Ein Projekt, alle Inhalte (Lua, Server und Web App in einem Projekt)
 - ⭐ Neu: Daten für den Server werden nur noch dann geschrieben, wenn der Server gestartet ist
 - ⭐ Neu: Einmaliges Suchen nach globalen Daten macht das Ganze schneller
-- ⭐ Neu: Warnung, wenn die Datenausgabe länger dauert
+- ⭐ Neu: Warnung, wenn die Datenausgabe länger dauert, als der refresh, der in EEPMain aufgerufen wird
 
 - ℹ️ Info: Für folgende Lua Dateien müssen die Imports geändert werden:
   - `ak.core.eep.AkEepFunktionen` ersetzt ~~`ak.eep.AkEepFunktionen`~~
   - `ak.core.eep.AkTippTextFormat` ersetzt ~~`ak.text.AkFormat`~~
+  - 👎 **Bisheriger Code** (funktioniert so nicht mehr!)
+
+    ```lua
+      function EEPMain()
+        AkKreuzung:planeSchaltungenEin()
+        AkPlaner:fuehreGeplanteAktionenAus()
+        AkStatistik.statistikAusgabe()
+        return 1
+    end
+    ```
+
+    👍 **Neuer Code**
+
+    ```lua
+    local ModuleRegistry = require("ak.core.ModuleRegistry")
+    ModuleRegistry.registerModules(
+        require("ak.core.CoreLuaModule"),
+        require("ak.strasse.KreuzungLuaModul")
+    )
+
+    function EEPMain()
+        ModuleRegistry.runTasks()
+        return 1
+    end
+    ```
 
 ## v0.8.4
 

@@ -190,9 +190,14 @@ Muss in `EEPMain()` aufgerufen werden - plant die Umschaltung von Kreuzungsschal
 * __Damit das Ganze funktioniert__, muss `EEPMain()` mindestens folgende Befehle verwenden:
 
     ```lua
+    local ModuleRegistry = require("ak.core.ModuleRegistry")
+    ModuleRegistry.registerModules(
+        require("ak.core.CoreLuaModule"),
+        require("ak.strasse.KreuzungLuaModul") -- Registriert das Kreuzungsmodul
+    )
+
     function EEPMain()
-        AkKreuzung:planeSchaltungenEin()     -- Plant die Ampelschaltungen ein
-        AkPlaner:fuehreGeplanteAktionenAus() -- Führt Aktionen nach Zeit aus
+        ModuleRegistry.runTasks()               -- Führt alle anstehenden Aktionen der registrierten Module aus
         return 1
     end```
 

@@ -1,16 +1,15 @@
-print"Lade ak.data.SignalPublisher ..."
-local SignalPublisher = {}
-local AkStatistik = require("ak.io.AkStatistik")
+print "Lade ak.data.SignalJsonCollector ..."
+local SignalJsonCollector = {}
 local enabled = true
 local initialized = false
-SignalPublisher.name = "ak.data.SignalPublisher"
+SignalJsonCollector.name = "ak.data.SignalJsonCollector"
 
 local MAX_SIGNALS = 1000
 local signals = {}
 
 --- Register EEP signals.
 -- do it once
-function SignalPublisher.initialize()
+function SignalJsonCollector.initialize()
     if not enabled or initialized then
         return
     end
@@ -30,15 +29,13 @@ end
 
 --- Get EEP signals and store them.
 -- do it frequently
-function SignalPublisher.updateData()
+function SignalJsonCollector.collectData()
     if not enabled then
-        AkStatistik.writeLater("signals", nil)
-        AkStatistik.writeLater("waiting-on-signals", nil)
         return
     end
 
     if not initialized then
-        SignalPublisher.initialize()
+        SignalJsonCollector.initialize()
     end
 
     local waitingOnSignals = {}
@@ -63,8 +60,10 @@ function SignalPublisher.updateData()
         end
     end
 
-    AkStatistik.writeLater("signals", signals)
-    AkStatistik.writeLater("waiting-on-signals", waitingOnSignals)
+    return {
+        ["signals"] = signals,
+        ["waiting-on-signals"] = waitingOnSignals
+    }
 end
 
-return SignalPublisher
+return SignalJsonCollector

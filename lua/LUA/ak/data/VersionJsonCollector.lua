@@ -1,11 +1,12 @@
-print"Lade ak.data.VersionPublisher ..."
-VersionPublisher = {}
+print "Lade ak.data.VersionJsonCollector ..."
+VersionJsonCollector = {}
 local AkStatistik = require("ak.io.AkStatistik")
 local enabled = true
+local data = {}
 local initialized = false
-VersionPublisher.name = "ak.data.VersionPublisher"
+VersionJsonCollector.name = "ak.data.VersionJsonCollector"
 
-function VersionPublisher.initialize()
+function VersionJsonCollector.initialize()
     if not enabled or initialized then
         return
     end
@@ -20,10 +21,12 @@ function VersionPublisher.initialize()
         }
     }
 
-    AkStatistik.writeLater("eep-version", versions)
+    data = {["eep-version"] = versions}
     initialized = true
 end
 
-function VersionPublisher.updateData() end
+function VersionJsonCollector.collectData()
+    return data
+end
 
-return VersionPublisher
+return VersionJsonCollector

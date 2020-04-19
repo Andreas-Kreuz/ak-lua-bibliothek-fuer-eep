@@ -25,7 +25,6 @@ Beinhaltet eine Funktion, die später ausgeführt werden soll und einen Namen f�
 
   Erzeugt eine neue Aktion, die mit der Funktion `AkPlaner:planeAktion(...)` aufgerufen werden kann.
 
-
 ## Klasse `AkPlaner`
 Nimmt Aktionen für die Planung entgegen und führt diese nach Ablauf einer bestimmten Zeitspanne aus.
 
@@ -40,17 +39,23 @@ Nimmt Aktionen für die Planung entgegen und führt diese nach Ablauf einer best
   Der dritte Parameter `vorgaengerAktion` ist __optional__ und eine `AkAktion`, die mit `AkAktion:neu(f, name)` erstellt wurde. Wird die Vorgängeraktion angegeben, so wird die einzuplanende Aktionen eingeplant sobald die Vorgängeraktion durchgeführt wurde (nach der angegebenen Zeitspanne).<br>
   Wird die Vorgängeraktion nicht angegeben, so wird die einzuplanende Aktion direkt eingeplant (nach der angegebenen Zeitspanne).
 
-
 * Funktion `AkPlaner:fuehreGeplanteAktionenAus()`
   Diese Funktion muss regelmäßig aufgerufen werden. Sie prüft die vergangene Zeit und führt alle eingeplanten Aktionen aus, deren Zeitspanne zum aktuellen Zeitpunkt erreicht oder vergangen ist.
 
+  Im Normalfall muss diese Funktion nicht manuell aufgerufen werden. Stattdessen wird dies erledigt durch das einmalige Registrieren von PlanerLuaModul:
+
+  
 
 # Wichtig
 
-Damit der Planer funktioniert musst Du ihn in die EEPMain()-Methode einbinden:
+Damit der Planer funktioniert musst Du ihn registrieren und den runTasks()-Aufruf in die EEPMain()-Methode einbinden:
+
   ```lua
+  local ModuleRegistry = require("ak.core.ModuleRegistry")
+  ModuleRegistry.registerModules(require("ak.planer.PlanerLuaModul"))
+  
   function EEPMain()
-      AkPlaner:fuehreGeplanteAktionenAus()
+      ModuleRegistry.runTasks()
       return 1
   end
   ```

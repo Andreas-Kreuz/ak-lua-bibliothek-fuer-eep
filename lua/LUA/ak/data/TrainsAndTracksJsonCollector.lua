@@ -1,9 +1,8 @@
-print"Lade ak.data.TrainsAndTracksPublisher ..."
-TrainsAndTracksPublisher = {}
-local AkStatistik = require("ak.io.AkStatistik")
+print "Lade ak.data.TrainsAndTracksJsonCollector ..."
+TrainsAndTracksJsonCollector = {}
 local enabled = true
 local initialized = false
-TrainsAndTracksPublisher.name = "ak.data.TrainsAndTracksPublisher"
+TrainsAndTracksJsonCollector.name = "ak.data.TrainsAndTracksJsonCollector"
 
 local MAX_TRACKS = 50000
 local data = {}
@@ -267,7 +266,7 @@ local function updateTracks()
     updateTracksBy(EEPIsTramTrackReserved, "tram")
 end
 
-function TrainsAndTracksPublisher.initialize()
+function TrainsAndTracksJsonCollector.initialize()
     if not enabled or initialized then
         return
     end
@@ -277,20 +276,18 @@ function TrainsAndTracksPublisher.initialize()
     initialized = true
 end
 
-function TrainsAndTracksPublisher.updateData()
+function TrainsAndTracksJsonCollector.collectData()
     if not enabled then
         return
     end
 
     if not initialized then
-        TrainsAndTracksPublisher.initialize()
+        TrainsAndTracksJsonCollector.initialize()
     end
 
     updateTracks()
 
-    for key, value in pairs(data) do
-        AkStatistik.writeLater(key, value)
-    end
+    return data
 end
 
-return TrainsAndTracksPublisher
+return TrainsAndTracksJsonCollector

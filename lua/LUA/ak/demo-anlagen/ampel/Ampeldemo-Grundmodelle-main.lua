@@ -211,10 +211,14 @@ k1:fuegeSchaltungHinzu(k1_schaltung3)
 k1:fuegeSchaltungHinzu(k1_schaltung4)
 --endregion
 
+local ModuleRegistry = require("ak.core.ModuleRegistry")
+ModuleRegistry.registerModules(
+    require("ak.core.CoreLuaModule"),
+    require("ak.strasse.KreuzungLuaModul")
+)
+
 function EEPMain()
     --print("Speicher: " .. collectgarbage("count"))
-    AkKreuzung:planeSchaltungenEin()
-    AkPlaner:fuehreGeplanteAktionenAus()
-    AkStatistik.statistikAusgabe()
+    ModuleRegistry.runTasks()
     return 1
 end

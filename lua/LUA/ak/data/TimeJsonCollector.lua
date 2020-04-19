@@ -1,11 +1,10 @@
-print"Lade ak.data.TimePublisher ..."
-TimePublisher = {}
-local AkStatistik = require("ak.io.AkStatistik")
+print "Lade ak.data.TimeJsonCollector ..."
+TimeJsonCollector = {}
 local enabled = true
 local initialized = false
-TimePublisher.name = "ak.data.TimePublisher"
+TimeJsonCollector.name = "ak.data.TimeJsonCollector"
 
-function TimePublisher.initialize()
+function TimeJsonCollector.initialize()
     if not enabled or initialized then
         return
     end
@@ -13,13 +12,13 @@ function TimePublisher.initialize()
     initialized = true
 end
 
-function TimePublisher.updateData()
+function TimeJsonCollector.collectData()
     if not enabled then
         return
     end
 
     if not initialized then
-        TimePublisher.initialize()
+        TimeJsonCollector.initialize()
     end
 
     local value = {
@@ -32,7 +31,7 @@ function TimePublisher.updateData()
         }
     }
 
-    AkStatistik.writeLater("times", value)
+    return {["times"] = value}
 end
 
-return TimePublisher
+return TimeJsonCollector

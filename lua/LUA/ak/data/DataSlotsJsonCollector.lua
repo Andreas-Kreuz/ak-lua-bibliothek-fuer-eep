@@ -1,22 +1,21 @@
-print("Lade ak.data.DataSlotsPublisher ...")
+print("Lade ak.data.DataSlotsJsonCollector ...")
 
-local DataSlotsPublisher = {}
+local DataSlotsJsonCollector = {}
 local enabled = true
 local initialized = false
 local AkSlotNamesParser = require("ak.data.AkSlotNamesParser")
 local AkSpeicherHilfe = require("ak.speicher.AkSpeicher")
-local AkStatistik = require("ak.io.AkStatistik")
-DataSlotsPublisher.name = "ak.data.DataSlotsPublisher"
+DataSlotsJsonCollector.name = "ak.data.DataSlotsJsonCollector"
 
 
-function DataSlotsPublisher.initialize()
+function DataSlotsJsonCollector.initialize()
     initialized = true
 end
 
-function DataSlotsPublisher.updateData()
+function DataSlotsJsonCollector.collectData()
     -- nothing todo
     if not enabled then return end
-    if not initialized then DataSlotsPublisher.initialize() end
+    if not initialized then DataSlotsJsonCollector.initialize() end
 
     AkSlotNamesParser.updateSlotNames()
     local filledSlots = {}
@@ -38,8 +37,10 @@ function DataSlotsPublisher.updateData()
         end
     end
 
-    AkStatistik.writeLater("save-slots", filledSlots)
-    AkStatistik.writeLater("free-slots", emptySlots) -- you may want to omit free slots to save space
+    return {
+        ["save-slots"] = filledSlots,
+        ["free-slots"] = emptySlots,
+    }
 end
 
-return DataSlotsPublisher
+return DataSlotsJsonCollector
