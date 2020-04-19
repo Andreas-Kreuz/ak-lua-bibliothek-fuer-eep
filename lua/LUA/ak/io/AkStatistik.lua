@@ -223,7 +223,7 @@ function AkStatistik.statistikAusgabe(modulus)
     if printFirstTime or timeDiff > allowedTimeDiff then
         print(
             string.format(
-                (printFirstTime and "FIRST TIME" or "WARNING") ..
+                (printFirstTime and "MIT INITIALISIERUNG" or "WARNUNG") ..
                     ": Current time for AkStatistik.statistikAusgabe() is %.3f s (allowedTime: %.3f s)\n         " ..
                         "waitForServer: %.3f, initialize: %.3f, processNewCommands: %.3f, collectAndWriteData: %.3f",
                 timeDiff,

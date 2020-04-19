@@ -41,7 +41,17 @@ local function initTask(module)
     module.init()
     local t1 = os.clock()
     local timeDiff = t1 - t0
-    print(string.format('ModuleRegistry.initTasks() %.3f Sekunden fuer "%s"', timeDiff, module.name))
+    print(string.format('ModuleRegistry.initTask() %.3f Sekunden fuer "%s"', timeDiff, module.name))
+end
+
+local function runTask(module)
+    local t0 = os.clock()
+    module.run()
+    local t1 = os.clock()
+    local timeDiff = t1 - t0
+    if timeDiff > 0.2 then
+        print(string.format('WARNUNG: ModuleRegistry.runTask() %.3f Sekunden fuer "%s"', timeDiff, module.name))
+    end
 end
 
 ---
@@ -66,7 +76,7 @@ function ModuleRegistry.runTasks()
     end
 
     for _, module in pairs(registeredLuaModules) do
-        module.run()
+        runTask(module)
     end
 
     if enableServer then
