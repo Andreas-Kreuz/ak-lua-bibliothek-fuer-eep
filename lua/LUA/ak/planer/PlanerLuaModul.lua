@@ -17,7 +17,7 @@ function PlanerLuaModul.init()
     -- Hier wird der CoreWebConnector registriert, so dass die Kommunikation mit der WebApp funktioniert
     -- Not there yet
     --local PlanerWebConnector = require("ak.planer.PlanerWebConnector")
-    --PlanerWebConnector.registerJsonControllers();
+    --PlanerWebConnector.registerJsonCollectors();
 
     initialized = true
 end

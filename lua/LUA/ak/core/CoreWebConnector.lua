@@ -2,7 +2,7 @@ print("Lade ak.eep.CoreWebConnector ...")
 local AkStatistik = require("ak.io.AkStatistik")
 local CoreWebConnector = {}
 
-function CoreWebConnector.registerJsonControllers()
+function CoreWebConnector.registerJsonCollectors()
     AkStatistik.addJsonCollector(require("ak.data.DataSlotsJsonCollector"))
     AkStatistik.addJsonCollector(require("ak.data.SignalJsonCollector"))
     AkStatistik.addJsonCollector(require("ak.data.SwitchJsonCollector"))
