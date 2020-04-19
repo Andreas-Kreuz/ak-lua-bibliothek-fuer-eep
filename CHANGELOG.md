@@ -3,6 +3,9 @@
 ## 0.9.0
 
 - ⭐ Neu: Ein Projekt, alle Inhalte (Lua, Server und Web App in einem Projekt)
+- ⭐ Neu: Daten für den Server werden nur noch dann geschrieben, wenn der Server gestartet ist
+- ⭐ Neu: Einmaliges Suchen nach globalen Daten macht das Ganze schneller
+- ⭐ Neu: Warnung, wenn die Datenausgabe länger dauert
 
 - ℹ️ Info: Für folgende Lua Dateien müssen die Imports geändert werden:
   - `ak.core.eep.AkEepFunktionen` ersetzt ~~`ak.eep.AkEepFunktionen`~~
