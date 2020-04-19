@@ -162,18 +162,22 @@ function collectAndWriteData(printFirstTime, modulus)
 
     -- write file
     local t2 = os.clock()
-    AkWebServerIo.updateJsonFile(json.encode(collectedData, {keyorder = orderedKeys}))
+    local content = json.encode(collectedData, {keyorder = orderedKeys})
 
     local t3 = os.clock()
-    if not printFirstTime and t3 - t0 > .2 * modulus then
+    AkWebServerIo.updateJsonFile(content)
+
+    local t4 = os.clock()
+    if not printFirstTime and t4 - t0 > .2 * modulus then
         print(
             string.format(
                 "WARNUNG: AkStatistik:collectAndWriteData(): dauerte %.2f s - " ..
-                    "collect: %.2f s, sort: %.2f s, writeFile: %.2f s",
-                t3 - t0,
+                    "collect: %.2f s, sort: %.2f s, encode: %.2f s, writeFile: %.2f s",
+                t4 - t0,
                 t1 - t0,
                 t2 - t1,
-                t3 - t2
+                t3 - t2,
+                t4 - t3
             )
         )
     end
