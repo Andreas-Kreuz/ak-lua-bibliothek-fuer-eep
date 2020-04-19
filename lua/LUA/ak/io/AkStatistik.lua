@@ -147,7 +147,7 @@ function AkStatistik.addJsonCollector(...)
     end
 end
 
-function collectAndWriteData(printFirstTime)
+function collectAndWriteData(printFirstTime, modulus)
     local t0 = os.clock()
     collectData(printFirstTime)
 
@@ -165,7 +165,7 @@ function collectAndWriteData(printFirstTime)
     AkWebServerIo.updateJsonFile(json.encode(collectedData, {keyorder = orderedKeys}))
 
     local t3 = os.clock()
-    if t3 - t0 > 1 then
+    if not printFirstTime and t3 - t0 > .2 * modulus then
         print(
             string.format(
                 "WARNUNG: AkStatistik:collectAndWriteData(): dauerte %.2f s - " ..
@@ -196,6 +196,7 @@ function AkStatistik.statistikAusgabe(modulus)
     local serverIsReady = not AkStatistik.checkServerStatus or AkWebServerIo.checkWebServer()
 
     -- initialization in first call
+    local overallTime1 = os.clock()
     local printFirstTime = false
     if not initialized and serverIsReady then
         printFirstTime = true
@@ -203,40 +204,32 @@ function AkStatistik.statistikAusgabe(modulus)
     end
 
     -- process commands
-    local overallTime1 = os.clock()
+    local overallTime2 = os.clock()
     AkWebServerIo.processNewCommands()
 
     -- export data regularly
-    local overallTime2 = os.clock()
+    local overallTime3 = os.clock()
     if i % modulus == 0 and serverIsReady then
-        collectAndWriteData(printFirstTime)
+        collectAndWriteData(printFirstTime, modulus)
     end
 
-    local overallTime3 = os.clock()
-    local timeDiff = overallTime3 - overallTime0
-    if printFirstTime then
+    local overallTime4 = os.clock()
+    local timeDiff = overallTime4 - overallTime0
+    local allowedTimeDiff = modulus * 0.200
+    if printFirstTime or timeDiff > allowedTimeDiff then
         print(
             string.format(
-                "FIRST TIME for AkStatistik.statistikAusgabe() was %.3f s" ..
-                    "\ninitialize: %.3f\nprocessNewCommands: %.3f\ncollectAndWriteData: %.3f",
+                (printFirstTime and "FIRST TIME" or "WARNING") ..
+                    ": Current time for AkStatistik.statistikAusgabe() is %.3f s (allowedTime: %.3f s)\n         " ..
+                        "waitForServer: %.3f, initialize: %.3f, processNewCommands: %.3f, collectAndWriteData: %.3f",
                 timeDiff,
-                overallTime3 - overallTime2,
+                allowedTimeDiff,
+                overallTime1 - overallTime0,
                 overallTime2 - overallTime1,
-                overallTime1 - overallTime0
+                overallTime3 - overallTime2,
+                overallTime4 - overallTime3
             )
         )
-    else
-        local allowedTimeDiff = modulus * 0.200
-        if timeDiff > allowedTimeDiff then
-            print(
-                string.format(
-                    "WARNING!!! Current time for AkStatistik.statistikAusgabe() %.3f s is " ..
-                        "bigger than allowedTime %.3f s",
-                    timeDiff,
-                    allowedTimeDiff
-                )
-            )
-        end
     end
 end
 
