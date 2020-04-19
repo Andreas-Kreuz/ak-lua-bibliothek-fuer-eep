@@ -184,8 +184,8 @@ end
 
 --- Lese Kommandos aus Datei und führe sie aus.
 function AkWebServerIo.processNewCommands()
-    local commands = inFileCommands:read() -- file: ak-eep-in.commands
-    if (commands) then
+    local commands = inFileCommands:read("*all") -- file: ak-eep-in.commands
+    if commands and commands ~= "" then
         AkCommandExecutor.execute(commands)
     end
 end
