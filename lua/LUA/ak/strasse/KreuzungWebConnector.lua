@@ -3,7 +3,8 @@ local AkStatistik = require("ak.io.AkStatistik")
 local KreuzungWebConnector = {}
 
 function KreuzungWebConnector.registerJsonCollectors()
-   -- TODO
+   AkStatistik.addJsonCollector(require("ak.strasse.AmpelModellJsonCollector"))
+   AkStatistik.addJsonCollector(require("ak.strasse.KreuzungJsonCollector"))
 end
 
 return KreuzungWebConnector

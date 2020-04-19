@@ -25,7 +25,7 @@ AkStatistik.fillTrainYards        = false
 
 local repeatCycles = 1
 function EEPMain()
-  --AkStatistik.writeLater(key, value) -- add additional data to output file
+  --AkStatistik.collectedData(key, value) -- add additional data to output file
   AkStatistik.statistikAusgabe(repeatCycles) -- optional parameter
   return 1
 end
@@ -46,26 +46,18 @@ AkStatistik.programVersion = "0.8.4"
 AkStatistik.checkServerStatus = true
 
 local registeredJsonCollectors = {}
-local writeLater = {}
+local collectedData = {}
 local checksum = 0
 local initialized = false
 
---- Store additional data in json file.
--- Call this function in your Lua script to store additional data in the json file.
--- @param key Key.
--- @param value Data.
-function AkStatistik.writeLater(key, value)
-    writeLater[key] = value
-end
-
 local function fillApiEntriesV1(orderedKeys)
-    writeLater["api-entries"] = {}
+    collectedData["api-entries"] = {}
     checksum = checksum + 1
     local apiEntries = {}
     local apiEntry
     for _, key in ipairs(orderedKeys) do
         local count = 0
-        for _ in pairs(writeLater[key]) do
+        for _ in pairs(collectedData[key]) do
             count = count + 1
         end
 
@@ -87,7 +79,7 @@ local function fillApiEntriesV1(orderedKeys)
         apiEntry.count = #apiEntries
     end
 
-    writeLater["api-entries"] = apiEntries
+    collectedData["api-entries"] = apiEntries
 end
 
 local function initializeJsonCollector(jsonCollector)
@@ -113,7 +105,7 @@ local function collectData(printFirstTime)
     for _, jsonCollector in pairs(registeredJsonCollectors) do
         local newData = collectFrom(jsonCollector, printFirstTime)
         for key, value in pairs(newData) do
-            writeLater[key] = value
+            collectedData[key] = value
         end
     end
 end
@@ -162,7 +154,7 @@ function collectAndWriteData(printFirstTime)
     -- add statistical data
     local t1 = os.clock()
     local orderedKeys = {}
-    for key in pairs(writeLater) do
+    for key in pairs(collectedData) do
         table.insert(orderedKeys, key)
     end
     table.sort(orderedKeys)
@@ -170,7 +162,7 @@ function collectAndWriteData(printFirstTime)
 
     -- write file
     local t2 = os.clock()
-    AkWebServerIo.updateJsonFile(json.encode(writeLater, {keyorder = orderedKeys}))
+    AkWebServerIo.updateJsonFile(json.encode(collectedData, {keyorder = orderedKeys}))
 
     local t3 = os.clock()
     if t3 - t0 > 1 then
