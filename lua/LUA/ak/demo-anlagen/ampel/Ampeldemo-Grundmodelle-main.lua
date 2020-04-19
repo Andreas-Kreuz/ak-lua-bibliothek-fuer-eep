@@ -2,13 +2,11 @@
 -- Lade Funktionen fuer Ampeln
 --------------------------------
 -- Planer
-local AkPlaner = require("ak.planer.AkPlaner")
 local AkAmpelModell = require("ak.strasse.AkAmpelModell")
 local AkAmpel = require("ak.strasse.AkAmpel")
 local AkRichtung = require("ak.strasse.AkRichtung")
 local AkKreuzung = require("ak.strasse.AkKreuzung")
 local AkKreuzungsSchaltung = require("ak.strasse.AkKreuzungsSchaltung")
-local AkStatistik = require("ak.io.AkStatistik")
 AkAmpel.zeigeAnforderungen = true
 
 ------------------------------------------------

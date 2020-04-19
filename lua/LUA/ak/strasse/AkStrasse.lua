@@ -6,10 +6,6 @@ print(
 # Bitte stattdessen unbedingt die notwendigen Dinge einzeln mittels zuweisen:
 # local <Module> = require("<Modulname>")
 ############################################################################################
--- Planer
-local AkPlaner = require("ak.planer.AkPlaner")
--- IO
-local AkStatistik = require("ak.io.AkStatistik")
 -- Strasse
 local AkStrabWeiche = require("ak.strasse.AkStrabWeiche")
 local AkAmpelModell = require("ak.strasse.AkAmpelModell")
