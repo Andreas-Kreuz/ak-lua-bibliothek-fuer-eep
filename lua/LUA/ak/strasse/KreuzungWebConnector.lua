@@ -1,10 +1,10 @@
 print("Lade ak.eep.KreuzungWebConnector ...")
-local AkStatistik = require("ak.io.AkStatistik")
+local ServerController = require("ak.io.ServerController")
 local KreuzungWebConnector = {}
 
 function KreuzungWebConnector.registerJsonCollectors()
-   AkStatistik.addJsonCollector(require("ak.strasse.AmpelModellJsonCollector"))
-   AkStatistik.addJsonCollector(require("ak.strasse.KreuzungJsonCollector"))
+   ServerController.addJsonCollector(require("ak.strasse.AmpelModellJsonCollector"))
+   ServerController.addJsonCollector(require("ak.strasse.KreuzungJsonCollector"))
 end
 
 return KreuzungWebConnector

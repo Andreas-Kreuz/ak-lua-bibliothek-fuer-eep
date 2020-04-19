@@ -1,7 +1,7 @@
 print("Lade ak.eep.ModuleRegistry ...")
 local ModuleRegistry = {}
 
-local AkStatistik = require("ak.io.AkStatistik")
+local ServerController = require("ak.io.ServerController")
 local enableServer = true
 local initialized = false
 local registeredLuaModules = {}
@@ -82,7 +82,7 @@ function ModuleRegistry.runTasks()
     if enableServer then
         -- Sorgt dafür, dass alle JsonDaten der registrieren XxxJsonColletor zum Server kommen
         -- und dass die Befehle des Servers ausgewertet werden
-        AkStatistik.statistikAusgabe(1)
+        ServerController.communicateWithServer(1)
     end
 end
 

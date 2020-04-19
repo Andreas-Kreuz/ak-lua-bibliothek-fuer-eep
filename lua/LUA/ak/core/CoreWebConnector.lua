@@ -1,15 +1,15 @@
 print("Lade ak.eep.CoreWebConnector ...")
-local AkStatistik = require("ak.io.AkStatistik")
+local ServerController = require("ak.io.ServerController")
 local CoreWebConnector = {}
 
 function CoreWebConnector.registerJsonCollectors()
-    AkStatistik.addJsonCollector(require("ak.data.DataSlotsJsonCollector"))
-    AkStatistik.addJsonCollector(require("ak.data.SignalJsonCollector"))
-    AkStatistik.addJsonCollector(require("ak.data.SwitchJsonCollector"))
-    AkStatistik.addJsonCollector(require("ak.data.StructureJsonCollector"))
-    AkStatistik.addJsonCollector(require("ak.data.TimeJsonCollector"))
-    AkStatistik.addJsonCollector(require("ak.data.TrainsAndTracksJsonCollector"))
-    AkStatistik.addJsonCollector(require("ak.data.VersionJsonCollector"))
+    ServerController.addJsonCollector(require("ak.data.DataSlotsJsonCollector"))
+    ServerController.addJsonCollector(require("ak.data.SignalJsonCollector"))
+    ServerController.addJsonCollector(require("ak.data.SwitchJsonCollector"))
+    ServerController.addJsonCollector(require("ak.data.StructureJsonCollector"))
+    ServerController.addJsonCollector(require("ak.data.TimeJsonCollector"))
+    ServerController.addJsonCollector(require("ak.data.TrainsAndTracksJsonCollector"))
+    ServerController.addJsonCollector(require("ak.data.VersionJsonCollector"))
 end
 
 return CoreWebConnector

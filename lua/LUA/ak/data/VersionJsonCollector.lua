@@ -1,6 +1,6 @@
 print "Lade ak.data.VersionJsonCollector ..."
 VersionJsonCollector = {}
-local AkStatistik = require("ak.io.AkStatistik")
+local ServerController = require("ak.io.ServerController")
 local enabled = true
 local data = {}
 local initialized = false
@@ -17,7 +17,7 @@ function VersionJsonCollector.initialize()
             name = "versionInfo", -- EEP-Web requires that data entries have an id or name tag
             eepVersion = string.format("%.1f", EEPVer), -- show string instead of float
             luaVersion = _VERSION,
-            singleVersion = {AkStatistik = AkStatistik.programVersion} -- EEP-Web does not show this object value
+            singleVersion = {ServerController = ServerController.programVersion} -- EEP-Web does not show this value
         }
     }
 

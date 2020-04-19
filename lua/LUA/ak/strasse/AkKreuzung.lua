@@ -6,7 +6,6 @@ local AkAmpelModell = require("ak.strasse.AkAmpelModell")
 local AkKreuzungsSchaltung = require("ak.strasse.AkKreuzungsSchaltung")
 local AkRichtung = require("ak.strasse.AkRichtung")
 local AkPhase = require("ak.strasse.AkPhase")
-local AkStatistik = require("ak.io.AkStatistik")
 local fmt = require("ak.core.eep.AkTippTextFormat")
 
 --------------------
@@ -504,7 +503,6 @@ function AkKreuzung.planeSchaltungenEin()
     for _, kreuzung in ipairs(AkAllKreuzungen) do
         AkSchalteKreuzung(kreuzung)
         zeigeSchaltung(kreuzung)
-        --AkStatistik.writeLater("intersections_single_" .. kreuzung.name, json.encode(kreuzung:toJsonObject()))
     end
 end
 
