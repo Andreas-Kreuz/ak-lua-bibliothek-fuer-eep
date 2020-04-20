@@ -29,6 +29,7 @@
         "EEPIsRoadTrackReserved",
         "EEPIsTramTrackReserved",
         "EEPLoadData",
+        "EEPPause",
         "EEPRegisterAuxiliaryTrack",
         "EEPRegisterControlTrack",
         "EEPRegisterRailTrack",
