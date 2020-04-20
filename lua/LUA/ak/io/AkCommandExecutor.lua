@@ -20,6 +20,7 @@ local AkCommandExecutor = {}
 local acceptedRemoteFunctions = {}
 
 --- Adding an accepted function
+---NOTE: acceptedFunctions are typically added via the Modules WebConnector
 ---@param fName string using the name of the function as called from EEP-Web
 ---@param f function
 function AkCommandExecutor.addAcceptedRemoteFunction(fName, f)
@@ -28,6 +29,7 @@ function AkCommandExecutor.addAcceptedRemoteFunction(fName, f)
     acceptedRemoteFunctions[fName] = f
 end
 
+-- Accept EEPPause function
 AkCommandExecutor.addAcceptedRemoteFunction("EEPPause", EEPPause)
 
 -- Accept all EEP*Set functions
