@@ -24,7 +24,7 @@ local acceptedRemoteFunctions = {}
 ---@param f function
 function AkCommandExecutor.addAcceptedRemoteFunction(fName, f)
     assert(fName and type(fName) == "string", "Es muss ein Funktionsname angegeben werden.")
-    assert(f and type(f) == "function", "Es muss eine Funktion angegeben werden.")
+    assert(f and type(f) == "function", "Es muss eine Funktion angegeben werden fuer " .. fName)
     acceptedRemoteFunctions[fName] = f
 end
 
