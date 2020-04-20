@@ -29,8 +29,6 @@ function AkCommandExecutor.addAcceptedRemoteFunction(fName, f)
 end
 
 AkCommandExecutor.addAcceptedRemoteFunction("EEPPause", EEPPause)
-AkCommandExecutor.addAcceptedRemoteFunction("clearlog", clearlog)
-AkCommandExecutor.addAcceptedRemoteFunction("print", print)
 
 -- Accept all EEP*Set functions
 for name, value in pairs(_G) do

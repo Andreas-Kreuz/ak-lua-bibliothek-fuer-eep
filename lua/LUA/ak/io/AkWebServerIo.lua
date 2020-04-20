@@ -137,6 +137,10 @@ function clearlog()
     file:close()
 end
 
+-- These two functions must be registered AFTER print and clearlog are overwritten
+AkCommandExecutor.addAcceptedRemoteFunction("clearlog", clearlog)
+AkCommandExecutor.addAcceptedRemoteFunction("print", print)
+
 local serverWasReadyLastTime = true
 local serverWasListeningLastTime = true
 --- Prüfe Status des Web Servers.
