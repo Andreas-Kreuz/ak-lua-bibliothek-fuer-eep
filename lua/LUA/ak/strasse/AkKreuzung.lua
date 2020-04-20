@@ -33,7 +33,7 @@ function AkKreuzung.setZeigeSignalIdsAllerSignale(value)
     AkKreuzung.zeigeSignalIdsAllerSignale = value
 end
 
-function AkKreuzungSchalteManuell(nameDerKreuzung, nameDerSchaltung)
+function AkKreuzung.schalteManuell(nameDerKreuzung, nameDerSchaltung)
     print("schalteManuell:" .. nameDerKreuzung .. "/" .. nameDerSchaltung)
     local k = AkKreuzung.alleKreuzungen[nameDerKreuzung]
     if k then
@@ -41,7 +41,7 @@ function AkKreuzungSchalteManuell(nameDerKreuzung, nameDerSchaltung)
     end
 end
 
-function AkKreuzungSchalteAutomatisch(nameDerKreuzung)
+function AkKreuzung.schalteAutomatisch(nameDerKreuzung)
     print("schalteAutomatisch:" .. nameDerKreuzung)
     local k = AkKreuzung.alleKreuzungen[nameDerKreuzung]
     if k then
