@@ -23,6 +23,11 @@ IF %ERRORLEVEL% NEQ 0 (
     exit %ERRORLEVEL%
 )
 
+xcopy %projectPath%\ak-eep-web-server\target\ak-eep-web.jar %projectPath%\lua\LUA\ak
+IF %ERRORLEVEL% NEQ 0 (
+    exit %ERRORLEVEL%
+)
+
 @REM Create the installation package for EEP
 cd %projectPath%\lua\LUA
 IF %ERRORLEVEL% NEQ 0 (
