@@ -1,5 +1,5 @@
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import { StoreRouterConnectingModule } from '@ngrx/router-store';
+import { StoreRouterConnectingModule, DefaultRouterStateSerializer } from '@ngrx/router-store';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { StoreModule } from '@ngrx/store';
@@ -33,7 +33,7 @@ import { LayoutModule } from '@angular/cdk/layout';
     CoreModule,
     StoreModule.forRoot(reducers),
     EffectsModule.forRoot(effects),
-    StoreRouterConnectingModule.forRoot(),
+    StoreRouterConnectingModule.forRoot({ serializer: DefaultRouterStateSerializer }),
     environment.production ? [] : StoreDevtoolsModule.instrument(),
     LayoutModule,
   ],
