@@ -49,7 +49,7 @@
         "EEPTimeS",
         "EEPVer"
     ],
-    "editor.minimap.maxColumn": 160,
+    "editor.minimap.maxColumn": 120,
     "git-assistant.checkForRemote": "disabled",
     "editor.wordWrapColumn": 120
 }
