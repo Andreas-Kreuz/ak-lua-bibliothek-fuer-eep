@@ -52,5 +52,9 @@
     ],
     "editor.minimap.maxColumn": 120,
     "git-assistant.checkForRemote": "disabled",
-    "editor.wordWrapColumn": 120
+    "editor.wordWrapColumn": 120,
+    "[lua]": {
+        "files.encoding": "iso88591",
+        "files.autoGuessEncoding": true
+    }
 }
