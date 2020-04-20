@@ -27,8 +27,8 @@ local collectedData = {}
 local checksum = 0
 local initialized = false
 
-function ServerController.addAllowedFunction(fName)
-    AkCommandExecutor.addAllowedFunction(fName)
+function ServerController.addAcceptedRemoteFunction(fName, f)
+    AkCommandExecutor.addAcceptedRemoteFunction(fName, f)
 end
 
 local function fillApiEntriesV1(orderedKeys)

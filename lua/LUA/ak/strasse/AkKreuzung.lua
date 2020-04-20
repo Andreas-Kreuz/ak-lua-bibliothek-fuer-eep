@@ -19,6 +19,21 @@ AkKreuzung.zeigeAnforderungenAlsInfo = AkStartMitDebug or false
 AkKreuzung.zeigeSchaltungAlsInfo = AkStartMitDebug or false
 AkKreuzung.zeigeSignalIdsAllerSignale = false
 
+function AkKreuzung.setZeigeAnforderungenAlsInfo(value)
+    assert(value == true or value == false)
+    AkKreuzung.zeigeAnforderungenAlsInfo = value
+end
+
+function AkKreuzung.setZeigeSchaltungAlsInfo(value)
+    assert(value == true or value == false)
+    AkKreuzung.zeigeSchaltungAlsInfo = value
+end
+
+function AkKreuzung.setZeigeSignalIdsAllerSignale(value)
+    assert(value == true or value == false)
+    AkKreuzung.zeigeSignalIdsAllerSignale = value
+end
+
 function AkKreuzungSchalteManuell(nameDerKreuzung, nameDerSchaltung)
     print("schalteManuell:" .. nameDerKreuzung .. "/" .. nameDerSchaltung)
     local k = AkKreuzung.alleKreuzungen[nameDerKreuzung]
@@ -505,6 +520,5 @@ function AkKreuzung.planeSchaltungenEin()
         zeigeSchaltung(kreuzung)
     end
 end
-
 
 return AkKreuzung

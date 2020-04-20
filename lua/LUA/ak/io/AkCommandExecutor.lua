@@ -15,40 +15,47 @@ local function split(text, delimiter)
 end
 
 local AkCommandExecutor = {}
+--- List of acceptedFunctions for remote execution
+--- Parameters of these functions are separated by | in the calls
+local acceptedRemoteFunctions = {}
 
-local allowedFunctions = {
-    ["clearlog"] = true,
-    ["print"] = true,
-    ["AkKreuzungSchalteManuell"] = true,
-    ["AkKreuzungSchalteAutomatisch"] = true,
-    ["EEPPause"] = true
-}
+--- Adding an accepted function
+---@param fName string using the name of the function as called from EEP-Web
+---@param f function
+function AkCommandExecutor.addAcceptedRemoteFunction(fName, f)
+    assert(fName and type(fName) == "string", "Es muss ein Funktionsname angegeben werden.")
+    assert(f and type(f) == "function", "Es muss eine Funktion angegeben werden.")
+    acceptedRemoteFunctions[fName] = f
+end
 
-function AkCommandExecutor.addAllowedFunction(fName)
-    allowedFunctions[fName] = true
+AkCommandExecutor.addAcceptedRemoteFunction("AkKreuzungSchalteAutomatisch", AkKreuzungSchalteAutomatisch)
+AkCommandExecutor.addAcceptedRemoteFunction("AkKreuzungSchalteManuell", AkKreuzungSchalteManuell)
+AkCommandExecutor.addAcceptedRemoteFunction("EEPPause", EEPPause)
+AkCommandExecutor.addAcceptedRemoteFunction("clearlog", clearlog)
+AkCommandExecutor.addAcceptedRemoteFunction("print", print)
+
+-- Accept all EEP*Set functions
+for name, value in pairs(_G) do
+    if string.find(name, "^EEP.*Set") and type(value) == "function" then
+        --print(string.format("Adding %s to acceptedRemoteFunctions", name))
+        AkCommandExecutor.addAcceptedRemoteFunction(name, value)
+    end
 end
 
 function AkCommandExecutor.callSavely(functionAndArgs)
     local fName = table.remove(functionAndArgs, 1)
     local args = functionAndArgs
-    local accepted
 
     if fName == "" then -- ignore empty commands
         return
     end
 
-    --for i, arg in ipairs(args) do
-    --    print(i .. "-" .. arg)
-    --end
+    local f = acceptedRemoteFunctions[fName]
 
-    if string.find(fName, "^EEP.*Set") then -- Accept all EEP-Set-functions
-        accepted = true
-    else
-        accepted = allowedFunctions[fName]
-    end
+    assert(f, "Funktionsname nicht hinterlegt: " .. fName)
 
-    if accepted then
-        if pcall(_G[fName], table.unpack(args)) then
+    if f then
+        if pcall(f, table.unpack(args)) then
             -- print("Aufruf von " .. fName)
         else
             print("Aufruf von " .. fName .. " fehlgeschlagen")

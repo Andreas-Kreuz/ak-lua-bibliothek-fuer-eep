@@ -17,6 +17,7 @@ function KreuzungLuaModul.init()
     -- Hier wird der CoreWebConnector registriert, so dass die Kommunikation mit der WebApp funktioniert
     local KreuzungWebConnector = require("ak.strasse.KreuzungWebConnector")
     KreuzungWebConnector.registerJsonCollectors()
+    KreuzungWebConnector.registerFunctions()
 
     initialized = true
 end
