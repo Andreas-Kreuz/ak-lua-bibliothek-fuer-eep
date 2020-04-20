@@ -171,13 +171,13 @@ export class IntersectionComponent implements OnInit, OnDestroy {
   }
 
   switchTo(intersection: Intersection, switching: IntersectionSwitching) {
-    this.store.dispatch(new IntersectionAction.SwitchManually({
+    this.store.dispatch(IntersectionAction.switchManually({
       intersection, switching
     }));
   }
 
   enableAutomaticMode(intersection: Intersection) {
-    this.store.dispatch(new IntersectionAction.SwitchAutomatically({
+    this.store.dispatch(IntersectionAction.switchAutomatically({
       intersection
     }));
   }

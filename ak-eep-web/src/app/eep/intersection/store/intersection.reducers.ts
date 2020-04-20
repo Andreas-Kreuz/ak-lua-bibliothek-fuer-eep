@@ -1,6 +1,5 @@
-import { createFeatureSelector, createSelector } from '@ngrx/store';
-
-import * as fromIntersection from './intersection.actions';
+import { createFeatureSelector, createSelector, createReducer, Action, on } from '@ngrx/store';
+import * as IntersectionActions from './intersection.actions';
 import { Intersection } from '../models/intersection.model';
 import { IntersectionLane } from '../models/intersection-lane.model';
 import { IntersectionSwitching } from '../models/intersection-switching.model';
@@ -8,38 +7,29 @@ import { IntersectionTrafficLight } from '../models/intersection-traffic-light.m
 
 export interface State {
   intersections: Intersection[];
-  intersectionLanes: IntersectionLane[];
-  intersectionSwitching: IntersectionSwitching[];
-  intersectionTrafficLights: IntersectionTrafficLight[];
+  lanes: IntersectionLane[];
+  switchings: IntersectionSwitching[];
+  trafficLights: IntersectionTrafficLight[];
 }
 
 const initialState: State = {
   intersections: [],
-  intersectionLanes: [],
-  intersectionSwitching: [],
-  intersectionTrafficLights: [],
+  lanes: [],
+  switchings: [],
+  trafficLights: [],
 };
 
-export function reducer(state: State = initialState, action: fromIntersection.IntersectionActions) {
-  switch (action.type) {
-    case fromIntersection.SET_INTERSECTIONS:
-      return {
-        ...state,
-        intersections: [...action.payload],
-      };
-    case fromIntersection.SET_INTERSECTION_SWITCHING:
-      return {
-        ...state,
-        intersectionSwitching: [...action.payload],
-      };
-    case fromIntersection.SET_INTERSECTION_LANES:
-      return {
-        ...state,
-        intersectionLanes: [...action.payload],
-      };
-    default:
-      return state;
-  }
+
+const intersectionsReducer = createReducer(
+  initialState,
+  on(IntersectionActions.setIntersections, (state: State, { intersections }) => ({ ...state, intersections: [...intersections] })),
+  on(IntersectionActions.setLanes, (state: State, { lanes }) => ({ ...state, lanes: [...lanes] })),
+  on(IntersectionActions.setSwitchings, (state: State, { switchings }) => ({ ...state, switchings: [...switchings] })),
+  on(IntersectionActions.setTrafficLights, (state: State, { trafficLights }) => ({ ...state, trafficLights: [...trafficLights] }))
+);
+
+export function reducer(state: State | undefined, action: Action) {
+  return intersectionsReducer(state, action);
 }
 
 export const intersectionsState$ = createFeatureSelector('intersection');
@@ -56,7 +46,7 @@ export const intersectionsCount$ = createSelector(
 
 export const intersectionLanes$ = createSelector(
   intersectionsState$,
-  (state: State) => state.intersectionLanes
+  (state: State) => state.lanes
 );
 
 export const laneByIntersectionId$ = (intersectionId) => createSelector(
@@ -68,7 +58,7 @@ export const laneByIntersectionId$ = (intersectionId) => createSelector(
 
 export const intersectionSwitching$ = createSelector(
   intersectionsState$,
-  (state: State) => state.intersectionSwitching
+  (state: State) => state.switchings
 );
 
 export const switchingNamesByIntersection$ = (intersectionId: Intersection) => createSelector(
@@ -86,7 +76,7 @@ export const intersectionById$ = (intersectionId) => createSelector(
 
 export const intersectionTrafficLights$ = createSelector(
   intersectionsState$,
-  (state: State) => state.intersectionTrafficLights
+  (state: State) => state.trafficLights
 );
 
 export const signalTypes$ = createSelector(

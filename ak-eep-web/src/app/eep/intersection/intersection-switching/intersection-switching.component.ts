@@ -22,7 +22,7 @@ export class IntersectionSwitchingComponent implements OnInit, OnDestroy {
   private switchings: IntersectionSwitching[];
 
   constructor(private store: Store<fromRoot.State>,
-              public dialog: MatDialog) {
+    public dialog: MatDialog) {
   }
 
   ngOnInit() {
@@ -46,7 +46,7 @@ export class IntersectionSwitchingComponent implements OnInit, OnDestroy {
 
   onChangeManualSwitching(intersection: Intersection, switchingName: string) {
     if (intersection.manualSwitching) {
-      this.store.dispatch(new IntersectionAction.SwitchAutomatically({
+      this.store.dispatch(IntersectionAction.switchAutomatically({
         intersection
       }));
     } else if (switchingName) {
@@ -56,7 +56,7 @@ export class IntersectionSwitchingComponent implements OnInit, OnDestroy {
   }
 
   switchTo(intersection: Intersection, switching: IntersectionSwitching) {
-    this.store.dispatch(new IntersectionAction.SwitchManually({
+    this.store.dispatch(IntersectionAction.switchManually({
       intersection: intersection, switching: switching
     }));
   }

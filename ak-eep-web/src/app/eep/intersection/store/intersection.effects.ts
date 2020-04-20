@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { Actions, Effect, ofType } from '@ngrx/effects';
+import { Actions, Effect, ofType, createEffect } from '@ngrx/effects';
 import { map, switchMap } from 'rxjs/operators';
-import * as fromIntersections from './intersection.actions';
+import * as IntersectionActions from './intersection.actions';
 import { of } from 'rxjs';
 import { IntersectionLane } from '../models/intersection-lane.model';
 import * as fromSignals from '../../signals/store/signal.actions';
@@ -34,7 +34,7 @@ export class IntersectionEffects {
             }
           }
           return of(
-            new fromIntersections.SetIntersectionTrafficLights(list),
+            IntersectionActions.setTrafficLights({ trafficLights: list }),
             new fromSignals.SetSignalTypes(signalModels),
           );
         }
@@ -49,7 +49,7 @@ export class IntersectionEffects {
           const list: Intersection[] = JSON.parse(wsEvent.payload);
 
           return of(
-            new fromIntersections.SetIntersections(list),
+            IntersectionActions.setIntersections({ intersections: list })
           );
         }
       )
@@ -63,7 +63,7 @@ export class IntersectionEffects {
           const list: IntersectionSwitching[] = JSON.parse(wsEvent.payload);
 
           return of(
-            new fromIntersections.SetIntersectionSwitching(list),
+            IntersectionActions.setSwitchings({ switchings: list }),
           );
         }
       )
@@ -77,48 +77,51 @@ export class IntersectionEffects {
           const list: IntersectionLane[] = JSON.parse(wsEvent.payload);
 
           return of(
-            new fromIntersections.SetIntersectionLanes(list),
+            IntersectionActions.setLanes({ lanes: list }),
           );
         }
       )
     );
 
-  @Effect({dispatch: false}) // effect will not dispatch any actions
+  @Effect({ dispatch: false }) // effect will not dispatch any actions
   switchManuallyCommand$ = this.actions$.pipe(
-    ofType(fromIntersections.SWITCH_MANUALLY),
-    map((action: fromIntersections.SwitchManually) => {
+    ofType(IntersectionActions.switchManually),
+    map((action) => {
       const command = 'AkKreuzungSchalteManuell|'
-        + action.payload.intersection.name + '|'
-        + action.payload.switching.name;
+        + action.intersection.name + '|'
+        + action.switching.name;
       this.intersectionService.emit(
         new WsEvent('[EEPCommand]', 'Send', command));
     })
   );
 
-  @Effect({dispatch: false}) // effect will not dispatch any actions
+  @Effect({ dispatch: false }) // effect will not dispatch any actions
   switchAutomaticallyCommand$ = this.actions$.pipe(
-    ofType(fromIntersections.SWITCH_AUTOMATICALLY),
-    map((action: fromIntersections.SwitchAutomatically) => {
+    ofType(IntersectionActions.switchAutomatically),
+    map((action) => {
       const command = 'AkKreuzungSchalteAutomatisch|'
-        + action.payload.intersection.name;
+        + action.intersection.name;
       this.intersectionService.emit(
         new WsEvent('[EEPCommand]', 'Send', command));
     })
   );
 
-  @Effect({dispatch: false}) // effect will not dispatch any actions
-  switchToCamCommand$ = this.actions$.pipe(
-    ofType(fromIntersections.SWITCH_TO_CAM),
-    map((action: fromIntersections.SwitchToCam) => {
-      const command = 'EEPSetCamera|0|' + action.payload.staticCam;
-      this.intersectionService.emit(
-        new WsEvent('[EEPCommand]', 'Send', command));
-    })
-  );
+  @Effect({ dispatch: false }) // effect will not dispatch any actions
+  switchToCamCommand$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(IntersectionActions.switchToCam),
+        map((action) => {
+          const command = 'EEPSetCamera|0|' + action.staticCam;
+          this.intersectionService.emit(
+            new WsEvent('[EEPCommand]', 'Send', command));
+        })
+        ),
+        { dispatch: false });
 
   constructor(private actions$: Actions,
-              private httpClient: HttpClient,
-              private router: Router,
-              private intersectionService: IntersectionService) {
+    private httpClient: HttpClient,
+    private router: Router,
+    private intersectionService: IntersectionService) {
   }
 }
