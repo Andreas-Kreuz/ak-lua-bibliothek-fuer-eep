@@ -20,6 +20,7 @@ paket0:fuegeDateienHinzu(aktuellerOrdner, "", "LUA\\ak", {
     "README.md",
     "ak-eep-in.commands",
     "ak-eep-out.json",
+    "ak-eep-out-json.isfinished",
     "ak-eep-out.socket",
     "ak-eep-version.txt",
     "ak-server.iswatching",
