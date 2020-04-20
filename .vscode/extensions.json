@@ -3,13 +3,15 @@
 	// Extension identifier format: ${publisher}.${name}. Example: vscode.csharp
 	// List of extensions which should be recommended for users of this workspace.
 	"recommendations": [
-		"sumneko.lua",
-		"eg2.tslint",
+		"ms-vscode.vscode-typescript-tslint-plugin",
+		"davidanson.vscode-markdownlint",
 		"github.vscode-pull-request-github",
-		"knisterpeter.vscode-github",
-		"angular.ng-template",
 		"sidneys1.gitconfig"
 	],
 	// List of extensions recommended by VS Code that should not be recommended for users of this workspace.
-	"unwantedRecommendations": []
+	"unwantedRecommendations": [
+		"sumneko.lua",
+		"angular.ng-template",
+		"knisterpeter.vscode-github"
+	]
 }
