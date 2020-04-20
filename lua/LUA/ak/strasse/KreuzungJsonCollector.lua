@@ -1,9 +1,11 @@
-print("Lade ak.strasse.KreuzungJsonCollector")
+print("Lade ak.strasse.KreuzungJsonCollector ...")
 KreuzungJsonCollector = {}
 local enabled = true
 local initialized = false
 KreuzungJsonCollector.name = "ak.data.KreuzungJsonCollector"
 local AkKreuzung = require("ak.strasse.AkKreuzung")
+local AkRichtung = require("ak.strasse.AkRichtung")
+local AkPhase = require("ak.strasse.AkPhase")
 
 local function collect(alleKreuzungen)
     local intersections = {}
@@ -14,7 +16,7 @@ local function collect(alleKreuzungen)
     local richtungsSchaltungen = {}
 
     local intersectionIdCounter = 0
-    for _, kreuzung in ipairs(alleKreuzungen) do
+    for _, kreuzung in pairs(alleKreuzungen) do
         intersectionIdCounter = intersectionIdCounter + 1
         local intersection = {
             id = intersectionIdCounter,
