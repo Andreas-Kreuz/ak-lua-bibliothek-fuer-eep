@@ -27,6 +27,8 @@ function KreuzungWebConnector.registerFunctions()
             AkKreuzung.setZeigeSignalIdsAllerSignale(param == "true")
         end
     )
+    ServerController.addAcceptedRemoteFunction("AkKreuzungSchalteAutomatisch", AkKreuzung.AkKreuzungSchalteAutomatisch)
+    ServerController.addAcceptedRemoteFunction("AkKreuzungSchalteManuell", AkKreuzung.AkKreuzungSchalteManuell)
 end
 
 return KreuzungWebConnector

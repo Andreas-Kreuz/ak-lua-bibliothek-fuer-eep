@@ -28,8 +28,6 @@ function AkCommandExecutor.addAcceptedRemoteFunction(fName, f)
     acceptedRemoteFunctions[fName] = f
 end
 
-AkCommandExecutor.addAcceptedRemoteFunction("AkKreuzungSchalteAutomatisch", AkKreuzungSchalteAutomatisch)
-AkCommandExecutor.addAcceptedRemoteFunction("AkKreuzungSchalteManuell", AkKreuzungSchalteManuell)
 AkCommandExecutor.addAcceptedRemoteFunction("EEPPause", EEPPause)
 AkCommandExecutor.addAcceptedRemoteFunction("clearlog", clearlog)
 AkCommandExecutor.addAcceptedRemoteFunction("print", print)
@@ -55,10 +53,9 @@ function AkCommandExecutor.callSavely(functionAndArgs)
     assert(f, "Funktionsname nicht hinterlegt: " .. fName)
 
     if f then
-        if pcall(f, table.unpack(args)) then
-            -- print("Aufruf von " .. fName)
-        else
-            print("Aufruf von " .. fName .. " fehlgeschlagen")
+        local status, error = pcall(f, table.unpack(args))
+        if not status then
+            print(error)
         end
     else
         print("Aufruf von " .. fName .. " nicht erlaubt")
