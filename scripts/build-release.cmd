@@ -12,6 +12,9 @@
 @REM
 @REM The "7z.exe" command must be callable from "C:\Program Files\7-Zip\7z.exe"
 @REM Requires 7-zip to be installed (https://www.7-zip.org/)
+@REM
+@REM The "java" commands must be in the PATH variable
+@REM Requires a Java Development Kit to be installed (https://jdk.java.net/)
 
 setlocal
 SET oldDir=%CD%
