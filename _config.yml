@@ -18,27 +18,7 @@ theme_settings:
   footer_text: >
     <p>Präsentiert von <a href="http://andreas-kreuz.github.io/">Andreas Kreuz</a> - Diskussion bitte in <a href="http://www.eepforum.de">Mein EEP Forum</a>.</p>
   # Icons
-  rss: false
-  email_address: # Full email address, e.g. "sam@example.com"
-  behance:
-  bitbucket:
-  dribbble:
-  facebook:
-  flickr:
-  gitlab:
   github: "Andreas-Kreuz"
-  google_plus:
-  instagram:
-  linkedin:  # Full URL
-  pinterest:
-  reddit:
-  soundcloud:
-  stack_exchange:  # Full URL
-  steam:
-  tumblr:
-  twitter:
-  wordpress:
-  youtube:
 
   # Scripts
   google_analytics: # Tracking ID, e.g. "UA-000000-01"
@@ -89,18 +69,29 @@ collections:
 # BUILD SETTINGS
 markdown: kramdown
 highlighter: rouge
+
+# Where things are
+source              : .
+destination         : docs/_site
+collections_dir     : docs/
+plugins_dir         : docs/_plugins
+layouts_dir         : docs/_layouts
+data_dir            : docs/_data
+includes_dir        : docs/_includes
 sass:
-  sass_dir: _sass
+  sass_dir: docs/_sass
   style: :compressed
+
+# Plugins
 plugins:
   - jekyll-paginate
   - jekyll-seo-tag
   - jemoji
-exclude: ["Gemfile", "Gemfile.lock", "*.gem", "*.lua", "LICENSE", "screenshot.png"]
+exclude: ["Gemfile", "Gemfile.lock", "node_modules", "vendor/bundle/", "vendor/cache/", "vendor/gems/", "vendor/ruby/", "web-app", "server", "*.lua", "LICENSE", "screenshot.png"]
 
 defaults:
-  - 
+  -
     scope:
-      path: "../LUA"
+      path: "../lua"
     values:
       layout: "default"

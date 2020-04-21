@@ -16,7 +16,11 @@ img: "/docs/assets/headers/SourceCode.png"
   </thead>
   <tbody>
     <tr>
-      <td><a href="eep/">📦&nbsp;ak/eep</a></td>
+      <td><a href="eep/">📦&nbsp;ak/core</a></td>
+      <td>Das Hauptmodul der App</td>
+    </tr>
+    <tr>
+      <td><a href="eep/">📦&nbsp;ak/core/eep</a></td>
       <td>Alle Funktionen von EEP für Deine Tests</td>
     </tr>
     <tr>

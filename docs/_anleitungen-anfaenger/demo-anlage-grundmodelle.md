@@ -24,10 +24,10 @@ Wenn die Ampeln zum Linksabbiegen geschaltet sind, haben die Fußgänger rot, da
 
 __Kreuzung 2__:
 
-+ Hier handelt es sich um eine Einmündung mit einzelnen Spuren.
+* Hier handelt es sich um eine Einmündung mit einzelnen Spuren.
 
 * Für keine der Richtungen werden die Fahrzeuge gezählt, so dass die Richtungen, die am längsten Rot waren, bei der Schaltung auf grün bevorzugt werden.
 
-# Herunterladen
+## Herunterladen
 
 _[Alle Dateien zum Herunterladen](https://github.com/Andreas-Kreuz/ak-lua-bibliothek-fuer-eep/releases)_
