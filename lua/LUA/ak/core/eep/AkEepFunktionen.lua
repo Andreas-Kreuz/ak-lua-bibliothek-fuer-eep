@@ -276,13 +276,13 @@ end
 
 --- Kupplung vorn setzen
 -- @param trainName Name des Zuges
--- @param kupplungOn true: kuppeln, false: abstoï¿½en
+-- @param kupplungOn true: kuppeln, false: abstoßen
 function EEPSetTrainCouplingFront(trainName, kupplungOn)
 end
 
 --- Kupplung hinten setzen
 -- @param trainName Name des Zuges
--- @param kupplungOn true: kuppeln, false: abstoï¿½en
+-- @param kupplungOn true: kuppeln, false: abstoßen
 function EEPSetTrainCouplingRear(trainName, kupplungOn)
 end
 
@@ -353,7 +353,8 @@ end
 --- Fragt ab, ob ein Gleis besetzt ist.
 -- @param trackId Id des Gleises
 -- @param returnTrainName wenn true, wird als dritter Wert der Zugname
--- @return Erster Wert: true, wenn Gleis existiert und registriert,
+-- @return
+-- Erster Wert: true, wenn Gleis existiert und registriert,
 -- zweiter Wert: true, wenn besetzt,
 -- dritter Wert: Name des Zuges auf dem Gleis
 function EEPIsRoadTrackReserved(trackId, returnTrainName)
@@ -537,7 +538,7 @@ end
 
 --- Argument ist der Name des Fahrzeugs.
 -- Rueckgabewert 1 ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
--- Rueckgabewert 2 ist die LÃ¤nge des Fahrzeugs von Kupplung zu Kupplung in Metern.
+-- Rueckgabewert 2 ist die Länge des Fahrzeugs von Kupplung zu Kupplung in Metern.
 function EEPRollingstockGetLength(rollingStockName)
     return true, 5
 end
@@ -551,22 +552,22 @@ end
 
 --- Argument ist der Name des Fahrzeugs.
 -- Rueckgabewert 1 ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
--- RÃ¼ckgabewert 2 ist die ID des GleisstÃ¼cks, auf dem sich das Fahrzeug befindet.
--- Rueckgabewert 3 ist der Abstand (in Metern) zum Anfang des GleisstÃ¼cks, auf dem sich das
+-- Rückgabewert 2 ist die ID des Gleisstücks, auf dem sich das Fahrzeug befindet.
+-- Rueckgabewert 3 ist der Abstand (in Metern) zum Anfang des Gleisstücks, auf dem sich das
 -- Fahrzeug befindet.
--- Rueckgabewert 4 ist die Ausrichtung relativ zur Fahrtrichtung des GleisstÃ¼cks, auf dem sich das
+-- Rueckgabewert 4 ist die Ausrichtung relativ zur Fahrtrichtung des Gleisstücks, auf dem sich das
 -- Fahrzeug befindet. 1 = in Fahrtrichtung, 0 = entgegen der Fahrtrichtung
 -- Rueckgabewert 5 ist die Nummer des Gleissystems, auf dem das Fahrzeug unterwegs ist.
 -- 1 = Bahngleise
--- 2 = StraÃŸen
+-- 2 = Straßen
 -- 3 = Tramgleise
 -- 4 = sonstige Splines/Wasserwege
 function EEPRollingstockGetTrack(rollingStockName)
     return true, 5, 5, 1, 1
 end
 
---- â€¢ Argument ist der Fahrzeugname.
--- Rueckgabewert 1 ist true, wenn die AusfÃ¼hrung erfolgreich war, sonst false.
+--- Argument ist der Fahrzeugname.
+-- Rueckgabewert 1 ist true, wenn die Ausführung erfolgreich war, sonst false.
 -- Rueckgabewert 2 ist die Kategorie, welche der Konstrukteur im Modell eingetragen hat:
 -- 1 = Tenderlok
 -- 2 = Schlepptenderlok
@@ -645,48 +646,48 @@ local tags = {
     rollingStock = {},
 }
 
---- Ã„ndert den Tag-Text einer Immobilie. Jede Immobilie kann jetzt einen individuellen String von
---- maximal 1024 Zeichen LÃ¤nge mitfÃ¼hren. Diese Strings werden mit der Anlage gespeichert und
+--- Ändert den Tag-Text einer Immobilie. Jede Immobilie kann jetzt einen individuellen String von
+--- maximal 1024 Zeichen Länge mitführen. Diese Strings werden mit der Anlage gespeichert und
 --- geladen.
---- Bemerkungen â€¢ Argument 1 ist der Lua-Name der Immobilie oder des LS-Elements.
---- Es genÃ¼gt die Nummer mit vorangestelltem #-Zeichen.
---- â€¢ Argument 2 ist der gewÃ¼nschte Text.
---- â€¢ RÃ¼ckgabewert ist true, wenn die AusfÃ¼hrung erfolgreich war, sonst false
+--- Bemerkungen * Argument 1 ist der Lua-Name der Immobilie oder des LS-Elements.
+--- Es genügt die Nummer mit vorangestelltem #-Zeichen.
+--- * Argument 2 ist der gewünschte Text.
+--- * Rückgabewert ist true, wenn die Ausführung erfolgreich war, sonst false
 function EEPStructureGetTagText(name, tag)
     tags.structures[name] = tag
     return true
 end
 
---- Liest den Tag-Text einer Immobilie aus. Mittels Tag-Texten kÃ¶nnen Immobilien als permanente
---- Speicher fÃ¼r relevante Informationen genutzt werden.
+--- Liest den Tag-Text einer Immobilie aus. Mittels Tag-Texten können Immobilien als permanente
+--- Speicher für relevante Informationen genutzt werden.
 --- Bemerkungen
---- â€¢ Argument 1 ist der Lua-Name der Immobilie oder des LS-Elements.
---- Es genÃ¼gt die Nummer mit vorangestelltem #-Zeichen.
---- â€¢ RÃ¼ckgabewert 1 ist true, wenn die AusfÃ¼hrung erfolgreich war, sonst false.
---- â€¢ RÃ¼ckgabewert 2 ist der Tag-Text, welcher der Immobilie mitgegeben wurde
+--- * Argument 1 ist der Lua-Name der Immobilie oder des LS-Elements.
+--- Es genügt die Nummer mit vorangestelltem #-Zeichen.
+--- * Rückgabewert 1 ist true, wenn die Ausführung erfolgreich war, sonst false.
+--- * Rückgabewert 2 ist der Tag-Text, welcher der Immobilie mitgegeben wurde
 function EEPStructureGetTagText(name)
     return true, tags.structures[name]
 end
 
---- Ã„ndert den Tag-Text eines Fahrzeugs. Jedes Fahrzeug kann jetzt einen eigenen String von
---- maximal 1024 Zeichen LÃ¤nge mitfÃ¼hren. Diese Strings werden mit der Anlage gespeichert und
+--- Ändert den Tag-Text eines Fahrzeugs. Jedes Fahrzeug kann jetzt einen eigenen String von
+--- maximal 1024 Zeichen Länge mitführen. Diese Strings werden mit der Anlage gespeichert und
 --- geladen. Da die Texte individuell jedem Fahrzeug zugeordnet sind, gehen sie im Gegensatz zu
---- Routen nicht durch RangiermanÃ¶ver etc. verloren.
+--- Routen nicht durch Rangiermanöver etc. verloren.
 --- Bemerkungen
---- â€¢ Argument 1 ist der Name des Fahrzeugs.
---- â€¢ Argument 2 ist der gewÃ¼nschte Text.
---- â€¢ RÃ¼ckgabewert ist true, wenn die AusfÃ¼hrung erfolgreich war, sonst false.
+--- * Argument 1 ist der Name des Fahrzeugs.
+--- * Argument 2 ist der gewünschte Text.
+--- * Rückgabewert ist true, wenn die Ausführung erfolgreich war, sonst false.
 function EEPRollingstockSetTagText(name, tag)
     tags.rollingStock[name] = tag
     return true
 end
 
---- Liest den Tag-Text eines Fahrzeugs aus. Mittels Tag-Texten kÃ¶nnen Fahrzeuge jetzt kategorisiert
+--- Liest den Tag-Text eines Fahrzeugs aus. Mittels Tag-Texten können Fahrzeuge jetzt kategorisiert
 --- werden. Beispielsweise kann man dort Waggontypen speichern oder Bestimmungsorte.
 --- Bemerkungen
---- â€¢ Argument 1 ist der Name des Fahrzeugs.
---- â€¢ RÃ¼ckgabewert 1 ist true, wenn die AusfÃ¼hrung erfolgreich war, sonst false.
---- â€¢ RÃ¼ckgabewert 2 ist der Tag-Text, welcher dem Waggon mitgegeben wurde.
+--- * Argument 1 ist der Name des Fahrzeugs.
+--- * Rückgabewert 1 ist true, wenn die Ausführung erfolgreich war, sonst false.
+--- * Rückgabewert 2 ist der Tag-Text, welcher dem Waggon mitgegeben wurde.
 function EEPRollingstockGetTagText(name)
     return true, tags.rollingStock[name]
 end

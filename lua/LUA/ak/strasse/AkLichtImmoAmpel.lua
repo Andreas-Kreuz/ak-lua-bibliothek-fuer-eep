@@ -5,9 +5,9 @@ function AkLichtImmoAmpel.neuAusTabelle(tabelle)
     return AkLichtImmoAmpel:neu(tabelle.rotImmo, tabelle.gruenImmo, tabelle.gelbImmo, tabelle.anforderungImmo)
 end
 
---- Schaltet das Licht der angegebenen Immobilien beim Schalten der Ampel auf rot, gelb, grÃ¼n oder Anforderung
+--- Schaltet das Licht der angegebenen Immobilien beim Schalten der Ampel auf rot, gelb, grün oder Anforderung
 -- @param rotImmo Immo deren Licht eingeschaltet wird, wenn die Ampel rot oder rot-gelb ist
--- @param gruenImmo Immo deren Licht eingeschaltet wird, wenn die Ampel grÃ¼n ist
+-- @param gruenImmo Immo deren Licht eingeschaltet wird, wenn die Ampel grün ist
 -- @param gelbImmo Immo deren Licht eingeschaltet wird, wenn die Ampel gelb oder rot-gelb ist
 -- @param anforderungImmo Immo deren Licht eingeschaltet wird, wenn die Ampel eine Anforderung erkennt
 --

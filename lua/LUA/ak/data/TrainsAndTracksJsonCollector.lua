@@ -192,7 +192,7 @@ local function updateTracksBy(besetztFunktion, trackType)
             if rollingStockName then
                 local _, couplingFront = EEPRollingstockGetCouplingFront(rollingStockName) -- EEP 11.0
                 local _, couplingRear = EEPRollingstockGetCouplingRear(rollingStockName) -- EEP 11.0
-                -- 1 Kupplung scharf, 2 Absto√üen, 3 Gekuppelt
+                -- 1 Kupplung scharf, 2 Abstoﬂen, 3 Gekuppelt
                 local hasPos, PosX, PosY, PosZ = EEPRollingstockGetPosition(rollingStockName) -- EEP 16.1
 
                 local hasLength, length = EEPRollingstockGetLength(rollingStockName) -- EEP 15
@@ -214,8 +214,8 @@ local function updateTracksBy(besetztFunktion, trackType)
                 --     ["5"] = "Diesellok",
                 --     ["6"] = "Triebwagen",
                 --     ["7"] = "U- oder S-Bahn",
-                --     ["8"] = "Stra√üenbahn",
-                --     ["9"] = "G√ºterwaggon",
+                --     ["8"] = "Straﬂenbahn",
+                --     ["9"] = "G¸terwaggon",
                 --     ["10"] = "Personenwaggon",
                 --     ["11"] = "Luftfahrzeug",
                 --     ["12"] = "Maschine",

@@ -4,7 +4,7 @@ print([[EEP\LUA\ak\demo-anlagen\testen\Andreas_Kreuz-Lua-Testbeispiel-test.lua]]
 print("")
 print("Mit der test-Datei kann man diese Datei hier ohne EEP testen!")
 
--- Lade den aktuellen Z√§hler
+-- Lade den aktuellen Z‰hler
 zaehler = 0
 geladen, loadedZaehler = EEPLoadData(1)
 if geladen then
@@ -12,14 +12,14 @@ if geladen then
 	print(zaehler .. " (geladen)")
 end
 
--- Ein Fahrzeug verl√§sst den Bereich vor dem Signal
+-- Ein Fahrzeug verl‰sst den Bereich vor dem Signal
 function zaehleHoch()
 	zaehler = zaehler + 1
 	EEPSaveData(1, zaehler)
 	print(zaehler .. " erwarte: " .. ((zaehler < 2) and "rot" or "gruen"))
 end
 
--- Ein Fahrzeug verl√§sst den Bereich vor dem Signal
+-- Ein Fahrzeug verl‰sst den Bereich vor dem Signal
 function zaehleRunter()
 	zaehler = zaehler - 1
 	EEPSaveData(1, zaehler)

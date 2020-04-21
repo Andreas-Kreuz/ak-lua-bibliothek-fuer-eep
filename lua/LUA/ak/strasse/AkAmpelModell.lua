@@ -70,9 +70,9 @@ end
 ---------------------
 
 -- Fuer die Strassenbahnsignale von MA1 - http://www.eep.euma.de/downloads/V80MA1F003.zip
--- 4er Signal, Stellung 2 als grÃ¼n, z.B. Strab_Sig_09_LG auf gerade schalten
--- 4er Signal, Stellung 3 als grÃ¼n, z.B. Strab_Sig_09_LG auf links schalten
--- 3er Signal, Stellung 3 als grÃ¼n, z.B. Ak_Strab_Sig_05_gerade oder
+-- 4er Signal, Stellung 2 als grün, z.B. Strab_Sig_09_LG auf gerade schalten
+-- 4er Signal, Stellung 3 als grün, z.B. Strab_Sig_09_LG auf links schalten
+-- 3er Signal, Stellung 3 als grün, z.B. Ak_Strab_Sig_05_gerade oder
 --                                       Ak_Strab_Sig_05_gerade schalten
 AkAmpelModell.MA1_STRAB_4er_2_gruen = AkAmpelModell:neu("MA1_STRAB_4er_2_gruen", 1, 2, 4, 4)
 AkAmpelModell.MA1_STRAB_4er_3_gruen = AkAmpelModell:neu("MA1_STRAB_4er_3_gruen", 1, 3, 4, 4)

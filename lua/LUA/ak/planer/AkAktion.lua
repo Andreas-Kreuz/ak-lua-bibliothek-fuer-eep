@@ -7,7 +7,7 @@ print("Lade ak.planer.AkAktion ...")
 local AkAktion = {}
 
 ---
--- @param f AuszufÃ¼hrende Funktion (die zu startende Aktion)
+-- @param f Auszuführende Funktion (die zu startende Aktion)
 -- @param name Name der Aktion
 --
 function AkAktion:neu(f, name)

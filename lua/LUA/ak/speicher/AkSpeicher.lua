@@ -67,7 +67,7 @@ function AkSpeicherHilfe.ladeTabelle(eepSaveId, name)
     return t
 end
 
---- Hilfsroutine fÃ¼r die sortierte Ausgabe einer Tabelle
+--- Hilfsroutine für die sortierte Ausgabe einer Tabelle
 -- @param t eine Tabelle
 -- @param f optionale Sortierfunktion
 --
@@ -138,7 +138,7 @@ function AkSpeicherHilfe.aktualisiereDebugDatei()
     datei:close()
 end
 
---- LÃ¤dt
+--- Lädt
 for i = 1, 1000 do
     local hResult, data = EEPLoadData(i)
     if hResult then

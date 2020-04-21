@@ -368,7 +368,7 @@ function AkKreuzung.planeSchaltungenEin()
             local richtungenAktuellGruen = {}
             local richtungenAktuellFussgaengerGruen = {}
 
-            -- aktuelle Richtungen fÃ¼r alle Schaltungen auf rot schalten:
+            -- aktuelle Richtungen für alle Schaltungen auf rot schalten:
             if aktuelleSchaltung then
                 for richtung in pairs(aktuelleSchaltung:getNormaleRichtungen()) do
                     richtungenAktuellGruen[richtung] = true
@@ -379,7 +379,7 @@ function AkKreuzung.planeSchaltungenEin()
                     richtungenAufFussgaengerRot[richtung] = true
                 end
             else
-                -- Wenn es keine aktuellen Richtung gibt, mÃ¼ssen alle auf rot gesetzt werden:
+                -- Wenn es keine aktuellen Richtung gibt, müssen alle auf rot gesetzt werden:
                 if AkKreuzung.debug then
                     print("[AkKreuzung ] Setze alle Richtungen fuer " .. kreuzung.name .. " auf rot")
                 end

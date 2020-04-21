@@ -45,7 +45,7 @@ end
 --   |              +------------------------------- Name der Richtung
 --   |              |     +------------------------- Speicher ID - um die Anzahl der Fahrzeuge
 --   |              |     |                                        und die Wartezeit zu speichern
---   |              |     |      +------------------ neue Ampel fÃ¼r diese Richtung
+--   |              |     |      +------------------ neue Ampel für diese Richtung
 --   |              |     |      |           +------ Signal-ID dieser Ampel
 --   |              |     |      |           |   +-- Modell kann rot, gelb, gruen und FG schalten
 n = AkRichtung:neu("N", 100, {
@@ -105,7 +105,7 @@ ws:zaehleAnStrasseAlle(2) -- Erfasst Anforderungen, wenn ein Fahrzeug auf Strass
 -- Definiere die Schaltungen und die Kreuzung
 --------------------------------------------------------------
 -- Eine Schaltung bestimmt, welche Richtungen gleichzeitig auf
--- grÃ¼n geschaltet werden dÃ¼rfen, alle anderen sind rot
+-- grün geschaltet werden dürfen, alle anderen sind rot
 
 --- Tutorial 2: Schaltung 1
 local sch1 = AkKreuzungsSchaltung:neu("Schaltung 1")

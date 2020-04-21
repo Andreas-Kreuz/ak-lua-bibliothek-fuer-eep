@@ -4,9 +4,9 @@ local AkTippTextFormat = {
     -- <br> neue Zeile
     -- <b> & </b> Fettschrift an/aus
     -- <i> & </i> Kursivschrift an/aus
-    -- <j> Blocksatz aus (= linksbÃ¼ndig)
+    -- <j> Blocksatz aus (= linksbündig)
     -- <c> zentriert
-    -- <r> rechtsbÃ¼ndig
+    -- <r> rechtsbündig
     -- <fgrgb=0,0,0> Schriftfarbe in 8 Bit RGB Werten
     -- <bgrgb=0,0,0> Hintergrundfarbe in 8 Bit RGB Werten (diese Hintergrundfarbe betrifft nur die Schrift)
     fett = function(text)

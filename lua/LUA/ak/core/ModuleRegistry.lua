@@ -80,7 +80,7 @@ function ModuleRegistry.runTasks()
     end
 
     if enableServer then
-        -- Sorgt dafÃ¼r, dass alle JsonDaten der registrieren XxxJsonColletor zum Server kommen
+        -- Sorgt dafür, dass alle JsonDaten der registrieren XxxJsonColletor zum Server kommen
         -- und dass die Befehle des Servers ausgewertet werden
         ServerController.communicateWithServer(1)
     end

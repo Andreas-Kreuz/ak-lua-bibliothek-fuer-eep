@@ -83,7 +83,7 @@ function AkKreuzungsSchaltung:getRichtungFuerFussgaenger()
     return self.richtungenFuerFussgaenger
 end
 
---- Gibt alle Richtungen nach Prioritaet zurueck, sowie deren Anzahl und deren Durchschnittspriorit√§t
+--- Gibt alle Richtungen nach Prioritaet zurueck, sowie deren Anzahl und deren Durchschnittspriorit‰t
 -- @return sortierteRichtungen, anzahlDerRichtungen, durchschnittsPrio
 function AkKreuzungsSchaltung:nachPrioSortierteRichtungen()
     local sortierteRichtungen = {}

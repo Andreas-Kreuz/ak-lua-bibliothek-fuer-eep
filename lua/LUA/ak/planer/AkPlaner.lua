@@ -67,7 +67,7 @@ function AkPlaner:fuehreGeplanteAktionenAus()
 end
 
 --- the newAction will be called after offsetSeconds milliseconds of the current action
--- @param zeitspanneInSekunden Zeitspanne nach der die einzuplanende Aktion ausgefÃ¼hrt werden soll kann nicht groesser
+-- @param zeitspanneInSekunden Zeitspanne nach der die einzuplanende Aktion ausgeführt werden soll kann nicht groesser
 -- sein als AkSekundenProTag
 -- @param einzuplanendeAktion the new action to be performed
 -- @param vorgaengerAktion optional - wenn angegeben, wird die neue Aktion eingeplant, wenn die zeitspanneInSekunden

@@ -2,7 +2,7 @@ print("Lade ak.strasse.AkStrasse ...")
 print(
     [[
 ############################################################################################
-# require("ak.planer.AkStrasse") wird nicht mehr unterstÃ¼tzt!!!
+# require("ak.planer.AkStrasse") wird nicht mehr unterstützt!!!
 # Bitte stattdessen unbedingt die notwendigen Dinge einzeln mittels zuweisen:
 # local <Module> = require("<Modulname>")
 ############################################################################################
