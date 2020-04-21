@@ -54,7 +54,8 @@
     "git-assistant.checkForRemote": "disabled",
     "editor.wordWrapColumn": 120,
     "[lua]": {
-        "files.encoding": "iso88591",
+        "files.encoding": "windows1252",
         "files.autoGuessEncoding": true
-    }
+    },
+    "editor.fontFamily": "'Source Code Pro', Consolas, 'Courier New', monospace"
 }
