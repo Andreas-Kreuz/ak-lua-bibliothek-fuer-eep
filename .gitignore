@@ -1,9 +1,13 @@
+# compiled output
+/web-app/dist
+/web-app/tmp
+/web-app/out-tsc
+
+# dependencies
+/web-app/node_modules
+
 # Andreas Kreuz's projects
-/ak-lua-bibliothek-fuer-eep-grafiken
-/ak-privat
-/andreas-kreuz.github.io
-/eep-lua-out-dir.txt
-/eep-web.github.io
+/server/target
 
 # Project based settings
 /lua/LUA/**/AkSpeicherWerte.txt
@@ -19,11 +23,19 @@
 # EEP Files to ignore
 *.dds
 
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
 # General files
 scratch.*
 
-# Mac files
+# System files
 .DS_Store
+Thumbs.db
 
 # Jekyll documentation files
 _site

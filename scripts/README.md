@@ -1,6 +1,6 @@
 <p align="center">
   <a href="http://andreas-kreuz.github.io/ak-lua-bibliothek-fuer-eep">
-    <img src="/docs/assets/img/eep-web-logo-shadow-72.png" alt="" width=72 height=72>
+    <img src="docs/assets/img/eep-web-logo-shadow-72.png" alt="" width=72 height=72>
   </a>
   <h3 align="center">Projektdateien für EEP-Web</h3>
   <p align="center">
@@ -12,7 +12,7 @@
 # Beschreibung
 
 Im Repository sind alle notwendigen Dateien für die Entwicklung der folgenden **Projekte** enthalten:
-_ak-eep-web_, _ak-eep-web-server_, _ak-lua-bibliothek-fuer-eep_.
+_web-app_, _server_, _lua_.
 
 Folgende **Bibliotheken** sind notwendig:
 
@@ -53,7 +53,7 @@ Für die Entwicklung der Web App müssen noch die Angular Pakete installiert wer
 Installiere die notwendigen Pakete für Angular mit der Kommandozeile. Verwende dazu folgende Befehle:
 
    ```bash
-   cd ak-eep-web
+   cd web-app
    ```
 
    ```bash

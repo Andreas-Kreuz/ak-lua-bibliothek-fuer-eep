@@ -14,7 +14,7 @@ SET oldDir=%CD%
 SET projectPath=%~dp0..
 
 @REM Build EEP Web Server with included EEP Web App
-cd "%projectPath%\ak-eep-web-server"
+cd "%projectPath%\server"
 IF %ERRORLEVEL% NEQ 0 (
     exit %ERRORLEVEL%
 )
@@ -26,7 +26,7 @@ IF %ERRORLEVEL% NEQ 0 (
 
 
 @REM Build EEP Web App
-cd "%projectPath%\ak-eep-web"
+cd "%projectPath%\web-app"
 IF %ERRORLEVEL% NEQ 0 (
    exit %ERRORLEVEL%
 )
@@ -38,12 +38,12 @@ IF %ERRORLEVEL% NEQ 0 (
 
 
 @REM Build EEP Web Server with included EEP Web App
-cd "%projectPath%\ak-eep-web-server"
+cd "%projectPath%\server"
 IF %ERRORLEVEL% NEQ 0 (
    exit %ERRORLEVEL%
 )
 
-xcopy /E /I /S ..\ak-eep-web\dist\ak-eep-web target\classes\public\ak-eep-web
+xcopy /E /I /S ..\web-app\dist\ak-eep-web target\classes\public\ak-eep-web
 IF %ERRORLEVEL% NEQ 0 (
    exit %ERRORLEVEL%
 )

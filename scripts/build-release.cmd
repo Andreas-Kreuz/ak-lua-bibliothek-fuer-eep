@@ -26,7 +26,7 @@ IF %ERRORLEVEL% NEQ 0 (
     exit %ERRORLEVEL%
 )
 
-xcopy %projectPath%\ak-eep-web-server\target\ak-eep-web.jar %projectPath%\lua\LUA\ak
+xcopy /Y %projectPath%\server\target\ak-eep-web.jar %projectPath%\lua\LUA\ak
 IF %ERRORLEVEL% NEQ 0 (
     exit %ERRORLEVEL%
 )

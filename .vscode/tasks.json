@@ -6,7 +6,7 @@
         {
             "type": "npm",
             "script": "start",
-            "path": "ak-eep-web/",
+            "path": "web-app/",
             "problemMatcher": [
                 "$eslint-compact"
             ]
@@ -14,7 +14,7 @@
         {
             "type": "npm",
             "script": "build",
-            "path": "ak-eep-web/",
+            "path": "web-app/",
             "problemMatcher": [
                 "$eslint-compact"
             ]
