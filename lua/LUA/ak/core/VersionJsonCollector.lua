@@ -1,10 +1,10 @@
-print "Lade ak.data.VersionJsonCollector ..."
+print "Lade ak.core.VersionJsonCollector ..."
 VersionJsonCollector = {}
 local ServerController = require("ak.io.ServerController")
 local enabled = true
 local data = {}
 local initialized = false
-VersionJsonCollector.name = "ak.data.VersionJsonCollector"
+VersionJsonCollector.name = "ak.core.VersionJsonCollector"
 
 function VersionJsonCollector.initialize()
     if not enabled or initialized then

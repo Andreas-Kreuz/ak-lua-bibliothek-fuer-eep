@@ -1,6 +1,7 @@
 print "Lade ak.data.KreuzungLuaModul ..."
 KreuzungLuaModul = {}
-local enabled = true
+KreuzungLuaModul.id = "c5a3e6d3-0f9b-4c89-a908-ed8cf8809362"
+KreuzungLuaModul.enabled = true
 local initialized = false
 -- Jedes Modul hat einen eindeutigen Namen
 KreuzungLuaModul.name = "ak.data.KreuzungLuaModul"
@@ -10,7 +11,7 @@ local AkKreuzung = require("ak.strasse.AkKreuzung")
 -- Ist ein Modul für EEPWeb vorhanden, dann solltes in dieser Funktion aufgerufen werden
 -- @author Andreas Kreuz
 function KreuzungLuaModul.init()
-    if not enabled or initialized then
+    if not KreuzungLuaModul.enabled or initialized then
         return
     end
 
@@ -25,7 +26,7 @@ end
 --- Diese Funktion wird regelmäßig durch ModuleRegistry.runTasks() aufgerufen
 -- @author Andreas Kreuz
 function KreuzungLuaModul.run()
-    if not enabled then
+    if not KreuzungLuaModul.enabled then
         return
     end
 

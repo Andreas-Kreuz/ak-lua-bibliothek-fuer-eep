@@ -1,9 +1,10 @@
-print("Lade ak.eep.ModuleRegistry ...")
+print("Lade ak.core.ModuleRegistry ...")
 local ModuleRegistry = {}
 
 local ServerController = require("ak.io.ServerController")
 local enableServer = true
 local initialized = false
+-- @type name
 local registeredLuaModules = {}
 
 ---
@@ -15,8 +16,15 @@ function ModuleRegistry.registerModules(...)
     for _, module in ipairs({...}) do
         -- Check the module
         assert(module.name and type(module.name) == "string", "A module must have a string name")
-        assert(module.init and type(module.init) == "function", "A module must have a function init()")
-        assert(module.run and type(module.run) == "function", "A module must have a function run()")
+        assert(type(module.enabled) == "boolean", string.format("Module %s must have a boolean enabled", module.name))
+        assert(
+            module.init and type(module.init) == "function",
+            string.format("Module %s must have a function init()", module.name)
+        )
+        assert(
+            module.run and type(module.run) == "function",
+            string.format("Module %s must have a function run()", module.name)
+        )
 
         -- Remember the module by it's name
         registeredLuaModules[module.name] = module
@@ -92,6 +100,13 @@ end
 
 function ModuleRegistry.deactivateServer()
     enableServer = false
+end
+
+-- Register the core module to hold basic data
+do
+    local CoreLuaModule = require("ak.core.CoreLuaModule")
+    CoreLuaModule.setRegisteredLuaModules(registeredLuaModules)
+    ModuleRegistry.registerModules(CoreLuaModule)
 end
 
 return ModuleRegistry

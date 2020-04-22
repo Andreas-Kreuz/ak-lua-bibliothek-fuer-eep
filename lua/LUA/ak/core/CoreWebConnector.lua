@@ -1,15 +1,16 @@
-print("Lade ak.eep.CoreWebConnector ...")
-local ServerController = require("ak.io.ServerController")
+print("Lade ak.core.CoreWebConnector ...")
 local CoreWebConnector = {}
+local ServerController = require("ak.io.ServerController")
+local knownModules = nil
+function CoreWebConnector.setRegisteredLuaModules(registeredLuaModules)
+    knownModules = registeredLuaModules
+end
 
 function CoreWebConnector.registerJsonCollectors()
-    ServerController.addJsonCollector(require("ak.data.DataSlotsJsonCollector"))
-    ServerController.addJsonCollector(require("ak.data.SignalJsonCollector"))
-    ServerController.addJsonCollector(require("ak.data.SwitchJsonCollector"))
-    ServerController.addJsonCollector(require("ak.data.StructureJsonCollector"))
-    ServerController.addJsonCollector(require("ak.data.TimeJsonCollector"))
-    ServerController.addJsonCollector(require("ak.data.TrainsAndTracksJsonCollector"))
-    ServerController.addJsonCollector(require("ak.data.VersionJsonCollector"))
+    local ModulesJsonCollector = require("ak.core.ModulesJsonCollector")
+    ModulesJsonCollector.setRegisteredLuaModules(knownModules)
+    ServerController.addJsonCollector(ModulesJsonCollector)
+    ServerController.addJsonCollector(require("ak.core.VersionJsonCollector"))
 end
 
 return CoreWebConnector

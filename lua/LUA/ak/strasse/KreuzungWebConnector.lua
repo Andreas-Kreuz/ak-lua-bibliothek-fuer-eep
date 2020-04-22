@@ -1,4 +1,4 @@
-print("Lade ak.eep.KreuzungWebConnector ...")
+print("Lade ak.strasse.KreuzungWebConnector ...")
 local ServerController = require("ak.io.ServerController")
 local AkKreuzung = require("ak.strasse.AkKreuzung")
 local KreuzungWebConnector = {}

@@ -1,6 +1,7 @@
 print "Lade ak.data.PlanerLuaModul ..."
 PlanerLuaModul = {}
-local enabled = true
+PlanerLuaModul.id = "725585f1-cfee-4237-97e1-135c5e9f4d02"
+PlanerLuaModul.enabled = true
 local initialized = false
 -- Jedes Modul hat einen eindeutigen Namen
 PlanerLuaModul.name = "ak.data.PlanerLuaModul"
@@ -10,7 +11,7 @@ local AkPlaner = require("ak.planer.AkPlaner")
 -- Ist ein Modul für EEPWeb vorhanden, dann solltes in dieser Funktion aufgerufen werden
 -- @author Andreas Kreuz
 function PlanerLuaModul.init()
-    if not enabled or initialized then
+    if not PlanerLuaModul.enabled or initialized then
         return
     end
 
@@ -25,7 +26,8 @@ end
 --- Diese Funktion wird regelmäßig durch ModuleRegistry.runTasks() aufgerufen
 -- @author Andreas Kreuz
 function PlanerLuaModul.run()
-    if not enabled then
+    if not PlanerLuaModul.enabled then
+        print("WARNING: PlannerLuaModul is not enabled")
         return
     end
 

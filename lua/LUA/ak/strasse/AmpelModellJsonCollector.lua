@@ -1,4 +1,4 @@
-print("Lade ak.strasse.AmpelModellJsonCollector")
+print("Lade ak.strasse.AmpelModellJsonCollector ...")
 AmpelModellJsonCollector = {}
 local enabled = true
 local initialized = false
