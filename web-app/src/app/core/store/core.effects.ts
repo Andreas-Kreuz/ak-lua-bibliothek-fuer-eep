@@ -7,6 +7,7 @@ import { VersionInfo } from '../model/version-info.model';
 import * as fromCore from './core.actions';
 import { filter, switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { ModuleInfo } from '../model/module-info.model';
 
 @Injectable()
 export class CoreEffects {
@@ -26,9 +27,20 @@ export class CoreEffects {
       )
     );
 
+
+  @Effect()
+  listenForModules$ = this.wsService
+    .listen('[Data-modules]')
+    .pipe(
+      filter(wsEvent => wsEvent.action === 'Set'),
+      switchMap((wsEvent: WsEvent) => {
+        const modules: ModuleInfo[] = JSON.parse(wsEvent.payload);
+
+        return of(fromCore.setModules({ modules: modules }));
+      }
+      )
+    );
+
   constructor(private wsService: WsService) {
   }
 }
-
-
-

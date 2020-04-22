@@ -1,6 +1,6 @@
 export class ModuleInfo {
-  constructor(public name: String,
-              public id: String,
+  constructor(public name: string,
+              public id: string,
               public enabled: boolean) {
   }
 }

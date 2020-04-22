@@ -2,11 +2,13 @@ import { Action, createAction, props } from '@ngrx/store';
 
 import { Alert } from '../error/alert.model';
 import { EepWebUrl } from '../server-status/eep-web-url.model';
+import { ModuleInfo } from '../model/module-info.model';
 
 export const showError = createAction('[Core] SHOW_ERROR', props<{ alert: Alert }>());
 export const hideError = createAction('[Core] HIDE_ERROR', props<{ alert: Alert }>());
 export const showUrlError = createAction('[Core] Show URL error', props<{ url: EepWebUrl }>());
 export const showUrlSuccess = createAction('[Core] Show URL success', props<{ url: EepWebUrl }>());
+export const setModules = createAction('[Core] Set Modules', props<{ modules: ModuleInfo[] }>());
 export const setEepVersion = createAction('[Core] Set EEP version', props<{ version: string }>());
 export const setEepLuaVersion = createAction('[Core] Set EEP Lua version', props<{ version: string }>());
 export const setEepWebVersion = createAction('[Core] Set EEP Web version', props<{ version: string }>());

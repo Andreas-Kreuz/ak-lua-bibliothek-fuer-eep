@@ -5,6 +5,7 @@ import { Alert } from '../error/alert.model';
 import { environment } from '../../../environments/environment';
 import { EepWebUrl } from '../server-status/eep-web-url.model';
 import { Status } from '../server-status/status.enum';
+import { ModuleInfo } from '../model/module-info.model';
 
 
 export interface State {
@@ -17,6 +18,7 @@ export interface State {
   eepLuaVersion: string;
   eepWebVersion: string;
   urlStatus: EepWebUrl[];
+  modules: ModuleInfo[];
 }
 
 const initialState: State = {
@@ -31,6 +33,7 @@ const initialState: State = {
   eepLuaVersion: '?',
   eepWebVersion: environment.VERSION,
   urlStatus: [],
+  modules: []
 };
 
 const coreReducer = createReducer(
@@ -91,7 +94,8 @@ const coreReducer = createReducer(
   on(CoreAction.setConnected, state => ({ ...state, connectionEstablished: true })),
   on(CoreAction.setEepVersion, (state: State, { version: version }) => ({ ...state, eepVersion: version })),
   on(CoreAction.setEepLuaVersion, (state: State, { version: version }) => ({ ...state, eepLuaVersion: version })),
-  on(CoreAction.setEepWebVersion, (state: State, { version: version }) => ({ ...state, eepWebVersion: version }))
+  on(CoreAction.setEepWebVersion, (state: State, { version: version }) => ({ ...state, eepWebVersion: version })),
+  on(CoreAction.setModules, (state: State, { modules: modules }) => ({ ...state, modules: modules }))
 );
 
 export function reducer(state: State | undefined, action: Action) {
@@ -143,4 +147,14 @@ export const selectEepLuaVersion = createSelector(
 export const getApiPaths$ = createSelector(
   appState,
   (state: State) => state.urlStatus
+);
+
+export const getModuleInfos$ = createSelector(
+  appState,
+  (state: State) => state.modules
+);
+
+export const isModuleLoaded$ = (moduleId: string) => createSelector(
+  getModuleInfos$,
+  moduleInfos => moduleInfos.some((i: ModuleInfo) => moduleId === i.id)
 );

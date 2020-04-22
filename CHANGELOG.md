@@ -4,6 +4,9 @@
 
 - ⭐ Neu: Ein Projekt, alle Inhalte (Lua, Server und Web App in einem Projekt)
 - ⭐ Neu: Daten für den Server werden nur noch dann geschrieben, wenn der Server gestartet ist
+- ⭐ Neu: Module:
+  - Werden nur dann geladen, wenn sie registriert wurden
+  - Werden nur dann in EEP-Web angezeigt, wenn sie geladen wurden
 - ⭐ Neu: Einmaliges Suchen nach globalen Daten macht das Ganze schneller
 - ⭐ Neu: Warnung, wenn die Datenausgabe länger dauert, als der refresh, der in EEPMain aufgerufen wird
 

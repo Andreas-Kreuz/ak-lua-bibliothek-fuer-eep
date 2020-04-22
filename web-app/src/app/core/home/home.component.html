@@ -20,12 +20,12 @@
 
 <ng-container *ngIf="(connectionEstablished$ | async)">
   <ng-container *ngFor="let category of navigation; let last_outer = last; let first_outer=first">
-    <ng-container *ngIf="category.name !== 'Home'">
+    <ng-container *ngIf="category.name !== 'Home' && category.available |async">
       <h1 class="mt-4 mb-4 app-mute-on-light-bg">{{ category.name }}</h1>
 
       <div class="row">
         <ng-container *ngFor="let element of category.values; let last = last">
-          <div class="col-sm-12 col-md-6 col-xl-3 d-flex">
+          <div  *ngIf="element.available | async" class="col-sm-12 col-md-6 col-xl-3 d-flex">
             <mat-card class="d-flex flex-column flex-grow-1 mb-5 app-card">
               <mat-card-title-group class="app-bg-primary app-fg-on-primary">
                 <mat-card-title>{{ element.title }}</mat-card-title>
