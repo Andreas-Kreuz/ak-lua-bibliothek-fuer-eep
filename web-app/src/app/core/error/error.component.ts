@@ -26,6 +26,6 @@ export class ErrorComponent implements OnInit, OnDestroy {
   }
 
   close(alert: Alert) {
-    this.store.dispatch(new ErrorActions.HideError((alert)));
+    this.store.dispatch(ErrorActions.hideError({alert}));
   }
 }

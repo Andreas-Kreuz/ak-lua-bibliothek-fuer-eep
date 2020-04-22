@@ -16,51 +16,16 @@ export class CoreEffects {
     .pipe(
       filter(wsEvent => wsEvent.action === 'Set'),
       switchMap((wsEvent: WsEvent) => {
-          const versions: Versions = JSON.parse(wsEvent.payload);
-          const versionInfo: VersionInfo = versions.versionInfo;
+        const versions: Versions = JSON.parse(wsEvent.payload);
+        const versionInfo: VersionInfo = versions.versionInfo;
 
-          return of(
-            new fromCore.SetEepVersion(versionInfo.eepVersion),
-            new fromCore.SetEepLuaVersion(versionInfo.luaVersion));
-        }
+        return of(
+          fromCore.setEepVersion({ version: versionInfo.eepVersion }),
+          fromCore.setEepLuaVersion({ version: versionInfo.luaVersion }));
+      }
       )
     );
 
-
-  // @Effect()
-  // fetchVersions = this.actions$
-  //   .pipe(
-  //     ofType(fromCore.FETCH_VERSIONS),
-  //     switchMap((action: fromCore.FetchVersion) => {
-  //       const url =
-  //         location.protocol
-  //         + '//' + location.hostname
-  //         + ':' + environment.jsonPort
-  //         + VERSION_PATH;
-  //       console.log(url);
-  //       return this.httpClient.get<Versions>(url)
-  //         .pipe(
-  //           map((versions: Versions) => {
-  //             return versions.versionInfo;
-  //           }),
-  //           catchError((error) => {
-  //             return throwError(error);
-  //           }));
-  //     }),
-  //     switchMap((versionInfo: VersionInfo) => {
-  //         return of(
-  //           new fromCore.ShowUrlError(new EepWebUrl(VERSION_PATH, Status.SUCCESS, 'Daten geladen')),
-  //           new fromCore.SetEepVersion(versionInfo.eepVersion),
-  //           new fromCore.SetEepLuaVersion(versionInfo.luaVersion)
-  //         );
-  //       }
-  //     ),
-  //     catchError((err) => {
-  //       return of(
-  //         new fromCore.ShowUrlError(new EepWebUrl(VERSION_PATH, Status.ERROR, err.message)));
-  //     })
-  //   );
-  //
   constructor(private wsService: WsService) {
   }
 }

@@ -116,8 +116,8 @@ export class IntersectionEffects {
           this.intersectionService.emit(
             new WsEvent('[EEPCommand]', 'Send', command));
         })
-        ),
-        { dispatch: false });
+      ),
+    { dispatch: false });
 
   constructor(private actions$: Actions,
     private httpClient: HttpClient,

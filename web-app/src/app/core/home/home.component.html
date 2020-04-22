@@ -19,40 +19,6 @@
 </ng-container>
 
 <ng-container *ngIf="(connectionEstablished$ | async)">
-  <!--<div class="row">-->
-  <!--<div class="col-12 d-flex">-->
-  <!--<div class="jumbotron flex-grow-1 mb-5">-->
-  <!--<p class="mat-display-2 flex-grow-1"-->
-  <!--style="margin-bottom: 24px; margin-top: 64px;">-->
-  <!--EEP-Web-->
-  <!--</p>-->
-  <!--<p class="mat-display-1 app-mute-dark-bg">-->
-  <!--Deine Anlage. Übersichtlich. Dargestellt.-->
-  <!--</p>-->
-  <!--</div>-->
-  <!--</div>-->
-
-  <!--<div class="col-12 col-lg-4">-->
-  <!--<h1 class="mt-5 mb-4">Schnellzugriff</h1>-->
-  <!--<ng-container *ngFor="let category of navigation; let last_outer = last; let first_outer=first">-->
-  <!--<ng-container *ngIf="category.name !== 'Home'">-->
-  <!--<ng-container *ngFor="let element of category.values; let last = last">-->
-  <!--<button class="mr-3"-->
-  <!--mat-icon-button-->
-  <!--type="button"-->
-  <!--[matTooltip]="element.linkDescription"-->
-  <!--routerLink="{{ element.link }}">-->
-  <!--<mat-icon-->
-  <!--[matBadge]="element.badge | async"-->
-  <!--matBadgePosition="above after"-->
-  <!--class="app-list-icon">{{ element.icon }}</mat-icon>-->
-  <!--</button>-->
-  <!--</ng-container>-->
-  <!--</ng-container>-->
-  <!--</ng-container>-->
-  <!--</div>-->
-  <!--</div>-->
-
   <ng-container *ngFor="let category of navigation; let last_outer = last; let first_outer=first">
     <ng-container *ngIf="category.name !== 'Home'">
       <h1 class="mt-4 mb-4 app-mute-on-light-bg">{{ category.name }}</h1>

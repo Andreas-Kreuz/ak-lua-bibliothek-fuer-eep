@@ -1,4 +1,4 @@
-import { createFeatureSelector, createSelector } from '@ngrx/store';
+import { createFeatureSelector, createSelector, on, createReducer, Action } from '@ngrx/store';
 
 import * as CoreAction from './core.actions';
 import { Alert } from '../error/alert.model';
@@ -33,78 +33,69 @@ const initialState: State = {
   urlStatus: [],
 };
 
-export function reducer(state: State = initialState, action: CoreAction.CoreActions) {
-  switch (action.type) {
-    case CoreAction.SHOW_ERROR:
-      const newState: State = {
-        ...state,
-        alerts: [action.payload, ...state.alerts.slice(0, Math.min(state.alerts.length, 20))],
-        lastAlert: action.payload,
-      };
-      return newState;
-    case CoreAction.HIDE_ERROR:
-      const oldErrors = [...state.alerts];
-      oldErrors.splice(state.alerts.indexOf(action.payload), 1);
-      return {
-        ...state,
-        alerts: oldErrors
-      };
-    case CoreAction.SHOW_URL_ERROR:
-    case CoreAction.SHOW_URL_SUCCESS:
-      const newUrlStatus1: EepWebUrl[] = [];
-      for (const oldUrl of state.urlStatus) {
-        if (oldUrl.path !== action.payload.path) {
-          newUrlStatus1.push(oldUrl);
-        }
+const coreReducer = createReducer(
+  initialState,
+  on(CoreAction.showError, (state: State, { alert: alert }) => ({
+    ...state, alerts: [alert, ...state.alerts.slice(0, Math.min(state.alerts.length, 20))],
+    lastAlert: alert,
+  })),
+  on(CoreAction.hideError, (state: State, { alert: alert }) => {
+    const oldErrors = [...state.alerts];
+    oldErrors.splice(state.alerts.indexOf(alert), 1);
+    return {
+      ...state,
+      alerts: oldErrors
+    }
+  }),
+  on(CoreAction.showUrlSuccess, (state: State, { url: url }) => {
+    const newUrlStatus1: EepWebUrl[] = [];
+    for (const oldUrl of state.urlStatus) {
+      if (oldUrl.path !== url.path) {
+        newUrlStatus1.push(oldUrl);
       }
-      newUrlStatus1.push(action.payload);
-      newUrlStatus1.sort((a: EepWebUrl, b: EepWebUrl) => {
-          return a.path < b.path ? -1 : 1;
-        }
-      );
+    }
+    newUrlStatus1.push(url);
+    newUrlStatus1.sort((a: EepWebUrl, b: EepWebUrl) => {
+      return a.path < b.path ? -1 : 1;
+    }
+    );
 
-      return {
-        ...state,
-        urlStatus: newUrlStatus1,
-      };
-    case CoreAction.SET_JSON_SERVER_URL:
-      return {
-        ...state,
-        jsonServerUrl: action.payload
-      };
-    case CoreAction.SET_CONNECTION_STATUS_SUCCESS:
-      return {
-        ...state,
-        connectionStatus: Status.SUCCESS,
-      };
-    case CoreAction.SET_CONNECTION_STATUS_ERROR:
-      return {
-        ...state,
-        connectionStatus: Status.ERROR,
-      };
-    case CoreAction.SET_CONNECTED:
-      return {
-        ...state,
-        connectionEstablished: true
-      };
-    case CoreAction.SET_EEP_VERSION:
-      return {
-        ...state,
-        eepVersion: action.payload
-      };
-    case CoreAction.SET_EEP_LUA_VERSION:
-      return {
-        ...state,
-        eepLuaVersion: action.payload
-      };
-    case CoreAction.SET_EEP_WEB_VERSION:
-      return {
-        ...state,
-        eepWebVersion: action.payload
-      };
-    default:
-      return state;
+    return {
+      ...state,
+      urlStatus: newUrlStatus1,
+    };
   }
+  ),
+  on(CoreAction.showUrlError, (state: State, { url: url }) => {
+    const newUrlStatus1: EepWebUrl[] = [];
+    for (const oldUrl of state.urlStatus) {
+      if (oldUrl.path !== url.path) {
+        newUrlStatus1.push(oldUrl);
+      }
+    }
+    newUrlStatus1.push(url);
+    newUrlStatus1.sort((a: EepWebUrl, b: EepWebUrl) => {
+      return a.path < b.path ? -1 : 1;
+    }
+    );
+
+    return {
+      ...state,
+      urlStatus: newUrlStatus1,
+    };
+  }
+  ),
+  on(CoreAction.setJsonServerUrl, (state: State, { url: url }) => ({ ...state, jsonServerUrl: url })),
+  on(CoreAction.setConnectionStatusSuccess, state => ({ ...state, connectionStatus: Status.SUCCESS })),
+  on(CoreAction.setConnectionStatusError, state => ({ ...state, connectionStatus: Status.ERROR })),
+  on(CoreAction.setConnected, state => ({ ...state, connectionEstablished: true })),
+  on(CoreAction.setEepVersion, (state: State, { version: version }) => ({ ...state, eepVersion: version })),
+  on(CoreAction.setEepLuaVersion, (state: State, { version: version }) => ({ ...state, eepLuaVersion: version })),
+  on(CoreAction.setEepWebVersion, (state: State, { version: version }) => ({ ...state, eepWebVersion: version }))
+);
+
+export function reducer(state: State | undefined, action: Action) {
+  return coreReducer(state, action);
 }
 
 export const appState = createFeatureSelector('core');

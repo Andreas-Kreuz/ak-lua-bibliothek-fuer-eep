@@ -14,12 +14,12 @@ export class AppComponent implements OnInit {
   hostLocation = 'http://localhost:3000';
 
   constructor(private pongService: PongService,
-              private store: Store<fromCore.State>) {
+    private store: Store<fromCore.State>) {
   }
 
   ngOnInit() {
     this.pongService.connect();
     this.hostLocation = location.protocol + '//' + location.hostname + ':3000';
-    this.store.dispatch(new CoreActions.SetJsonServerUrl(this.hostLocation));
+    this.store.dispatch(CoreActions.setJsonServerUrl({ url: this.hostLocation }));
   }
 }

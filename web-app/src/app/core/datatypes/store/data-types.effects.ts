@@ -21,34 +21,34 @@ export class DataTypesEffects {
     .pipe(
       filter(wsEvent => wsEvent.action === 'Set'),
       switchMap((wsEvent: WsEvent) => {
-          const versions: Versions = JSON.parse(wsEvent.payload);
-          const versionInfo: VersionInfo = versions.versionInfo;
+        const versions: Versions = JSON.parse(wsEvent.payload);
+        const versionInfo: VersionInfo = versions.versionInfo;
 
-          return of(
-            new fromCore.SetEepVersion(versionInfo.eepVersion),
-            new fromCore.SetEepLuaVersion(versionInfo.luaVersion));
-        }
+        return of(
+          fromCore.setEepVersion({ version: versionInfo.eepVersion }),
+          fromCore.setEepLuaVersion({ version: versionInfo.luaVersion }));
+      }
       )
     );
 
   @Effect()
   dataTypes = this.dataTypesService.getActions().pipe(
-    filter(wsEvent => WsEventUtil.storeAction(wsEvent) === fromDataTypes.SET_DATA_TYPES),
+    filter(wsEvent => WsEventUtil.storeAction(wsEvent) === fromDataTypes.setDataTypes.type),
     switchMap(
       (wsEvent: WsEvent) => {
         return of(
-          new fromDataTypes.SetDataTypes(JSON.parse(wsEvent.payload)),
-          new fromCore.SetConnected(),
-          new fromCore.SetConnectionStatusSuccess());
+          fromDataTypes.setDataTypes({ types: JSON.parse(wsEvent.payload) }),
+          fromCore.setConnected(),
+          fromCore.setConnectionStatusSuccess());
       }
     ),
     catchError(error => {
       console.log(error);
-      return of(new fromCore.SetConnectionStatusError());
+      return of(fromCore.setConnectionStatusError());
     })
   );
 
   constructor(private wsService: WsService,
-              private dataTypesService: DataTypesService) {
+    private dataTypesService: DataTypesService) {
   }
 }
