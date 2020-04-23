@@ -83,7 +83,7 @@ export class MainNavigationService {
           this.store.pipe(select(fromCore.isModuleLoaded$(this.kreuzungLuaModuleId))),
           this.store.pipe(select(fromCore.isModuleLoaded$(this.dataLuaModuleId)))]
         ).pipe(
-          map((b1) => b1[0] && b1[1])
+          map((b1) => b1[0] || b1[1])
         ),
         values: [
           {
