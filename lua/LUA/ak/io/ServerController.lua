@@ -12,7 +12,8 @@ print("Lade ak.io.ServerController ...")
 local AkWebServerIo = require("ak.io.AkWebServerIo")
 local AkCommandExecutor = require("ak.io.AkCommandExecutor")
 local os = require("os")
-local json = require("ak.io.dkjson")
+local json1 = require("ak.io.json")
+-- local json2 = require("ak.io.dkjson")
 
 local ServerController = {}
 ServerController.programVersion = "0.9.0"
@@ -68,7 +69,7 @@ local function initializeJsonCollector(jsonCollector)
     jsonCollector.initialize()
     local t1 = os.clock()
     local timeDiff = t1 - t0
-    print(string.format('ServerController: initialize() %.3f Sekunden fuer "%s"', timeDiff, jsonCollector.name))
+    print(string.format('ServerController: initialize() %.2f Sekunden fuer "%s"', timeDiff, jsonCollector.name))
 end
 
 local function collectFrom(jsonCollector, printFirstTime)
@@ -77,7 +78,7 @@ local function collectFrom(jsonCollector, printFirstTime)
     local t1 = os.clock()
     local timeDiff = t1 - t0
     if timeDiff > 0.02 or printFirstTime then
-        print(string.format('ServerController:collectData() %.3f Sekunden fuer "%s"', timeDiff, jsonCollector.name))
+        print(string.format('ServerController:collectData() %.2f Sekunden fuer "%s"', timeDiff, jsonCollector.name))
     end
     return newData
 end
@@ -143,16 +144,31 @@ function collectAndWriteData(printFirstTime, modulus)
 
     -- write file
     local t2 = os.clock()
-    local content = json.encode(collectedData, {keyorder = orderedKeys})
+
+    -- local tStartSorted = os.clock()
+    local content = json1.encode(collectedData, {keyorder = orderedKeys})
+    -- local tSorted = os.clock() - tStartSorted
+
+    -- local tStartUnsorted = os.clock()
+    -- content = json1.encode(collectedData)
+    -- local tUnsorted = os.clock() - tStartUnsorted
+
+    -- local tStartJson2Unsorted = os.clock()
+    -- content = json2.encode(collectedData)
+    -- local tJson2Unsorted = os.clock() - tStartJson2Unsorted
+
+    -- print(string.format("JSON: Sortiert: %.2f, Unsortiert: %.2f, Json2: %.2f", tSorted, tUnsorted, tJson2Unsorted))
 
     local t3 = os.clock()
     AkWebServerIo.updateJsonFile(content)
 
     local t4 = os.clock()
+
+    -- Do not print warning on the first time
     if not printFirstTime and t4 - t0 > .2 * modulus then
         print(
             string.format(
-                "WARNUNG: ServerController:collectAndWriteData(): dauerte %.2f s - " ..
+                "WARNUNG: ServerController.collectAndWriteData()   time is %.2f s --- " ..
                     "collect: %.2f s, sort: %.2f s, encode: %.2f s, writeFile: %.2f s",
                 t4 - t0,
                 t1 - t0,
@@ -161,6 +177,16 @@ function collectAndWriteData(printFirstTime, modulus)
                 t4 - t3
             )
         )
+    end
+
+    if printFirstTime then
+        local sizes = ""
+        for _, key in ipairs(orderedKeys) do
+            local value = collectedData[key]
+            local size = string.len(json1.encode(value, {keyorder = orderedKeys}))
+            sizes = sizes .. string.format("\n%s: %d b", key, size)
+        end
+        print(sizes)
     end
 end
 
@@ -205,14 +231,15 @@ function ServerController.communicateWithServer(modulus)
         print(
             string.format(
                 (printFirstTime and "MIT INITIALISIERUNG" or "WARNUNG") ..
-                    ": Current time for ServerController.communicateWithServer() is %.3f s (allowed: %.3f s)\n      " ..
-                        "waitForServer: %.3f, initialize: %.3f, processNewCommands: %.3f, collectAndWriteData: %.3f",
+                    ": ServerController.communicateWithServer() time is %.2f s --- " ..
+                        "waitForServer: %.2f s, initialize: %.2f s, " ..
+                            "processNewCommands: %.2f s, collectAndWriteData: %.2f s" .. "(allowed: %.2f s)",
                 timeDiff,
-                allowedTimeDiff,
                 overallTime1 - overallTime0,
                 overallTime2 - overallTime1,
                 overallTime3 - overallTime2,
-                overallTime4 - overallTime3
+                overallTime4 - overallTime3,
+                allowedTimeDiff
             )
         )
     end
