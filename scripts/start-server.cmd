@@ -11,4 +11,6 @@ call java -jar %projectPath%\server\target\ak-eep-web.jar --test "%projectPath%\
 IF %ERRORLEVEL% NEQ 0 (
    exit %ERRORLEVEL%
 )
+
+cd %oldDir%
 endlocal
