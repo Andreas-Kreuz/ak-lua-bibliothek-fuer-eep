@@ -7,7 +7,7 @@
 local ServerController = require("ak.io.ServerController")
 --]]
 -- @author Andreas Kreuz
--- @release 0.8.4
+-- @release 0.9.0
 print("Lade ak.io.ServerController ...")
 local AkWebServerIo = require("ak.io.AkWebServerIo")
 local AkCommandExecutor = require("ak.io.AkCommandExecutor")
@@ -15,7 +15,7 @@ local os = require("os")
 local json = require("ak.io.dkjson")
 
 local ServerController = {}
-ServerController.programVersion = "0.8.4"
+ServerController.programVersion = "0.9.0"
 
 -- checkServerStatus:
 -- true: Check status of EEP-Web Server before updating the json file
