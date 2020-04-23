@@ -123,12 +123,15 @@ export const signalsWithModel$ = createSelector(
   signals$,
   signalIdToModels$,
   (signals: Signal[], signalTypeDefinitionMap: Map<number, SignalTypeDefinition>) => {
+    const modSignals: Signal[] = [];
     for (const signal of signals) {
-      const type = signalTypeDefinitionMap.get(signal.id);
+      const modSignal = { ...signal };
+      const type = signalTypeDefinitionMap.get(modSignal.id);
       if (type) {
-        signal.model = type;
+        modSignal.model = type;
       }
+      modSignals.push(modSignal);
     }
-    return signals;
+    return modSignals;
   }
 );
