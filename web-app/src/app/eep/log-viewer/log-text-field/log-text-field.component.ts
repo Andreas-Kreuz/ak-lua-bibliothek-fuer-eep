@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewChecked } from '@angular/core';
 import { debounceTime } from 'rxjs/operators';
 import { fromEvent, Observable } from 'rxjs';
 import { select, Store } from '@ngrx/store';
@@ -11,13 +11,16 @@ import * as fromLogFile from '../store/log-file.reducers';
   templateUrl: './log-text-field.component.html',
   styleUrls: ['./log-text-field.component.css']
 })
-export class LogTextFieldComponent implements OnInit {
+export class LogTextFieldComponent implements OnInit, AfterViewChecked {
   lines$: Observable<string[]>;
   linesAsString$: Observable<string>;
   loading$: Observable<boolean>;
   maxHeight: string;
+  container: HTMLElement;
+  autoscroll: boolean;
 
   constructor(private store: Store<fromRoot.State>) {
+    this.autoscroll = true;
   }
 
   ngOnInit() {
@@ -35,5 +38,12 @@ export class LogTextFieldComponent implements OnInit {
 
   logEntries(index, item) {
     return index;
+  }
+
+  ngAfterViewChecked() {
+    if (this.autoscroll) {
+      this.container = document.getElementById('container');
+      this.container.scrollTop = this.container.scrollHeight;
+    }
   }
 }

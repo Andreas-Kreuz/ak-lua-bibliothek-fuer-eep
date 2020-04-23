@@ -1,4 +1,5 @@
 <ul observe-attributes
+    id="container"
     class="list-pre"
     [ngStyle]="{'height': maxHeight, 'max-height': maxHeight }">
   <li *ngFor="let line of (lines$ | async); trackBy: logEntries"
