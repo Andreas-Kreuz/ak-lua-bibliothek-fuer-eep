@@ -10,34 +10,37 @@
 - ⭐ Neu: Einmaliges Suchen nach globalen Daten macht das Ganze schneller
 - ⭐ Neu: Warnung, wenn die Datenausgabe länger dauert, als der refresh, der in EEPMain aufgerufen wird
 
-- ℹ️ Info: Für folgende Lua Dateien müssen die Imports geändert werden:
-  - `ak.core.eep.AkEepFunktionen` ersetzt ~~`ak.eep.AkEepFunktionen`~~
-  - `ak.core.eep.AkTippTextFormat` ersetzt ~~`ak.text.AkFormat`~~
-  - 👎 **Bisheriger Code** (funktioniert so nicht mehr!)
+ℹ️ Wichtige Informationen
 
-    ```lua
-      function EEPMain()
-        AkKreuzung:planeSchaltungenEin()
-        AkPlaner:fuehreGeplanteAktionenAus()
-        AkStatistik.statistikAusgabe()
-        return 1
-    end
-    ```
+Der Code wurde wie folgt geändert:
 
-    👍 **Neuer Code**
+- `ak.core.eep.AkEepFunktionen` ersetzt die alte Datei ~~`ak.eep.AkEepFunktionen`~~
+- `ak.core.eep.AkTippTextFormat` ersetzt die alte Datei ~~`ak.text.AkFormat`~~
+- 👎 **Bisheriger Code** (funktioniert so nicht mehr!)
 
-    ```lua
-    local ModuleRegistry = require("ak.core.ModuleRegistry")
-    ModuleRegistry.registerModules(
-        require("ak.core.CoreLuaModule"),
-        require("ak.strasse.KreuzungLuaModul")
-    )
-
+  ```lua
     function EEPMain()
-        ModuleRegistry.runTasks()
-        return 1
-    end
-    ```
+      AkKreuzung:planeSchaltungenEin()
+      AkPlaner:fuehreGeplanteAktionenAus()
+      AkStatistik.statistikAusgabe()
+      return 1
+  end
+  ```
+
+  👍 **Neuer Code**
+
+  ```lua
+  local ModuleRegistry = require("ak.core.ModuleRegistry")
+  ModuleRegistry.registerModules(
+      require("ak.core.CoreLuaModule"),
+      require("ak.strasse.KreuzungLuaModul")
+  )
+
+  function EEPMain()
+      ModuleRegistry.runTasks()
+      return 1
+  end
+  ```
 
 ## v0.8.4
 
