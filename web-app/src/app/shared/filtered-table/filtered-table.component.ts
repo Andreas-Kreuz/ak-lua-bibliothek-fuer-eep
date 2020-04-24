@@ -40,7 +40,7 @@ export class FilteredTableComponent<T> implements OnInit, OnDestroy {
     this.data$ = data$;
   }
 
-  private detailsItem: DetailsItem<T>;
+  detailsItem: DetailsItem<T>;
   private oldDetailsItem: DetailsItem<T>;
   private filter = new Subject<string>();
   dataSource: TableDataSource<T>;
