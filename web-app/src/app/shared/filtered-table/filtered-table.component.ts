@@ -14,8 +14,8 @@ import { DetailsItem } from '../details/details-item';
   styleUrls: ['./filtered-table.component.css'],
   animations: [
     trigger('detailExpand', [
-      state('collapsed, void', style({height: '0px', minHeight: '0', display: 'none'})),
-      state('expanded', style({height: '*'})),
+      state('collapsed, void', style({ height: '0px', minHeight: '0', display: 'none' })),
+      state('expanded', style({ height: '*' })),
       transition('expanded <=> collapsed', animate('1ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
       transition('expanded <=> void', animate('1ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
     ]),
@@ -24,7 +24,7 @@ import { DetailsItem } from '../details/details-item';
 export class FilteredTableComponent<T> implements OnInit, OnDestroy {
   @ViewChild(DetailsDirective) detailHost: DetailsDirective;
   @ViewChild(OldDetailsDirective) oldDetailHost: OldDetailsDirective;
-  @ViewChild(MatSort, {static: true}) sort: MatSort;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
   @Input() public columnsToDisplay: string[];
   @Input() public columnNames: string[];
   @Input() public columnAlignment?: string[];
