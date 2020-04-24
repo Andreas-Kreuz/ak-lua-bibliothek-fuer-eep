@@ -12,8 +12,7 @@ print("Lade ak.io.ServerController ...")
 local AkWebServerIo = require("ak.io.AkWebServerIo")
 local AkCommandExecutor = require("ak.io.AkCommandExecutor")
 local os = require("os")
-local json1 = require("ak.io.json")
--- local json2 = require("ak.io.dkjson")
+local json = require("ak.io.json")
 
 local ServerController = {}
 ServerController.programVersion = "0.9.0"
@@ -145,19 +144,7 @@ function collectAndWriteData(printFirstTime, modulus)
     -- write file
     local t2 = os.clock()
 
-    -- local tStartSorted = os.clock()
-    local content = json1.encode(collectedData, {keyorder = orderedKeys})
-    -- local tSorted = os.clock() - tStartSorted
-
-    -- local tStartUnsorted = os.clock()
-    -- content = json1.encode(collectedData)
-    -- local tUnsorted = os.clock() - tStartUnsorted
-
-    -- local tStartJson2Unsorted = os.clock()
-    -- content = json2.encode(collectedData)
-    -- local tJson2Unsorted = os.clock() - tStartJson2Unsorted
-
-    -- print(string.format("JSON: Sortiert: %.2f, Unsortiert: %.2f, Json2: %.2f", tSorted, tUnsorted, tJson2Unsorted))
+    local content = json.encode(collectedData, {keyorder = orderedKeys})
 
     local t3 = os.clock()
     AkWebServerIo.updateJsonFile(content)
@@ -183,7 +170,7 @@ function collectAndWriteData(printFirstTime, modulus)
         local sizes = "Data sizes: "
         for _, key in ipairs(orderedKeys) do
             local value = collectedData[key]
-            local size = string.len(json1.encode(value, {keyorder = orderedKeys}))
+            local size = string.len(json.encode(value, {keyorder = orderedKeys}))
             sizes = sizes .. string.format("\n%10d Bytes: %s", size, key)
         end
         print(sizes)
