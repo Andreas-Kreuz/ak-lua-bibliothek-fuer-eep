@@ -12,11 +12,10 @@ pre {
   /*border: 1px solid darkgray;*/
 }
 
-list-item-pre {
+.list-item-pre {
   padding: unset;
   display: block;
-  font-size: 87.5% !important;
-  color: #212529;
-  font-size: inherit;
+  /* font-size: 87.5% !important; */
+  /* color: #212529;*/
   white-space: pre;
 }
