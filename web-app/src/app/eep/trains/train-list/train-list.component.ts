@@ -68,7 +68,6 @@ export class TrainListComponent implements OnInit, OnDestroy {
   }
 
   private getCouplingText(train: Train): string {
-    let value = '?';
     if (train && train.rollingStock) {
       const frontReady =
         train.rollingStock[0].couplingFront === Coupling.Ready
@@ -85,7 +84,8 @@ export class TrainListComponent implements OnInit, OnDestroy {
       } else {
         return 'Abstoßen';
       }
+    } else {
+      return '?';
     }
-    return value;
   }
 }
