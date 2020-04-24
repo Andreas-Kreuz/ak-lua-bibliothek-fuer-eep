@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewChecked } from '@angular/core';
+import { Component, OnInit, AfterViewChecked, AfterViewInit } from '@angular/core';
 import { debounceTime } from 'rxjs/operators';
 import { fromEvent, Observable } from 'rxjs';
 import { select, Store } from '@ngrx/store';
@@ -11,12 +11,13 @@ import * as fromLogFile from '../store/log-file.reducers';
   templateUrl: './log-text-field.component.html',
   styleUrls: ['./log-text-field.component.css']
 })
-export class LogTextFieldComponent implements OnInit, AfterViewChecked {
+export class LogTextFieldComponent implements OnInit, AfterViewInit {
   lines$: Observable<string[]>;
   linesAsString$: Observable<string>;
   loading$: Observable<boolean>;
   maxHeight: string;
-  container: HTMLElement;
+  private container: HTMLElement;
+  private isNearBottom = true;
   autoscroll: boolean;
 
   constructor(private store: Store<fromRoot.State>) {
@@ -40,10 +41,33 @@ export class LogTextFieldComponent implements OnInit, AfterViewChecked {
     return index;
   }
 
-  ngAfterViewChecked() {
-    if (this.autoscroll) {
-      this.container = document.getElementById('container');
-      this.container.scrollTop = this.container.scrollHeight;
+  ngAfterViewInit() {
+    this.container = document.getElementById('container');
+    this.linesAsString$.subscribe(_ => this.onItemElementsChanged());
+  }
+
+  private scrollToBottom() {
+    this.container.scroll({
+      top: this.container.scrollHeight,
+      left: 0,
+      behavior: 'smooth'
+    });
+  }
+
+  private onItemElementsChanged(): void {
+    if (this.isNearBottom && this.autoscroll) {
+      this.scrollToBottom();
     }
+  }
+
+  private isUserNearBottom(): boolean {
+    const threshold = 150;
+    const position = this.container.scrollTop + this.container.offsetHeight;
+    const height = this.container.scrollHeight;
+    return position > height - threshold;
+  }
+
+  scrolled(event: any): void {
+    this.isNearBottom = this.isUserNearBottom();
   }
 }
