@@ -5,7 +5,7 @@ import * as fromGenericActions from '../store/generic-data.actions';
 import * as fromGenericData from '../store/generic-data.reducers';
 import { Observable, Subject } from 'rxjs';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-generic-data',
@@ -22,22 +22,21 @@ export class GenericDataComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.data$ = this.route.paramMap.pipe(
-      switchMap((params: ParamMap) => {
-        const name = params.get('name');
-        const hostName = params.get('hostName');
-        const path = params.get('path');
+    const snapshot = this.route.snapshot;
+    const name = snapshot.params.name;
+    const hostName = snapshot.params.hostName;
+    const path = snapshot.params.path;
 
-        this.store.dispatch(
-          new fromGenericActions.FetchData(
-            {
-              name: name,
-              hostName: hostName,
-              path: path,
-            }));
-        return this.store.pipe(select(fromGenericData.selectedDataStructure(name)));
-      })
-    );
+    console.log('Dispatch fetch data', snapshot.params);
+    this.store.dispatch(
+      new fromGenericActions.FetchData(
+        {
+          name: name,
+          hostName: hostName,
+          path: path,
+        }));
+
+    this.data$ = this.store.pipe(select(fromGenericData.selectedDataStructure(name)));
     this.data$.subscribe(data => this.tableData.next(data.values));
   }
 }
