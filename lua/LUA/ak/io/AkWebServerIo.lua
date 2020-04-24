@@ -105,7 +105,6 @@ function print(...)
     local time = os.date("%X ")
     local text = "" .. time
     for _, arg in pairs(args) do
-        _print(arg)
         text = text .. tostring(arg):gsub("\n", "\n       . ")
     end
     file:write(text .. "\n")
