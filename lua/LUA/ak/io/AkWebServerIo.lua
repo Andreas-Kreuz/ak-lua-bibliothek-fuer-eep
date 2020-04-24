@@ -101,11 +101,12 @@ local _print = print
 function print(...)
     -- print the output to the log file (Why do we open/close the file within every call? What about flush?)
     local file = _assert(io.open(outFileNameLog, "a"))
-    local args = table.pack(...)
+    local args = { ... }
     local time = os.date("%X ")
     local text = "" .. time
-    for i = 1, args.n do
-        text = text .. tostring(args[i])
+    for _, arg in pairs(args) do
+        _print(arg)
+        text = text .. tostring(arg):gsub("\n", "\n       . ")
     end
     file:write(text .. "\n")
     file:close()
