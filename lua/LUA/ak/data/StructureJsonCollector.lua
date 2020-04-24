@@ -49,9 +49,9 @@ function StructureJsonCollector.initialize()
             -- }
             local _, tag = EEPStructureGetTagText(name)
 
-            structure.pos_x = pos_x or 0 --string.format("%.2f", pos_x)
-            structure.pos_y = pos_y or 0 --string.format("%.2f", pos_y)
-            structure.pos_z = pos_z or 0 --string.format("%.2f", pos_z)
+            structure.pos_x = pos_x and string.format("%.2f", pos_x) or 0
+            structure.pos_y = pos_y and string.format("%.2f", pos_y) or 0
+            structure.pos_z = pos_z and string.format("%.2f", pos_z) or 0
             structure.modelType = modelType or 0
             structure.tag = tag or ""
             table.insert(structures, structure)
