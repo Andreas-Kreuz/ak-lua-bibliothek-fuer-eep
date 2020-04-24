@@ -180,11 +180,11 @@ function collectAndWriteData(printFirstTime, modulus)
     end
 
     if printFirstTime then
-        local sizes = ""
+        local sizes = "Data sizes: "
         for _, key in ipairs(orderedKeys) do
             local value = collectedData[key]
             local size = string.len(json1.encode(value, {keyorder = orderedKeys}))
-            sizes = sizes .. string.format("\n%s: %d b", key, size)
+            sizes = sizes .. string.format("\n%10d Bytes: %s", size, key)
         end
         print(sizes)
     end
