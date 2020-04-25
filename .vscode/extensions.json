@@ -10,7 +10,8 @@
 		"github.vscode-pull-request-github", // Easy GitHub Pull Requests
 		"johnpapa.angular2", // Angular 9 Snippets
 		"liwangqian.luacoderassist", // Lua Code Completion and Checking
-		"ms-vscode.vscode-typescript-tslint-plugin", // Web App Typescript support
+    "ms-vscode.vscode-typescript-tslint-plugin", // Web App Typescript support
+    "msjsdiag.debugger-for-chrome",
 		"tyriar.sort-lines" // Sort lines
 	],
 	// List of extensions recommended by VS Code that should not be recommended for users of this workspace.

@@ -1,14 +1,38 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "Launch Program",
-            "program": "${file}"
-        }
-    ]
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Launch localhost in Microsoft Edge",
+      "type": "edge",
+      "request": "launch",
+      "url": "http://localhost:4200/",
+      "webRoot": "${workspaceFolder}/web-app/src",
+      "sourceMapPathOverrides": {
+        "webpack:///./src/*": "${webRoot}/*",
+      },
+      "trace": true
+    },
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "Launch Chrome against localhost:4200",
+      "url": "http://localhost:4200/",
+      "trace": true,
+      "webRoot": "${workspaceFolder}/web-app/src",
+      "sourceMapPathOverrides": {
+        "webpack:///./src/*": "${webRoot}/*",
+      }
+    },
+    {
+      "type": "java",
+      "name": "Start Server",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/server/src/main/java",
+      "mainClass": "ak.eep.web.server.Main",
+      "args": "--test ${workspaceFolder}\\lua\\LUA\\ak\\io\\exchange"
+    }
+  ]
 }
