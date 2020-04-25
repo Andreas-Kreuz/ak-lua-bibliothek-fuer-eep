@@ -22,7 +22,7 @@ install:
   - luarocks install luacov-coveralls
 
 script:
-  - luacheck --std max+busted LUA
+  - luacheck --std max+busted lua/LUA
   - busted --verbose --coverage --
 
 after_success:
