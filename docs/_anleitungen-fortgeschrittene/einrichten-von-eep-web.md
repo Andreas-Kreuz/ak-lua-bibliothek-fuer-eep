@@ -21,16 +21,18 @@ date: 2018-11-19
 
 2. **Lua einrichten**
 
-   Wenn Du die Bibliothek installiert hast, dann nimm den Aufruf von ```AkStatistik:statistikAusgabe()``` in die vorhandene Funtion ```EEPMain()``` auf:
+   Wenn Du die Bibliothek installiert hast, dann nimm den Aufruf von `ModuleRegistry.runTasks()` in die vorhandene Funtion ```EEPMain()``` auf:
+
     ```lua
-    local AkStatistik = require("ak.io.AkStatistik")
- 
-    -- anderer Code
-    
+    local ModuleRegistry = require("ak.core.ModuleRegistry")
+    ModuleRegistry.registerModules(
+        require("ak.core.CoreLuaModule"),
+        require("ak.strasse.KreuzungLuaModul")
+    )
+
     function EEPMain()
         -- Dein bisheriger Code in EEPMain
-        AkStatistik.statistikAusgabe()
-
+        ModuleRegistry.runTasks()
         return 1
     end
     ```

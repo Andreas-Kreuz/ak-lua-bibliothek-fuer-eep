@@ -1,6 +1,6 @@
 return {
   _all = {
-    directory="LUA"
+    directory="lua/LUA"
   },
   default = {
     verbose = true,
@@ -10,7 +10,7 @@ return {
   apiUnit = {
     coverage=true,
     tags = "api",
-    ROOT = {"LUA"},
+    ROOT = {"lua/LUA"},
     verbose = true
   }
 }

@@ -1,0 +1,63 @@
+<ng-container *ngIf="!(connectionEstablished$ | async)">
+  <div class="row">
+    <div class="col-12">
+      <p class="mat-display-2"
+         style="margin-bottom: 24px; margin-top: 64px;">
+        EEP-Web
+      </p>
+      <p class="mat-display-1 app-mute-on-light-bg">
+        Deine Anlage. Übersichtlich. Dargestellt.
+      </p>
+      <p>Verbinde mit Server ... {{ hostName$ | async }}<br><br></p>
+      <mat-progress-spinner
+        class="my-progress"
+        color="warn"
+        mode="indeterminate">
+      </mat-progress-spinner>
+    </div>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="(connectionEstablished$ | async)">
+  <ng-container *ngFor="let category of navigation; let last_outer = last; let first_outer=first">
+    <ng-container *ngIf="category.name !== 'Home' && category.available |async">
+      <h1 class="mt-4 mb-4 app-mute-on-light-bg">{{ category.name }}</h1>
+
+      <div class="row">
+        <ng-container *ngFor="let element of category.values; let last = last">
+          <div  *ngIf="element.available | async" class="col-sm-12 col-md-6 col-xl-3 d-flex">
+            <mat-card class="d-flex flex-column flex-grow-1 mb-5 app-card">
+              <mat-card-title-group class="app-bg-primary app-fg-on-primary">
+                <mat-card-title>{{ element.title }}</mat-card-title>
+                <mat-card-subtitle *ngIf="element.subtitle">{{ element.subtitle }}</mat-card-subtitle>
+              </mat-card-title-group>
+              <img *ngIf="element.image"
+                   mat-card-image
+                   src="../../../../assets/{{ element.image }}">
+              <mat-card-content *ngIf="element.description">
+                {{ element.description }}
+              </mat-card-content>
+              <span class="flex-grow-1"></span>
+              <mat-card-actions>
+                <a mat-button
+                   color="primary"
+                   routerLink="{{ element.link }}">
+                  {{ element.linkDescription }}
+                </a>
+              </mat-card-actions>
+            </mat-card>
+          </div>
+        </ng-container>
+      </div>
+
+    </ng-container>
+  </ng-container>
+
+
+  <h5 class="mt-5 mb-4 app-mute-on-light-bg">Versionen</h5>
+  <p class="mat-small mat-caption app-mute-on-light-bg">
+    EEP-Web: {{ eepWebVersion$ | async }}<span
+    *ngIf="(eepVersion$ | async) !== '?'">, EEP-Lua: {{ eepLuaVersion$ | async }}, EEP: {{ eepVersion$ | async }}
+  </span>
+  </p>
+</ng-container>

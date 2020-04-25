@@ -1,0 +1,33 @@
+<ng-template #htmlContent>
+  <strong>{{ rollingStock.name }}</strong><br>
+  <table class="table table-dark bg-dark text-left">
+    <tbody>
+    <tr *ngIf="typeOf() !== 'UNBEKANNT'">
+      <td>Typ</td>
+      <td>{{ typeOf() }}</td>
+    </tr>
+    <tr *ngIf="rollingStock.length > 0">
+      <td>Länge</td>
+      <td>{{ rollingStock.length | number }} m</td>
+    </tr>
+    <tr>
+      <td>Kupplung vorn</td>
+      <td>{{ textForCoupling(rollingStock.couplingFront) }}</td>
+    </tr>
+    <tr>
+      <td>Kupplung hinten</td>
+      <td>{{ textForCoupling(rollingStock.couplingRear) }}</td>
+    </tr>
+    <tr>
+      <td>Tag</td>
+      <td>{{ rollingStock.tag || '-' }}</td>
+    </tr>
+    </tbody>
+  </table>
+</ng-template>
+<!--<span [ngbTooltip]="htmlContent"-->
+<span [matTooltip]="getTooltip()"
+      [ngClass]="{'table-success': rollingStock.modelType === 10, 'table-warning': rollingStock.modelType === 9}"
+      style="text-decoration: underline;">
+  {{ iconFor() }}
+</span>

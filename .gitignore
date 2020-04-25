@@ -1,3 +1,48 @@
+# compiled output
+/web-app/dist
+/web-app/tmp
+/web-app/out-tsc
+
+# dependencies
+/web-app/node_modules
+
+# Andreas Kreuz's projects
+/server/target
+
+# Project based settings
+/lua/LUA/**/AkSpeicherWerte.txt
+/lua/LUA/**/*.jar
+/lua/LUA/ak/anlagen
+/lua/LUA/ak/ext
+/lua/LUA/comm_*
+/lua/LUA/ak/io/exchange/ak*
+/lua/LUA/SlotNames_BH2.lua
+/lua/LUA/ModellInstallationPrivat.lua
+/lua/modell-pakete
+
+# EEP Files to ignore
+*.dds
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# General files
+scratch.*
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Jekyll documentation files
+_site
+Gemfile.lock
+.sass-cache
+.jekyll*
+
 # Compiled Lua sources
 luac.out
 
@@ -39,22 +84,3 @@ luac.out
 *.x86_64
 *.hex
 
-# Project based settings
-/modell-pakete
-/LUA/ak/anlagen
-/LUA/ak/ext
-/LUA/comm_*
-*.dds
-/LUA/ak/io/exchange/ak*
-LUA/**/AkSpeicherWerte.txt
-LUA/**/*.jar
-LUA/SlotNames_BH2.lua
-
-_site
-Gemfile.lock
-.sass-cache
-.jekyll*
-.DS_Store
-/scratch.lua
-/scratch.md
-/LUA/ModellInstallationPrivat.lua

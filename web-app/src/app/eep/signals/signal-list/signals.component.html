@@ -1,0 +1,13 @@
+<div class="mat-typography">
+  <h1 class="app-mute-on-light-bg">
+    Signale
+  </h1>
+</div>
+
+<mat-card>
+  <app-filtered-table [columnNames]="columnNames"
+                      [columnsToDisplay]="columnsToDisplay"
+                      [columnTextFunctions]="columnTextFunctions"
+                      [tableData]="tableData$">
+  </app-filtered-table>
+</mat-card>

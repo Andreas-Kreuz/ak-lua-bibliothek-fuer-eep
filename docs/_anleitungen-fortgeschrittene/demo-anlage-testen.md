@@ -35,7 +35,7 @@ Die Anlage `Andreas_Kreuz-Lua-Testbeispiel` - oder besser deren Lua-Skripte - de
 * Damit das Haupt-Skript ohne EEP funktioniert gibt es von mir ein Skript `AkEepFunktionen.lua` welches auch in
   `C:\Trend\EEP14\LUA` abgelegt werden muss, damit es beim testen die Funktionen von EEP bereitstellt.
   Dieses muss in `ak-demo-lua\testen\Andreas_Kreuz-Lua-Testbeispiel-test.lua` an erster Stelle eingebunden werden:
-  `require 'ak.eep.AkEepFunktionen'`
+  `require 'ak.core.eep.AkEepFunktionen'`
 
 * Zum Ausführen des Test-Skriptes ohne EEP ist Lua 5.2 erforderlich - z.B. `lua.exe`, `lua52.dll` und `luac.exe` aus
 folgendem Link. [https://sourceforge.net/projects/luabinaries/files/5.2.4/Tools%20Executables/lua-5.2.4_Win64_bin.zip/download](https://sourceforge.net/projects/luabinaries/files/5.2.4/Tools%20Executables/lua-5.2.4_Win64_bin.zip/download)

@@ -1,0 +1,22 @@
+{
+	// See http://go.microsoft.com/fwlink/?LinkId=827846 to learn about workspace recommendations.
+	// Extension identifier format: ${publisher}.${name}. Example: vscode.csharp
+	// List of extensions which should be recommended for users of this workspace.
+	"recommendations": [
+		"angular.ng-template", // Angular Language Support
+		"bierner.github-markdown-preview", // To view github pages
+		"davidanson.vscode-markdownlint", // Check markdown pages
+		"editorconfig.editorconfig", // Support indentations by .editorconfig file
+		"github.vscode-pull-request-github", // Easy GitHub Pull Requests
+		"johnpapa.angular2", // Angular 9 Snippets
+		"liwangqian.luacoderassist", // Lua Code Completion and Checking
+    "ms-vscode.vscode-typescript-tslint-plugin", // Web App Typescript support
+    "msjsdiag.debugger-for-chrome",
+		"tyriar.sort-lines" // Sort lines
+	],
+	// List of extensions recommended by VS Code that should not be recommended for users of this workspace.
+	"unwantedRecommendations": [
+		"sumneko.lua",
+		"knisterpeter.vscode-github"
+	]
+}
