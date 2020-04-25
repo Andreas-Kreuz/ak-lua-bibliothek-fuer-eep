@@ -14,7 +14,7 @@
 <br>
 <hr>
 
-## Überblick
+# Überblick
 
 Die bereitgestellte Bibliothek übernimmt für Dich die _Steuerung des Verkehrs_, damit Du Dich andere Aspekte konzentrieren kannst. Beschreibe in Lua, wie Deine Kreuzungen aussehen und die Skripte kümmern sich um den Rest der Steuerung.
 
@@ -36,6 +36,8 @@ EEP (Eisenbahn.exe Professional) ist eine [Simulationssoftware des Trendverlags]
   für Performance-Optimierungen und kleine Verbesserungen
 * [Damian-Rutkowski](https://github.com/Damian-Rutkowski)
   für die Langzeitmotivation
+* [EEP-Benny](https://github.com/EEP-Benny)
+  für Ideen zur Umsetzung und Modularisierung
 
 ## Danksagungen an andere Projekte
 
