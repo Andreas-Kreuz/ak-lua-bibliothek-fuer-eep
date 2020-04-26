@@ -6,9 +6,9 @@
     "java.configuration.updateBuildConfiguration": "interactive",
     "files.exclude": {
         "**/.classpath": true,
+        "**/.factorypath": true,
         "**/.project": true,
-        "**/.settings": true,
-        "**/.factorypath": true
+        "**/.settings": true
     },
     "LuaCoderAssist.format.quotemark": "double",
     "LuaCoderAssist.luaparse.luaversion": 5.2,
@@ -57,5 +57,8 @@
         "files.encoding": "windows1252",
         "files.autoGuessEncoding": true
     },
-    "editor.fontFamily": "'Source Code Pro', Consolas, 'Courier New', monospace"
+    "editor.fontFamily": "'Source Code Pro', Consolas, 'Courier New', monospace",
+    "search.exclude": {
+        "/lua/modell-pakete": true
+    }
 }
