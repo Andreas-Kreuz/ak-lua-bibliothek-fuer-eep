@@ -34,6 +34,7 @@ Der Code wurde wie folgt geändert:
   local ModuleRegistry = require("ak.core.ModuleRegistry")
   ModuleRegistry.registerModules(
       require("ak.core.CoreLuaModule"),
+      require("ak.data.DataLuaModule"),
       require("ak.strasse.KreuzungLuaModul")
   )
 
