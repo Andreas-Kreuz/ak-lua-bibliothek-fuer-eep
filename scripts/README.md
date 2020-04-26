@@ -1,10 +1,10 @@
 <p align="center">
   <a href="http://andreas-kreuz.github.io/ak-lua-bibliothek-fuer-eep">
-    <img src="docs/assets/img/eep-web-logo-shadow-72.png" alt="" width=72 height=72>
+    <img src="../assets/img/eep-web-logo-shadow-72.png" alt="" width=72 height=72>
   </a>
-  <h3 align="center">Projektdateien für EEP-Web</h3>
+  <h3 align="center">EEP-Web entwickeln</h3>
   <p align="center">
-    Dieses Repository enthält die notwendigen Dateien für die Entwicklung von EEP-Web.
+    Informationen zu den notwendigen Dateien für die Entwicklung von EEP-Web.
   </p>
 <br>
 <hr>
@@ -16,7 +16,7 @@ _web-app_, _server_, _lua_.
 
 Folgende **Bibliotheken** sind notwendig:
 
-* [Lua 5.2](http://luabinaries.sourceforge.net/download.html) (für Lua-Skripte)
+* [Lua 5.3](http://luabinaries.sourceforge.net/download.html) (für Lua-Skripte)
 * [Node.js](https://nodejs.org/en/) (für EEP-Web App)
 * [Angular-CLI](https://angular.io/) (für EEP-Web App)
 * [Java 11](https://jdk.java.net/11/) (für EEP-Web-Server)
@@ -48,28 +48,29 @@ Nun kann das Verzeichnis `ak-lua-bibliothek-fuer-eep` in VS Code als Ordner geö
 
 ## Vorbereitung der Entwicklung
 
-Für die Entwicklung der Web App müssen noch die Angular Pakete installiert werden.
-
-Installiere die notwendigen Pakete für Angular mit der Kommandozeile. Verwende dazu folgende Befehle:
+Für die Entwicklung der Web App musst Du noch die Angular Pakete installieren:
 
    ```bash
    cd web-app
-   ```
-
-   ```bash
    npm install
    ```
 
+Benutze das Skript `.\scripts\build-package.cmd` um das ganze Programm einmal zu bauen.
+
+Dabei werden App, Server und Lua in eine EEP-Installationsdatei zusammengepackt.
+
+## Lua in EEP nutzen
+
+Wenn Du möchtest, kannst Du das Lua-Verzeichnis aus Git direkt in EEP nutzen. Erstelle dazu einen Link mit der Kommandozeile:
+
+```cmd
+mklink /D C:\Trend\EEP15\LUA\ak C:\GitHub\ak-lua-bibliothek-fuer-eep\lua\LUA\ak
+```
+
 ## Server im Entwicklungsmodus starten
 
-Das Skript `scripts\start-server-for-testing.cmd` startet den Server im Testmodus.
+Das Skript `.\scripts\start-server.cmd` startet den Server im Testmodus. Damit stellst Du der Web-App die EEP-Daten zur Verfügung.
 
 ## App im Entwicklungsmodus starten
 
-Das Skript `start-app-dev-server` erlaubt die Entwicklung der Angular App. Sobald es läuft, kannst Du unter <http://localhost:4200/> auf die Web App zugreifen.
-
-# Das ganze Projekt ausliefern
-
-Benutze das Skript `scripts\build-package.cmd` um das ganze Programm zu bauen.
-
-Dabei werden App, Server und Lua in eine EEP-Installationsdatei zusammengepackt.
+Das Skript `.\scripts\start-web-app` erlaubt die Entwicklung der Web App. Du findest sie nach dem Start unter <http://localhost:4200/>.

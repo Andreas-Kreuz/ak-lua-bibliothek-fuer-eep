@@ -10,12 +10,12 @@ SET projectPath=%~dp0..
 @REM Build EEP Web App
 cd %projectPath%\web-app
 IF %ERRORLEVEL% NEQ 0 (
-   exit %ERRORLEVEL%
+   exit /b %ERRORLEVEL%
 )
 
 call npm run-script start
 IF %ERRORLEVEL% NEQ 0 (
-   exit %ERRORLEVEL%
+   exit /b %ERRORLEVEL%
 )
 
 cd %oldDir%

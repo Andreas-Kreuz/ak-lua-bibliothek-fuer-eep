@@ -9,7 +9,7 @@ SET projectPath=%~dp0..
 
 bundle exec jekyll serve
 IF %ERRORLEVEL% NEQ 0 (
-   exit %ERRORLEVEL%
+   exit /b %ERRORLEVEL%
 )
 
 cd %oldDir%
