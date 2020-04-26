@@ -10,7 +10,7 @@
      *ngIf="(intersections$ | async) as intersections">
   <ng-container *ngFor="let intersection of intersections; trackBy: trackById; let last = last">
     <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3 d-flex">
-      <mat-card class="d-flex flex-column flex-grow-1 mb-5 app-card">
+      <mat-card class="d-flex flex-column flex-grow-1 mb-3 app-card">
         <img mat-card-image
              alt="intersection-icon"
              class="d-none d-xl-flex"
@@ -75,8 +75,13 @@
 
 <h1 class="mt-5 mb-4">Weitere Informationen</h1>
 <div class="row">
-  <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3 d-flex">
-    <mat-card class="flex-fill">
+  <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 d-flex">
+    <app-config-card class="flex-fill mb-5"
+                     [luaSettings]="luaModuleSettings$"
+                     (settingChanged)="onSettingChanged($event)"></app-config-card>
+  </div>
+  <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 d-flex">
+    <mat-card class="flex-fill mb-5">
       <mat-card-title-group>
         <mat-card-title>Hilfe</mat-card-title>
       </mat-card-title-group>

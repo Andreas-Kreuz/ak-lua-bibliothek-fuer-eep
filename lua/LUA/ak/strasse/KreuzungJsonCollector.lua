@@ -162,6 +162,34 @@ local function collect(alleKreuzungen)
         ["intersection-traffic-lights"] = intersectionTrafficLights
     }
 end
+local function collectModuleSettings()
+    return {
+        {
+            ["category"] = "Kreuzung",
+            ["name"] = "Anforderungen als TippText",
+            ["description"] = "Zeigt für alle Ampeln einen TippText mit den Anforderungen",
+            ["type"] = "boolean",
+            ["value"] = AkKreuzung.zeigeAnforderungenAlsInfo,
+            ["eepFunction"] = "AkKreuzung.setZeigeAnforderungenAlsInfo"
+        },
+        {
+            ["category"] = "Kreuzung",
+            ["name"] = "Schaltungen als TippText",
+            ["description"] = "Zeigt für alle Ampeln einen TippText mit den Schaltungen",
+            ["type"] = "boolean",
+            ["value"] = AkKreuzung.zeigeSchaltungAlsInfo,
+            ["eepFunction"] = "AkKreuzung.setZeigeSchaltungAlsInfo"
+        },
+        {
+            ["category"] = "Signale",
+            ["name"] = "Signal-ID als TippText",
+            ["description"] = "Zeigt an jedem Signal dessen Nummer als TippText",
+            ["type"] = "boolean",
+            ["value"] = AkKreuzung.zeigeSignalIdsAllerSignale,
+            ["eepFunction"] = "AkKreuzung.setZeigeSignalIdsAllerSignale"
+        }
+    }
+end
 
 function KreuzungJsonCollector.initialize()
     if not enabled or initialized then
@@ -180,7 +208,9 @@ function KreuzungJsonCollector.collectData()
         KreuzungJsonCollector.initialize()
     end
 
-    return collect(AkKreuzung.alleKreuzungen)
+    local data = collect(AkKreuzung.alleKreuzungen)
+    data["intersection-module-settings"] = collectModuleSettings()
+    return data
 end
 
 return KreuzungJsonCollector

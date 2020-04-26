@@ -36,6 +36,7 @@ import { DashboardSampleComponent } from './ui/dashboard-sample/dashboard-sample
 import { DashboardCardComponent } from './ui/dashboard-card/dashboard-card.component';
 import { LayoutModule } from '@angular/cdk/layout';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { ConfigCardComponent } from './ui/config-card/config-card.component';
 
 @NgModule({
   declarations: [
@@ -48,9 +49,11 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     TitledCardComponent,
     DashboardCardComponent,
     DashboardSampleComponent,
+    ConfigCardComponent,
   ],
   exports: [
     CommonModule,
+    ConfigCardComponent,
     FilteredTableComponent,
     MatBadgeModule,
     MatButtonModule,
@@ -97,6 +100,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     MatPaginatorModule,
     MatProgressSpinnerModule,
     MatSidenavModule,
+    MatSlideToggleModule,
     MatSortModule,
     MatTableModule,
     MatTooltipModule,

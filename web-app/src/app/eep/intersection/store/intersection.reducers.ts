@@ -4,12 +4,14 @@ import { Intersection } from '../models/intersection.model';
 import { IntersectionLane } from '../models/intersection-lane.model';
 import { IntersectionSwitching } from '../models/intersection-switching.model';
 import { IntersectionTrafficLight } from '../models/intersection-traffic-light.model';
+import { LuaSettings } from '../../../shared/model/lua-settings';
 
 export interface State {
   intersections: Intersection[];
   lanes: IntersectionLane[];
   switchings: IntersectionSwitching[];
   trafficLights: IntersectionTrafficLight[];
+  luaModuleSettings: LuaSettings;
 }
 
 const initialState: State = {
@@ -17,6 +19,7 @@ const initialState: State = {
   lanes: [],
   switchings: [],
   trafficLights: [],
+  luaModuleSettings: new LuaSettings('Kreuzungen', [])
 };
 
 
@@ -25,7 +28,8 @@ const intersectionsReducer = createReducer(
   on(IntersectionActions.setIntersections, (state: State, { intersections }) => ({ ...state, intersections: [...intersections] })),
   on(IntersectionActions.setLanes, (state: State, { lanes }) => ({ ...state, lanes: [...lanes] })),
   on(IntersectionActions.setSwitchings, (state: State, { switchings }) => ({ ...state, switchings: [...switchings] })),
-  on(IntersectionActions.setTrafficLights, (state: State, { trafficLights }) => ({ ...state, trafficLights: [...trafficLights] }))
+  on(IntersectionActions.setTrafficLights, (state: State, { trafficLights }) => ({ ...state, trafficLights: [...trafficLights] })),
+  on(IntersectionActions.setModuleSettings, (state: State, { settings }) => ({ ...state, luaModuleSettings: settings }))
 );
 
 export function reducer(state: State | undefined, action: Action) {
@@ -89,4 +93,11 @@ export const signalTypes$ = createSelector(
     return signalTypeMap;
   }
 );
+
+export const luaModuleSettings$ = createSelector(
+  intersectionsState$,
+  (state: State) => state.luaModuleSettings
+);
+
+
 
