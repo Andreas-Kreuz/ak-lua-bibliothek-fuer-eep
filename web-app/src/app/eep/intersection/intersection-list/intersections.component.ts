@@ -19,7 +19,7 @@ export class IntersectionsComponent implements OnInit {
 
   constructor(private store: Store<fromRoot.State>,
               private router: Router,
-              private intersectionHelper: IntersectionHelper,
+              intersectionHelper: IntersectionHelper,
               public dialog: MatDialog) {
   }
 
