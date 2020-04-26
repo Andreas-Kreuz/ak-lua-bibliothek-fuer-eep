@@ -2,7 +2,6 @@
     "html.format.endWithNewline": true,
     "html.format.maxPreserveNewLines": 2,
     "html.format.wrapAttributes": "force-aligned",
-    "html.format.wrapLineLength": 40,
     "java.configuration.updateBuildConfiguration": "interactive",
     "files.exclude": {
         "**/.classpath": true,
@@ -60,5 +59,6 @@
     "editor.fontFamily": "'Source Code Pro', Consolas, 'Courier New', monospace",
     "search.exclude": {
         "/lua/modell-pakete": true
-    }
+    },
+    "html.format.indentHandlebars": true
 }
