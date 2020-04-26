@@ -10,17 +10,19 @@
      *ngIf="(intersections$ | async) as intersections">
   <ng-container *ngFor="let intersection of intersections; trackBy: trackById; let last = last">
     <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3 d-flex">
-      <mat-card class="d-flex flex-column flex-grow-1 mb-5 app-card">
+      <mat-card class="d-flex flex-column flex-grow-1 mb-3 app-card">
         <img mat-card-image
+             alt="intersection-icon"
              class="d-none d-xl-flex"
              src="../../../../assets/card-img-intersection.jpg">
         <mat-card-title-group class="w-100 app-bg-primary app-fg-on-primary">
           <img mat-card-avatar
-               align="left"
+               alt="intersection-icon"
                class="d-xl-none"
                src="../../../../assets/card-img-intersection.jpg">
           <mat-card-title>{{ intersection.name }}</mat-card-title>
-          <mat-card-subtitle>{{ intersection.currentSwitching ? intersection.currentSwitching : 'Schaltung' }}</mat-card-subtitle>
+          <mat-card-subtitle>{{ intersection.currentSwitching ? intersection.currentSwitching : 'Schaltung' }}
+          </mat-card-subtitle>
         </mat-card-title-group>
         <mat-card-content class="d-none d-xl-block">
           <p class="mat-caption">Modus</p>
@@ -39,7 +41,8 @@
                     *ngFor="let cam of intersection.staticCams"
                     (click)="intersectionHelper.activateCam(cam, dialog)">
               <mat-icon>videocam</mat-icon>
-              {{ cam }}</button>
+              {{ cam }}
+            </button>
           </mat-menu>
           <button mat-icon-button
                   color="accent"
@@ -72,8 +75,13 @@
 
 <h1 class="mt-5 mb-4">Weitere Informationen</h1>
 <div class="row">
-  <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3 d-flex">
-    <mat-card>
+  <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 d-flex">
+    <app-config-card class="flex-fill mb-5"
+                     [luaSettings]="luaModuleSettings$"
+                     (settingChanged)="onSettingChanged($event)"></app-config-card>
+  </div>
+  <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 d-flex">
+    <mat-card class="flex-fill mb-5">
       <mat-card-title-group>
         <mat-card-title>Hilfe</mat-card-title>
       </mat-card-title-group>
@@ -86,6 +94,7 @@
         <a mat-button
            color="primary"
            target="_blank"
+           rel="noopener noreferrer"
            href="https://andreas-kreuz.github.io/ak-lua-bibliothek-fuer-eep/anleitungen/">
           Anleitung
           <mat-icon>launch</mat-icon>

@@ -90,6 +90,17 @@ html, body {
   padding-bottom: 8px;
 }
 
+.app-card .mat-card-header + .mat-list,
+.app-card .mat-card-header + .mat-divider + .mat-list,
+.app-card .mat-card-header + .mat-card-content > .mat-list,
+.app-card .mat-card-header + .mat-card-content > .mat-divider + .mat-list,
+.app-card .mat-card-title-group + .mat-list,
+.app-card .mat-card-title-group + .mat-divider + .mat-list,
+.app-card .mat-card-title-group + .mat-card-content > .mat-list,
+.app-card .mat-card-title-group + .mat-card-content > .mat-divider + .mat-list {
+  padding-top: 0px;
+}
+
 .app-card-header-primary > .mat-card-header,
 .app-card-header-primary > .mat-card-title-group {
   background-color: mat-color($ak-eep-web-primary);

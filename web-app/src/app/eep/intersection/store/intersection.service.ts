@@ -16,6 +16,7 @@ export class IntersectionService {
   private laneActions$: Observable<WsEvent>;
   private switchingActions$: Observable<WsEvent>;
   private trafficLightActions$: Observable<WsEvent>;
+  private luaModuleSettingsActions$: Observable<WsEvent>;
 
   getIntersectionActions(): Observable<WsEvent> {
     if (!this.intersectionActions$) {
@@ -43,6 +44,13 @@ export class IntersectionService {
       this.trafficLightActions$ = this.wsService.listen('[Data-intersection-traffic-lights]');
     }
     return this.trafficLightActions$;
+  }
+
+  getLuaSettingsReceivedActions(): Observable<WsEvent> {
+    if (!this.luaModuleSettingsActions$) {
+      this.luaModuleSettingsActions$ = this.wsService.listen('[Data-intersection-module-settings]');
+    }
+    return this.luaModuleSettingsActions$;
   }
 
   emit(wsEvent: WsEvent) {

@@ -2,6 +2,7 @@
 
 ## 0.9.0
 
+- ⭐ Neu: Umschalten der Debug-Einstellungen für Kreuzungen in der Web-App
 - ⭐ Neu: Ein Projekt, alle Inhalte (Lua, Server und Web App in einem Projekt)
 - ⭐ Neu: Daten für den Server werden nur noch dann geschrieben, wenn der Server gestartet ist
 - ⭐ Neu: Module:
@@ -33,6 +34,7 @@ Der Code wurde wie folgt geändert:
   local ModuleRegistry = require("ak.core.ModuleRegistry")
   ModuleRegistry.registerModules(
       require("ak.core.CoreLuaModule"),
+      require("ak.data.DataLuaModule"),
       require("ak.strasse.KreuzungLuaModul")
   )
 

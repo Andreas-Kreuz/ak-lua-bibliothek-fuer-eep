@@ -5,8 +5,13 @@ import { Intersection } from '../models/intersection.model';
 import { IntersectionLane } from '../models/intersection-lane.model';
 import { IntersectionSwitching } from '../models/intersection-switching.model';
 import { IntersectionTrafficLight } from '../models/intersection-traffic-light.model';
+import { LuaSetting } from '../../../shared/model/lua-setting';
+import { LuaSettings } from '../../../shared/model/lua-settings';
 
-export const setIntersections = createAction('[Intersections] Set', props<{ intersections: Intersection[] }>());
+export const setIntersections = createAction('[Intersections] Set Intersections', props<{ intersections: Intersection[] }>());
+export const setModuleSettings = createAction('[Intersections] Set Module Settings', props<{ settings: LuaSettings }>());
+export const changeModuleSettings =
+  createAction('[Intersections] Send Module Setting Update', props<{ setting: LuaSetting<any>, value: any }>());
 export const setLanes = createAction('[Intersections] Set Lanes', props<{ lanes: IntersectionLane[] }>());
 export const setSwitchings =
   createAction('[Intersections] Set Switching', props<{ switchings: IntersectionSwitching[] }>());
