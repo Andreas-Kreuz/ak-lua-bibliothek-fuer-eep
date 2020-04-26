@@ -27,6 +27,7 @@ indent_size = 2
 
 [*.ts]
 indent_size = 2
+quote_type = single
 
 [*.md]
 indent_size = 2

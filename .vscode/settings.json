@@ -61,7 +61,9 @@
     "/lua/modell-pakete": true
   },
   "html.format.indentHandlebars": true,
+  "prettier.printWidth": 120,
   "typescript.preferences.quoteStyle": "single",
+  "javascript.preferences.quoteStyle": "single",
+  "prettier.jsxSingleQuote": true,
   "prettier.singleQuote": true,
-  "prettier.printWidth": 120
 }
