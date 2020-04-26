@@ -23,23 +23,23 @@ SET projectPath="%~dp0.."
 @REM rebuild the server
 call "%~dp0build-server-with-app.cmd"
 IF %ERRORLEVEL% NEQ 0 (
-    exit %ERRORLEVEL%
+    exit /b %ERRORLEVEL%
 )
 
 xcopy /Y %projectPath%\server\target\ak-eep-web.jar %projectPath%\lua\LUA\ak
 IF %ERRORLEVEL% NEQ 0 (
-    exit %ERRORLEVEL%
+    exit /b %ERRORLEVEL%
 )
 
 @REM Create the installation package for EEP
 cd %projectPath%\lua\LUA
 IF %ERRORLEVEL% NEQ 0 (
-    exit %ERRORLEVEL%
+    exit /b %ERRORLEVEL%
 )
 
 call lua ModellInstallation.lua
 IF %ERRORLEVEL% NEQ 0 (
-    exit %ERRORLEVEL%
+    exit /b %ERRORLEVEL%
 )
 
 cd %oldDir%

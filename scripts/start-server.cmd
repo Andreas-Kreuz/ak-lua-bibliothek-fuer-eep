@@ -9,7 +9,7 @@ SET projectPath=%~dp0..
 
 call java -jar %projectPath%\server\target\ak-eep-web.jar --test "%projectPath%\lua\LUA\ak\io\exchange"
 IF %ERRORLEVEL% NEQ 0 (
-   exit %ERRORLEVEL%
+   exit /b %ERRORLEVEL%
 )
 
 cd %oldDir%
