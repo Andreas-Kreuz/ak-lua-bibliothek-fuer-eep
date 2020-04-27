@@ -1,4 +1,4 @@
-print "Lade ak.data.TrainsAndTracksJsonCollector ..."
+print "Load ak.data.TrainsAndTracksJsonCollector ..."
 TrainsAndTracksJsonCollector = {}
 local enabled = true
 local initialized = false
@@ -7,6 +7,24 @@ TrainsAndTracksJsonCollector.name = "ak.data.TrainsAndTracksJsonCollector"
 local MAX_TRACKS = 50000
 local data = {}
 local tracks = {}
+
+function storeRunTime(group, time)
+    -- collect and sum runtime date, needs rework
+    if not data["runtime"] then
+        data["runtime"] = {}
+    end
+    if not data["runtime"][group] then
+        data["runtime"][group] = {
+            id = group,
+            count = 0,
+            time = 0
+        }
+    end
+    local runtime = data["runtime"][group]
+    runtime.count = runtime.count + 1
+    runtime.time = runtime.time + time
+    -- data["times"][1][group] = runtime
+end
 
 --- Create dummy functions for EEP functions which are not yet available depending of the version of EEP
 -- The minimal required version is EEP 11.3 Plug-In 3 which supports some quite important functions
@@ -25,14 +43,12 @@ local function EEPGetRollingstockItemsCount(...)
         return
     end
 
-    -- local t0 = os.clock()
+    local t0 = os.clock()
 
     local result = {_EEPGetRollingstockItemsCount(...)}
 
-    -- local t1 = os.clock()
-    -- local runTime = data["times"][1].EEPGetRollingstockItemsCount or {n = 0, t = 0}
-    -- runTime.n = runTime.n + 1
-    -- runTime.t = runTime.t + t1 - t0
+    local t1 = os.clock()
+    storeRunTime("EEPGetRollingstockItemsCount", t1 - t0)
 
     return table.unpack(result)
 end
@@ -62,6 +78,23 @@ EEPRollingstockGetModelType = EEPRollingstockGetModelType or function()
 EEPRollingstockGetTagText = EEPRollingstockGetTagText or function()
         return
     end -- EEP 14.2
+
+-- Redefine function from EEP 11.0 to collect run time data
+local _EEPGetTrainSpeed = EEPGetTrainSpeed
+local function EEPGetTrainSpeed(...)
+    if not EEPGetTrainSpeed then
+        return
+    end
+
+    local t0 = os.clock()
+
+    local result = {_EEPGetTrainSpeed(...)}
+
+    local t1 = os.clock()
+    storeRunTime("EEPGetTrainSpeed", t1 - t0)
+
+    return table.unpack(result)
+end
 
 --- Register EEP tracks.
 -- The main reason for this is to be able to retrieve the names and positions of all trains and rolling stocks.

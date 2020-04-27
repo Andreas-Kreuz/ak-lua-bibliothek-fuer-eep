@@ -1,4 +1,4 @@
-print("Lade ak.core.ModuleRegistry ...")
+print("Load ak.core.ModuleRegistry ...")
 local ModuleRegistry = {}
 
 local ServerController = require("ak.io.ServerController")
@@ -32,7 +32,7 @@ function ModuleRegistry.registerModules(...)
 end
 
 ---
--- Registers a module to be used in EEP Web
+-- Unregisters a module
 -- @param module a module of type AkLuaControlModule
 function ModuleRegistry.unregisterModules(...)
     for _, module in ipairs({...}) do
@@ -45,26 +45,28 @@ function ModuleRegistry.unregisterModules(...)
 end
 
 local function initTask(module)
+    --print(string.format('Begin ModuleRegistry.initTask() for "%s"', module.name))
     local t0 = os.clock()
     module.init()
     local t1 = os.clock()
     local timeDiff = t1 - t0
-    print(string.format('ModuleRegistry.initTask() %.3f Sekunden fuer "%s"', timeDiff, module.name))
+    print(string.format('ModuleRegistry.initTask() %.3f seconds for "%s"', timeDiff, module.name))
 end
 
 local function runTask(module)
+    --print(string.format('Begin ModuleRegistry.runTask() for "%s"', module.name))
     local t0 = os.clock()
     module.run()
     local t1 = os.clock()
     local timeDiff = t1 - t0
+    --print(string.format('ModuleRegistry.runTask() %.3f seconds for "%s"', timeDiff, module.name)) --###
     if timeDiff > 0.2 then
-        print(string.format('WARNUNG: ModuleRegistry.runTask() %.3f Sekunden fuer "%s"', timeDiff, module.name))
+        print(string.format('WARNING: ModuleRegistry.runTask() %.3f seconds for "%s"', timeDiff, module.name))
     end
 end
 
 ---
 -- This will init all registeredLuaModules
--- @param module a module of type AkLuaControlModule
 function ModuleRegistry.initTasks()
     if not initialized then
         for _, module in pairs(registeredLuaModules) do
@@ -76,9 +78,9 @@ function ModuleRegistry.initTasks()
 end
 
 ---
--- This will init all registeredLuaModules
--- @param module a module of type AkLuaControlModule
-function ModuleRegistry.runTasks()
+-- This will run all registeredLuaModules
+-- @param cycleCount Repetion frequency (1: every 200 ms, 5: every second, ...)
+function ModuleRegistry.runTasks(cycleCount)
     if not initialized then
         ModuleRegistry.initTasks()
     end
@@ -90,7 +92,7 @@ function ModuleRegistry.runTasks()
     if enableServer then
         -- Sorgt dafür, dass alle JsonDaten der registrieren XxxJsonColletor zum Server kommen
         -- und dass die Befehle des Servers ausgewertet werden
-        ServerController.communicateWithServer(1)
+        ServerController.communicateWithServer(cycleCount)
     end
 end
 
@@ -100,6 +102,13 @@ end
 
 function ModuleRegistry.deactivateServer()
     enableServer = false
+end
+
+---
+-- Set option of the ServerController
+-- @param flag true(default)/false to decide if Lua should check if the EEP Server is running and ready
+function ModuleRegistry.setWaitForServer(flag)
+    ServerController.checkServerStatus = flag
 end
 
 -- Register the core module to hold basic data

@@ -17,7 +17,7 @@ function VersionJsonCollector.initialize()
             name = "versionInfo", -- EEP-Web requires that data entries have an id or name tag
             eepVersion = string.format("%.1f", EEPVer), -- show string instead of float
             luaVersion = _VERSION,
-            singleVersion = {ServerController = ServerController.programVersion} -- EEP-Web does not show this value
+            singleVersion = ServerController.programVersion,
         }
     }
 
