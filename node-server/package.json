@@ -1,0 +1,25 @@
+{
+  "name": "lua-server-for-eep",
+  "version": "0.0.1",
+  "description": "Lua Server für EEP - ein Server im Fenster",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "lint": "tslint -c tslint.json -p tsconfig.json",
+    "start": "npm run build && electron ./dist/main.js"
+  },
+  "repository": "https://github.com/ak-lua-bibliothek-fuer-eep",
+  "keywords": [
+    "EEP", "Lua"
+  ],
+  "author": "Andreas-Kreuz",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^6.0.8",
+    "tslint": "^5.19.0",
+    "typescript": "^3.6.0"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
