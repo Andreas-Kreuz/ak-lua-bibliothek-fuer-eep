@@ -8,6 +8,10 @@
 
 # Andreas Kreuz's projects
 /server/target
+/server/node_modules
+/server/dist
+/node-server/node_modules
+/node-server/dist
 
 # Project based settings
 /lua/LUA/**/AkSpeicherWerte.txt
