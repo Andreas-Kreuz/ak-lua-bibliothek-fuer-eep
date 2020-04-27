@@ -34,7 +34,7 @@ EEP (Eisenbahn.exe Professional) ist eine [Simulationssoftware des Trendverlags]
 
 ## Danke
 
-* [FrankBucholz](https://github.com/FrankBuchholz)
+* [FrankBuchholz](https://github.com/FrankBuchholz)
   für Performance-Optimierungen und kleine Verbesserungen
 * [Damian-Rutkowski](https://github.com/Damian-Rutkowski)
   für die Langzeitmotivation

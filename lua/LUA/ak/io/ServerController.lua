@@ -8,7 +8,7 @@ local ServerController = require("ak.io.ServerController")
 --]]
 -- @author Andreas Kreuz
 -- @release 0.9.0
-print("Lade ak.io.ServerController ...")
+print("Load ak.io.ServerController ...")
 local AkWebServerIo = require("ak.io.AkWebServerIo")
 local AkCommandExecutor = require("ak.io.AkCommandExecutor")
 local os = require("os")
@@ -68,7 +68,7 @@ local function initializeJsonCollector(jsonCollector)
     jsonCollector.initialize()
     local t1 = os.clock()
     local timeDiff = t1 - t0
-    print(string.format('ServerController: initialize() %.2f Sekunden fuer "%s"', timeDiff, jsonCollector.name))
+    print(string.format('ServerController: initialize() %.2f seconds for "%s"', timeDiff, jsonCollector.name))
 end
 
 local function collectFrom(jsonCollector, printFirstTime)
@@ -77,7 +77,7 @@ local function collectFrom(jsonCollector, printFirstTime)
     local t1 = os.clock()
     local timeDiff = t1 - t0
     if timeDiff > 0.02 or printFirstTime then
-        print(string.format('ServerController:collectData() %.2f Sekunden fuer "%s"', timeDiff, jsonCollector.name))
+        print(string.format('ServerController:collectData() %.2f seconds for "%s"', timeDiff, jsonCollector.name))
     end
     return newData
 end
@@ -107,15 +107,18 @@ function ServerController.addJsonCollector(...)
         -- Check the jsonCollector
         assert(
             jsonCollector.name and type(jsonCollector.name) == "string",
-            "Der Name des Moduls muss gesetzt und ein String sein"
+            --"Der Name des Moduls muss gesetzt und ein String sein"
+            "The name of the module must be defined and is has to be a string"
         )
         assert(
             jsonCollector.initialize and type(jsonCollector.initialize) == "function",
-            "Das Modul muss eine Funktion initialize() besitzen"
+            --"Das Modul muss eine Funktion initialize() besitzen"
+            string.format("Module %s must have a function initialize()", jsonCollector.name)
         )
         assert(
             jsonCollector.collectData and type(jsonCollector.collectData) == "function",
-            "Das Modul muss eine Funktion collectData() besitzen"
+            --"Das Modul muss eine Funktion collectData() besitzen"
+            string.format("Module %s must have a function collectData()", jsonCollector.name)
         )
 
         -- Remember the jsonCollector by it's name
@@ -155,7 +158,7 @@ function collectAndWriteData(printFirstTime, modulus)
     if not printFirstTime and t4 - t0 > .2 * modulus then
         print(
             string.format(
-                "WARNUNG: ServerController.collectAndWriteData()   time is %.2f s --- " ..
+                "WARNING: ServerController.collectAndWriteData()   time is %.2f s --- " ..
                     "collect: %.2f s, sort: %.2f s, encode: %.2f s, writeFile: %.2f s",
                 t4 - t0,
                 t1 - t0,
@@ -217,7 +220,7 @@ function ServerController.communicateWithServer(modulus)
     if printFirstTime or timeDiff > allowedTimeDiff then
         print(
             string.format(
-                (printFirstTime and "MIT INITIALISIERUNG" or "WARNUNG") ..
+                (printFirstTime and "INITIALIZATION" or "WARNING") ..
                     ": ServerController.communicateWithServer() time is %.2f s --- " ..
                         "waitForServer: %.2f s, initialize: %.2f s, " ..
                             "processNewCommands: %.2f s, collectAndWriteData: %.2f s" .. "(allowed: %.2f s)",
