@@ -111,6 +111,28 @@ function ModuleRegistry.setWaitForServer(flag)
     ServerController.checkServerStatus = flag
 end
 
+---
+-- DataLuaModule: register jsonCollectors (default = all)
+-- @param Array of jsonCollector names
+function ModuleRegistry.registerCollectors(collectorsArray)
+    local collectorsList = {}
+    for key, value in pairs(collectorsArray) do
+        collectorsList[value] = true
+    end
+    ServerController.activeCollectors = collectorsList
+end
+
+---
+-- DataLuaModule: set active entries (default = all)
+-- @param Array of entry names
+function ModuleRegistry.setActiveEntries(entriesArray)
+    local entriesList = {}
+    for key, value in pairs(entriesArray) do
+        entriesList[value] = true
+    end
+    ServerController.activeEntries = entriesList
+end
+
 -- Register the core module to hold basic data
 do
     local CoreLuaModule = require("ak.core.CoreLuaModule")

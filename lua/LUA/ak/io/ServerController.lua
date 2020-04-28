@@ -22,6 +22,13 @@ ServerController.programVersion = "0.9.0"
 -- false: Update json file without checking if the EEP-Web Server is ready
 ServerController.checkServerStatus = true
 
+-- List of collectors which should be active (default = all)
+-- Example: { ["ak.core.VersionJsonCollector"] = true, ["ak.data.TrainsAndTracksJsonCollector"] = true, }
+ServerController.activeCollectors = {}
+-- List of entries which should be active (default = all)
+-- Example: { ["api-entries"] = true, ["eep-version"] = true, }
+ServerController.activeEntries = {}
+
 local registeredJsonCollectors = {}
 local collectedData = {}
 local checksum = 0
@@ -113,20 +120,25 @@ function ServerController.addJsonCollector(...)
         assert(
             jsonCollector.initialize and type(jsonCollector.initialize) == "function",
             --"Das Modul muss eine Funktion initialize() besitzen"
-            string.format("Module %s must have a function initialize()", jsonCollector.name)
+            string.format("jsonCollector %s must have a function initialize()", jsonCollector.name)
         )
         assert(
             jsonCollector.collectData and type(jsonCollector.collectData) == "function",
             --"Das Modul muss eine Funktion collectData() besitzen"
-            string.format("Module %s must have a function collectData()", jsonCollector.name)
+            string.format("jsonCollector %s must have a function collectData()", jsonCollector.name)
         )
 
-        -- Remember the jsonCollector by it's name
-        print(string.format("ServerController.addJsonCollector(%s)", jsonCollector.name))
-        registeredJsonCollectors[jsonCollector.name] = jsonCollector
+        if next(ServerController.activeCollectors) == nil -- empty list
+          or ServerController.activeCollectors[jsonCollector.name] then
+            -- Remember the jsonCollector by it's name
+            print(string.format("ServerController.addJsonCollector(%s)", jsonCollector.name))
+            registeredJsonCollectors[jsonCollector.name] = jsonCollector
 
-        if initialized then
-            initializeJsonCollector(jsonCollector)
+            if initialized then
+                initializeJsonCollector(jsonCollector)
+            end
+        else    
+            print(string.format("ServerController.addJsonCollector(%s) not activated", jsonCollector.name))
         end
     end
 end
@@ -138,8 +150,13 @@ function collectAndWriteData(printFirstTime, modulus)
     -- add statistical data
     local t1 = os.clock()
     local orderedKeys = {}
-    for key in pairs(collectedData) do
-        table.insert(orderedKeys, key)
+    local exportData = {}
+    for key, value in pairs(collectedData) do
+        if next(ServerController.activeEntries) == nil -- empty list
+          or ServerController.activeEntries[key] then
+            exportData[key] = value
+            table.insert(orderedKeys, key)
+        end 
     end
     table.sort(orderedKeys)
     fillApiEntriesV1(orderedKeys)
@@ -147,7 +164,7 @@ function collectAndWriteData(printFirstTime, modulus)
     -- write file
     local t2 = os.clock()
 
-    local content = json.encode(collectedData, {keyorder = orderedKeys})
+    local content = json.encode(exportData, {keyorder = orderedKeys})
 
     local t3 = os.clock()
     AkWebServerIo.updateJsonFile(content)
