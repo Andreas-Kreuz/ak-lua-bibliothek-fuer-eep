@@ -10,7 +10,8 @@
   },
   "repository": "https://github.com/ak-lua-bibliothek-fuer-eep",
   "keywords": [
-    "EEP", "Lua"
+    "EEP",
+    "Lua"
   ],
   "author": "Andreas-Kreuz",
   "license": "MIT",
@@ -20,6 +21,8 @@
     "typescript": "^3.6.0"
   },
   "dependencies": {
+    "@types/express": "^4.17.6",
+    "cors": "^2.8.5",
     "express": "^4.17.1"
   }
 }
