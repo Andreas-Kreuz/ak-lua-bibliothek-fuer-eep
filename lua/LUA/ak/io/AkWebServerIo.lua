@@ -176,7 +176,7 @@ local writing = false
 function AkWebServerIo.updateJsonFile(jsonData)
     if not writing then
         writing = true
-        if not pcall(writeFile, outFileNameJson, jsonData) then -- file: ak-eep-out.json
+        if not pcall(writeFile, outFileNameJson, jsonData .. "\n") then -- file: ak-eep-out.json
             print("CANNOT WRITE TO " .. outFileNameJson)
         end
         writing = false
