@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import tail from 'tail';
+import readline from 'readline';
 
 const serverWatchingFile = 'ak-server.iswatching';
 const serverReadyForJsonFile = 'ak-eep-out-json.isfinished';
@@ -10,55 +10,84 @@ const writtenCommandFileName = 'ak-eep-in.commands';
 const writtenEventFileName = 'ak-eep-in.event';
 
 export default class FileOperations {
-  private jsonUpdate: (jsonText: string) => void;
+  private onJsonUpdate = (jsonText: string) => {
+    console.log('Received: ' + jsonText.length + ' bytes of JSON');
+  }
+  private onLogLine = (line: string) => {};
 
   constructor(private dir: string) {
-    fs.watch(dir, {}, (eventType: string, filename: string) => {
-      this.onFileChange(eventType, filename);
-    });
+    this.dir = path.resolve(dir);
 
-    const fileToTail = dir + '/' + watchedLogFileName;
-    const logTail = new tail.Tail(fileToTail, { fromBeginning: true, follow: true });
-    logTail.on('line', (line: string) => this.onLogFileUpdated(line));
-
-    const fileToTail2 = dir + '/' + watchedJsonFileName;
-    const logTail2 = new tail.Tail(fileToTail2, { fromBeginning: true, follow: true, flushAtEOF: true });
-    logTail2.on('line', (line: string) => this.onJsonFileUpdated(line));
-    logTail2.on('error', (error: string) => console.log(error));
-
-    fs.closeSync(fs.openSync(dir + '/' + serverWatchingFile, 'w'));
+    this.attachAkEepOutJsonFile(dir);
+    this.attachAkEepOutLogFile(dir);
+    this.createAkServerFile(dir);
   }
 
-  private onFileChange(eventType: string, filename: string) {
-    if (filename) {
-      switch (filename) {
-        case watchedJsonFileName:
-        case watchedLogFileName: {
-          break;
-        }
-        default: {
-          console.log(`Ignore file change <${eventType}> on: ${filename}`);
-          break;
-        }
-      }
-    } else {
-      console.log('filename not provided');
+  private deleteFileIfExists(file: string): void {
+    try {
+      fs.unlinkSync(file);
+    } catch (err) {
+      /* ignored */
     }
   }
 
-  public onJsonContentChanged(updateFunction: (jsonText: string) => void) {
-    this.jsonUpdate = updateFunction;
+  private attachAkEepOutJsonFile(dir: string): void {
+    const jsonFile = path.resolve(dir, watchedJsonFileName);
+    const jsonReadyFile = path.resolve(dir, serverReadyForJsonFile);
+
+    this.deleteFileIfExists(jsonReadyFile);
+    fs.watch(dir, {}, (eventType: string, filename: string) => {
+      // If the jsonReadyFile exists: Read the data and remove the file
+      if (filename === serverReadyForJsonFile && fs.existsSync(jsonReadyFile)) {
+        fs.readFile(jsonFile, { encoding: 'latin1' }, (err, data) => {
+          if (err) {
+            console.log(err);
+          }
+          this.onJsonUpdate(data);
+        });
+        this.deleteFileIfExists(jsonReadyFile);
+      }
+    });
   }
 
-  private onJsonFileUpdated(line: string) {
-    // Inform the server
-    console.log('JSON File updated!' + line.length);
-    this.jsonUpdate(line);
-    fs.unlinkSync(this.dir + '/' + serverReadyForJsonFile);
+  private attachAkEepOutLogFile(dir: string): void {
+    const logFile = path.resolve(dir, watchedLogFileName);
+    const logFileStream = fs.createReadStream(logFile, { encoding: 'latin1' });
+
+    const rl = readline.createInterface({
+      input: logFileStream,
+      crlfDelay: Infinity,
+    });
+
+    rl.on('line', (line) => this.onLogLine(line));
+
+    process.on('exit', () => {
+      rl.close();
+      console.log('on(exit): ' + logFile + ' stream closed.');
+    });
   }
 
-  private onLogFileUpdated(line: string) {
-    // Inform the server
-    // console.log('Log File updated: ' + line);
+  public createAkServerFile(dir: string) {
+    const watchFile = path.resolve(this.dir, serverWatchingFile);
+    // Create the serverWatchingFile
+    fs.closeSync(fs.openSync(watchFile, 'w'));
+
+    // Delete the file on exit
+    process.on('exit', () => {
+      fs.unlink(watchFile, (err) => {
+        if (err) {
+          throw err;
+        }
+        console.log('on(exit): ' + watchFile + ' successfully deleted');
+      });
+    });
+  }
+
+  public setOnJsonContentChanged(updateFunction: (jsonText: string) => void) {
+    this.onJsonUpdate = updateFunction;
+  }
+
+  private setOnNewLogLine(logLineFunction: (line: string) => void) {
+    this.onLogLine = logLineFunction;
   }
 }

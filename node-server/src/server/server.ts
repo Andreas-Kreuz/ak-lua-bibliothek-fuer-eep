@@ -1,3 +1,4 @@
+import path from 'path';
 import FileOperations from './file-operations';
 import JsonDataHandler from './json-data-handler';
 
@@ -6,7 +7,10 @@ export class Server {
   private express: any;
   private app: any;
 
-  constructor(private exchangeDir = __dirname + '/../../../lua/LUA/ak/io/exchange/', private port = 3000) {
+  constructor(
+    private exchangeDir = path.resolve(__dirname + '/../../../lua/LUA/ak/io/exchange/'),
+    private port = 3000
+  ) {
     // Init the server
     this.express = require('express');
     this.app = this.express();
@@ -22,7 +26,7 @@ export class Server {
       (key: string) => this.jsonKeyChanged(key),
       (key: string) => this.jsonKeyRemoved(key)
     );
-    fileOperations.onJsonContentChanged((jsonString: string) => this.jsonDataHandler.jsonDataUpdated(jsonString));
+    fileOperations.setOnJsonContentChanged((jsonString: string) => this.jsonDataHandler.jsonDataUpdated(jsonString));
 
     // Init LogHandler
     // fileOperations.addLogCallback((jsonString: string) => this.onUpdate);
@@ -50,7 +54,7 @@ export class Server {
   }
 
   private registerApiUrls(key: string) {
-    console.log('Register: /api/v1/: ' + key);
+    console.log('Register: /api/v1/' + key);
     const router = this.express.Router();
     router.get('/' + key, (req: any, res: any) => {
       res.json(this.jsonDataHandler.getCurrentApiEntry(key));
