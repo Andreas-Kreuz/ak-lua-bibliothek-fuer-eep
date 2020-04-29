@@ -6,7 +6,7 @@ import { Tail } from 'tail';
 const serverWatchingFile = 'ak-server.iswatching';
 const serverReadyForJsonFile = 'ak-eep-out-json.isfinished';
 const watchedJsonFileName = 'ak-eep-out.json';
-const watchedLogFileName = 'ak-eep-out.socket'; // TODO: CHANGE TO ak-eep-out.log
+const watchedLogFileName = 'ak-eep-out.log'; // TODO: CHANGE TO ak-eep-out.log
 const writtenCommandFileName = 'ak-eep-in.commands';
 const writtenEventFileName = 'ak-eep-in.event';
 

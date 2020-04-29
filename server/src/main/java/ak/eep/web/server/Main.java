@@ -33,7 +33,7 @@ public class Main {
         this.directoryWatcher = new DirectoryWatcher(dir).watchFilesInBg();
 
         this.commandOutFilePath = Paths.get(dir + "/ak-eep-in.commands").toAbsolutePath();
-        this.logInFilePath = Paths.get(dir + "/ak-eep-out.socket").toAbsolutePath();
+        this.logInFilePath = Paths.get(dir + "/ak-eep-out.log").toAbsolutePath();
         this.jsonDataFilePath = Paths.get(dir + "/ak-eep-out.json").toAbsolutePath();
         this.serverSyncFilePath = Paths.get(dir + "/ak-server.iswatching").toAbsolutePath();
         // this.serverReadyFileName =
