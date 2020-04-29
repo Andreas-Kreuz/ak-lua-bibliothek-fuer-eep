@@ -57,7 +57,7 @@ function AkWebServerIo.setOutputDirectory(dirName)
     ioDirectoryName = dirName
 
     -- EEP appends the log to this file
-    outFileNameLog = ioDirectoryName .. "/ak-eep-out.socket"
+    outFileNameLog = ioDirectoryName .. "/ak-eep-out.log"
 
     -- EEP writes it's status to this file regularly
     -- but only if the Web Server is listening and has finished reading the previous version of the file
