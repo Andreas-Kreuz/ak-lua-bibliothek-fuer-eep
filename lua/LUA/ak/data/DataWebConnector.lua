@@ -5,8 +5,7 @@ local DataWebConnector = {}
 function DataWebConnector.registerJsonCollectors(activeCollectors)
     local all = true
     if activeCollectors then
-        if next(activeCollectors) == nil then -- empty list
-        else
+        if next(activeCollectors) ~= nil then -- not empty list
             all = false
         end
     end
