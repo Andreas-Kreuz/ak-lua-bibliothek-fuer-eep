@@ -43,14 +43,13 @@ end
 -- @options List of options { waitForServer = true/false, activeEntries = array of entry names, }
 local ServerController = require("ak.io.ServerController")
 function CoreLuaModule.setOptions(options)
-    if options.waitForServer == nil then -- it seems to be difficult to distinguish between nil, true, false
-    else -- however this way it works
+    if options.waitForServer ~= nil then
         ServerController.checkServerStatus = options.waitForServer
     end
 
     if options.activeEntries then
         local entriesList = {}
-        for key, value in pairs(options.activeEntries) do
+        for _, value in pairs(options.activeEntries) do
             entriesList[value] = true
         end
         ServerController.activeEntries = entriesList

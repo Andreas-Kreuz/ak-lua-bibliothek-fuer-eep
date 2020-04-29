@@ -40,11 +40,10 @@ end
 --- Über diese Funktion kann das EEP Skript die Optionen des Moduls setzen
 -- @author Frank Buchholz
 -- @options List of options { activeCollectors = array of jsonCollector names, }
-local ServerController = require("ak.io.ServerController")
 function DataLuaModule.setOptions(options)
     if options.activeCollectors then
         local collectorsList = {}
-        for key, value in pairs(options.activeCollectors) do
+        for _, value in pairs(options.activeCollectors) do
             collectorsList[value] = true
         end
         activeCollectors = collectorsList

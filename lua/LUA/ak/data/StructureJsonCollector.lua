@@ -33,7 +33,7 @@ function StructureJsonCollector.initialize()
             local structure = {}
             structure.name = name
 
-            local hasPos, pos_x, pos_y, pos_z = EEPStructureGetPosition(name)
+            local _, pos_x, pos_y, pos_z = EEPStructureGetPosition(name)
             local _, modelType = EEPStructureGetModelType(name)
             local EEPStructureModelTypeText = {
                 [16] = "Gleis/Gleisobjekt",

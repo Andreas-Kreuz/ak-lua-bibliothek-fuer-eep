@@ -190,7 +190,7 @@ local function updateTracksBy(besetztFunktion, trackType)
 
     for trainName, train in pairs(trains) do
         -- Store trains
-        local haveSpeed, speed = EEPGetTrainSpeed(trainName) -- EEP 11.0
+        local _, speed = EEPGetTrainSpeed(trainName) -- EEP 11.0
         local haveRoute, route = EEPGetTrainRoute(trainName) -- EEP 11.2 Plugin 2
 
         local rollingStockCount = EEPGetRollingstockItemsCount(trainName) -- EEP 13.2 Plug-In 2
