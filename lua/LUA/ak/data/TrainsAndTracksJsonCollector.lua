@@ -245,8 +245,8 @@ local function updateTracksBy(besetztFunktion, trackType)
                     [5] = "Diesellok",
                     [6] = "Triebwagen",
                     [7] = "U- oder S-Bahn",
-                    [8] = "Straßenbahn",
-                    [9] = "Güterwaggon",
+                    [8] = "Strassenbahn", -- avoid German Umlaute
+                    [9] = "Gueterwaggon", -- avoid German Umlaute
                     [10] = "Personenwaggon",
                     [11] = "Luftfahrzeug",
                     [12] = "Maschine",

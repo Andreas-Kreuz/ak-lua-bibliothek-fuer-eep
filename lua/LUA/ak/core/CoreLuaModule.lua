@@ -38,6 +38,23 @@ function CoreLuaModule.run()
     -- Das CoreModul hat keine wiederkehrenden Funktionen
 end
 
+--- Über diese Funktion kann das EEP Skript die Optionen des Moduls setzen
+-- @author Frank Buchholz
+-- @options List of options { waitForServer = true/false, activeEntries = array of entry names, }
+local ServerController = require("ak.io.ServerController")
+function CoreLuaModule.setOptions(options)
+    if options.waitForServer == nil then -- it seems to be difficult to distinguish between nil, true, false
+    else -- however this way it works
+        ServerController.checkServerStatus = options.waitForServer
+    end
 
+    if options.activeEntries then
+        local entriesList = {}
+        for key, value in pairs(options.activeEntries) do
+            entriesList[value] = true
+        end
+        ServerController.activeEntries = entriesList
+    end
+end
 
 return CoreLuaModule

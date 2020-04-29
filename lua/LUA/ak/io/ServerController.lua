@@ -22,9 +22,6 @@ ServerController.programVersion = "0.9.0"
 -- false: Update json file without checking if the EEP-Web Server is ready
 ServerController.checkServerStatus = true
 
--- List of collectors which should be active (default = all)
--- Example: { ["ak.core.VersionJsonCollector"] = true, ["ak.data.TrainsAndTracksJsonCollector"] = true, }
-ServerController.activeCollectors = {}
 -- List of entries which should be active (default = all)
 -- Example: { ["api-entries"] = true, ["eep-version"] = true, }
 ServerController.activeEntries = {}
@@ -128,17 +125,12 @@ function ServerController.addJsonCollector(...)
             string.format("jsonCollector %s must have a function collectData()", jsonCollector.name)
         )
 
-        if next(ServerController.activeCollectors) == nil -- empty list
-          or ServerController.activeCollectors[jsonCollector.name] then
-            -- Remember the jsonCollector by it's name
-            print(string.format("ServerController.addJsonCollector(%s)", jsonCollector.name))
-            registeredJsonCollectors[jsonCollector.name] = jsonCollector
+        -- Remember the jsonCollector by it's name
+        print(string.format("ServerController.addJsonCollector(%s)", jsonCollector.name))
+        registeredJsonCollectors[jsonCollector.name] = jsonCollector
 
-            if initialized then
-                initializeJsonCollector(jsonCollector)
-            end
-        else    
-            print(string.format("ServerController.addJsonCollector(%s) not activated", jsonCollector.name))
+        if initialized then
+            initializeJsonCollector(jsonCollector)
         end
     end
 end
@@ -156,7 +148,7 @@ function collectAndWriteData(printFirstTime, modulus)
           or ServerController.activeEntries[key] then
             exportData[key] = value
             table.insert(orderedKeys, key)
-        end 
+        end
     end
     table.sort(orderedKeys)
     fillApiEntriesV1(orderedKeys)

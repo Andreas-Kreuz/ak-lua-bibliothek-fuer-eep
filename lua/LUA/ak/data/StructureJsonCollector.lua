@@ -38,7 +38,7 @@ function StructureJsonCollector.initialize()
             local EEPStructureModelTypeText = {
                 [16] = "Gleis/Gleisobjekt",
                 [17] = "Schiene/Gleisobjekt",
-                [18] = "Straﬂe/Gleisobjekt",
+                [18] = "Strasse/Gleisobjekt", -- avoid German Umlaute
                 [19] = "Sonstiges/Gleisobjekt",
                 [22] = "Immobilie",
                 [23] = "Landschaftselement/Fauna",
