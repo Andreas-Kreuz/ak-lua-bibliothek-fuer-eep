@@ -1,18 +1,20 @@
-import { json, Router } from 'express';
 import FileOperations from './file-operations';
 import JsonDataHandler from './json-data-handler';
 
 export class Server {
   private jsonDataHandler: JsonDataHandler;
+  private express: any;
+  private app: any;
 
-  constructor(
-    private express = require('express'),
-    private app = express(),
-    private port = 3000,
-    private fileOperations = new FileOperations()
-  ) {
+  constructor(private exchangeDir = __dirname + '/../../../lua/LUA/ak/io/exchange/', private port = 3000) {
+    // Init the server
+    this.express = require('express');
+    this.app = this.express();
     const cors = require('cors');
     this.app.use(cors());
+
+    // Init file operations
+    const fileOperations = new FileOperations(this.exchangeDir);
 
     // Init JsonHandler
     this.jsonDataHandler = new JsonDataHandler(

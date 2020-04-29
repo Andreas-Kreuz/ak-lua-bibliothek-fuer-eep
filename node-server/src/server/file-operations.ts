@@ -12,7 +12,7 @@ const writtenEventFileName = 'ak-eep-in.event';
 export default class FileOperations {
   private jsonUpdate: (jsonText: string) => void;
 
-  constructor(private dir = __dirname + '/../../../lua/LUA/ak/io/exchange/') {
+  constructor(private dir: string) {
     fs.watch(dir, {}, (eventType: string, filename: string) => {
       this.onFileChange(eventType, filename);
     });
