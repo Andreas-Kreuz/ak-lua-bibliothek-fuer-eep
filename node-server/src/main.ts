@@ -2,7 +2,7 @@ import { app, BrowserWindow, remote, shell } from 'electron';
 import * as path from 'path';
 
 import CommandLineParser from './server/command-line-parser';
-import { Server } from './server/server';
+import { ServerMain } from './server/server-main';
 
 let mainWindow: Electron.BrowserWindow;
 
@@ -16,16 +16,15 @@ function createWindow() {
     width: 800,
   });
 
-  // User App Code
-  const server = new Server();
-  server.start();
+  // Hide the menu
+  mainWindow.removeMenu();
 
   // and load the index.html of the app.
   mainWindow.loadFile(path.join(__dirname, '../index.html'));
   // mainWindow.loadURL('http://localhost:3000');
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools();
 
   // Emitted when the window is closed.
   mainWindow.on('closed', () => {
@@ -55,3 +54,7 @@ app.on('window-all-closed', () => {
     app.quit();
   }
 });
+
+// User App Code
+const server = new ServerMain();
+server.start();
