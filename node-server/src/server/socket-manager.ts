@@ -11,6 +11,8 @@ export default class SocketManager {
 
   private registerMessages() {
     this.io.on('connection', (socket: Socket) => {
+      console.log('CONNECT FROM ' + socket.id);
+
       socket.on(SocketEvent.JOIN_ROOM, (rooms: string | string[]) => {
         socket.join(rooms);
         let joinedRooms: string[];

@@ -20,30 +20,44 @@ export class ServerMain {
   private config = new Config();
   private jsonDataHandler: JsonDataManager;
   private socketMgr: SocketManager;
+  private eepDirOk = false;
 
   constructor(private port = 3000) {
     // Init the server
     app.use(cors());
     app.set('port', this.port);
     this.socketMgr = new SocketManager(io);
-    this.socketMgr.addOnRoomsJoinedCallback((socket: Socket, joinedRooms: string[]) => this.onRoomsJoined(socket, joinedRooms));
+    this.socketMgr.addOnRoomsJoinedCallback((socket: Socket, joinedRooms: string[]) =>
+      this.onRoomsJoined(socket, joinedRooms)
+    );
+    io.on('connection', (socket: Socket) => {
+      socket.on(SocketEvent.ChangeDir, (dir: string) => {
+        console.log(SocketEvent.ChangeDir + '"' + dir + '"');
+        this.changeEepDirectory(dir);
+      });
+    });
   }
 
   public changeEepDirectory(eepDir: string) {
     // Append the exchange directory to the path
-    const dir = path.resolve(eepDir, 'LUA/ak/io/exchange/');
+    const completeDir = path.resolve(eepDir, 'LUA/ak/io/exchange/');
 
     // Check the directory and register handlers on success
     const fileOperations = new FileOperations();
-    fileOperations.reInit(dir, (err: string, dir2: string) => {
+    fileOperations.reInit(completeDir, (err: string, dir: string) => {
       if (err) {
         console.error(err);
-        io.to(Room.SERVER_SETTINGS).emit('[Current Dir]', err);
-      } else if (dir2) {
+        this.eepDirOk = false;
+        io.to(Room.SERVER_SETTINGS).emit(SocketEvent.DirError, eepDir);
+      } else if (dir) {
         this.config.saveEepDirectory(eepDir);
-        console.log('Directory set to : ' + dir2);
+        console.log('Directory set to : ' + dir);
         this.registerHandlers(fileOperations);
-        io.to(Room.SERVER_SETTINGS).emit('[Current Dir]', eepDir);
+        this.eepDirOk = true;
+        io.to(Room.SERVER_SETTINGS).emit(SocketEvent.DirOk, eepDir);
+      } else {
+        this.eepDirOk = false;
+        io.to(Room.SERVER_SETTINGS).emit(SocketEvent.DirError, eepDir);
       }
     });
   }
@@ -67,8 +81,9 @@ export class ServerMain {
 
   onRoomsJoined(socket: Socket, joinedRooms: string[]) {
     if (joinedRooms.indexOf(Room.SERVER_SETTINGS) > -1) {
-      console.log('EMIT ' + '[Current Dir]' + ' to ' + socket.id);
-      socket.emit('[Current Dir]', this.config.getEepDirectory());
+      const event = this.eepDirOk ? SocketEvent.DirOk : SocketEvent.DirError;
+      console.log('EMIT ' + event + ' to ' + socket.id);
+      socket.emit(event, this.config.getEepDirectory());
     }
   }
 }

@@ -3,8 +3,24 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Web Server mit EEP-Anbindung</title>
+  <title>Web Server für die Anbindung an EEP</title>
 </head>
+<style>
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  .dir-ok {
+    color: green;
+    font-weight: normal;
+  }
+
+  .dir-error {
+    color: red;
+    font-weight: bold;
+  }
+
+</style>
 
 <body>
   <h1>EEP-Lua-Connection</h1>
@@ -13,11 +29,12 @@
      rel="noopener noreferrer">Server</a>
 
   <p style="padding-top: 1.5em;"><strong>EEP-Verzeichnis</strong></p>
-  <form action="">
-    <input id="changeDir"
-           autocomplete="off" /><button>EEP-Verzeichnis wählen</button>
-  </form>
   <p>Aktuelles Verzeichnis: <em id="dir">none</em></p>
+  <form action="">
+    <label>Neues EEP-Verzeichnis: </label>
+    <input id="changeDir"
+           autocomplete="off" /><button>Ändern</button>
+  </form>
 
   <p style="padding-top: 2.5em;"><strong>Daten</strong></p>
   <div id="urls"><em>keine</em></div>
@@ -43,9 +60,15 @@
         $('#changeDir').val('');
         return false;
       });
-      socket.on('[Current Dir]', function (msg) {
+      socket.on('[Dir Ok]', function (msg) {
         $('#dir').contents().replaceWith($('<em>').text(msg));
-        // $('#changeDir').val('');
+        $('#dir').removeClass('dir-error').addClass('dir-ok');
+        $('#changeDir').val('');
+      });
+      socket.on('[Dir Error]', function (msg) {
+        $('#dir').contents().replaceWith($('<em>').text(msg));
+        $('#dir').removeClass('dir-ok').addClass('dir-error');
+        $('#changeDir').val(msg);
       });
       socket.on('[URLs]', function (msg) {
         console.log(msg);
@@ -53,7 +76,7 @@
       });
       socket.on('connect', function () {
         // Connected, let's sign-up for to receive messages for this room
-        socket.emit('join-room', ['[Server Settings]', '[URLs]']);
+        socket.emit('[join-room]', ['[Server Settings]', '[URLs]']);
       });
     });
   </script>
