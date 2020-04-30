@@ -30,12 +30,6 @@ export class ServerMain {
     this.socketMgr.addOnRoomsJoinedCallback((socket: Socket, joinedRooms: string[]) =>
       this.onRoomsJoined(socket, joinedRooms)
     );
-    io.on('connection', (socket: Socket) => {
-      socket.on(SocketEvent.ChangeDir, (dir: string) => {
-        console.log(SocketEvent.ChangeDir + '"' + dir + '"');
-        this.changeEepDirectory(dir);
-      });
-    });
   }
 
   public changeEepDirectory(eepDir: string) {
@@ -85,5 +79,10 @@ export class ServerMain {
       console.log('EMIT ' + event + ' to ' + socket.id);
       socket.emit(event, this.config.getEepDirectory());
     }
+
+    socket.on(SocketEvent.ChangeDir, (dir: string) => {
+      console.log(SocketEvent.ChangeDir + '"' + dir + '"');
+      this.changeEepDirectory(dir);
+    });
   }
 }
