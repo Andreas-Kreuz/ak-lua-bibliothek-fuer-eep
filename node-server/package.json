@@ -9,7 +9,7 @@
     "build": "npm run pub-del && npm run pub-mkdir && npm run pub-copy && tsc",
     "watch": "tsc -w",
     "lint": "tslint -c tslint.json -p tsconfig.json",
-    "start": "npm run build && electron ./build/main.js",
+    "start": "tsc && electron ./build/main.js",
     "start-pure": "npm run build && node ./build/node-main.js",
     "package-win": "npm run build && electron-builder build --win --x64",
     "pack": "electron-builder --dir",
@@ -24,6 +24,7 @@
   "build": {
     "appId": "io.github.andreas-kreuz.ak-lua-library-for-eep",
     "files": [
+      "index.html",
       "build/**/*",
       "node_modules/**/*",
       "!**/node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme}",

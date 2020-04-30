@@ -5,28 +5,46 @@ import SocketServer from './socket-server';
 
 import cors = require('cors');
 import express = require('express');
+import fs from 'fs';
 import http = require('http');
 import socketio from 'socket.io';
+import Config from './config';
 
 const app = express();
 const server = new http.Server(app);
 const io = socketio(server);
 
 export class Server {
+  private config = new Config();
   private jsonDataHandler: JsonDataHandler;
   private socketServer: SocketServer;
   private knownUrls: string[] = [];
 
-  constructor(private exchangeDir = path.resolve(__dirname, '/../../../lua/LUA/ak/io/exchange/'), private port = 3000) {
+  constructor(private port = 3000) {
     // Init the server
     app.use(cors());
     app.set('port', this.port);
+    this.socketServer = new SocketServer(io);
   }
 
-  public setDirectory() {
+  public changeEepDirectory(eepDir: string) {
+    const dir = path.resolve(eepDir, 'LUA/ak/io/exchange/');
     // Init file operations
-    const fileOperations = new FileOperations(this.exchangeDir);
+    const fileOperations = new FileOperations();
+    fileOperations.reInit(dir, (err: string, dir2: string) => {
+      if (err) {
+        console.error(err);
+        io.emit('[Current Dir]', err);
+      } else if (dir2) {
+        this.config.saveEepDirectory(eepDir);
+        console.log('Directory set to : ' + dir2);
+        this.registerHandlers(fileOperations);
+        io.emit('[Current Dir]', eepDir);
+      }
+    });
+  }
 
+  private registerHandlers(fileOperations: FileOperations) {
     // Init JsonHandler
     this.jsonDataHandler = new JsonDataHandler(
       (key: string) => this.jsonKeyAdded(key),
@@ -44,6 +62,14 @@ export class Server {
     server.listen(this.port, () => {
       console.log('Express server listening on port ' + app.get('port'));
     });
+    io.on('connection', (socket) => {
+      socket.on('[Change Dir]', (dir) => {
+        this.changeEepDirectory(dir);
+      });
+
+      socket.emit('[Current Dir]', this.config.getEepDirectory());
+    });
+    this.changeEepDirectory(this.config.getEepDirectory());
   }
 
   public jsonKeyRemoved(key: string): void {
