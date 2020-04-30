@@ -68,15 +68,14 @@ export default class FileOperations {
       if (filename === serverReadyForJsonFile && fs.existsSync(jsonReadyFile)) {
         // EEP has written the JsonFile for us, so let's read it.
         fs.readFile(jsonFile, { encoding: 'latin1' }, (err, data) => {
+          // Delete the file from EEP, so EEP will know we are ready
+          this.deleteFileIfExists(jsonReadyFile);
           if (err) {
             console.log(err);
-            this.deleteFileIfExists(jsonReadyFile);
           } else {
             this.onJsonUpdate(data);
           }
         });
-        // Last: delete the file from EEP, so EEP will know we are ready
-        this.deleteFileIfExists(jsonReadyFile);
       }
     });
   }
