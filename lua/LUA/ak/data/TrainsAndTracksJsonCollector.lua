@@ -8,6 +8,8 @@ local MAX_TRACKS = 50000
 local data = {}
 local tracks = {}
 
+--- Store runtime information
+-- @author Frank Buchholz
 function storeRunTime(group, time)
     -- collect and sum runtime date, needs rework
     if not data["runtime"] then
@@ -23,7 +25,23 @@ function storeRunTime(group, time)
     local runtime = data["runtime"][group]
     runtime.count = runtime.count + 1
     runtime.time = runtime.time + time
-    -- data["times"][1][group] = runtime
+end
+
+--- Indirect call of EEP function (or any other function) including time measurement
+-- @author Frank Buchholz
+function executeAndStoreRunTime(func, group, ...)
+    if not func then
+        return
+    end
+
+    local t0 = os.clock()
+
+    local result = {func(...)}
+
+    local t1 = os.clock()
+    storeRunTime(group, t1 - t0)
+
+    return table.unpack(result)
 end
 
 --- Create dummy functions for EEP functions which are not yet available depending of the version of EEP
@@ -39,18 +57,7 @@ EEPGetSignalTrainName = EEPGetSignalTrainName or function()
 --EEPGetRollingstockItemsCount = EEPGetRollingstockItemsCount  or function () return end -- EEP 13.2 Plug-In 2
 local _EEPGetRollingstockItemsCount = EEPGetRollingstockItemsCount
 local function EEPGetRollingstockItemsCount(...)
-    if not _EEPGetRollingstockItemsCount then
-        return
-    end
-
-    local t0 = os.clock()
-
-    local result = {_EEPGetRollingstockItemsCount(...)}
-
-    local t1 = os.clock()
-    storeRunTime("EEPGetRollingstockItemsCount", t1 - t0)
-
-    return table.unpack(result)
+    return executeAndStoreRunTime(_EEPGetRollingstockItemsCount, "EEPGetRollingstockItemsCount", ...)
 end
 
 EEPGetRollingstockItemName = EEPGetRollingstockItemName or function()
@@ -79,21 +86,14 @@ EEPRollingstockGetTagText = EEPRollingstockGetTagText or function()
         return
     end -- EEP 14.2
 
--- Redefine function from EEP 11.0 to collect run time data
+-- Redefine functions from EEP 11.0 to collect run time data
 local _EEPGetTrainSpeed = EEPGetTrainSpeed
 local function EEPGetTrainSpeed(...)
-    if not EEPGetTrainSpeed then
-        return
-    end
-
-    local t0 = os.clock()
-
-    local result = {_EEPGetTrainSpeed(...)}
-
-    local t1 = os.clock()
-    storeRunTime("EEPGetTrainSpeed", t1 - t0)
-
-    return table.unpack(result)
+    return executeAndStoreRunTime(_EEPGetTrainSpeed, "EEPGetTrainSpeed", ...)
+end
+local _EEPGetRollingstockItemName = EEPGetRollingstockItemName
+local function EEPGetRollingstockItemName(...)
+    return executeAndStoreRunTime(_EEPGetRollingstockItemName, "EEPGetRollingstockItemName", ...)
 end
 
 --- Register EEP tracks.
@@ -190,7 +190,7 @@ local function updateTracksBy(besetztFunktion, trackType)
 
     for trainName, train in pairs(trains) do
         -- Store trains
-        local haveSpeed, speed = EEPGetTrainSpeed(trainName) -- EEP 11.0
+        local _, speed = EEPGetTrainSpeed(trainName) -- EEP 11.0
         local haveRoute, route = EEPGetTrainRoute(trainName) -- EEP 11.2 Plugin 2
 
         local rollingStockCount = EEPGetRollingstockItemsCount(trainName) -- EEP 13.2 Plug-In 2
@@ -200,15 +200,14 @@ local function updateTracksBy(besetztFunktion, trackType)
             id = trainName,
             route = haveRoute and route or "",
             rollingStockCount = rollingStockCount or 0,
-            length = trainLength or 0
+            length = trainLength or 0,
         }
 
         table.insert(data[trainList], currentTrain)
         -- data[trainList][tostring(currentTrain.id)] = currentTrain
         local trainsInfo = {
             id = trainName,
-            speed = haveSpeed and speed or --string.format("%.2f", speed)
-                0,
+            speed = tonumber(string.format("%.4f", speed or 0)),
             onTrackId = train.onTrack,
             occupiedTacks = train.occupiedTacks
         }
@@ -238,24 +237,23 @@ local function updateTracksBy(besetztFunktion, trackType)
                 -- EEP 14.2
 
                 local _, modelType = EEPRollingstockGetModelType(rollingStockName) -- EEP 14.2
-                -- local EEPRollingstockModelTypeText = {
-                --     -- not used yet
-                --     ["1"] = "Tenderlok",
-                --     ["2"] = "Schlepptenderlok",
-                --     ["3"] = "Tender",
-                --     ["4"] = "Elektrolok",
-                --     ["5"] = "Diesellok",
-                --     ["6"] = "Triebwagen",
-                --     ["7"] = "U- oder S-Bahn",
-                --     ["8"] = "Straßenbahn",
-                --     ["9"] = "Güterwaggon",
-                --     ["10"] = "Personenwaggon",
-                --     ["11"] = "Luftfahrzeug",
-                --     ["12"] = "Maschine",
-                --     ["13"] = "Wasserfahrzeug",
-                --     ["14"] = "LKW",
-                --     ["15"] = "PKW"
-                -- }
+                local EEPRollingstockModelTypeText = {
+                    [1] = "Tenderlok",
+                    [2] = "Schlepptenderlok",
+                    [3] = "Tender",
+                    [4] = "Elektrolok",
+                    [5] = "Diesellok",
+                    [6] = "Triebwagen",
+                    [7] = "U- oder S-Bahn",
+                    [8] = "Strassenbahn", -- avoid German Umlaute
+                    [9] = "Gueterwaggon", -- avoid German Umlaute
+                    [10] = "Personenwaggon",
+                    [11] = "Luftfahrzeug",
+                    [12] = "Maschine",
+                    [13] = "Wasserfahrzeug",
+                    [14] = "LKW",
+                    [15] = "PKW"
+                }
 
                 local _, tag = EEPRollingstockGetTagText(rollingStockName) -- EEP 14.2
 
@@ -265,29 +263,31 @@ local function updateTracksBy(besetztFunktion, trackType)
                     positionInTrain = i,
                     couplingFront = couplingFront,
                     couplingRear = couplingRear,
-                    length = length or -1, --string.format("%.2f", length),
+                    length = tonumber(string.format("%.2f", length or -1)),
                     propelled = propelled or true,
                     trackSystem = trackSystem or -1,
                     modelType = modelType or -1,
+                    modelTypeText = EEPRollingstockModelTypeText[modelType] or "",
                     tag = tag or ""
                 }
                 if hasPos then
-                    currentRollingStock.PosX = PosX
-                    currentRollingStock.PosY = PosY
-                    currentRollingStock.PosZ = PosZ
+                    currentRollingStock.PosX = tonumber(PosX)
+                    currentRollingStock.PosY = tonumber(PosY)
+                    currentRollingStock.PosZ = tonumber(PosZ)
                 end
                 table.insert(data[rollingStockList], currentRollingStock)
                 -- data[rollingStockList][currentRollingStock.name] = currentRollingStock
                 local rollingStockInfo = {
                     name = rollingStockName,
                     trackId = trackId or -1,
-                    trackDistance = trackDistance or -1, --string.format("%.2f", trackDistance),
+                    trackDistance = tonumber(string.format("%.2f", trackDistance or -1)),
                     trackDirection = trackDirection or -1
                 }
                 table.insert(data[rollingStockInfos], rollingStockInfo)
             -- data[rollingStockInfos][tostring(rollingStockInfo.name)] = rollingStockInfo
             end
         end
+        currentTrain.length = tonumber(string.format("%.2f", currentTrain.length or 0))
     end
 end
 
@@ -313,6 +313,9 @@ function TrainsAndTracksJsonCollector.collectData()
     if not enabled then
         return
     end
+
+    -- reset runtime data
+    data["runtime"] = {}
 
     if not initialized then
         TrainsAndTracksJsonCollector.initialize()

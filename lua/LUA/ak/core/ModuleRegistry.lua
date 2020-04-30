@@ -29,6 +29,9 @@ function ModuleRegistry.registerModules(...)
         -- Remember the module by it's name
         registeredLuaModules[module.name] = module
     end
+
+    -- pass the modules to the caller in the EEP script
+    return registeredLuaModules
 end
 
 ---
@@ -102,13 +105,6 @@ end
 
 function ModuleRegistry.deactivateServer()
     enableServer = false
-end
-
----
--- Set option of the ServerController
--- @param flag true(default)/false to decide if Lua should check if the EEP Server is running and ready
-function ModuleRegistry.setWaitForServer(flag)
-    ServerController.checkServerStatus = flag
 end
 
 -- Register the core module to hold basic data

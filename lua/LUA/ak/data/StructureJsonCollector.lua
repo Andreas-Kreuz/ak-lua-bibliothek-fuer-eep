@@ -35,24 +35,24 @@ function StructureJsonCollector.initialize()
 
             local _, pos_x, pos_y, pos_z = EEPStructureGetPosition(name)
             local _, modelType = EEPStructureGetModelType(name)
-            -- local EEPStructureModelTypeText = {
-            --     -- not used yet
-            --     ["16"] = "Gleis/Gleisobjekt",
-            --     ["17"] = "Schiene/Gleisobjekt",
-            --     ["18"] = "Straﬂe/Gleisobjekt",
-            --     ["19"] = "Sonstiges/Gleisobjekt",
-            --     ["22"] = "Immobilie",
-            --     ["23"] = "Landschaftselement/Fauna",
-            --     ["24"] = "Landschaftselement/Flora",
-            --     ["25"] = "Landschaftselement/Terra",
-            --     ["38"] = "Landschaftselement/Instancing"
-            -- }
+            local EEPStructureModelTypeText = {
+                [16] = "Gleis/Gleisobjekt",
+                [17] = "Schiene/Gleisobjekt",
+                [18] = "Strasse/Gleisobjekt", -- avoid German Umlaute
+                [19] = "Sonstiges/Gleisobjekt",
+                [22] = "Immobilie",
+                [23] = "Landschaftselement/Fauna",
+                [24] = "Landschaftselement/Flora",
+                [25] = "Landschaftselement/Terra",
+                [38] = "Landschaftselement/Instancing"
+            }
             local _, tag = EEPStructureGetTagText(name)
 
-            structure.pos_x = pos_x and string.format("%.2f", pos_x) or 0
-            structure.pos_y = pos_y and string.format("%.2f", pos_y) or 0
-            structure.pos_z = pos_z and string.format("%.2f", pos_z) or 0
+            structure.pos_x = pos_x and tonumber(string.format("%.2f", pos_x)) or 0
+            structure.pos_y = pos_y and tonumber(string.format("%.2f", pos_y)) or 0
+            structure.pos_z = pos_z and tonumber(string.format("%.2f", pos_z)) or 0
             structure.modelType = modelType or 0
+            structure.modelTypeText = EEPStructureModelTypeText[modelType] or ""
             structure.tag = tag or ""
             table.insert(structures, structure)
         end
