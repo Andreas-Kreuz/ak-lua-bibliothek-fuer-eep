@@ -17,12 +17,11 @@ function createWindow() {
   });
 
   // User App Code
-  const options = new CommandLineParser().parseOptions();
-  const server = new Server(options['exchange-dir']);
+  const server = new Server();
   server.start();
 
   // and load the index.html of the app.
-  mainWindow.loadURL('file://' + path.join(__dirname, 'index.html'));
+  mainWindow.loadFile(path.join(__dirname, '../index.html'));
   // mainWindow.loadURL('http://localhost:3000');
 
   // Open the DevTools.

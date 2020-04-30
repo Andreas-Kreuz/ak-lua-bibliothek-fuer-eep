@@ -1,32 +1,52 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
   <meta charset="UTF-8">
-  <title>Hello World!</title>
+  <title>Web Server mit EEP-Anbindung</title>
 </head>
 
 <body>
   <h1>EEP-Lua-Connection</h1>
-  We are using Node.js <span id="node-version"></span>,
-  Chromium <span id="chrome-version"></span>,
-  and Electron <span id="electron-version"></span>.
-
   <a href="http://localhost:3000/"
      target="_blank"
      rel="noopener noreferrer">Server</a>
 
+  <p style="padding-top: 1.5em;"><strong>EEP-Verzeichnis</strong></p>
+  <form action="">
+    <input id="changeDir"
+           autocomplete="off" /><button>EEP-Verzeichnis wählen</button>
+  </form>
+  <p>Aktuelles Verzeichnis: <em id="dir">none</em></p>
 
-  <div id="urls"
-       style="padding-top: 100px;">No data yet.</div>
+  <p style="padding-top: 2.5em;"><strong>Daten</strong></p>
+  <div id="urls"><em>keine</em></div>
+
+  <p style="padding-top: 2.5em;"><strong>Versionen</strong></p>
+  <p>
+    Node.js <span id="node-version"></span>,
+    Chromium <span id="chrome-version"></span>,
+    and Electron <span id="electron-version"></span>.
+  </p>
+
 
   <!-- You can also require other files to run in this process -->
-  <script src="./dist/renderer.js"></script>
+  <script src="./renderer.js"></script>
   <script src="node_modules/socket.io-client/dist/socket.io.js"></script>
   <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
   <script>
     $(function () {
       var socket = io("http://localhost:3000");
+      $('form').submit(function (e) {
+        e.preventDefault(); // prevents page reloading
+        socket.emit('[Change Dir]', $('#changeDir').val());
+        $('#changeDir').val('');
+        return false;
+      });
+      socket.on('[Current Dir]', function (msg) {
+        $('#dir').contents().replaceWith($('<em>').text(msg));
+        // $('#changeDir').val('');
+      });
       socket.on('urls', function (msg) {
         console.log(msg);
         $('#urls').replaceWith($('<div id="urls">').text('Happily serving: ' + msg));
@@ -34,4 +54,5 @@
     });
   </script>
 </body>
+
 </html>

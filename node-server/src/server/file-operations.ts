@@ -11,21 +11,40 @@ const writtenCommandFileName = 'ak-eep-in.commands';
 const writtenEventFileName = 'ak-eep-in.event';
 
 export default class FileOperations {
-  private onJsonUpdate = (jsonText: string) => {
-    console.log('Received: ' + jsonText.length + ' bytes of JSON');
-    // tslint:disable-next-line: semicolon
-  };
-  private onLogLine = (line: string) => {
-    console.log(line);
-    // tslint:disable-next-line: semicolon
-  };
+  private dir: string;
+  private jsonFileWatcher: fs.FSWatcher;
+  private logTail: Tail;
+  private onJsonUpdate: (jsonText: string) => void;
+  private onLogLine: (line: string) => void;
 
-  constructor(private dir: string) {
+  constructor() {}
+
+  public reInit(dir: string, callback: (err: string, dir: string) => void): void {
     this.dir = path.resolve(dir);
 
-    this.attachAkEepOutJsonFile();
-    this.attachAkEepOutLogFile();
-    this.createAkServerFile();
+    if (this.logTail) {
+      this.logTail.unwatch();
+    }
+    if (this.jsonFileWatcher) {
+      this.jsonFileWatcher.close();
+    }
+    this.onJsonUpdate = (jsonText: string) => {
+      console.log('Received: ' + jsonText.length + ' bytes of JSON');
+    };
+    this.onLogLine = (line: string) => {
+      console.log(line);
+    };
+
+    fs.stat(this.dir, (err, stats) => {
+      if (!err && stats.isDirectory()) {
+        this.attachAkEepOutJsonFile();
+        this.attachAkEepOutLogFile();
+        this.createAkServerFile();
+        callback(null, this.dir);
+      } else {
+        callback('No such directory: ' + this.dir, null);
+      }
+    });
   }
 
   private deleteFileIfExists(file: string): void {
@@ -44,7 +63,7 @@ export default class FileOperations {
     this.deleteFileIfExists(jsonReadyFile);
 
     // Watch in the directory, if the file is recreated
-    fs.watch(this.dir, {}, (eventType: string, filename: string) => {
+    this.jsonFileWatcher = fs.watch(this.dir, {}, (eventType: string, filename: string) => {
       // If the jsonReadyFile exists: Read the data and remove the file
       if (filename === serverReadyForJsonFile && fs.existsSync(jsonReadyFile)) {
         // EEP has written the JsonFile for us, so let's read it.
@@ -73,6 +92,7 @@ export default class FileOperations {
         tail.unwatch();
         this.attachAkEepOutLogFile();
       });
+      this.logTail = tail;
     });
   }
 
