@@ -3,24 +3,64 @@
   "version": "0.0.1",
   "description": "Lua Server für EEP - ein Server im Fenster",
   "scripts": {
-    "build": "tsc",
+    "pub-del": "if exist build\\public_html rmdir /s /q build\\public_html",
+    "pub-mkdir": "mkdir build\\public_html",
+    "pub-copy": "xcopy /s /q ..\\web-app\\dist\\ak-eep-web\\* build\\public_html\\",
+    "build": "npm run pub-del && npm run pub-mkdir && npm run pub-copy && tsc",
     "watch": "tsc -w",
     "lint": "tslint -c tslint.json -p tsconfig.json",
-    "start": "npm run build && electron ./dist/main.js"
+    "start": "npm run build && electron ./build/main.js",
+    "start-pure": "npm run build && node ./build/node-main.js",
+    "package-win": "npm run build && electron-builder build --win --x64",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
   },
   "repository": "https://github.com/ak-lua-bibliothek-fuer-eep",
   "keywords": [
     "EEP",
     "Lua"
   ],
+  "main": "./build/main.js",
+  "build": {
+    "appId": "io.github.andreas-kreuz.ak-lua-library-for-eep",
+    "files": [
+      "build/**/*",
+      "node_modules/**/*",
+      "!**/node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme}",
+      "!**/node_modules/*/{test,__tests__,tests,powered-test,example,examples}",
+      "!**/node_modules/*.d.ts",
+      "!**/node_modules/.bin",
+      "!**/*.{iml,o,hprof,orig,pyc,pyo,rbc,swp,csproj,sln,xproj}",
+      "!.editorconfig",
+      "!**/._*",
+      "!**/{.DS_Store,.git,.hg,.svn,CVS,RCS,SCCS,.gitignore,.gitattributes}",
+      "!**/{__pycache__,thumbs.db,.flowconfig,.idea,.vs,.nyc_output}",
+      "!**/{appveyor.yml,.travis.yml,circle.yml}",
+      "!**/{npm-debug.log,yarn.lock,.yarn-integrity,.yarn-metadata.json}"
+    ],
+    "directories": {
+      "buildResources": "resources",
+      "output": "dist"
+    },
+    "mac": {
+      "category": "Application"
+    },
+    "win": {
+      "target": [
+        "portable"
+      ]
+    }
+  },
   "author": "Andreas-Kreuz",
   "license": "MIT",
   "devDependencies": {
-    "electron": "^6.0.8",
+    "electron": "^6.1.10",
+    "electron-builder": "^22.6.0",
     "tslint": "^5.19.0",
     "typescript": "^3.6.0"
   },
   "dependencies": {
+    "@types/cors": "^2.8.6",
     "@types/express": "^4.17.6",
     "@types/node": "^13.13.4",
     "@types/socket.io": "^2.1.4",

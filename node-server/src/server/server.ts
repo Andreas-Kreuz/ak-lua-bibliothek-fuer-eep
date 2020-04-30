@@ -1,32 +1,29 @@
-import express from 'express';
 import path from 'path';
-import socketio from 'socket.io';
 import FileOperations from './file-operations';
 import JsonDataHandler from './json-data-handler';
 import SocketServer from './socket-server';
 
+import cors = require('cors');
+import express = require('express');
+import http = require('http');
+import socketio from 'socket.io';
+
+const app = express();
+const server = new http.Server(app);
+const io = socketio(server);
+
 export class Server {
   private jsonDataHandler: JsonDataHandler;
-  private app: any;
-  private http: any;
-  private io: any;
   private socketServer: SocketServer;
   private knownUrls: string[] = [];
 
-  constructor(
-    private exchangeDir = path.resolve(__dirname + '/../../../lua/LUA/ak/io/exchange/'),
-    private port = 3000
-  ) {
+  constructor(private exchangeDir = path.resolve(__dirname, '/../../../lua/LUA/ak/io/exchange/'), private port = 3000) {
     // Init the server
-    this.app = express();
-    const cors = require('cors');
-    this.app.use(cors());
-    this.app.set('port', this.port);
-    this.http = require('http').Server(this.app);
-    this.io = socketio(this.http);
+    app.use(cors());
+    app.set('port', this.port);
+  }
 
-    this.socketServer = new SocketServer(this.io);
-
+  public setDirectory() {
     // Init file operations
     const fileOperations = new FileOperations(this.exchangeDir);
 
@@ -43,10 +40,9 @@ export class Server {
   }
 
   public start() {
-    'use strict';
-    this.app.use('/', express.static(__dirname + '/../../../web-app/dist/ak-eep-web'));
-    const server = this.http.listen(this.port, () => {
-      console.log('Express server listening on port ' + server.address().port);
+    app.use('/', express.static(path.join(__dirname, '../public_html')));
+    server.listen(this.port, () => {
+      console.log('Express server listening on port ' + app.get('port'));
     });
   }
 
@@ -67,7 +63,7 @@ export class Server {
 
   private urlRemoved(key: string): void {
     this.knownUrls.splice(this.knownUrls.indexOf(key));
-    this.io.emit('urls', this.knownUrls);
+    io.emit('urls', this.knownUrls);
   }
 
   private urlAdded(key: string): void {
@@ -81,7 +77,7 @@ export class Server {
       }
       return 0;
     });
-    this.io.emit('urls', JSON.stringify(this.knownUrls));
+    io.emit('urls', JSON.stringify(this.knownUrls));
   }
 
   private registerApiUrls(key: string) {
@@ -90,6 +86,6 @@ export class Server {
     router.get('/' + key, (req: any, res: any) => {
       res.json(this.jsonDataHandler.getCurrentApiEntry(key));
     });
-    this.app.use('/api/v1', router);
+    app.use('/api/v1', router);
   }
 }

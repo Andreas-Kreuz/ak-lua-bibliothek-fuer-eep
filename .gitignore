@@ -11,7 +11,9 @@
 /server/node_modules
 /server/dist
 /node-server/node_modules
+/node-server/build
 /node-server/dist
+/node-server/resources/public
 
 # Project based settings
 /lua/LUA/**/AkSpeicherWerte.txt

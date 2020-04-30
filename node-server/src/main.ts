@@ -16,11 +16,17 @@ function createWindow() {
     width: 800,
   });
 
+  // User App Code
+  const options = new CommandLineParser().parseOptions();
+  const server = new Server(options['exchange-dir']);
+  server.start();
+
   // and load the index.html of the app.
-  mainWindow.loadFile(path.join(__dirname, '../index.html'));
+  mainWindow.loadURL('file://' + path.join(__dirname, 'index.html'));
+  // mainWindow.loadURL('http://localhost:3000');
 
   // Open the DevTools.
-  // mainWindow.webContents.openDevTools();
+  mainWindow.webContents.openDevTools();
 
   // Emitted when the window is closed.
   mainWindow.on('closed', () => {
@@ -50,8 +56,3 @@ app.on('window-all-closed', () => {
     app.quit();
   }
 });
-
-// User App Code
-const options = new CommandLineParser().parseOptions();
-const server = new Server(options['exchange-dir']);
-server.start();
