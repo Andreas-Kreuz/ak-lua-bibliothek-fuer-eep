@@ -47,9 +47,13 @@
         $('#dir').contents().replaceWith($('<em>').text(msg));
         // $('#changeDir').val('');
       });
-      socket.on('urls', function (msg) {
+      socket.on('[URLs]', function (msg) {
         console.log(msg);
         $('#urls').replaceWith($('<div id="urls">').text('Happily serving: ' + msg));
+      });
+      socket.on('connect', function () {
+        // Connected, let's sign-up for to receive messages for this room
+        socket.emit('join-room', ['[Server Settings]', '[URLs]']);
       });
     });
   </script>
