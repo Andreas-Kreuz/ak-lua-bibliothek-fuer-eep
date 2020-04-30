@@ -120,7 +120,10 @@ export default class JsonDataManager {
   }
 
   private urlRemoved(key: string): void {
-    this.knownUrls.splice(this.knownUrls.indexOf(key));
+    const index = this.knownUrls.indexOf(key);
+    if (index >= 0) {
+      this.knownUrls.splice(index, 1);
+    }
     this.io.to(Room.URLS).emit(Room.URLS, JSON.stringify(this.knownUrls));
   }
 
