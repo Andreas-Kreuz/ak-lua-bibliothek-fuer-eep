@@ -10,7 +10,10 @@ const watchedLogFileName = 'ak-eep-out.log'; // TODO: CHANGE TO ak-eep-out.log
 const writtenCommandFileName = 'ak-eep-in.commands';
 const writtenEventFileName = 'ak-eep-in.event';
 
-export default class FileOperations {
+/**
+ * This service is responsible for the communication with EEP.
+ */
+export default class EepService {
   private dir: string;
   private jsonFileWatcher: fs.FSWatcher;
   private logTail: Tail;

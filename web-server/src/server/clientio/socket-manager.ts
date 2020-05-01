@@ -1,14 +1,17 @@
 import { Server, Socket } from 'socket.io';
 import { SocketEvent } from 'web-shared';
 
-export default class SocketManager {
+export default class SocketService {
   private onRoomsJoinedCallbacks: Array<(socket: Socket, joinedRooms: string[]) => void> = [];
 
   constructor(private io: Server) {
-    this.registerMessages();
+    this.allowRoomJoining();
   }
 
-  private registerMessages() {
+  /**
+   * This will allow room joining for all new incoming connections
+   */
+  private allowRoomJoining() {
     this.io.on('connection', (socket: Socket) => {
       console.log('CONNECT FROM ' + socket.id);
 
