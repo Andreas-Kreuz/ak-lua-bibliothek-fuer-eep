@@ -5,46 +5,38 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Debug Main Process",
+      "name": "Debug Web Server",
       "type": "node",
       "request": "launch",
-      "cwd": "${workspaceFolder}/node_server",
-      "runtimeExecutable": "${workspaceFolder}/node_server/node_modules/.bin/electron",
+      "cwd": "${workspaceFolder}/web-server",
+      "runtimeExecutable": "${workspaceFolder}/web-server/node_modules/.bin/electron",
       "windows": {
-        "runtimeExecutable": "${workspaceFolder}\\node_server\\node_modules\\.bin\\electron.cmd"
+        "runtimeExecutable": "${workspaceFolder}\\web-server\\node_modules\\.bin\\electron.cmd"
       },
-      "args" : ["."],
+      "args": ["."],
       "outputCapture": "std"
     },
     {
-      "name": "Launch localhost in Microsoft Edge",
+      "name": "Debug Web App in Microsoft Edge (4200)",
       "type": "edge",
       "request": "launch",
       "url": "http://localhost:4200/",
       "webRoot": "${workspaceFolder}/web-app/src",
       "sourceMapPathOverrides": {
-        "webpack:///./src/*": "${webRoot}/*",
+        "webpack:///./src/*": "${webRoot}/*"
       },
       "trace": true
     },
     {
       "type": "chrome",
       "request": "launch",
-      "name": "Launch Chrome against localhost:4200",
+      "name": "Debug Web App in Google Chrome (4200)",
       "url": "http://localhost:4200/",
       "trace": true,
       "webRoot": "${workspaceFolder}/web-app/src",
       "sourceMapPathOverrides": {
-        "webpack:///./src/*": "${webRoot}/*",
+        "webpack:///./src/*": "${webRoot}/*"
       }
-    },
-    {
-      "type": "java",
-      "name": "Start Server",
-      "request": "launch",
-      "cwd": "${workspaceFolder}/server/src/main/java",
-      "mainClass": "ak.eep.web.server.Main",
-      "args": "--test ${workspaceFolder}\\lua\\LUA\\ak\\io\\exchange"
     }
   ]
 }

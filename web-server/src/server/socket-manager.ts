@@ -12,7 +12,7 @@ export default class SocketManager {
     this.io.on('connection', (socket: Socket) => {
       console.log('CONNECT FROM ' + socket.id);
 
-      socket.on(SocketEvent.JOIN_ROOM, (rooms: string | string[]) => {
+      socket.on(SocketEvent.JoinRoom, (rooms: string | string[]) => {
         socket.join(rooms);
         let joinedRooms: string[];
         if (typeof rooms === 'string') {
@@ -26,7 +26,7 @@ export default class SocketManager {
         }
       });
 
-      socket.on(SocketEvent.LEAVE_ROOM, (room: string) => {
+      socket.on(SocketEvent.LeaveRoom, (room: string) => {
         socket.leave(room);
       });
     });

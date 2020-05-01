@@ -70,13 +70,14 @@
         $('#dir').removeClass('dir-ok').addClass('dir-error');
         $('#changeDir').val(msg);
       });
-      socket.on('[URLs]', function (msg) {
+      socket.on('[JsonUrls]', function (msg) {
         console.log(msg);
         $('#urls').replaceWith($('<div id="urls">').text('Happily serving: ' + msg));
       });
       socket.on('connect', function () {
-        // Connected, let's sign-up for to receive messages for this room
-        socket.emit('[join-room]', ['[Server Settings]', '[URLs]']);
+        console.log("socket.emit('[Join Room]', ['[Server Settings]', '[JsonUrls]'])");
+        // Connected, let's sign-up for Server Serttings and Json Urls
+        socket.emit('[Join Room]', ['[Server Settings]', '[JsonUrls]']);
       });
     });
   </script>

@@ -81,10 +81,10 @@ export default class JsonDataManager {
       socket.emit(room, JSON.stringify(this.currentJsonContent[key]));
     }
 
-    if (joinedRooms.indexOf(Room.URLS) > -1) {
-      socket.join(Room.URLS);
-      console.log('EMIT ' + Room.URLS + ' to ' + socket.id);
-      socket.emit(Room.URLS, JSON.stringify(this.knownUrls));
+    if (joinedRooms.indexOf(Room.JsonUrls) > -1) {
+      socket.join(Room.JsonUrls);
+      console.log('EMIT ' + Room.JsonUrls + ' to ' + socket.id);
+      socket.emit(Room.JsonUrls, JSON.stringify(this.knownUrls));
     }
   }
 
@@ -114,7 +114,7 @@ export default class JsonDataManager {
       }
       return 0;
     });
-    this.io.to(Room.URLS).emit(Room.URLS, JSON.stringify(this.knownUrls));
+    this.io.to(Room.JsonUrls).emit(Room.JsonUrls, JSON.stringify(this.knownUrls));
   }
 
   private urlRemoved(key: string): void {
@@ -122,7 +122,7 @@ export default class JsonDataManager {
     if (index >= 0) {
       this.knownUrls.splice(index, 1);
     }
-    this.io.to(Room.URLS).emit(Room.URLS, JSON.stringify(this.knownUrls));
+    this.io.to(Room.JsonUrls).emit(Room.JsonUrls, JSON.stringify(this.knownUrls));
   }
 
   private registerApiUrls(key: string) {

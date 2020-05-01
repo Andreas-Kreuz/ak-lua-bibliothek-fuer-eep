@@ -41,16 +41,16 @@ export class ServerMain {
       if (err) {
         console.error(err);
         this.eepDirOk = false;
-        io.to(Room.SERVER_SETTINGS).emit(SocketEvent.DirError, eepDir);
+        io.to(Room.ServerSettings).emit(SocketEvent.DirError, eepDir);
       } else if (dir) {
         this.config.saveEepDirectory(eepDir);
         console.log('Directory set to : ' + dir);
         this.registerHandlers(fileOperations);
         this.eepDirOk = true;
-        io.to(Room.SERVER_SETTINGS).emit(SocketEvent.DirOk, eepDir);
+        io.to(Room.ServerSettings).emit(SocketEvent.DirOk, eepDir);
       } else {
         this.eepDirOk = false;
-        io.to(Room.SERVER_SETTINGS).emit(SocketEvent.DirError, eepDir);
+        io.to(Room.ServerSettings).emit(SocketEvent.DirError, eepDir);
       }
     });
   }
@@ -73,7 +73,7 @@ export class ServerMain {
   }
 
   onRoomsJoined(socket: Socket, joinedRooms: string[]) {
-    if (joinedRooms.indexOf(Room.SERVER_SETTINGS) > -1) {
+    if (joinedRooms.indexOf(Room.ServerSettings) > -1) {
       const event = this.eepDirOk ? SocketEvent.DirOk : SocketEvent.DirError;
       console.log('EMIT ' + event + ' to ' + socket.id);
       socket.emit(event, this.config.getEepDirectory());
