@@ -12,6 +12,7 @@ export default class CommandEffects {
     private queueCommand: (command: string) => void
   ) {
     this.io.on(Room.EepCommand, (socket: Socket, command: string) => {
+      console.log('Received command: ' + command);
       this.queueCommand(command);
       io.to(Room.EepCommand).emit(Room.EepCommand, command);
     });
