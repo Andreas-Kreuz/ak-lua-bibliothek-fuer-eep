@@ -1,6 +1,5 @@
 import { Server, Socket } from 'socket.io';
-import Room from './room';
-import SocketEvent from './socket-event';
+import { SocketEvent } from 'web-shared';
 
 export default class SocketManager {
   private onRoomsJoinedCallbacks: Array<(socket: Socket, joinedRooms: string[]) => void> = [];

@@ -8,9 +8,8 @@ import express = require('express');
 import fs from 'fs';
 import http = require('http');
 import socketio, { Socket } from 'socket.io';
+import { Room, SocketEvent } from 'web-shared';
 import Config from './config';
-import Room from './room';
-import SocketEvent from './socket-event';
 
 const app = express();
 const server = new http.Server(app);

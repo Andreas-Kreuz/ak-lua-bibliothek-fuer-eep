@@ -1,0 +1,21 @@
+{
+  "name": "web-shared",
+  "version": "1.0.0",
+  "description": "Shared code for Web Application",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "keywords": [
+    "Shared",
+    "Web",
+    "App",
+    "EEP"
+  ],
+  "author": "Andreas_Kreuz",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^3.8.3"
+  }
+}

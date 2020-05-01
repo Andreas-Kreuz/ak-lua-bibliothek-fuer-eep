@@ -71,6 +71,7 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "socket.io": "^2.3.0",
-    "tail": "^2.0.3"
+    "tail": "^2.0.3",
+    "web-shared": "file:../web-shared"
   }
 }

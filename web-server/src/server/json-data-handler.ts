@@ -1,9 +1,7 @@
-import { Server, Socket } from 'socket.io';
-import Room from './room';
-import { ServerMain } from './server-main';
-
 import express = require('express');
-import SocketEvent from './socket-event';
+import { Server, Socket } from 'socket.io';
+
+import { Room, SocketEvent } from 'web-shared';
 import SocketManager from './socket-manager';
 
 export default class JsonDataManager {
