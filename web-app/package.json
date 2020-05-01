@@ -30,6 +30,7 @@
     "bootstrap": "^4.4.1",
     "core-js": "^2.6.11",
     "rxjs": "~6.5.5",
+    "socket.io": "^2.3.0",
     "tslib": "^1.11.1",
     "zone.js": "^0.10.3"
   },
@@ -43,6 +44,7 @@
     "@types/jasmine": "^2.8.16",
     "@types/jasminewd2": "^2.0.8",
     "@types/node": "^12.12.30",
+    "@types/socket.io": "^2.1.4",
     "codelyzer": "^5.1.2",
     "jasmine-core": "~2.99.1",
     "jasmine-spec-reporter": "~4.2.1",
