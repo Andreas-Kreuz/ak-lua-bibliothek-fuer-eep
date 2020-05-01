@@ -10,10 +10,14 @@
 /server/target
 /server/node_modules
 /server/dist
-/node-server/node_modules
-/node-server/build
-/node-server/dist
-/node-server/resources/public
+/web-server/node_modules
+/web-server/build
+/web-server/dist
+/web-server/resources/public
+/web-shared/node_modules
+/web-shared/build
+/web-shared/dist
+/web-shared/resources/public
 
 # Project based settings
 /lua/LUA/**/AkSpeicherWerte.txt
