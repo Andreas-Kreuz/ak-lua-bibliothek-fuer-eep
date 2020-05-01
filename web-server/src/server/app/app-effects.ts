@@ -5,6 +5,7 @@ import { Server, Socket } from 'socket.io';
 
 import { Room, SocketEvent } from 'web-shared';
 import SocketService from '../clientio/socket-manager';
+import CommandEffects from '../command/command-effects';
 import EepService from '../eep/eep-service';
 import JsonDataEffects from '../json/json-data-effects';
 import LogEffects from '../log/log-effects';
@@ -16,6 +17,7 @@ export default class AppEffects {
   private serverConfigFile = path.resolve(this.serverConfigPath, 'settings.json');
   private jsonDataEffects: JsonDataEffects;
   private logEffects: LogEffects;
+  private commandEffects: CommandEffects;
   private store = new AppReducer(this);
 
   constructor(private app: any, private io: Server, private socketService: SocketService) {
@@ -107,5 +109,8 @@ export default class AppEffects {
     // Init LogHandler
     this.logEffects = new LogEffects(this.app, this.io, this.socketService, eepService.getCurrentLogLines);
     eepService.setOnNewLogLine((logLines: string) => this.logEffects.onNewLogLine(logLines));
+
+    // Init LogHandler
+    this.commandEffects = new CommandEffects(this.app, this.io, this.socketService, eepService.queueCommand);
   }
 }

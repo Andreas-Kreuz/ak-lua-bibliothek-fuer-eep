@@ -144,4 +144,12 @@ export default class EepService {
   public setOnNewLogLine(logLineFunction: (line: string) => void) {
     this.onLogLine = logLineFunction;
   }
+
+  public queueCommand(command: string) {
+    try {
+      fs.appendFileSync(writtenCommandFileName, command, { encoding: 'latin1' });
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }
