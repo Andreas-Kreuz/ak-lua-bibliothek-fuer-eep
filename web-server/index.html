@@ -60,14 +60,16 @@
         $('#changeDir').val('');
         return false;
       });
+      socket.on('[Dir]', function (msg) {
+        $('#dir').contents().replaceWith($('<em id="dir">').text(msg));
+      });
       socket.on('[Dir Ok]', function (msg) {
-        $('#dir').contents().replaceWith($('<em>').text(msg));
         $('#dir').removeClass('dir-error').addClass('dir-ok');
         $('#changeDir').val('');
       });
       socket.on('[Dir Error]', function (msg) {
-        $('#dir').contents().replaceWith($('<em>').text(msg));
         $('#dir').removeClass('dir-ok').addClass('dir-error');
+        $('#dir').contents().replaceWith($('<em id="dir">').text(msg));
         $('#changeDir').val(msg);
       });
       socket.on('[JsonUrls]', function (msg) {
@@ -78,6 +80,7 @@
         console.log("socket.emit('[Join Room]', ['[Server Settings]', '[JsonUrls]'])");
         // Connected, let's sign-up for Server Serttings and Json Urls
         socket.emit('[Join Room]', ['[Server Settings]', '[JsonUrls]']);
+        socket.emit('[EEPCommand]', 'clearlog');
       });
     });
   </script>

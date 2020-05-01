@@ -30,12 +30,14 @@ export default class AppEffects {
   private onRoomsJoined(socket: Socket, joinedRooms: string[]) {
     if (joinedRooms.indexOf(Room.ServerSettings) > -1) {
       const event = this.store.getEepDirOk() ? SocketEvent.DirOk : SocketEvent.DirError;
-      console.log('EMIT ' + event + ' to ' + socket.id);
+      // console.log('EMIT ' + event + ' to ' + socket.id);
+      // console.log('EMIT ' + SocketEvent.Dir + ', ' + this.getEepDirectory() + ' to ' + socket.id);
       socket.emit(event, this.getEepDirectory());
+      socket.emit(SocketEvent.Dir, this.getEepDirectory());
     }
 
     socket.on(SocketEvent.ChangeDir, (dir: string) => {
-      console.log(SocketEvent.ChangeDir + '"' + dir + '"');
+      // console.log(SocketEvent.ChangeDir + '"' + dir + '"');
       this.changeEepDirectory(dir);
     });
   }
@@ -93,7 +95,8 @@ export default class AppEffects {
         this.registerHandlers(fileOperations);
         this.store.setEepDirOk(true);
         this.saveEepDirectory(eepDir);
-        this.io.to(Room.ServerSettings).emit(SocketEvent.DirOk, eepDir);
+        this.io.to(Room.ServerSettings).emit(SocketEvent.DirOk);
+        this.io.to(Room.ServerSettings).emit(SocketEvent.Dir, eepDir);
       } else {
         this.store.setEepDirOk(false);
         this.io.to(Room.ServerSettings).emit(SocketEvent.DirError, eepDir);
