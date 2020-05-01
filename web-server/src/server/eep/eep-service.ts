@@ -6,7 +6,7 @@ import { Tail } from 'tail';
 const serverWatchingFile = 'ak-server.iswatching';
 const serverReadyForJsonFile = 'ak-eep-out-json.isfinished';
 const watchedJsonFileName = 'ak-eep-out.json';
-const watchedLogFileName = 'ak-eep-out.log'; // TODO: CHANGE TO ak-eep-out.log
+const watchedLogFileName = 'ak-eep-out.log';
 const writtenCommandFileName = 'ak-eep-in.commands';
 const writtenEventFileName = 'ak-eep-in.event';
 
@@ -98,6 +98,14 @@ export default class EepService {
     });
   }
 
+  getCurrentLogLines(): string {
+    try {
+      return fs.readFileSync(watchedLogFileName, { encoding: 'latin1' });
+    } catch (e) {
+      return '';
+    }
+  }
+
   private oneFileAppearance(expectedFile: string, callback: () => void): void {
     if (fs.existsSync(expectedFile)) {
       callback();
@@ -133,7 +141,7 @@ export default class EepService {
     this.onJsonUpdate = updateFunction;
   }
 
-  private setOnNewLogLine(logLineFunction: (line: string) => void) {
+  public setOnNewLogLine(logLineFunction: (line: string) => void) {
     this.onLogLine = logLineFunction;
   }
 }

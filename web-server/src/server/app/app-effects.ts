@@ -7,6 +7,7 @@ import { Room, SocketEvent } from 'web-shared';
 import SocketService from '../clientio/socket-manager';
 import EepService from '../eep/eep-service';
 import JsonDataEffects from '../json/json-data-effects';
+import LogEffects from '../log/log-effects';
 import AppConfig from './app-config';
 import AppReducer from './app-reducer';
 
@@ -14,6 +15,7 @@ export default class AppEffects {
   private serverConfigPath = path.resolve(electron.app.getPath('appData'), 'eep-web-server');
   private serverConfigFile = path.resolve(this.serverConfigPath, 'settings.json');
   private jsonDataEffects: JsonDataEffects;
+  private logEffects: LogEffects;
   private store = new AppReducer(this);
 
   constructor(private app: any, private io: Server, private socketService: SocketService) {
@@ -45,7 +47,7 @@ export default class AppEffects {
         appConfig = config;
       }
     } catch (error) {
-      console.log(error);
+      // IGNORE console.log(error);
     }
     this.store.setAppConfig(appConfig);
     this.io.to(Room.ServerSettings).emit(SocketEvent.DirError, this.store.getEepDir());
@@ -55,7 +57,7 @@ export default class AppEffects {
     try {
       fs.mkdirSync(this.serverConfigPath);
     } catch (error) {
-      console.log(error);
+      // IGNORE console.log(error);
     }
     try {
       fs.writeFileSync(this.serverConfigFile, JSON.stringify(config));
@@ -103,6 +105,7 @@ export default class AppEffects {
     eepService.setOnJsonContentChanged((jsonString: string) => this.jsonDataEffects.jsonDataUpdated(jsonString));
 
     // Init LogHandler
-    // fileOperations.addLogCallback((jsonString: string) => this.onUpdate);
+    this.logEffects = new LogEffects(this.app, this.io, this.socketService, eepService.getCurrentLogLines);
+    eepService.setOnNewLogLine((logLines: string) => this.logEffects.onNewLogLine(logLines));
   }
 }
