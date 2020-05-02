@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { WsEvent } from './ws-event';
+import { SocketEvent } from './socket-event';
 import { environment } from '../../../environments/environment';
 import { Store } from '@ngrx/store';
 import * as fromRoot from '../../app.reducers';
@@ -11,7 +11,7 @@ import * as CoreAction from '../store/core.actions';
 @Injectable({
   providedIn: 'root',
 })
-export class WsService {
+export class SocketService {
   private socket: SocketIOClient.Socket;
   connected$ = new BehaviorSubject<boolean>(false);
 
@@ -58,8 +58,15 @@ export class WsService {
     return new Observable((observer) => {
       this.socket.on(event, (data: any) => {
         console.groupCollapsed('----- SOCKET INBOUND  ----- ' + event);
-        console.log('Action: ', event);
-        console.log('Payload: ', data);
+        console.log('Action      : ', event);
+        if (data) {
+          if ('string' === typeof data) {
+            console.log('PAYLOAD TYPE: STRING !!!');
+          } else {
+            console.log('Payload Type: ' + typeof data);
+          }
+        }
+        console.log('Payload     : ', data);
         console.groupEnd();
 
         observer.next(data);

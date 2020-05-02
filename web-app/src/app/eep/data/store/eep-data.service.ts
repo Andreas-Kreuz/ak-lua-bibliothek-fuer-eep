@@ -3,17 +3,17 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
 import * as fromRoot from '../../../app.reducers';
-import { WsEvent } from '../../../core/socket/ws-event';
-import { WsService } from '../../../core/socket/ws.service';
+import { SocketEvent } from '../../../core/socket/socket-event';
+import { SocketService } from '../../../core/socket/socket-service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EepDataService {
-  private dataActions$: Observable<WsEvent>;
-  private freeDataActions$: Observable<WsEvent>;
+  private dataActions$: Observable<SocketEvent>;
+  private freeDataActions$: Observable<SocketEvent>;
 
-  constructor(private socket: WsService,
+  constructor(private socket: SocketService,
               private store: Store<fromRoot.State>) {
   }
 

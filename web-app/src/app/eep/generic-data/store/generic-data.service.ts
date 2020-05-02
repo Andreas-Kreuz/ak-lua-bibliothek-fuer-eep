@@ -3,8 +3,8 @@ import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 
 import * as fromRoot from '../../../app.reducers';
-import { WsEvent } from '../../../core/socket/ws-event';
-import { WsService } from '../../../core/socket/ws.service';
+import { SocketEvent } from '../../../core/socket/socket-event';
+import { SocketService } from '../../../core/socket/socket-service';
 import { DataType } from '../model/data-type';
 import * as fromGenericData from './generic-data.actions';
 
@@ -14,7 +14,7 @@ import * as fromGenericData from './generic-data.actions';
 export class GenericDataService {
   private wsSubscription: Subscription;
 
-  constructor(private socket: WsService,
+  constructor(private socket: SocketService,
               private store: Store<fromRoot.State>) {
   }
 
@@ -22,7 +22,7 @@ export class GenericDataService {
     this.wsSubscription = this.socket
       .listen('[Data-api-entries]')
       .subscribe(
-        (wsEvent: WsEvent) => {
+        (wsEvent: SocketEvent) => {
           if (wsEvent.action === 'Set') {
             const dataTypes: DataType[] = JSON.parse(wsEvent.payload);
             dataTypes.sort((a: DataType, b: DataType) => {

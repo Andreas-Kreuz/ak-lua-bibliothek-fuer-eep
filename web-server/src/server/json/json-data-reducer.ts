@@ -11,7 +11,7 @@ export default class JsonDataStore {
     const changedKeys: string[] = [];
     for (const key of keysToCheck) {
       const currentData = JSON.stringify(this.currentJsonContent[key]);
-      const newData = JSON.stringify(this.currentJsonContent[key]);
+      const newData = JSON.stringify(newJsonContent[key]);
       if (currentData !== newData) {
         changedKeys.push(key);
       }

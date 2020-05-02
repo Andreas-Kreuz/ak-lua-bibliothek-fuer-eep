@@ -70,20 +70,28 @@ export default class EepService {
     // First: delete the file from EEP, so EEP will know we are ready
     this.deleteFileIfExists(jsonReadyFile);
 
+    if (!this.jsonFileWatcher) {
+      this.readJsonFile(jsonFile, jsonReadyFile);
+    }
+
     // Watch in the directory, if the file is recreated
     this.jsonFileWatcher = fs.watch(this.dir, {}, (eventType: string, filename: string) => {
       // If the jsonReadyFile exists: Read the data and remove the file
       if (filename === serverReadyForJsonFile && fs.existsSync(jsonReadyFile)) {
-        // EEP has written the JsonFile for us, so let's read it.
-        fs.readFile(jsonFile, { encoding: 'latin1' }, (err, data) => {
-          // Delete the file from EEP, so EEP will know we are ready
-          this.deleteFileIfExists(jsonReadyFile);
-          if (err) {
-            console.log(err);
-          } else {
-            this.onJsonUpdate(data);
-          }
-        });
+        this.readJsonFile(jsonFile, jsonReadyFile);
+      }
+    });
+  }
+
+  private readJsonFile(jsonFile: string, jsonReadyFile: string) {
+    // EEP has written the JsonFile for us, so let's read it.
+    fs.readFile(jsonFile, { encoding: 'latin1' }, (err, data) => {
+      // Delete the file from EEP, so EEP will know we are ready
+      this.deleteFileIfExists(jsonReadyFile);
+      if (err) {
+        console.log(err);
+      } else {
+        this.onJsonUpdate(data);
       }
     });
   }

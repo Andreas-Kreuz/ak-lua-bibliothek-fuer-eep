@@ -75,14 +75,14 @@
         $('#dir').contents().replaceWith($('<em id="dir">').text(msg));
         $('#changeDir').val(msg);
       });
-      socket.on('[JsonUrls]', function (msg) {
-        console.log('[JsonUrls] ' + msg);
+      socket.on('[Server Status Event] Urls Changed', function (msg) {
+        console.log('[Server Status Event] Urls Changed ' + msg);
         $('#urls').replaceWith($('<div id="urls">').text('Happily serving: ' + msg));
       });
       socket.on('connect', function () {
         // Connected, let's sign-up for Server Settings and Json Urls
-        console.log("socket.emit('[Room] Join', '[JsonUrls]')");
-        socket.emit('[Room] Join', { room: '[JsonUrls]' });
+        console.log("socket.emit('[Room] Join', '[Server Status Event]')");
+        socket.emit('[Room] Join', { room: '[Server Status Event]' });
         console.log("socket.emit('[Room] Join', '[Settings Event]')");
         socket.emit('[Room] Join', { room: '[Settings Event]' });
       });

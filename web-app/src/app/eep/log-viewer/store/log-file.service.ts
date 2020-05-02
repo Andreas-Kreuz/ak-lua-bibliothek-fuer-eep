@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { WsEvent } from '../../../core/socket/ws-event';
-import { WsService } from '../../../core/socket/ws.service';
+import { SocketEvent } from '../../../core/socket/socket-event';
+import { SocketService } from '../../../core/socket/socket-service';
 import { LogEvent } from 'web-shared';
 
 @Injectable({
@@ -12,7 +12,7 @@ export class LogFileService {
   logLinesAdded$: Observable<any>;
   logLinesCleared$: Observable<any>;
 
-  constructor(private socket: WsService) {
+  constructor(private socket: SocketService) {
     // Every socket NOTES event has it's own observable, will be used by ngrx effects
     this.logLinesAdded$ = this.socket.listen(LogEvent.LinesAdded);
     this.logLinesCleared$ = this.socket.listen(LogEvent.LinesCleared);

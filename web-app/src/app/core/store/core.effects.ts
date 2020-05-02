@@ -1,46 +1,45 @@
 import { Injectable } from '@angular/core';
-import { WsService } from '../socket/ws.service';
-import { Effect } from '@ngrx/effects';
-import { WsEvent } from '../socket/ws-event';
+import { Effect, createEffect } from '@ngrx/effects';
 import { Versions } from '../model/versions.model';
 import { VersionInfo } from '../model/version-info.model';
-import * as fromCore from './core.actions';
-import { filter, switchMap } from 'rxjs/operators';
+import * as CoreAction from './core.actions';
+import { filter, switchMap, map } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { ModuleInfo } from '../model/module-info.model';
+import { CoreService } from './core-service';
 
 @Injectable()
 export class CoreEffects {
-  @Effect()
-  init$ = this.wsService
-    .listen('[Data-eep-version]')
-    .pipe(
-      filter(wsEvent => wsEvent.action === 'Set'),
-      switchMap((wsEvent: WsEvent) => {
-        const versions: Versions = JSON.parse(wsEvent.payload);
-        const versionInfo: VersionInfo = versions.versionInfo;
+  versionChanged$ = createEffect(() =>
+    this.coreService.versionChanged$.pipe(
+      switchMap((data) => {
+        if ('' !== data) {
+          const versions: Versions = JSON.parse(data);
+          const versionInfo: VersionInfo = versions.versionInfo;
 
-        return of(
-          fromCore.setEepVersion({ version: versionInfo.eepVersion }),
-          fromCore.setEepLuaVersion({ version: versionInfo.luaVersion }));
-      }
-      )
-    );
+          return of(
+            CoreAction.setEepVersion({ version: versionInfo.eepVersion }),
+            CoreAction.setEepLuaVersion({ version: versionInfo.luaVersion })
+          );
+        } else {
+          CoreAction.setEepVersion({ version: undefined });
+          CoreAction.setEepLuaVersion({ version: undefined });
+        }
+      })
+    )
+  );
 
+  modulesChanged$ = createEffect(() =>
+    this.coreService.modulesChanged$.pipe(
+      map((data) => {
+        let modules: ModuleInfo[] = [];
+        if ('' !== data) {
+          modules = JSON.parse(data);
+        }
+        return CoreAction.setModules({ modules: modules });
+      })
+    )
+  );
 
-  @Effect()
-  listenForModules$ = this.wsService
-    .listen('[Data-modules]')
-    .pipe(
-      filter(wsEvent => wsEvent.action === 'Set'),
-      switchMap((wsEvent: WsEvent) => {
-        const modules: ModuleInfo[] = JSON.parse(wsEvent.payload);
-
-        return of(fromCore.setModules({ modules: modules }));
-      }
-      )
-    );
-
-  constructor(private wsService: WsService) {
-  }
+  constructor(private coreService: CoreService) {}
 }

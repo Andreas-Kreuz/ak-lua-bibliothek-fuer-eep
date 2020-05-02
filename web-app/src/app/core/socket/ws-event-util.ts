@@ -1,7 +1,8 @@
-import { WsEvent } from './ws-event';
+import { SocketEvent } from './socket-event';
 
 export class WsEventUtil {
-  public static storeAction(w: WsEvent) {
+  // TODO REMOVE THIS
+  public static storeAction(w: SocketEvent) {
     return w.action;
   }
 }

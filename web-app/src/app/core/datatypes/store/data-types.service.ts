@@ -2,19 +2,19 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import * as fromDataTypes from './data-types.actions';
-import { WsEvent } from '../../socket/ws-event';
-import { WsService } from '../../socket/ws.service';
+import { SocketEvent } from '../../socket/socket-event';
+import { SocketService } from '../../socket/socket-service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DataTypesService {
-  private actionObservable: Observable<WsEvent>;
+  private actionObservable: Observable<SocketEvent>;
 
-  constructor(private wsService: WsService) {
+  constructor(private wsService: SocketService) {
   }
 
-  getActions(): Observable<WsEvent> {
+  getActions(): Observable<SocketEvent> {
     if (!this.actionObservable) {
       this.actionObservable = this.wsService.listen(fromDataTypes.ROOM);
     }

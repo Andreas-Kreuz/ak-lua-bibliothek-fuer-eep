@@ -6,7 +6,7 @@ import * as fromSignal from './signal.actions';
 import { Signal } from '../models/signal.model';
 import { of } from 'rxjs';
 import { SignalsService } from './signals.service';
-import { WsEvent } from '../../../core/socket/ws-event';
+import { SocketEvent } from '../../../core/socket/socket-event';
 import { SignalTypeDefinition } from '../models/signal-type-definition.model';
 
 @Injectable()
@@ -16,7 +16,7 @@ export class SignalEffects {
   fetchSignals$ = this.signalsService.getSignalActions()
     .pipe(
       switchMap(
-        (wsEvent: WsEvent) => {
+        (wsEvent: SocketEvent) => {
           const list: Signal[] = JSON.parse(wsEvent.payload);
           list.sort((a, b) => a.id - b.id);
 
@@ -36,7 +36,7 @@ export class SignalEffects {
   fetchSignalTypDefinitions$ = this.signalsService.getSignalTypeDefinitionActions()
     .pipe(
       switchMap(
-        (wsEvent: WsEvent) => {
+        (wsEvent: SocketEvent) => {
           const list: SignalTypeDefinition[] = JSON.parse(wsEvent.payload);
           return of(
             new fromSignal.SetSignalTypeDefinitions(list),

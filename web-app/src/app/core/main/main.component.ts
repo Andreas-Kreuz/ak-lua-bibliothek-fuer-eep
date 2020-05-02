@@ -24,7 +24,7 @@ export class MainComponent implements OnInit, OnDestroy {
   title: string;
   private intersectionsAvailable$: Observable<boolean>;
   private readonly _mobileQueryListener: () => void;
-  private connectionStatus$: Observable<Status>;
+  connectionStatus$: Observable<Status>;
   navigation;
   mobileQuery: MediaQueryList;
   atHome: boolean;

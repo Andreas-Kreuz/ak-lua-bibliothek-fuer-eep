@@ -1,5 +1,5 @@
 import { Action, createAction, props } from '@ngrx/store';
-import { WsEvent } from '../../../core/socket/ws-event';
+import { SocketEvent } from '../../../core/socket/socket-event';
 
 export const linesAdded = createAction('[Log] Lines Added' , props<{ lines: string }>());
 export const linesCleared = createAction('[Log] Lines Cleared');

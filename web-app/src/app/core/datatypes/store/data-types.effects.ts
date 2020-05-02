@@ -3,11 +3,11 @@ import { Effect } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { catchError, filter, switchMap } from 'rxjs/operators';
 
-import { WsEvent } from '../../socket/ws-event';
+import { SocketEvent } from '../../socket/socket-event';
 import { Versions } from '../../model/versions.model';
 import { VersionInfo } from '../../model/version-info.model';
 import * as fromCore from '../../store/core.actions';
-import { WsService } from '../../socket/ws.service';
+import { SocketService } from '../../socket/socket-service';
 import { WsEventUtil } from '../../socket/ws-event-util';
 import * as fromDataTypes from './data-types.actions';
 import { DataTypesService } from './data-types.service';
@@ -20,7 +20,7 @@ export class DataTypesEffects {
     .listen('[Data-eep-version]')
     .pipe(
       filter(wsEvent => wsEvent.action === 'Set'),
-      switchMap((wsEvent: WsEvent) => {
+      switchMap((wsEvent: SocketEvent) => {
         const versions: Versions = JSON.parse(wsEvent.payload);
         const versionInfo: VersionInfo = versions.versionInfo;
 
@@ -35,7 +35,7 @@ export class DataTypesEffects {
   dataTypes = this.dataTypesService.getActions().pipe(
     filter(wsEvent => WsEventUtil.storeAction(wsEvent) === fromDataTypes.setDataTypes.type),
     switchMap(
-      (wsEvent: WsEvent) => {
+      (wsEvent: SocketEvent) => {
         return of(
           fromDataTypes.setDataTypes({ types: JSON.parse(wsEvent.payload) }),
           fromCore.setConnectionStatusSuccess());
@@ -47,7 +47,7 @@ export class DataTypesEffects {
     })
   );
 
-  constructor(private wsService: WsService,
+  constructor(private wsService: SocketService,
     private dataTypesService: DataTypesService) {
   }
 }

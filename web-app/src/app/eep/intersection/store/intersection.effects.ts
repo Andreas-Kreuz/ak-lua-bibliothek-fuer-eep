@@ -9,7 +9,7 @@ import { IntersectionLane } from '../models/intersection-lane.model';
 import * as fromSignals from '../../signals/store/signal.actions';
 import { IntersectionTrafficLight } from '../models/intersection-traffic-light.model';
 import { IntersectionService } from './intersection.service';
-import { WsEvent } from '../../../core/socket/ws-event';
+import { SocketEvent } from '../../../core/socket/socket-event';
 import { Intersection } from '../models/intersection.model';
 import { IntersectionSwitching } from '../models/intersection-switching.model';
 import { LuaSettings } from '../../../shared/model/lua-settings';
@@ -19,7 +19,7 @@ import { LuaSetting } from '../../../shared/model/lua-setting';
 export class IntersectionEffects {
   @Effect()
   fetchIntersectionTrafficLights$ = this.intersectionService.getTrafficLightActions().pipe(
-    switchMap((wsEvent: WsEvent) => {
+    switchMap((wsEvent: SocketEvent) => {
       const list: IntersectionTrafficLight[] = JSON.parse(wsEvent.payload);
       const signalModels = new Map<number, string>();
       for (const element of list) {
@@ -42,7 +42,7 @@ export class IntersectionEffects {
 
   @Effect()
   fetchIntersections$ = this.intersectionService.getIntersectionActions().pipe(
-    switchMap((wsEvent: WsEvent) => {
+    switchMap((wsEvent: SocketEvent) => {
       const list: Intersection[] = JSON.parse(wsEvent.payload);
 
       return of(IntersectionActions.setIntersections({ intersections: list }));
@@ -51,7 +51,7 @@ export class IntersectionEffects {
 
   @Effect()
   fetchIntersectionSwitchings$ = this.intersectionService.getSwitchingActions().pipe(
-    switchMap((wsEvent: WsEvent) => {
+    switchMap((wsEvent: SocketEvent) => {
       const list: IntersectionSwitching[] = JSON.parse(wsEvent.payload);
 
       return of(IntersectionActions.setSwitchings({ switchings: list }));
@@ -60,7 +60,7 @@ export class IntersectionEffects {
 
   @Effect()
   intersectionLanesActions$ = this.intersectionService.getLaneActions().pipe(
-    switchMap((wsEvent: WsEvent) => {
+    switchMap((wsEvent: SocketEvent) => {
       const list: IntersectionLane[] = JSON.parse(wsEvent.payload);
 
       return of(IntersectionActions.setLanes({ lanes: list }));
@@ -69,7 +69,7 @@ export class IntersectionEffects {
 
   @Effect()
   luaModuleSettingsReceivedAction$ = this.intersectionService.getLuaSettingsReceivedActions().pipe(
-    switchMap((wsEvent: WsEvent) => {
+    switchMap((wsEvent: SocketEvent) => {
       const list: LuaSetting<any>[] = JSON.parse(wsEvent.payload);
       const settings = new LuaSettings('Kreuzungen', list);
 
@@ -82,7 +82,7 @@ export class IntersectionEffects {
     ofType(IntersectionActions.changeModuleSettings),
     map((action) => {
       const command = action.setting.eepFunction + '|' + action.value;
-      this.intersectionService.emit(new WsEvent('[Command Event]', command));
+      this.intersectionService.emit(new SocketEvent('[Command Event]', command));
     })
   );
 
@@ -91,7 +91,7 @@ export class IntersectionEffects {
     ofType(IntersectionActions.switchManually),
     map((action) => {
       const command = 'AkKreuzungSchalteManuell|' + action.intersection.name + '|' + action.switching.name;
-      this.intersectionService.emit(new WsEvent('[Command Event]', command));
+      this.intersectionService.emit(new SocketEvent('[Command Event]', command));
     })
   );
 
@@ -100,7 +100,7 @@ export class IntersectionEffects {
     ofType(IntersectionActions.switchAutomatically),
     map((action) => {
       const command = 'AkKreuzungSchalteAutomatisch|' + action.intersection.name;
-      this.intersectionService.emit(new WsEvent('[Command Event]', command));
+      this.intersectionService.emit(new SocketEvent('[Command Event]', command));
     })
   );
 
@@ -111,7 +111,7 @@ export class IntersectionEffects {
         ofType(IntersectionActions.switchToCam),
         map((action) => {
           const command = 'EEPSetCamera|0|' + action.staticCam;
-          this.intersectionService.emit(new WsEvent('[Command Event]', command));
+          this.intersectionService.emit(new SocketEvent('[Command Event]', command));
         })
       ),
     { dispatch: false }
