@@ -3,25 +3,27 @@ import { Observable } from 'rxjs';
 
 import { WsEvent } from '../../../core/socket/ws-event';
 import { WsService } from '../../../core/socket/ws.service';
+import { LogEvent } from 'web-shared';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class LogFileService {
+  logLinesAdded$: Observable<any>;
+  logLinesCleared$: Observable<any>;
 
-  constructor(private wsService: WsService) {
+  constructor(private socket: WsService) {
+    // Every socket NOTES event has it's own observable, will be used by ngrx effects
+    this.logLinesAdded$ = this.socket.listen(LogEvent.LinesAdded);
+    this.logLinesCleared$ = this.socket.listen(LogEvent.LinesCleared);
+    this.socket.join(LogEvent.Room);
   }
 
-  private actionObservable: Observable<WsEvent>;
-
-  getActions(): Observable<WsEvent> {
-    if (!this.actionObservable) {
-      this.actionObservable = this.wsService.listen('[Log]');
-    }
-    return this.actionObservable;
+  clearLog() {
+    this.socket.emit(LogEvent.ClearLog);
   }
 
-  emit(wsEvent: WsEvent) {
-    return this.wsService.emit(wsEvent);
+  sendTestMessage() {
+    this.socket.emit(LogEvent.SendTestMessage);
   }
 }

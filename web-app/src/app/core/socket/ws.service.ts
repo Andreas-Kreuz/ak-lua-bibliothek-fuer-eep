@@ -1,88 +1,64 @@
 import { Injectable } from '@angular/core';
 import { WsEvent } from './ws-event';
 import { environment } from '../../../environments/environment';
-import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 import { Store } from '@ngrx/store';
 import * as fromRoot from '../../app.reducers';
-import { Observable } from 'rxjs';
+import { Observable, of, BehaviorSubject } from 'rxjs';
+import * as socketio from 'socket.io-client';
+import { RoomEvent } from 'web-shared';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class WsService {
-  public websocketSubject: WebSocketSubject<WsEvent>;
-  private readonly url: string;
+  private socket: SocketIOClient.Socket;
+  connected$ = new BehaviorSubject<boolean>(false);
 
   constructor(private store: Store<fromRoot.State>) {
-    this.url = 'ws://' + location.hostname
-      + ':'
-      + environment.websocketPort
-      + environment.websocketPath;
-    this.connect();
+    this.socket = socketio(location.hostname + ':' + environment.websocketPort, {});
+    this.socket.on('connect', () => this.connected$.next(true));
+    this.socket.on('disconnect', () => this.connected$.next(false));
+    this.socket.connect();
   }
 
-  public connect() {
-    if (!this.websocketSubject) {
-      console.log('Connecting websocket: ' + this.url);
-      // this.websocket = new WebSocket(this.url);
-      this.websocketSubject = webSocket(this.url);
-      this.websocketSubject.subscribe(
-        (wsEvent: WsEvent) => {
-          this.logSocket('INBOUND ', wsEvent);
-        },
-        (err) => {
-          console.log(err);
-        },
-        () => console.log('Websocket is complete')
-      );
-    }
-    return this;
-  }
+  join(room: string) {
+    console.log('----- JOINING ROOM    ----- ' + room);
 
-  public disconnect() {
-    if (this.websocketSubject) {
-      this.websocketSubject.complete();
-    }
-  }
-
-  public listen(room: string, action?: string): Observable<WsEvent> {
-    return this.websocketSubject.multiplex(
-      () => {
-        const event = new WsEvent('[Room]', 'Subscribe', room);
-        this.logSocket('OUTGOING', event, room);
-        return event;
-      },
-      () => {
-        const event = new WsEvent('[Room]', 'Unsubscribe', room);
-        this.logSocket('OUTGOING', event, room);
-        return event;
-      },
-      (wsEvent: WsEvent) => {
-        if (action) {
-          return wsEvent.room === room && wsEvent.action === action;
-        }
-        return wsEvent.room === room;
+    // auto rejoin after reconnect mechanism
+    this.connected$.subscribe((connected) => {
+      if (connected) {
+        this.socket.emit(RoomEvent.JoinRoom, { room: room });
       }
-    );
+    });
   }
 
-  private logSocket(direction: string, wsEvent: WsEvent, additionalInfo?: string) {
-    if (wsEvent.room === '[Ping]') {
-      return;
-    }
+  disconnect() {
+    this.socket.disconnect();
+    this.connected$.next(false);
+  }
 
-    console.groupCollapsed(direction + ' SOCKET: '
-      + wsEvent.room + ' ' + wsEvent.action
-      + (additionalInfo ? ' ' + additionalInfo : '')
-    );
-    console.log('Room: ', wsEvent.room);
-    console.log('Action: ', wsEvent.action);
-    console.log('Event: ', wsEvent);
+  emit(event: string, data?: any) {
+    console.groupCollapsed('----- SOCKET OUTGOING ----- ' + event);
+    console.log('Action: ', event);
+    console.log('Payload: ', data);
     console.groupEnd();
+
+    this.socket.emit(event, data);
   }
 
-  public emit(wsEvent: WsEvent) {
-    this.logSocket('OUTGOING', wsEvent);
-    this.websocketSubject.next(wsEvent);
+  listen(event: string): Observable<any> {
+    console.log('----- SOCKET REGISTERED FOR ----- ' + event);
+    return new Observable((observer) => {
+      this.socket.on(event, (data: any) => {
+        console.groupCollapsed('----- SOCKET INBOUND  ----- ' + event);
+        console.log('Action: ', event);
+        console.log('Payload: ', data);
+        console.groupEnd();
+
+        observer.next(data);
+      });
+      // dispose of the event listener when unsubscribed
+      return () => this.socket.off(event);
+    });
   }
 }

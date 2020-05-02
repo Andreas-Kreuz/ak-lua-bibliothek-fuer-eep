@@ -1,6 +1,5 @@
 export class WsEvent {
-  constructor(public room: string,
-              public action: string,
+  constructor(public action: string,
               public payload?: any) {
   }
 }

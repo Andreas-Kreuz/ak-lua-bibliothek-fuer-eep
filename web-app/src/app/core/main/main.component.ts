@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { AppComponent } from '../../app.component';
 import { select, Store } from '@ngrx/store';
-import * as fromErrors from '../store/core.reducers';
+import * as fromCore from '../store/core.reducers';
 import * as fromRoot from '../../app.reducers';
 import { Observable } from 'rxjs';
 import { Status } from '../server-status/status.enum';
@@ -56,7 +56,7 @@ export class MainComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.navigation = this.mainNavigation.navigation;
-    this.connectionStatus$ = this.store.pipe(select(fromErrors.selectConnectionStatus));
+    this.connectionStatus$ = this.store.pipe(select(fromCore.selectConnectionStatus));
   }
 
   ngOnDestroy(): void {

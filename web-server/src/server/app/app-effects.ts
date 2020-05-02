@@ -3,8 +3,8 @@ import fs from 'fs';
 import path from 'path';
 import { Server, Socket } from 'socket.io';
 
-import { Room, SocketEvent } from 'web-shared';
-import SocketService from '../clientio/socket-manager';
+import { Room, SettingsEvent } from 'web-shared';
+import SocketService from '../clientio/socket-service';
 import CommandEffects from '../command/command-effects';
 import EepService from '../eep/eep-service';
 import JsonDataEffects from '../json/json-data-effects';
@@ -22,21 +22,21 @@ export default class AppEffects {
 
   constructor(private app: any, private io: Server, private socketService: SocketService) {
     this.loadConfig();
-    this.socketService.addOnRoomsJoinedCallback((socket: Socket, joinedRooms: string[]) =>
-      this.onRoomsJoined(socket, joinedRooms)
+    this.socketService.addOnRoomsJoinedCallback((socket: Socket, joinedRoom: string) =>
+      this.onRoomsJoined(socket, joinedRoom)
     );
   }
 
-  private onRoomsJoined(socket: Socket, joinedRooms: string[]) {
-    if (joinedRooms.indexOf(Room.ServerSettings) > -1) {
-      const event = this.store.getEepDirOk() ? SocketEvent.DirOk : SocketEvent.DirError;
+  private onRoomsJoined(socket: Socket, joinedRoom: string) {
+    if (joinedRoom === SettingsEvent.Room) {
+      const event = this.store.getEepDirOk() ? SettingsEvent.DirOk : SettingsEvent.DirError;
       // console.log('EMIT ' + event + ' to ' + socket.id);
       // console.log('EMIT ' + SocketEvent.Dir + ', ' + this.getEepDirectory() + ' to ' + socket.id);
       socket.emit(event, this.getEepDirectory());
-      socket.emit(SocketEvent.Dir, this.getEepDirectory());
+      socket.emit(SettingsEvent.Dir, this.getEepDirectory());
     }
 
-    socket.on(SocketEvent.ChangeDir, (dir: string) => {
+    socket.on(SettingsEvent.ChangeDir, (dir: string) => {
       // console.log(SocketEvent.ChangeDir + '"' + dir + '"');
       this.changeEepDirectory(dir);
     });
@@ -54,7 +54,7 @@ export default class AppEffects {
       // IGNORE console.log(error);
     }
     this.store.setAppConfig(appConfig);
-    this.io.to(Room.ServerSettings).emit(SocketEvent.DirError, this.store.getEepDir());
+    this.io.to(SettingsEvent.Room).emit(SettingsEvent.DirError, this.store.getEepDir());
   }
 
   private saveConfig(config: { eepDir: string }): void {
@@ -89,17 +89,17 @@ export default class AppEffects {
       if (err) {
         console.error(err);
         this.store.setEepDirOk(false);
-        this.io.to(Room.ServerSettings).emit(SocketEvent.DirError, eepDir);
+        this.io.to(SettingsEvent.Room).emit(SettingsEvent.DirError, eepDir);
       } else if (dir) {
         console.log('Directory set to : ' + dir);
         this.registerHandlers(fileOperations);
         this.store.setEepDirOk(true);
         this.saveEepDirectory(eepDir);
-        this.io.to(Room.ServerSettings).emit(SocketEvent.DirOk);
-        this.io.to(Room.ServerSettings).emit(SocketEvent.Dir, eepDir);
+        this.io.to(SettingsEvent.Room).emit(SettingsEvent.DirOk);
+        this.io.to(SettingsEvent.Room).emit(SettingsEvent.Dir, eepDir);
       } else {
         this.store.setEepDirOk(false);
-        this.io.to(Room.ServerSettings).emit(SocketEvent.DirError, eepDir);
+        this.io.to(SettingsEvent.Room).emit(SettingsEvent.DirError, eepDir);
       }
     });
   }
@@ -110,8 +110,9 @@ export default class AppEffects {
     eepService.setOnJsonContentChanged((jsonString: string) => this.jsonDataEffects.jsonDataUpdated(jsonString));
 
     // Init LogHandler
-    this.logEffects = new LogEffects(this.app, this.io, this.socketService, eepService.getCurrentLogLines);
+    this.logEffects = new LogEffects(this.app, this.io, this.socketService, eepService.getCurrentLogLines, eepService.queueCommand);
     eepService.setOnNewLogLine((logLines: string) => this.logEffects.onNewLogLine(logLines));
+    eepService.setOnLogCleared(() => this.logEffects.onLogCleared());
 
     // Init LogHandler
     this.commandEffects = new CommandEffects(this.app, this.io, this.socketService, eepService.queueCommand);

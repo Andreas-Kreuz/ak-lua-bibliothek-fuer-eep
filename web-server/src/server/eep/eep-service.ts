@@ -15,14 +15,16 @@ const writtenEventFileName = 'ak-eep-in.event';
  */
 export default class EepService {
   private dir: string;
+  private lastLogFileSize: number;
   private jsonFileWatcher: fs.FSWatcher;
   private logTail: Tail;
   private onJsonUpdate: (jsonText: string) => void;
-  private onLogLine: (line: string) => void;
+  private logLineAppeared: (line: string) => void;
+  private logWasCleared: () => void;
 
   constructor() {}
 
-  public reInit(dir: string, callback: (err: string, dir: string) => void): void {
+  reInit(dir: string, callback: (err: string, dir: string) => void): void {
     this.dir = path.resolve(dir);
 
     if (this.logTail) {
@@ -34,8 +36,11 @@ export default class EepService {
     this.onJsonUpdate = (jsonText: string) => {
       console.log('Received: ' + jsonText.length + ' bytes of JSON');
     };
-    this.onLogLine = (line: string) => {
+    this.logLineAppeared = (line: string) => {
       console.log(line);
+    };
+    this.logWasCleared = () => {
+      console.log('Log was cleared');
     };
 
     fs.stat(this.dir, (err, stats) => {
@@ -86,25 +91,36 @@ export default class EepService {
   private attachAkEepOutLogFile(): void {
     const logFile = path.resolve(this.dir, watchedLogFileName);
     this.oneFileAppearance(logFile, () => {
-      const tail = new Tail(logFile, { encoding: 'latin1' });
-      tail.on('line', (line: string) => this.onLogLine(line));
+      const tail = new Tail(logFile, { encoding: 'latin1', fromBeginning: true });
+      tail.on('line', (line: string) => {
+        const stats = fs.statSync(logFile);
+        const fileSizeInBytes = stats['size'];
+        if (this.lastLogFileSize && fileSizeInBytes < this.lastLogFileSize) {
+          this.logWasCleared(); // TODO: NOT WORKING; BECAUSE TAIL DOES NOT LOOK BACK
+        }
+        this.lastLogFileSize = fileSizeInBytes;
+        this.logLineAppeared(line);
+      });
 
       tail.on('error', (error: string) => {
         console.log(error);
         tail.unwatch();
         this.attachAkEepOutLogFile();
       });
+
       this.logTail = tail;
     });
   }
 
-  getCurrentLogLines(): string {
+  getCurrentLogLines = (): string => {
     try {
-      return fs.readFileSync(watchedLogFileName, { encoding: 'latin1' });
+      console.log('Read: ' + path.resolve(this.dir, watchedLogFileName));
+      return fs.readFileSync(path.resolve(this.dir, watchedLogFileName), { encoding: 'latin1' });
     } catch (e) {
-      return '';
+      console.log(e);
     }
-  }
+    // tslint:disable-next-line: semicolon
+  };
 
   private oneFileAppearance(expectedFile: string, callback: () => void): void {
     if (fs.existsSync(expectedFile)) {
@@ -142,14 +158,20 @@ export default class EepService {
   }
 
   public setOnNewLogLine(logLineFunction: (line: string) => void) {
-    this.onLogLine = logLineFunction;
+    this.logLineAppeared = logLineFunction;
   }
 
-  public queueCommand(command: string) {
+  public setOnLogCleared(logClearedFunction: () => void) {
+    this.logWasCleared = logClearedFunction;
+  }
+
+  queueCommand = (command: string) => {
+    const file = path.resolve(this.dir, writtenCommandFileName);
     try {
-      fs.appendFileSync(writtenCommandFileName, command, { encoding: 'latin1' });
+      fs.appendFileSync(file, command + '\n', { encoding: 'latin1' });
     } catch (error) {
       console.log(error);
     }
-  }
+    // tslint:disable-next-line: semicolon
+  };
 }

@@ -54,6 +54,6 @@ export class IntersectionService {
   }
 
   emit(wsEvent: WsEvent) {
-    return this.wsService.emit(wsEvent);
+    return this.wsService.emit(wsEvent.action, wsEvent.payload);
   }
 }

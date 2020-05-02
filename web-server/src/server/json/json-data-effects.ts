@@ -1,8 +1,8 @@
 import express = require('express');
 import { Server, Socket } from 'socket.io';
 
-import { Room, SocketEvent } from 'web-shared';
-import SocketService from '../clientio/socket-manager';
+import { Room } from 'web-shared';
+import SocketService from '../clientio/socket-service';
 import JsonDataStore from './json-data-reducer';
 
 export default class JsonDataEffects {
@@ -10,8 +10,9 @@ export default class JsonDataEffects {
   private store = new JsonDataStore(this);
 
   constructor(private app: express.Express, private io: Server, private socketService: SocketService) {
-    this.socketService.addOnRoomsJoinedCallback((socket: Socket, joinedRooms: string[]) =>
-      this.onRoomsJoined(socket, joinedRooms)
+    this.registerAvailableApiUrl();
+    this.socketService.addOnRoomsJoinedCallback((socket: Socket, joinedRoom: string) =>
+      this.onRoomsJoined(socket, joinedRoom)
     );
   }
 
@@ -51,26 +52,35 @@ export default class JsonDataEffects {
     }
   }
 
-  private onRoomsJoined(socket: Socket, joinedRooms: string[]): void {
-    // Send data on join
-    const keys = Object.keys(this.store.getJsonData()).filter((key) =>
-      Object.keys(joinedRooms).includes(Room.ofDataType(key))
-    );
+  private onRoomsJoined = (socket: Socket, joinedRoom: string): void => {
+    console.log('EMIT ' + Room.JsonUrls + ' to interested parties');
 
+    // Send data on join
+    const keys = Object.keys(this.store.getJsonData());
     for (const key of keys) {
       // Send datatype events to datatype rooms
       const room = Room.ofDataType(key);
-      console.log('EMIT ' + room + ' to ' + socket.id);
-      socket.emit(room, JSON.stringify(this.store.getJsonData()[key]));
+      if (room === joinedRoom) {
+        console.log('EMIT ' + room + ' to ' + socket.id);
+        socket.emit(room, JSON.stringify(this.store.getJsonData()[key]));
+      }
     }
 
-    // Send URLs to all URLs room
-    if (joinedRooms.indexOf(Room.JsonUrls) > -1) {
+    // Send JsonKeys to all JsonKey rooms
+    if (joinedRoom === Room.JsonUrls) {
       socket.join(Room.JsonUrls);
       console.log('EMIT ' + Room.JsonUrls + ' to ' + socket.id);
       socket.emit(Room.JsonUrls, JSON.stringify(this.store.getUrls()));
     }
-  }
+
+    // Send URLs to all URLs rooms
+    if (joinedRoom === Room.AvailableDataTypes) {
+      socket.join(Room.AvailableDataTypes);
+      console.log('EMIT ' + Room.AvailableDataTypes + ' to ' + socket.id);
+      socket.emit(Room.AvailableDataTypes, JSON.stringify(this.store.getDataRooms()));
+    }
+    // tslint:disable-next-line: semicolon
+  };
 
   public onDataAdded(key: string, json: string): void {
     this.store.addDataRoom(Room.ofDataType(key));
@@ -86,6 +96,15 @@ export default class JsonDataEffects {
     this.store.removeDataRoom(Room.ofDataType(key));
     this.io.to(Room.JsonUrls).emit(Room.JsonUrls, JSON.stringify(this.store.getUrls()));
     this.io.to(Room.ofDataType(key)).emit(Room.ofDataType(key), '');
+  }
+
+  private registerAvailableApiUrl() {
+    console.log('Register: /api/v1/api-entries');
+    const router = express.Router();
+    router.get('/api-entries', (req: any, res: any) => {
+      res.json(this.store.getDataRooms());
+    });
+    this.app.use('/api/v1', router);
   }
 
   private registerApiUrls(key: string) {

@@ -1,4 +1,7 @@
+import { CommandEvent } from './command-event';
+import { LogEvent } from './log-event';
 import { Room } from './room';
-import { SocketEvent } from './socket-event';
+import { RoomEvent } from './room-event';
+import { SettingsEvent } from './settings-event';
 
-export { Room, SocketEvent };
+export { CommandEvent, LogEvent, Room, RoomEvent, SettingsEvent };

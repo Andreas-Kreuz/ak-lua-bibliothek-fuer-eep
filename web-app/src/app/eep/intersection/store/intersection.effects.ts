@@ -82,7 +82,7 @@ export class IntersectionEffects {
     ofType(IntersectionActions.changeModuleSettings),
     map((action) => {
       const command = action.setting.eepFunction + '|' + action.value;
-      this.intersectionService.emit(new WsEvent('[EEPCommand]', 'Send', command));
+      this.intersectionService.emit(new WsEvent('[Command Event]', command));
     })
   );
 
@@ -91,7 +91,7 @@ export class IntersectionEffects {
     ofType(IntersectionActions.switchManually),
     map((action) => {
       const command = 'AkKreuzungSchalteManuell|' + action.intersection.name + '|' + action.switching.name;
-      this.intersectionService.emit(new WsEvent('[EEPCommand]', 'Send', command));
+      this.intersectionService.emit(new WsEvent('[Command Event]', command));
     })
   );
 
@@ -100,7 +100,7 @@ export class IntersectionEffects {
     ofType(IntersectionActions.switchAutomatically),
     map((action) => {
       const command = 'AkKreuzungSchalteAutomatisch|' + action.intersection.name;
-      this.intersectionService.emit(new WsEvent('[EEPCommand]', 'Send', command));
+      this.intersectionService.emit(new WsEvent('[Command Event]', command));
     })
   );
 
@@ -111,7 +111,7 @@ export class IntersectionEffects {
         ofType(IntersectionActions.switchToCam),
         map((action) => {
           const command = 'EEPSetCamera|0|' + action.staticCam;
-          this.intersectionService.emit(new WsEvent('[EEPCommand]', 'Send', command));
+          this.intersectionService.emit(new WsEvent('[Command Event]', command));
         })
       ),
     { dispatch: false }

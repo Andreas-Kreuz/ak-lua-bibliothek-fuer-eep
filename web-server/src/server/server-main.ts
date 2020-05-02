@@ -1,11 +1,12 @@
 import cors = require('cors');
+import { EventEmitter } from 'events';
 import express = require('express');
 import http = require('http');
 import path from 'path';
 import socketio from 'socket.io';
 
 import AppEffects from './app/app-effects';
-import SocketService from './clientio/socket-manager';
+import SocketService from './clientio/socket-service';
 
 const app = express();
 const server = new http.Server(app);
@@ -17,6 +18,7 @@ export class ServerMain {
 
   constructor(private port = 3000) {
     // Init the server
+    EventEmitter.defaultMaxListeners = 50;
     app.use(cors());
     app.set('port', this.port);
     this.socketService = new SocketService(io);

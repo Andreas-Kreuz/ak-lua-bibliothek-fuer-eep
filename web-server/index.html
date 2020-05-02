@@ -56,31 +56,35 @@
       var socket = io("http://localhost:3000");
       $('form').submit(function (e) {
         e.preventDefault(); // prevents page reloading
-        socket.emit('[Change Dir]', $('#changeDir').val());
+        socket.emit('[Settings Event] Change Dir', $('#changeDir').val());
         $('#changeDir').val('');
         return false;
       });
-      socket.on('[Dir]', function (msg) {
+      socket.on('[Settings Event] Set Dir', function (msg) {
+        console.log('[Settings Event] Set Dir' + msg);
         $('#dir').contents().replaceWith($('<em id="dir">').text(msg));
       });
-      socket.on('[Dir Ok]', function (msg) {
+      socket.on('[Settings Event] Dir Ok', function (msg) {
+        console.log('[Settings Event] Dir Ok ' + msg);
         $('#dir').removeClass('dir-error').addClass('dir-ok');
         $('#changeDir').val('');
       });
-      socket.on('[Dir Error]', function (msg) {
+      socket.on('[Settings Event] Dir Error', function (msg) {
+        console.log('[Settings Event] Dir Error ' + msg);
         $('#dir').removeClass('dir-ok').addClass('dir-error');
         $('#dir').contents().replaceWith($('<em id="dir">').text(msg));
         $('#changeDir').val(msg);
       });
       socket.on('[JsonUrls]', function (msg) {
-        console.log(msg);
+        console.log('[JsonUrls] ' + msg);
         $('#urls').replaceWith($('<div id="urls">').text('Happily serving: ' + msg));
       });
       socket.on('connect', function () {
-        console.log("socket.emit('[Join Room]', ['[Server Settings]', '[JsonUrls]'])");
-        // Connected, let's sign-up for Server Serttings and Json Urls
-        socket.emit('[Join Room]', ['[Server Settings]', '[JsonUrls]']);
-        socket.emit('[EEPCommand]', 'clearlog');
+        // Connected, let's sign-up for Server Settings and Json Urls
+        console.log("socket.emit('[Room] Join', '[JsonUrls]')");
+        socket.emit('[Room] Join', { room: '[JsonUrls]' });
+        console.log("socket.emit('[Room] Join', '[Settings Event]')");
+        socket.emit('[Room] Join', { room: '[Settings Event]' });
       });
     });
   </script>
