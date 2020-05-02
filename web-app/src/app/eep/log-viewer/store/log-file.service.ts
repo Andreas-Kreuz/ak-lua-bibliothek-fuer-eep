@@ -8,7 +8,7 @@ import { LogEvent } from 'web-shared';
   providedIn: 'root',
 })
 export class LogFileService {
-  logLinesAdded$: Observable<any>;
+  logLinesAdded$: Observable<string>;
   logLinesCleared$: Observable<any>;
 
   constructor(private socket: SocketService) {
