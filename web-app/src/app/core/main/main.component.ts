@@ -22,7 +22,6 @@ export class MainComponent implements OnInit, OnDestroy {
 
   @Output() featureSelected = new EventEmitter<string>();
   title: string;
-  private intersectionsAvailable$: Observable<boolean>;
   private readonly _mobileQueryListener: () => void;
   connectionStatus$: Observable<Status>;
   navigation;
@@ -41,7 +40,6 @@ export class MainComponent implements OnInit, OnDestroy {
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
     this.mobileQuery.addListener(this._mobileQueryListener);
     this.title = appComponent.title;
-    this.intersectionsAvailable$ = this.store.pipe(select(fromDataTypes.selectIntersectionsAvailable));
 
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)

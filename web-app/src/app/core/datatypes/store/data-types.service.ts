@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import * as fromDataTypes from './data-types.actions';
+import { AvailableDataTypesEvent } from 'web-shared';
 import { SocketEvent } from '../../socket/socket-event';
 import { SocketService } from '../../socket/socket-service';
 
@@ -11,12 +11,10 @@ import { SocketService } from '../../socket/socket-service';
 export class DataTypesService {
   private actionObservable: Observable<SocketEvent>;
 
-  constructor(private socketService: SocketService) {}
+  logLinesCleared$: Observable<any>;
 
-  getActions(): Observable<SocketEvent> {
-    if (!this.actionObservable) {
-      this.actionObservable = this.socketService.listen(fromDataTypes.ROOM);
-    }
-    return this.actionObservable;
+  constructor(private socketService: SocketService) {
+    this.logLinesCleared$ = this.socketService.listen(AvailableDataTypesEvent.Changed);
+    this.socketService.join(AvailableDataTypesEvent.Room);
   }
 }

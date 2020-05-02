@@ -27,7 +27,6 @@ export class MainNavigationService {
   intersectionsCount$: Observable<number>;
   signalCount$: Observable<number>;
   slotCount$: Observable<number>;
-  intersectionsAvailable$: Observable<boolean>;
   railTrainCount$: Observable<number>;
   roadTrainCount$: Observable<number>;
   tramTrainCount$: Observable<number>;
@@ -52,7 +51,6 @@ export class MainNavigationService {
   private readonly kreuzungLuaModuleId = 'c5a3e6d3-0f9b-4c89-a908-ed8cf8809362'; // "ak.data.KreuzungLuaModul"
 
   constructor(private store: Store<fromRoot.State>) {
-    this.intersectionsAvailable$ = this.store.pipe(select(fromDataTypes.selectIntersectionsAvailable));
     this.intersectionsCount$ = this.store.pipe(select(fromIntersection.intersectionsCount$));
     this.slotCount$ = this.store.pipe(select(fromEepData.eepDataCount$));
     this.signalCount$ = this.store.pipe(select(fromSignal.signalCount$));

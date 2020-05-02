@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { SocketEvent } from '../../../core/socket/socket-event';
 import { SocketService } from '../../../core/socket/socket-service';
 import { LogEvent } from 'web-shared';
 
