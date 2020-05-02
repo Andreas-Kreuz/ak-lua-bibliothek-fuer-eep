@@ -150,6 +150,7 @@ function collectAndWriteData(printFirstTime, modulus)
             table.insert(orderedKeys, key)
         end
     end
+    table.insert(orderedKeys, "api-entries")
     table.sort(orderedKeys)
     fillApiEntriesV1(orderedKeys)
 
