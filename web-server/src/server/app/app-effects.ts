@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import { Server, Socket } from 'socket.io';
 
-import { SettingsEvent, RoomEvent } from 'web-shared';
+import { RoomEvent, SettingsEvent } from 'web-shared';
 import SocketService from '../clientio/socket-service';
 import CommandEffects from '../command/command-effects';
 import EepService from '../eep/eep-service';
