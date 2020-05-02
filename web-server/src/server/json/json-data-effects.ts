@@ -1,7 +1,7 @@
 import express = require('express');
 import { Server, Socket } from 'socket.io';
 
-import { AvailableDataTypesEvent, DataEvent, ServerStatusEvent } from 'web-shared';
+import { DataEvent, ServerStatusEvent } from 'web-shared';
 import SocketService from '../clientio/socket-service';
 import JsonDataStore from './json-data-reducer';
 
@@ -72,14 +72,6 @@ export default class JsonDataEffects {
       console.log('EMIT ' + ServerStatusEvent.UrlsChanged + ' to ' + socket.id);
       socket.emit(ServerStatusEvent.UrlsChanged, JSON.stringify(this.store.getUrls()));
     }
-
-    // Send URLs to all URLs rooms
-    if (joinedRoom === AvailableDataTypesEvent.Room) {
-      socket.join(AvailableDataTypesEvent.Room);
-      console.log('EMIT ' + AvailableDataTypesEvent.Changed + ' to ' + socket.id);
-      socket.emit(AvailableDataTypesEvent.Changed, JSON.stringify(this.store.getDataRooms()));
-    }
-    // tslint:disable-next-line: semicolon
   };
 
   public onDataAdded(key: string, json: string): void {

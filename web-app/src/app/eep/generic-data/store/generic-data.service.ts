@@ -7,6 +7,7 @@ import { SocketEvent } from '../../../core/socket/socket-event';
 import { SocketService } from '../../../core/socket/socket-service';
 import { DataType } from '../model/data-type';
 import * as fromGenericData from './generic-data.actions';
+import { DataEvent } from 'web-shared';
 
 @Injectable({
   providedIn: 'root'
@@ -19,26 +20,25 @@ export class GenericDataService {
   }
 
   connect() {
-    this.wsSubscription = this.socket
-      .listen('[Data-api-entries]')
+    this.wsSubscription = this.socket.listen(DataEvent.eventOf('api-entries'))
       .subscribe(
-        (wsEvent: SocketEvent) => {
-          if (wsEvent.action === 'Set') {
-            const dataTypes: DataType[] = JSON.parse(wsEvent.payload);
+        (data) => {
+            const dataTypes: DataType[] = JSON.parse(data);
             dataTypes.sort((a: DataType, b: DataType) => {
               return a.name.localeCompare(b.name);
             });
             this.store.dispatch(new fromGenericData.SetDataTypes(dataTypes));
-          }
         },
         error => {
           console.log(error);
         },
         () => console.log('Closed socket: GenericDataService')
       );
+      this.socket.join(DataEvent.roomOf('api-entries'));
   }
 
   disconnect() {
+    this.socket.leave(DataEvent.roomOf('api-entries'));
     this.wsSubscription.unsubscribe();
   }
 }

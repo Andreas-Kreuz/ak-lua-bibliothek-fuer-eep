@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { AvailableDataTypesEvent } from 'web-shared';
 import { SocketEvent } from '../../socket/socket-event';
 import { SocketService } from '../../socket/socket-service';
 
@@ -14,7 +13,7 @@ export class DataTypesService {
   logLinesCleared$: Observable<any>;
 
   constructor(private socketService: SocketService) {
-    this.logLinesCleared$ = this.socketService.listen(AvailableDataTypesEvent.Changed);
-    this.socketService.join(AvailableDataTypesEvent.Room);
+    this.logLinesCleared$ = this.socketService.listen('NULL');
+    this.socketService.join('NULL');
   }
 }

@@ -39,6 +39,17 @@ export class SocketService {
     });
   }
 
+  leave(room: string) {
+    console.log('----- LEAVING ROOM    ----- ' + room);
+
+    // auto rejoin after reconnect mechanism
+    this.connected$.subscribe((connected) => {
+      if (connected) {
+        this.socket.emit(RoomEvent.LeaveRoom, { room: room });
+      }
+    });
+  }
+
   disconnect() {
     this.socket.disconnect();
     this.connected$.next(false);
