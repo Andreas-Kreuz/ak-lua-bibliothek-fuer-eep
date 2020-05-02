@@ -11,8 +11,8 @@ import { DataEvent } from 'web-shared';
   providedIn: 'root'
 })
 export class EepDataService {
-  private dataActions$: Observable<SocketEvent>;
-  private freeDataActions$: Observable<SocketEvent>;
+  private dataActions$: Observable<string>;
+  private freeDataActions$: Observable<string>;
 
   constructor(private socket: SocketService,
               private store: Store<fromRoot.State>) {

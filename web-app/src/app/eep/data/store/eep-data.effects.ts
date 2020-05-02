@@ -12,25 +12,23 @@ import { EepFreeData } from '../models/eep-free-data.model';
 export class EepDataEffects {
   @Effect()
   fetchEepData = this.eepDataService.getDataActions().pipe(
-    switchMap(data => {
-        const list: EepData[] = JSON.parse(data);
-        for (const element of list) {
-          if (!element.name) {
-            element.name = '?';
-          }
+    switchMap((data) => {
+      const list: EepData[] = JSON.parse(data);
+      for (const element of list) {
+        if (!element.name) {
+          element.name = '?';
         }
-        return of(new SetSlots(list));
       }
-    )
+      return of(new SetSlots(list));
+    })
   );
 
   @Effect()
   fetchEepFreeData = this.eepDataService.getFreeDataActions().pipe(
-    switchMap(data => {
-        const list: EepFreeData[] = JSON.parse(data);
-        return of(new SetFreeSlots(list));
-      }
-    )
+    switchMap((data) => {
+      const list: EepFreeData[] = JSON.parse(data);
+      return of(new SetFreeSlots(list));
+    })
   );
   //
   // fetchEepData = this.actions$
@@ -74,7 +72,5 @@ export class EepDataEffects {
   //     })
   //   );
 
-  constructor(private actions$: Actions,
-              private eepDataService: EepDataService) {
-  }
+  constructor(private actions$: Actions, private eepDataService: EepDataService) {}
 }
