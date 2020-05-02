@@ -16,22 +16,6 @@ import { DataTypesService } from './data-types.service';
 export class DataTypesEffects {
 
   @Effect()
-  init$ = this.wsService
-    .listen('[Data-eep-version]')
-    .pipe(
-      filter(wsEvent => wsEvent.action === 'Set'),
-      switchMap((wsEvent: SocketEvent) => {
-        const versions: Versions = JSON.parse(wsEvent.payload);
-        const versionInfo: VersionInfo = versions.versionInfo;
-
-        return of(
-          fromCore.setEepVersion({ version: versionInfo.eepVersion }),
-          fromCore.setEepLuaVersion({ version: versionInfo.luaVersion }));
-      }
-      )
-    );
-
-  @Effect()
   dataTypes = this.dataTypesService.getActions().pipe(
     filter(wsEvent => WsEventUtil.storeAction(wsEvent) === fromDataTypes.setDataTypes.type),
     switchMap(
