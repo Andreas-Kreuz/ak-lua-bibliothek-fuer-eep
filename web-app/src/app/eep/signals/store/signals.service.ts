@@ -29,8 +29,4 @@ export class SignalsService {
     }
     return this.signalTypes$;
   }
-
-  emit(wsEvent: SocketEvent) {
-    return this.socket.emit(wsEvent.action, wsEvent.payload);
-  }
 }

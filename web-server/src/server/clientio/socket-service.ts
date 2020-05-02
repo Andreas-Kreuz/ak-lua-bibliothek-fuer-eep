@@ -2,7 +2,7 @@ import { Server, Socket } from 'socket.io';
 import { RoomEvent } from 'web-shared';
 
 export default class SocketService {
-  private onRoomsJoinedCallbacks: Array<(socket: Socket, joinedRoom: string) => void> = [];
+  private onSocketConnectedCallbacks: Array<(socket: Socket) => void> = [];
 
   constructor(private io: Server) {
     this.allowRoomJoining();
@@ -14,13 +14,13 @@ export default class SocketService {
   private allowRoomJoining() {
     this.io.on('connection', (socket: Socket) => {
       console.log('CONNECT FROM ' + socket.id);
+      for (const addSocketEvents of this.onSocketConnectedCallbacks) {
+        addSocketEvents(socket);
+      }
 
       socket.on(RoomEvent.JoinRoom, (rooms: { room: string }) => {
         socket.join(rooms.room);
         console.log(socket.id + ' joined rooms: "' + rooms.room + '" ');
-        for (const onRoomsJoined of this.onRoomsJoinedCallbacks) {
-          onRoomsJoined(socket, rooms.room);
-        }
       });
 
       socket.on(RoomEvent.LeaveRoom, (room: string) => {
@@ -29,7 +29,7 @@ export default class SocketService {
     });
   }
 
-  public addOnRoomsJoinedCallback(callback: (socket: Socket, joinedRoom: string) => void): void {
-    this.onRoomsJoinedCallbacks.push(callback);
+  public addOnSocketConnectedCallback(callback: (socket: Socket) => void): void {
+    this.onSocketConnectedCallbacks.push(callback);
   }
 }

@@ -138,7 +138,7 @@ export class IntersectionHelper {
 
   activateCam(staticCam: string, dialog: MatDialog) {
     if (staticCam) {
-      this.store.dispatch(IntersectionAction.switchToCam({staticCam: staticCam}));
+      this.store.dispatch(IntersectionAction.switchToStaticCam({staticCam: staticCam}));
     } else {
       this.openDialog(dialog);
     }

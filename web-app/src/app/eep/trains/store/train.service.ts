@@ -65,8 +65,4 @@ export class TrainService {
     }
     return this.tramRollingStock$;
   }
-
-  emit(wsEvent: SocketEvent) {
-    return this.socket.emit(wsEvent.action, wsEvent.payload);
-  }
 }

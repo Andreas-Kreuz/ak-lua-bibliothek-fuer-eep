@@ -3,10 +3,11 @@ import fs from 'fs';
 import path from 'path';
 import { Server, Socket } from 'socket.io';
 
-import { SettingsEvent } from 'web-shared';
+import { SettingsEvent, RoomEvent } from 'web-shared';
 import SocketService from '../clientio/socket-service';
 import CommandEffects from '../command/command-effects';
 import EepService from '../eep/eep-service';
+import IntersectionEffects from '../intersection/intersection-effects';
 import JsonDataEffects from '../json/json-data-effects';
 import LogEffects from '../log/log-effects';
 import AppConfig from './app-config';
@@ -17,24 +18,25 @@ export default class AppEffects {
   private serverConfigFile = path.resolve(this.serverConfigPath, 'settings.json');
   private jsonDataEffects: JsonDataEffects;
   private logEffects: LogEffects;
+  private intersectionEffects: IntersectionEffects;
   private commandEffects: CommandEffects;
   private store = new AppReducer(this);
 
   constructor(private app: any, private io: Server, private socketService: SocketService) {
     this.loadConfig();
-    this.socketService.addOnRoomsJoinedCallback((socket: Socket, joinedRoom: string) =>
-      this.onRoomsJoined(socket, joinedRoom)
-    );
+    this.socketService.addOnSocketConnectedCallback((socket: Socket) => this.socketConnected(socket));
   }
 
-  private onRoomsJoined(socket: Socket, joinedRoom: string) {
-    if (joinedRoom === SettingsEvent.Room) {
-      const event = this.store.getEepDirOk() ? SettingsEvent.DirOk : SettingsEvent.DirError;
-      // console.log('EMIT ' + event + ' to ' + socket.id);
-      // console.log('EMIT ' + SocketEvent.Dir + ', ' + this.getEepDirectory() + ' to ' + socket.id);
-      socket.emit(event, this.getEepDirectory());
-      socket.emit(SettingsEvent.Dir, this.getEepDirectory());
-    }
+  private socketConnected(socket: Socket) {
+    socket.on(RoomEvent.JoinRoom, (rooms: { room: string }) => {
+      if (rooms.room === SettingsEvent.Room) {
+        const event = this.store.getEepDirOk() ? SettingsEvent.DirOk : SettingsEvent.DirError;
+        // console.log('EMIT ' + event + ' to ' + socket.id);
+        // console.log('EMIT ' + SocketEvent.Dir + ', ' + this.getEepDirectory() + ' to ' + socket.id);
+        socket.emit(event, this.getEepDirectory());
+        socket.emit(SettingsEvent.Dir, this.getEepDirectory());
+      }
+    });
 
     socket.on(SettingsEvent.ChangeDir, (dir: string) => {
       // console.log(SocketEvent.ChangeDir + '"' + dir + '"');
@@ -110,11 +112,20 @@ export default class AppEffects {
     eepService.setOnJsonContentChanged((jsonString: string) => this.jsonDataEffects.jsonDataUpdated(jsonString));
 
     // Init LogHandler
-    this.logEffects = new LogEffects(this.app, this.io, this.socketService, eepService.getCurrentLogLines, eepService.queueCommand);
+    this.logEffects = new LogEffects(
+      this.app,
+      this.io,
+      this.socketService,
+      eepService.getCurrentLogLines,
+      eepService.queueCommand
+    );
     eepService.setOnNewLogLine((logLines: string) => this.logEffects.onNewLogLine(logLines));
     eepService.setOnLogCleared(() => this.logEffects.onLogCleared());
 
-    // Init LogHandler
+    // Init CommandHandler
     this.commandEffects = new CommandEffects(this.app, this.io, this.socketService, eepService.queueCommand);
+
+    // Init IntersectionHandler
+    this.intersectionEffects = new IntersectionEffects(this.app, this.io, this.socketService, eepService.queueCommand);
   }
 }

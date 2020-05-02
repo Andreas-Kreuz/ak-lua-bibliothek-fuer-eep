@@ -20,4 +20,4 @@ export const setTrafficLights =
 export const switchManually =
   createAction('[Intersections] Switch Manually', props<{ intersection: Intersection, switching: IntersectionSwitching }>());
 export const switchAutomatically = createAction('[Intersections] Switch Automatically', props<{ intersection: Intersection }>());
-export const switchToCam = createAction('[Intersections] Switch To Cam', props<{ staticCam: string }>());
+export const switchToStaticCam = createAction('[Intersections] Switch To Cam', props<{ staticCam: string }>());

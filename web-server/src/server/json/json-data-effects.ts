@@ -1,7 +1,7 @@
 import express = require('express');
 import { Server, Socket } from 'socket.io';
 
-import { DataEvent, ServerStatusEvent } from 'web-shared';
+import { DataEvent, RoomEvent, ServerStatusEvent } from 'web-shared';
 import SocketService from '../clientio/socket-service';
 import JsonDataStore from './json-data-reducer';
 
@@ -10,9 +10,32 @@ export default class JsonDataEffects {
   private store = new JsonDataStore(this);
 
   constructor(private app: express.Express, private io: Server, private socketService: SocketService) {
-    this.socketService.addOnRoomsJoinedCallback((socket: Socket, joinedRoom: string) =>
-      this.onRoomsJoined(socket, joinedRoom)
-    );
+    this.socketService.addOnSocketConnectedCallback((socket: Socket) => this.socketConnected(socket));
+  }
+
+  private socketConnected(socket: Socket) {
+    socket.on(RoomEvent.JoinRoom, (rooms: { room: string }) => {
+      console.log('EMIT ' + ServerStatusEvent.Room + ' to interested parties');
+
+      // Send data on join
+      const keys = Object.keys(this.store.getJsonData());
+      for (const key of keys) {
+        // Send datatype events to datatype rooms
+        const room = DataEvent.roomOf(key);
+        if (room === rooms.room) {
+          const event = DataEvent.eventOf(key);
+          console.log('EMIT ' + event + ' to ' + socket.id);
+          socket.emit(event, JSON.stringify(this.store.getJsonData()[key]));
+        }
+      }
+
+      // Send JsonKeys to all JsonKey rooms
+      if (rooms.room === ServerStatusEvent.Room) {
+        socket.join(ServerStatusEvent.Room);
+        console.log('EMIT ' + ServerStatusEvent.UrlsChanged + ' to ' + socket.id);
+        socket.emit(ServerStatusEvent.UrlsChanged, JSON.stringify(this.store.getUrls()));
+      }
+    });
   }
 
   jsonDataUpdated(jsonString: string): void {
@@ -50,29 +73,6 @@ export default class JsonDataEffects {
       this.io.to(ServerStatusEvent.Room).emit(ServerStatusEvent.UrlsChanged, JSON.stringify(this.store.getUrls()));
     }
   }
-
-  private onRoomsJoined = (socket: Socket, joinedRoom: string): void => {
-    console.log('EMIT ' + ServerStatusEvent.Room + ' to interested parties');
-
-    // Send data on join
-    const keys = Object.keys(this.store.getJsonData());
-    for (const key of keys) {
-      // Send datatype events to datatype rooms
-      const room = DataEvent.roomOf(key);
-      if (room === joinedRoom) {
-        const event = DataEvent.eventOf(key);
-        console.log('EMIT ' + event + ' to ' + socket.id);
-        socket.emit(event, JSON.stringify(this.store.getJsonData()[key]));
-      }
-    }
-
-    // Send JsonKeys to all JsonKey rooms
-    if (joinedRoom === ServerStatusEvent.Room) {
-      socket.join(ServerStatusEvent.Room);
-      console.log('EMIT ' + ServerStatusEvent.UrlsChanged + ' to ' + socket.id);
-      socket.emit(ServerStatusEvent.UrlsChanged, JSON.stringify(this.store.getUrls()));
-    }
-  };
 
   public onDataAdded(key: string, json: string): void {
     this.store.addDataRoom(DataEvent.roomOf(key));

@@ -9,7 +9,7 @@ import { LogEvent } from 'web-shared';
 })
 export class LogFileService {
   logLinesAdded$: Observable<string>;
-  logLinesCleared$: Observable<any>;
+  logLinesCleared$: Observable<void>;
 
   constructor(private socket: SocketService) {
     // Every socket NOTES event has it's own observable, will be used by ngrx effects

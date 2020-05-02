@@ -14,12 +14,13 @@ import { Intersection } from '../models/intersection.model';
 import { IntersectionSwitching } from '../models/intersection-switching.model';
 import { LuaSettings } from '../../../shared/model/lua-settings';
 import { LuaSetting } from '../../../shared/model/lua-setting';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Injectable()
 export class IntersectionEffects {
   @Effect()
   fetchIntersectionTrafficLights$ = this.intersectionService.getTrafficLightActions().pipe(
-    switchMap(data => {
+    switchMap((data) => {
       const list: IntersectionTrafficLight[] = JSON.parse(data);
       const signalModels = new Map<number, string>();
       for (const element of list) {
@@ -42,7 +43,7 @@ export class IntersectionEffects {
 
   @Effect()
   fetchIntersections$ = this.intersectionService.getIntersectionActions().pipe(
-    switchMap(data => {
+    switchMap((data) => {
       const list: Intersection[] = JSON.parse(data);
 
       return of(IntersectionActions.setIntersections({ intersections: list }));
@@ -51,7 +52,7 @@ export class IntersectionEffects {
 
   @Effect()
   fetchIntersectionSwitchings$ = this.intersectionService.getSwitchingActions().pipe(
-    switchMap(data => {
+    switchMap((data) => {
       const list: IntersectionSwitching[] = JSON.parse(data);
 
       return of(IntersectionActions.setSwitchings({ switchings: list }));
@@ -60,7 +61,7 @@ export class IntersectionEffects {
 
   @Effect()
   intersectionLanesActions$ = this.intersectionService.getLaneActions().pipe(
-    switchMap(data => {
+    switchMap((data) => {
       const list: IntersectionLane[] = JSON.parse(data);
 
       return of(IntersectionActions.setLanes({ lanes: list }));
@@ -69,7 +70,7 @@ export class IntersectionEffects {
 
   @Effect()
   luaModuleSettingsReceivedAction$ = this.intersectionService.getLuaSettingsReceivedActions().pipe(
-    switchMap(data => {
+    switchMap((data) => {
       const list: LuaSetting<any>[] = JSON.parse(data);
       const settings = new LuaSettings('Kreuzungen', list);
 
@@ -81,8 +82,7 @@ export class IntersectionEffects {
   changeSettingCommand$ = this.actions$.pipe(
     ofType(IntersectionActions.changeModuleSettings),
     map((action) => {
-      const command = action.setting.eepFunction + '|' + action.value;
-      this.intersectionService.emit(new SocketEvent('[Command Event]', command));
+      this.intersectionService.changeModuleSettings(action.setting, action.value);
     })
   );
 
@@ -90,8 +90,7 @@ export class IntersectionEffects {
   switchManuallyCommand$ = this.actions$.pipe(
     ofType(IntersectionActions.switchManually),
     map((action) => {
-      const command = 'AkKreuzungSchalteManuell|' + action.intersection.name + '|' + action.switching.name;
-      this.intersectionService.emit(new SocketEvent('[Command Event]', command));
+      this.intersectionService.switchManually(action.intersection.name, action.switching.name);
     })
   );
 
@@ -99,19 +98,17 @@ export class IntersectionEffects {
   switchAutomaticallyCommand$ = this.actions$.pipe(
     ofType(IntersectionActions.switchAutomatically),
     map((action) => {
-      const command = 'AkKreuzungSchalteAutomatisch|' + action.intersection.name;
-      this.intersectionService.emit(new SocketEvent('[Command Event]', command));
+      this.intersectionService.switchAutomatically(action.intersection.name);
     })
   );
 
   @Effect({ dispatch: false }) // effect will not dispatch any actions
-  switchToCamCommand$ = createEffect(
+  switchToStaticCamCommand$ = createEffect(
     () =>
       this.actions$.pipe(
-        ofType(IntersectionActions.switchToCam),
+        ofType(IntersectionActions.switchToStaticCam),
         map((action) => {
-          const command = 'EEPSetCamera|0|' + action.staticCam;
-          this.intersectionService.emit(new SocketEvent('[Command Event]', command));
+          this.intersectionService.changeStaticCam(action.staticCam);
         })
       ),
     { dispatch: false }

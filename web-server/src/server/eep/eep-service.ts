@@ -176,6 +176,7 @@ export default class EepService {
   queueCommand = (command: string) => {
     const file = path.resolve(this.dir, writtenCommandFileName);
     try {
+      console.log('Queuing: ' + command);
       fs.appendFileSync(file, command + '\n', { encoding: 'latin1' });
     } catch (error) {
       console.log(error);

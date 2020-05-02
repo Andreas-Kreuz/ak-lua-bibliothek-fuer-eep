@@ -1,10 +1,9 @@
-import path from 'path';
 import { Server, Socket } from 'socket.io';
 
-import { CommandEvent, RoomEvent } from 'web-shared';
+import { IntersectionEvent, RoomEvent } from 'web-shared';
 import SocketService from '../clientio/socket-service';
 
-export default class CommandEffects {
+export default class IntersectionEffects {
   constructor(
     private app: any,
     private io: Server,
@@ -16,18 +15,17 @@ export default class CommandEffects {
 
   private socketConnected(socket: Socket) {
     socket.on(RoomEvent.JoinRoom, (rooms: { room: string }) => {
-      if (rooms.room === CommandEvent.Room) {
+      if (rooms.room === IntersectionEvent.Room) {
         // Nothing to do here!
       }
     });
 
-    socket.on(CommandEvent.ChangeStaticCam, (action: { staticCam: string }) => {
-      const command = 'EEPSetCamera|0|' + action.staticCam;
+    socket.on(IntersectionEvent.SwitchAutomatically, (action: { intersectionName: string }) => {
+      const command = 'AkKreuzungSchalteAutomatisch|' + action.intersectionName;
       this.queueCommand(command);
     });
-
-    socket.on(CommandEvent.ChangeSetting, (action: { name: string; func: string; newValue: any }) => {
-      const command = action.func + '|' + action.newValue;
+    socket.on(IntersectionEvent.SwitchManually, (action: { intersectionName: string; switchingName: string }) => {
+      const command = 'AkKreuzungSchalteManuell|' + action.intersectionName + '|' + action.switchingName;
       this.queueCommand(command);
     });
   }

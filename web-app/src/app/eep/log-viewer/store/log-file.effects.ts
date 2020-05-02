@@ -36,9 +36,10 @@ export class LogFileEffects {
   );
 
   logLinesCleared$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(LogFileActions.linesCleared),
-      tap(() => LogFileActions.linesCleared)
+    this.logFileService.logLinesCleared$.pipe(
+      map(() => {
+        return LogFileActions.linesCleared();
+      })
     )
   );
 

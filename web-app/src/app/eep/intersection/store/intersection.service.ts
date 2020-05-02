@@ -3,7 +3,8 @@ import { Observable } from 'rxjs';
 
 import { SocketEvent } from '../../../core/socket/socket-event';
 import { SocketService } from '../../../core/socket/socket-service';
-import { DataEvent } from 'web-shared';
+import { CommandEvent, DataEvent, IntersectionEvent } from 'web-shared';
+import { LuaSetting } from '../../../shared/model/lua-setting';
 
 // socket.listen\('\[Data-(.*)\]'\);
 // socket.listen(DataEvent.eventOf('$1'));this.socket.join(DataEvent.roomOf('$1'));
@@ -60,7 +61,19 @@ export class IntersectionService {
     return this.luaModuleSettingsActions$;
   }
 
-  emit(wsEvent: SocketEvent) {
-    return this.socket.emit(wsEvent.action, wsEvent.payload);
+  changeModuleSettings(setting: LuaSetting<any>, value: any) {
+    this.socket.emit(CommandEvent.ChangeSetting, { name: setting.name, func: setting.eepFunction, newValue: value });
+  }
+
+  changeStaticCam(staticCam: string) {
+    this.socket.emit(CommandEvent.ChangeStaticCam, { staticCam: staticCam });
+  }
+
+  switchAutomatically(intersectionName: string) {
+    this.socket.emit(IntersectionEvent.SwitchAutomatically, { intersectionName: intersectionName });
+  }
+
+  switchManually(intersectionName: string, switchingName: string) {
+    this.socket.emit(IntersectionEvent.SwitchManually, { intersectionName: intersectionName, switchingName: switchingName });
   }
 }
