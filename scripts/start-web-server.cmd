@@ -1,7 +1,7 @@
 @REM NOTE:
 @REM -----
-@REM The "npm" command must be in the PATH variable
-@REM Requires node.js to be installed (https://nodejs.org/en/).
+@REM The "java" command must be in the PATH variable
+@REM Requires a Java Runtime Environment to be installed (https://jdk.java.net/)
 
 setlocal
 SET oldDir=%CD%
@@ -19,7 +19,7 @@ IF %ERRORLEVEL% NEQ 0 (
 )
 
 @REM Build EEP Web App
-cd %projectPath%\web-app
+cd %projectPath%\web-server
 IF %ERRORLEVEL% NEQ 0 (
    exit /b %ERRORLEVEL%
 )
