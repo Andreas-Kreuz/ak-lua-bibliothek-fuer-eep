@@ -3,7 +3,7 @@ import { Effect, createEffect } from '@ngrx/effects';
 import { Versions } from '../model/versions.model';
 import { VersionInfo } from '../model/version-info.model';
 import * as CoreAction from './core.actions';
-import { filter, switchMap, map } from 'rxjs/operators';
+import { filter, switchMap, map, tap, concatMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { ModuleInfo } from '../model/module-info.model';
 import { CoreService } from './core-service';
@@ -12,8 +12,8 @@ import { CoreService } from './core-service';
 export class CoreEffects {
   versionChanged$ = createEffect(() =>
     this.coreService.versionChanged$.pipe(
-      switchMap((data) => {
-        if ('' !== data) {
+      concatMap((data) => {
+        if (data && '' !== data) {
           const versions: Versions = JSON.parse(data);
           const versionInfo: VersionInfo = versions.versionInfo;
 
@@ -22,8 +22,10 @@ export class CoreEffects {
             CoreAction.setEepLuaVersion({ version: versionInfo.luaVersion })
           );
         } else {
-          CoreAction.setEepVersion({ version: undefined });
-          CoreAction.setEepLuaVersion({ version: undefined });
+          return of(
+            CoreAction.setEepVersion({ version: undefined }),
+            CoreAction.setEepLuaVersion({ version: undefined })
+          );
         }
       })
     )
@@ -31,12 +33,12 @@ export class CoreEffects {
 
   modulesChanged$ = createEffect(() =>
     this.coreService.modulesChanged$.pipe(
-      map((data) => {
+      concatMap((data) => {
         let modules: ModuleInfo[] = [];
-        if ('' !== data) {
+        if (data && '' !== data) {
           modules = JSON.parse(data);
         }
-        return CoreAction.setModules({ modules: modules });
+        return of(CoreAction.setModules({ modules: modules }), CoreAction.setModulesAvailable());
       })
     )
   );

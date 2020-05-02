@@ -19,11 +19,11 @@ export class SocketService {
     this.socket = socketio(location.hostname + ':' + environment.websocketPort, {});
     this.socket.on('connect', () => {
       this.connected$.next(true);
-      this.store.dispatch(CoreAction.setConnected());
+      this.store.dispatch(CoreAction.connectedToServer());
     });
     this.socket.on('disconnect', () => {
       this.connected$.next(false);
-      this.store.dispatch(CoreAction.setDisconnected());
+      this.store.dispatch(CoreAction.disconnectedFromServer());
     });
     this.socket.connect();
   }
@@ -54,7 +54,7 @@ export class SocketService {
   }
 
   listen(event: string): Observable<any> {
-    console.log('----- SOCKET REGISTERED FOR ----- ' + event);
+    console.log('----- SOCKET REG FOR  ----- ' + event);
     return new Observable((observer) => {
       this.socket.on(event, (data: any) => {
         console.groupCollapsed('----- SOCKET INBOUND  ----- ' + event);

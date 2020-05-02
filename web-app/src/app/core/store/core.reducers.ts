@@ -19,6 +19,7 @@ export interface State {
   eepWebVersion: string;
   urlStatus: EepWebUrl[];
   modules: ModuleInfo[];
+  modulesAvailable: boolean;
 }
 
 const initialState: State = {
@@ -33,7 +34,8 @@ const initialState: State = {
   eepLuaVersion: '?',
   eepWebVersion: environment.VERSION,
   urlStatus: [],
-  modules: []
+  modules: [],
+  modulesAvailable: false
 };
 
 const coreReducer = createReducer(
@@ -48,7 +50,7 @@ const coreReducer = createReducer(
     return {
       ...state,
       alerts: oldErrors
-    }
+    };
   }),
   on(CoreAction.showUrlSuccess, (state: State, { url: url }) => {
     const newUrlStatus1: EepWebUrl[] = [];
@@ -91,12 +93,13 @@ const coreReducer = createReducer(
   on(CoreAction.setJsonServerUrl, (state: State, { url: url }) => ({ ...state, jsonServerUrl: url })),
   on(CoreAction.setConnectionStatusSuccess, state => ({ ...state, connectionStatus: Status.SUCCESS })),
   on(CoreAction.setConnectionStatusError, state => ({ ...state, connectionStatus: Status.ERROR })),
-  on(CoreAction.setConnected, state => ({ ...state, connectionEstablished: true })),
-  on(CoreAction.setDisconnected, state => ({ ...state, connectionEstablished: false })),
+  on(CoreAction.connectedToServer, state => ({ ...state, connectionEstablished: true })),
+  on(CoreAction.disconnectedFromServer, state => ({ ...state, connectionEstablished: false })),
   on(CoreAction.setEepVersion, (state: State, { version: version }) => ({ ...state, eepVersion: version })),
   on(CoreAction.setEepLuaVersion, (state: State, { version: version }) => ({ ...state, eepLuaVersion: version })),
   on(CoreAction.setEepWebVersion, (state: State, { version: version }) => ({ ...state, eepWebVersion: version })),
-  on(CoreAction.setModules, (state: State, { modules: modules }) => ({ ...state, modules: modules }))
+  on(CoreAction.setModules, (state: State, { modules: modules }) => ({ ...state, modules: modules })),
+  on(CoreAction.setModulesAvailable, (state: State) => ({ ...state, modulesAvailable: true }))
 );
 
 export function reducer(state: State | undefined, action: Action) {
@@ -158,4 +161,9 @@ export const getModuleInfos$ = createSelector(
 export const isModuleLoaded$ = (moduleId: string) => createSelector(
   getModuleInfos$,
   moduleInfos => moduleInfos.some((i: ModuleInfo) => moduleId === i.id)
+);
+
+export const isModulesAvailable = createSelector(
+  appState,
+  (state: State) => state.modulesAvailable
 );

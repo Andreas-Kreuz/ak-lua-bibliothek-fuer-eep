@@ -186,7 +186,7 @@ export class MainNavigationService {
           // {
           //   name: 'Roh-Daten', values: [
           {
-            available: of(true),
+            available: this.store.pipe(select(fromCore.isModulesAvailable)),
             icon: 'list_alt',
             title: 'Roh-Daten',
             subtitle: null, // 'JSON-Daten vom Server',
