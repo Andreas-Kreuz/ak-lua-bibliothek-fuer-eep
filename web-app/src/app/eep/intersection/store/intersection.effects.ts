@@ -19,8 +19,8 @@ import { LuaSetting } from '../../../shared/model/lua-setting';
 export class IntersectionEffects {
   @Effect()
   fetchIntersectionTrafficLights$ = this.intersectionService.getTrafficLightActions().pipe(
-    switchMap((wsEvent: SocketEvent) => {
-      const list: IntersectionTrafficLight[] = JSON.parse(wsEvent.payload);
+    switchMap(data => {
+      const list: IntersectionTrafficLight[] = JSON.parse(data);
       const signalModels = new Map<number, string>();
       for (const element of list) {
         if (!element.lightStructures) {
@@ -42,8 +42,8 @@ export class IntersectionEffects {
 
   @Effect()
   fetchIntersections$ = this.intersectionService.getIntersectionActions().pipe(
-    switchMap((wsEvent: SocketEvent) => {
-      const list: Intersection[] = JSON.parse(wsEvent.payload);
+    switchMap(data => {
+      const list: Intersection[] = JSON.parse(data);
 
       return of(IntersectionActions.setIntersections({ intersections: list }));
     })
@@ -51,8 +51,8 @@ export class IntersectionEffects {
 
   @Effect()
   fetchIntersectionSwitchings$ = this.intersectionService.getSwitchingActions().pipe(
-    switchMap((wsEvent: SocketEvent) => {
-      const list: IntersectionSwitching[] = JSON.parse(wsEvent.payload);
+    switchMap(data => {
+      const list: IntersectionSwitching[] = JSON.parse(data);
 
       return of(IntersectionActions.setSwitchings({ switchings: list }));
     })
@@ -60,8 +60,8 @@ export class IntersectionEffects {
 
   @Effect()
   intersectionLanesActions$ = this.intersectionService.getLaneActions().pipe(
-    switchMap((wsEvent: SocketEvent) => {
-      const list: IntersectionLane[] = JSON.parse(wsEvent.payload);
+    switchMap(data => {
+      const list: IntersectionLane[] = JSON.parse(data);
 
       return of(IntersectionActions.setLanes({ lanes: list }));
     })
@@ -69,8 +69,8 @@ export class IntersectionEffects {
 
   @Effect()
   luaModuleSettingsReceivedAction$ = this.intersectionService.getLuaSettingsReceivedActions().pipe(
-    switchMap((wsEvent: SocketEvent) => {
-      const list: LuaSetting<any>[] = JSON.parse(wsEvent.payload);
+    switchMap(data => {
+      const list: LuaSetting<any>[] = JSON.parse(data);
       const settings = new LuaSettings('Kreuzungen', list);
 
       return of(IntersectionActions.setModuleSettings({ settings: settings }));
