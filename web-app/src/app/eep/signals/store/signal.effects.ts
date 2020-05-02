@@ -11,41 +11,28 @@ import { SignalTypeDefinition } from '../models/signal-type-definition.model';
 
 @Injectable()
 export class SignalEffects {
+  @Effect()
+  fetchSignals$ = this.signalsService.getSignalActions().pipe(
+    switchMap((data) => {
+      const list: Signal[] = JSON.parse(data);
+      list.sort((a, b) => a.id - b.id);
+
+      for (const signal of list) {
+        if (!signal.model) {
+          signal.model = null;
+        }
+      }
+      return of(new fromSignal.SetSignals(list));
+    })
+  );
 
   @Effect()
-  fetchSignals$ = this.signalsService.getSignalActions()
-    .pipe(
-      switchMap(
-        (wsEvent: SocketEvent) => {
-          const list: Signal[] = JSON.parse(wsEvent.payload);
-          list.sort((a, b) => a.id - b.id);
+  fetchSignalTypDefinitions$ = this.signalsService.getSignalTypeDefinitionActions().pipe(
+    switchMap((data) => {
+      const list: SignalTypeDefinition[] = JSON.parse(data);
+      return of(new fromSignal.SetSignalTypeDefinitions(list));
+    })
+  );
 
-          for (const signal of list) {
-            if (!signal.model) {
-              signal.model = null;
-            }
-          }
-          return of(
-            new fromSignal.SetSignals(list),
-          );
-        }
-      )
-    );
-
-  @Effect()
-  fetchSignalTypDefinitions$ = this.signalsService.getSignalTypeDefinitionActions()
-    .pipe(
-      switchMap(
-        (wsEvent: SocketEvent) => {
-          const list: SignalTypeDefinition[] = JSON.parse(wsEvent.payload);
-          return of(
-            new fromSignal.SetSignalTypeDefinitions(list),
-          );
-        }
-      )
-    );
-
-  constructor(private actions$: Actions,
-              private signalsService: SignalsService) {
-  }
+  constructor(private actions$: Actions, private signalsService: SignalsService) {}
 }
