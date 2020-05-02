@@ -6,17 +6,16 @@ import { SocketEvent } from '../../socket/socket-event';
 import { SocketService } from '../../socket/socket-service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DataTypesService {
   private actionObservable: Observable<SocketEvent>;
 
-  constructor(private wsService: SocketService) {
-  }
+  constructor(private socketService: SocketService) {}
 
   getActions(): Observable<SocketEvent> {
     if (!this.actionObservable) {
-      this.actionObservable = this.wsService.listen(fromDataTypes.ROOM);
+      this.actionObservable = this.socketService.listen(fromDataTypes.ROOM);
     }
     return this.actionObservable;
   }
