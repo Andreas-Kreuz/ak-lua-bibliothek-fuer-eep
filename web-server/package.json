@@ -51,7 +51,8 @@
     "win": {
       "target": [
         "portable"
-      ]
+      ],
+      "artifactName": "${productName}.${ext}"
     }
   },
   "author": "Andreas-Kreuz",
