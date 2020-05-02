@@ -21,7 +21,6 @@ export class HomeComponent implements OnInit {
   private mobileQuery: MediaQueryList;
 
   constructor(private store: Store<fromRoot.State>,
-              private breakpointObserver: BreakpointObserver,
               private mainNavigation: MainNavigationService,
               media: MediaMatcher) {
     this.mobileQuery = media.matchMedia('(max-width: 600px)');

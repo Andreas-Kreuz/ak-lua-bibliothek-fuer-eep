@@ -38,7 +38,6 @@ export class DataTypesEffects {
       (wsEvent: WsEvent) => {
         return of(
           fromDataTypes.setDataTypes({ types: JSON.parse(wsEvent.payload) }),
-          fromCore.setConnected(),
           fromCore.setConnectionStatusSuccess());
       }
     ),

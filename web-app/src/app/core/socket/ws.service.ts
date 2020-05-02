@@ -6,6 +6,7 @@ import * as fromRoot from '../../app.reducers';
 import { Observable, of, BehaviorSubject } from 'rxjs';
 import * as socketio from 'socket.io-client';
 import { RoomEvent } from 'web-shared';
+import * as CoreAction from '../store/core.actions';
 
 @Injectable({
   providedIn: 'root',
@@ -16,8 +17,14 @@ export class WsService {
 
   constructor(private store: Store<fromRoot.State>) {
     this.socket = socketio(location.hostname + ':' + environment.websocketPort, {});
-    this.socket.on('connect', () => this.connected$.next(true));
-    this.socket.on('disconnect', () => this.connected$.next(false));
+    this.socket.on('connect', () => {
+      this.connected$.next(true);
+      this.store.dispatch(CoreAction.setConnected());
+    });
+    this.socket.on('disconnect', () => {
+      this.connected$.next(false);
+      this.store.dispatch(CoreAction.setDisconnected());
+    });
     this.socket.connect();
   }
 

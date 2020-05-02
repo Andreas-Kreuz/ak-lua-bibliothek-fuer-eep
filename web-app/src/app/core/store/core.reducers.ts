@@ -92,6 +92,7 @@ const coreReducer = createReducer(
   on(CoreAction.setConnectionStatusSuccess, state => ({ ...state, connectionStatus: Status.SUCCESS })),
   on(CoreAction.setConnectionStatusError, state => ({ ...state, connectionStatus: Status.ERROR })),
   on(CoreAction.setConnected, state => ({ ...state, connectionEstablished: true })),
+  on(CoreAction.setDisconnected, state => ({ ...state, connectionEstablished: false })),
   on(CoreAction.setEepVersion, (state: State, { version: version }) => ({ ...state, eepVersion: version })),
   on(CoreAction.setEepLuaVersion, (state: State, { version: version }) => ({ ...state, eepLuaVersion: version })),
   on(CoreAction.setEepWebVersion, (state: State, { version: version }) => ({ ...state, eepWebVersion: version })),
