@@ -3,66 +3,70 @@ import { Observable } from 'rxjs';
 
 import { SocketEvent } from '../../../core/socket/socket-event';
 import { SocketService } from '../../../core/socket/socket-service';
+import { DataEvent } from 'web-shared';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class TrainService {
+  constructor(private socket: SocketService) {}
 
-  constructor(private wsService: SocketService) {
-  }
+  private railTrains$: Observable<string>;
+  private railRollingStock$: Observable<string>;
+  private roadTrains$: Observable<string>;
+  private roadRollingStock$: Observable<string>;
+  private tramTrains$: Observable<string>;
+  private tramRollingStock$: Observable<string>;
 
-  private railTrains$: Observable<SocketEvent>;
-  private railRollingStock$: Observable<SocketEvent>;
-  private roadTrains$: Observable<SocketEvent>;
-  private roadRollingStock$: Observable<SocketEvent>;
-  private tramTrains$: Observable<SocketEvent>;
-  private tramRollingStock$: Observable<SocketEvent>;
-
-
-  railTrainsActions$(): Observable<SocketEvent> {
+  railTrainsActions$(): Observable<string> {
     if (!this.railTrains$) {
-      this.railTrains$ = this.wsService.listen('[Data-rail-trains]');
+      this.railTrains$ = this.socket.listen(DataEvent.eventOf('rail-trains'));
+      this.socket.join(DataEvent.roomOf('rail-trains'));
     }
     return this.railTrains$;
   }
 
-  railRollingStockActions$(): Observable<SocketEvent> {
+  railRollingStockActions$(): Observable<string> {
     if (!this.railRollingStock$) {
-      this.railRollingStock$ = this.wsService.listen('[Data-rail-rolling-stocks]');
+      this.railRollingStock$ = this.socket.listen(DataEvent.eventOf('rail-rolling-stocks'));
+      this.socket.join(DataEvent.roomOf('rail-rolling-stocks'));
     }
     return this.railRollingStock$;
   }
 
-  roadTrainsActions$(): Observable<SocketEvent> {
+  roadTrainsActions$(): Observable<string> {
     if (!this.roadTrains$) {
-      this.roadTrains$ = this.wsService.listen('[Data-road-trains]');
+      this.roadTrains$ = this.socket.listen(DataEvent.eventOf('road-trains'));
+      this.socket.join(DataEvent.roomOf('road-trains'));
     }
     return this.roadTrains$;
   }
 
-  roadRollingStockActions$(): Observable<SocketEvent> {
+  roadRollingStockActions$(): Observable<string> {
     if (!this.roadRollingStock$) {
-      this.roadRollingStock$ = this.wsService.listen('[Data-road-rolling-stocks]');
+      this.roadRollingStock$ = this.socket.listen(DataEvent.eventOf('road-rolling-stocks'));
+      this.socket.join(DataEvent.roomOf('road-rolling-stocks'));
     }
     return this.roadRollingStock$;
   }
 
-  tramTrainsActions$(): Observable<SocketEvent> {
+  tramTrainsActions$(): Observable<string> {
     if (!this.tramTrains$) {
-      this.tramTrains$ = this.wsService.listen('[Data-tram-trains]');
+      this.tramTrains$ = this.socket.listen(DataEvent.eventOf('tram-trains'));
+      this.socket.join(DataEvent.roomOf('tram-trains'));
     }
     return this.tramTrains$;
   }
 
-  tramRollingStockActions$(): Observable<SocketEvent> {
+  tramRollingStockActions$(): Observable<string> {
     if (!this.tramRollingStock$) {
-      this.tramRollingStock$ = this.wsService.listen('[Data-tram-rolling-stocks]');
+      this.tramRollingStock$ = this.socket.listen(DataEvent.eventOf('tram-rolling-stocks'));
+      this.socket.join(DataEvent.roomOf('tram-rolling-stocks'));
     }
     return this.tramRollingStock$;
   }
 
   emit(wsEvent: SocketEvent) {
-    return this.wsService.emit(wsEvent.action, wsEvent.payload);
+    return this.socket.emit(wsEvent.action, wsEvent.payload);
   }
 }

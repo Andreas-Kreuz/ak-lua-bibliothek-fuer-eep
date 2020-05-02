@@ -12,10 +12,9 @@ import { RollingStock } from '../model/rolling-stock.model';
 export class TrainEffects {
   @Effect()
   setRailTrains$ = this.trainService.railTrainsActions$().pipe(
-    filter(wsEvent => wsEvent.action === 'Set'),
     switchMap(
-      wsEvent => {
-        const list: Train[] = JSON.parse(wsEvent.payload);
+      data => {
+        const list: Train[] = JSON.parse(data);
         return of(new fromTrains.SetRailTrains(list));
       }
     )
@@ -23,10 +22,9 @@ export class TrainEffects {
 
   @Effect()
   setRailRollingStock$ = this.trainService.railRollingStockActions$().pipe(
-    filter(wsEvent => wsEvent.action === 'Set'),
     switchMap(
-      wsEvent => {
-        const list: RollingStock[] = JSON.parse(wsEvent.payload);
+      data => {
+        const list: RollingStock[] = JSON.parse(data);
         return of(new fromTrains.SetRailRollingStock(list));
       }
     )
@@ -34,10 +32,9 @@ export class TrainEffects {
 
   @Effect()
   setRoadTrains$ = this.trainService.roadTrainsActions$().pipe(
-    filter(wsEvent => wsEvent.action === 'Set'),
     switchMap(
-      wsEvent => {
-        const list: Train[] = JSON.parse(wsEvent.payload);
+      data => {
+        const list: Train[] = JSON.parse(data);
         return of(new fromTrains.SetRoadTrains(list));
       }
     )
@@ -45,10 +42,9 @@ export class TrainEffects {
 
   @Effect()
   setRoadRollingStock$ = this.trainService.roadRollingStockActions$().pipe(
-    filter(wsEvent => wsEvent.action === 'Set'),
     switchMap(
-      wsEvent => {
-        const list: RollingStock[] = JSON.parse(wsEvent.payload);
+      data => {
+        const list: RollingStock[] = JSON.parse(data);
         return of(new fromTrains.SetRoadRollingStock(list));
       }
     )
@@ -56,10 +52,9 @@ export class TrainEffects {
 
   @Effect()
   setTramTrains$ = this.trainService.tramTrainsActions$().pipe(
-    filter(wsEvent => wsEvent.action === 'Set'),
     switchMap(
-      wsEvent => {
-        const list: Train[] = JSON.parse(wsEvent.payload);
+      data => {
+        const list: Train[] = JSON.parse(data);
         return of(new fromTrains.SetTramTrains(list));
       }
     )
@@ -67,10 +62,9 @@ export class TrainEffects {
 
   @Effect()
   setTramRollingStock$ = this.trainService.tramRollingStockActions$().pipe(
-    filter(wsEvent => wsEvent.action === 'Set'),
     switchMap(
-      wsEvent => {
-        const list: RollingStock[] = JSON.parse(wsEvent.payload);
+      data => {
+        const list: RollingStock[] = JSON.parse(data);
         return of(new fromTrains.SetTramRollingStock(list));
       }
     )
