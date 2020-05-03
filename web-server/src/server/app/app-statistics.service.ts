@@ -15,7 +15,6 @@ export class ServerStatisticsService {
   constructor(private nrOfHistoryEntries = NR_OF_UPDATES) {
     const obs = new PerformanceObserver((items) => {
       items.getEntries().forEach((item) => {
-        console.log(item.name);
         const lastEntry = this.lastTime[item.name];
         const diff = lastEntry === undefined ? 0 : item.startTime - lastEntry.startTime;
         this.lastTime[item.name] = {
