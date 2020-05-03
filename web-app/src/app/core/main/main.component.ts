@@ -26,7 +26,7 @@ export class MainComponent implements OnInit, OnDestroy {
   connectionStatus$: Observable<Status>;
   navigation;
   mobileQuery: MediaQueryList;
-  atHome: boolean;
+  atHome: boolean = true;
   private parentUrl: string;
 
   constructor(appComponent: AppComponent,
