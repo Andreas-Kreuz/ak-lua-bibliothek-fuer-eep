@@ -180,14 +180,14 @@ local function collectModuleSettings()
             ["value"] = AkKreuzung.zeigeSchaltungAlsInfo,
             ["eepFunction"] = "AkKreuzung.setZeigeSchaltungAlsInfo"
         },
-        {
-            ["category"] = "Signale",
-            ["name"] = "Signal-ID als TippText",
-            ["description"] = "Zeigt an jedem Signal dessen Nummer als TippText",
-            ["type"] = "boolean",
-            ["value"] = AkKreuzung.zeigeSignalIdsAllerSignale,
-            ["eepFunction"] = "AkKreuzung.setZeigeSignalIdsAllerSignale"
-        }
+        -- {
+        --     ["category"] = "Signale",
+        --     ["name"] = "Signal-ID als TippText",
+        --     ["description"] = "Zeigt an jedem Signal dessen Nummer als TippText",
+        --     ["type"] = "boolean",
+        --     ["value"] = AkKreuzung.zeigeSignalIdsAllerSignale,
+        --     ["eepFunction"] = "AkKreuzung.setZeigeSignalIdsAllerSignale"
+        -- }
     }
 end
 
