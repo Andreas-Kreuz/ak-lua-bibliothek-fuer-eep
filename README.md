@@ -26,7 +26,7 @@ Die bereitgestellte Bibliothek übernimmt für Dich die _Steuerung des Verkehrs_
 
 * [Fehler gefunden, Verbesserungsvorschläge?](CONTRIBUTING.md) <br>So kannst Du zum Projekt beitragen
 
-* So kannst Du die [Entwicklungsumgebung einrichten](scripts/README)
+* So kannst Du die [Entwicklungsumgebung einrichten](scripts/README.md)
 
 ## Was ist EEP
 
