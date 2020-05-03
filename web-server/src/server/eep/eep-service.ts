@@ -1,7 +1,8 @@
 import fs from 'fs';
 import path from 'path';
-import readline from 'readline';
+import { performance } from 'perf_hooks';
 import { Tail } from 'tail';
+import { ServerStatisticsService } from '../app/app-statistics.service';
 
 const serverWatchingFile = 'ak-server.iswatching';
 const serverReadyForJsonFile = 'ak-eep-out-json.isfinished';
@@ -18,9 +19,10 @@ export default class EepService {
   private lastLogFileSize: number;
   private jsonFileWatcher: fs.FSWatcher;
   private logTail: Tail;
-  private onJsonUpdate: (jsonText: string) => void;
+  private onJsonUpdate: (jsonText: string, lastUpdate: number) => void;
   private logLineAppeared: (line: string) => void;
   private logWasCleared: () => void;
+  private lastJsonUpdate: number;
 
   constructor() {}
 
@@ -33,7 +35,7 @@ export default class EepService {
     if (this.jsonFileWatcher) {
       this.jsonFileWatcher.close();
     }
-    this.onJsonUpdate = (jsonText: string) => {
+    this.onJsonUpdate = (jsonText: string, lastUpdate: number) => {
       console.log('Received: ' + jsonText.length + ' bytes of JSON');
     };
     this.logLineAppeared = (line: string) => {
@@ -67,33 +69,40 @@ export default class EepService {
     const jsonFile = path.resolve(this.dir, watchedJsonFileName);
     const jsonReadyFile = path.resolve(this.dir, serverReadyForJsonFile);
 
-    // First: delete the file from EEP, so EEP will know we are ready
-    this.deleteFileIfExists(jsonReadyFile);
-
+    // First start: Read the JSON file - ignore if EEP is ready
     if (!this.jsonFileWatcher) {
       this.readJsonFile(jsonFile, jsonReadyFile);
     }
+
+    // First start: Delete the EEP FINISHED file, so EEP will know we are ready
+    this.deleteFileIfExists(jsonReadyFile);
+    performance.mark('eep:start-wait-for-json');
 
     // Watch in the directory, if the file is recreated
     this.jsonFileWatcher = fs.watch(this.dir, {}, (eventType: string, filename: string) => {
       // If the jsonReadyFile exists: Read the data and remove the file
       if (filename === serverReadyForJsonFile && fs.existsSync(jsonReadyFile)) {
+        this.lastJsonUpdate = performance.now();
         this.readJsonFile(jsonFile, jsonReadyFile);
       }
     });
   }
 
   private readJsonFile(jsonFile: string, jsonReadyFile: string) {
-    // EEP has written the JsonFile for us, so let's read it.
-    fs.readFile(jsonFile, { encoding: 'latin1' }, (err, data) => {
-      // Delete the file from EEP, so EEP will know we are ready
+    try {
+      // EEP has written the JsonFile for us, so let's read it.
+      const data = fs.readFileSync(jsonFile, { encoding: 'latin1' });
+      performance.mark('eep:stop-wait-for-json');
+      performance.measure(ServerStatisticsService.TimeForEepJsonFile, 'eep:start-wait-for-json', 'eep:stop-wait-for-json');
+
+      // Delete the EEP FINISHED file, so EEP will know we are ready
       this.deleteFileIfExists(jsonReadyFile);
-      if (err) {
-        console.log(err);
-      } else {
-        this.onJsonUpdate(data);
-      }
-    });
+      performance.mark('eep:start-wait-for-json');
+
+      this.onJsonUpdate(data, this.lastJsonUpdate);
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   private attachAkEepOutLogFile(): void {
@@ -161,7 +170,7 @@ export default class EepService {
     });
   }
 
-  public setOnJsonContentChanged(updateFunction: (jsonText: string) => void) {
+  public setOnJsonContentChanged(updateFunction: (jsonText: string, lastUpdate: number) => void) {
     this.onJsonUpdate = updateFunction;
   }
 

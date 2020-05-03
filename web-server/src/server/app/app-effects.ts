@@ -1,9 +1,10 @@
 import electron = require('electron');
 import fs from 'fs';
 import path from 'path';
+import { performance } from 'perf_hooks';
 import { Server, Socket } from 'socket.io';
 
-import { RoomEvent, SettingsEvent } from 'web-shared';
+import { RoomEvent, ServerInfoEvent, SettingsEvent } from 'web-shared';
 import SocketService from '../clientio/socket-service';
 import CommandEffects from '../command/command-effects';
 import EepService from '../eep/eep-service';
@@ -12,6 +13,7 @@ import JsonDataEffects from '../json/json-data-effects';
 import LogEffects from '../log/log-effects';
 import AppConfig from './app-config';
 import AppReducer from './app-reducer';
+import { ServerStatisticsService } from './app-statistics.service';
 
 export default class AppEffects {
   private serverConfigPath = path.resolve(electron.app.getPath('appData'), 'eep-web-server');
@@ -22,7 +24,14 @@ export default class AppEffects {
   private commandEffects: CommandEffects;
   private store = new AppReducer(this);
 
+  // Statistic data
+  private statistics: ServerStatisticsService;
+
   constructor(private app: any, private io: Server, private socketService: SocketService) {
+    // Start collecting statistic data
+    this.statistics = new ServerStatisticsService();
+    this.statistics.start();
+
     this.loadConfig();
     this.socketService.addOnSocketConnectedCallback((socket: Socket) => this.socketConnected(socket));
   }
@@ -35,6 +44,10 @@ export default class AppEffects {
         // console.log('EMIT ' + SocketEvent.Dir + ', ' + this.getEepDirectory() + ' to ' + socket.id);
         socket.emit(event, this.getEepDirectory());
         socket.emit(SettingsEvent.Dir, this.getEepDirectory());
+      }
+
+      if (rooms.room === ServerInfoEvent.Room) {
+        socket.emit(ServerInfoEvent.StatisticsUpdate, this.statistics);
       }
     });
 
@@ -109,7 +122,13 @@ export default class AppEffects {
   private registerHandlers(eepService: EepService) {
     // Init JsonHandler
     this.jsonDataEffects = new JsonDataEffects(this.app, this.io, this.socketService);
-    eepService.setOnJsonContentChanged((jsonString: string) => this.jsonDataEffects.jsonDataUpdated(jsonString));
+    eepService.setOnJsonContentChanged((jsonString: string, lastJsonUpdate: number) => {
+      performance.mark('json-parsing:before');
+      this.jsonDataEffects.jsonDataUpdated(jsonString); // The real stuff
+      performance.mark('json-parsing:after');
+      performance.measure(ServerStatisticsService.TimeForJsonParsing, 'json-parsing:before', 'json-parsing:after');
+      this.statistics.setLastEepTime(lastJsonUpdate);
+    });
 
     // Init LogHandler
     this.logEffects = new LogEffects(

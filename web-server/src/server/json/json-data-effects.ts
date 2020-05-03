@@ -1,4 +1,5 @@
 import express = require('express');
+import { performance } from 'perf_hooks';
 import { Server, Socket } from 'socket.io';
 
 import { DataEvent, RoomEvent, ServerStatusEvent } from 'web-shared';
