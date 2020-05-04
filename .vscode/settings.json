@@ -1,14 +1,26 @@
 {
-  "html.format.endWithNewline": true,
-  "html.format.maxPreserveNewLines": 2,
-  "html.format.wrapAttributes": "preserve-aligned",
-  "java.configuration.updateBuildConfiguration": "interactive",
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.fontFamily": "'Source Code Pro', Consolas, 'Courier New', monospace",
+  "editor.formatOnSave": true,
+  "editor.minimap.maxColumn": 120,
+  "editor.wordWrap": "bounded",
+  "editor.wordWrapColumn": 120,
+  "[lua]": {
+    "files.encoding": "windows1252",
+    "files.autoGuessEncoding": true
+  },
   "files.exclude": {
     "**/.classpath": true,
     "**/.factorypath": true,
     "**/.project": true,
     "**/.settings": true
   },
+  "git-assistant.checkForRemote": "disabled",
+  "html.format.endWithNewline": true,
+  "html.format.indentHandlebars": true,
+  "html.format.maxPreserveNewLines": 2,
+  "html.format.wrapAttributes": "preserve-aligned",
+  "javascript.preferences.quoteStyle": "single",
   "LuaCoderAssist.format.quotemark": "double",
   "LuaCoderAssist.luaparse.luaversion": 5.2,
   "LuaCoderAssist.luaparse.allowDefined": true,
@@ -49,23 +61,12 @@
     "EEPTimeS",
     "EEPVer"
   ],
-  "editor.minimap.maxColumn": 120,
-  "editor.wordWrap": "bounded",
-  "git-assistant.checkForRemote": "disabled",
-  "editor.wordWrapColumn": 120,
-  "[lua]": {
-    "files.encoding": "windows1252",
-    "files.autoGuessEncoding": true
-  },
-  "editor.fontFamily": "'Source Code Pro', Consolas, 'Courier New', monospace",
+  "prettier.jsxBracketSameLine": true,
+  "prettier.jsxSingleQuote": true,
+  "prettier.printWidth": 120,
+  "prettier.singleQuote": true,
   "search.exclude": {
     "/lua/modell-pakete": true
   },
-  "html.format.indentHandlebars": true,
-  "typescript.preferences.quoteStyle": "single",
-  "javascript.preferences.quoteStyle": "single",
-  "prettier.printWidth": 120,
-  "prettier.jsxSingleQuote": true,
-  "prettier.singleQuote": true,
-  "prettier.jsxBracketSameLine": true
+  "typescript.preferences.quoteStyle": "single"
 }
