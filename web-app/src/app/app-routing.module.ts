@@ -2,53 +2,56 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './core/home/home.component';
 import { SwitchesComponent } from './eep/switches/switch-list/switches.component';
-import { ServerStatusComponent } from './core/server-status/server-status.component';
 import { ConnectingLayoutComponent } from './layouts/connecting-layout.component';
 import { MainComponent } from './core/main/main.component';
 
 const routes: Routes = [
-
   {
-    path: '', component: ConnectingLayoutComponent,
+    path: '',
+    component: ConnectingLayoutComponent,
     children: [
       {
-        path: '', component: MainComponent,
+        path: '',
+        component: MainComponent,
         // These Children do all have the main menu bar
         children: [
           { path: '', component: HomeComponent, pathMatch: 'full' },
           {
             path: 'signals',
-            loadChildren: () => import('./eep/signals/signals.module').then(m => m.SignalsModule)
+            loadChildren: () => import('./eep/signals/signals.module').then((m) => m.SignalsModule),
           },
           {
             path: 'trains',
-            loadChildren: () => import('./eep/trains/trains.module').then(m => m.TrainsModule)
+            loadChildren: () => import('./eep/trains/trains.module').then((m) => m.TrainsModule),
           },
           {
             path: 'intersections',
-            loadChildren: () => import('./eep/intersection/intersection.module').then(m => m.IntersectionModule)
+            loadChildren: () => import('./eep/intersection/intersection.module').then((m) => m.IntersectionModule),
           },
           {
             path: 'data',
-            loadChildren: () => import('./eep/data/eep-data.module').then(m => m.EepDataModule)
+            loadChildren: () => import('./eep/data/eep-data.module').then((m) => m.EepDataModule),
           },
           {
             path: 'generic-data',
-            loadChildren: () => import('./eep/generic-data/generic-data.module').then(m => m.GenericDataModule)
+            loadChildren: () => import('./eep/generic-data/generic-data.module').then((m) => m.GenericDataModule),
           },
           {
             path: 'log',
-            loadChildren: () => import('./eep/log-viewer/log-viewer.module').then(m => m.LogViewerModule),
+            loadChildren: () => import('./eep/log-viewer/log-viewer.module').then((m) => m.LogViewerModule),
             data: { title: 'Log-Datei' },
           },
           {
             path: 'ui',
-            loadChildren: () => import('./shared/shared.module').then(m => m.SharedModule),
+            loadChildren: () => import('./shared/shared.module').then((m) => m.SharedModule),
           },
           { path: 'switches', component: SwitchesComponent },
         ],
       },
-      { path: 'server', component: ServerStatusComponent },
+      {
+        path: 'server',
+        loadChildren: () => import('./server/server.module').then((m) => m.ServerModule),
+      },
     ],
   },
   { path: '**', redirectTo: '', pathMatch: 'full' },
@@ -56,10 +59,11 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, {
-    // preloadingStrategy: PreloadAllModules
-  })],
-  exports: [RouterModule]
+  imports: [
+    RouterModule.forRoot(routes, {
+      // preloadingStrategy: PreloadAllModules
+    }),
+  ],
+  exports: [RouterModule],
 })
-export class AppRoutingModule {
-}
+export class AppRoutingModule {}

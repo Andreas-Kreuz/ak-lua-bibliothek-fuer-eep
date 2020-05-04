@@ -110,7 +110,7 @@ export default class AppEffects {
         this.registerHandlers(fileOperations);
         this.store.setEepDirOk(true);
         this.saveEepDirectory(eepDir);
-        this.io.to(SettingsEvent.Room).emit(SettingsEvent.DirOk);
+        this.io.to(SettingsEvent.Room).emit(SettingsEvent.DirOk, eepDir);
         this.io.to(SettingsEvent.Room).emit(SettingsEvent.Dir, eepDir);
       } else {
         this.store.setEepDirOk(false);

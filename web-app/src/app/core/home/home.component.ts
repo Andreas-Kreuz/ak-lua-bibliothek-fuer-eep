@@ -9,20 +9,21 @@ import { MainNavigationService } from './main-navigation.service';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
   hostName$: Observable<string>;
-  connectionEstablished$: Observable<boolean>;
   eepLuaVersion$: Observable<string>;
   eepVersion$: Observable<string>;
   eepWebVersion$: Observable<string>;
   navigation;
   private mobileQuery: MediaQueryList;
 
-  constructor(private store: Store<fromRoot.State>,
-              private mainNavigation: MainNavigationService,
-              media: MediaMatcher) {
+  constructor(
+    private store: Store<fromRoot.State>,
+    private mainNavigation: MainNavigationService,
+    media: MediaMatcher
+  ) {
     this.mobileQuery = media.matchMedia('(max-width: 600px)');
   }
 
@@ -31,7 +32,6 @@ export class HomeComponent implements OnInit {
     this.eepLuaVersion$ = this.store.pipe(select(fromCore.selectEepLuaVersion));
     this.eepVersion$ = this.store.pipe(select(fromCore.selectEepVersion));
     this.eepWebVersion$ = this.store.pipe(select(fromCore.selectEepWebVersion));
-    this.connectionEstablished$ = this.store.pipe(select(fromCore.getConnectionEstablished));
     this.navigation = this.mainNavigation.navigation;
   }
 }
