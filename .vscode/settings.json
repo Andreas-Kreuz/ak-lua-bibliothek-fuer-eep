@@ -1,11 +1,18 @@
 {
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.fontFamily": "'Source Code Pro', Consolas, 'Courier New', monospace",
-  "editor.formatOnSave": true,
+  "editor.formatOnSave": false,
   "editor.minimap.maxColumn": 120,
   "editor.rulers": [120],
   "editor.wordWrap": "bounded",
   "editor.wordWrapColumn": 120,
+  "[typescript]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
+    "editor.formatOnSave": true
+  },
   "[lua]": {
     "files.encoding": "windows1252",
     "files.autoGuessEncoding": true
@@ -66,6 +73,7 @@
   "prettier.jsxSingleQuote": true,
   "prettier.printWidth": 120,
   "prettier.singleQuote": true,
+  "prettier.trailingComma": "all",
   "search.exclude": {
     "/lua/modell-pakete": true
   },
