@@ -55,7 +55,7 @@ const routes: Routes = [
     ],
   },
   { path: '**', redirectTo: '', pathMatch: 'full' },
-  // {path: '**', redirectTo: '/'} // Must be the last route!
+  // { path: '**', redirectTo: '/' }, // Must be the last route!
 ];
 
 @NgModule({
