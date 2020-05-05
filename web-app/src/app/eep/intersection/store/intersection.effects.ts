@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { Actions, Effect, ofType, createEffect } from '@ngrx/effects';
+import { Actions, ofType, createEffect } from '@ngrx/effects';
 import { map, switchMap } from 'rxjs/operators';
 import * as IntersectionActions from './intersection.actions';
 import { of } from 'rxjs';
@@ -18,91 +18,108 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Injectable()
 export class IntersectionEffects {
-  @Effect()
-  fetchIntersectionTrafficLights$ = this.intersectionService.getTrafficLightActions().pipe(
-    switchMap((data) => {
-      const list: IntersectionTrafficLight[] = JSON.parse(data);
-      const signalModels = new Map<number, string>();
-      for (const element of list) {
-        if (!element.lightStructures) {
-          element.lightStructures = {};
+  fetchIntersectionTrafficLights$ = createEffect(() =>
+    this.intersectionService.getTrafficLightActions().pipe(
+      switchMap((data) => {
+        const list: IntersectionTrafficLight[] = JSON.parse(data);
+        const signalModels = new Map<number, string>();
+        for (const element of list) {
+          if (!element.lightStructures) {
+            element.lightStructures = {};
+          }
+          if (!element.axisStructures) {
+            element.axisStructures = [];
+          }
+          if (element.modelId) {
+            signalModels.set(element.signalId, element.modelId);
+          }
         }
-        if (!element.axisStructures) {
-          element.axisStructures = [];
-        }
-        if (element.modelId) {
-          signalModels.set(element.signalId, element.modelId);
-        }
-      }
-      return of(
-        IntersectionActions.setTrafficLights({ trafficLights: list }),
-        new fromSignals.SetSignalTypes(signalModels)
-      );
-    })
+        return of(
+          IntersectionActions.setTrafficLights({ trafficLights: list }),
+          new fromSignals.SetSignalTypes(signalModels)
+        );
+      })
+    )
   );
 
-  @Effect()
-  fetchIntersections$ = this.intersectionService.getIntersectionActions().pipe(
-    switchMap((data) => {
-      const list: Intersection[] = JSON.parse(data);
+  fetchIntersections$ = createEffect(() =>
+    this.intersectionService.getIntersectionActions().pipe(
+      switchMap((data) => {
+        const list: Intersection[] = JSON.parse(data);
 
-      return of(IntersectionActions.setIntersections({ intersections: list }));
-    })
+        return of(IntersectionActions.setIntersections({ intersections: list }));
+      })
+    )
   );
 
-  @Effect()
-  fetchIntersectionSwitchings$ = this.intersectionService.getSwitchingActions().pipe(
-    switchMap((data) => {
-      const list: IntersectionSwitching[] = JSON.parse(data);
+  fetchIntersectionSwitchings$ = createEffect(() =>
+    this.intersectionService.getSwitchingActions().pipe(
+      switchMap((data) => {
+        const list: IntersectionSwitching[] = JSON.parse(data);
 
-      return of(IntersectionActions.setSwitchings({ switchings: list }));
-    })
+        return of(IntersectionActions.setSwitchings({ switchings: list }));
+      })
+    )
   );
 
-  @Effect()
-  intersectionLanesActions$ = this.intersectionService.getLaneActions().pipe(
-    switchMap((data) => {
-      const list: IntersectionLane[] = JSON.parse(data);
+  intersectionLanesActions$ = createEffect(() =>
+    this.intersectionService.getLaneActions().pipe(
+      switchMap((data) => {
+        const list: IntersectionLane[] = JSON.parse(data);
 
-      return of(IntersectionActions.setLanes({ lanes: list }));
-    })
+        return of(IntersectionActions.setLanes({ lanes: list }));
+      })
+    )
   );
 
-  @Effect()
-  luaModuleSettingsReceivedAction$ = this.intersectionService.getLuaSettingsReceivedActions().pipe(
-    switchMap((data) => {
-      const list: LuaSetting<any>[] = JSON.parse(data);
-      const settings = new LuaSettings('Kreuzungen', list);
+  luaModuleSettingsReceivedAction$ = createEffect(() =>
+    this.intersectionService.getLuaSettingsReceivedActions().pipe(
+      switchMap((data) => {
+        const list: LuaSetting<any>[] = JSON.parse(data);
+        const settings = new LuaSettings('Kreuzungen', list);
 
-      return of(IntersectionActions.setModuleSettings({ settings: settings }));
-    })
+        return of(IntersectionActions.setModuleSettings({ settings: settings }));
+      })
+    )
   );
 
-  @Effect({ dispatch: false }) // effect will not dispatch any actions
-  changeSettingCommand$ = this.actions$.pipe(
-    ofType(IntersectionActions.changeModuleSettings),
-    map((action) => {
-      this.intersectionService.changeModuleSettings(action.setting, action.value);
-    })
+  // effect will not dispatch any actions
+  changeSettingCommand$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(IntersectionActions.changeModuleSettings),
+        map((action) => {
+          this.intersectionService.changeModuleSettings(action.setting, action.value);
+        })
+      ),
+    { dispatch: false }
   );
 
-  @Effect({ dispatch: false }) // effect will not dispatch any actions
-  switchManuallyCommand$ = this.actions$.pipe(
-    ofType(IntersectionActions.switchManually),
-    map((action) => {
-      this.intersectionService.switchManually(action.intersection.name, action.switching.name);
-    })
+  // effect will not dispatch any actions
+  switchManuallyCommand$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(IntersectionActions.switchManually),
+        map((action) => {
+          this.intersectionService.switchManually(action.intersection.name, action.switching.name);
+        })
+      ),
+    { dispatch: false }
   );
 
-  @Effect({ dispatch: false }) // effect will not dispatch any actions
-  switchAutomaticallyCommand$ = this.actions$.pipe(
-    ofType(IntersectionActions.switchAutomatically),
-    map((action) => {
-      this.intersectionService.switchAutomatically(action.intersection.name);
-    })
+  // effect will not dispatch any actions
+  switchAutomaticallyCommand$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(IntersectionActions.switchAutomatically),
+        map((action) => {
+          this.intersectionService.switchAutomatically(action.intersection.name);
+        })
+      ),
+    { dispatch: false }
   );
 
-  @Effect({ dispatch: false }) // effect will not dispatch any actions
+  // effect will not dispatch any actions
   switchToStaticCamCommand$ = createEffect(
     () =>
       this.actions$.pipe(

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Actions, Effect } from '@ngrx/effects';
+import { Actions, createEffect } from '@ngrx/effects';
 import { filter, switchMap } from 'rxjs/operators';
 
 import { SetFreeSlots, SetSlots } from './eep-data.actions';
@@ -10,25 +10,27 @@ import { EepFreeData } from '../models/eep-free-data.model';
 
 @Injectable()
 export class EepDataEffects {
-  @Effect()
-  fetchEepData = this.eepDataService.getDataActions().pipe(
-    switchMap((data) => {
-      const list: EepData[] = JSON.parse(data);
-      for (const element of list) {
-        if (!element.name) {
-          element.name = '?';
+  fetchEepData = createEffect(() =>
+    this.eepDataService.getDataActions().pipe(
+      switchMap((data) => {
+        const list: EepData[] = JSON.parse(data);
+        for (const element of list) {
+          if (!element.name) {
+            element.name = '?';
+          }
         }
-      }
-      return of(new SetSlots(list));
-    })
+        return of(new SetSlots(list));
+      })
+    )
   );
 
-  @Effect()
-  fetchEepFreeData = this.eepDataService.getFreeDataActions().pipe(
-    switchMap((data) => {
-      const list: EepFreeData[] = JSON.parse(data);
-      return of(new SetFreeSlots(list));
-    })
+  fetchEepFreeData = createEffect(() =>
+    this.eepDataService.getFreeDataActions().pipe(
+      switchMap((data) => {
+        const list: EepFreeData[] = JSON.parse(data);
+        return of(new SetFreeSlots(list));
+      })
+    )
   );
   //
   // fetchEepData = this.actions$

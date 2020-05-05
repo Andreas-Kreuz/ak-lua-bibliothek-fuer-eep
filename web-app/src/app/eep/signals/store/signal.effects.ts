@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Actions, Effect } from '@ngrx/effects';
+import { Actions, createEffect } from '@ngrx/effects';
 import { switchMap } from 'rxjs/operators';
 
 import * as fromSignal from './signal.actions';
@@ -11,27 +11,29 @@ import { SignalTypeDefinition } from '../models/signal-type-definition.model';
 
 @Injectable()
 export class SignalEffects {
-  @Effect()
-  fetchSignals$ = this.signalsService.getSignalActions().pipe(
-    switchMap((data) => {
-      const list: Signal[] = JSON.parse(data);
-      list.sort((a, b) => a.id - b.id);
+  fetchSignals$ = createEffect(() =>
+    this.signalsService.getSignalActions().pipe(
+      switchMap((data) => {
+        const list: Signal[] = JSON.parse(data);
+        list.sort((a, b) => a.id - b.id);
 
-      for (const signal of list) {
-        if (!signal.model) {
-          signal.model = null;
+        for (const signal of list) {
+          if (!signal.model) {
+            signal.model = null;
+          }
         }
-      }
-      return of(new fromSignal.SetSignals(list));
-    })
+        return of(new fromSignal.SetSignals(list));
+      })
+    )
   );
 
-  @Effect()
-  fetchSignalTypDefinitions$ = this.signalsService.getSignalTypeDefinitionActions().pipe(
-    switchMap((data) => {
-      const list: SignalTypeDefinition[] = JSON.parse(data);
-      return of(new fromSignal.SetSignalTypeDefinitions(list));
-    })
+  fetchSignalTypDefinitions$ = createEffect(() =>
+    this.signalsService.getSignalTypeDefinitionActions().pipe(
+      switchMap((data) => {
+        const list: SignalTypeDefinition[] = JSON.parse(data);
+        return of(new fromSignal.SetSignalTypeDefinitions(list));
+      })
+    )
   );
 
   constructor(private actions$: Actions, private signalsService: SignalsService) {}
