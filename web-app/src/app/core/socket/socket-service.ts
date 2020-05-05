@@ -29,9 +29,8 @@ export class SocketService {
   }
 
   join(room: string) {
-    console.log('----- JOINING ROOM    ----- ' + room);
-
     // auto rejoin after reconnect mechanism
+    console.log('----- JOINING ROOM    ----- ' + room);
     this.connected$.subscribe((connected) => {
       if (connected) {
         this.socket.emit(RoomEvent.JoinRoom, { room: room });
@@ -41,13 +40,7 @@ export class SocketService {
 
   leave(room: string) {
     console.log('----- LEAVING ROOM    ----- ' + room);
-
-    // auto rejoin after reconnect mechanism
-    this.connected$.subscribe((connected) => {
-      if (connected) {
-        this.socket.emit(RoomEvent.LeaveRoom, { room: room });
-      }
-    });
+    this.socket.emit(RoomEvent.LeaveRoom, { room: room });
   }
 
   disconnect() {
@@ -65,7 +58,6 @@ export class SocketService {
   }
 
   listen(event: string): Observable<any> {
-    console.log('----- SOCKET REG FOR  ----- ' + event);
     return new Observable((observer) => {
       this.socket.on(event, (data: any) => {
         console.groupCollapsed('----- SOCKET INBOUND  ----- ' + event);
