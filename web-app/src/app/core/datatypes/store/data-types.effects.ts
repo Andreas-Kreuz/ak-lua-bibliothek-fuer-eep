@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Effect } from '@ngrx/effects';
+import { createEffect } from '@ngrx/effects';
 import { map } from 'rxjs/operators';
 
 import { SocketService } from '../../socket/socket-service';
@@ -8,9 +8,8 @@ import { DataTypesService } from './data-types.service';
 
 @Injectable()
 export class DataTypesEffects {
-  @Effect()
-  dataTypes = this.dataTypesService.logLinesCleared$.pipe(
-    map((data) => fromDataTypes.setDataTypes({ types: JSON.parse(data) }))
+  dataTypes = createEffect(() =>
+    this.dataTypesService.logLinesCleared$.pipe(map((data) => fromDataTypes.setDataTypes({ types: JSON.parse(data) })))
   );
 
   constructor(private wsService: SocketService, private dataTypesService: DataTypesService) {}
