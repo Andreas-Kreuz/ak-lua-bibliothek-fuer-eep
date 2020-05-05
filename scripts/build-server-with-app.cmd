@@ -19,7 +19,7 @@ IF %ERRORLEVEL% NEQ 0 (
    exit /b %ERRORLEVEL%
 )
 
-call npm run-script build
+call npm run-script package-win
 IF %ERRORLEVEL% NEQ 0 (
    exit /b %ERRORLEVEL%
 )
