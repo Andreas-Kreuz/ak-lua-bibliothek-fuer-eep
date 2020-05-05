@@ -10,7 +10,12 @@ export default class JsonDataEffects {
   [x: string]: any;
   private store = new JsonDataStore(this);
 
-  constructor(private app: express.Express, private io: Server, private socketService: SocketService) {
+  constructor(
+    private app: express.Express,
+    private router: express.Router,
+    private io: Server,
+    private socketService: SocketService
+  ) {
     this.socketService.addOnSocketConnectedCallback((socket: Socket) => this.socketConnected(socket));
   }
 
@@ -95,11 +100,10 @@ export default class JsonDataEffects {
 
   private registerApiUrls(key: string) {
     console.log('Register: /api/v1/' + key);
-    const router = express.Router();
-    router.get('/' + key, (req: any, res: any) => {
+    this.router.get('/' + key, (req: any, res: any) => {
       res.json(this.getCurrentApiEntry(key));
     });
-    this.app.use('/api/v1', router);
+    this.app.use('/api/v1', this.router);
   }
 
   private getCurrentApiEntry(key: string) {

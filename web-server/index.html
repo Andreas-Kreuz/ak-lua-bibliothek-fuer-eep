@@ -60,18 +60,16 @@
         $('#changeDir').val('');
         return false;
       });
-      socket.on('[Settings Event] Set Dir', function (msg) {
-        console.log('[Settings Event] Set Dir' + msg);
-        $('#dir').contents().replaceWith($('<em id="dir">').text(msg));
-      });
       socket.on('[Settings Event] Dir Ok', function (msg) {
         console.log('[Settings Event] Dir Ok ' + msg);
+        $('#dir').contents().replaceWith($('<em id="dir">').text(msg));
         $('#dir').removeClass('dir-error').addClass('dir-ok');
         $('#changeDir').val('');
       });
       socket.on('[Settings Event] Dir Error', function (msg) {
         console.log('[Settings Event] Dir Error ' + msg);
         $('#dir').removeClass('dir-ok').addClass('dir-error');
+        $('#dir').contents().replaceWith($('<em id="dir">').text(msg));
         $('#dir').contents().replaceWith($('<em id="dir">').text(msg));
         $('#changeDir').val(msg);
       });

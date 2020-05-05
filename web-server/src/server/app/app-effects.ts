@@ -1,4 +1,5 @@
 import electron = require('electron');
+import express = require('express');
 import fs from 'fs';
 import path from 'path';
 import { performance } from 'perf_hooks';
@@ -27,7 +28,12 @@ export default class AppEffects {
   // Statistic data
   private statistics: ServerStatisticsService;
 
-  constructor(private app: any, private io: Server, private socketService: SocketService) {
+  constructor(
+    private app: any,
+    private router: express.Router,
+    private io: Server,
+    private socketService: SocketService
+  ) {
     // Start collecting statistic data
     this.statistics = new ServerStatisticsService();
     this.statistics.start();
@@ -40,10 +46,9 @@ export default class AppEffects {
     socket.on(RoomEvent.JoinRoom, (rooms: { room: string }) => {
       if (rooms.room === SettingsEvent.Room) {
         const event = this.store.getEepDirOk() ? SettingsEvent.DirOk : SettingsEvent.DirError;
-        // console.log('EMIT ' + event + ' to ' + socket.id);
-        // console.log('EMIT ' + SocketEvent.Dir + ', ' + this.getEepDirectory() + ' to ' + socket.id);
-        socket.emit(event, this.getEepDirectory());
+        console.log('EMIT ' + event + ' to ' + socket.id + this.getEepDirectory());
         socket.emit(SettingsEvent.Dir, this.getEepDirectory());
+        socket.emit(event, this.getEepDirectory());
       }
 
       if (rooms.room === ServerInfoEvent.Room) {
@@ -52,7 +57,7 @@ export default class AppEffects {
     });
 
     socket.on(SettingsEvent.ChangeDir, (dir: string) => {
-      // console.log(SocketEvent.ChangeDir + '"' + dir + '"');
+      console.log(SettingsEvent.ChangeDir + '"' + dir + '"');
       this.changeEepDirectory(dir);
     });
   }
@@ -103,17 +108,16 @@ export default class AppEffects {
     fileOperations.reInit(completeDir, (err: string, dir: string) => {
       if (err) {
         console.error(err);
-        this.store.setEepDirOk(false);
-        this.io.to(SettingsEvent.Room).emit(SettingsEvent.DirError, eepDir);
-      } else if (dir) {
+      }
+      if (dir) {
         console.log('Directory set to : ' + dir);
         this.registerHandlers(fileOperations);
         this.store.setEepDirOk(true);
         this.saveEepDirectory(eepDir);
         this.io.to(SettingsEvent.Room).emit(SettingsEvent.DirOk, eepDir);
-        this.io.to(SettingsEvent.Room).emit(SettingsEvent.Dir, eepDir);
       } else {
         this.store.setEepDirOk(false);
+        this.saveEepDirectory(eepDir);
         this.io.to(SettingsEvent.Room).emit(SettingsEvent.DirError, eepDir);
       }
     });
@@ -121,7 +125,7 @@ export default class AppEffects {
 
   private registerHandlers(eepService: EepService) {
     // Init JsonHandler
-    this.jsonDataEffects = new JsonDataEffects(this.app, this.io, this.socketService);
+    this.jsonDataEffects = new JsonDataEffects(this.app, this.router, this.io, this.socketService);
     eepService.setOnJsonContentChanged((jsonString: string, lastJsonUpdate: number) => {
       performance.mark('json-parsing:before');
       this.jsonDataEffects.jsonDataUpdated(jsonString); // The real stuff

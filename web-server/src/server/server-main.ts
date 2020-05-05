@@ -9,6 +9,7 @@ import AppEffects from './app/app-effects';
 import SocketService from './clientio/socket-service';
 
 const app = express();
+const router = express.Router();
 const server = new http.Server(app);
 const io = socketio(server);
 
@@ -22,11 +23,15 @@ export class ServerMain {
     app.use(cors());
     app.set('port', this.port);
     this.socketService = new SocketService(io);
-    this.appEffects = new AppEffects(app, io, this.socketService);
+    this.appEffects = new AppEffects(app, router, io, this.socketService);
   }
 
   public start() {
-    app.use('/', express.static(path.join(__dirname, '../public_html')));
+    const appDir = path.join(__dirname, '../public_html');
+    app.use('/', express.static(appDir));
+    app.get('*', (req, res) => {
+      res.sendFile(path.join(appDir, 'index.html'));
+    });
     server.listen(this.port, () => {
       console.log('Express server listening on port ' + app.get('port'));
     });
