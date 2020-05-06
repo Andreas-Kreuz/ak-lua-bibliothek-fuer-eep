@@ -5,7 +5,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --host 0.0.0.0 --disable-host-check --progress",
-    "build": "ng build --prod --aot --build-optimizer --progress --base-href=./",
+    "build": "ng build --prod --aot --build-optimizer --progress --base-href=/",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"

@@ -103,7 +103,6 @@ export default class JsonDataEffects {
     this.router.get('/' + key, (req: any, res: any) => {
       res.json(this.getCurrentApiEntry(key));
     });
-    this.app.use('/api/v1', this.router);
   }
 
   private getCurrentApiEntry(key: string) {

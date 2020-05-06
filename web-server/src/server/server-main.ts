@@ -23,18 +23,19 @@ export class ServerMain {
     app.use(cors());
     app.set('port', this.port);
     this.socketService = new SocketService(io);
-    this.appEffects = new AppEffects(app, router, io, this.socketService);
   }
 
   public start() {
     const appDir = path.join(__dirname, '../public_html');
+    app.use('/api/v1', router);
     app.use('/', express.static(appDir));
-    app.get('*', (req, res) => {
-      res.sendFile(path.join(appDir, 'index.html'));
+    app.get('/*', (req: any, res: any) => {
+      res.sendFile(path.join(appDir, '/index.html'));
     });
     server.listen(this.port, () => {
       console.log('Express server listening on port ' + app.get('port'));
     });
+    this.appEffects = new AppEffects(app, router, io, this.socketService);
     this.appEffects.changeEepDirectory(this.appEffects.getEepDirectory());
   }
 }
