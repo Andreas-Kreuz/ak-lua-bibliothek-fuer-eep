@@ -24,14 +24,13 @@ export class MainComponent implements OnInit, OnDestroy {
     appComponent: AppComponent,
     private store: Store<fromRoot.State>,
     changeDetectorRef: ChangeDetectorRef,
-    private mainNavigation: MainNavigationService,
+    mainNavigation: MainNavigationService,
     media: MediaMatcher,
-    private router: Router,
-    private route: ActivatedRoute
+    private router: Router
   ) {
     this.mobileQuery = media.matchMedia('(max-width: 600px)');
     this.title = appComponent.title;
-
+    this.navigation = mainNavigation.navigation;
     this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe((event: NavigationEnd) => {
       this.updateUrlInfo();
     });
