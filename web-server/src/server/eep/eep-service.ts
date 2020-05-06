@@ -47,10 +47,10 @@ export default class EepService {
 
     fs.stat(this.dir, (err, stats) => {
       if (!err && stats.isDirectory()) {
+        callback(null, this.dir);
         this.attachAkEepOutJsonFile();
         this.attachAkEepOutLogFile();
         this.createAkServerFile();
-        callback(null, this.dir);
       } else {
         callback('No such directory: ' + this.dir, null);
       }
@@ -93,7 +93,11 @@ export default class EepService {
       // EEP has written the JsonFile for us, so let's read it.
       const data = fs.readFileSync(jsonFile, { encoding: 'latin1' });
       performance.mark('eep:stop-wait-for-json');
-      performance.measure(ServerStatisticsService.TimeForEepJsonFile, 'eep:start-wait-for-json', 'eep:stop-wait-for-json');
+      performance.measure(
+        ServerStatisticsService.TimeForEepJsonFile,
+        'eep:start-wait-for-json',
+        'eep:stop-wait-for-json'
+      );
 
       // Delete the EEP FINISHED file, so EEP will know we are ready
       this.deleteFileIfExists(jsonReadyFile);
