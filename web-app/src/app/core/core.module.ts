@@ -11,10 +11,12 @@ import { MatCardModule } from '@angular/material/card';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [MainComponent, HomeComponent, HeaderToolBarComponent],
   imports: [
+    RouterModule,
     SharedModule,
     HttpClientModule,
     AppRoutingModule,

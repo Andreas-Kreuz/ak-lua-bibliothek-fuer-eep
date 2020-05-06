@@ -8,10 +8,12 @@ import { MainComponent } from './core/main/main.component';
 const routes: Routes = [
   {
     path: '',
+    pathMatch: 'prefix',
     component: ConnectingLayoutComponent,
     children: [
       {
         path: '',
+        pathMatch: 'prefix',
         component: MainComponent,
         // These Children do all have the main menu bar
         children: [
@@ -54,7 +56,7 @@ const routes: Routes = [
       },
     ],
   },
-  { path: '**', redirectTo: '', pathMatch: 'full' },
+  { path: '**', redirectTo: '' },
   // { path: '**', redirectTo: '/' }, // Must be the last route!
 ];
 

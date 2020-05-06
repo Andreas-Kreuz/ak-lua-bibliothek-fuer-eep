@@ -1,11 +1,7 @@
 import { ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { AppComponent } from '../../app.component';
-import { select, Store } from '@ngrx/store';
-import * as fromCore from '../store/core.reducers';
+import { Store } from '@ngrx/store';
 import * as fromRoot from '../../app.reducers';
-import { Observable } from 'rxjs';
-import { Status } from '../server-status/status.enum';
-import * as fromDataTypes from '../datatypes/store/data-types.reducers';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { MainNavigationService } from '../home/main-navigation.service';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
@@ -37,20 +33,22 @@ export class MainComponent implements OnInit, OnDestroy {
     this.title = appComponent.title;
 
     this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe((event: NavigationEnd) => {
-      this.parentUrl = '/' + event.urlAfterRedirects.substr(1, event.urlAfterRedirects.lastIndexOf('/') - 1);
-      this.atHome = event.urlAfterRedirects === '/';
-      console.log(this.parentUrl);
+      this.updateUrlInfo();
     });
   }
 
   ngOnInit() {
-    this.navigation = this.mainNavigation.navigation;
+    this.updateUrlInfo();
   }
 
   ngOnDestroy(): void {}
 
+  private updateUrlInfo() {
+    this.atHome = this.router.url === '/';
+    this.parentUrl = '/' + this.router.url.substr(1, this.router.url.lastIndexOf('/') - 1);
+  }
+
   navigateUp() {
-    console.log(this.parentUrl);
     this.router.navigateByUrl(this.parentUrl);
   }
 }
