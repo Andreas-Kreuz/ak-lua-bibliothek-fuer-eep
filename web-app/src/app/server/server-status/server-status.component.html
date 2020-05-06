@@ -32,7 +32,7 @@ end
     </mat-card>
     <mat-card *ngIf="(urlsAvailable$ | async) === true">
       <span>Happily Serving<br />
-        <span class="text-muted">{{ urls$ | async }}</span>
+        <span class="text-muted">{{ (urls$ | async).join(', ') }}</span>
       </span>
     </mat-card>
   </div>
