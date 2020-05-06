@@ -12,7 +12,7 @@
     "watch": "tsc -w",
     "lint": "tslint -c tslint.json -p tsconfig.json",
     "start": "tsc && electron ./build/main.js",
-    "start-pure": "npm run build && node ./build/node-main.js",
+    "start-with-app": "npm run build && electron ./build/main.js",
     "package-win": "npm run build && electron-builder build --win --x64",
     "pack": "electron-builder --dir",
     "dist": "electron-builder"
