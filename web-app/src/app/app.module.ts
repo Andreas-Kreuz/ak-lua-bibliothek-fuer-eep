@@ -21,29 +21,23 @@ import { FormsModule } from '@angular/forms';
 import { LayoutModule } from '@angular/cdk/layout';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    FullPageLayoutComponent,
-    ConnectingLayoutComponent,
-    SwitchesComponent,
-  ],
+  declarations: [AppComponent, FullPageLayoutComponent, ConnectingLayoutComponent, SwitchesComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
     FormsModule,
-    AppRoutingModule,
     SharedModule,
     CoreModule,
+    LayoutModule,
     StoreModule.forRoot(reducers),
     EffectsModule.forRoot(effects),
     StoreRouterConnectingModule.forRoot({ serializer: DefaultRouterStateSerializer }),
     environment.production ? [] : StoreDevtoolsModule.instrument(),
-    LayoutModule,
+    AppRoutingModule,
   ],
   exports: [],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule {
-}
+export class AppModule {}
