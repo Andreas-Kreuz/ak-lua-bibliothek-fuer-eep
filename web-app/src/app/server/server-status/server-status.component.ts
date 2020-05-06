@@ -15,6 +15,7 @@ export class ServerStatusComponent implements OnInit {
   public eepDir$: Observable<string>;
   public eepDirOk$: Observable<boolean>;
   public urls$: Observable<string[]>;
+  public urlsAvailable$: Observable<boolean>;
   error = true;
   dir = 'C:\\Trend\\EEP16';
 
@@ -24,6 +25,7 @@ export class ServerStatusComponent implements OnInit {
     this.eepDir$ = this.store.pipe(select(fromServer.eepDir$));
     this.eepDirOk$ = this.store.pipe(select(fromServer.eepDirOk$));
     this.urls$ = this.store.pipe(select(fromServer.urls$));
+    this.urlsAvailable$ = this.store.pipe(select(fromServer.urlsAvailable$));
     this.eepDirOk$.subscribe((ok) => {
       this.error = !ok;
     });

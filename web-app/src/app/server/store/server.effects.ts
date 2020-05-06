@@ -38,8 +38,9 @@ export class ServerEffects {
 
   urlsChanged$ = createEffect(() =>
     this.service.urlsChanged$.pipe(
-      switchMap((data: string[]) => {
-        return of(ServerAction.urlsChanged({ urls: data }));
+      switchMap((data: string) => {
+        const urls = JSON.parse(data);
+        return of(ServerAction.urlsChanged({ urls: urls }));
       })
     )
   );

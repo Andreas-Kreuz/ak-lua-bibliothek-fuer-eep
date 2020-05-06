@@ -16,7 +16,21 @@
     </mat-card>
   </div>
   <div class="col col-12" *ngIf="!error">
-    <mat-card>
+    <mat-card *ngIf="(urlsAvailable$ | async) === false">
+      <span>Es wurden keine Daten von EEP gesammelt.<br />
+        <span class="text-muted">Stelle sicher, dass Du den folgenden Lua-Code in EEP eingetragen hast:</span>
+        <pre>
+local ModuleRegistry = require("ak.core.ModuleRegistry")
+ModuleRegistry.registerModules(require("ak.core.CoreLuaModule"))
+
+function EEPMain()
+    ModuleRegistry.runTasks()
+    return 1
+end
+        </pre>
+      </span>
+    </mat-card>
+    <mat-card *ngIf="(urlsAvailable$ | async) === true">
       <span>Happily Serving<br />
         <span class="text-muted">{{ urls$ | async }}</span>
       </span>

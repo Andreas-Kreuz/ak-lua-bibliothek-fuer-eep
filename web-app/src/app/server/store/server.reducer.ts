@@ -1,4 +1,4 @@
-import { Action, createReducer, on, createSelector, createFeatureSelector } from '@ngrx/store';
+import { createFeatureSelector, createReducer, createSelector, on } from '@ngrx/store';
 import { changeEepDirectoryFailure, changeEepDirectorySuccess, urlsChanged } from './server.actions';
 
 export const FeatureKey = 'server';
@@ -35,3 +35,6 @@ export const appState = createFeatureSelector('server');
 export const eepDir$ = createSelector(appState, (state: State) => state.eepDir);
 export const eepDirOk$ = createSelector(appState, (state: State) => state.eepDirOk);
 export const urls$ = createSelector(appState, (state: State) => state.urls);
+export const urlsAvailable$ = createSelector(appState, (state: State) => {
+  return state.urls.length > 0;
+});
