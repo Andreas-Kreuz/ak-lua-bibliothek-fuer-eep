@@ -104,14 +104,14 @@ export default class AppEffects {
     const completeDir = path.resolve(eepDir, 'LUA/ak/io/exchange/');
 
     // Check the directory and register handlers on success
-    const fileOperations = new EepService();
-    fileOperations.reInit(completeDir, (err: string, dir: string) => {
+    const eepService = new EepService();
+    eepService.reInit(completeDir, (err: string, dir: string) => {
       if (err) {
         console.error(err);
       }
       if (dir) {
         console.log('Directory set to : ' + dir);
-        this.registerHandlers(fileOperations);
+        this.registerHandlers(eepService);
         this.store.setEepDirOk(true);
         this.saveEepDirectory(eepDir);
         this.io.to(SettingsEvent.Room).emit(SettingsEvent.DirOk, eepDir);
