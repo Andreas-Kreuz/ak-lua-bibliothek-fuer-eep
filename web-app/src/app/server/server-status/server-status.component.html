@@ -42,7 +42,8 @@ end
         <span class="text-muted">{{ eepDir$ | async }}</span>
       </span>
       <span class="app-spacer"></span>
-      <button mat-stroked-button (click)="openDialog()">Verzeichnis wählen</button>
+      <button *ngIf="error" mat-flat-button (click)="openDialog()" color="warn">Verzeichnis wählen</button>
+      <button *ngIf="!error" mat-stroked-button (click)="openDialog()">Verzeichnis wählen</button>
     </mat-card>
   </div>
   <div class="col col-12" *ngIf="error">
