@@ -8,11 +8,22 @@ feature-img: "/assets/headers/SourceCode.png"
 img: "/assets/headers/SourceCode.png"
 ---
 
+
 <div class="row">
   <div class="col col-lg-6">
     <div class="row">
+      <div class="col col-12 pb-5">
+        <h4>Herunterladen</h4>
+        <p class="lead">
+          Lade die neueste Version herunter und probiere es gleich aus.
+        </p>
+        <p class="lead">
+          <a href="{{ site.github.latest_release.assets[0].browser_download_url }}"
+              class="btn btn-primary btn-lg">Download {{ site.github.latest_release.tag_name }}</a>
+        </p>
+      </div>
       <div class="col col-md-6 pb-5">
-        <h4>Ausprobieren</h4>
+        <h4>Informieren</h4>
         <p class="lead">
           Schritt-für-Schritt Anleitungen helfen Dir beim Steuern Deiner Anlagen.
         </p>
