@@ -1,10 +1,10 @@
 ---
 layout: page_with_toc
-title: EEP-Web einrichten
+title: Web-App einrichten
 type: Tutorial
-subtitle: Erfahre wie Du EEP-Web einrichtest und benutzt.
+subtitle: Erfahre wie Du die Web-App einrichtest und benutzt.
 img: "/assets/thumbnails/eep-web-startseite.png"
-permalink: anleitungen-fortgeschrittene/einrichten-von-eep-web
+permalink: anleitungen-anfaenger/einrichten-von-eep-web
 hide: false
 date: 2018-11-19
 ---
@@ -46,7 +46,7 @@ date: 2018-11-19
 
 ## Starten von EEP-Web
 
-1. Starte die exe aus `LUA\ak\lua-server-for-eep.exe`.
+1. Starte die exe aus `C:\Trend\EEP16\LUA\ak\lua-server-for-eep.exe`.
 
    ![Programm starten](../assets/tutorial/eep-web-installation/01-lua-server-for-eep-starten.png)
 
