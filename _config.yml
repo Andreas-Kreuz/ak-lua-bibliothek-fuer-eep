@@ -106,13 +106,18 @@ exclude:
         "vendor/cache/",
         "vendor/gems/",
         "vendor/ruby/",
+        "lua/LUA/ak/io/exchange",
         "*.lua",
         "LICENSE",
         "screenshot.png",
         "server",
-        "web-app/node_modules/*",
-        "web-server/node_modules/*",
-        "web-shared/node_modules/*",
+        "web-app/dist/",
+        "web-app/node_modules/",
+        "web-server/build/",
+        "web-server/dist/",
+        "web-server/node_modules/",
+        "web-shared/build/",
+        "web-shared/node_modules/",
     ]
 
 defaults:
