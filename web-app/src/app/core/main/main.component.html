@@ -1,6 +1,5 @@
 <div class="app-fixed-top mat-elevation-z4">
-  <mat-toolbar
-    color="primary">
+  <mat-toolbar color="primary">
     <mat-toolbar-row>
       <button *ngIf="!atHome"
               mat-icon-button
@@ -18,50 +17,39 @@
     </mat-toolbar-row>
   </mat-toolbar>
   <router-outlet name="main-toolbar-tabs"></router-outlet>
-  <!--<nav mat-tab-nav-bar backgroundColor="primary"-->
-  <!--class="fixed-header">-->
-  <!--<a mat-tab-link *ngFor="let link of [ 'Autos', 'Bahn', 'Tram' ]"-->
-  <!--(click)="activeLink = link"-->
-  <!--[active]="activeLink == link"> {{link}} </a>-->
-  <!--</nav>-->
 </div>
 
-<mat-sidenav-container
-  class="sidenav-container"
-  [style.marginTop.px]="mobileQuery.matches ? 0 : 0">
-  <mat-sidenav
-    #leftNavigation
-    [opened]="false"
-    [mode]="mobileQuery.matches ? 'over' : 'side'"
-    [fixedInViewport]="mobileQuery.matches">
+<mat-sidenav-container class="sidenav-container"
+                       [style.marginTop.px]="mobileQuery.matches ? 0 : 0">
+  <mat-sidenav #leftNavigation
+               [opened]="false"
+               [mode]="mobileQuery.matches ? 'over' : 'side'"
+               [fixedInViewport]="mobileQuery.matches">
     <mat-toolbar class="side-toolbar">
       <mat-toolbar-row>
-        <!--<button-->
-        <!--mat-icon-button-->
-        <!--(click)="leftNavigation.toggle()">-->
-        <!--<mat-icon>menu</mat-icon>-->
-        <!--</button>-->
         <h1>Navigation</h1>
       </mat-toolbar-row>
     </mat-toolbar>
     <mat-divider></mat-divider>
-    <mat-nav-list class="side-toolbar-navlist"
-                  *ngFor="let category of navigation">
-      <p *ngIf="category.name !== 'Home'"
-         class="d-none d-sm-block mt-2 ml-3 mat-caption">{{ category.name }}</p>
-      <ng-container *ngFor="let element of category.values">
-        <a *ngIf="element.available | async"
-           mat-list-item
-           class="app-nav-link"
-           (click)="mobileQuery.matches && leftNavigation.toggle()"
-           routerLinkActive="app-nav-link-active"
-           [routerLinkActiveOptions]="{exact: true}"
-           routerLink="{{ element.link }}">
-          <mat-icon class="nav-entry-icon">{{ element.icon }}</mat-icon>
-          <span class="nav-entry-name">{{ element.title }}</span>
-        </a>
-      </ng-container>
-    </mat-nav-list>
+    <div *ngFor="let category of navigation">
+      <mat-nav-list class="side-toolbar-navlist"
+                    *ngIf="category.available | async">
+        <p *ngIf="category.name !== 'Home'"
+           class="d-none d-sm-block mt-2 ml-3 mat-caption">{{ category.name }}</p>
+        <ng-container *ngFor="let element of category.values">
+          <a *ngIf="element.available | async"
+             mat-list-item
+             class="app-nav-link"
+             (click)="mobileQuery.matches && leftNavigation.toggle()"
+             routerLinkActive="app-nav-link-active"
+             [routerLinkActiveOptions]="{exact: true}"
+             routerLink="{{ element.link }}">
+            <mat-icon class="nav-entry-icon">{{ element.icon }}</mat-icon>
+            <span class="nav-entry-name">{{ element.title }}</span>
+          </a>
+        </ng-container>
+      </mat-nav-list>
+    </div>
   </mat-sidenav>
   <mat-sidenav-content class="p-sm-3 mh-100">
     <div class="container-fluid">
@@ -74,4 +62,3 @@
     Second
   </mat-sidenav>
 </mat-sidenav-container>
-

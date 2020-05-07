@@ -57,7 +57,7 @@ function AkWebServerIo.setOutputDirectory(dirName)
     ioDirectoryName = dirName
 
     -- EEP appends the log to this file
-    outFileNameLog = ioDirectoryName .. "/ak-eep-out.socket"
+    outFileNameLog = ioDirectoryName .. "/ak-eep-out.log"
 
     -- EEP writes it's status to this file regularly
     -- but only if the Web Server is listening and has finished reading the previous version of the file
@@ -176,7 +176,7 @@ local writing = false
 function AkWebServerIo.updateJsonFile(jsonData)
     if not writing then
         writing = true
-        if not pcall(writeFile, outFileNameJson, jsonData) then -- file: ak-eep-out.json
+        if not pcall(writeFile, outFileNameJson, jsonData .. "\n") then -- file: ak-eep-out.json
             print("CANNOT WRITE TO " .. outFileNameJson)
         end
         writing = false

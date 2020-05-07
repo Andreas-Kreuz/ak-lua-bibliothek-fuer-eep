@@ -1,0 +1,12 @@
+<h1 mat-dialog-title>EEP Verzeichnis</h1>
+<div mat-dialog-content>
+  <p>Wähle das Verzeichnis Deiner EEP-Installation</p>
+  <mat-form-field>
+    <mat-label>Verzeichnis</mat-label>
+    <input matInput [(ngModel)]="data.dir">
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Abbrechen</button>
+  <button mat-button [mat-dialog-close]="data.dir" (click)="onYesClick()" [disabled]="data.dir == ''" cdkFocusInitial>Wählen</button>
+</div>

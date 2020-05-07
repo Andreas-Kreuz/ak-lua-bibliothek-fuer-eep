@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Actions, Effect } from '@ngrx/effects';
+import { Actions, createEffect } from '@ngrx/effects';
 import { TrainService } from './train.service';
 import { filter, switchMap } from 'rxjs/operators';
 
@@ -10,73 +10,59 @@ import { RollingStock } from '../model/rolling-stock.model';
 
 @Injectable()
 export class TrainEffects {
-  @Effect()
-  setRailTrains$ = this.trainService.railTrainsActions$().pipe(
-    filter(wsEvent => wsEvent.action === 'Set'),
-    switchMap(
-      wsEvent => {
-        const list: Train[] = JSON.parse(wsEvent.payload);
+  setRailTrains$ = createEffect(() =>
+    this.trainService.railTrainsActions$().pipe(
+      switchMap((data) => {
+        const list: Train[] = JSON.parse(data);
         return of(new fromTrains.SetRailTrains(list));
-      }
+      })
     )
   );
 
-  @Effect()
-  setRailRollingStock$ = this.trainService.railRollingStockActions$().pipe(
-    filter(wsEvent => wsEvent.action === 'Set'),
-    switchMap(
-      wsEvent => {
-        const list: RollingStock[] = JSON.parse(wsEvent.payload);
+  setRailRollingStock$ = createEffect(() =>
+    this.trainService.railRollingStockActions$().pipe(
+      switchMap((data) => {
+        const list: RollingStock[] = JSON.parse(data);
         return of(new fromTrains.SetRailRollingStock(list));
-      }
+      })
     )
   );
 
-  @Effect()
-  setRoadTrains$ = this.trainService.roadTrainsActions$().pipe(
-    filter(wsEvent => wsEvent.action === 'Set'),
-    switchMap(
-      wsEvent => {
-        const list: Train[] = JSON.parse(wsEvent.payload);
+  setRoadTrains$ = createEffect(() =>
+    this.trainService.roadTrainsActions$().pipe(
+      switchMap((data) => {
+        const list: Train[] = JSON.parse(data);
         return of(new fromTrains.SetRoadTrains(list));
-      }
+      })
     )
   );
 
-  @Effect()
-  setRoadRollingStock$ = this.trainService.roadRollingStockActions$().pipe(
-    filter(wsEvent => wsEvent.action === 'Set'),
-    switchMap(
-      wsEvent => {
-        const list: RollingStock[] = JSON.parse(wsEvent.payload);
+  setRoadRollingStock$ = createEffect(() =>
+    this.trainService.roadRollingStockActions$().pipe(
+      switchMap((data) => {
+        const list: RollingStock[] = JSON.parse(data);
         return of(new fromTrains.SetRoadRollingStock(list));
-      }
+      })
     )
   );
 
-  @Effect()
-  setTramTrains$ = this.trainService.tramTrainsActions$().pipe(
-    filter(wsEvent => wsEvent.action === 'Set'),
-    switchMap(
-      wsEvent => {
-        const list: Train[] = JSON.parse(wsEvent.payload);
+  setTramTrains$ = createEffect(() =>
+    this.trainService.tramTrainsActions$().pipe(
+      switchMap((data) => {
+        const list: Train[] = JSON.parse(data);
         return of(new fromTrains.SetTramTrains(list));
-      }
+      })
     )
   );
 
-  @Effect()
-  setTramRollingStock$ = this.trainService.tramRollingStockActions$().pipe(
-    filter(wsEvent => wsEvent.action === 'Set'),
-    switchMap(
-      wsEvent => {
-        const list: RollingStock[] = JSON.parse(wsEvent.payload);
+  setTramRollingStock$ = createEffect(() =>
+    this.trainService.tramRollingStockActions$().pipe(
+      switchMap((data) => {
+        const list: RollingStock[] = JSON.parse(data);
         return of(new fromTrains.SetTramRollingStock(list));
-      }
+      })
     )
   );
 
-  constructor(private actions$: Actions,
-              private trainService: TrainService) {
-  }
+  constructor(private actions$: Actions, private trainService: TrainService) {}
 }

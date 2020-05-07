@@ -189,7 +189,7 @@ function AkKreuzung:neu(name)
     return o
 end
 
-local aufbauHilfeErzeugt = false
+local aufbauHilfeErzeugt = AkKreuzung.zeigeSignalIdsAllerSignale
 
 function AkKreuzung.planeSchaltungenEin()
     --- Diese Funktion sucht sich aus den Ampeln die mit der passenden Richtung
@@ -333,8 +333,8 @@ function AkKreuzung.planeSchaltungenEin()
         end
     end
 
-    if not aufbauHilfeErzeugt then
-        aufbauHilfeErzeugt = true
+    if aufbauHilfeErzeugt ~= AkKreuzung.zeigeSignalIdsAllerSignale then
+        aufbauHilfeErzeugt = AkKreuzung.zeigeSignalIdsAllerSignale
         for signalId = 1, 1000 do
             EEPShowInfoSignal(signalId, AkKreuzung.zeigeSignalIdsAllerSignale)
             if AkKreuzung.zeigeSignalIdsAllerSignale then

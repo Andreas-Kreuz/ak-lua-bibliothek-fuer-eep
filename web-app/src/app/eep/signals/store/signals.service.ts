@@ -1,35 +1,32 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { WsEvent } from '../../../core/socket/ws-event';
-import { WsService } from '../../../core/socket/ws.service';
+import { SocketEvent } from '../../../core/socket/socket-event';
+import { SocketService } from '../../../core/socket/socket-service';
+import { DataEvent } from 'web-shared';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SignalsService {
+  constructor(private socket: SocketService) {}
 
-  constructor(private wsService: WsService) {
-  }
+  private signals$: Observable<string>;
+  private signalTypes$: Observable<string>;
 
-  private signals$: Observable<WsEvent>;
-  private signalTypes$: Observable<WsEvent>;
-
-  getSignalActions(): Observable<WsEvent> {
+  getSignalActions(): Observable<string> {
     if (!this.signals$) {
-      this.signals$ = this.wsService.listen('[Data-signals]');
+      this.signals$ = this.socket.listen(DataEvent.eventOf('signals'));
+      this.socket.join(DataEvent.roomOf('signals'));
     }
     return this.signals$;
   }
 
-  getSignalTypeDefinitionActions(): Observable<WsEvent> {
+  getSignalTypeDefinitionActions(): Observable<string> {
     if (!this.signalTypes$) {
-      this.signalTypes$ = this.wsService.listen('[Data-signal-type-definitions]');
+      this.signalTypes$ = this.socket.listen(DataEvent.eventOf('signal-type-definitions'));
+      this.socket.join(DataEvent.roomOf('signal-type-definitions'));
     }
     return this.signalTypes$;
-  }
-
-  emit(wsEvent: WsEvent) {
-    return this.wsService.emit(wsEvent);
   }
 }

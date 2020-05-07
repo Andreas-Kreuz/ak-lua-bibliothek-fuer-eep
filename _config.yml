@@ -4,44 +4,44 @@ url: "https://andreas-kreuz.github.io"
 
 # THEME-SPECIFIC CONFIGURATION
 theme_settings:
-  # Meta
-  title: Lua-Bibliothek für EEP
-  avatar: assets/img/Avatar-Andreas-Kreuz.png
-  favicon: assets/img/Avatar-Andreas-Kreuz.png
-  gravatar: b3d6b9ea43f1401c06bf20a38fa3ba91 # Email MD5 hash
-  description: "Lua für EEP - Verkehrssteuerung und mehr" # used by search engines
+    # Meta
+    title: Lua-Bibliothek für EEP
+    avatar: assets/img/Avatar-Andreas-Kreuz.png
+    favicon: assets/img/Avatar-Andreas-Kreuz.png
+    gravatar: b3d6b9ea43f1401c06bf20a38fa3ba91 # Email MD5 hash
+    description: "Lua für EEP - Verkehrssteuerung und mehr" # used by search engines
 
-  # Header and footer text
-  header_text: >
-     <p>Lua Bibliothek für EEP 14</p>
-  header_text_feature_image: assets/headers/Titelbild-Simulator.jpg
-  footer_text: >
-    <p>Präsentiert von <a href="http://andreas-kreuz.github.io/">Andreas Kreuz</a> - Diskussion bitte in <a href="http://www.eepforum.de">Mein EEP Forum</a>.</p>
-  # Icons
-  github: "Andreas-Kreuz"
+    # Header and footer text
+    header_text: >
+        <p>Lua Bibliothek für EEP 14</p>
+    header_text_feature_image: assets/headers/Titelbild-Simulator.jpg
+    footer_text: >
+        <p>Präsentiert von <a href="http://andreas-kreuz.github.io/">Andreas Kreuz</a> - Diskussion bitte in <a href="http://www.eepforum.de">Mein EEP Forum</a>.</p>
+    # Icons
+    github: "Andreas-Kreuz"
 
-  # Scripts
-  google_analytics: # Tracking ID, e.g. "UA-000000-01"
-  disqus_shortname:
-  katex: # Enable if using math markup
+    # Scripts
+    google_analytics: # Tracking ID, e.g. "UA-000000-01"
+    disqus_shortname:
+    katex: # Enable if using math markup
 
-  # Localization strings
-  str_follow_on: "Folgen"
-  str_rss_follow: "RSS-Feed abonieren"
-  str_email: "Email"
-  str_next_post: "Nächster Beitrag"
-  str_previous_post: "Vorheriger Beitrag"
-  str_next_page: "Weiter"
-  str_previous_page: "Zurück"
-  str_continue_reading: "Weiterlesen"
-  str_javascript_required_disqus: "Bitte Javascript einschalten, um die Kommentare zu lesen."
+    # Localization strings
+    str_follow_on: "Folgen"
+    str_rss_follow: "RSS-Feed abonieren"
+    str_email: "Email"
+    str_next_post: "Nächster Beitrag"
+    str_previous_post: "Vorheriger Beitrag"
+    str_next_page: "Weiter"
+    str_previous_page: "Zurück"
+    str_continue_reading: "Weiterlesen"
+    str_javascript_required_disqus: "Bitte Javascript einschalten, um die Kommentare zu lesen."
 
-  # Colours, typography and padding
-  # Open the "_sass > base" folder, and open "_variables.scss"
-  google_fonts: "Source+Sans+Pro:400,700,700italic,400italic"
+    # Colours, typography and padding
+    # Open the "_sass > base" folder, and open "_variables.scss"
+    google_fonts: "Source+Sans+Pro:400,700,700italic,400italic"
 
-  # Post navigation
-  post_navigation: false
+    # Post navigation
+    post_navigation: false
 
 # PAGINATION
 paginate: 5
@@ -49,49 +49,79 @@ paginate_path: "blog/page:num"
 
 # PORTFOLIO
 collections:
-  anleitungen-anfaenger:
-    output: true
-    title: Erster Eindruck
-    permalink: /:collection/:name
-  anleitungen-fortgeschrittene:
-    output: true
-    title: Schritt-für-Schritt-Anleitungen
-    permalink: /:collection/:name
-  anleitungen-entwickler:
-    output: true
-    title: Für Entwickler
-    permalink: /:collection/:name
-  seiten:
-    output: true
-    title: Seiten
-    permalink: /:name
+    anleitungen-anfaenger:
+        output: true
+        title: Erster Eindruck
+        permalink: /:collection/:name
+    anleitungen-fortgeschrittene:
+        output: true
+        title: Schritt-für-Schritt-Anleitungen
+        permalink: /:collection/:name
+    anleitungen-entwickler:
+        output: true
+        title: Für Entwickler
+        permalink: /:collection/:name
+    seiten:
+        output: true
+        title: Seiten
+        permalink: /:name
 
 # BUILD SETTINGS
 markdown: kramdown
 highlighter: rouge
 
+#################################################################
+#
+# IMPORTANT: GENERATE THE DOCUMENTATION FROM THE MASTER BRANCH
+#            BUT NOT FROM THE /docs FOLDER.
+#
+#            Building from the project directory will include
+#            the neccessary README files from the Lua Folders.
+#
+#################################################################
+
 # Where things are
-source              : .
-destination         : docs/_site
-collections_dir     : docs/
-plugins_dir         : docs/_plugins
-layouts_dir         : docs/_layouts
-data_dir            : docs/_data
-includes_dir        : docs/_includes
+source: .
+destination: docs/_site
+collections_dir: docs/
+plugins_dir: docs/_plugins
+layouts_dir: docs/_layouts
+data_dir: docs/_data
+includes_dir: docs/_includes
 sass:
-  sass_dir: docs/_sass
-  style: :compressed
+    sass_dir: docs/_sass
+    style: :compressed
 
 # Plugins
 plugins:
-  - jekyll-paginate
-  - jekyll-seo-tag
-  - jemoji
-exclude: ["Gemfile", "Gemfile.lock", "node_modules", "vendor/bundle/", "vendor/cache/", "vendor/gems/", "vendor/ruby/", "web-app", "server", "*.lua", "LICENSE", "screenshot.png"]
+    - jekyll-paginate
+    - jekyll-seo-tag
+    - jemoji
+exclude:
+    [
+        "Gemfile",
+        "Gemfile.lock",
+        "node_modules",
+        "vendor/bundle/",
+        "vendor/cache/",
+        "vendor/gems/",
+        "vendor/ruby/",
+        "lua/LUA/ak/io/exchange",
+        "*.lua",
+        "LICENSE",
+        "screenshot.png",
+        "server",
+        "web-app/dist/",
+        "web-app/node_modules/",
+        "web-server/build/",
+        "web-server/dist/",
+        "web-server/node_modules/",
+        "web-shared/build/",
+        "web-shared/node_modules/",
+    ]
 
 defaults:
-  -
-    scope:
-      path: "../lua"
-    values:
-      layout: "default"
+    - scope:
+          path: "../lua"
+      values:
+          layout: "default"

@@ -11,6 +11,8 @@ import { AppComponent } from './app.component';
 import { SwitchesComponent } from './eep/switches/switch-list/switches.component';
 import { HttpClientModule } from '@angular/common/http';
 import { SharedModule } from './shared/shared.module';
+import { FullPageLayoutComponent } from './layouts/full-page-layout.component';
+import { ConnectingLayoutComponent } from './layouts/connecting-layout.component';
 import { CoreModule } from './core/core.module';
 import { reducers } from './app.reducers';
 import { effects } from './app.effects';
@@ -19,27 +21,23 @@ import { FormsModule } from '@angular/forms';
 import { LayoutModule } from '@angular/cdk/layout';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    SwitchesComponent,
-  ],
+  declarations: [AppComponent, FullPageLayoutComponent, ConnectingLayoutComponent, SwitchesComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
     FormsModule,
-    AppRoutingModule,
     SharedModule,
     CoreModule,
+    LayoutModule,
     StoreModule.forRoot(reducers),
     EffectsModule.forRoot(effects),
     StoreRouterConnectingModule.forRoot({ serializer: DefaultRouterStateSerializer }),
     environment.production ? [] : StoreDevtoolsModule.instrument(),
-    LayoutModule,
+    AppRoutingModule,
   ],
   exports: [],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule {
-}
+export class AppModule {}

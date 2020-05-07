@@ -11,14 +11,11 @@ import * as fromCore from '../../core/store/core.reducers';
 import { map } from 'rxjs/operators';
 
 class AppAction {
-  constructor(public iconName: string,
-    public action: Action,
-    public tooltip: string) {
-  }
+  constructor(public iconName: string, public action: Action, public tooltip: string) {}
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class MainNavigationService {
   navAction$: Observable<AppAction>;
@@ -27,13 +24,12 @@ export class MainNavigationService {
   intersectionsCount$: Observable<number>;
   signalCount$: Observable<number>;
   slotCount$: Observable<number>;
-  intersectionsAvailable$: Observable<boolean>;
   railTrainCount$: Observable<number>;
   roadTrainCount$: Observable<number>;
   tramTrainCount$: Observable<number>;
-  navigation: ({
-    name: string,
-    available: Observable<boolean>,
+  navigation: {
+    name: string;
+    available: Observable<boolean>;
     values: {
       badge: null | Observable<number>;
       available: Observable<boolean>;
@@ -43,16 +39,15 @@ export class MainNavigationService {
       subtitle: string | null;
       description: string | null;
       linkDescription: string | null;
-      link: string,
-      requiredModuleId: string,
+      link: string;
+      requiredModuleId: string;
     }[];
-  })[];
+  }[];
 
   private readonly dataLuaModuleId = 'e538a124-3f0a-4848-98cf-02b08563bf32'; // "ak.data.DataLuaModule"
   private readonly kreuzungLuaModuleId = 'c5a3e6d3-0f9b-4c89-a908-ed8cf8809362'; // "ak.data.KreuzungLuaModul"
 
   constructor(private store: Store<fromRoot.State>) {
-    this.intersectionsAvailable$ = this.store.pipe(select(fromDataTypes.selectIntersectionsAvailable));
     this.intersectionsCount$ = this.store.pipe(select(fromIntersection.intersectionsCount$));
     this.slotCount$ = this.store.pipe(select(fromEepData.eepDataCount$));
     this.signalCount$ = this.store.pipe(select(fromSignal.signalCount$));
@@ -61,7 +56,8 @@ export class MainNavigationService {
     this.tramTrainCount$ = this.store.pipe(select(fromTrain.selectTramTrainCount));
     this.navigation = [
       {
-        name: 'Home', values: [
+        name: 'Home',
+        values: [
           {
             available: of(true),
             icon: 'home',
@@ -75,16 +71,14 @@ export class MainNavigationService {
             requiredModuleId: null,
           },
         ],
-        available: of(true)
+        available: of(true),
       },
       {
         name: 'Verkehr',
         available: combineLatest([
           this.store.pipe(select(fromCore.isModuleLoaded$(this.kreuzungLuaModuleId))),
-          this.store.pipe(select(fromCore.isModuleLoaded$(this.dataLuaModuleId)))]
-        ).pipe(
-          map((b1) => b1[0] || b1[1])
-        ),
+          this.store.pipe(select(fromCore.isModuleLoaded$(this.dataLuaModuleId))),
+        ]).pipe(map((b1) => b1[0] || b1[1])),
         values: [
           {
             available: this.store.pipe(select(fromCore.isModuleLoaded$(this.kreuzungLuaModuleId))),
@@ -138,7 +132,7 @@ export class MainNavigationService {
             linkDescription: 'Züge zeigen',
             requiredModuleId: this.dataLuaModuleId,
           },
-        ]
+        ],
       },
       {
         name: 'Daten',
@@ -186,7 +180,7 @@ export class MainNavigationService {
           // {
           //   name: 'Roh-Daten', values: [
           {
-            available: of(true),
+            available: this.store.pipe(select(fromCore.isModulesAvailable)),
             icon: 'list_alt',
             title: 'Roh-Daten',
             subtitle: null, // 'JSON-Daten vom Server',
@@ -197,7 +191,7 @@ export class MainNavigationService {
             linkDescription: 'Zu den Daten',
             requiredModuleId: null,
           },
-        ]
+        ],
       },
     ];
   }

@@ -26,7 +26,7 @@ IF %ERRORLEVEL% NEQ 0 (
     exit /b %ERRORLEVEL%
 )
 
-xcopy /Y %projectPath%\server\target\ak-eep-web.jar %projectPath%\lua\LUA\ak
+xcopy /Y %projectPath%\web-server\dist\lua-server-for-eep.exe %projectPath%\lua\LUA\ak
 IF %ERRORLEVEL% NEQ 0 (
     exit /b %ERRORLEVEL%
 )

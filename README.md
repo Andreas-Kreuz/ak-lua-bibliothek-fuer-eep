@@ -3,7 +3,7 @@
     <img src="assets/img/eep-web-logo-shadow-72.png" alt="" width=72 height=72>
   </a>
 
-  <h3 align="center">Lua-Bibliothek für EEP-Web</h3>
+  <h3 align="center">Lua-Bibliothek für EEP</h3>
 
   <p align="center">
     Eine Sammlung von Lua-Skripten für die einfache Verkehrssteuerung in EEP.
@@ -18,7 +18,12 @@
 
 Die bereitgestellte Bibliothek übernimmt für Dich die _Steuerung des Verkehrs_, damit Du Dich andere Aspekte konzentrieren kannst. Beschreibe in Lua, wie Deine Kreuzungen aussehen und die Skripte kümmern sich um den Rest der Steuerung.
 
-## Loslegen
+Du erhältst mit diesem Paket:
+
+1. **Lua-Bibliothek** - verschiedene Lua-Module für die Verkehrssteuerung
+2. **Server und Web-App _(optional)_** - steuere oder betrachte bestimmte Aspekte im Browser
+
+## Ausführliche Dokumentation
 
 * Die Webseite enthält [Anleitungen und Dokumentation](http://andreas-kreuz.github.io/ak-lua-bibliothek-fuer-eep) zur Verwendung der Skript-Sammlung.
 

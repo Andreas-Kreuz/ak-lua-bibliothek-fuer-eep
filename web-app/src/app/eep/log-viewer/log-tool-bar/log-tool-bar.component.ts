@@ -17,11 +17,11 @@ export class LogToolBarComponent implements OnInit {
   }
 
   clearLog() {
-    this.store.dispatch(new logAction.SendCommand('clearlog'));
+    this.store.dispatch(logAction.clearLog());
   }
 
   sendTestMessage() {
-    this.store.dispatch(new logAction.SendCommand('print|Hallo von EEP-Web! Umlaute: äöüÄÖÜß'));
+    this.store.dispatch(logAction.sendTestMessage());
   }
 
 }

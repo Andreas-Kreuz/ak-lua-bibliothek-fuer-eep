@@ -1,4 +1,3 @@
 import { Action, createAction, props } from '@ngrx/store';
 
-export const ROOM = '[AvailableDataTypes]';
-export const setDataTypes = createAction(ROOM + ' Set', props<{ types: string[] }>());
+export const setDataTypes = createAction('[Datatypes] Changed', props<{ types: string[] }>());

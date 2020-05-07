@@ -31,7 +31,7 @@ public class Server {
     }
 
     public void startServer() {
-        app.start(3000);
+        app.start(3001);
         System.out.println("" + "   ___     ___      ___         __      __        _      \n"
                 + "  | __|   | __|    | _ \\   ___  \\ \\    / / ___   | |__   \n"
                 + "  | _|    | _|     |  _/  |___|  \\ \\/\\/ / / -_)  | '_ \\  \n"
