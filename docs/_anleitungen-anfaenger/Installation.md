@@ -37,7 +37,7 @@ tags: [Installation]
 
 Du hast die Installation abgeschlossen.
 
-Die Bibliothek wurde in das Unterverzeichnis `LUA/ak` Deiner EEP-Installation installiert, z.B. in `C:\Trend\EEP16\LUA\`.
+Die Bibliothek wurde in das Unterverzeichnis `LUA\ak` Deiner EEP-Installation installiert, z.B. in `C:\Trend\EEP16\LUA\`.
 
 Jetzt kannst Du:
 
