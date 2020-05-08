@@ -20,7 +20,8 @@
   },
   "[lua]": {
     "files.encoding": "windows1252",
-    "files.autoGuessEncoding": true
+    "files.autoGuessEncoding": true,
+    "editor.defaultFormatter": "liwangqian.luacoderassist"
   },
   "files.exclude": {
     "**/.classpath": true,
