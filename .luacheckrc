@@ -36,6 +36,7 @@ read_globals = {
 allow_defined_top = true
 
 -- See https://luacheck.readthedocs.io/en/stable/warnings.html
+-- 121 - global assignment to readonly
 -- 131 - global assignment
 -- 212 - unused argument
 files["lua/LUA/ak/core/eep"].ignore = { "212" , "131" }
