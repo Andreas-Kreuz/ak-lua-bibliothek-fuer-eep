@@ -72,7 +72,7 @@ local function initializeJsonCollector(jsonCollector)
     jsonCollector.initialize()
     local t1 = os.clock()
     local timeDiff = t1 - t0
-    print(string.format('ServerController: initialize() %.2f seconds for "%s"', timeDiff, jsonCollector.name))
+    print(string.format('ServerController: initialize() %4.0f ms for "%s"', timeDiff * 1000, jsonCollector.name))
 end
 
 local function collectFrom(jsonCollector, printFirstTime)
@@ -80,8 +80,8 @@ local function collectFrom(jsonCollector, printFirstTime)
     local newData = jsonCollector.collectData()
     local t1 = os.clock()
     local timeDiff = t1 - t0
-    if timeDiff > 0.02 or printFirstTime then
-        print(string.format('ServerController:collectData() %.2f seconds for "%s"', timeDiff, jsonCollector.name))
+    if timeDiff > 0.01 or printFirstTime then
+        print(string.format('ServerController:collectData() %4.0f ms for "%s"', timeDiff * 1000, jsonCollector.name))
     end
     return newData
 end
@@ -135,17 +135,12 @@ function ServerController.addJsonCollector(...)
     end
 end
 
-function collectAndWriteData(printFirstTime, modulus)
-    local t0 = os.clock()
-    collectData(printFirstTime)
-
+local function expandData()
     -- add statistical data
-    local t1 = os.clock()
     local orderedKeys = {}
     local exportData = {}
     for key, value in pairs(collectedData) do
-        if next(ServerController.activeEntries) == nil -- empty list
-          or ServerController.activeEntries[key] then
+        if next(ServerController.activeEntries) == nil or ServerController.activeEntries[key] then -- empty list
             exportData[key] = value
             table.insert(orderedKeys, key)
         end
@@ -153,41 +148,15 @@ function collectAndWriteData(printFirstTime, modulus)
     -- table.insert(orderedKeys, "api-entries")
     table.sort(orderedKeys)
     fillApiEntriesV1(orderedKeys)
+    return exportData, orderedKeys
+end
 
-    -- write file
-    local t2 = os.clock()
+local function encode(exportData, orderedKeys)
+    return json.encode(exportData, {keyorder = orderedKeys})
+end
 
-    local content = json.encode(exportData, {keyorder = orderedKeys})
-
-    local t3 = os.clock()
-    AkWebServerIo.updateJsonFile(content)
-
-    local t4 = os.clock()
-
-    -- Do not print warning on the first time
-    if not printFirstTime and t4 - t0 > .2 * modulus then
-        print(
-            string.format(
-                "WARNING: ServerController.collectAndWriteData()   time is %.2f s --- " ..
-                    "collect: %.2f s, sort: %.2f s, encode: %.2f s, writeFile: %.2f s",
-                t4 - t0,
-                t1 - t0,
-                t2 - t1,
-                t3 - t2,
-                t4 - t3
-            )
-        )
-    end
-
-    if printFirstTime then
-        local sizes = "Data sizes: "
-        for _, key in ipairs(orderedKeys) do
-            local value = collectedData[key]
-            local size = string.len(json.encode(value, {keyorder = orderedKeys}))
-            sizes = sizes .. string.format("\n%10d Bytes: %s", size, key)
-        end
-        print(sizes)
-    end
+local function writeData(jsonString)
+    AkWebServerIo.updateJsonFile(jsonString)
 end
 
 local i = -1
@@ -220,26 +189,48 @@ function ServerController.communicateWithServer(modulus)
 
     -- export data regularly
     local overallTime3 = os.clock()
+    local overallTime4 = overallTime3
+    local overallTime5 = overallTime3
+    local overallTime6 = overallTime3
+
     if i % modulus == 0 and serverIsReady then
-        collectAndWriteData(printFirstTime, modulus)
+        collectData(printFirstTime, modulus)
+        overallTime4 = os.clock()
+
+        local exportData, orderedKeys = expandData()
+        overallTime5 = os.clock()
+
+        local jsonString = encode(exportData, orderedKeys)
+        overallTime6 = os.clock()
+
+        writeData(jsonString)
     end
 
-    local overallTime4 = os.clock()
-    local timeDiff = overallTime4 - overallTime0
+    local overallTime7 = os.clock()
+    local timeDiff = overallTime7 - overallTime0
     local allowedTimeDiff = modulus * 0.200
     if printFirstTime or timeDiff > allowedTimeDiff then
+        local format =
+            (printFirstTime and "INITIALIZATION" or "WARNING") ..
+            ": ServerController.communicateWithServer() time is %3.0f ms --- " ..
+                "waitForServer: %.0f ms, " ..
+                    "initialize: %.0f ms, " ..
+                        "commands: %2.0f ms, " ..
+                            "collect: %3.0f ms, " ..
+                                " expand: %3.0f ms " ..
+                                    " encode: %3.0f ms " .. " write: %.0f ms " .. "(allowed: %.0f ms)"
         print(
             string.format(
-                (printFirstTime and "INITIALIZATION" or "WARNING") ..
-                    ": ServerController.communicateWithServer() time is %.2f s --- " ..
-                        "waitForServer: %.2f s, initialize: %.2f s, " ..
-                            "processNewCommands: %.2f s, collectAndWriteData: %.2f s" .. "(allowed: %.2f s)",
-                timeDiff,
-                overallTime1 - overallTime0,
-                overallTime2 - overallTime1,
-                overallTime3 - overallTime2,
-                overallTime4 - overallTime3,
-                allowedTimeDiff
+                format,
+                (timeDiff) * 1000,
+                (overallTime1 - overallTime0) * 1000,
+                (overallTime2 - overallTime1) * 1000,
+                (overallTime3 - overallTime2) * 1000,
+                (overallTime4 - overallTime3) * 1000,
+                (overallTime5 - overallTime4) * 1000,
+                (overallTime6 - overallTime5) * 1000,
+                (overallTime7 - overallTime6) * 1000,
+                (allowedTimeDiff) * 1000
             )
         )
     end

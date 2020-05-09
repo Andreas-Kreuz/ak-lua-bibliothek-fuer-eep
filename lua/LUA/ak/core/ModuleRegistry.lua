@@ -63,7 +63,7 @@ local function runTask(module)
     local t1 = os.clock()
     local timeDiff = t1 - t0
     --print(string.format('ModuleRegistry.runTask() %.3f seconds for "%s"', timeDiff, module.name)) --###
-    if timeDiff > 0.2 then
+    if timeDiff > 0.001 then
         print(string.format('WARNING: ModuleRegistry.runTask() %.3f seconds for "%s"', timeDiff, module.name))
     end
 end
@@ -84,19 +84,33 @@ end
 -- This will run all registeredLuaModules
 -- @param cycleCount Repetion frequency (1: every 200 ms, 5: every second, ...)
 function ModuleRegistry.runTasks(cycleCount)
+    local t1 = os.clock()
     if not initialized then
         ModuleRegistry.initTasks()
     end
 
+    local t2 = os.clock()
     for _, module in pairs(registeredLuaModules) do
         runTask(module)
     end
 
+    local t3 = os.clock()
     if enableServer then
         -- Sorgt dafür, dass alle JsonDaten der registrieren XxxJsonColletor zum Server kommen
         -- und dass die Befehle des Servers ausgewertet werden
         ServerController.communicateWithServer(cycleCount)
     end
+    local t4 = os.clock()
+
+    print(
+        string.format(
+            "ModuleRegistry.runTasks(cycleCount) time: %.0f ms (%.0f ms init, %.0f ms runTask, %.0f ms serveData)",
+            (t4 - t1) * 1000,
+            (t2 - t1) * 1000,
+            (t3 - t2) * 1000,
+            (t4 - t3) * 1000
+        )
+    )
 end
 
 function ModuleRegistry.activateServer()
