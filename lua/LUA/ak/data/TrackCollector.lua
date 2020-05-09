@@ -130,10 +130,10 @@ function TrackCollector:updateTrains()
     local t0 = os.clock()
 
     -- Remove missing trains
-    for trainName in pairs(self.trains) do
+    for trainName, train in pairs(self.trains) do
         local haveSpeed, speed = EEPGetTrainSpeed(trainName) -- EEP 11.0
         if haveSpeed then
-            self.trains[trainName].speed = speed
+            train.speed = speed
         else
             self.trains[trainName] = nil
             self.trainInfo[trainName] = nil
@@ -159,11 +159,12 @@ function TrackCollector:updateTrains()
                         movedTrains[trainName] = true
                     end
                 end
+
+                -- Update the trains
+                self:updateTrainInfo(trainName, trackId)
             end
         end
 
-        -- Update the trains
-        self:updateTrainInfo(trainName, trackId)
     end
 
     local t2 = os.clock()
@@ -201,7 +202,6 @@ end
 
 function TrackCollector:updateTrain(trainName)
     -- Store trains
-    local _, speed = EEPGetTrainSpeed(trainName) -- EEP 11.0
     local haveRoute, route = EEPGetTrainRoute(trainName) -- EEP 11.2 Plugin 2
 
     local rollingStockCount = EEPGetRollingstockItemsCount(trainName) -- EEP 13.2 Plug-In 2
@@ -214,14 +214,6 @@ function TrackCollector:updateTrain(trainName)
         length = trainLength or 0
     }
     self.trains[trainName] = currentTrain
-
-    local trainsInfo = {
-        id = trainName,
-        speed = tonumber(string.format("%.4f", speed or 0)),
-        onTrackId = currentTrain.onTrack,
-        occupiedTacks = currentTrain.occupiedTacks
-    }
-    self.trainInfo[trainName] = trainsInfo
 
     if rollingStockCount then
         for i = 0, (currentTrain.rollingStockCount - 1) do
@@ -236,11 +228,17 @@ function TrackCollector:updateTrain(trainName)
 end
 
 function TrackCollector:updateTrainInfo(trainName, trackId)
-    self.trainInfo[trainName] = self.trainInfo[trainName] or {}
-    self.trainInfo[trainName].trackType = self.trackType
-    self.trainInfo[trainName].onTrack = trackId
-    self.trainInfo[trainName].occupiedTacks = self.trainInfo[trainName].occupiedTacks or {}
-    self.trainInfo[trainName].occupiedTacks[tostring(trackId)] = trackId
+    local _, speed = EEPGetTrainSpeed(trainName) -- EEP 11.0
+    local trainInfo = self.trainInfo[trainName] or {}
+    trainInfo.id = trainName
+    trainInfo.trackType = self.trackType
+    trainInfo.speed = tonumber(string.format("%.4f", speed or 0))
+    trainInfo.onTrack = trackId
+    trainInfo.occupiedTacks = trainInfo.occupiedTacks or {}
+    trainInfo.occupiedTacks[tostring(trackId)] = trackId
+    if not self.trainInfo[trainName] then
+        self.trainInfo[trainName] = trainInfo
+    end
 end
 
 function TrackCollector:updateRollingStock(rollingStockName, currentTrain, positionInTrain)
