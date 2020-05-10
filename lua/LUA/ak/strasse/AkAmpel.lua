@@ -13,6 +13,8 @@ local fmt = require("ak.core.eep.AkTippTextFormat")
 ------------------------------------------------------------------------------------------
 local AkAmpel = {}
 AkAmpel.debug = AkStartMitDebug or false
+local registeredSignals = {}
+
 ---
 -- @param signalId ID der Ampel auf der Anlage (Eine Ampel von diesem Typ sollte auf der Anlage sein
 -- @param ampelTyp Typ der Ampel (AkAmpelModell)
@@ -22,8 +24,13 @@ AkAmpel.debug = AkStartMitDebug or false
 -- @param anforderungImmo Immobilie fuer Signalbild "A" (Licht an / aus)
 --
 function AkAmpel:neu(signalId, ampelTyp, rotImmo, gruenImmo, gelbImmo, anforderungImmo)
-    assert(signalId)
-    assert(ampelTyp)
+    assert(signalId, "Specify a signalId")
+    assert(ampelTyp, "Specify a ampelTyp")
+    local error = string.format("Signal ID already used: %s - %s", signalId, ampelTyp.name)
+    assert(
+        not registeredSignals[tostring(signalId)] or registeredSignals[tostring(signalId)].ampelTyp == ampelTyp,
+        error
+    )
     EEPShowInfoSignal(signalId, false)
     local o = {
         signalId = signalId,
@@ -36,7 +43,7 @@ function AkAmpel:neu(signalId, ampelTyp, rotImmo, gruenImmo, gelbImmo, anforderu
         aufbauInfo = "" .. tostring(signalId),
         richtungen = {},
         lichtImmos = {},
-        achsenImmos = {},
+        achsenImmos = {}
     }
     self.__index = self
     o = setmetatable(o, self)
@@ -44,6 +51,8 @@ function AkAmpel:neu(signalId, ampelTyp, rotImmo, gruenImmo, gelbImmo, anforderu
     if rotImmo or gruenImmo or gelbImmo or anforderungImmo then
         o:fuegeLichtImmoHinzu(rotImmo, gruenImmo, gelbImmo, anforderungImmo)
     end
+
+    registeredSignals[tostring(signalId)] = o
     return o
 end
 
@@ -68,10 +77,16 @@ end
 -- @param stellungGelb Achsstellung bei gelb
 -- @param stellungFG Achsstellung bei FG
 --
-function AkAmpel:fuegeAchsenImmoHinzu(immoName, achsName, grundStellung,
-stellungRot, stellungGruen, stellungGelb, stellungFG)
-    local achsAmpel = AkAchsenImmoAmpel:neu(immoName, achsName, grundStellung,
-        stellungRot, stellungGruen, stellungGelb, stellungFG)
+function AkAmpel:fuegeAchsenImmoHinzu(
+    immoName,
+    achsName,
+    grundStellung,
+    stellungRot,
+    stellungGruen,
+    stellungGelb,
+    stellungFG)
+    local achsAmpel =
+        AkAchsenImmoAmpel:neu(immoName, achsName, grundStellung, stellungRot, stellungGruen, stellungGelb, stellungFG)
     self.achsenImmos[achsAmpel] = true
     return self
 end
@@ -93,26 +108,34 @@ end
 --- Stellt die vorher gesetzten Tipp-Texte dar.
 --
 function AkAmpel:aktualisiereInfo()
-    local infoFuerAnforderung = AkKreuzung.zeigeAnforderungenAlsInfo
-    local infoFuerAktuelleSchaltung = AkKreuzung.zeigeSchaltungAlsInfo
-    local zeigeInfo = infoFuerAnforderung or infoFuerAktuelleSchaltung
+    local showRequests = AkKreuzung.zeigeAnforderungenAlsInfo
+    local showSwitching = AkKreuzung.zeigeSchaltungAlsInfo
+    local showAllSignals = AkKreuzung.zeigeSignalIdsAllerSignale
+    local zeigeInfo = showRequests or showSwitching or showAllSignals
 
     EEPShowInfoSignal(self.signalId, zeigeInfo)
     if zeigeInfo then
         local infoText = "<j><b>Ampel ID: " .. fmt.hintergrund_grau(self.signalId) .. "</b></j>"
+        infoText = infoText .. "<br>" .. self.ampelTyp.name
 
         if AkKreuzung.zeigeSchaltungAlsInfo then
-            if infoText:len() > 0 then infoText = infoText .. "<br>___________________________<br>" end
+            if infoText:len() > 0 then
+                infoText = infoText .. "<br>___________________________<br>"
+            end
             infoText = infoText .. self.schaltungsInfo
         end
 
-        if infoFuerAktuelleSchaltung and self.phase and self.grund then
-            if infoText:len() > 0 then infoText = infoText .. "<br><br>" end
+        if showSwitching and self.phase and self.grund then
+            if infoText:len() > 0 then
+                infoText = infoText .. "<br><br>"
+            end
             infoText = infoText .. " " .. self.phase .. " (" .. self.grund .. ")"
         end
 
-        if infoFuerAnforderung then
-            if infoText:len() > 0 then infoText = infoText .. "<br>___________________________<br>" end
+        if showRequests then
+            if infoText:len() > 0 then
+                infoText = infoText .. "<br>___________________________<br>"
+            end
             infoText = infoText .. self.richtungsInfo
         end
         assert(infoText:len() < 1023)
@@ -133,8 +156,10 @@ function AkAmpel:schalte(phase, grund)
 
     local sigIndex = self.ampelTyp:signalIndexFuer(self.phase)
     if (self.debug or AkAmpel.debug) then
-        print(string.format("[AkAmpel    ] Schalte Ampel %04d auf %s (%01d)",
-            self.signalId, self.phase, sigIndex) .. immoLichtDbg .. immoAchseDbg .. " - " .. grund)
+        print(
+            string.format("[AkAmpel    ] Schalte Ampel %04d auf %s (%01d)", self.signalId, self.phase, sigIndex) ..
+                immoLichtDbg .. immoAchseDbg .. " - " .. grund
+        )
     end
     self:schalteSignal(sigIndex)
 end
@@ -143,18 +168,33 @@ function AkAmpel:schalteImmoLicht()
     local immoDbg = ""
     for lichtAmpel in pairs(self.lichtImmos) do
         if lichtAmpel.rotImmo then
-            immoDbg = immoDbg .. string.format(", Licht in %s: %s", lichtAmpel.rotImmo,
-                (self.phase == AkPhase.ROT or self.phase == AkPhase.ROTGELB) and "an" or "aus")
+            immoDbg =
+                immoDbg ..
+                string.format(
+                    ", Licht in %s: %s",
+                    lichtAmpel.rotImmo,
+                    (self.phase == AkPhase.ROT or self.phase == AkPhase.ROTGELB) and "an" or "aus"
+                )
             EEPStructureSetLight(lichtAmpel.rotImmo, self.phase == AkPhase.ROT or self.phase == AkPhase.ROTGELB)
         end
         if lichtAmpel.gelbImmo then
-            immoDbg = immoDbg .. string.format(", Licht in %s: %s", lichtAmpel.gelbImmo,
-                (self.phase == AkPhase.GELB or self.phase == AkPhase.ROTGELB) and "an" or "aus")
+            immoDbg =
+                immoDbg ..
+                string.format(
+                    ", Licht in %s: %s",
+                    lichtAmpel.gelbImmo,
+                    (self.phase == AkPhase.GELB or self.phase == AkPhase.ROTGELB) and "an" or "aus"
+                )
             EEPStructureSetLight(lichtAmpel.gelbImmo, self.phase == AkPhase.GELB or self.phase == AkPhase.ROTGELB)
         end
         if lichtAmpel.gruenImmo then
-            immoDbg = immoDbg .. string.format(", Licht in %s: %s", lichtAmpel.gruenImmo,
-                (self.phase == AkPhase.GRUEN) and "an" or "aus")
+            immoDbg =
+                immoDbg ..
+                string.format(
+                    ", Licht in %s: %s",
+                    lichtAmpel.gruenImmo,
+                    (self.phase == AkPhase.GRUEN) and "an" or "aus"
+                )
             EEPStructureSetLight(lichtAmpel.gruenImmo, self.phase == AkPhase.GRUEN)
         end
     end
@@ -166,14 +206,11 @@ function AkAmpel:schalteImmoAchsen()
     for achsenAmpel in pairs(self.achsenImmos) do
         local achsStellung = achsenAmpel.grundStellung
 
-        if achsenAmpel.stellungRotGelb and
-                self.phase == AkPhase.ROTGELB then
+        if achsenAmpel.stellungRotGelb and self.phase == AkPhase.ROTGELB then
             achsStellung = achsenAmpel.stellungRotGelb
-        elseif achsenAmpel.stellungGelb and
-                (self.phase == AkPhase.GELB or self.phase == AkPhase.ROTGELB) then
+        elseif achsenAmpel.stellungGelb and (self.phase == AkPhase.GELB or self.phase == AkPhase.ROTGELB) then
             achsStellung = achsenAmpel.stellungGelb
-        elseif achsenAmpel.stellungRot and
-                self.phase == AkPhase.ROT then
+        elseif achsenAmpel.stellungRot and self.phase == AkPhase.ROT then
             achsStellung = achsenAmpel.stellungRot
         elseif achsenAmpel.stellungGruen and self.phase == AkPhase.GRUEN then
             achsStellung = achsenAmpel.stellungGruen
@@ -181,8 +218,8 @@ function AkAmpel:schalteImmoAchsen()
             achsStellung = achsenAmpel.stellungFG
         end
 
-        immoDbg = immoDbg .. string.format(", Achse %s in %s auf: %d",
-            achsenAmpel.achse, achsenAmpel.immoName, achsStellung)
+        immoDbg =
+            immoDbg .. string.format(", Achse %s in %s auf: %d", achsenAmpel.achse, achsenAmpel.immoName, achsStellung)
         EEPStructureSetAxis(achsenAmpel.immoName, achsenAmpel.achse, achsStellung)
     end
     return immoDbg
@@ -202,8 +239,9 @@ function AkAmpel:aktualisiereAnforderung(richtung)
 
     for lichtAmpel in pairs(self.lichtImmos) do
         if lichtAmpel.anforderungImmo then
-            immoDbg = immoDbg ..
-                    string.format(", Licht in %s: %s", lichtAmpel.anforderungImmo, (anforderung) and "an" or "aus")
+            immoDbg =
+                immoDbg ..
+                string.format(", Licht in %s: %s", lichtAmpel.anforderungImmo, (anforderung) and "an" or "aus")
             EEPStructureSetLight(lichtAmpel.anforderungImmo, anforderung)
         end
     end
@@ -219,4 +257,3 @@ function AkAmpel:print()
 end
 
 return AkAmpel
-
