@@ -31,6 +31,20 @@ read_globals = {
     "EEPVer",
     "Zugname",
     "clearlog",
+    "EEPGetCameraPosition",
+    "EEPGetCloudIntensity ",
+    "EEPGetFogIntensity",
+    "EEPGetHailIntensity",
+    "EEPGetRainIntensity",
+    "EEPGetSnowIntensity",
+    "EEPGetTrainActive",
+    "EEPGetWindIntensity",
+    "EEPGoodsGetRotation",
+    "EEPRollingstockGetActive",
+    "EEPRollingstockGetHook",
+    "EEPRollingstockGetHookGlue",
+    "EEPRollingstockGetOrientation",
+    "EEPRollingstockGetSmoke",	
 }
 
 allow_defined_top = true
