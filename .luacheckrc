@@ -6,38 +6,43 @@ read_globals = {
     "AkTimeH",
     "AkTimeM",
     "AkTimeS",
-    "clearlog",
-    "EEPPause",
-    "EEPVer",
     "EEPChangeInfoSignal",
     "EEPChangeInfoSwitch",
-    "EEPStructureGetLight",
     "EEPGetSignal",
     "EEPGetSwitch",
     "EEPGetTrainAxis",
+    "EEPOnTrainCoupling",
+    "EEPOnTrainExitTrainyard",
+    "EEPOnTrainLooseCoupling",
+    "EEPPause",
     "EEPRegisterRailTrack",
     "EEPRegisterRoadTrack",
-    "EEPRegisterTramTrack",
-    "EEPRegisterSwitch",
     "EEPRegisterSignal",
-    "EEPStructureSetLight",
+    "EEPRegisterSwitch",
+    "EEPRegisterTramTrack",
     "EEPSetSignal",
     "EEPSetSwitch",
     "EEPSetTrainAxis",
     "EEPSetTrainRoute",
     "EEPShowInfoSignal",
     "EEPShowInfoSwitch",
+    "EEPStructureGetLight",
+    "EEPStructureSetLight",
+    "EEPVer",
     "Zugname",
+    "clearlog",
 }
 
 allow_defined_top = true
 
 -- See https://luacheck.readthedocs.io/en/stable/warnings.html
+-- 121 - global assignment to readonly
 -- 131 - global assignment
 -- 212 - unused argument
 files["lua/LUA/ak/core/eep"].ignore = { "212" , "131" }
 files["lua/LUA/ak/data/AkSlotNamesParser.lua"].ignore = { "212" }
 files["lua/LUA/ak/strasse/AkStrasse.lua"].ignore = { "131" }
+files["lua/LUA/ak/data/TrackCollector.lua"].ignore = { "121" }
 
 exclude_files = {
     "lua/LUA/ak/io/crc32lua.lua",
