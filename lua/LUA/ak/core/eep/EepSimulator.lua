@@ -892,7 +892,7 @@ function EEPGetRainIntensity() return RainIntensity or 10 end
 --- Ermittelt die Schneeintensität (EEP 16.1)
 -- @return ok Rückgabewert ist true wenn die Ausführung erfolgreich war, sonst false
 -- @return intensity Schneeintensität in Prozent (%)
-function EEPGetSnowIntensity() return RainIntensity or 10 end
+function EEPGetSnowIntensity() return SnowIntensity or 10 end
 
 --- Ermittelt die Hagelintensität (EEP 16.1)
 -- @return ok Rückgabewert ist true wenn die Ausführung erfolgreich war, sonst false
