@@ -32,7 +32,7 @@ local switches = {}
 --- Setzt das Signal signalId auf die Stellung signalStellung. Der Parameter informiereEepOnSignal sollte den Wert 1 haben
 -- @param signalId Id des Signals
 -- @param signalStellung Stellung des Signals
--- @param informiereEepOnSignal (optional) Wenn = 1 dann aktiviere Funktion EEPOnSignal_x() 
+-- @param informiereEepOnSignal (optional) Wenn = 1 dann aktiviere Funktion EEPOnSignal_x()
 -- @return ok 1 wenn das Signal und die gewünschte Signalstellung existieren oder 0, wenn eins von beidem nicht existiert.
 function EEPSetSignal(signalId, signalStellung, informiereEepOnSignal)
     signale[signalId] = signalStellung
@@ -49,7 +49,7 @@ end
 --- Setzt die Weiche x auf die Stellung y. Der Wert activateEEPOnSwitch sollte den Wert 1 haben.
 -- @param switchId Id der Weiche
 -- @param switchPosition Stellung der Weiche
--- @param activateEEPOnSwitch (optional) Wenn = 1 dann aktiviere Funktion EEPOnSignal_x() 
+-- @param activateEEPOnSwitch (optional) Wenn = 1 dann aktiviere Funktion EEPOnSignal_x()
 -- @return ok 1 wenn die Weiche und die gewünschte Weichenstellung existieren oder 0, wenn eins von beidem nicht existiert.
 function EEPSetSwitch(switchId, switchPosition, activateEEPOnSwitch)
     switches[switchId] = switchPosition
@@ -803,7 +803,7 @@ local horn = {}
 -- @param status true = an, false = aus
 -- @return ok Rückgabewert ist true wenn die Ausführung erfolgreich war, sonst false
 function EEPRollingstockSetHorn(rollingstockName, status)
-	horn[rollingstockName] = status
+    horn[rollingstockName] = status
     return true
 end
 
@@ -814,14 +814,14 @@ local hook = {}
 -- @param status true = an, false = aus
 -- @return ok Rückgabewert ist true wenn die Ausführung erfolgreich war, sonst false
 function EEPRollingstockSetHook(rollingstockName, status)
-	hook[rollingstockName] = status
+    hook[rollingstockName] = status
     return true
 end
 
 --- Ermittelt, ob der Haken eines bestimmten Rollmaterials an oder ausgeschaltet ist (EEP 16.1)
 -- @param rollingstockName Name des Rollmaterials
 -- @return ok Rückgabewert ist true wenn die Ausführung erfolgreich war, sonst false
--- @return status Haken aus = 0, an = 1, in Betrieb = 3 
+-- @return status Haken aus = 0, an = 1, in Betrieb = 3
 function EEPRollingstockGetHook(rollingstockName)
     return true, hook[rollingstockName] and 1 or 0
 end
@@ -833,14 +833,14 @@ local hookGlue = {}
 -- @param status true = an, false = aus
 -- @return ok Rückgabewert ist true wenn die Ausführung erfolgreich war, sonst false
 function EEPRollingstockSetHookGlue(rollingstockName, status)
-	hookGlue[rollingstockName] = status
+    hookGlue[rollingstockName] = status
     return true
 end
 
 --- Ermittelt das Verhalten von Gütern am Kranhaken eines Rollmaterials  (EEP 16.1)
 -- @param rollingstockName Name des Rollmaterials
 -- @return ok Rückgabewert ist true wenn die Ausführung erfolgreich war, sonst false
--- @return status Güterhaken aus = 0, an = 1, in Betrieb = 3 
+-- @return status Güterhaken aus = 0, an = 1, in Betrieb = 3
 function EEPRollingstockGetHookGlue(rollingstockName)
     return true, hookGlue[rollingstockName] and hook[rollingstockName] or 0
 end
@@ -875,13 +875,13 @@ local camera = {}
 -- @param RotZ Kameraausrichtung (Drehung)
 -- @return ok Rückgabewert ist true wenn die Ausführung erfolgreich war, sonst false
 function EEPRollingstockSetUserCamera(rollingstockName, PosX, PosY, PosZ, RotX, RotY, RotZ)
-	camera.rollingstockName = rollingstockName
-	camera.PosX = PosX
-	camera.PosY = PosY 
-	camera.PosZ = PosZ
-	camera.RotX = RotX 
-	camera.RotY = RotY 
-	camera.RotZ = RotZ 
+    camera.rollingstockName = rollingstockName
+    camera.PosX = PosX
+    camera.PosY = PosY
+    camera.PosZ = PosZ
+    camera.RotX = RotX
+    camera.RotY = RotY
+    camera.RotZ = RotZ
     return true
 end
 
@@ -909,9 +909,9 @@ end
 -- @param PosZ Kameraposition
 -- @return ok Rückgabewert ist true wenn die Ausführung erfolgreich war, sonst false
 function EEPSetCameraPosition(PosX, PosY, PosZ)
-	camera.PosX = PosX
-	camera.PosY = PosY 
-	camera.PosZ = PosZ
+    camera.PosX = PosX
+    camera.PosY = PosY
+    camera.PosZ = PosZ
     return true
 end
 
@@ -921,9 +921,9 @@ end
 -- @param RotZ Kameraausrichtung (Drehung)
 -- @return ok Rückgabewert ist true wenn die Ausführung erfolgreich war, sonst false
 function EEPSetCameraRotation(RotX, RotY, RotZ)
-	camera.RotX = RotX 
-	camera.RotY = RotY 
-	camera.RotZ = RotZ 
+    camera.RotX = RotX
+    camera.RotY = RotY
+    camera.RotZ = RotZ
     return true
 end
 
@@ -983,7 +983,7 @@ end
 -- @return ok Rückgabewert ist true wenn die Ausführung erfolgreich war, sonst false
 -- @return intensity Schneeintensität in Prozent (%)
 function EEPGetSnowIntensity()
-    return RainIntensity or 10
+    return SnowIntensity or 10
 end
 
 --- Ermittelt die Hagelintensität (EEP 16.1)
@@ -1011,7 +1011,7 @@ end
 -- @param Windstärke
 -- @return ok Rückgabewert ist true wenn die Ausführung erfolgreich war, sonst false
 function EEPSetWindIntensity(intensity)
-	WindIntensity = intensity
+    WindIntensity = intensity
     return true
 end
 
@@ -1019,7 +1019,7 @@ end
 -- @param Niederschlagintensität
 -- @return ok Rückgabewert ist true wenn die Ausführung erfolgreich war, sonst false
 function EEPSetRainIntensity(intensity)
-	 RainIntensity = intensity
+     RainIntensity = intensity
     return true
 end
 
@@ -1027,7 +1027,7 @@ end
 -- @param Schneeintensität
 -- @return ok Rückgabewert ist true wenn die Ausführung erfolgreich war, sonst false
 function EEPSetSnowIntensity(intensity)
-	 SnowIntensity = intensity
+     SnowIntensity = intensity
     return true
 end
 
@@ -1035,7 +1035,7 @@ end
 -- @param Hagelintensität
 -- @return ok Rückgabewert ist true wenn die Ausführung erfolgreich war, sonst false
 function EEPSetHailIntensity(intensity)
-	 HailIntensity = intensity
+     HailIntensity = intensity
     return true
 end
 
@@ -1043,7 +1043,7 @@ end
 -- @param Nebelintensität
 -- @return ok Rückgabewert ist true wenn die Ausführung erfolgreich war, sonst false
 function EEPSetFogIntensity(intensity)
-	 FogIntensity = intensity
+     FogIntensity = intensity
     return true
 end
 
@@ -1051,7 +1051,7 @@ end
 -- @param Wolkenanteil
 -- @return ok Rückgabewert ist true wenn die Ausführung erfolgreich war, sonst false
 function EEPSetCloudIntensity(intensity)
-	CloudIntensity = intensity
+    CloudIntensity = intensity
     return true
 end
 

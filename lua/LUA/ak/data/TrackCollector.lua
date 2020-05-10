@@ -137,16 +137,16 @@ local EEPRollingstockGetPosition = EEPRollingstockGetPosition or function()
         return
     end -- EEP 16.1
 
---- Ermittelt, ob der Haken eines bestimmten Rollmaterials an oder ausgeschaltet ist 	
+--- Ermittelt, ob der Haken eines bestimmten Rollmaterials an oder ausgeschaltet ist    
 -- OK, Status = EEPRollingstockGetHook("#Kranwagen")
--- Haken aus = 0, an = 1, in Betrieb = 3 
+-- Haken aus = 0, an = 1, in Betrieb = 3
 local EEPRollingstockGetHook = EEPRollingstockGetHook or function() -- (not used yet)
         return
     end -- EEP 16.1
 
 --- Ermittelt das Verhalten von Gütern am Kranhaken eines Rollmaterials
 --  OK, Status = EEPRollingstockGetHookGlue("#Kranwagen")
--- Güterhaken aus = 0, an = 1, in Benutzung = 3 
+-- Güterhaken aus = 0, an = 1, in Benutzung = 3
 local EEPRollingstockGetHookGlue = EEPRollingstockGetHookGlue or function() -- (not used yet)
         return
     end -- EEP 16.1
@@ -169,7 +169,7 @@ local EEPRollingstockGetSmoke = EEPRollingstockGetSmoke or function() -- (not us
 local EEPGoodsGetRotation = EEPGoodsGetRotation or function() -- (not used yet)
         return
     end -- EEP 16.1
-	
+   
 -- To be used in another modules:
 
 --- Ermittelt die aktuelle Position der Kamera
@@ -219,7 +219,7 @@ local EEPGetFogIntensity = EEPGetFogIntensity or function() -- (not used yet)
 local EEPGetCloudIntensity = EEPGetCloudIntensity or function() -- (not used yet)
         return
     end -- EEP 16.1
-	
+   
 -- Redefine functions from EEP 11.0 to collect run time data
 local _EEPGetTrainSpeed = EEPGetTrainSpeed
 local function EEPGetTrainSpeed(...)
@@ -380,7 +380,7 @@ function TrackCollector:updateRollingStockInfo(rollingStockName)
     local _, trackId, trackDistance, trackDirection, trackSystem = EEPRollingstockGetTrack(rollingStockName)
     -- EEP 14.2
     local hasPos, PosX, PosY, PosZ = EEPRollingstockGetPosition(rollingStockName) -- EEP 16.1
-	local hasMileage, mileage = EEPRollingstockGetMileage(rollingStockName) -- EEP 16.1
+    local hasMileage, mileage = EEPRollingstockGetMileage(rollingStockName) -- EEP 16.1
 
     local rollingStockInfo = {
         name = rollingStockName,
@@ -391,7 +391,7 @@ function TrackCollector:updateRollingStockInfo(rollingStockName)
         posX = hasPos and tonumber(PosX) or -1,
         posY = hasPos and tonumber(PosY) or -1,
         posZ = hasPos and tonumber(PosZ) or -1,
-		mileage = hasMileage and tonumber(mileage) or -1,
+        mileage = hasMileage and tonumber(mileage) or -1,
     }
     self.rollingStockInfo[rollingStockName] = rollingStockInfo
 end
