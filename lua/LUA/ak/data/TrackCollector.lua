@@ -137,7 +137,7 @@ local EEPRollingstockGetPosition = EEPRollingstockGetPosition or function()
         return
     end -- EEP 16.1
 
---- Ermittelt, ob der Haken eines bestimmten Rollmaterials an oder ausgeschaltet ist    
+--- Ermittelt, ob der Haken eines bestimmten Rollmaterials an oder ausgeschaltet ist.
 -- OK, Status = EEPRollingstockGetHook("#Kranwagen")
 -- Haken aus = 0, an = 1, in Betrieb = 3
 local EEPRollingstockGetHook = EEPRollingstockGetHook or function() -- (not used yet)
@@ -169,7 +169,7 @@ local EEPRollingstockGetSmoke = EEPRollingstockGetSmoke or function() -- (not us
 local EEPGoodsGetRotation = EEPGoodsGetRotation or function() -- (not used yet)
         return
     end -- EEP 16.1
-   
+
 -- To be used in another modules:
 
 --- Ermittelt die aktuelle Position der Kamera
@@ -219,7 +219,7 @@ local EEPGetFogIntensity = EEPGetFogIntensity or function() -- (not used yet)
 local EEPGetCloudIntensity = EEPGetCloudIntensity or function() -- (not used yet)
         return
     end -- EEP 16.1
-   
+
 -- Redefine functions from EEP 11.0 to collect run time data
 local _EEPGetTrainSpeed = EEPGetTrainSpeed
 local function EEPGetTrainSpeed(...)

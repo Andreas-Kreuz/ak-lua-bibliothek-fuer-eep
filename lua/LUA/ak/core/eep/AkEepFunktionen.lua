@@ -29,11 +29,13 @@ end
 local signale = {}
 local switches = {}
 
---- Setzt das Signal signalId auf die Stellung signalStellung. Der Parameter informiereEepOnSignal sollte den Wert 1 haben
+--- Setzt das Signal signalId auf die Stellung signalStellung.
+-- Der Parameter informiereEepOnSignal sollte den Wert 1 haben
 -- @param signalId Id des Signals
 -- @param signalStellung Stellung des Signals
 -- @param informiereEepOnSignal (optional) Wenn = 1 dann aktiviere Funktion EEPOnSignal_x()
--- @return ok 1 wenn das Signal und die gewünschte Signalstellung existieren oder 0, wenn eins von beidem nicht existiert.
+-- @return ok 1 wenn das Signal und die gewünschte Signalstellung existieren 
+-- oder 0, wenn eins von beidem nicht existiert.
 function EEPSetSignal(signalId, signalStellung, informiereEepOnSignal)
     signale[signalId] = signalStellung
     return 1
@@ -50,7 +52,8 @@ end
 -- @param switchId Id der Weiche
 -- @param switchPosition Stellung der Weiche
 -- @param activateEEPOnSwitch (optional) Wenn = 1 dann aktiviere Funktion EEPOnSignal_x()
--- @return ok 1 wenn die Weiche und die gewünschte Weichenstellung existieren oder 0, wenn eins von beidem nicht existiert.
+-- @return ok 1 wenn die Weiche und die gewünschte Weichenstellung existieren 
+-- oder 0, wenn eins von beidem nicht existiert.
 function EEPSetSwitch(switchId, switchPosition, activateEEPOnSwitch)
     switches[switchId] = switchPosition
     return 1
@@ -736,7 +739,8 @@ end
 local activeTrain = ""
 
 --- Ermittelt, welcher Zug derzeit im Steuerdialog ausgewählt ist. (EEP 15.1)
--- Befindet sich der Steuerdialog im manuellen Modus, dann wird der Name des Zuges zurückgegeben, welcher das ausgewählte Fahrzeug enthält
+-- Befindet sich der Steuerdialog im manuellen Modus, dann wird der Name des Zuges zurückgegeben, 
+-- welcher das ausgewählte Fahrzeug enthält
 -- @return trainName Name des Zuges
 function EEPGetTrainActive()
     return activeTrain
@@ -796,14 +800,11 @@ function EEPActivateCtrlDesk(GBSname)
     return true
 end
 
-local horn = {}
-
 --- Lässt bei einem bestimmten Rollmaterial den Warnton (Pfeife, Hupe) ertönen. (EEP 16.1)
 -- @param rollingstockName Name des Rollmaterials
 -- @param status true = an, false = aus
 -- @return ok Rückgabewert ist true wenn die Ausführung erfolgreich war, sonst false
 function EEPRollingstockSetHorn(rollingstockName, status)
-    horn[rollingstockName] = status
     return true
 end
 
@@ -865,7 +866,8 @@ end
 
 local camera = {}
 
---- Definiert die Position der Benutzer-definierten Mitfahrkamera in Relation zum Fahrzeug, Aufruf über Taste 9) (EEP 16.1)
+--- Definiert die Position der Benutzer-definierten Mitfahrkamera in Relation zum Fahrzeug (EEP 16.1)
+-- Aufruf über Taste 9
 -- @param rollingstockName Name des Rollmaterials
 -- @param PosX Kameraposition
 -- @param PosY Kameraposition
