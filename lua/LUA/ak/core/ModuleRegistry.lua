@@ -47,6 +47,9 @@ function ModuleRegistry.unregisterModules(...)
     end
 end
 
+-- ACHTUNG: DIE VERWENDUNG ERFOLGT AUF EIGENE GEFAHR. ES IST GUT MÖGLICH,
+--          DASS EEP ABSTÜRZT, WENN NICHT ALLE ABHÄNGIGKEITEN DER BIBLIOTHEK
+--          GEFUNDEN WERDEN.
 function ModuleRegistry.useDlls(enableDlls)
     assert(enableDlls == true or enableDlls == false)
     ServerController.useDlls(enableDlls)

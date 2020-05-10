@@ -9,7 +9,7 @@ img: "/docs/assets/headers/SourceCode.png"
 
 # Paket ak.core
 
-* Dieses Paket enthält das Skript für das Einbinden und Starten der anderen Module.
+- Dieses Paket enthält das Skript für das Einbinden und Starten der anderen Module.
 
 Das Skript `ModuleRegistry` wird genutzt um die Module zu registrieren.
 Die Einbindung von `ModuleRegistry.runTasks()` in `EEPMain()` sorgt dafür, dass die Tasks der Module ausgeführt werden.
@@ -135,3 +135,19 @@ function EEPMain()
     return 1
 end
 ```
+
+## JSON Export beschleunigen
+
+Optional kann für den JSON-Export eine für Windows gebaute Bibliothek (DLL) genutzt werden. Dafür wurde die Bibliothek
+[lua-cjson2](https://luarocks.org/modules/criztianix/lua-cjson2) genutzt.
+Der Export der JSON-Dateien wird dadurch stark beschleunigt.
+
+```lua
+-- ACHTUNG: DIE VERWENDUNG ERFOLGT AUF EIGENE GEFAHR. ES IST GUT MÖGLICH,
+--          DASS EEP ABSTÜRZT, WENN NICHT ALLE ABHÄNGIGKEITEN DER BIBLIOTHEK
+--          GEFUNDEN WERDEN.
+ModuleRegistry.useDlls(true)
+```
+
+**ACHTUNG**: DIE VERWENDUNG ERFOLGT AUF EIGENE GEFAHR. ES IST GUT MÖGLICH, DASS EEP ABSTÜRZT,
+WENN NICHT ALLE ABHÄNGIGKEITEN GEFUNDEN WERDEN.

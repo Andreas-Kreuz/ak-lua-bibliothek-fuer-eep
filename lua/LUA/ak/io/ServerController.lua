@@ -17,6 +17,9 @@ local ServerController = {}
 ServerController.programVersion = "0.9.0"
 local json
 
+-- ACHTUNG: DIE VERWENDUNG ERFOLGT AUF EIGENE GEFAHR. ES IST GUT MÖGLICH,
+--          DASS EEP ABSTÜRZT, WENN NICHT ALLE ABHÄNGIGKEITEN DER BIBLIOTHEK
+--          GEFUNDEN WERDEN.
 function ServerController.useDlls(enableDlls)
     if enableDlls then
         package.cpath = package.cpath .. ";.\\LUA\\ak\\?.dll"
