@@ -318,7 +318,7 @@ function TrackCollector:updateTrain(trainName)
         id = trainName,
         route = haveRoute and route or "",
         rollingStockCount = rollingStockCount or 0,
-        length = trainLength or 0
+        length = tonumber(string.format("%.2f", trainLength or 0)),
     }
     self.trains[trainName] = currentTrain
 
