@@ -167,7 +167,7 @@ local function expandData()
     return exportData, orderedKeys
 end
 
-local function encode(exportData, orderedKeys)
+local function encode(exportData)
     return json.encode(exportData)
 end
 
@@ -213,10 +213,10 @@ function ServerController.communicateWithServer(modulus)
         collectData(printFirstTime, modulus)
         overallTime4 = os.clock()
 
-        local exportData, orderedKeys = expandData()
+        local exportData = expandData()
         overallTime5 = os.clock()
 
-        local jsonString = encode(exportData, orderedKeys)
+        local jsonString = encode(exportData)
         overallTime6 = os.clock()
 
         writeData(jsonString)
