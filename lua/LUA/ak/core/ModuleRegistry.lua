@@ -47,6 +47,11 @@ function ModuleRegistry.unregisterModules(...)
     end
 end
 
+function ModuleRegistry.useDlls(enableDlls)
+    assert(enableDlls == true or enableDlls == false)
+    ServerController.useDlls(enableDlls)
+end
+
 local function initTask(module)
     --print(string.format('Begin ModuleRegistry.initTask() for "%s"', module.name))
     local t0 = os.clock()

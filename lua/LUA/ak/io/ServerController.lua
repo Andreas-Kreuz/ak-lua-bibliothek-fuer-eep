@@ -12,10 +12,23 @@ print("Load ak.io.ServerController ...")
 local AkWebServerIo = require("ak.io.AkWebServerIo")
 local AkCommandExecutor = require("ak.io.AkCommandExecutor")
 local os = require("os")
-local json = require("ak.io.json")
 
 local ServerController = {}
 ServerController.programVersion = "0.9.0"
+local json
+
+function ServerController.useDlls(enableDlls)
+    if enableDlls then
+        package.cpath = package.cpath .. ";.\\LUA\\ak\\?.dll"
+        print(package.cpath)
+        json = require("cjson")
+        -- Important: Empty tables must not be packed as objects {}, but as lists []
+        json.encode_empty_table_as_object(false)
+    else
+        json = require("ak.io.json")
+    end
+end
+ServerController.useDlls(false)
 
 -- checkServerStatus:
 -- true: Check status of EEP-Web Server before updating the json file
@@ -152,7 +165,7 @@ local function expandData()
 end
 
 local function encode(exportData, orderedKeys)
-    return json.encode(exportData, {keyorder = orderedKeys})
+    return json.encode(exportData)
 end
 
 local function writeData(jsonString)
