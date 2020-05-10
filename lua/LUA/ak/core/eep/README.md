@@ -9,7 +9,7 @@ img: "/docs/assets/headers/SourceCode.png"
 
 # Paket ak.core.eep
 
-* Bietet die Funktionen von EEP 14 für Deine Tests.
+* Bietet die Funktionen von EEP 16 für Deine Tests.
 
 Das Skript `AkEepFunktionen` stellt alle dokumentierten Funktionen von EEP zur Verfügung und ist für die Verwendung in Test-Klassen vorgesehen.
 
