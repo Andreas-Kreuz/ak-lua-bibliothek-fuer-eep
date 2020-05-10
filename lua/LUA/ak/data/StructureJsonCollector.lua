@@ -16,7 +16,10 @@ local EEPStructureGetModelType = EEPStructureGetModelType or function()
 local EEPStructureGetTagText = EEPStructureGetTagText or function()
         return
     end -- EEP 14.2
-local EEPStructureGetRotation = EEPStructureGetRotation or function() -- (not used yet)
+
+--- Ermittelt die Ausrichtung der Immobilie/des Landschaftselementes in Grad (°)
+-- OK, RotX, RotY, RotZ = EEPStructureGetRotation("#aunnel")
+local EEPStructureGetRotation = EEPStructureGetRotation or function()
         return
     end -- EEP 16.1
 
@@ -37,11 +40,12 @@ function StructureJsonCollector.initialize()
             structure.name = name
 
             local _, pos_x, pos_y, pos_z = EEPStructureGetPosition(name)
+            local _, rot_x, rot_y, rot_z = EEPStructureGetRotation(name)
             local _, modelType = EEPStructureGetModelType(name)
             local EEPStructureModelTypeText = {
                 [16] = "Gleis/Gleisobjekt",
                 [17] = "Schiene/Gleisobjekt",
-                [18] = "Strasse/Gleisobjekt", -- avoid German Umlaute
+                [18] = "Straße/Gleisobjekt",
                 [19] = "Sonstiges/Gleisobjekt",
                 [22] = "Immobilie",
                 [23] = "Landschaftselement/Fauna",
@@ -54,6 +58,9 @@ function StructureJsonCollector.initialize()
             structure.pos_x = pos_x and tonumber(string.format("%.2f", pos_x)) or 0
             structure.pos_y = pos_y and tonumber(string.format("%.2f", pos_y)) or 0
             structure.pos_z = pos_z and tonumber(string.format("%.2f", pos_z)) or 0
+            structure.rot_x = rot_x and tonumber(string.format("%.2f", rot_x)) or 0
+            structure.rot_y = rot_y and tonumber(string.format("%.2f", rot_y)) or 0
+            structure.rot_z = rot_z and tonumber(string.format("%.2f", rot_z)) or 0
             structure.modelType = modelType or 0
             structure.modelTypeText = EEPStructureModelTypeText[modelType] or ""
             structure.tag = tag or ""

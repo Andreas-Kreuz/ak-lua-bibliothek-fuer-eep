@@ -133,40 +133,40 @@ local EEPRollingstockGetTagText = EEPRollingstockGetTagText or function()
 
 
 --- Ermittelt die Position des Rollmaterials im EEP-Koordinatensystem in Meter (m).
---  OK, PosX, PosY, PosZ = EEPRollingstockGetPosition(“#Fahrzeug”)
+--  OK, PosX, PosY, PosZ = EEPRollingstockGetPosition("#Fahrzeug")
 local EEPRollingstockGetPosition = EEPRollingstockGetPosition or function()
         return
     end -- EEP 16.1
 
 --- Ermittelt, ob der Haken eines bestimmten Rollmaterials an oder ausgeschaltet ist 	
--- OK, Status = EEPRollingstockGetHook(“#Kranwagen”)
+-- OK, Status = EEPRollingstockGetHook("#Kranwagen")
 -- Haken aus = 0, an = 1, in Betrieb = 3 
 local EEPRollingstockGetHook = EEPRollingstockGetHook or function() -- (not used yet)
         return
     end -- EEP 16.1
 
 --- Ermittelt das Verhalten von Gütern am Kranhaken eines Rollmaterials
---  OK, Status = EEPRollingstockGetHookGlue(”#Kranwagen”)
+--  OK, Status = EEPRollingstockGetHookGlue("#Kranwagen")
 -- Güterhaken aus = 0, an = 1, in Benutzung = 3 
 local EEPRollingstockGetHookGlue = EEPRollingstockGetHookGlue or function() -- (not used yet)
         return
     end -- EEP 16.1
 
 --- Ermittelt die zurückgelegte Strecke des Rollmaterials in Meter (m)
---  OK, Mileage = EEPRollingstockGetMileage(“#Fahrzeug”)
+--  OK, Mileage = EEPRollingstockGetMileage("#Fahrzeug")
 local EEPRollingstockGetMileage = EEPRollingstockGetMileage or function()
         return
     end -- EEP 16.1
 
 --- Ermittelt, ob der Rauch des benannten Rollmaterials, an- oder ausgeschaltet ist.
--- OK, Status = EEPRollingstockGetSmoke(“#Fahrzeug”)
+-- OK, Status = EEPRollingstockGetSmoke("#Fahrzeug")
 -- aus = 0, angeschaltet = 1
 local EEPRollingstockGetSmoke = EEPRollingstockGetSmoke or function() -- (not used yet)
         return
     end -- EEP 16.1
 
 --- Ermittelt die Ausrichtung des Ladegutes in Grad (°)
--- OK, RotX, RotY, RotZ = EEPGoodsGetRotation(“#Container”)
+-- OK, RotX, RotY, RotZ = EEPGoodsGetRotation("#Container")
 local EEPGoodsGetRotation = EEPGoodsGetRotation or function() -- (not used yet)
         return
     end -- EEP 16.1
