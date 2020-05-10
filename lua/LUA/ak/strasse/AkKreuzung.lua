@@ -11,8 +11,17 @@ local fmt = require("ak.core.eep.AkTippTextFormat")
 -- Klasse Kreuzung
 --------------------
 local AkAllKreuzungen = {}
+---@class AkKreuzung
+---@field public name string @Intersection Name
+---@field private aktuelleSchaltung AkKreuzungsSchaltung @Currently used switching
+---@field private schaltungen AkKreuzungsSchaltung[] @All switchings of the intersection
+---@field private bereit boolean @If true, the Intersection can be switched
+---@field private geschaltet @If true, the intersection is switched
+---@field private gruenZeit number @Integer value of how long the intersection will show green light
+---@field private staticCams table @List of static cams
 local AkKreuzung = {}
 AkKreuzung.debug = AkStartMitDebug or false
+---@type table<string,AkKreuzung>
 AkKreuzung.alleKreuzungen = {}
 AkKreuzung.zeigeAnforderungenAlsInfo = AkStartMitDebug or false
 AkKreuzung.zeigeSchaltungAlsInfo = AkStartMitDebug or false
@@ -35,6 +44,7 @@ end
 
 function AkKreuzung.schalteManuell(nameDerKreuzung, nameDerSchaltung)
     print("schalteManuell:" .. nameDerKreuzung .. "/" .. nameDerSchaltung)
+    ---@type AkKreuzung
     local k = AkKreuzung.alleKreuzungen[nameDerKreuzung]
     if k then
         k:setManuelleSchaltung(nameDerSchaltung)
@@ -43,6 +53,7 @@ end
 
 function AkKreuzung.schalteAutomatisch(nameDerKreuzung)
     print("schalteAutomatisch:" .. nameDerKreuzung)
+    ---@type AkKreuzung
     local k = AkKreuzung.alleKreuzungen[nameDerKreuzung]
     if k then
         k:setAutomatikModus()
@@ -165,7 +176,7 @@ end
 --- Erzeugt eine neue Kreuzung und registriert diese automatisch fuer das automatische Schalten.
 -- Fuegen sie Schaltungen zu dieser Kreuzung hinzu.
 -- @param name
---
+---@return AkKreuzung
 function AkKreuzung:neu(name)
     local o = {
         name = name,

@@ -21,7 +21,7 @@ local acceptedRemoteFunctions = {}
 
 --- Adding an accepted function
 ---NOTE: acceptedFunctions are typically added via the Modules WebConnector
----@param fName string using the name of the function as called from EEP-Web
+---@param fName string @using the name of the function as called from EEP-Web
 ---@param f function
 function AkCommandExecutor.addAcceptedRemoteFunction(fName, f)
     assert(fName and type(fName) == "string", "Es muss ein Funktionsname angegeben werden.")

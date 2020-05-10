@@ -1,10 +1,10 @@
 print "Lade ak.core.ModulesJsonCollector ..."
----- @class LuaModule
+---@class JsonCollector
 ModulesJsonCollector = {}
 local enabled = true
 local initialized = false
 ModulesJsonCollector.name = "ak.core.ModulesJsonCollector"
----@type<string,LuaModule>
+---@type table<string,LuaModule>
 local knownModules = nil
 
 function ModulesJsonCollector.setRegisteredLuaModules(registeredLuaModules)
