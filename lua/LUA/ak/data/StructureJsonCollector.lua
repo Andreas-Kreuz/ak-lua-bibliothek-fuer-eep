@@ -7,15 +7,18 @@ StructureJsonCollector.name = "ak.data.StructureJsonCollector"
 local MAX_STRUCTURES = 50000
 local structures = {}
 
-EEPStructureGetPosition = EEPStructureGetPosition or function()
+local EEPStructureGetPosition = EEPStructureGetPosition or function()
         return
     end -- EEP 14.2
-EEPStructureGetModelType = EEPStructureGetModelType or function()
+local EEPStructureGetModelType = EEPStructureGetModelType or function()
         return
     end -- EEP 14.2
-EEPStructureGetTagText = EEPStructureGetTagText or function()
+local EEPStructureGetTagText = EEPStructureGetTagText or function()
         return
     end -- EEP 14.2
+local EEPStructureGetRotation = EEPStructureGetRotation or function() -- (not used yet)
+        return
+    end -- EEP 16.1
 
 function StructureJsonCollector.initialize()
     if not enabled or initialized then
