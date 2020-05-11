@@ -1,4 +1,6 @@
 print "Lade ak.core.CoreLuaModule ..."
+
+---@class LuaModule
 CoreLuaModule = {}
 CoreLuaModule.id = "8aeef2ab-8672-4f9a-a929-d62845f5f1fc"
 CoreLuaModule.enabled = true

@@ -16,7 +16,7 @@ local AkAllKreuzungen = {}
 ---@field private aktuelleSchaltung AkKreuzungsSchaltung @Currently used switching
 ---@field private schaltungen AkKreuzungsSchaltung[] @All switchings of the intersection
 ---@field private bereit boolean @If true, the Intersection can be switched
----@field private geschaltet @If true, the intersection is switched
+---@field private geschaltet boolean @If true, the intersection is switched
 ---@field private gruenZeit number @Integer value of how long the intersection will show green light
 ---@field private staticCams table @List of static cams
 local AkKreuzung = {}
@@ -246,7 +246,6 @@ function AkKreuzung.planeSchaltungenEin()
                 return (schaltung1.name < schaltung2.name)
             end
         )
-
         for _, schaltung in ipairs(tnames) do
             for richtung in pairs(schaltung:getNormaleRichtungen()) do
                 for _, ampel in pairs(richtung.ampeln) do
@@ -294,7 +293,6 @@ function AkKreuzung.planeSchaltungenEin()
                     return (schaltung1.name < schaltung2.name)
                 end
             )
-
             do
                 local text = "<j><b>Schaltung:</b></j>"
                 for _, schaltung in ipairs(sortierteNamen) do
@@ -304,20 +302,20 @@ function AkKreuzung.planeSchaltungenEin()
                             text =
                                 text ..
                                 "<br><j>" ..
-                                    (farbig and fmt.hintergrund_gruen(schaltung.name .. " (Gruen)") or
-                                        (schaltung.name .. " " .. fmt.hintergrund_gruen("(Gruen)")))
+                                (farbig and fmt.hintergrund_gruen(schaltung.name .. " (Gruen)") or
+                                (schaltung.name .. " " .. fmt.hintergrund_gruen("(Gruen)")))
                         elseif kreuzungsAmpelSchaltungen[ampel.signalId][schaltung] == AkPhase.GELB then
                             text =
                                 text ..
                                 "<br><j>" ..
-                                    (farbig and fmt.hintergrund_blau(schaltung.name .. " (Anf)") or
-                                        (schaltung.name .. " " .. fmt.hintergrund_blau("(Anf)")))
+                                (farbig and fmt.hintergrund_blau(schaltung.name .. " (Anf)") or
+                                (schaltung.name .. " " .. fmt.hintergrund_blau("(Anf)")))
                         elseif kreuzungsAmpelSchaltungen[ampel.signalId][schaltung] == AkPhase.FG then
                             text =
                                 text ..
                                 "<br><j>" ..
-                                    (farbig and fmt.hintergrund_gelb(schaltung.name .. " (FG)") or
-                                        (schaltung.name .. " " .. fmt.hintergrund_gelb("(FG)")))
+                                (farbig and fmt.hintergrund_gelb(schaltung.name .. " (FG)") or
+                                (schaltung.name .. " " .. fmt.hintergrund_gelb("(FG)")))
                         else
                             assert(false)
                         end
@@ -325,8 +323,8 @@ function AkKreuzung.planeSchaltungenEin()
                         text =
                             text ..
                             "<br><j>" ..
-                                (farbig and fmt.hintergrund_rot(schaltung.name .. " (Rot)") or
-                                    (schaltung.name .. " " .. fmt.hintergrund_rot("(Rot)")))
+                            (farbig and fmt.hintergrund_rot(schaltung.name .. " (Rot)") or
+                            (schaltung.name .. " " .. fmt.hintergrund_rot("(Rot)")))
                     end
                 end
                 ampel:setzeSchaltungsInfo(text)
@@ -379,7 +377,7 @@ function AkKreuzung.planeSchaltungenEin()
             local richtungenAktuellGruen = {}
             local richtungenAktuellFussgaengerGruen = {}
 
-            -- aktuelle Richtungen f¸r alle Schaltungen auf rot schalten:
+            -- aktuelle Richtungen fùr alle Schaltungen auf rot schalten:
             if aktuelleSchaltung then
                 for richtung in pairs(aktuelleSchaltung:getNormaleRichtungen()) do
                     richtungenAktuellGruen[richtung] = true
@@ -390,7 +388,7 @@ function AkKreuzung.planeSchaltungenEin()
                     richtungenAufFussgaengerRot[richtung] = true
                 end
             else
-                -- Wenn es keine aktuellen Richtung gibt, m¸ssen alle auf rot gesetzt werden:
+                -- Wenn es keine aktuellen Richtung gibt, mùssen alle auf rot gesetzt werden:
                 if AkKreuzung.debug then
                     print("[AkKreuzung ] Setze alle Richtungen fuer " .. kreuzung.name .. " auf rot")
                 end
@@ -415,8 +413,8 @@ function AkKreuzung.planeSchaltungenEin()
                         if AkKreuzung.debug then
                             print(
                                 "[AkKreuzung ] Plane neue Ampel " ..
-                                    richtungDanachGruen.eepSaveId .. " auf Gruen: " .. richtungDanachGruen:getName()
-                            )
+                                richtungDanachGruen.eepSaveId .. " auf Gruen: " .. richtungDanachGruen:getName()
+                        )
                         end
                         richtungenAufGruen[richtungDanachGruen] = true
                     end
@@ -432,8 +430,8 @@ function AkKreuzung.planeSchaltungenEin()
                     if AkKreuzung.debug then
                         print(
                             "[AkKreuzung ] Richtung " ..
-                                richtungDanachGruen:getName() .. " wird fuer Autos auf gruen geschaltet."
-                        )
+                            richtungDanachGruen:getName() .. " wird fuer Autos auf gruen geschaltet."
+                    )
                     end
                     richtungenAufGruen[richtungDanachGruen] = true
                 end
@@ -449,8 +447,8 @@ function AkKreuzung.planeSchaltungenEin()
                     if AkKreuzung.debug then
                         print(
                             "[AkKreuzung ] Richtung " ..
-                                richtungDanachGruen:getName() .. " wird fuer FG auf gruen geschaltet."
-                        )
+                            richtungDanachGruen:getName() .. " wird fuer FG auf gruen geschaltet."
+                    )
                     end
                 end
             end
@@ -458,68 +456,68 @@ function AkKreuzung.planeSchaltungenEin()
             if AkKreuzung.debug then
                 print(
                     "[AkKreuzung ] Schalte " ..
-                        kreuzung:getName() ..
-                            " zu " .. nextSchaltung:getName() .. " (" .. nextSchaltung:richtungenAlsTextZeile() .. ")"
-                )
+                    kreuzung:getName() ..
+                    " zu " .. nextSchaltung:getName() .. " (" .. nextSchaltung:richtungenAlsTextZeile() .. ")"
+            )
             end
 
             local fussgaengerAufRot =
                 AkAktion:neu(
-                function()
-                    AkRichtung.schalteAmpeln(richtungenAufFussgaengerRot, AkPhase.ROT, currentName)
-                end,
-                "Schalte " .. currentName .. " auf Fussgaenger Rot"
+                    function()
+                        AkRichtung.schalteAmpeln(richtungenAufFussgaengerRot, AkPhase.ROT, currentName)
+                    end,
+                    "Schalte " .. currentName .. " auf Fussgaenger Rot"
             )
             AkPlaner:planeAktion(3, fussgaengerAufRot)
 
             local alteAmpelnAufGelb =
                 AkAktion:neu(
-                function()
-                    AkRichtung.schalteAmpeln(richtungenAufRot, AkPhase.GELB, currentName)
-                end,
-                "Schalte " .. currentName .. " auf gelb"
+                    function()
+                        AkRichtung.schalteAmpeln(richtungenAufRot, AkPhase.GELB, currentName)
+                    end,
+                    "Schalte " .. currentName .. " auf gelb"
             )
             AkPlaner:planeAktion(0, alteAmpelnAufGelb, fussgaengerAufRot)
 
             local alteAmpelnAufRot =
                 AkAktion:neu(
-                function()
-                    AkRichtung.schalteAmpeln(richtungenAufRot, AkPhase.ROT, currentName)
-                    kreuzung:setzeWarteZeitZurueck(nextSchaltung)
-                end,
-                "Schalte " .. currentName .. " auf rot"
+                    function()
+                        AkRichtung.schalteAmpeln(richtungenAufRot, AkPhase.ROT, currentName)
+                        kreuzung:setzeWarteZeitZurueck(nextSchaltung)
+                    end,
+                    "Schalte " .. currentName .. " auf rot"
             )
             AkPlaner:planeAktion(2, alteAmpelnAufRot, alteAmpelnAufGelb)
 
             local neueAmpelnAufRotGelb =
                 AkAktion:neu(
-                function()
-                    AkRichtung.schalteAmpeln(richtungenAufGruen, AkPhase.ROTGELB, nextName)
-                    AkRichtung.schalteAmpeln(richtungenAufFussgaengerGruen, AkPhase.FG, nextName)
-                end,
-                "Schalte " .. nextName .. " auf rot-gelb"
+                    function()
+                        AkRichtung.schalteAmpeln(richtungenAufGruen, AkPhase.ROTGELB, nextName)
+                        AkRichtung.schalteAmpeln(richtungenAufFussgaengerGruen, AkPhase.FG, nextName)
+                    end,
+                    "Schalte " .. nextName .. " auf rot-gelb"
             )
             AkPlaner:planeAktion(3, neueAmpelnAufRotGelb, alteAmpelnAufRot)
 
             local neueAmpelnAufGruen =
                 AkAktion:neu(
-                function()
-                    AkRichtung.schalteAmpeln(richtungenAufGruen, AkPhase.GRUEN, nextName)
-                    kreuzung:setGeschaltet(true)
-                end,
-                "Schalte " .. nextName .. " auf gruen"
+                    function()
+                        AkRichtung.schalteAmpeln(richtungenAufGruen, AkPhase.GRUEN, nextName)
+                        kreuzung:setGeschaltet(true)
+                    end,
+                    "Schalte " .. nextName .. " auf gruen"
             )
             AkPlaner:planeAktion(1, neueAmpelnAufGruen, neueAmpelnAufRotGelb)
 
             local kreuzungFertigSchalten =
                 AkAktion:neu(
-                function()
-                    if AkKreuzung.debug then
-                        print("[AkKreuzung ] " .. kreuzung.name .. ": Fahrzeuge sind gefahren, kreuzung ist dann frei.")
-                    end
-                    kreuzung:setBereit(true)
-                end,
-                kreuzung.name .. " ist nun bereit (war " .. kreuzung:getGruenZeitSekunden() .. "s auf gruen geschaltet)"
+                    function()
+                        if AkKreuzung.debug then
+                            print("[AkKreuzung ] " .. kreuzung.name .. ": Fahrzeuge sind gefahren, kreuzung ist dann frei.")
+                        end
+                        kreuzung:setBereit(true)
+                    end,
+                    kreuzung.name .. " ist nun bereit (war " .. kreuzung:getGruenZeitSekunden() .. "s auf gruen geschaltet)"
             )
             AkPlaner:planeAktion(kreuzung:getGruenZeitSekunden(), kreuzungFertigSchalten, neueAmpelnAufGruen)
         end
