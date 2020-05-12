@@ -1,4 +1,4 @@
-print("Load ak.core.ModuleRegistry ...")
+print("Loading ak.core.ModuleRegistry ...")
 local ModuleRegistry = {}
 
 local os = require("os")

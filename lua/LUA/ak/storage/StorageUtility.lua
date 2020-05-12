@@ -1,4 +1,4 @@
-print("Lade ak.storage.StorageUtility ...")
+print("Loading ak.storage.StorageUtility ...")
 
 local speicherPlaetze = {}
 local gespeicherteWerte = {}

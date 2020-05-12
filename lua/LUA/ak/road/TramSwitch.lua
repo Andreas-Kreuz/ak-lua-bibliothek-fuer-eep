@@ -1,4 +1,4 @@
-print("Lade ak.road.TramSwitch ...")
+print("Loading ak.road.TramSwitch ...")
 
 local TramSwitch = {}
 --- Registriert eine neue Strassenbahnweiche und schaltet das Licht der angegeben Immobilien anhand der Weichenstellung

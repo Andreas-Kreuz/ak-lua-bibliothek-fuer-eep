@@ -1,4 +1,4 @@
-print("Lade ak.road.AxisStructureTrafficLight ...")
+print("Loading ak.road.AxisStructureTrafficLight ...")
 
 local AxisStructureTrafficLight = {}
 function AxisStructureTrafficLight.neuAusTabelle(tabelle)

@@ -1,4 +1,4 @@
-print "Lade ak.data.TimeJsonCollector ..."
+print "Loading ak.data.TimeJsonCollector ..."
 TimeJsonCollector = {}
 local enabled = true
 local initialized = false

@@ -1,4 +1,4 @@
-print("Lade AkEepFunctions ...")
+print("Loading AkEepFunctions ...")
 local AkEEPHilfe = require("ak.core.eep.AkEepFunktionen")
 
 local Scheduler = require("ak.scheduler.Scheduler")
@@ -15,7 +15,7 @@ AkStartMitDebug = false
 --------------------------------------------------------------------
 -- Zeigt erweiterte Informationen waehrend der erste Schitte an   --
 --------------------------------------------------------------------
-print("Lade ak.demo-anlagen.tutorial-ampel.Andreas_Kreuz-Tutorial-Ampelkreuzung-2-main ...")
+print("Loading ak.demo-anlagen.tutorial-ampel.Andreas_Kreuz-Tutorial-Ampelkreuzung-2-main ...")
 require("ak.demo-anlagen.tutorial-ampel.Andreas_Kreuz-Tutorial-Ampelkreuzung-2-main")
 
 --------------------------------------------------------------------

@@ -1,4 +1,4 @@
-print "Lade ak.data.SwitchJsonCollector ..."
+print "Loading ak.data.SwitchJsonCollector ..."
 SwitchJsonCollector = {}
 local enabled = true
 local initialized = false

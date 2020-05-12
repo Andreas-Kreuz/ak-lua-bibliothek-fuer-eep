@@ -1,4 +1,4 @@
-print("Lade ak.data.DataSlotsJsonCollector ...")
+print("Loading ak.data.DataSlotsJsonCollector ...")
 
 local DataSlotsJsonCollector = {}
 local enabled = true

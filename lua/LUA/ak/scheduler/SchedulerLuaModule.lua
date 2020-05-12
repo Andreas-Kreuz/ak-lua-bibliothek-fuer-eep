@@ -1,4 +1,4 @@
-print "Lade ak.data.SchedulerLuaModule ..."
+print "Loading ak.data.SchedulerLuaModule ..."
 SchedulerLuaModule = {}
 SchedulerLuaModule.id = "725585f1-cfee-4237-97e1-135c5e9f4d02"
 SchedulerLuaModule.enabled = true

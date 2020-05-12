@@ -1,4 +1,4 @@
-print "Lade ak.data.DataLuaModule ..."
+print "Loading ak.data.DataLuaModule ..."
 ---@class DataLuaModule
 DataLuaModule = {}
 DataLuaModule.id = "e538a124-3f0a-4848-98cf-02b08563bf32"

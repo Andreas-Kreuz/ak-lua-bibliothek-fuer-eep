@@ -1,4 +1,4 @@
-print("Load ak.data.DataWebConnector ...")
+print("Loading ak.data.DataWebConnector ...")
 local ServerController = require("ak.io.ServerController")
 local DataWebConnector = {}
 

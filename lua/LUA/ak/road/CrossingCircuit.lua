@@ -1,4 +1,4 @@
-print("Lade ak.road.CrossingCircuit ...")
+print("Loading ak.road.CrossingCircuit ...")
 
 local Lane = require("ak.road.Lane")
 

@@ -1,4 +1,4 @@
-print("Lade ak.road.TrafficLight ...")
+print("Loading ak.road.TrafficLight ...")
 
 local Crossing = require("ak.road.Crossing")
 local AxisStructureTrafficLight = require("ak.road.AxisStructureTrafficLight")

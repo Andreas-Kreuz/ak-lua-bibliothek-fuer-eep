@@ -1,4 +1,4 @@
-print("Lade ak.core.eep.AkTippTextFormat ...")
+print("Loading ak.core.eep.AkTippTextFormat ...")
 
 local AkTippTextFormat = {
     -- <br> neue Zeile

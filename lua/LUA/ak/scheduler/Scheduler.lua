@@ -1,4 +1,4 @@
-print("Lade ak.scheduler.Scheduler ...")
+print("Loading ak.scheduler.Scheduler ...")
 
 local AkSekundenProTag = 24 * 60 * 60
 

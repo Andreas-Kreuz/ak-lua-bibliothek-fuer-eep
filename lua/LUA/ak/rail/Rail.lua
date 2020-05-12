@@ -1,4 +1,4 @@
-print("Lade ak.rail.AkSchiene ...")
+print("Loading ak.rail.Rail ...")
 local StorageUtility = require("ak.storage.StorageUtility")
 local fmt = require("ak.core.eep.AkTippTextFormat")
 

@@ -1,4 +1,4 @@
-print("Lade Bus ...")
+print("Loading Bus ...")
 
 -----------------------
 -- Bushaltestellen

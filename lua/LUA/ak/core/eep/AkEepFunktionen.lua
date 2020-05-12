@@ -1,4 +1,4 @@
-print("Lade ak.core.eep.AkEepFunktionen ...")
+print("Loading ak.core.eep.AkEepFunktionen ...")
 
 ------------------
 -- EEP Functions
@@ -122,7 +122,7 @@ end
 
 --------------------------------------------------------------------------
 -- Siehe hierzu auch Handbuch EEP 11(Achsgruppen) Setzen einer Achsgruppe,
--- z.B.: EEPRollingstockSetSlot("Ladekran2Greifer", 1)
+-- z.B.: EEPRollingstockSetSlot("Loadingkran2Greifer", 1)
 -- @param rsName Name des Rollmaterials als String
 -- @param slot Slot mit der Achsstellung
 --------------------------------------------------------------------------

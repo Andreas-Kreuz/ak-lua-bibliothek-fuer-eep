@@ -1,4 +1,4 @@
-print "Lade ak.data.StructureJsonCollector ..."
+print "Loading ak.data.StructureJsonCollector ..."
 StructureJsonCollector = {}
 local enabled = true
 local initialized = false

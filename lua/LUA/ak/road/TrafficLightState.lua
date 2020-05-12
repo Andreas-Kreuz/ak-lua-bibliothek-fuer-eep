@@ -1,4 +1,4 @@
-print("Lade ak.road.TrafficLightState ...")
+print("Loading ak.road.TrafficLightState ...")
 
 local TrafficLightState = {}
 TrafficLightState.ROT = "Rot"

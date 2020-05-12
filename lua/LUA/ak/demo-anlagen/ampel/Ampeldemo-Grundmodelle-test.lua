@@ -17,7 +17,7 @@ AkStartMitDebug = false
 --------------------------------------------------------------------
 -- Zeigt erweiterte Informationen waehrend der erste Schitte an   --
 --------------------------------------------------------------------
-print("Lade Ampeldemo-Grundmodelle-main ...")
+print("Loading Ampeldemo-Grundmodelle-main ...")
 require("ak.demo-anlagen.ampel.Ampeldemo-Grundmodelle-main")
 
 --------------------------------------------------------------------

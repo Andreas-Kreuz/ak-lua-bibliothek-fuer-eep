@@ -1,4 +1,4 @@
-print "Lade ak.core.CoreLuaModule ..."
+print "Loading ak.core.CoreLuaModule ..."
 
 ---@class LuaModule
 CoreLuaModule = {}

@@ -1,4 +1,4 @@
-print("Lade ak.road.CrossingJsonCollector ...")
+print("Loading ak.road.CrossingJsonCollector ...")
 CrossingJsonCollector = {}
 local enabled = true
 local initialized = false

@@ -1,4 +1,4 @@
-print("Lade ak.io.AkCommandExecutor ...")
+print("Loading ak.io.AkCommandExecutor ...")
 
 -- split a string
 local function split(text, delimiter)

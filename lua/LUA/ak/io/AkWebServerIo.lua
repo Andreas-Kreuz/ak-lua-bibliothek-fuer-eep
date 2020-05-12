@@ -1,4 +1,4 @@
-print("Lade ak.io.AkWebServerIo ...")
+print("Loading ak.io.AkWebServerIo ...")
 local AkCommandExecutor = require("ak.io.AkCommandExecutor")
 local os = require("os")
 

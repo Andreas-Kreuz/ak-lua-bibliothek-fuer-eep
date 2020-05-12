@@ -1,4 +1,4 @@
-print("Lade ak.road.CrossingWebConnector ...")
+print("Loading ak.road.CrossingWebConnector ...")
 local ServerController = require("ak.io.ServerController")
 local Crossing = require("ak.road.Crossing")
 local CrossingWebConnector = {}

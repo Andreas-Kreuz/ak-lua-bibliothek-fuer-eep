@@ -1,4 +1,4 @@
-print "Load ak.data.TrackCollector ..."
+print "Loading ak.data.TrackCollector ..."
 local TrackCollector = {}
 local os = require("os")
 

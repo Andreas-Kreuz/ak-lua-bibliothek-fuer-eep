@@ -1,4 +1,4 @@
-print "Load ak.data.TrainsAndTracksJsonCollector ..."
+print "Loading ak.data.TrainsAndTracksJsonCollector ..."
 
 
 TrainsAndTracksJsonCollector = {}

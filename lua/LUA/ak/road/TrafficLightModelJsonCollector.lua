@@ -1,4 +1,4 @@
-print("Lade ak.road.TrafficLightModelJsonCollector ...")
+print("Loading ak.road.TrafficLightModelJsonCollector ...")
 TrafficLightModelJsonCollector = {}
 local enabled = true
 local initialized = false

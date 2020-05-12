@@ -1,4 +1,4 @@
-print "Lade ak.core.ModulesJsonCollector ..."
+print "Loading ak.core.ModulesJsonCollector ..."
 ---@class JsonCollector
 ModulesJsonCollector = {}
 local enabled = true
