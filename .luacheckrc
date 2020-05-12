@@ -32,6 +32,7 @@ read_globals = {
     "Zugname",
     "clearlog",
     "EEPGetCameraPosition",
+    "EEPGetCameraRotation",
     "EEPGetCloudIntensity ",
     "EEPGetFogIntensity",
     "EEPGetHailIntensity",
