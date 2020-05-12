@@ -1,5 +1,5 @@
-print("Lade ak.schiene.AkSchiene ...")
-local AkSpeicherHilfe = require("ak.speicher.AkSpeicher")
+print("Lade ak.rail.AkSchiene ...")
+local StorageUtility = require("ak.storage.StorageUtility")
 local fmt = require("ak.core.eep.AkTippTextFormat")
 
 dbg = {
@@ -279,7 +279,7 @@ AkBlock.__index = AkBlock
 function AkBlock.new(name, eepSaveId)
     assert(type(name) == "string")
     assert(type(eepSaveId) == "number")
-    AkSpeicherHilfe.registriereId(eepSaveId, name)
+    StorageUtility.registriereId(eepSaveId, name)
     local self = setmetatable({}, AkBlock)
     self.name = name
     self.eepSaveId = eepSaveId
@@ -339,12 +339,12 @@ function AkBlock:save()
     data["b"] = tostring(self.taken)
     data["r"] = self.trainDirection and tostring(self.trainDirection) or nil
     data["z"] = self.trainName and tostring(self.trainName) or nil
-    AkSpeicherHilfe.speichereTabelle(self.eepSaveId, data, "Block " .. self.name)
+    StorageUtility.storageeTabelle(self.eepSaveId, data, "Block " .. self.name)
 end
 
 function AkBlock:load()
-    local data = AkSpeicherHilfe.ladeTabelle(self.eepSaveId, "Block " .. self.name)
-    self.taken = AkSpeicherHilfe.toboolean(data["b"])
+    local data = StorageUtility.ladeTabelle(self.eepSaveId, "Block " .. self.name)
+    self.taken = StorageUtility.toboolean(data["b"])
     self.trainDirection = data["r"] and data["r"] or nil
     self.trainName = data["z"] and data["z"] or nil
 
@@ -450,7 +450,7 @@ function AkRoute.new(eepSaveId, direction, block1, block2, signals, switches, cr
     assert(type(signals) == "table")
     assert(type(switches) == "table")
     if (crossings) then assert(type(crossings) == "table") end
-    AkSpeicherHilfe.registriereId(eepSaveId, block1.name .. " -> " .. direction .. " -> " .. block2.name)
+    StorageUtility.registriereId(eepSaveId, block1.name .. " -> " .. direction .. " -> " .. block2.name)
 
     local self = setmetatable({}, AkRoute)
     self.eepSaveId = eepSaveId
@@ -655,12 +655,12 @@ function AkRoute:save()
     data["b"] = tostring(self.taken)
     data["z"] = tostring(self.trainName)
     data["t"] = tostring(self.securedTime)
-    AkSpeicherHilfe.speichereTabelle(self.eepSaveId, data, "FS " .. self.name)
+    StorageUtility.storageeTabelle(self.eepSaveId, data, "FS " .. self.name)
 end
 
 function AkRoute:load()
-    local data = AkSpeicherHilfe.ladeTabelle(self.eepSaveId, "FS " .. self.name)
-    self.taken = AkSpeicherHilfe.toboolean(data["b"])
+    local data = StorageUtility.ladeTabelle(self.eepSaveId, "FS " .. self.name)
+    self.taken = StorageUtility.toboolean(data["b"])
     self.trainName = data["z"] and data["z"] or nil
     self.securedTime = data["t"] and tonumber(data["t"]) or -1
 

@@ -1,12 +1,12 @@
-print("Lade ak.strasse.AkAmpelModell ...")
+print("Lade ak.road.TrafficLightModel ...")
 
-local AkPhase = require("ak.strasse.AkPhase")
+local TrafficLightState = require("ak.road.TrafficLightState")
 ------------------------------------------------------------------------------------------
--- Klasse AkAmpelModell
+-- Klasse TrafficLightModel
 -- Weiss, welche Signalstellung fuer rot, gelb und gruen geschaltet werden muessen.
 ------------------------------------------------------------------------------------------
-local AkAmpelModell = {}
-AkAmpelModell.alleAmpelModelle = {}
+local TrafficLightModel = {}
+TrafficLightModel.allModels = {}
 
 ---
 -- @param name Name des Ampeltyps
@@ -18,7 +18,7 @@ AkAmpelModell.alleAmpelModelle = {}
 -- @param sigIndexKomplettAus Index der Signalstellung in der die Ampel komplett aus ist
 -- @param sigIndexGelbBlinkenAus Index der Signalstellung in der die Ampel gelb blinkt ohne den Verkehr zu beeinflussen
 --
-function AkAmpelModell:neu(
+function TrafficLightModel:neu(
     name,
     sigIndexRot,
     sigIndexGruen,
@@ -42,25 +42,25 @@ function AkAmpelModell:neu(
     }
     self.__index = self
     local x = setmetatable(o, self)
-    table.insert(AkAmpelModell.alleAmpelModelle, o)
+    table.insert(TrafficLightModel.allModels, o)
     return x
 end
 
-function AkAmpelModell:print()
+function TrafficLightModel:print()
     print(self.name)
 end
 
-function AkAmpelModell:signalIndexFuer(phase)
+function TrafficLightModel:signalIndexFuer(phase)
     assert(phase)
-    if phase == AkPhase.GELB then
+    if phase == TrafficLightState.GELB then
         return self.sigIndexGelb
-    elseif phase == AkPhase.ROT then
+    elseif phase == TrafficLightState.ROT then
         return self.sigIndexRot
-    elseif phase == AkPhase.ROTGELB then
+    elseif phase == TrafficLightState.ROTGELB then
         return self.sigIndexRotGelb
-    elseif phase == AkPhase.GRUEN then
+    elseif phase == TrafficLightState.GRUEN then
         return self.sigIndexGruen
-    elseif phase == AkPhase.FG then
+    elseif phase == TrafficLightState.FG then
         return self.sigIndexFgGruen
     end
 end
@@ -74,21 +74,21 @@ end
 -- 4er Signal, Stellung 3 als grün, z.B. Strab_Sig_09_LG auf links schalten
 -- 3er Signal, Stellung 3 als grün, z.B. Ak_Strab_Sig_05_gerade oder
 --                                       Ak_Strab_Sig_05_gerade schalten
-AkAmpelModell.MA1_STRAB_4er_2_gruen = AkAmpelModell:neu("MA1_STRAB_4er_2_gruen", 1, 2, 4, 4)
-AkAmpelModell.MA1_STRAB_4er_3_gruen = AkAmpelModell:neu("MA1_STRAB_4er_3_gruen", 1, 3, 4, 4)
-AkAmpelModell.MA1_STRAB_3er_2_gruen = AkAmpelModell:neu("MA1_STRAB_3er_2_gruen", 1, 2, 3, 3)
+TrafficLightModel.MA1_STRAB_4er_2_gruen = TrafficLightModel:neu("MA1_STRAB_4er_2_gruen", 1, 2, 4, 4)
+TrafficLightModel.MA1_STRAB_4er_3_gruen = TrafficLightModel:neu("MA1_STRAB_4er_3_gruen", 1, 3, 4, 4)
+TrafficLightModel.MA1_STRAB_3er_2_gruen = TrafficLightModel:neu("MA1_STRAB_3er_2_gruen", 1, 2, 3, 3)
 
 -- Fuer die Ampeln von NP1 - http://eepshopping.de - Ampelset 1 und Ampelset 2
-AkAmpelModell.NP1_3er_mit_FG = AkAmpelModell:neu("Ampel_NP1_mit_FG", 2, 4, 5, 3, 1)
-AkAmpelModell.NP1_3er_ohne_FG = AkAmpelModell:neu("Ampel_NP1_ohne_FG", 1, 3, 4, 2)
+TrafficLightModel.NP1_3er_mit_FG = TrafficLightModel:neu("Ampel_NP1_mit_FG", 2, 4, 5, 3, 1)
+TrafficLightModel.NP1_3er_ohne_FG = TrafficLightModel:neu("Ampel_NP1_ohne_FG", 1, 3, 4, 2)
 
 -- Fuer die Ampeln von JS2 - http://eepshopping.de - Ampel-Baukasten (V80NJS20039)
 -- Diese Signale sind teilweise mit und ohne Fussgaenger
-AkAmpelModell.JS2_2er_nur_FG = AkAmpelModell:neu("Ak_Ampel_2er_nur_FG", 1, 1, 1, 1, 2, 3, 3)
-AkAmpelModell.JS2_3er_mit_FG = AkAmpelModell:neu("Ampel_3er_XXX_mit_FG", 1, 3, 5, 2, 6, 7, 8)
-AkAmpelModell.JS2_3er_ohne_FG = AkAmpelModell:neu("Ampel_3er_XXX_ohne_FG", 1, 3, 5, 2, 1, 6, 7)
+TrafficLightModel.JS2_2er_nur_FG = TrafficLightModel:neu("Ak_Ampel_2er_nur_FG", 1, 1, 1, 1, 2, 3, 3)
+TrafficLightModel.JS2_3er_mit_FG = TrafficLightModel:neu("Ampel_3er_XXX_mit_FG", 1, 3, 5, 2, 6, 7, 8)
+TrafficLightModel.JS2_3er_ohne_FG = TrafficLightModel:neu("Ampel_3er_XXX_ohne_FG", 1, 3, 5, 2, 1, 6, 7)
 
 -- Unsichtbare Ampeln haben "nur" rot und gruen
-AkAmpelModell.Unsichtbar_2er = AkAmpelModell:neu("Unsichtbares Signal", 2, 1, 2, 2, 2, 1, 1)
+TrafficLightModel.Unsichtbar_2er = TrafficLightModel:neu("Unsichtbares Signal", 2, 1, 2, 2, 2, 1, 1)
 
-return AkAmpelModell
+return TrafficLightModel

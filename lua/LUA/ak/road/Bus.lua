@@ -1,14 +1,14 @@
-print("Lade AkBus ...")
+print("Lade Bus ...")
 
 -----------------------
 -- Bushaltestellen
 -----------------------
-AkBus = {}
+Bus = {}
 
 --- Oeffnet die Tueren eines Busses (Fahrzeugverband)
 -- @param bus Fahrzeugverband
 --
-function AkBus.openDoors(bus)
+function Bus.openDoors(bus)
     assert(bus, "bus wurde nicht angegeben.")
     -- Ikarus Busse und andere?
     EEPSetTrainAxis(bus, "Tuer1", 100)
@@ -26,7 +26,7 @@ end
 --- Schliesst die Tueren eines Busses (Fahrzeugverband)
 -- @param bus Fahrzeugverband
 --
-function AkBus.closeDoors(bus)
+function Bus.closeDoors(bus)
     assert(bus, "bus wurde nicht angegeben.")
     -- Ikarus Busse und andere?
     EEPSetTrainAxis(bus, "Tuer1", 0)
@@ -38,7 +38,7 @@ end
 --- Schaltet den Fahrer und die Fahrgaeste ein
 -- @param fahrzeugverband
 --
-function AkBus.inititalisiere(fahrzeugverband)
+function Bus.inititalisiere(fahrzeugverband)
     EEPSetTrainAxis(fahrzeugverband, "Fahrer", 100)
     EEPSetTrainAxis(fahrzeugverband, "Fahrgast", 100)
 end
@@ -48,6 +48,6 @@ end
 -- @param fahrzeug wird von EEP automatisch gefuellt
 --
 function FAHRZEUG_INITIALISIERE(fahrzeug)
-    AkBus.initialisiere(fahrzeug)
+    Bus.initialisiere(fahrzeug)
 end
 -- luacheck: pop

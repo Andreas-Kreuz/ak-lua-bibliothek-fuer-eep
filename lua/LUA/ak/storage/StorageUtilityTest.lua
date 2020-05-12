@@ -1,7 +1,7 @@
 require("ak.core.eep.AkEepFunktionen")
-local AkSpeicherHilfe = require("ak.speicher.AkSpeicher")
+local StorageUtility = require("ak.storage.StorageUtility")
 
-AkSpeicherHilfe.debug = false
+StorageUtility.debug = false
 
 
 ------------------------------------------------------------------------------------
@@ -9,9 +9,9 @@ AkSpeicherHilfe.debug = false
 -- Sinnvoll zu nutzen, wenn man jedem Signal oder anderen Dingen eine eindeutige ID
 -- geben möchte
 ------------------------------------------------------------------------------------
-AkSpeicherHilfe.registriereId(800, "Speicherplatz 800")
+StorageUtility.registriereId(800, "Speicherplatz 800")
 -- Ein weiterer Aufruf mit dem selben Speicherplatz würde fehlschlagen (Test muss mit pcall erfolgen)
-if pcall(AkSpeicherHilfe.registriereId, 800, "Speicherplatz 800") then
+if pcall(StorageUtility.registriereId, 800, "Speicherplatz 800") then
     assert(false, "Wenn das auftritt, dann wurde Speicherplatz 800 mehrfach angefragt.")
 else
     print("Alles ok: Speicherplatz 800 konnte nicht doppelt verwendet werden.")
@@ -19,7 +19,7 @@ end
 
 
 ------------------------------------------------------------------------------------
--- Mit AkSpeicherHilfe.speichereTabelle(id, tabelle, [name]) kann man tables speichern,
+-- Mit StorageUtility.storageeTabelle(id, tabelle, [name]) kann man tables speichern,
 -- deren Werte aus Text bestehen.
 -- daten_zum_speichern wird als Tabelle angelegt
 ------------------------------------------------------------------------------------
@@ -52,7 +52,7 @@ do
         b2 = tostring(boolean2),
     }
 
-    AkSpeicherHilfe.speichereTabelle(700, zuSpeicherndeDaten, "Meine Daten")
+    StorageUtility.storageeTabelle(700, zuSpeicherndeDaten, "Meine Daten")
 
     print("-----------------------------------------")
     print("Speicherplatzinhalt nach dem Speichern:")
@@ -63,7 +63,7 @@ end
 
 
 do
-    local geladene_daten = AkSpeicherHilfe.ladeTabelle(700, "Meine Daten")
+    local geladene_daten = StorageUtility.ladeTabelle(700, "Meine Daten")
 
     -- Die Daten werden gelesen und aus der Tabelle in eigene Werte gespeichert.
     -- Dabei ist die Typumwandlung wichtig
@@ -72,8 +72,8 @@ do
     local zahl = tonumber(geladene_daten.z)
     local text1 = geladene_daten.t1
     local text2 = geladene_daten.t2
-    local boolean1 = AkSpeicherHilfe.toboolean(geladene_daten.b1)
-    local boolean2 = AkSpeicherHilfe.toboolean(geladene_daten.b2)
+    local boolean1 = StorageUtility.toboolean(geladene_daten.b1)
+    local boolean2 = StorageUtility.toboolean(geladene_daten.b2)
 
     print("-----------------------------------------")
     print("Nach dem Laden:")
@@ -86,8 +86,8 @@ do
 end
 
 
-require("ak.speicher.AkSpeicher")
-AkSpeicherHilfe.debug = false
+require("ak.storage.StorageUtility")
+StorageUtility.debug = false
 do
     -- Verschiedene Daten
     local anzahl_fahrzeuge = 88
@@ -107,7 +107,7 @@ do
         a = tostring(anzahl_fahrzeuge),
     }
 
-    AkSpeicherHilfe.speichereTabelle(600, daten_zum_speichern, "Meine Daten")
+    StorageUtility.storageeTabelle(600, daten_zum_speichern, "Meine Daten")
 
     print("-----------------------------------------\n"
     .."Speicherplatzinhalt nach dem Speichern:"
@@ -117,13 +117,13 @@ do
 end
 
 do
-    local geladene_daten = AkSpeicherHilfe.ladeTabelle(600, "Meine Daten")
+    local geladene_daten = StorageUtility.ladeTabelle(600, "Meine Daten")
 
     -- Nach dem Laden müssen die Werte aus der Tabelle wieder den Variablen zugeordnet werden.
-    -- Dabei ist die Rückumwandlung vom string zum korrekten Typ wichtig (tonumber und AkSpeicherHilfe.toboolean)
+    -- Dabei ist die Rückumwandlung vom string zum korrekten Typ wichtig (tonumber und StorageUtility.toboolean)
     local anzahl_fahrzeuge = tonumber(geladene_daten.a)
     local block = {
-        belegt = AkSpeicherHilfe.toboolean(true), -- AkSpeicherHilfe.toboolean(x), da Lua kein toboolean(x) hat
+        belegt = StorageUtility.toboolean(true), -- StorageUtility.toboolean(x), da Lua kein toboolean(x) hat
         zugname = geladene_daten.z,
         prio = tonumber(geladene_daten.p)
     }

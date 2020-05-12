@@ -1,29 +1,29 @@
-print("Lade ak.strasse.AkAmpel ...")
+print("Lade ak.road.TrafficLight ...")
 
-local AkKreuzung = require("ak.strasse.AkKreuzung")
-local AkAchsenImmoAmpel = require("ak.strasse.AkAchsenImmoAmpel")
-local AkLichtImmoAmpel = require("ak.strasse.AkLichtImmoAmpel")
-local AkPhase = require("ak.strasse.AkPhase")
+local Crossing = require("ak.road.Crossing")
+local AxisStructureTrafficLight = require("ak.road.AxisStructureTrafficLight")
+local LightStructureTrafficLight = require("ak.road.LightStructureTrafficLight")
+local TrafficLightState = require("ak.road.TrafficLightState")
 local fmt = require("ak.core.eep.AkTippTextFormat")
 
 ------------------------------------------------------------------------------------------
--- Klasse AkAmpel
+-- Klasse TrafficLight
 -- Ampel mit einer festen signalId und einem festen Ampeltyp
 -- Optional kann die Ampel bei Immobilien Licht ein- und ausschalten (Straba - Ampelsatz)
 ------------------------------------------------------------------------------------------
-local AkAmpel = {}
-AkAmpel.debug = AkStartMitDebug or false
+local TrafficLight = {}
+TrafficLight.debug = AkStartMitDebug or false
 local registeredSignals = {}
 
 ---
 -- @param signalId ID der Ampel auf der Anlage (Eine Ampel von diesem Typ sollte auf der Anlage sein
--- @param ampelTyp Typ der Ampel (AkAmpelModell)
+-- @param ampelTyp Typ der Ampel (TrafficLightModel)
 -- @param rotImmo Immobilie fuer Signalbild gelb (Licht an / aus)
 -- @param gruenImmo Immobilie fuer Signalbild gelb (Licht an / aus)
 -- @param gelbImmo Immobilie fuer Signalbild gelb (Licht an / aus)
 -- @param anforderungImmo Immobilie fuer Signalbild "A" (Licht an / aus)
 --
-function AkAmpel:neu(signalId, ampelTyp, rotImmo, gruenImmo, gelbImmo, anforderungImmo)
+function TrafficLight:neu(signalId, ampelTyp, rotImmo, gruenImmo, gelbImmo, anforderungImmo)
     assert(signalId, "Specify a signalId")
     assert(ampelTyp, "Specify a ampelTyp")
     local error = string.format("Signal ID already used: %s - %s", signalId, ampelTyp.name)
@@ -35,7 +35,7 @@ function AkAmpel:neu(signalId, ampelTyp, rotImmo, gruenImmo, gelbImmo, anforderu
     local o = {
         signalId = signalId,
         ampelTyp = ampelTyp,
-        phase = AkPhase.ROT,
+        phase = TrafficLightState.ROT,
         anforderung = false,
         debug = false,
         richtungsInfo = "",
@@ -62,8 +62,8 @@ end
 -- @param gelbImmo Name der Immobilie,  deren Licht eingeschaltet wird, wenn die Ampel gelb oder rot-gelb ist
 -- @param anforderungImmo Name der Immobilie,  deren Licht eingeschaltet wird, wenn die Ampel eine Anforderung erkennt
 --
-function AkAmpel:fuegeLichtImmoHinzu(rotImmo, gruenImmo, gelbImmo, anforderungImmo)
-    local lichtAmpel = AkLichtImmoAmpel:neu(rotImmo, gruenImmo, gelbImmo, anforderungImmo)
+function TrafficLight:fuegeLichtImmoHinzu(rotImmo, gruenImmo, gelbImmo, anforderungImmo)
+    local lichtAmpel = LightStructureTrafficLight:neu(rotImmo, gruenImmo, gelbImmo, anforderungImmo)
     self.lichtImmos[lichtAmpel] = true
     return self
 end
@@ -77,7 +77,7 @@ end
 -- @param stellungGelb Achsstellung bei gelb
 -- @param stellungFG Achsstellung bei FG
 --
-function AkAmpel:fuegeAchsenImmoHinzu(
+function TrafficLight:fuegeAchsenImmoHinzu(
     immoName,
     achsName,
     grundStellung,
@@ -86,7 +86,7 @@ function AkAmpel:fuegeAchsenImmoHinzu(
     stellungGelb,
     stellungFG)
     local achsAmpel =
-        AkAchsenImmoAmpel:neu(immoName, achsName, grundStellung, stellungRot, stellungGruen, stellungGelb, stellungFG)
+        AxisStructureTrafficLight:neu(immoName, achsName, grundStellung, stellungRot, stellungGruen, stellungGelb, stellungFG)
     self.achsenImmos[achsAmpel] = true
     return self
 end
@@ -94,23 +94,23 @@ end
 --- Aktualisiert den Text für die aktuellen Schaltung dieser Ampel
 -- @param schaltungsInfo TippText für die Schaltung
 --
-function AkAmpel:setzeSchaltungsInfo(schaltungsInfo)
+function TrafficLight:setzeSchaltungsInfo(schaltungsInfo)
     self.schaltungsInfo = schaltungsInfo
 end
 
 --- Aktualsisiert den Text für die Richtungen dieser Ampel
 -- @param richtungsInfo TippText für die Richtung
 --
-function AkAmpel:setzeRichtungsInfo(richtungsInfo)
+function TrafficLight:setzeRichtungsInfo(richtungsInfo)
     self.richtungsInfo = richtungsInfo
 end
 
 --- Stellt die vorher gesetzten Tipp-Texte dar.
 --
-function AkAmpel:aktualisiereInfo()
-    local showRequests = AkKreuzung.zeigeAnforderungenAlsInfo
-    local showSwitching = AkKreuzung.zeigeSchaltungAlsInfo
-    local showAllSignals = AkKreuzung.zeigeSignalIdsAllerSignale
+function TrafficLight:aktualisiereInfo()
+    local showRequests = Crossing.zeigeAnforderungenAlsInfo
+    local showSwitching = Crossing.zeigeSchaltungAlsInfo
+    local showAllSignals = Crossing.zeigeSignalIdsAllerSignale
     local zeigeInfo = showRequests or showSwitching or showAllSignals
 
     EEPShowInfoSignal(self.signalId, zeigeInfo)
@@ -118,7 +118,7 @@ function AkAmpel:aktualisiereInfo()
         local infoText = "<j><b>Ampel ID: " .. fmt.hintergrund_grau(self.signalId) .. "</b></j>"
         infoText = infoText .. "<br>" .. self.ampelTyp.name
 
-        if AkKreuzung.zeigeSchaltungAlsInfo then
+        if Crossing.zeigeSchaltungAlsInfo then
             if infoText:len() > 0 then
                 infoText = infoText .. "<br>___________________________<br>"
             end
@@ -145,26 +145,26 @@ end
 
 ---
 -- @param signalId ID der Ampel auf der Anlage (Eine Ampel von diesem Typ sollte auf der Anlage sein)
--- @param phase AkPhase.xxx
+-- @param phase TrafficLightState.xxx
 -- @param grund z.B. Name der Schaltung
 --
-function AkAmpel:schalte(phase, grund)
+function TrafficLight:schalte(phase, grund)
     assert(phase)
     self.phase = phase
     local immoLichtDbg = self:schalteImmoLicht()
     local immoAchseDbg = self:schalteImmoAchsen()
 
     local sigIndex = self.ampelTyp:signalIndexFuer(self.phase)
-    if (self.debug or AkAmpel.debug) then
+    if (self.debug or TrafficLight.debug) then
         print(
-            string.format("[AkAmpel    ] Schalte Ampel %04d auf %s (%01d)", self.signalId, self.phase, sigIndex) ..
+            string.format("[TrafficLight    ] Schalte Ampel %04d auf %s (%01d)", self.signalId, self.phase, sigIndex) ..
                 immoLichtDbg .. immoAchseDbg .. " - " .. grund
         )
     end
     self:schalteSignal(sigIndex)
 end
 
-function AkAmpel:schalteImmoLicht()
+function TrafficLight:schalteImmoLicht()
     local immoDbg = ""
     for lichtAmpel in pairs(self.lichtImmos) do
         if lichtAmpel.rotImmo then
@@ -173,9 +173,9 @@ function AkAmpel:schalteImmoLicht()
                 string.format(
                     ", Licht in %s: %s",
                     lichtAmpel.rotImmo,
-                    (self.phase == AkPhase.ROT or self.phase == AkPhase.ROTGELB) and "an" or "aus"
+                    (self.phase == TrafficLightState.ROT or self.phase == TrafficLightState.ROTGELB) and "an" or "aus"
                 )
-            EEPStructureSetLight(lichtAmpel.rotImmo, self.phase == AkPhase.ROT or self.phase == AkPhase.ROTGELB)
+            EEPStructureSetLight(lichtAmpel.rotImmo, self.phase == TrafficLightState.ROT or self.phase == TrafficLightState.ROTGELB)
         end
         if lichtAmpel.gelbImmo then
             immoDbg =
@@ -183,9 +183,9 @@ function AkAmpel:schalteImmoLicht()
                 string.format(
                     ", Licht in %s: %s",
                     lichtAmpel.gelbImmo,
-                    (self.phase == AkPhase.GELB or self.phase == AkPhase.ROTGELB) and "an" or "aus"
+                    (self.phase == TrafficLightState.GELB or self.phase == TrafficLightState.ROTGELB) and "an" or "aus"
                 )
-            EEPStructureSetLight(lichtAmpel.gelbImmo, self.phase == AkPhase.GELB or self.phase == AkPhase.ROTGELB)
+            EEPStructureSetLight(lichtAmpel.gelbImmo, self.phase == TrafficLightState.GELB or self.phase == TrafficLightState.ROTGELB)
         end
         if lichtAmpel.gruenImmo then
             immoDbg =
@@ -193,28 +193,28 @@ function AkAmpel:schalteImmoLicht()
                 string.format(
                     ", Licht in %s: %s",
                     lichtAmpel.gruenImmo,
-                    (self.phase == AkPhase.GRUEN) and "an" or "aus"
+                    (self.phase == TrafficLightState.GRUEN) and "an" or "aus"
                 )
-            EEPStructureSetLight(lichtAmpel.gruenImmo, self.phase == AkPhase.GRUEN)
+            EEPStructureSetLight(lichtAmpel.gruenImmo, self.phase == TrafficLightState.GRUEN)
         end
     end
     return immoDbg
 end
 
-function AkAmpel:schalteImmoAchsen()
+function TrafficLight:schalteImmoAchsen()
     local immoDbg = ""
     for achsenAmpel in pairs(self.achsenImmos) do
         local achsStellung = achsenAmpel.grundStellung
 
-        if achsenAmpel.stellungRotGelb and self.phase == AkPhase.ROTGELB then
+        if achsenAmpel.stellungRotGelb and self.phase == TrafficLightState.ROTGELB then
             achsStellung = achsenAmpel.stellungRotGelb
-        elseif achsenAmpel.stellungGelb and (self.phase == AkPhase.GELB or self.phase == AkPhase.ROTGELB) then
+        elseif achsenAmpel.stellungGelb and (self.phase == TrafficLightState.GELB or self.phase == TrafficLightState.ROTGELB) then
             achsStellung = achsenAmpel.stellungGelb
-        elseif achsenAmpel.stellungRot and self.phase == AkPhase.ROT then
+        elseif achsenAmpel.stellungRot and self.phase == TrafficLightState.ROT then
             achsStellung = achsenAmpel.stellungRot
-        elseif achsenAmpel.stellungGruen and self.phase == AkPhase.GRUEN then
+        elseif achsenAmpel.stellungGruen and self.phase == TrafficLightState.GRUEN then
             achsStellung = achsenAmpel.stellungGruen
-        elseif achsenAmpel.stellungFG and self.phase == AkPhase.FG then
+        elseif achsenAmpel.stellungFG and self.phase == TrafficLightState.FG then
             achsStellung = achsenAmpel.stellungFG
         end
 
@@ -225,14 +225,14 @@ function AkAmpel:schalteImmoAchsen()
     return immoDbg
 end
 
-function AkAmpel:schalteSignal(sigIndex)
+function TrafficLight:schalteSignal(sigIndex)
     EEPSetSignal(self.signalId, sigIndex, 1)
 end
 
 --- Setzt die Anforderung fuer eine Ampel (damit sie weiß, ob eine Anforderung vorliegt)
 -- @param anforderung - true oder false
--- @param richtung - AkRichtung, für welche die Anforderung vorliegt
-function AkAmpel:aktualisiereAnforderung(richtung)
+-- @param richtung - Lane, für welche die Anforderung vorliegt
+function TrafficLight:aktualisiereAnforderung(richtung)
     local immoDbg = ""
     self.richtungen[richtung] = true
     local anforderung = richtung:anforderungVorhanden()
@@ -246,14 +246,14 @@ function AkAmpel:aktualisiereAnforderung(richtung)
         end
     end
 
-    if (self.debug or AkAmpel.debug) and immoDbg ~= "" then
-        print(string.format("[AkAmpel    ] Schalte Ampel %04d", self.signalId) .. immoDbg)
+    if (self.debug or TrafficLight.debug) and immoDbg ~= "" then
+        print(string.format("[TrafficLight    ] Schalte Ampel %04d", self.signalId) .. immoDbg)
     end
     self:aktualisiereInfo()
 end
 
-function AkAmpel:print()
-    print(string.format("[AkAmpel    ] Ampel %04d: %s (%s)", self.signalId, self.phase, self.ampelTyp.name))
+function TrafficLight:print()
+    print(string.format("[TrafficLight    ] Ampel %04d: %s (%s)", self.signalId, self.phase, self.ampelTyp.name))
 end
 
-return AkAmpel
+return TrafficLight

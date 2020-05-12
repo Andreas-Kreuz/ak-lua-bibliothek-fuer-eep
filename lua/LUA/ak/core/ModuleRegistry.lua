@@ -1,6 +1,7 @@
 print("Load ak.core.ModuleRegistry ...")
 local ModuleRegistry = {}
 
+local os = require("os")
 local ServerController = require("ak.io.ServerController")
 local enableServer = true
 local initialized = false

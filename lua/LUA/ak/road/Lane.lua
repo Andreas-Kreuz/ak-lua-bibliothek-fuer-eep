@@ -1,65 +1,63 @@
-print("Lade ak.strasse.AkRichtung ...")
+print("Lade ak.road.Lane ...")
 
-local AkAktion = require("ak.planer.AkAktion")
-local AkPlaner = require("ak.planer.AkPlaner")
-local AkSpeicherHilfe = require("ak.speicher.AkSpeicher")
-local AkPhase = require("ak.strasse.AkPhase")
+local Task = require("ak.scheduler.Task")
+local Scheduler = require("ak.scheduler.Scheduler")
+local StorageUtility = require("ak.storage.StorageUtility")
+local TrafficLightState = require("ak.road.TrafficLightState")
 local fmt = require("ak.core.eep.AkTippTextFormat")
 
 --------------------
 -- Klasse Richtung
 --------------------
-local AkRichtung = {}
-AkRichtung.SchaltungsTyp = {}
-AkRichtung.SchaltungsTyp.NICHT_VERWENDET = "NICHT VERWENDET"
-AkRichtung.SchaltungsTyp.ANFORDERUNG = "ANFORDERUNG"
-AkRichtung.SchaltungsTyp.NORMAL = "NORMAL"
-AkRichtung.SchaltungsTyp.FUSSGAENGER = "FUSSGAENGER"
+local Lane = {}
+Lane.SchaltungsTyp = {}
+Lane.SchaltungsTyp.NICHT_VERWENDET = "NICHT VERWENDET"
+Lane.SchaltungsTyp.ANFORDERUNG = "ANFORDERUNG"
+Lane.SchaltungsTyp.NORMAL = "NORMAL"
+Lane.SchaltungsTyp.FUSSGAENGER = "FUSSGAENGER"
 
-function AkRichtung.schalteAmpeln(ampeln, phase, grund)
+function Lane.schalteAmpeln(ampeln, phase, grund)
     assert(
-        phase == AkPhase.GRUEN or phase == AkPhase.ROTGELB or phase == AkPhase.GELB or phase == AkPhase.ROT or
-            phase == AkPhase.FG
+        phase == TrafficLightState.GRUEN or phase == TrafficLightState.ROTGELB or phase == TrafficLightState.GELB
+        or phase == TrafficLightState.ROT or phase == TrafficLightState.FG
     )
-
     for richtung in pairs(ampeln) do
         richtung:schalte(phase, grund)
     end
 end
 
-function AkRichtung.getTyp()
-    return "AkRichtung"
+function Lane.getTyp()
+    return "Lane"
 end
 
-function AkRichtung:getName()
+function Lane:getName()
     return self.name
 end
 
-function AkRichtung:getSchaltungsTyp()
+function Lane:getSchaltungsTyp()
     return self.schaltungsTyp
 end
 
-function AkRichtung:setSchaltungsTyp(schaltungsTyp)
+function Lane:setSchaltungsTyp(schaltungsTyp)
     assert(schaltungsTyp)
     assert(
-        self.schaltungsTyp == AkRichtung.SchaltungsTyp.NICHT_VERWENDET or self.schaltungsTyp == schaltungsTyp,
+        self.schaltungsTyp == Lane.SchaltungsTyp.NICHT_VERWENDET or self.schaltungsTyp == schaltungsTyp,
         "Diese Richtung hatte schon den Schaltungstyp: '" ..
-            self.schaltungsTyp .. "' und kann daher nicht auf '" .. schaltungsTyp .. "' gesetzt werden."
+        self.schaltungsTyp .. "' und kann daher nicht auf '" .. schaltungsTyp .. "' gesetzt werden."
     )
-
     self.schaltungsTyp = schaltungsTyp
 end
 
-function AkRichtung:pruefeAnforderungen()
+function Lane:pruefeAnforderungen()
     self:pruefeAnforderungenAnStrassen()
     self:pruefeAnforderungenAnSignalen()
 
     local text = ""
-    if self.schaltungsTyp == AkRichtung.SchaltungsTyp.NORMAL then
+    if self.schaltungsTyp == Lane.SchaltungsTyp.NORMAL then
         text = text .. fmt.hintergrund_gruen(self.name)
-    elseif self.schaltungsTyp == AkRichtung.SchaltungsTyp.FUSSGAENGER then
+    elseif self.schaltungsTyp == Lane.SchaltungsTyp.FUSSGAENGER then
         text = text .. fmt.hintergrund_gelb(self.name)
-    elseif self.schaltungsTyp == AkRichtung.SchaltungsTyp.ANFORDERUNG then
+    elseif self.schaltungsTyp == Lane.SchaltungsTyp.ANFORDERUNG then
         text = text .. fmt.hintergrund_blau(self.name)
     else
         text = text .. fmt.rot(self.name)
@@ -78,13 +76,13 @@ function AkRichtung:pruefeAnforderungen()
     self:aktualisiereAnforderung()
 end
 
-function AkRichtung:aktualisiereAnforderung()
+function Lane:aktualisiereAnforderung()
     for _, ampel in pairs(self.ampeln) do
         ampel:aktualisiereAnforderung(self)
     end
 end
 
-function AkRichtung:getPrio()
+function Lane:getPrio()
     local verwendeZaehlStrassen = self:pruefeAnforderungenAnStrassen()
     if verwendeZaehlStrassen then
         local prio = (self.anforderungAnStrasse and 1 or 0) * 3 * self.fahrzeugMultiplikator
@@ -101,11 +99,11 @@ function AkRichtung:getPrio()
     return self.warteZeit > prio and self.warteZeit or prio
 end
 
-function AkRichtung:getAnforderungsText()
+function Lane:getAnforderungsText()
     return self.anforderungsText or "KEINE ANFORDERUNG"
 end
 
-function AkRichtung:zaehleAnStrasseAlle(strassenId)
+function Lane:zaehleAnStrasseAlle(strassenId)
     self.verwendeZaehlStrassen = true
     EEPRegisterRoadTrack(strassenId)
     if not self.zaehlStrassen[strassenId] then
@@ -114,7 +112,7 @@ function AkRichtung:zaehleAnStrasseAlle(strassenId)
     return self
 end
 
-function AkRichtung:zaehleAnStrasseBeiRoute(strassenId, route)
+function Lane:zaehleAnStrasseBeiRoute(strassenId, route)
     self.verwendeZaehlStrassen = true
     EEPRegisterRoadTrack(strassenId)
     if not self.zaehlStrassen[strassenId] then
@@ -124,7 +122,7 @@ function AkRichtung:zaehleAnStrasseBeiRoute(strassenId, route)
     return self
 end
 
-function AkRichtung:pruefeAnforderungenAnStrassen()
+function Lane:pruefeAnforderungenAnStrassen()
     local anforderungGefunden = false
     for strassenId, routen in pairs(self.zaehlStrassen) do
         local ok, wartend, zugName = EEPIsRoadTrackReserved(strassenId, true)
@@ -152,7 +150,7 @@ function AkRichtung:pruefeAnforderungenAnStrassen()
     self.anforderungAnStrasse = anforderungGefunden
 end
 
-function AkRichtung:zaehleAnAmpelAlle(signalId)
+function Lane:zaehleAnAmpelAlle(signalId)
     self.verwendeZaehlAmpeln = true
     assert(signalId, "Keine signalId angegeben")
     if not self.zaehlAmpeln[signalId] then
@@ -161,7 +159,7 @@ function AkRichtung:zaehleAnAmpelAlle(signalId)
     return self
 end
 
-function AkRichtung:zaehleAnAmpelBeiRoute(signalId, route)
+function Lane:zaehleAnAmpelBeiRoute(signalId, route)
     self.verwendeZaehlAmpeln = true
     if not self.zaehlAmpeln[signalId] then
         self.zaehlAmpeln[signalId] = {}
@@ -170,7 +168,7 @@ function AkRichtung:zaehleAnAmpelBeiRoute(signalId, route)
     return self
 end
 
-function AkRichtung:pruefeAnforderungenAnSignalen()
+function Lane:pruefeAnforderungenAnSignalen()
     local anforderungGefunden = false
     for signalId, routen in pairs(self.zaehlAmpeln) do
         local wartend = EEPGetSignalTrainsCount(signalId)
@@ -198,13 +196,13 @@ function AkRichtung:pruefeAnforderungenAnSignalen()
     self.anforderungAnSignal = anforderungGefunden
 end
 
-function AkRichtung:betritt()
+function Lane:betritt()
     self.fahrzeuge = self.fahrzeuge + 1
     self:aktualisiereAnforderung()
     self:save()
 end
 
-function AkRichtung:verlasse(signalaufrot, fahrzeugName)
+function Lane:verlasse(signalaufrot, fahrzeugName)
     self.fahrzeuge = self.fahrzeuge - 1
     if self.fahrzeuge < 0 then
         self.fahrzeuge = 0
@@ -216,97 +214,97 @@ function AkRichtung:verlasse(signalaufrot, fahrzeugName)
         local richtungen = {}
         richtungen[self] = true
 
-        AkRichtung.schalteAmpeln(richtungen, AkPhase.GELB, "Fahrzeug verlassen: " .. fahrzeugName)
+        Lane.schalteAmpeln(richtungen, TrafficLightState.GELB, "Fahrzeug verlassen: " .. fahrzeugName)
 
         local toRed =
-            AkAktion:neu(
-            function()
-                AkRichtung.schalteAmpeln(richtungen, AkPhase.ROT, "Fahrzeug verlassen: " .. fahrzeugName)
-            end,
-            "Schalte " .. self.name .. " auf rot."
+            Task:neu(
+                function()
+                    Lane.schalteAmpeln(richtungen, TrafficLightState.ROT, "Fahrzeug verlassen: " .. fahrzeugName)
+                end,
+                "Schalte " .. self.name .. " auf rot."
         )
-        AkPlaner:planeAktion(2, toRed)
+        Scheduler:planeAktion(2, toRed)
     end
 end
 
-function AkRichtung:setzeFahrzeugeZurueck()
+function Lane:setzeFahrzeugeZurueck()
     self.fahrzeuge = 0
     self:aktualisiereAnforderung()
     self:save()
 end
 
-function AkRichtung:erhoeheWartezeit()
+function Lane:erhoeheWartezeit()
     self.warteZeit = self.warteZeit + 1
     self:save()
 end
 
-function AkRichtung:setzeWartezeitZurueck()
+function Lane:setzeWartezeitZurueck()
     self.warteZeit = 0
     self:save()
 end
 
-function AkRichtung:anforderungVorhanden()
+function Lane:anforderungVorhanden()
     return self.fahrzeuge > 0 or self.anforderungAnSignal or self.anforderungAnStrasse
 end
 
-function AkRichtung:save()
+function Lane:save()
     if self.eepSaveId ~= -1 then
         local data = {}
         data["f"] = tostring(self.fahrzeuge)
         data["w"] = tostring(self.warteZeit)
         data["p"] = tostring(self.phase)
-        AkSpeicherHilfe.speichereTabelle(self.eepSaveId, data, "AkRichtung " .. self.name)
+        StorageUtility.storageeTabelle(self.eepSaveId, data, "Lane " .. self.name)
     end
 end
 
-function AkRichtung:load()
+function Lane:load()
     if self.eepSaveId ~= -1 then
-        local data = AkSpeicherHilfe.ladeTabelle(self.eepSaveId, "AkRichtung " .. self.name)
+        local data = StorageUtility.ladeTabelle(self.eepSaveId, "Lane " .. self.name)
         self.fahrzeuge = data["f"] and tonumber(data["f"]) or 0
         self.warteZeit = data["w"] and tonumber(data["w"]) or 0
-        self.phase = data["p"] or AkPhase.ROT
+        self.phase = data["p"] or TrafficLightState.ROT
         self:pruefeAnforderungen()
         self:schalte(self.phase, "Neu geladen")
     else
         self.fahrzeuge = 0
         self.warteZeit = 0
-        self.phase = AkPhase.ROT
+        self.phase = TrafficLightState.ROT
     end
 end
 
-function AkRichtung:getWarteZeit()
+function Lane:getWarteZeit()
     return self.warteZeit
 end
 
-function AkRichtung:getFahrzeuge()
+function Lane:getFahrzeuge()
     return self.fahrzeuge
 end
 
-function AkRichtung:getRichtungSaveId()
+function Lane:getRichtungSaveId()
     return self.richtungSaveId
 end
 
-function AkRichtung:getRichtungsInfo()
+function Lane:getRichtungsInfo()
     return self.richtungsInfo
 end
 
-function AkRichtung:setFahrzeugMultiplikator(fahrzeugMultiplikator)
+function Lane:setFahrzeugMultiplikator(fahrzeugMultiplikator)
     self.fahrzeugMultiplikator = fahrzeugMultiplikator
     return self
 end
 
-function AkRichtung:schalte(phase, grund)
+function Lane:schalte(phase, grund)
     for _, ampel in pairs(self.ampeln) do
         ampel:schalte(phase, grund)
     end
     self.phase = phase
 end
 
-function AkRichtung:setRichtungen(...)
+function Lane:setRichtungen(...)
     self.richtungen = ... or {"LEFT", "STRAIGHT", "RIGHT"}
 end
 
-function AkRichtung:setTrafficType(trafficType)
+function Lane:setTrafficType(trafficType)
     if trafficType ~= "TRAM" and trafficType ~= "PEDESTRIAN" and trafficType ~= "NORMAL" then
         print("No such traffic type: " .. trafficType)
     else
@@ -319,23 +317,22 @@ end
 -- @param eepSaveId Id fuer das Speichern der Richtung
 -- @param ... eine oder mehrere Ampeln
 --
-function AkRichtung:neu(name, eepSaveId, ampeln, richtungen, trafficType)
+function Lane:neu(name, eepSaveId, ampeln, richtungen, trafficType)
     assert(name, 'Bitte geben Sie den Namen "name" fuer diese Richtung an.')
     assert(type(name) == "string", "Name ist kein String")
     assert(eepSaveId, 'Bitte geben Sie den Wert "eepSaveId" fuer diese Richtung an.')
     assert(type(eepSaveId) == "number")
     assert(ampeln, 'Bitte geben Sie den Wert "ampeln" fuer diese Richtung an.')
     --assert(signalId, "Bitte geben Sie den Wert \"signalId\" fuer diese Richtung an.")
-
     if eepSaveId ~= -1 then
-        AkSpeicherHilfe.registriereId(eepSaveId, "Richtung " .. name)
+        StorageUtility.registriereId(eepSaveId, "Richtung " .. name)
     end
     local o = {
         fahrzeugMultiplikator = 1,
         name = name,
         eepSaveId = eepSaveId,
         ampeln = ampeln,
-        schaltungsTyp = AkRichtung.SchaltungsTyp.NICHT_VERWENDET,
+        schaltungsTyp = Lane.SchaltungsTyp.NICHT_VERWENDET,
         verwendeZaehlAmpeln = false,
         zaehlAmpeln = {},
         verwendeZaehlStrassen = false,
@@ -350,4 +347,4 @@ function AkRichtung:neu(name, eepSaveId, ampeln, richtungen, trafficType)
     return o
 end
 
-return AkRichtung
+return Lane

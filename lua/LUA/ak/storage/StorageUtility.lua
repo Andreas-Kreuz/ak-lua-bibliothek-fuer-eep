@@ -1,10 +1,10 @@
-print("Lade ak.speicher.AkSpeicher ...")
+print("Lade ak.storage.StorageUtility ...")
 
 local speicherPlaetze = {}
 local gespeicherteWerte = {}
-local AkSpeicherHilfe = {}
-AkSpeicherHilfe.debugDatei = "AkSpeicherWerte.txt"
-AkSpeicherHilfe.debug = AkStartMitDebug or false
+local StorageUtility = {}
+StorageUtility.debugDatei = "StorageUtilityWerte.txt"
+StorageUtility.debug = AkStartMitDebug or false
 
 --- Prueft einen EEP-Speicherslot zwischen 1 und 1000 und markiert ihn als benutzt.
 --- Es wird ein Fehler ausgegeben, wenn der gleiche Slot noch mal registriert wird.
@@ -14,7 +14,7 @@ AkSpeicherHilfe.debug = AkStartMitDebug or false
 -- @param eepSaveId 1-1000 - Speicherplatz in EEP
 -- @param name optional: Name des Speicherortes fuer Debug-Anzeige
 --
-function AkSpeicherHilfe.registriereId(eepSaveId, name)
+function StorageUtility.registriereId(eepSaveId, name)
     name = name and name or "?"
     assert(type(eepSaveId) == "number" and eepSaveId > 0 and eepSaveId <= 1000, "Falsche eepSaveId " .. eepSaveId)
     assert(speicherPlaetze[eepSaveId] == nil, "Speicher-ID ist bereits vergeben: "
@@ -23,7 +23,7 @@ function AkSpeicherHilfe.registriereId(eepSaveId, name)
     speicherPlaetze[eepSaveId] = name
 end
 
-function AkSpeicherHilfe.getName(eepSaveId)
+function StorageUtility.getName(eepSaveId)
     return speicherPlaetze[eepSaveId]
 end
 
@@ -31,7 +31,7 @@ end
 --- Das Speichern der Daten sollte komma-separiert erfolgen, z.B.:
 --- belegt = true, anzahl = 15
 --- Dann koennen die Daten wie folgt aus der Tabelle geladen werden:
---- local t = AkSpeicherHilfe.ladeTabelle(eepSaveId, "Name")
+--- local t = StorageUtility.ladeTabelle(eepSaveId, "Name")
 --- local belegt = t["belegt"]
 --- local anzahl = t["anzahl"]
 --- ---------------------------------------------------------------
@@ -39,20 +39,20 @@ end
 --- Storage should have been done in Table Syntax, e.g.:
 --- traffic = true, count = 15
 --- Then loading can be done with these functions as follows:
---- local t = AkSpeicherHilfe.ladeTabelle(eepSaveId, "Name")
+--- local t = StorageUtility.ladeTabelle(eepSaveId, "Name")
 --- local traffic = t["traffic"]
 --- local count = t["count"]-- @param eepSaveId
 -- @param eepSaveId 1-1000 - Speicherplatz in EEP
 -- @param name optional: Name des Speicherortes fuer Debug-Anzeige
 --
-function AkSpeicherHilfe.ladeTabelle(eepSaveId, name)
+function StorageUtility.ladeTabelle(eepSaveId, name)
     name = name and name or "?"
     local hResult, data = EEPLoadData(eepSaveId)
     if hResult then
-        if AkSpeicherHilfe.debug then print("[AkSpeicherHilfe  ] Laden: [OK] - "
+        if StorageUtility.debug then print("[StorageUtility  ] Laden: [OK] - "
                 .. eepSaveId .. " - " .. name .. " gefunden: " .. data) end
     else
-        if AkSpeicherHilfe.debug then print("[AkSpeicherHilfe  ] Laden: [!!] - "
+        if StorageUtility.debug then print("[StorageUtility  ] Laden: [!!] - "
                 .. eepSaveId .. " - " .. name .. " nicht gefunden!") end
     end
 
@@ -60,7 +60,7 @@ function AkSpeicherHilfe.ladeTabelle(eepSaveId, name)
     if data then
         for k, v in string.gmatch(data, "(%w+)=(.-[,])") do
             v = v:sub(1, -2)
-            if AkSpeicherHilfe.debug then print(k .. "=" .. v) end
+            if StorageUtility.debug then print(k .. "=" .. v) end
             t[k] = v
         end
     end
@@ -89,14 +89,14 @@ end
 --- local t = {}
 --- t[belegt] = true
 --- t[anzahl] = 15
---- AkSpeicherHilfe.storeToTable(100, t, "Meine Kreuzung")
+--- StorageUtility.storeToTable(100, t, "Meine Kreuzung")
 --- --------------------------------------------------------
 --- Stores the data of a table into an EEP data slot
 -- @param eepSaveId 1-1000 - Speicherplatz in EEP
 -- @param table eine Lua Tabelle mit Daten und moeglichst kurzem Key und Value
 -- @param name optional: Name des Speicherortes fuer Debug-Anzeige
 --
-function AkSpeicherHilfe.speichereTabelle(eepSaveId, table, name)
+function StorageUtility.storageeTabelle(eepSaveId, table, name)
     name = name and name or "?"
     local text = ""
     for k, v in pairsByKeys(table) do
@@ -107,13 +107,13 @@ function AkSpeicherHilfe.speichereTabelle(eepSaveId, table, name)
         text = text .. k .. "=" .. v .. ","
     end
     local hresult = EEPSaveData(eepSaveId, text)
-    if AkSpeicherHilfe.debug then
-        print("[AkSpeicherHilfe  ] Speichern [" .. (hresult and "OK" or "!!") .. "] - " .. eepSaveId
+    if StorageUtility.debug then
+        print("[StorageUtility  ] Speichern [" .. (hresult and "OK" or "!!") .. "] - " .. eepSaveId
                 .. " - " .. name .. " gespeichert: " .. text)
     end
     gespeicherteWerte[eepSaveId] = text
-    if AkSpeicherHilfe.debug then
-        AkSpeicherHilfe.aktualisiereDebugDatei()
+    if StorageUtility.debug then
+        StorageUtility.aktualisiereDebugDatei()
     end
 end
 
@@ -122,12 +122,12 @@ end
 --- Converts a value to boolean
 -- @param value optional: Name des Speicherortes fuer Debug-Anzeige
 --
-function AkSpeicherHilfe.toboolean(value)
+function StorageUtility.toboolean(value)
     return (value and value == "true") and true or false
 end
 
-function AkSpeicherHilfe.aktualisiereDebugDatei()
-    local datei = assert(io.open(AkSpeicherHilfe.debugDatei, "w"))
+function StorageUtility.aktualisiereDebugDatei()
+    local datei = assert(io.open(StorageUtility.debugDatei, "w"))
     local ausgabe = ""
     for i = 1, 1000 do
         if gespeicherteWerte[i] then
@@ -144,9 +144,9 @@ for i = 1, 1000 do
     if hResult then
         gespeicherteWerte[i] = data
     end
-    if AkSpeicherHilfe.debug then
-        AkSpeicherHilfe.aktualisiereDebugDatei()
+    if StorageUtility.debug then
+        StorageUtility.aktualisiereDebugDatei()
     end
 end
 
-return AkSpeicherHilfe
+return StorageUtility

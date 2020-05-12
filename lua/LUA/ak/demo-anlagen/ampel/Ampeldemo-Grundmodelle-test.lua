@@ -2,10 +2,10 @@ Zugname = "#PLATZHALTER"
 
 require("ak.core.eep.AkEepFunktionen")
 
-local AkPlaner = require("ak.planer.AkPlaner")
-local AkAmpel = require("ak.strasse.AkAmpel")
-local AkKreuzung = require("ak.strasse.AkKreuzung")
-local AkSpeicherHilfe = require("ak.speicher.AkSpeicher")
+local Scheduler = require("ak.scheduler.Scheduler")
+local TrafficLight = require("ak.road.TrafficLight")
+local Crossing = require("ak.road.Crossing")
+local StorageUtility = require("ak.storage.StorageUtility")
 -- endregion
 
 clearlog()
@@ -23,29 +23,29 @@ require("ak.demo-anlagen.ampel.Ampeldemo-Grundmodelle-main")
 --------------------------------------------------------------------
 -- Zeige erweiterte Informationen an                              --
 --------------------------------------------------------------------
-AkAmpel.debug = false
-AkKreuzung.debug = false
-AkKreuzung.zeigeAnforderungenAlsInfo = true
-AkKreuzung.zeigeSchaltungAlsInfo = true
-AkKreuzung.zeigeSignalIdsAllerSignale = false
-AkPlaner.debug = false
-AkSpeicherHilfe.debug = false
+TrafficLight.debug = false
+Crossing.debug = false
+Crossing.zeigeAnforderungenAlsInfo = true
+Crossing.zeigeSchaltungAlsInfo = true
+Crossing.zeigeSignalIdsAllerSignale = false
+Scheduler.debug = false
+StorageUtility.debug = false
 
 --------------------------------------------------------------------
 -- Erste Hilfe - normalerweise nicht notwendig                    --
 --------------------------------------------------------------------
--- AkKreuzung.zaehlerZuruecksetzen()
+-- Crossing.zaehlerZuruecksetzen()
 
 
 
 
 
 -------------------------------------------------------------------
-AkKreuzung.debug = true
+Crossing.debug = true
 KpBetritt(k1_r8)
 KpBetritt(k1_r8)
 assert(k1_r8.fahrzeuge == 2, k1_r8.anzahlFahrzeuge)
-AkKreuzung.zaehlerZuruecksetzen()
+Crossing.zaehlerZuruecksetzen()
 assert(k1_r8.fahrzeuge == 0)
 -------------------------------------------------------------------
 local function run()

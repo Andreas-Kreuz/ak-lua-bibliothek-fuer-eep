@@ -1,5 +1,6 @@
 print "Load ak.data.TrainsAndTracksJsonCollector ..."
 TrainsAndTracksJsonCollector = {}
+local os = require("os")
 local enabled = true
 local initialized = false
 TrainsAndTracksJsonCollector.name = "ak.data.TrainsAndTracksJsonCollector"

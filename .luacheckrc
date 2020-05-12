@@ -1,6 +1,6 @@
 read_globals = {
     "AkAktion",
-    "AkPlaner",
+    "Scheduler",
     "AkSpeicherHilfe",
     "AkStartMitDebug",
     "AkTimeH",
@@ -41,7 +41,7 @@ allow_defined_top = true
 -- 212 - unused argument
 files["lua/LUA/ak/core/eep"].ignore = { "212" , "131" }
 files["lua/LUA/ak/data/AkSlotNamesParser.lua"].ignore = { "212" }
-files["lua/LUA/ak/strasse/AkStrasse.lua"].ignore = { "131" }
+files["lua/LUA/ak/strasse/Road.lua"].ignore = { "131" }
 files["lua/LUA/ak/data/TrackCollector.lua"].ignore = { "121" }
 
 exclude_files = {

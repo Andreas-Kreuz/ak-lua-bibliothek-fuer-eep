@@ -1,5 +1,6 @@
 print("Lade ak.io.AkWebServerIo ...")
 local AkCommandExecutor = require("ak.io.AkCommandExecutor")
+local os = require("os")
 
 local AkWebServerIo = {}
 
@@ -76,7 +77,6 @@ function AkWebServerIo.setOutputDirectory(dirName)
     --assert(os.remove(watchFileNameLua))
     -- Howe ver, this is not possible because within EEP, the library os contains only the following functions:
     -- setlocale date time difftime clock getenv tmpname
-
     -- EEP reads commands from this file
     local inFileNameCommands = ioDirectoryName .. "/ak-eep-in.commands"
     -- clear content of commands file
@@ -94,15 +94,17 @@ AkWebServerIo.setOutputDirectory(
         }
     ) or "."
 )
-
 local _assert = assert
 local _print = print
 --- Schreibe log zusätzlich in Datei.
 function print(...)
     -- print the output to the log file (Why do we open/close the file within every call? What about flush?)
     local file = _assert(io.open(outFileNameLog, "a"))
-    local args = { ... }
-    local time = os.date("%X ")
+    local args = {...}
+    local time = ""
+    if os.date then
+        time = os.date("%X ")
+    end
     local text = "" .. time
     for _, arg in pairs(args) do
         text = text .. tostring(arg):gsub("\n", "\n       . ")
@@ -123,11 +125,9 @@ end
 --         file:write(text .. "\n")
 --         file:close()
 --     end
-
 --     -- call the original assert function
 --     _assert(v, message)
 -- end
-
 local _clearlog = clearlog
 --- Lösche Inhalt der log-Datei.
 function clearlog()
@@ -183,13 +183,13 @@ function AkWebServerIo.updateJsonFile(jsonData)
     end
 
     if fileExists(watchFileNameServer) then -- file: ak-server.iswatching
-        writeFile(watchFileNameLua, "") -- file: ak-eep-out-json.isfinished
+        writeFile(watchFileNameLua, "")-- file: ak-eep-out-json.isfinished
     end
 end
 
 --- Lese Kommandos aus Datei und führe sie aus.
 function AkWebServerIo.processNewCommands()
-    local commands = inFileCommands:read("*all") -- file: ak-eep-in.commands
+    local commands = inFileCommands:read("*all")-- file: ak-eep-in.commands
     if commands and commands ~= "" then
         AkCommandExecutor.execute(commands)
     end

@@ -1,16 +1,16 @@
-print("Lade ak.planer.AkAktion ...")
+print("Lade ak.scheduler.Task ...")
 
 
 ---------------------------------------
--- Class AkAktion - is just a function
+-- Class Task - is just a function
 ---------------------------------------
-local AkAktion = {}
+local Task = {}
 
 ---
 -- @param f Auszuführende Funktion (die zu startende Aktion)
 -- @param name Name der Aktion
 --
-function AkAktion:neu(f, name)
+function Task:neu(f, name)
     local o = {
         f = f,
         name = name,
@@ -20,16 +20,16 @@ function AkAktion:neu(f, name)
     return setmetatable(o, self)
 end
 
-function AkAktion:planeFolgeAktion(folgeAktion, zeitspanneInSekunden)
+function Task:planeFolgeAktion(folgeAktion, zeitspanneInSekunden)
     self.folgeAktionen[folgeAktion] = zeitspanneInSekunden
 end
 
-function AkAktion:starteAktion()
+function Task:starteAktion()
     self.f()
 end
 
-function AkAktion:getName()
+function Task:getName()
     return self.name
 end
 
-return AkAktion
+return Task

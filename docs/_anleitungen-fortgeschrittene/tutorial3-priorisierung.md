@@ -91,8 +91,8 @@ Durch das Einbeziehen der Wartezeit wird sichergestellt, dass jede Richtung ber√
 * Verwende dazu folgenden Code (`ws` ist eine Richtung):
 
   ```lua
-  richtung = AkRichtung:neu("WS", 108, {
-      AkAmpel:neu(15, AkAmpelModell.Unsichtbar_2er)
+  richtung = Lane:neu("WS", 108, {
+      TrafficLight:neu(15, TrafficLightModel.Unsichtbar_2er)
   })
   richtung:zaehleAnStrasseAlle(2) -- Erfasst Anforderungen, wenn ein Fahrzeug auf Strasse 2 steht
   ```
@@ -121,8 +121,8 @@ Auf Wunsch kann die Priorisierung nur dann erfolgen, wenn Fahrzeuge einer bestim
 * Verwende dazu folgenden Code (`ws` ist eine Richtung)
 
   ```lua
-  richtung = AkRichtung:neu("WS", 108, {
-      AkAmpel:neu(15, AkAmpelModell.Unsichtbar_2er)
+  richtung = Lane:neu("WS", 108, {
+      TrafficLight:neu(15, TrafficLightModel.Unsichtbar_2er)
   })
   richtung:zaehleAnStrasseBeiRoute(2, "Linie 1")
   ```
@@ -132,8 +132,8 @@ Auf Wunsch kann die Priorisierung nur dann erfolgen, wenn Fahrzeuge einer bestim
 * Es k√∂nnen auch mehrere Routen hintereinander beobachtet werden:
 
   ```lua
-  richtung = AkRichtung:neu("WS", 108, {
-      AkAmpel:neu(15, AkAmpelModell.Unsichtbar_2er)
+  richtung = Lane:neu("WS", 108, {
+      TrafficLight:neu(15, TrafficLightModel.Unsichtbar_2er)
   })
   richtung:zaehleAnStrasseBeiRoute(2, "Linie 1")
   richtung:zaehleAnStrasseBeiRoute(2, "Linie 4")

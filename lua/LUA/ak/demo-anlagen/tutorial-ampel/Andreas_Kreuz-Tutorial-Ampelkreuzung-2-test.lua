@@ -1,10 +1,10 @@
 print("Lade AkEepFunctions ...")
 local AkEEPHilfe = require("ak.core.eep.AkEepFunktionen")
 
-local AkPlaner = require("ak.planer.AkPlaner")
-local AkAmpel = require("ak.strasse.AkAmpel")
-local AkKreuzung = require("ak.strasse.AkKreuzung")
-local AkSpeicherHilfe = require("ak.speicher.AkSpeicher")
+local Scheduler = require("ak.scheduler.Scheduler")
+local TrafficLight = require("ak.road.TrafficLight")
+local Crossing = require("ak.road.Crossing")
+local StorageUtility = require("ak.storage.StorageUtility")
 
 clearlog()
 --------------------------------------------------------------------
@@ -21,22 +21,22 @@ require("ak.demo-anlagen.tutorial-ampel.Andreas_Kreuz-Tutorial-Ampelkreuzung-2-m
 --------------------------------------------------------------------
 -- Zeige erweiterte Informationen an                              --
 --------------------------------------------------------------------
-AkPlaner.debug = true
-AkSpeicherHilfe.debug = true
-AkAmpel.debug = false
-AkKreuzung.debug = false
-AkKreuzung.zeigeSignalIdsAllerSignale = false
-AkKreuzung.zeigeAnforderungenAlsInfo = true
-AkKreuzung.zeigeSchaltungAlsInfo = true
+Scheduler.debug = true
+StorageUtility.debug = true
+TrafficLight.debug = false
+Crossing.debug = false
+Crossing.zeigeSignalIdsAllerSignale = false
+Crossing.zeigeAnforderungenAlsInfo = true
+Crossing.zeigeSchaltungAlsInfo = true
 
 --------------------------------------------------------------------
 -- Erste Hilfe - normalerweise nicht notwendig                    --
 --------------------------------------------------------------------
--- AkKreuzung.zaehlerZuruecksetzen()
+-- Crossing.zaehlerZuruecksetzen()
 
 
 -------------------------------------------------------------------
---AkKreuzung.debug = true
+--Crossing.debug = true
 -------------------------------------------------------------------
 local function run()
     EEPTime = EEPTime + 20

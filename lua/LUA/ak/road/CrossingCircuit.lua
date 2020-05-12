@@ -1,22 +1,22 @@
-print("Lade ak.strasse.AkKreuzungsSchaltung ...")
+print("Lade ak.road.CrossingCircuit ...")
 
-local AkRichtung = require("ak.strasse.AkRichtung")
+local Lane = require("ak.road.Lane")
 
 ------------------------------------------------------
 -- Klasse Richtungsschaltung (schaltet mehrere Ampeln)
 ------------------------------------------------------
----@class AkKreuzungsSchaltung
-local AkKreuzungsSchaltung = {}
+---@class CrossingCircuit
+local CrossingCircuit = {}
 
-function AkKreuzungsSchaltung.getTyp()
-    return "AkKreuzungsSchaltung"
+function CrossingCircuit.getTyp()
+    return "CrossingCircuit"
 end
 
-function AkKreuzungsSchaltung:getName()
+function CrossingCircuit:getName()
     return self.name
 end
 
-function AkKreuzungsSchaltung:neu(name)
+function CrossingCircuit:neu(name)
     local o = {}
     setmetatable(o, self)
     self.__index = self
@@ -28,7 +28,7 @@ function AkKreuzungsSchaltung:neu(name)
     return o
 end
 
-function AkKreuzungsSchaltung:getAlleRichtungen()
+function CrossingCircuit:getAlleRichtungen()
     local alle = {}
     for richtung in pairs(self.richtungenNormal) do
         alle[richtung] = "NORMAL"
@@ -42,11 +42,11 @@ function AkKreuzungsSchaltung:getAlleRichtungen()
     return alle
 end
 
-function AkKreuzungsSchaltung:getNormaleRichtungen()
+function CrossingCircuit:getNormaleRichtungen()
     return self.richtungenNormal
 end
 
-function AkKreuzungsSchaltung:richtungenAlsTextZeile()
+function CrossingCircuit:richtungenAlsTextZeile()
     local s = ""
     for richtung in pairs(self.richtungenNormal) do
         s = s .. ", " .. richtung.name
@@ -58,35 +58,35 @@ function AkKreuzungsSchaltung:richtungenAlsTextZeile()
     return s
 end
 
-function AkKreuzungsSchaltung:getRichtungenMitAnforderung()
+function CrossingCircuit:getRichtungenMitAnforderung()
     return self.richtungenMitAnforderung
 end
 
-function AkKreuzungsSchaltung:fuegeRichtungHinzu(richtung)
+function CrossingCircuit:fuegeRichtungHinzu(richtung)
     assert(richtung, "Bitte ein gueltige Richtung angeben")
-    richtung:setSchaltungsTyp(AkRichtung.SchaltungsTyp.NORMAL)
+    richtung:setSchaltungsTyp(Lane.SchaltungsTyp.NORMAL)
     self.richtungenNormal[richtung] = true
 end
 
-function AkKreuzungsSchaltung:addRichtungMitAnforderung(richtung)
+function CrossingCircuit:addRichtungMitAnforderung(richtung)
     assert(richtung, "Bitte ein gueltige Richtung angeben")
-    richtung:setSchaltungsTyp(AkRichtung.SchaltungsTyp.ANFORDERUNG)
+    richtung:setSchaltungsTyp(Lane.SchaltungsTyp.ANFORDERUNG)
     self.richtungenMitAnforderung[richtung] = true
 end
 
-function AkKreuzungsSchaltung:fuegeRichtungFuerFussgaengerHinzu(richtung)
+function CrossingCircuit:fuegeRichtungFuerFussgaengerHinzu(richtung)
     assert(richtung, "Bitte ein gueltige Richtung angeben")
-    richtung:setSchaltungsTyp(AkRichtung.SchaltungsTyp.FUSSGAENGER)
+    richtung:setSchaltungsTyp(Lane.SchaltungsTyp.FUSSGAENGER)
     self.richtungenFuerFussgaenger[richtung] = true
 end
 
-function AkKreuzungsSchaltung:getRichtungFuerFussgaenger()
+function CrossingCircuit:getRichtungFuerFussgaenger()
     return self.richtungenFuerFussgaenger
 end
 
 --- Gibt alle Richtungen nach Prioritaet zurueck, sowie deren Anzahl und deren Durchschnittsprioritùt
 -- @return sortierteRichtungen, anzahlDerRichtungen, durchschnittsPrio
-function AkKreuzungsSchaltung:nachPrioSortierteRichtungen()
+function CrossingCircuit:nachPrioSortierteRichtungen()
     local sortierteRichtungen = {}
     local anzahlDerRichtungen = 0
     local gesamtPrio = 0
@@ -116,7 +116,7 @@ end
 
 ------ Gibt alle Richtungen nach Name sortiert zurueck
 -- @return sortierteRichtungen
-function AkKreuzungsSchaltung:nachNameSortierteRichtungen()
+function CrossingCircuit:nachNameSortierteRichtungen()
     local sortierteRichtungen = {}
     for richtung in pairs(self.richtungenNormal) do
         table.insert(sortierteRichtungen, richtung)
@@ -138,7 +138,7 @@ end
 -- @param schaltung1 erste Schaltung
 -- @param schaltung2 zweite Schaltung
 --
-function AkKreuzungsSchaltung.hoeherePrioAls(schaltung1, schaltung2)
+function CrossingCircuit.hoeherePrioAls(schaltung1, schaltung2)
     if schaltung1 and schaltung2 then
         local _, tableSize1, avg1 = schaltung1:nachPrioSortierteRichtungen()
         local _, tableSize2, avg2 = schaltung2:nachPrioSortierteRichtungen()
@@ -159,15 +159,15 @@ function AkKreuzungsSchaltung.hoeherePrioAls(schaltung1, schaltung2)
     end
 end
 
-function AkKreuzungsSchaltung:getPrio()
+function CrossingCircuit:getPrio()
     local _, _, prio = self:nachPrioSortierteRichtungen()
     return prio
 end
 
-function AkKreuzungsSchaltung:setzeWartezeitZurueck()
+function CrossingCircuit:setzeWartezeitZurueck()
     for richtung in pairs(self.richtungenNormal) do
         richtung:setzeWartezeitZurueck()
     end
 end
 
-return AkKreuzungsSchaltung
+return CrossingCircuit

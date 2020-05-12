@@ -1,11 +1,11 @@
-print("Lade ak.strasse.KreuzungJsonCollector ...")
-KreuzungJsonCollector = {}
+print("Lade ak.road.CrossingJsonCollector ...")
+CrossingJsonCollector = {}
 local enabled = true
 local initialized = false
-KreuzungJsonCollector.name = "ak.data.KreuzungJsonCollector"
-local AkKreuzung = require("ak.strasse.AkKreuzung")
-local AkRichtung = require("ak.strasse.AkRichtung")
-local AkPhase = require("ak.strasse.AkPhase")
+CrossingJsonCollector.name = "ak.data.CrossingJsonCollector"
+local Crossing = require("ak.road.Crossing")
+local Lane = require("ak.road.Lane")
+local TrafficLightState = require("ak.road.TrafficLightState")
 
 local function collect(alleKreuzungen)
     local intersections = {}
@@ -49,7 +49,7 @@ local function collect(alleKreuzungen)
 
     for lane, intersectionId in pairs(alleRichtungen) do
         local type
-        if (lane.schaltungsTyp == AkRichtung.SchaltungsTyp.FUSSGAENGER) then
+        if (lane.schaltungsTyp == Lane.SchaltungsTyp.FUSSGAENGER) then
             type = "PEDESTRIAN"
         elseif (lane.trafficType == "TRAM") then
             type = "TRAM"
@@ -58,15 +58,15 @@ local function collect(alleKreuzungen)
         end
 
         local phase = "NONE"
-        if lane.phase == AkPhase.GELB then
+        if lane.phase == TrafficLightState.GELB then
             phase = "YELLOW"
-        elseif lane.phase == AkPhase.ROT then
+        elseif lane.phase == TrafficLightState.ROT then
             phase = "RED"
-        elseif lane.phase == AkPhase.ROTGELB then
+        elseif lane.phase == TrafficLightState.ROTGELB then
             phase = "RED_YELLOW"
-        elseif lane.phase == AkPhase.GRUEN then
+        elseif lane.phase == TrafficLightState.GRUEN then
             phase = "GREEN"
-        elseif lane.phase == AkPhase.FG then
+        elseif lane.phase == TrafficLightState.FG then
             phase = "PEDESTRIAN"
         end
 
@@ -169,29 +169,29 @@ local function collectModuleSettings()
             ["name"] = "Anforderungen als TippText",
             ["description"] = "Zeigt für alle Ampeln einen TippText mit den Anforderungen",
             ["type"] = "boolean",
-            ["value"] = AkKreuzung.zeigeAnforderungenAlsInfo,
-            ["eepFunction"] = "AkKreuzung.setZeigeAnforderungenAlsInfo"
+            ["value"] = Crossing.zeigeAnforderungenAlsInfo,
+            ["eepFunction"] = "Crossing.setZeigeAnforderungenAlsInfo"
         },
         {
             ["category"] = "Kreuzung",
             ["name"] = "Schaltungen als TippText",
             ["description"] = "Zeigt für alle Ampeln einen TippText mit den Schaltungen",
             ["type"] = "boolean",
-            ["value"] = AkKreuzung.zeigeSchaltungAlsInfo,
-            ["eepFunction"] = "AkKreuzung.setZeigeSchaltungAlsInfo"
+            ["value"] = Crossing.zeigeSchaltungAlsInfo,
+            ["eepFunction"] = "Crossing.setZeigeSchaltungAlsInfo"
         },
         {
             ["category"] = "Signale",
             ["name"] = "Signal-ID als TippText",
             ["description"] = "Zeigt an jedem Signal dessen Nummer als TippText",
             ["type"] = "boolean",
-            ["value"] = AkKreuzung.zeigeSignalIdsAllerSignale,
-            ["eepFunction"] = "AkKreuzung.setZeigeSignalIdsAllerSignale"
+            ["value"] = Crossing.zeigeSignalIdsAllerSignale,
+            ["eepFunction"] = "Crossing.setZeigeSignalIdsAllerSignale"
         }
     }
 end
 
-function KreuzungJsonCollector.initialize()
+function CrossingJsonCollector.initialize()
     if not enabled or initialized then
         return
     end
@@ -199,18 +199,18 @@ function KreuzungJsonCollector.initialize()
     initialized = true
 end
 
-function KreuzungJsonCollector.collectData()
+function CrossingJsonCollector.collectData()
     if not enabled then
         return
     end
 
     if not initialized then
-        KreuzungJsonCollector.initialize()
+        CrossingJsonCollector.initialize()
     end
 
-    local data = collect(AkKreuzung.alleKreuzungen)
+    local data = collect(Crossing.alleKreuzungen)
     data["intersection-module-settings"] = collectModuleSettings()
     return data
 end
 
-return KreuzungJsonCollector
+return CrossingJsonCollector

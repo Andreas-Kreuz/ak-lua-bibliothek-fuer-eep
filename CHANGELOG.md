@@ -22,7 +22,7 @@ Der Code wurde wie folgt geändert:
   ```lua
     function EEPMain()
       AkKreuzung:planeSchaltungenEin()
-      AkPlaner:fuehreGeplanteAktionenAus()
+      Scheduler:fuehreGeplanteAktionenAus()
       AkStatistik.statistikAusgabe()
       return 1
   end
@@ -82,7 +82,7 @@ Der Code wurde wie folgt geändert:
 - ℹ️ Info: `AkStrasse` sollte nicht mehr importiert werden.
 
     Requires von Lua sollten immer einer lokalen Variable zugewiesen werden.
-    Darum wird ab dieser Version die Funktion `require("ak.planer.AkStrasse")`
+    Darum wird ab dieser Version die Funktion `require("ak.scheduler.AkStrasse")`
     nicht mehr empfohlen.
 
     **Import vor Version 0.6.0:**
@@ -90,7 +90,7 @@ Der Code wurde wie folgt geändert:
     👎 **schlecht!**
 
     ```lua
-    require("ak.planer.AkStrasse")
+    require("ak.scheduler.AkStrasse")
     ```
 
     **Import ab Version 0.6.0:**
@@ -98,7 +98,7 @@ Der Code wurde wie folgt geändert:
     👍 **Besser!**
 
     ```lua
-    local AkPlaner = require("ak.planer.AkPlaner")
+    local Scheduler = require("ak.scheduler.Scheduler")
     local AkAmpelModell = require("ak.strasse.AkAmpelModell")
     local AkAmpel = require("ak.strasse.AkAmpel")
     local AkRichtung = require("ak.strasse.AkRichtung")

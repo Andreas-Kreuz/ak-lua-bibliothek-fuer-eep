@@ -6,7 +6,7 @@ subtitle: Verwende maximal eine Ampel zum Steuern jeder Fahrspur. Verwende "alte
 img: "/assets/thumbnails/ampel-aufstellen.jpg"
 date: 2017-09-30
 permalink: anleitungen-fortgeschrittene/ampel-aufstellen
-tags: [AkStrasse, Verwendung, Anleitung]
+tags: [Verwendung, Anleitung]
 ---
 
 # "Alte Ampeln" im 1-spurigen System benutzen

@@ -1,8 +1,8 @@
-print("Lade ak.strasse.AkLichtImmoAmpel ...")
+print("Lade ak.road.LightStructureTrafficLight ...")
 
-local AkLichtImmoAmpel = {}
-function AkLichtImmoAmpel.neuAusTabelle(tabelle)
-    return AkLichtImmoAmpel:neu(tabelle.rotImmo, tabelle.gruenImmo, tabelle.gelbImmo, tabelle.anforderungImmo)
+local LightStructureTrafficLight = {}
+function LightStructureTrafficLight.neuAusTabelle(tabelle)
+    return LightStructureTrafficLight:neu(tabelle.rotImmo, tabelle.gruenImmo, tabelle.gelbImmo, tabelle.anforderungImmo)
 end
 
 --- Schaltet das Licht der angegebenen Immobilien beim Schalten der Ampel auf rot, gelb, grün oder Anforderung
@@ -11,7 +11,7 @@ end
 -- @param gelbImmo Immo deren Licht eingeschaltet wird, wenn die Ampel gelb oder rot-gelb ist
 -- @param anforderungImmo Immo deren Licht eingeschaltet wird, wenn die Ampel eine Anforderung erkennt
 --
-function AkLichtImmoAmpel:neu(rotImmo, gruenImmo, gelbImmo, anforderungImmo)
+function LightStructureTrafficLight:neu(rotImmo, gruenImmo, gelbImmo, anforderungImmo)
     assert(rotImmo)
     assert(type(rotImmo) == "string")
     assert(EEPStructureGetLight(gruenImmo))
@@ -37,4 +37,4 @@ function AkLichtImmoAmpel:neu(rotImmo, gruenImmo, gelbImmo, anforderungImmo)
     return o
 end
 
-return AkLichtImmoAmpel
+return LightStructureTrafficLight

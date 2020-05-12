@@ -1,8 +1,8 @@
-print("Lade ak.strasse.AkAchsenImmoAmpel ...")
+print("Lade ak.road.AxisStructureTrafficLight ...")
 
-local AkAchsenImmoAmpel = {}
-function AkAchsenImmoAmpel.neuAusTabelle(tabelle)
-    return AkAchsenImmoAmpel:neu(
+local AxisStructureTrafficLight = {}
+function AxisStructureTrafficLight.neuAusTabelle(tabelle)
+    return AxisStructureTrafficLight:neu(
         tabelle.immoName,
         tabelle.achse,
         tabelle.grundStellung,
@@ -23,7 +23,7 @@ end
 -- @param stellungGelb Achsstellung bei gelb
 -- @param stellungFG Achsstellung bei FG
 --
-function AkAchsenImmoAmpel:neu(
+function AxisStructureTrafficLight:neu(
     immoName,
     achse,
     grundStellung,
@@ -68,4 +68,4 @@ function AkAchsenImmoAmpel:neu(
     return o
 end
 
-return AkAchsenImmoAmpel
+return AxisStructureTrafficLight

@@ -22,7 +22,7 @@ Hier ein minimales Beispiel (bei dem die Kreuzungssteuerung genutzt wird):
 local ModuleRegistry = require("ak.core.ModuleRegistry")
 ModuleRegistry.registerModules(
     -- require("ak.core.CoreLuaModule"), -- loaded automatically
-    require("ak.strasse.KreuzungLuaModul")
+    require("ak.road.CrossingLuaModul")
 )
 
 function EEPMain()

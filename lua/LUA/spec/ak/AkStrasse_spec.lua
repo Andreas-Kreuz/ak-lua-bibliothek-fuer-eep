@@ -1,16 +1,16 @@
-describe("AkStrasse.lua", function()
+describe("Road.lua", function()
     describe("EEPSetSignal", function()
         describe(".zaehleAnAmpelAlle()", function()
             insulate("ohne Zähler", function()
                 require("ak.core.eep.AkEepFunktionen")
-                local AkAmpelModell = require("ak.strasse.AkAmpelModell")
-                local AkAmpel = require("ak.strasse.AkAmpel")
-                local AkRichtung = require("ak.strasse.AkRichtung")
+                local TrafficLightModel = require("ak.road.TrafficLightModel")
+                local TrafficLight = require("ak.road.TrafficLight")
+                local Lane = require("ak.road.Lane")
 
                 EEPSetTrainRoute("#Auto1", "Meine Route 1")
 
-                local richtung1 = AkRichtung:neu("Richtung 1", 34, {
-                    AkAmpel:neu(55, AkAmpelModell.Unsichtbar_2er)
+                local richtung1 = Lane:neu("Richtung 1", 34, {
+                    TrafficLight:neu(55, TrafficLightModel.Unsichtbar_2er)
                 })
                 richtung1:pruefeAnforderungen()
                 it("Keine Zählampeln vorhanden", function()
@@ -24,14 +24,14 @@ describe("AkStrasse.lua", function()
 
             insulate("mit Zähler, ohne Anforderung", function()
                 require("ak.core.eep.AkEepFunktionen")
-                local AkAmpelModell = require("ak.strasse.AkAmpelModell")
-                local AkAmpel = require("ak.strasse.AkAmpel")
-                local AkRichtung = require("ak.strasse.AkRichtung")
+                local TrafficLightModel = require("ak.road.TrafficLightModel")
+                local TrafficLight = require("ak.road.TrafficLight")
+                local Lane = require("ak.road.Lane")
 
                 EEPSetTrainRoute("#Auto1", "Meine Route 1")
 
-                local richtung1 = AkRichtung:neu("Richtung 1", 34, {
-                    AkAmpel:neu(55, AkAmpelModell.Unsichtbar_2er)
+                local richtung1 = Lane:neu("Richtung 1", 34, {
+                    TrafficLight:neu(55, TrafficLightModel.Unsichtbar_2er)
                 })
 
 
@@ -48,16 +48,16 @@ describe("AkStrasse.lua", function()
 
             insulate("mit Zähler, mit Anforderung", function()
                 local AkEEPHilfe = require("ak.core.eep.AkEepFunktionen")
-                local AkAmpelModell = require("ak.strasse.AkAmpelModell")
-                local AkAmpel = require("ak.strasse.AkAmpel")
-                local AkRichtung = require("ak.strasse.AkRichtung")
+                local TrafficLightModel = require("ak.road.TrafficLightModel")
+                local TrafficLight = require("ak.road.TrafficLight")
+                local Lane = require("ak.road.Lane")
 
                 EEPSetTrainRoute("#Auto1", "Meine Route 1")
                 AkEEPHilfe.zahlDerZuegeAnSignal[55] = 0
                 AkEEPHilfe.namenDerZuegeAnSignal[55] = {}
 
-                local richtung1 = AkRichtung:neu("Richtung 1", 35, {
-                    AkAmpel:neu(55, AkAmpelModell.Unsichtbar_2er)
+                local richtung1 = Lane:neu("Richtung 1", 35, {
+                    TrafficLight:neu(55, TrafficLightModel.Unsichtbar_2er)
                 })
                 richtung1:zaehleAnAmpelAlle(55)
                 AkEEPHilfe.zahlDerZuegeAnSignal[55] = 1
@@ -75,13 +75,13 @@ describe("AkStrasse.lua", function()
     describe(".zaehleAnStrasseAlle()", function()
         insulate("ohne Zähler", function()
             require("ak.core.eep.AkEepFunktionen")
-            local AkAmpelModell = require("ak.strasse.AkAmpelModell")
-            local AkAmpel = require("ak.strasse.AkAmpel")
-            local AkRichtung = require("ak.strasse.AkRichtung")
+            local TrafficLightModel = require("ak.road.TrafficLightModel")
+            local TrafficLight = require("ak.road.TrafficLight")
+            local Lane = require("ak.road.Lane")
             EEPSetTrainRoute("#Auto1", "Meine Route 1")
 
-            local richtung1 = AkRichtung:neu("Richtung 1", 34, {
-                AkAmpel:neu(55, AkAmpelModell.Unsichtbar_2er)
+            local richtung1 = Lane:neu("Richtung 1", 34, {
+                TrafficLight:neu(55, TrafficLightModel.Unsichtbar_2er)
             })
             richtung1:pruefeAnforderungen()
             it("Keine Zählampeln vorhanden", function()
@@ -95,14 +95,14 @@ describe("AkStrasse.lua", function()
 
         insulate("mit Zähler, ohne Anforderung", function()
             require("ak.core.eep.AkEepFunktionen")
-            local AkAmpelModell = require("ak.strasse.AkAmpelModell")
-            local AkAmpel = require("ak.strasse.AkAmpel")
-            local AkRichtung = require("ak.strasse.AkRichtung")
+            local TrafficLightModel = require("ak.road.TrafficLightModel")
+            local TrafficLight = require("ak.road.TrafficLight")
+            local Lane = require("ak.road.Lane")
 
             EEPSetTrainRoute("#Auto1", "Meine Route 1")
 
-            local richtung1 = AkRichtung:neu("Richtung 1", 34, {
-                AkAmpel:neu(55, AkAmpelModell.Unsichtbar_2er)
+            local richtung1 = Lane:neu("Richtung 1", 34, {
+                TrafficLight:neu(55, TrafficLightModel.Unsichtbar_2er)
             })
 
 
@@ -119,14 +119,14 @@ describe("AkStrasse.lua", function()
 
         insulate("mit Zähler, mit Anforderung", function()
             local AkEEPHilfe = require("ak.core.eep.AkEepFunktionen")
-            local AkAmpelModell = require("ak.strasse.AkAmpelModell")
-            local AkAmpel = require("ak.strasse.AkAmpel")
-            local AkRichtung = require("ak.strasse.AkRichtung")
+            local TrafficLightModel = require("ak.road.TrafficLightModel")
+            local TrafficLight = require("ak.road.TrafficLight")
+            local Lane = require("ak.road.Lane")
 
             EEPSetTrainRoute("#Auto1", "Meine Route 1")
 
-            local richtung1 = AkRichtung:neu("Richtung 1", 35, {
-                AkAmpel:neu(55, AkAmpelModell.Unsichtbar_2er)
+            local richtung1 = Lane:neu("Richtung 1", 35, {
+                TrafficLight:neu(55, TrafficLightModel.Unsichtbar_2er)
             })
             richtung1:zaehleAnStrasseAlle(55)
             AkEEPHilfe.setzeZugAufStrasse(55, "#Auto1")
@@ -141,15 +141,15 @@ describe("AkStrasse.lua", function()
     describe(".zaehleAnStrasseRoute()", function()
         insulate("mit Zähler, mit Anforderung", function()
             local AkEEPHilfe = require("ak.core.eep.AkEepFunktionen")
-            local AkAmpelModell = require("ak.strasse.AkAmpelModell")
-            local AkAmpel = require("ak.strasse.AkAmpel")
-            local AkRichtung = require("ak.strasse.AkRichtung")
+            local TrafficLightModel = require("ak.road.TrafficLightModel")
+            local TrafficLight = require("ak.road.TrafficLight")
+            local Lane = require("ak.road.Lane")
 
             EEPSetTrainRoute("#Auto1", "Meine Route 1")
             EEPSetTrainRoute("#Auto2", "Meine Route 2")
 
-            local richtung1 = AkRichtung:neu("Richtung 1", 35, {
-                AkAmpel:neu(55, AkAmpelModell.Unsichtbar_2er)
+            local richtung1 = Lane:neu("Richtung 1", 35, {
+                TrafficLight:neu(55, TrafficLightModel.Unsichtbar_2er)
             })
             richtung1:zaehleAnStrasseBeiRoute(55, "Meine Route 1")
             AkEEPHilfe.setzeZugAufStrasse(55, "#Auto2")
@@ -162,16 +162,16 @@ describe("AkStrasse.lua", function()
 
         insulate("mit Zähler, mit Anforderung", function()
             local AkEEPHilfe = require("ak.core.eep.AkEepFunktionen")
-            local AkAmpelModell = require("ak.strasse.AkAmpelModell")
-            local AkAmpel = require("ak.strasse.AkAmpel")
-            local AkRichtung = require("ak.strasse.AkRichtung")
+            local TrafficLightModel = require("ak.road.TrafficLightModel")
+            local TrafficLight = require("ak.road.TrafficLight")
+            local Lane = require("ak.road.Lane")
 
             EEPSetTrainRoute("#Auto1", "Meine Route 1")
             EEPSetTrainRoute("#Auto2", "Meine Route 2")
 
 
-            local richtung1 = AkRichtung:neu("Richtung 1", 35, {
-                AkAmpel:neu(55, AkAmpelModell.Unsichtbar_2er)
+            local richtung1 = Lane:neu("Richtung 1", 35, {
+                TrafficLight:neu(55, TrafficLightModel.Unsichtbar_2er)
             })
             richtung1:zaehleAnStrasseBeiRoute(55, "Meine Route 1")
             AkEEPHilfe.setzeZugAufStrasse(55, "#Auto1")

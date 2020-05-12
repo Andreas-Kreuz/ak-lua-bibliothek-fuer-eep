@@ -1,4 +1,4 @@
-print("Lade ak.planer.AkPlaner ...")
+print("Lade ak.scheduler.Scheduler ...")
 
 local AkSekundenProTag = 24 * 60 * 60
 
@@ -9,7 +9,7 @@ local function AkSekundenSeitMitternacht()
     if EEPTime then
         secondsSinceMidnight = EEPTime
     else
-        print("[AkPlaner] System time!")
+        print("[Scheduler] System time!")
         local time = os.date("*t")
         secondsSinceMidnight = os.time {
             year = 1970, month = 1, day = 1, hour = time.hour, min = time.min, sec = time.sec
@@ -22,13 +22,13 @@ end
 -- Class Scheduler
 ------------------
 
-local AkPlaner = { bereit = true }
-AkPlaner.debug = AkStartMitDebug or false
-AkPlaner.eingeplanteAktionen = {}
-AkPlaner.spaetereAktionen = {} -- Wird zu self.eingeplanteAktionen hinzugefuegt
-AkPlaner.letzteAusfuehrung = 0
+local Scheduler = { bereit = true }
+Scheduler.debug = AkStartMitDebug or false
+Scheduler.eingeplanteAktionen = {}
+Scheduler.spaetereAktionen = {} -- Wird zu self.eingeplanteAktionen hinzugefuegt
+Scheduler.letzteAusfuehrung = 0
 
-function AkPlaner:fuehreGeplanteAktionenAus()
+function Scheduler:fuehreGeplanteAktionenAus()
     if self.bereit then
         self.bereit = false
         for action, plannedAtSeconds in pairs(self.spaetereAktionen) do
@@ -45,7 +45,7 @@ function AkPlaner:fuehreGeplanteAktionenAus()
                 self.eingeplanteAktionen[action] = plannedAtSeconds
             end
             if anzahlSekundenSeitLetzterMitternacht >= plannedAtSeconds then
-                if AkPlaner.debug then print("[AkPlaner] Starte Aktion: '" .. action.name .. "'") end
+                if Scheduler.debug then print("[Scheduler] Starte Aktion: '" .. action.name .. "'") end
                 action:starteAktion()
                 ausgefuehrteAktionen[action] = true
             end
@@ -54,7 +54,7 @@ function AkPlaner:fuehreGeplanteAktionenAus()
         for ausgefuehrteAktion in pairs(ausgefuehrteAktionen) do
             self.eingeplanteAktionen[ausgefuehrteAktion] = nil
             for action, offsetSeconds in pairs(ausgefuehrteAktion.folgeAktionen) do
-                if AkPlaner.debug then print("[AkPlaner] Plan action: '" .. action.name .. "' in " .. offsetSeconds
+                if Scheduler.debug then print("[Scheduler] Plan action: '" .. action.name .. "' in " .. offsetSeconds
                         .. " seconds (at " .. AkSekundenSeitMitternacht() + offsetSeconds .. ")")
                 end
                 self.eingeplanteAktionen[action] = AkSekundenSeitMitternacht() + offsetSeconds
@@ -72,7 +72,7 @@ end
 -- @param einzuplanendeAktion the new action to be performed
 -- @param vorgaengerAktion optional - wenn angegeben, wird die neue Aktion eingeplant, wenn die zeitspanneInSekunden
 -- nach Ausfuehren der vorgaengerAktion vergangen ist
-function AkPlaner:planeAktion(zeitspanneInSekunden, einzuplanendeAktion, vorgaengerAktion)
+function Scheduler:planeAktion(zeitspanneInSekunden, einzuplanendeAktion, vorgaengerAktion)
     assert(zeitspanneInSekunden)
     assert(einzuplanendeAktion)
     assert(zeitspanneInSekunden < AkSekundenProTag)
@@ -84,14 +84,14 @@ function AkPlaner:planeAktion(zeitspanneInSekunden, einzuplanendeAktion, vorgaen
                 or planeNachAktion(self.spaetereAktionen, einzuplanendeAktion,
             zeitspanneInSekunden, vorgaengerAktion)
         if not vorhergehendeAktionGefunden then
-            print("[AkPlaner] VORGAENGER-AKTION NICHT GEFUNDEN! : "
+            print("[Scheduler] VORGAENGER-AKTION NICHT GEFUNDEN! : "
                     .. vorgaengerAktion.name .. " --> " .. einzuplanendeAktion.name)
         end
     end
 
     if not vorhergehendeAktionGefunden and not self.eingeplanteAktionen[einzuplanendeAktion] then
         self.spaetereAktionen[einzuplanendeAktion] = AkSekundenSeitMitternacht() + zeitspanneInSekunden
-        if AkPlaner.debug then print("[AkPlaner] Plane Aktion: '" .. einzuplanendeAktion.name
+        if Scheduler.debug then print("[Scheduler] Plane Aktion: '" .. einzuplanendeAktion.name
                 .. "' in " .. zeitspanneInSekunden .. " Sekunden (um "
                 .. AkSekundenSeitMitternacht() + zeitspanneInSekunden .. ")")
         end
@@ -117,4 +117,4 @@ end
 
 
 
-return AkPlaner
+return Scheduler

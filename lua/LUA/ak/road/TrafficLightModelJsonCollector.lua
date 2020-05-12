@@ -1,11 +1,11 @@
-print("Lade ak.strasse.AmpelModellJsonCollector ...")
-AmpelModellJsonCollector = {}
+print("Lade ak.road.TrafficLightModelJsonCollector ...")
+TrafficLightModelJsonCollector = {}
 local enabled = true
 local initialized = false
-AmpelModellJsonCollector.name = "ak.data.AmpelModellJsonCollector"
-local AkAmpelModell = require("ak.strasse.AkAmpelModell")
+TrafficLightModelJsonCollector.name = "ak.data.TrafficLightModelJsonCollector"
+local TrafficLightModel = require("ak.road.TrafficLightModel")
 
-function AmpelModellJsonCollector.initialize()
+function TrafficLightModelJsonCollector.initialize()
     if not enabled or initialized then
         return
     end
@@ -13,17 +13,17 @@ function AmpelModellJsonCollector.initialize()
     initialized = true
 end
 
-function AmpelModellJsonCollector.collectData()
+function TrafficLightModelJsonCollector.collectData()
     if not enabled then
         return
     end
 
     if not initialized then
-        AmpelModellJsonCollector.initialize()
+        TrafficLightModelJsonCollector.initialize()
     end
 
     local trafficLightModels = {}
-    for _, ampelModel in pairs(AkAmpelModell.alleAmpelModelle) do
+    for _, ampelModel in pairs(TrafficLightModel.allModels) do
         local o = {
             id = ampelModel.name,
             name = ampelModel.name,
@@ -44,4 +44,4 @@ function AmpelModellJsonCollector.collectData()
     return {["signal-type-definitions"] = trafficLightModels}
 end
 
-return AmpelModellJsonCollector
+return TrafficLightModelJsonCollector

@@ -1,87 +1,87 @@
-print("Lade ak.strasse.AkKreuzung ...")
+print("Lade ak.road.Crossing ...")
 
-local AkAktion = require("ak.planer.AkAktion")
-local AkPlaner = require("ak.planer.AkPlaner")
-local AkKreuzungsSchaltung = require("ak.strasse.AkKreuzungsSchaltung")
-local AkRichtung = require("ak.strasse.AkRichtung")
-local AkPhase = require("ak.strasse.AkPhase")
+local Task = require("ak.scheduler.Task")
+local Scheduler = require("ak.scheduler.Scheduler")
+local CrossingCircuit = require("ak.road.CrossingCircuit")
+local Lane = require("ak.road.Lane")
+local TrafficLightState = require("ak.road.TrafficLightState")
 local fmt = require("ak.core.eep.AkTippTextFormat")
 
 --------------------
 -- Klasse Kreuzung
 --------------------
 local AkAllKreuzungen = {}
----@class AkKreuzung
+---@class Crossing
 ---@field public name string @Intersection Name
----@field private aktuelleSchaltung AkKreuzungsSchaltung @Currently used switching
----@field private schaltungen AkKreuzungsSchaltung[] @All switchings of the intersection
+---@field private aktuelleSchaltung CrossingCircuit @Currently used switching
+---@field private schaltungen CrossingCircuit[] @All switchings of the intersection
 ---@field private bereit boolean @If true, the Intersection can be switched
 ---@field private geschaltet boolean @If true, the intersection is switched
 ---@field private gruenZeit number @Integer value of how long the intersection will show green light
 ---@field private staticCams table @List of static cams
-local AkKreuzung = {}
-AkKreuzung.debug = AkStartMitDebug or false
----@type table<string,AkKreuzung>
-AkKreuzung.alleKreuzungen = {}
-AkKreuzung.zeigeAnforderungenAlsInfo = AkStartMitDebug or false
-AkKreuzung.zeigeSchaltungAlsInfo = AkStartMitDebug or false
-AkKreuzung.zeigeSignalIdsAllerSignale = false
+local Crossing = {}
+Crossing.debug = AkStartMitDebug or false
+---@type table<string,Crossing>
+Crossing.alleKreuzungen = {}
+Crossing.zeigeAnforderungenAlsInfo = AkStartMitDebug or false
+Crossing.zeigeSchaltungAlsInfo = AkStartMitDebug or false
+Crossing.zeigeSignalIdsAllerSignale = false
 
-function AkKreuzung.setZeigeAnforderungenAlsInfo(value)
+function Crossing.setZeigeAnforderungenAlsInfo(value)
     assert(value == true or value == false)
-    AkKreuzung.zeigeAnforderungenAlsInfo = value
+    Crossing.zeigeAnforderungenAlsInfo = value
 end
 
-function AkKreuzung.setZeigeSchaltungAlsInfo(value)
+function Crossing.setZeigeSchaltungAlsInfo(value)
     assert(value == true or value == false)
-    AkKreuzung.zeigeSchaltungAlsInfo = value
+    Crossing.zeigeSchaltungAlsInfo = value
 end
 
-function AkKreuzung.setZeigeSignalIdsAllerSignale(value)
+function Crossing.setZeigeSignalIdsAllerSignale(value)
     assert(value == true or value == false)
-    AkKreuzung.zeigeSignalIdsAllerSignale = value
+    Crossing.zeigeSignalIdsAllerSignale = value
 end
 
-function AkKreuzung.schalteManuell(nameDerKreuzung, nameDerSchaltung)
+function Crossing.schalteManuell(nameDerKreuzung, nameDerSchaltung)
     print("schalteManuell:" .. nameDerKreuzung .. "/" .. nameDerSchaltung)
-    ---@type AkKreuzung
-    local k = AkKreuzung.alleKreuzungen[nameDerKreuzung]
+    ---@type Crossing
+    local k = Crossing.alleKreuzungen[nameDerKreuzung]
     if k then
         k:setManuelleSchaltung(nameDerSchaltung)
     end
 end
 
-function AkKreuzung.schalteAutomatisch(nameDerKreuzung)
+function Crossing.schalteAutomatisch(nameDerKreuzung)
     print("schalteAutomatisch:" .. nameDerKreuzung)
-    ---@type AkKreuzung
-    local k = AkKreuzung.alleKreuzungen[nameDerKreuzung]
+    ---@type Crossing
+    local k = Crossing.alleKreuzungen[nameDerKreuzung]
     if k then
         k:setAutomatikModus()
     end
 end
 
-function AkKreuzung.getTyp()
-    return "AkKreuzung"
+function Crossing.getTyp()
+    return "Crossing"
 end
 
-function AkKreuzung:getName()
+function Crossing:getName()
     return self.name
 end
 
-function AkKreuzung:getSchaltungen()
+function Crossing:getSchaltungen()
     return self.schaltungen
 end
 
-function AkKreuzung:getAktuelleSchaltung()
+function Crossing:getAktuelleSchaltung()
     return self.aktuelleSchaltung
 end
 
-function AkKreuzung:setzeWarteZeitZurueck(nextSchaltung)
+function Crossing:setzeWarteZeitZurueck(nextSchaltung)
     local increaseRichtungen = {}
     for schaltung in pairs(self.schaltungen) do
-        assert(schaltung.getTyp() == "AkKreuzungsSchaltung", "Found: " .. schaltung.getTyp())
+        assert(schaltung.getTyp() == "CrossingCircuit", "Found: " .. schaltung.getTyp())
         for richtung in pairs(schaltung:getNormaleRichtungen()) do
-            assert(richtung.getTyp() == "AkRichtung", "Found: " .. richtung.getTyp())
+            assert(richtung.getTyp() == "Lane", "Found: " .. richtung.getTyp())
             if nextSchaltung:getNormaleRichtungen()[richtung] then
                 richtung:setzeWartezeitZurueck()
             else
@@ -91,17 +91,17 @@ function AkKreuzung:setzeWarteZeitZurueck(nextSchaltung)
     end
 
     for richtung in pairs(increaseRichtungen) do
-        assert(richtung.getTyp() == "AkRichtung", "Found: " .. richtung.getTyp())
+        assert(richtung.getTyp() == "Lane", "Found: " .. richtung.getTyp())
         richtung:erhoeheWartezeit()
     end
     self.aktuelleSchaltung = nextSchaltung
 end
 
-function AkKreuzung:getNextSchaltung()
+function Crossing:getNextSchaltung()
     return self.nextSchaltung
 end
 
-function AkKreuzung:calculateNextSchaltung()
+function Crossing:calculateNextSchaltung()
     if self.manuelleSchaltung then
         self.nextSchaltung = self.manuelleSchaltung
     else
@@ -109,13 +109,13 @@ function AkKreuzung:calculateNextSchaltung()
         for schaltung in pairs(self.schaltungen) do
             table.insert(sortedTable, schaltung)
         end
-        table.sort(sortedTable, AkKreuzungsSchaltung.hoeherePrioAls)
+        table.sort(sortedTable, CrossingCircuit.hoeherePrioAls)
         self.nextSchaltung = sortedTable[1]
     end
     return self.nextSchaltung
 end
 
-function AkKreuzung:setManuelleSchaltung(nameDerSchaltung)
+function Crossing:setManuelleSchaltung(nameDerSchaltung)
     for schaltung in pairs(self.schaltungen) do
         if schaltung.name == nameDerSchaltung then
             self.manuelleSchaltung = schaltung
@@ -125,43 +125,43 @@ function AkKreuzung:setManuelleSchaltung(nameDerSchaltung)
     end
 end
 
-function AkKreuzung:setAutomatikModus()
+function Crossing:setAutomatikModus()
     self.manuelleSchaltung = nil
     self:setBereit(true)
     print("Automatikmodus aktiviert. (" .. self.name .. "')")
 end
 
-function AkKreuzung:fuegeSchaltungHinzu(schaltung)
+function Crossing:fuegeSchaltungHinzu(schaltung)
     self.schaltungen[schaltung] = true
 end
 
-function AkKreuzung:setBereit(bereit)
+function Crossing:setBereit(bereit)
     self.bereit = bereit
 end
 
-function AkKreuzung:isBereit()
+function Crossing:isBereit()
     return self.bereit
 end
 
-function AkKreuzung:setGeschaltet(geschaltet)
+function Crossing:setGeschaltet(geschaltet)
     self.geschaltet = geschaltet
 end
 
-function AkKreuzung:isGeschaltet()
+function Crossing:isGeschaltet()
     return self.geschaltet
 end
 
-function AkKreuzung:getGruenZeitSekunden()
+function Crossing:getGruenZeitSekunden()
     return self.gruenZeit
 end
 
-function AkKreuzung:fuegeStatischeKameraHinzu(kameraName)
+function Crossing:fuegeStatischeKameraHinzu(kameraName)
     table.insert(self.staticCams, kameraName)
 end
 
-function AkKreuzung.zaehlerZuruecksetzen()
+function Crossing.zaehlerZuruecksetzen()
     for _, kreuzung in ipairs(AkAllKreuzungen) do
-        print("[AkKreuzung ] SETZE ZURUECK: " .. kreuzung.name)
+        print("[Crossing ] SETZE ZURUECK: " .. kreuzung.name)
         for schaltung in pairs(kreuzung:getSchaltungen()) do
             for richtung in pairs(schaltung:getNormaleRichtungen()) do
                 richtung:setzeFahrzeugeZurueck()
@@ -176,8 +176,8 @@ end
 --- Erzeugt eine neue Kreuzung und registriert diese automatisch fuer das automatische Schalten.
 -- Fuegen sie Schaltungen zu dieser Kreuzung hinzu.
 -- @param name
----@return AkKreuzung
-function AkKreuzung:neu(name)
+---@return Crossing
+function Crossing:neu(name)
     local o = {
         name = name,
         aktuelleSchaltung = nil,
@@ -196,13 +196,13 @@ function AkKreuzung:neu(name)
             return int1.name < int2.name
         end
     )
-    AkKreuzung.alleKreuzungen[name] = o
+    Crossing.alleKreuzungen[name] = o
     return o
 end
 
-local aufbauHilfeErzeugt = AkKreuzung.zeigeSignalIdsAllerSignale
+local aufbauHilfeErzeugt = Crossing.zeigeSignalIdsAllerSignale
 
-function AkKreuzung.planeSchaltungenEin()
+function Crossing.planeSchaltungenEin()
     --- Diese Funktion sucht sich aus den Ampeln die mit der passenden Richtung
     -- raus und setzt deren Texte auf die aktuelle Schaltung
     -- @param kreuzung
@@ -249,34 +249,34 @@ function AkKreuzung.planeSchaltungenEin()
         for _, schaltung in ipairs(tnames) do
             for richtung in pairs(schaltung:getNormaleRichtungen()) do
                 for _, ampel in pairs(richtung.ampeln) do
-                    --print(schaltung.name, richtung.name, ampel.signalId, AkPhase.GRUEN)
+                    --print(schaltung.name, richtung.name, ampel.signalId, TrafficLightState.GRUEN)
                     kreuzungsAmpelSchaltungen[ampel.signalId] = kreuzungsAmpelSchaltungen[ampel.signalId] or {}
-                    kreuzungsAmpelSchaltungen[ampel.signalId][schaltung] = AkPhase.GRUEN
+                    kreuzungsAmpelSchaltungen[ampel.signalId][schaltung] = TrafficLightState.GRUEN
                     kreuzungsAmpelSchaltungen[ampel.signalId]["richtungen"] =
                         kreuzungsAmpelSchaltungen[ampel.signalId]["richtungen"] or {}
-                    kreuzungsAmpelSchaltungen[ampel.signalId]["richtungen"][richtung] = AkPhase.GRUEN
+                    kreuzungsAmpelSchaltungen[ampel.signalId]["richtungen"][richtung] = TrafficLightState.GRUEN
                     kreuzungsAmpeln[ampel] = true
                 end
             end
             for richtung in pairs(schaltung:getRichtungenMitAnforderung()) do
                 for _, ampel in pairs(richtung.ampeln) do
-                    --print(schaltung.name, ampel.signalId, AkPhase.GELB)
+                    --print(schaltung.name, ampel.signalId, TrafficLightState.GELB)
                     kreuzungsAmpelSchaltungen[ampel.signalId] = kreuzungsAmpelSchaltungen[ampel.signalId] or {}
-                    kreuzungsAmpelSchaltungen[ampel.signalId][schaltung] = AkPhase.GELB
+                    kreuzungsAmpelSchaltungen[ampel.signalId][schaltung] = TrafficLightState.GELB
                     kreuzungsAmpelSchaltungen[ampel.signalId]["richtungen"] =
                         kreuzungsAmpelSchaltungen[ampel.signalId]["richtungen"] or {}
-                    kreuzungsAmpelSchaltungen[ampel.signalId]["richtungen"][richtung] = AkPhase.GELB
+                    kreuzungsAmpelSchaltungen[ampel.signalId]["richtungen"][richtung] = TrafficLightState.GELB
                     kreuzungsAmpeln[ampel] = true
                 end
             end
             for richtung in pairs(schaltung:getRichtungFuerFussgaenger()) do
                 for _, ampel in pairs(richtung.ampeln) do
-                    --print(schaltung.name, ampel.signalId, AkPhase.FG)
+                    --print(schaltung.name, ampel.signalId, TrafficLightState.FG)
                     kreuzungsAmpelSchaltungen[ampel.signalId] = kreuzungsAmpelSchaltungen[ampel.signalId] or {}
-                    kreuzungsAmpelSchaltungen[ampel.signalId][schaltung] = AkPhase.FG
+                    kreuzungsAmpelSchaltungen[ampel.signalId][schaltung] = TrafficLightState.FG
                     kreuzungsAmpelSchaltungen[ampel.signalId]["richtungen"] =
                         kreuzungsAmpelSchaltungen[ampel.signalId]["richtungen"] or {}
-                    kreuzungsAmpelSchaltungen[ampel.signalId]["richtungen"][richtung] = AkPhase.FG
+                    kreuzungsAmpelSchaltungen[ampel.signalId]["richtungen"][richtung] = TrafficLightState.FG
                     kreuzungsAmpeln[ampel] = true
                 end
             end
@@ -298,19 +298,19 @@ function AkKreuzung.planeSchaltungenEin()
                 for _, schaltung in ipairs(sortierteNamen) do
                     local farbig = schaltung == kreuzung:getAktuelleSchaltung()
                     if kreuzungsAmpelSchaltungen[ampel.signalId][schaltung] then
-                        if kreuzungsAmpelSchaltungen[ampel.signalId][schaltung] == AkPhase.GRUEN then
+                        if kreuzungsAmpelSchaltungen[ampel.signalId][schaltung] == TrafficLightState.GRUEN then
                             text =
                                 text ..
                                 "<br><j>" ..
                                 (farbig and fmt.hintergrund_gruen(schaltung.name .. " (Gruen)") or
                                 (schaltung.name .. " " .. fmt.hintergrund_gruen("(Gruen)")))
-                        elseif kreuzungsAmpelSchaltungen[ampel.signalId][schaltung] == AkPhase.GELB then
+                        elseif kreuzungsAmpelSchaltungen[ampel.signalId][schaltung] == TrafficLightState.GELB then
                             text =
                                 text ..
                                 "<br><j>" ..
                                 (farbig and fmt.hintergrund_blau(schaltung.name .. " (Anf)") or
                                 (schaltung.name .. " " .. fmt.hintergrund_blau("(Anf)")))
-                        elseif kreuzungsAmpelSchaltungen[ampel.signalId][schaltung] == AkPhase.FG then
+                        elseif kreuzungsAmpelSchaltungen[ampel.signalId][schaltung] == TrafficLightState.FG then
                             text =
                                 text ..
                                 "<br><j>" ..
@@ -342,11 +342,11 @@ function AkKreuzung.planeSchaltungenEin()
         end
     end
 
-    if aufbauHilfeErzeugt ~= AkKreuzung.zeigeSignalIdsAllerSignale then
-        aufbauHilfeErzeugt = AkKreuzung.zeigeSignalIdsAllerSignale
+    if aufbauHilfeErzeugt ~= Crossing.zeigeSignalIdsAllerSignale then
+        aufbauHilfeErzeugt = Crossing.zeigeSignalIdsAllerSignale
         for signalId = 1, 1000 do
-            EEPShowInfoSignal(signalId, AkKreuzung.zeigeSignalIdsAllerSignale)
-            if AkKreuzung.zeigeSignalIdsAllerSignale then
+            EEPShowInfoSignal(signalId, Crossing.zeigeSignalIdsAllerSignale)
+            if Crossing.zeigeSignalIdsAllerSignale then
                 EEPChangeInfoSignal(signalId, "<j>Signal: " .. signalId)
             end
         end
@@ -359,7 +359,7 @@ function AkKreuzung.planeSchaltungenEin()
     -- Funktion schalteAmpeln
     ---------------------------
     local function AkSchalteKreuzung(kreuzung)
-        --if AkKreuzung.debug then print(string.format("[AkKreuzung ] Schalte Kreuzung %s: %s",
+        --if Crossing.debug then print(string.format("[Crossing ] Schalte Kreuzung %s: %s",
         -- kreuzung:getName(), kreuzung:isBereit() and "Ja" or "Nein")) end
         if kreuzung:isBereit() and kreuzung:isGeschaltet() then
             kreuzung:setGeschaltet(false)
@@ -389,8 +389,8 @@ function AkKreuzung.planeSchaltungenEin()
                 end
             else
                 -- Wenn es keine aktuellen Richtung gibt, mùssen alle auf rot gesetzt werden:
-                if AkKreuzung.debug then
-                    print("[AkKreuzung ] Setze alle Richtungen fuer " .. kreuzung.name .. " auf rot")
+                if Crossing.debug then
+                    print("[Crossing ] Setze alle Richtungen fuer " .. kreuzung.name .. " auf rot")
                 end
                 for schaltung in pairs(kreuzung:getSchaltungen()) do
                     for richtung in pairs(schaltung:getNormaleRichtungen()) do
@@ -410,9 +410,9 @@ function AkKreuzung.planeSchaltungenEin()
                     richtungenAufRot[richtungDanachGruen] = nil
                 else
                     if richtungDanachGruen:anforderungVorhanden() then
-                        if AkKreuzung.debug then
+                        if Crossing.debug then
                             print(
-                                "[AkKreuzung ] Plane neue Ampel " ..
+                                "[Crossing ] Plane neue Ampel " ..
                                 richtungDanachGruen.eepSaveId .. " auf Gruen: " .. richtungDanachGruen:getName()
                         )
                         end
@@ -427,9 +427,9 @@ function AkKreuzung.planeSchaltungenEin()
                     -- Ampel nicht auf rot schalten, da sie in der naechsten Schaltung enthalten ist
                     richtungenAufRot[richtungDanachGruen] = nil
                 else
-                    if AkKreuzung.debug then
+                    if Crossing.debug then
                         print(
-                            "[AkKreuzung ] Richtung " ..
+                            "[Crossing ] Richtung " ..
                             richtungDanachGruen:getName() .. " wird fuer Autos auf gruen geschaltet."
                     )
                     end
@@ -444,82 +444,82 @@ function AkKreuzung.planeSchaltungenEin()
                     richtungenAufFussgaengerRot[richtungDanachGruen] = nil
                 else
                     richtungenAufFussgaengerGruen[richtungDanachGruen] = true
-                    if AkKreuzung.debug then
+                    if Crossing.debug then
                         print(
-                            "[AkKreuzung ] Richtung " ..
+                            "[Crossing ] Richtung " ..
                             richtungDanachGruen:getName() .. " wird fuer FG auf gruen geschaltet."
                     )
                     end
                 end
             end
 
-            if AkKreuzung.debug then
+            if Crossing.debug then
                 print(
-                    "[AkKreuzung ] Schalte " ..
+                    "[Crossing ] Schalte " ..
                     kreuzung:getName() ..
                     " zu " .. nextSchaltung:getName() .. " (" .. nextSchaltung:richtungenAlsTextZeile() .. ")"
             )
             end
 
             local fussgaengerAufRot =
-                AkAktion:neu(
+                Task:neu(
                     function()
-                        AkRichtung.schalteAmpeln(richtungenAufFussgaengerRot, AkPhase.ROT, currentName)
+                        Lane.schalteAmpeln(richtungenAufFussgaengerRot, TrafficLightState.ROT, currentName)
                     end,
                     "Schalte " .. currentName .. " auf Fussgaenger Rot"
             )
-            AkPlaner:planeAktion(3, fussgaengerAufRot)
+            Scheduler:planeAktion(3, fussgaengerAufRot)
 
             local alteAmpelnAufGelb =
-                AkAktion:neu(
+                Task:neu(
                     function()
-                        AkRichtung.schalteAmpeln(richtungenAufRot, AkPhase.GELB, currentName)
+                        Lane.schalteAmpeln(richtungenAufRot, TrafficLightState.GELB, currentName)
                     end,
                     "Schalte " .. currentName .. " auf gelb"
             )
-            AkPlaner:planeAktion(0, alteAmpelnAufGelb, fussgaengerAufRot)
+            Scheduler:planeAktion(0, alteAmpelnAufGelb, fussgaengerAufRot)
 
             local alteAmpelnAufRot =
-                AkAktion:neu(
+                Task:neu(
                     function()
-                        AkRichtung.schalteAmpeln(richtungenAufRot, AkPhase.ROT, currentName)
+                        Lane.schalteAmpeln(richtungenAufRot, TrafficLightState.ROT, currentName)
                         kreuzung:setzeWarteZeitZurueck(nextSchaltung)
                     end,
                     "Schalte " .. currentName .. " auf rot"
             )
-            AkPlaner:planeAktion(2, alteAmpelnAufRot, alteAmpelnAufGelb)
+            Scheduler:planeAktion(2, alteAmpelnAufRot, alteAmpelnAufGelb)
 
             local neueAmpelnAufRotGelb =
-                AkAktion:neu(
+                Task:neu(
                     function()
-                        AkRichtung.schalteAmpeln(richtungenAufGruen, AkPhase.ROTGELB, nextName)
-                        AkRichtung.schalteAmpeln(richtungenAufFussgaengerGruen, AkPhase.FG, nextName)
+                        Lane.schalteAmpeln(richtungenAufGruen, TrafficLightState.ROTGELB, nextName)
+                        Lane.schalteAmpeln(richtungenAufFussgaengerGruen, TrafficLightState.FG, nextName)
                     end,
                     "Schalte " .. nextName .. " auf rot-gelb"
             )
-            AkPlaner:planeAktion(3, neueAmpelnAufRotGelb, alteAmpelnAufRot)
+            Scheduler:planeAktion(3, neueAmpelnAufRotGelb, alteAmpelnAufRot)
 
             local neueAmpelnAufGruen =
-                AkAktion:neu(
+                Task:neu(
                     function()
-                        AkRichtung.schalteAmpeln(richtungenAufGruen, AkPhase.GRUEN, nextName)
+                        Lane.schalteAmpeln(richtungenAufGruen, TrafficLightState.GRUEN, nextName)
                         kreuzung:setGeschaltet(true)
                     end,
                     "Schalte " .. nextName .. " auf gruen"
             )
-            AkPlaner:planeAktion(1, neueAmpelnAufGruen, neueAmpelnAufRotGelb)
+            Scheduler:planeAktion(1, neueAmpelnAufGruen, neueAmpelnAufRotGelb)
 
             local kreuzungFertigSchalten =
-                AkAktion:neu(
+                Task:neu(
                     function()
-                        if AkKreuzung.debug then
-                            print("[AkKreuzung ] " .. kreuzung.name .. ": Fahrzeuge sind gefahren, kreuzung ist dann frei.")
+                        if Crossing.debug then
+                            print("[Crossing ] " .. kreuzung.name .. ": Fahrzeuge sind gefahren, kreuzung ist dann frei.")
                         end
                         kreuzung:setBereit(true)
                     end,
                     kreuzung.name .. " ist nun bereit (war " .. kreuzung:getGruenZeitSekunden() .. "s auf gruen geschaltet)"
             )
-            AkPlaner:planeAktion(kreuzung:getGruenZeitSekunden(), kreuzungFertigSchalten, neueAmpelnAufGruen)
+            Scheduler:planeAktion(kreuzung:getGruenZeitSekunden(), kreuzungFertigSchalten, neueAmpelnAufGruen)
         end
     end
 
@@ -529,4 +529,4 @@ function AkKreuzung.planeSchaltungenEin()
     end
 end
 
-return AkKreuzung
+return Crossing

@@ -1,13 +1,13 @@
-print("Lade ak.strasse.AkStrabWeiche ...")
+print("Lade ak.road.TramSwitch ...")
 
-local AkStrabWeiche = {}
+local TramSwitch = {}
 --- Registriert eine neue Strassenbahnweiche und schaltet das Licht der angegeben Immobilien anhand der Weichenstellung
 -- @param weiche_id ID der Weiche
 -- @param immo1 Immobilie, deren Licht bei Weichenstellung 1 leuchten soll
 -- @param immo2 Immobilie, deren Licht bei Weichenstellung 2 leuchten soll
 -- @param immo3 Immobilie, deren Licht bei Weichenstellung 3 leuchten soll
 --
-function AkStrabWeiche.new(weiche_id, immo1, immo2, immo3)
+function TramSwitch.new(weiche_id, immo1, immo2, immo3)
     EEPRegisterSwitch(weiche_id)
     _G["EEPOnSwitch_" .. weiche_id] = function(_)
         local stellung = EEPGetSwitch(weiche_id)
@@ -24,4 +24,4 @@ function AkStrabWeiche.new(weiche_id, immo1, immo2, immo3)
     _G["EEPOnSwitch_" .. weiche_id]()
 end
 
-return AkStrabWeiche
+return TramSwitch

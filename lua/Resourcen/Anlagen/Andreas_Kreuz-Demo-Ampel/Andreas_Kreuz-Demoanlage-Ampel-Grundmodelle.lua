@@ -9,40 +9,40 @@ AkStartMitDebug = false
 --------------------------------------------------------------------
 
 require("ak.demo-anlagen.ampel.Ampeldemo-Grundmodelle-main")
-local AkPlaner = require("ak.planer.AkPlaner")
-local AkAmpel = require("ak.strasse.AkAmpel")
-local AkKreuzung = require("ak.strasse.AkKreuzung")
-local AkSpeicherHilfe = require("ak.speicher.AkSpeicher")
+local Scheduler = require("ak.scheduler.Scheduler")
+local TrafficLight = require("ak.road.TrafficLight")
+local Crossing = require("ak.road.Crossing")
+local StorageUtility = require("ak.storage.StorageUtility")
 
 
 --------------------------------------------------------------------
 -- Zeige erweiterte Informationen an                              --
 --------------------------------------------------------------------
-AkAmpel.debug = false
-AkPlaner.debug = false
-AkKreuzung.debug = false
-AkKreuzung.zeigeSignalIdsAllerSignale = false
-AkKreuzung.zeigeAnforderungenAlsInfo = false
-AkKreuzung.zeigeSchaltungAlsInfo = false
-AkSpeicherHilfe.debug = false
+TrafficLight.debug = false
+Scheduler.debug = false
+Crossing.debug = false
+Crossing.zeigeSignalIdsAllerSignale = false
+Crossing.zeigeAnforderungenAlsInfo = false
+Crossing.zeigeSchaltungAlsInfo = false
+StorageUtility.debug = false
 
 --------------------------------------------------------------------
 -- Erste Hilfe - normalerweise nicht notwendig                    --
 --------------------------------------------------------------------
---AkKreuzung.zaehlerZuruecksetzen()
+--Crossing.zaehlerZuruecksetzen()
 
 
 [EEPLuaData]
-DS_101 = "f=2,p=Rot,w=4,"
-DS_102 = "f=0,p=Gruen,w=2,"
-DS_103 = "f=2,p=Rot,w=0,"
-DS_104 = "f=0,p=Gruen,w=1,"
-DS_105 = "f=1,p=Rot,w=4,"
-DS_106 = "f=0,p=Gruen,w=2,"
-DS_107 = "f=1,p=Rot,w=0,"
-DS_108 = "f=2,p=Gelb,w=1,"
-DS_121 = "f=0,p=Rot,w=0,"
-DS_122 = "f=0,p=Rot,w=0,"
-DS_123 = "f=0,p=Rot,w=1,"
-DS_124 = "f=0,p=Rot,w=1,"
-DS_125 = "f=0,p=Gruen,w=2,"
+DS_101 = "f=2,p=Rot,w=5,"
+DS_102 = "f=0,p=Rot,w=3,"
+DS_103 = "f=3,p=Rot,w=0,"
+DS_104 = "f=0,p=Rot,w=2,"
+DS_105 = "f=1,p=Rot,w=5,"
+DS_106 = "f=1,p=Rot,w=3,"
+DS_107 = "f=2,p=Rot,w=0,"
+DS_108 = "f=2,p=Rot,w=2,"
+DS_121 = "f=0,p=Rot,w=1,"
+DS_122 = "f=0,p=Rot,w=1,"
+DS_123 = "f=0,p=Rot,w=2,"
+DS_124 = "f=0,p=Rot,w=2,"
+DS_125 = "f=0,p=Rot,w=0,"
