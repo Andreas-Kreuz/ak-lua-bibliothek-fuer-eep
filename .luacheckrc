@@ -2,6 +2,7 @@ read_globals = {
     "AkDebugLoad",
     "EEPChangeInfoStructure",
     "EEPGetCameraPosition",
+    "EEPGetCameraRotation",
     "EEPGetCloudIntensity ",
     "EEPGetFogIntensity",
     "EEPGetHailIntensity",
