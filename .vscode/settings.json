@@ -1,7 +1,7 @@
 {
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.fontFamily": "'Source Code Pro', Consolas, 'Courier New', monospace",
-  "editor.formatOnSave": false,
+  "editor.formatOnSave": true,
   "editor.minimap.maxColumn": 120,
   "editor.rulers": [120],
   "editor.wordWrap": "bounded",
@@ -147,7 +147,7 @@
     "EEPTimeS",
     "EEPVer"
   ],
-  "Lua.workspace.ignoreDir": ["lua/Resourcen/Anlagen/**/*.lua"],
+  "Lua.workspace.ignoreDir": ["lua/Resourcen/"],
   "Lua.diagnostics.disable": ["lowercase-global"],
   "lua.format.useTabs": null,
   "lua.preferLuaCheckErrors": true,
