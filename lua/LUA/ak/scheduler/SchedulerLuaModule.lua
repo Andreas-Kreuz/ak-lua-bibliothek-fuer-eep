@@ -32,7 +32,7 @@ function SchedulerLuaModule.run()
     end
 
     -- Hier folgen die wiederkehrenden Funktionen jedes Moduls (müssen dann nicht in EEPMain aufgerufen werden)
-    Scheduler:fuehreGeplanteAktionenAus()
+    Scheduler:runTasks()
 end
 
 return SchedulerLuaModule

@@ -1,120 +1,113 @@
 print("Loading ak.scheduler.Scheduler ...")
+local os = require("os")
 
-local AkSekundenProTag = 24 * 60 * 60
+local secondsPerDay = 24 * 60 * 60
 
 --- Get the time from EEP or the current system
 -- @return the time of the current day in seconds
-local function AkSekundenSeitMitternacht()
-    local secondsSinceMidnight
+local function currentSecondsSinceMidnight()
+    local calculatedSeconds
     if EEPTime then
-        secondsSinceMidnight = EEPTime
+        calculatedSeconds = EEPTime
     else
         print("[Scheduler] System time!")
         local time = os.date("*t")
-        secondsSinceMidnight = os.time {
+        calculatedSeconds = os.time{
             year = 1970, month = 1, day = 1, hour = time.hour, min = time.min, sec = time.sec
         }
     end
-    return secondsSinceMidnight
+    return calculatedSeconds
 end
 
 ------------------
 -- Class Scheduler
 ------------------
-
-local Scheduler = { bereit = true }
+local Scheduler = {ready = true}
 Scheduler.debug = AkStartMitDebug or false
-Scheduler.eingeplanteAktionen = {}
-Scheduler.spaetereAktionen = {} -- Wird zu self.eingeplanteAktionen hinzugefuegt
-Scheduler.letzteAusfuehrung = 0
+Scheduler.scheduledTasks = {}
+Scheduler.futureTasks = {}-- Wird zu self.eingeplanteAktionen hinzugefuegt
+Scheduler.lastRuntime = 0
 
-function Scheduler:fuehreGeplanteAktionenAus()
-    if self.bereit then
-        self.bereit = false
-        for action, plannedAtSeconds in pairs(self.spaetereAktionen) do
-            self.eingeplanteAktionen[action] = plannedAtSeconds
-            self.spaetereAktionen[action] = nil
+function Scheduler:runTasks()
+    if self.ready then
+        self.ready = false
+        for action, plannedAtSeconds in pairs(self.futureTasks) do
+            self.scheduledTasks[action] = plannedAtSeconds
+            self.futureTasks[action] = nil
         end
 
-        local anzahlSekundenSeitLetzterMitternacht = AkSekundenSeitMitternacht()
-        local ausgefuehrteAktionen = {}
-        for action, plannedAtSeconds in pairs(self.eingeplanteAktionen) do
+        local secondsSinceMidnight = currentSecondsSinceMidnight()
+        ---@type table<Task,boolean>
+        local scheduledTasks = {}
+        for currentTask, plannedAtSeconds in pairs(self.scheduledTasks) do
             -- On a day change, last time is bigger than this time and we need to wrap to the next day
-            if self.letzteAusfuehrung > anzahlSekundenSeitLetzterMitternacht then
-                plannedAtSeconds = plannedAtSeconds % AkSekundenProTag
-                self.eingeplanteAktionen[action] = plannedAtSeconds
+            if self.lastRuntime > secondsSinceMidnight then
+                plannedAtSeconds = plannedAtSeconds % secondsPerDay
+                self.scheduledTasks[currentTask] = plannedAtSeconds
             end
-            if anzahlSekundenSeitLetzterMitternacht >= plannedAtSeconds then
-                if Scheduler.debug then print("[Scheduler] Starte Aktion: '" .. action.name .. "'") end
-                action:starteAktion()
-                ausgefuehrteAktionen[action] = true
+            if secondsSinceMidnight >= plannedAtSeconds then
+                if Scheduler.debug then print("[Scheduler] Starting Task: '" .. currentTask.name .. "'") end
+                currentTask:starteAktion()
+                scheduledTasks[currentTask] = true
             end
         end
 
-        for ausgefuehrteAktion in pairs(ausgefuehrteAktionen) do
-            self.eingeplanteAktionen[ausgefuehrteAktion] = nil
-            for action, offsetSeconds in pairs(ausgefuehrteAktion.folgeAktionen) do
-                if Scheduler.debug then print("[Scheduler] Plan action: '" .. action.name .. "' in " .. offsetSeconds
-                        .. " seconds (at " .. AkSekundenSeitMitternacht() + offsetSeconds .. ")")
+        for currentTask in pairs(scheduledTasks) do
+            self.scheduledTasks[currentTask] = nil
+            for successorAction, offsetSeconds in pairs(currentTask.subsequentTask) do
+                if Scheduler.debug then print("[Scheduler] Planning Task: '" .. successorAction.name .. "' in " .. offsetSeconds
+                    .. " seconds (at " .. currentSecondsSinceMidnight() + offsetSeconds .. ")")
                 end
-                self.eingeplanteAktionen[action] = AkSekundenSeitMitternacht() + offsetSeconds
+                self.scheduledTasks[successorAction] = currentSecondsSinceMidnight() + offsetSeconds
             end
         end
 
-        self.letzteAusfuehrung = anzahlSekundenSeitLetzterMitternacht
-        self.bereit = true
+        self.lastRuntime = secondsSinceMidnight
+        self.ready = true
     end
 end
 
 --- the newAction will be called after offsetSeconds milliseconds of the current action
--- @param zeitspanneInSekunden Zeitspanne nach der die einzuplanende Aktion ausgef¸hrt werden soll kann nicht groesser
--- sein als AkSekundenProTag
--- @param einzuplanendeAktion the new action to be performed
--- @param vorgaengerAktion optional - wenn angegeben, wird die neue Aktion eingeplant, wenn die zeitspanneInSekunden
+---@param offsetInSeconds number Zeitspanne nach der die einzuplanende Aktion ausgefùhrt werden soll kann nicht groesser sein als AkSekundenProTag
+---@param newTask Task the new action to be performed
+---@param precedingTask Task optional - wenn angegeben, wird die neue Aktion eingeplant, wenn die zeitspanneInSekunden
 -- nach Ausfuehren der vorgaengerAktion vergangen ist
-function Scheduler:planeAktion(zeitspanneInSekunden, einzuplanendeAktion, vorgaengerAktion)
-    assert(zeitspanneInSekunden)
-    assert(einzuplanendeAktion)
-    assert(zeitspanneInSekunden < AkSekundenProTag)
+function Scheduler:scheduleTask(offsetInSeconds, newTask, precedingTask)
+    assert(offsetInSeconds)
+    assert(newTask)
+    assert(offsetInSeconds < secondsPerDay)
 
-    local vorhergehendeAktionGefunden = false
-    if vorgaengerAktion then
-        vorhergehendeAktionGefunden
-        = planeNachAktion(self.eingeplanteAktionen, einzuplanendeAktion, zeitspanneInSekunden, vorgaengerAktion)
-                or planeNachAktion(self.spaetereAktionen, einzuplanendeAktion,
-            zeitspanneInSekunden, vorgaengerAktion)
-        if not vorhergehendeAktionGefunden then
-            print("[Scheduler] VORGAENGER-AKTION NICHT GEFUNDEN! : "
-                    .. vorgaengerAktion.name .. " --> " .. einzuplanendeAktion.name)
+    local previousTaskFound = false
+    if precedingTask then
+        previousTaskFound = scheduleAfter(self.scheduledTasks, newTask, offsetInSeconds, precedingTask)
+            or scheduleAfter(self.futureTasks, newTask, offsetInSeconds, precedingTask)
+        if not previousTaskFound then
+            print("[Scheduler] DID NOT FIND PREDECESSOR TASK FOR! : " .. precedingTask.name .. " --> " .. newTask.name)
         end
     end
 
-    if not vorhergehendeAktionGefunden and not self.eingeplanteAktionen[einzuplanendeAktion] then
-        self.spaetereAktionen[einzuplanendeAktion] = AkSekundenSeitMitternacht() + zeitspanneInSekunden
-        if Scheduler.debug then print("[Scheduler] Plane Aktion: '" .. einzuplanendeAktion.name
-                .. "' in " .. zeitspanneInSekunden .. " Sekunden (um "
-                .. AkSekundenSeitMitternacht() + zeitspanneInSekunden .. ")")
+    if not previousTaskFound and not self.scheduledTasks[newTask] then
+        self.futureTasks[newTask] = currentSecondsSinceMidnight() + offsetInSeconds
+        if Scheduler.debug then print("[Scheduler] Plane Aktion: '" .. newTask.name
+            .. "' in " .. offsetInSeconds .. " Sekunden (um "
+            .. currentSecondsSinceMidnight() + offsetInSeconds .. ")")
         end
     end
 end
 
-function planeNachAktion(eingeplanteAktionen, einzuplanendeAktion, zeitspanneInSekunden, vorgaengerAktion)
-    local vorhergehendeAktionGefunden = false
-    for foundAction in pairs(eingeplanteAktionen) do
-        if vorgaengerAktion == foundAction then
-            foundAction:planeFolgeAktion(einzuplanendeAktion, zeitspanneInSekunden)
-            vorhergehendeAktionGefunden = true
+function scheduleAfter(scheduledTasks, newTask, offsetInSeconds, previousTask)
+    local previousTaskFound = false
+    for scheduledTask in pairs(scheduledTasks) do
+        if previousTask == scheduledTask then
+            scheduledTask:addSubsequentTask(newTask, offsetInSeconds)
+            previousTaskFound = true
         else
-            -- plan in the subsequent eingeplanteAktionen of the current eingeplanteAktionen
-            vorhergehendeAktionGefunden = planeNachAktion(foundAction.folgeAktionen, einzuplanendeAktion,
-                zeitspanneInSekunden, vorgaengerAktion)
+            -- schedule the subsequentTask of the newTask
+            previousTaskFound = scheduleAfter(scheduledTask.subsequentTask, newTask, offsetInSeconds, previousTask)
         end
-        if (vorhergehendeAktionGefunden) then break end
+        if (previousTaskFound) then break end
     end
-    return vorhergehendeAktionGefunden
+    return previousTaskFound
 end
-
-
-
 
 return Scheduler

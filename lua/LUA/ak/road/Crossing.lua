@@ -468,7 +468,7 @@ function Crossing.planeSchaltungenEin()
                     end,
                     "Schalte " .. currentName .. " auf Fussgaenger Rot"
             )
-            Scheduler:planeAktion(3, fussgaengerAufRot)
+            Scheduler:scheduleTask(3, fussgaengerAufRot)
 
             local alteAmpelnAufGelb =
                 Task:neu(
@@ -477,7 +477,7 @@ function Crossing.planeSchaltungenEin()
                     end,
                     "Schalte " .. currentName .. " auf gelb"
             )
-            Scheduler:planeAktion(0, alteAmpelnAufGelb, fussgaengerAufRot)
+            Scheduler:scheduleTask(0, alteAmpelnAufGelb, fussgaengerAufRot)
 
             local alteAmpelnAufRot =
                 Task:neu(
@@ -487,7 +487,7 @@ function Crossing.planeSchaltungenEin()
                     end,
                     "Schalte " .. currentName .. " auf rot"
             )
-            Scheduler:planeAktion(2, alteAmpelnAufRot, alteAmpelnAufGelb)
+            Scheduler:scheduleTask(2, alteAmpelnAufRot, alteAmpelnAufGelb)
 
             local neueAmpelnAufRotGelb =
                 Task:neu(
@@ -497,7 +497,7 @@ function Crossing.planeSchaltungenEin()
                     end,
                     "Schalte " .. nextName .. " auf rot-gelb"
             )
-            Scheduler:planeAktion(3, neueAmpelnAufRotGelb, alteAmpelnAufRot)
+            Scheduler:scheduleTask(3, neueAmpelnAufRotGelb, alteAmpelnAufRot)
 
             local neueAmpelnAufGruen =
                 Task:neu(
@@ -507,7 +507,7 @@ function Crossing.planeSchaltungenEin()
                     end,
                     "Schalte " .. nextName .. " auf gruen"
             )
-            Scheduler:planeAktion(1, neueAmpelnAufGruen, neueAmpelnAufRotGelb)
+            Scheduler:scheduleTask(1, neueAmpelnAufGruen, neueAmpelnAufRotGelb)
 
             local kreuzungFertigSchalten =
                 Task:neu(
@@ -519,7 +519,7 @@ function Crossing.planeSchaltungenEin()
                     end,
                     kreuzung.name .. " ist nun bereit (war " .. kreuzung:getGruenZeitSekunden() .. "s auf gruen geschaltet)"
             )
-            Scheduler:planeAktion(kreuzung:getGruenZeitSekunden(), kreuzungFertigSchalten, neueAmpelnAufGruen)
+            Scheduler:scheduleTask(kreuzung:getGruenZeitSekunden(), kreuzungFertigSchalten, neueAmpelnAufGruen)
         end
     end
 

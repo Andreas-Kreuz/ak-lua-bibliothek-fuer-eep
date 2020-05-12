@@ -223,7 +223,7 @@ function Lane:verlasse(signalaufrot, fahrzeugName)
                 end,
                 "Schalte " .. self.name .. " auf rot."
         )
-        Scheduler:planeAktion(2, toRed)
+        Scheduler:scheduleTask(2, toRed)
     end
 end
 

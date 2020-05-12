@@ -4,6 +4,7 @@ print("Loading ak.scheduler.Task ...")
 ---------------------------------------
 -- Class Task - is just a function
 ---------------------------------------
+---@class Task
 local Task = {}
 
 ---
@@ -14,14 +15,14 @@ function Task:neu(f, name)
     local o = {
         f = f,
         name = name,
-        folgeAktionen = {},
+        subsequentTask = {},
     }
     self.__index = self
     return setmetatable(o, self)
 end
 
-function Task:planeFolgeAktion(folgeAktion, zeitspanneInSekunden)
-    self.folgeAktionen[folgeAktion] = zeitspanneInSekunden
+function Task:addSubsequentTask(folgeAktion, zeitspanneInSekunden)
+    self.subsequentTask[folgeAktion] = zeitspanneInSekunden
 end
 
 function Task:starteAktion()

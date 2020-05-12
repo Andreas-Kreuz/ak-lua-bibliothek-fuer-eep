@@ -25,7 +25,7 @@ Beinhaltet eine Funktion, die später ausgeführt werden soll und einen Namen f�
 
   Der zweite Parameter `name` ist ein Text, der für die Ausgabe der Informationen ausgegeben wird.
 
-  Erzeugt eine neue Aktion, die mit der Funktion `Scheduler:planeAktion(...)` aufgerufen werden kann.
+  Erzeugt eine neue Aktion, die mit der Funktion `Scheduler:scheduleTask(...)` aufgerufen werden kann.
 
 ## Klasse `Scheduler`
 
@@ -33,19 +33,19 @@ Nimmt Aktionen für die Planung entgegen und führt diese nach Ablauf einer best
 
 - Variable: `Scheduler.debug = false` schaltet Ausgabefunktionen zu eingeplanten Aktionen aus, `Scheduler.debug = true` schaltet sie ein.
 
-- Funktion `Scheduler:planeAktion(zeitspanneInSekunden, einzuplanendeAktion, vorgaengerAktion)`
+- Funktion `Scheduler:scheduleTask(offsetInSeconds, einzuplanendeAktion, vorgaengerAktion)`
 
-  Der erste Parameter `zeitspanneInSekunden` ist eine Zeitspanne in Sekunden, .
+  Der erste Parameter `offsetInSeconds` ist eine Wartezeit in Sekunden, bevor die Aktion gestartet wird.
 
-  Der zweite Parameter `einzuplanendeAktion` ist eine `Task`, die mit `Task:neu(f, name)` erstellt wurde.
+  Der zweite Parameter `newTask` ist ein `Task`, der mit `Task:neu(f, name)` erstellt wurde.
 
-  Der dritte Parameter `vorgaengerAktion` ist **optional** und eine `Task`, die mit `Task:neu(f, name)` erstellt wurde. Wird die Vorgängeraktion angegeben, so wird die einzuplanende Aktionen eingeplant sobald die Vorgängeraktion durchgeführt wurde (nach der angegebenen Zeitspanne).<br>
+  Der dritte Parameter `precedingTask` ist **optional** und ein `Task`, der mit `Task:neu(f, name)` erstellt wurde. Wird die Vorgängeraktion angegeben, so wird die einzuplanende Aktionen eingeplant sobald die Vorgängeraktion durchgeführt wurde (nach der angegebenen Zeitspanne).<br>
   Wird die Vorgängeraktion nicht angegeben, so wird die einzuplanende Aktion direkt eingeplant (nach der angegebenen Zeitspanne).
 
-- Funktion `Scheduler:fuehreGeplanteAktionenAus()`
+- Funktion `Scheduler:runTasks()`
   Diese Funktion muss regelmäßig aufgerufen werden. Sie prüft die vergangene Zeit und führt alle eingeplanten Aktionen aus, deren Zeitspanne zum aktuellen Zeitpunkt erreicht oder vergangen ist.
 
-  Im Normalfall muss diese Funktion nicht manuell aufgerufen werden. Stattdessen wird dies erledigt durch das einmalige Registrieren von SchedulerLuaModule:
+  Im Normalfall muss diese Funktion nicht manuell aufgerufen werden. Stattdessen wird dies erledigt durch das einmalige Registrieren des Moduls `SchedulerLuaModule`.
 
 # Wichtig
 
