@@ -513,11 +513,13 @@ function Crossing.planeSchaltungenEin()
                 Task:neu(
                     function()
                         if Crossing.debug then
-                            print("[Crossing ] " .. kreuzung.name .. ": Fahrzeuge sind gefahren, kreuzung ist dann frei.")
+                            print("[Crossing ] " .. kreuzung.name
+                                .. ": Fahrzeuge sind gefahren, kreuzung ist dann frei.")
                         end
                         kreuzung:setBereit(true)
                     end,
-                    kreuzung.name .. " ist nun bereit (war " .. kreuzung:getGruenZeitSekunden() .. "s auf gruen geschaltet)"
+                    kreuzung.name .. " ist nun bereit (war "
+                    .. kreuzung:getGruenZeitSekunden() .. "s auf gruen geschaltet)"
             )
             Scheduler:scheduleTask(kreuzung:getGruenZeitSekunden(), kreuzungFertigSchalten, neueAmpelnAufGruen)
         end
