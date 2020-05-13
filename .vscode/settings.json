@@ -20,7 +20,7 @@
   "[lua]": {
     "files.encoding": "windows1252",
     "files.autoGuessEncoding": false,
-    "editor.defaultFormatter": "gccfeli.vscode-lua"
+    "editor.defaultFormatter": "Koihik.vscode-lua-format"
   },
   "files.exclude": {
     "**/.classpath": true,
@@ -146,9 +146,13 @@
     "EEPTimeS",
     "EEPVer"
   ],
-  "Lua.workspace.ignoreDir": ["lua/Resourcen/**/*.lua"],
+  "Lua.workspace.ignoreDir": [
+    "lua/Resourcen/**/*.lua",
+    "lua/Resourcen"
+  ],
   "Lua.diagnostics.disable": ["lowercase-global"],
   "lua.format.useTabs": null,
   "lua.preferLuaCheckErrors": true,
-  "lua.targetVersion": "5.3"
+  "lua.targetVersion": "5.3",
+  "vscode-lua-format.configPath": "lua-formatter.conf"
 }
