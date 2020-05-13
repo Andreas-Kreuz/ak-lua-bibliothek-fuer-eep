@@ -1,5 +1,6 @@
 print("Loading ak.road.AxisStructureTrafficLight ...")
 
+---@class AxisStructureTrafficLight
 local AxisStructureTrafficLight = {}
 function AxisStructureTrafficLight.neuAusTabelle(tabelle)
     return AxisStructureTrafficLight:neu(

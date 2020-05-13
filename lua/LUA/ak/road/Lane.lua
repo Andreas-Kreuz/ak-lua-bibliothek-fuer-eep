@@ -9,6 +9,7 @@ local fmt = require("ak.core.eep.AkTippTextFormat")
 --------------------
 -- Klasse Richtung
 --------------------
+---@class Lane
 local Lane = {}
 Lane.SchaltungsTyp = {}
 Lane.SchaltungsTyp.NICHT_VERWENDET = "NICHT VERWENDET"

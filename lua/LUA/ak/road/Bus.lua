@@ -3,6 +3,7 @@ print("Loading Bus ...")
 -----------------------
 -- Bushaltestellen
 -----------------------
+---@class Bus
 Bus = {}
 
 --- Oeffnet die Tueren eines Busses (Fahrzeugverband)

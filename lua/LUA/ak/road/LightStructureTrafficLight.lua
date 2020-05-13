@@ -1,5 +1,6 @@
 print("Loading ak.road.LightStructureTrafficLight ...")
 
+---@class LightStructureTrafficLight
 local LightStructureTrafficLight = {}
 function LightStructureTrafficLight.neuAusTabelle(tabelle)
     return LightStructureTrafficLight:neu(tabelle.rotImmo, tabelle.gruenImmo, tabelle.gelbImmo, tabelle.anforderungImmo)

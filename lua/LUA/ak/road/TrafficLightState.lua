@@ -1,5 +1,6 @@
 print("Loading ak.road.TrafficLightState ...")
 
+---@class TrafficLightState
 local TrafficLightState = {}
 TrafficLightState.ROT = "Rot"
 TrafficLightState.ROTGELB = "Rot-Gelb"

@@ -1,4 +1,6 @@
 print("Loading ak.road.CrossingJsonCollector ...")
+
+---@class CrossingJsonCollector
 CrossingJsonCollector = {}
 local enabled = true
 local initialized = false

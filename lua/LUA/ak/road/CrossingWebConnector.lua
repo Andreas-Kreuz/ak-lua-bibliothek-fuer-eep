@@ -1,6 +1,8 @@
 print("Loading ak.road.CrossingWebConnector ...")
 local ServerController = require("ak.io.ServerController")
 local Crossing = require("ak.road.Crossing")
+
+---@class CrossingWebConnector
 local CrossingWebConnector = {}
 
 function CrossingWebConnector.registerJsonCollectors()

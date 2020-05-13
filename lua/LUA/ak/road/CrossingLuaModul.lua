@@ -1,4 +1,5 @@
 print "Loading ak.data.CrossingLuaModul ..."
+---@class CrossingLuaModul
 CrossingLuaModul = {}
 CrossingLuaModul.id = "c5a3e6d3-0f9b-4c89-a908-ed8cf8809362"
 CrossingLuaModul.enabled = true

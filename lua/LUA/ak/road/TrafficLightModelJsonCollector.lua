@@ -1,4 +1,6 @@
 print("Loading ak.road.TrafficLightModelJsonCollector ...")
+
+---@class TrafficLightModelJsonCollector
 TrafficLightModelJsonCollector = {}
 local enabled = true
 local initialized = false

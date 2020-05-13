@@ -5,6 +5,7 @@ local TrafficLightState = require("ak.road.TrafficLightState")
 -- Klasse TrafficLightModel
 -- Weiss, welche Signalstellung fuer rot, gelb und gruen geschaltet werden muessen.
 ------------------------------------------------------------------------------------------
+---@class TrafficLightModel
 local TrafficLightModel = {}
 TrafficLightModel.allModels = {}
 
