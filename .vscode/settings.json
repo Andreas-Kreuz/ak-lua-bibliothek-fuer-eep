@@ -147,7 +147,7 @@
     "EEPTimeS",
     "EEPVer"
   ],
-  "Lua.workspace.ignoreDir": ["lua/Resourcen/"],
+  "Lua.workspace.ignoreDir": ["lua/Resourcen/**/*.lua"],
   "Lua.diagnostics.disable": ["lowercase-global"],
   "lua.format.useTabs": null,
   "lua.preferLuaCheckErrors": true,

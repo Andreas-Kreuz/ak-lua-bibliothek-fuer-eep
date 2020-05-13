@@ -50,5 +50,5 @@ exclude_files = {
     "lua/LUA/ak/io/json.lua",
     "lua/LUA/ak/anlagen/**",
     "lua/LUA/SlotNames_BH2.lua",
-    "lua/Resourcen/**",
+    "lua/Resourcen/**/*.lua",
 }
