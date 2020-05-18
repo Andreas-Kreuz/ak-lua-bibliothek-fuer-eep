@@ -31,13 +31,13 @@ function TrafficLightModelJsonCollector.collectData()
             name = ampelModel.name,
             type = "road",
             positions = {
-                positionRed = ampelModel.sigIndexRot,
-                positionGreen = ampelModel.sigIndexGruen,
-                positionYellow = ampelModel.sigIndexGelb,
-                positionRedYellow = ampelModel.sigIndexRotGelb,
-                positionPedestrians = ampelModel.sigIndexFgGruen,
-                positionOff = ampelModel.sigIndexKomplettAus,
-                positionOffBlinking = ampelModel.sigIndexGelbBlinkenAus
+                positionRed = ampelModel.signalIndexRed,
+                positionGreen = ampelModel.signalIndexGreen,
+                positionYellow = ampelModel.signalIndexYellow,
+                positionRedYellow = ampelModel.signalIndexRedYellow,
+                positionPedestrians = ampelModel.signalIndexPedestrian,
+                positionOff = ampelModel.signalIndexSwitchOff,
+                positionOffBlinking = ampelModel.signalIndexBlinkYellow
             }
         }
         table.insert(trafficLightModels, o)

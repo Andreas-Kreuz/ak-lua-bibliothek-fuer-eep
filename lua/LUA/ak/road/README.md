@@ -25,18 +25,18 @@ Beschreibt das Modell einer Ampel mit den Schaltungen für rot, grün, gelb und 
 
 ### Mitgelieferte Ampelmodelle
 
-- `TrafficLightModel.NP1_3er_mit_FG = TrafficLightModel:neu("Ampel_NP1_mit_FG", 2, 4, 5, 3, 1)`
-- `TrafficLightModel.NP1_3er_ohne_FG = TrafficLightModel:neu("Ampel_NP1_ohne_FG", 1, 3, 4, 2)`
-- `TrafficLightModel.JS2_2er_nur_FG = TrafficLightModel:neu("Ak_Ampel_2er_nur_FG", 1, 1, 1, 1, 2)`
-- `TrafficLightModel.JS2_3er_ohne_FG = TrafficLightModel:neu("Ampel_3er_XXX_ohne_FG", 1, 3, 5, 2)`
-- `TrafficLightModel.JS2_3er_mit_FG = TrafficLightModel:neu("Ampel_3er_XXX_mit_FG", 1, 3, 5, 2, 6)`
-- `TrafficLightModel.Unsichtbar_2er = TrafficLightModel:neu("Unsichtbares Signal", 2, 1, 2, 2)`
+- `TrafficLightModel.NP1_3er_mit_FG = TrafficLightModel:new("Ampel_NP1_mit_FG", 2, 4, 5, 3, 1)`
+- `TrafficLightModel.NP1_3er_ohne_FG = TrafficLightModel:new("Ampel_NP1_ohne_FG", 1, 3, 4, 2)`
+- `TrafficLightModel.JS2_2er_nur_FG = TrafficLightModel:new("Ak_Ampel_2er_nur_FG", 1, 1, 1, 1, 2)`
+- `TrafficLightModel.JS2_3er_ohne_FG = TrafficLightModel:new("Ampel_3er_XXX_ohne_FG", 1, 3, 5, 2)`
+- `TrafficLightModel.JS2_3er_mit_FG = TrafficLightModel:new("Ampel_3er_XXX_mit_FG", 1, 3, 5, 2, 6)`
+- `TrafficLightModel.Unsichtbar_2er = TrafficLightModel:new("Unsichtbares Signal", 2, 1, 2, 2)`
 
   Siehe auch <https://eepshopping.de/> - Ampel-Baukasten für mehrspurige Straßenkreuzungen (V80NJS20039)
 
 ### Ampelmodell anlegen
 
-`function TrafficLightModel:neu(name, sigIndexRot, sigIndexGruen, sigIndexGelb, sigIndexRotGelb, sigIndexFgGruen)`
+`function TrafficLightModel:new(name, signalIndexRed, signalIndexGreen, signalIndexYellow, signalIndexRedYellow, signalIndexPedestrian)`
 
 _Beschreibung:_
 
@@ -45,11 +45,11 @@ _Beschreibung:_
 _Parameter:_
 
 - `name` Name des Modells für die Ausgabe im Log
-- `sigIndexRot` ist der Index der Signalstellung der Stellung **rot** (erforderlich)
-- `sigIndexGruen` ist der Index der Signalstellung der Stellung **grün** (erforderlich)
-- `sigIndexGelb` ist der Index der Signalstellung der Stellung **gelb** (optional, wenn nicht vorhanden wird rot verwendet)
-- `sigIndexRotGelb` ist der Index der Signalstellung der Stellung **rot-gelb** (optional, wenn nicht vorhanden wird rot verwendet)
-- `sigIndexFgGruen` ist der Index der Signalstellung der Stellung **Fußgänger grün** (optional, wenn nicht vorhanden, werden Fußgänger nicht auf grün geschaltet)
+- `signalIndexRed` ist der Index der Signalstellung der Stellung **rot** (erforderlich)
+- `signalIndexGreen` ist der Index der Signalstellung der Stellung **grün** (erforderlich)
+- `signalIndexYellow` ist der Index der Signalstellung der Stellung **gelb** (optional, wenn nicht vorhanden wird rot verwendet)
+- `signalIndexRedYellow` ist der Index der Signalstellung der Stellung **rot-gelb** (optional, wenn nicht vorhanden wird rot verwendet)
+- `signalIndexPedestrian` ist der Index der Signalstellung der Stellung **Fußgänger grün** (optional, wenn nicht vorhanden, werden Fußgänger nicht auf grün geschaltet)
 
 _Rückgabewert:_
 
@@ -61,7 +61,7 @@ Diese Klasse wird dazu verwendet eine Signal auf der Anlage (signalId) mit einem
 
 ### Neue Ampel erzeugen
 
-`function TrafficLight:neu(signalId, ampelModell)`
+`function TrafficLight:new(signalId, ampelModell)`
 
 _Beschreibung:_
 
@@ -80,7 +80,7 @@ _Rückgabewert:_
 
 ### Lichtsteuerung von Immobilien
 
-`function TrafficLight:fuegeLichtImmoHinzu(rotImmo, gruenImmo, gelbImmo, anforderungImmo)`
+`function TrafficLight:addLightStructure(redStructure, greenStructure, yellowStructure, requestStructure)`
 
 _Beschreibung:_
 
@@ -88,10 +88,10 @@ _Beschreibung:_
 
 _Parameter:_
 
-- `rotImmo` Name der Immobilie, deren Licht eingeschaltet wird, wenn die Ampel rot oder rot-gelb ist
-- `gruenImmo` Name der Immobilie, deren Licht eingeschaltet wird, wenn die Ampel grün ist
-- `gelbImmo` Name der Immobilie, deren Licht eingeschaltet wird, wenn die Ampel gelb oder rot-gelb ist
-- `anforderungImmo` Name der Immobilie, deren Licht eingeschaltet wird, wenn die Ampel eine Anforderung erkennt
+- `redStructure` Name der Immobilie, deren Licht eingeschaltet wird, wenn die Ampel rot oder rot-gelb ist
+- `greenStructure` Name der Immobilie, deren Licht eingeschaltet wird, wenn die Ampel grün ist
+- `yellowStructure` Name der Immobilie, deren Licht eingeschaltet wird, wenn die Ampel gelb oder rot-gelb ist
+- `requestStructure` Name der Immobilie, deren Licht eingeschaltet wird, wenn die Ampel eine Anforderung erkennt
 
 _Rückgabewert:_
 
@@ -101,7 +101,7 @@ Passende Modelle für die Steuerung der Immobilien mit Licht findest Du im Model
 
 ### Achssteuerung einer Immobilie
 
-`function TrafficLight:fuegeAchsenImmoHinzu(immoName, achsName, grundStellung, stellungRot, stellungGruen, stellungGelb, stellungFG)`
+`function TrafficLight:addAxisStructure(structureName, axisName, positionDefault, positionRed, positionGreen, positionRed, positionPedestrian)`
 
 _Beschreibung:_
 
@@ -109,13 +109,13 @@ _Beschreibung:_
 
 _Parameter:_
 
-- `immoName` Name der Immobilie, deren Achse gesteuert werden soll
-- `achsName` Name der Achse in der Immobilie, die gesteuert werden soll
-- `grundStellung` Grundstellung der Achse (wird eingestellt, wenn eine Stellung nicht angegeben wurde
-- `stellungRot` Achsstellung bei rot
-- `stellungGruen` Achsstellung bei grün
-- `stellungGelb` Achsstellung bei gelb
-- `stellungFG` Achsstellung bei FG
+- `structureName` Name der Immobilie, deren Achse gesteuert werden soll
+- `axisName` Name der Achse in der Immobilie, die gesteuert werden soll
+- `positionDefault` Grundstellung der Achse (wird eingestellt, wenn eine Stellung nicht angegeben wurde
+- `positionRed` Achsstellung bei rot
+- `positionGreen` Achsstellung bei grün
+- `positionRed` Achsstellung bei gelb
+- `positionPedestrian` Achsstellung bei FG
 
 _Rückgabewert:_
 
@@ -127,7 +127,7 @@ Wird dazu verwendet mehrere Ampeln gleichzeitig zu schalten. Die kann für eine 
 
 ### Neue Richtung anlegen
 
-`function Lane:neu(name, eepSaveId, ...)`
+`function Lane:new(name, eepSaveId, ...)`
 
 _Beschreibung:_
 
@@ -180,7 +180,7 @@ Es gibt drei Möglichkeiten Fahrzeuge zu erkennen:
 
 Wird dazu verwendet, mehrere Richtungen gleichzeitig zu schalten. Es muss sichergestellt werden, dass sich die Fahrwege der Richtungen einer Schaltung nicht überlappen.
 
-- `function CrossingCircuit:neu(name)` - legt eine neue Schaltung an
+- `function CrossingCircuit:new(name)` - legt eine neue Schaltung an
 
 - `function CrossingCircuit:fuegeRichtungHinzu(richtung)` fügt eine Richtung hinzu, für die mit den Zyklen Rot, Rot-Gelb, Gruen und Gelb geschaltet wird.
 
@@ -194,7 +194,7 @@ Wird dazu verwendet, mehrere Richtungen gleichzeitig zu schalten. Es muss sicher
 
 Wird dazu verwendet, die Kreuzung zu verwalten, enthält mehrere Schaltungen.
 
-- `Crossing:neu(name)` - legt eine neue Kreuzung an. Diese wird automatisch anhand ihrer Richtungen geschaltet.
+- `Crossing:new(name)` - legt eine neue Kreuzung an. Diese wird automatisch anhand ihrer Richtungen geschaltet.
 
 - `function Crossing:fuegeSchaltungHinzu(schaltung)` fügt eine Schaltung zur Kreuzung hinzu.
 

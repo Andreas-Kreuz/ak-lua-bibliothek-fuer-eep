@@ -48,42 +48,42 @@ end
 --   |        |     |      +------------------ neue Ampel für diese Richtung
 --   |        |     |      |           +------ Signal-ID dieser Ampel
 --   |        |     |      |           |   +-- Modell kann rot, gelb, gruen und FG schalten
-n = Lane:neu("N", 100, {
-    TrafficLight:neu(07, TrafficLightModel.JS2_3er_mit_FG),
-    TrafficLight:neu(08, TrafficLightModel.JS2_3er_mit_FG)
+n = Lane:new("N", 100, {
+    TrafficLight:new(07, TrafficLightModel.JS2_3er_mit_FG),
+    TrafficLight:new(08, TrafficLightModel.JS2_3er_mit_FG)
 })
 
-fg_n = Lane:neu("FG_n", 101, {
-    TrafficLight:neu(07, TrafficLightModel.JS2_3er_mit_FG), -- Wird geteilt mit N
-    TrafficLight:neu(08, TrafficLightModel.JS2_3er_mit_FG) -- Wird geteilt mit N
+fg_n = Lane:new("FG_n", 101, {
+    TrafficLight:new(07, TrafficLightModel.JS2_3er_mit_FG), -- Wird geteilt mit N
+    TrafficLight:new(08, TrafficLightModel.JS2_3er_mit_FG) -- Wird geteilt mit N
 })
 
 -- Die Richtung O1 hat zwei Ampeln fuer geradeaus: 9 und 10 jeweils mit Fussgaengern
-o1 = Lane:neu("O1", 102, {
-    TrafficLight:neu(09, TrafficLightModel.JS2_3er_mit_FG),
-    TrafficLight:neu(10, TrafficLightModel.JS2_3er_mit_FG)
+o1 = Lane:new("O1", 102, {
+    TrafficLight:new(09, TrafficLightModel.JS2_3er_mit_FG),
+    TrafficLight:new(10, TrafficLightModel.JS2_3er_mit_FG)
 })
 
-fg_o = Lane:neu("FG_O", 103, {
-    TrafficLight:neu(09, TrafficLightModel.JS2_3er_mit_FG), -- Wird geteilt mit O1
-    TrafficLight:neu(10, TrafficLightModel.JS2_3er_mit_FG) -- Wird geteilt mit O1
+fg_o = Lane:new("FG_O", 103, {
+    TrafficLight:new(09, TrafficLightModel.JS2_3er_mit_FG), -- Wird geteilt mit O1
+    TrafficLight:new(10, TrafficLightModel.JS2_3er_mit_FG) -- Wird geteilt mit O1
 })
 
 
 -- Richtungen im Westen
-w1 = Lane:neu("W1", 104, { TrafficLight:neu(12, TrafficLightModel.JS2_3er_mit_FG) })
-w2 = Lane:neu("W2", 105, {
-    TrafficLight:neu(11, TrafficLightModel.JS2_3er_mit_FG),
-    TrafficLight:neu(13, TrafficLightModel.JS2_3er_ohne_FG)
+w1 = Lane:new("W1", 104, { TrafficLight:new(12, TrafficLightModel.JS2_3er_mit_FG) })
+w2 = Lane:new("W2", 105, {
+    TrafficLight:new(11, TrafficLightModel.JS2_3er_mit_FG),
+    TrafficLight:new(13, TrafficLightModel.JS2_3er_ohne_FG)
 })
-fg_w = Lane:neu("FG_W", 106, {
-    TrafficLight:neu(11, TrafficLightModel.JS2_3er_mit_FG), -- Wird geteilt mit W1
-    TrafficLight:neu(12, TrafficLightModel.JS2_3er_mit_FG) -- Wird geteilt mit W2
+fg_w = Lane:new("FG_W", 106, {
+    TrafficLight:new(11, TrafficLightModel.JS2_3er_mit_FG), -- Wird geteilt mit W1
+    TrafficLight:new(12, TrafficLightModel.JS2_3er_mit_FG) -- Wird geteilt mit W2
 })
 
 -- Richtungen fuer Strassenbahnen:
-os = Lane:neu("OS", 107, {
-    TrafficLight:neu(14, TrafficLightModel.Unsichtbar_2er,
+os = Lane:new("OS", 107, {
+    TrafficLight:new(14, TrafficLightModel.Unsichtbar_2er,
         "#29_Straba Signal Halt", --       rot   schaltet das Licht dieser Immobilie ein
         "#28_Straba Signal geradeaus", --  gruen schaltet das Licht dieser Immobilie ein
         "#27_Straba Signal anhalten", --   gelb  schaltet das Licht dieser Immobilie ein
@@ -91,8 +91,8 @@ os = Lane:neu("OS", 107, {
 })
 os:zaehleAnAmpelAlle(14) -- Erfasst Anforderungen, wenn ein Fahrzeug an Signal 14 steht
 
-ws = Lane:neu("WS", 108, {
-    TrafficLight:neu(15, TrafficLightModel.Unsichtbar_2er,
+ws = Lane:new("WS", 108, {
+    TrafficLight:new(15, TrafficLightModel.Unsichtbar_2er,
         "#32_Straba Signal Halt", --       rot   schaltet das Licht dieser Immobilie ein
         "#30_Straba Signal geradeaus", --  gruen schaltet das Licht dieser Immobilie ein
         "#31_Straba Signal anhalten", --   gelb  schaltet das Licht dieser Immobilie ein
@@ -108,7 +108,7 @@ ws:zaehleAnStrasseAlle(2) -- Erfasst Anforderungen, wenn ein Fahrzeug auf Strass
 -- grün geschaltet werden dürfen, alle anderen sind rot
 
 --- Tutorial 2: Schaltung 1
-local sch1 = CrossingCircuit:neu("Schaltung 1")
+local sch1 = CrossingCircuit:new("Schaltung 1")
 sch1:fuegeRichtungHinzu(o1)
 sch1:fuegeRichtungHinzu(os)
 sch1:fuegeRichtungHinzu(w1)
@@ -116,17 +116,17 @@ sch1:fuegeRichtungHinzu(ws)
 sch1:fuegeRichtungFuerFussgaengerHinzu(fg_n)
 
 --- Tutorial 2: Schaltung 2
-local sch2 = CrossingCircuit:neu("Schaltung 2")
+local sch2 = CrossingCircuit:new("Schaltung 2")
 sch2:fuegeRichtungHinzu(w2)
 sch2:fuegeRichtungFuerFussgaengerHinzu(fg_o)
 
 --- Tutorial 2: Schaltung 3
-local sch3 = CrossingCircuit:neu("Schaltung 3")
+local sch3 = CrossingCircuit:new("Schaltung 3")
 sch3:fuegeRichtungHinzu(n)
 sch3:fuegeRichtungFuerFussgaengerHinzu(fg_o)
 sch3:fuegeRichtungFuerFussgaengerHinzu(fg_w)
 
-k1 = Crossing:neu("Tutorial 2")
+k1 = Crossing:new("Tutorial 2")
 k1:fuegeSchaltungHinzu(sch1)
 k1:fuegeSchaltungHinzu(sch2)
 k1:fuegeSchaltungHinzu(sch3)

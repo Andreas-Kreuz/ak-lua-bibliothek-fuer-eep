@@ -96,7 +96,7 @@ end
 -- @param table eine Lua Tabelle mit Daten und moeglichst kurzem Key und Value
 -- @param name optional: Name des Speicherortes fuer Debug-Anzeige
 --
-function StorageUtility.storageeTabelle(eepSaveId, table, name)
+function StorageUtility.saveTable(eepSaveId, table, name)
     name = name and name or "?"
     local text = ""
     for k, v in pairsByKeys(table) do

@@ -19,7 +19,7 @@ end
 
 
 ------------------------------------------------------------------------------------
--- Mit StorageUtility.storageeTabelle(id, tabelle, [name]) kann man tables speichern,
+-- Mit StorageUtility.saveTable(id, tabelle, [name]) kann man tables speichern,
 -- deren Werte aus Text bestehen.
 -- daten_zum_speichern wird als Tabelle angelegt
 ------------------------------------------------------------------------------------
@@ -52,7 +52,7 @@ do
         b2 = tostring(boolean2),
     }
 
-    StorageUtility.storageeTabelle(700, zuSpeicherndeDaten, "Meine Daten")
+    StorageUtility.saveTable(700, zuSpeicherndeDaten, "Meine Daten")
 
     print("-----------------------------------------")
     print("Speicherplatzinhalt nach dem Speichern:")
@@ -107,7 +107,7 @@ do
         a = tostring(anzahl_fahrzeuge),
     }
 
-    StorageUtility.storageeTabelle(600, daten_zum_speichern, "Meine Daten")
+    StorageUtility.saveTable(600, daten_zum_speichern, "Meine Daten")
 
     print("-----------------------------------------\n"
     .."Speicherplatzinhalt nach dem Speichern:"

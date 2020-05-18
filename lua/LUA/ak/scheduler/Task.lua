@@ -11,7 +11,7 @@ local Task = {}
 -- @param f Auszuführende Funktion (die zu startende Aktion)
 -- @param name Name der Aktion
 --
-function Task:neu(f, name)
+function Task:new(f, name)
     local o = {
         f = f,
         name = name,

@@ -339,7 +339,7 @@ function AkBlock:save()
     data["b"] = tostring(self.taken)
     data["r"] = self.trainDirection and tostring(self.trainDirection) or nil
     data["z"] = self.trainName and tostring(self.trainName) or nil
-    StorageUtility.storageeTabelle(self.eepSaveId, data, "Block " .. self.name)
+    StorageUtility.saveTable(self.eepSaveId, data, "Block " .. self.name)
 end
 
 function AkBlock:load()
@@ -655,7 +655,7 @@ function AkRoute:save()
     data["b"] = tostring(self.taken)
     data["z"] = tostring(self.trainName)
     data["t"] = tostring(self.securedTime)
-    StorageUtility.storageeTabelle(self.eepSaveId, data, "FS " .. self.name)
+    StorageUtility.saveTable(self.eepSaveId, data, "FS " .. self.name)
 end
 
 function AkRoute:load()

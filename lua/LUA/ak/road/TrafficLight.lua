@@ -17,127 +17,113 @@ TrafficLight.debug = AkStartMitDebug or false
 local registeredSignals = {}
 
 ---
--- @param signalId ID der Ampel auf der Anlage (Eine Ampel von diesem Typ sollte auf der Anlage sein
--- @param ampelTyp Typ der Ampel (TrafficLightModel)
--- @param rotImmo Immobilie fuer Signalbild gelb (Licht an / aus)
--- @param gruenImmo Immobilie fuer Signalbild gelb (Licht an / aus)
--- @param gelbImmo Immobilie fuer Signalbild gelb (Licht an / aus)
--- @param anforderungImmo Immobilie fuer Signalbild "A" (Licht an / aus)
+---@param signalId number ID der Ampel auf der Anlage (Eine Ampel von diesem Typ sollte auf der Anlage sein
+---@param trafficLightModel TrafficLightModel Typ der Ampel (TrafficLightModel)
+---@param redStructure string Immobilie fuer Signalbild gelb (Licht an / aus)
+---@param greenStructure string Immobilie fuer Signalbild gelb (Licht an / aus)
+---@param yellowStructure string Immobilie fuer Signalbild gelb (Licht an / aus)
+---@param requestStructure string Immobilie fuer Signalbild "A" (Licht an / aus)
 --
-function TrafficLight:neu(signalId, ampelTyp, rotImmo, gruenImmo, gelbImmo, anforderungImmo)
+function TrafficLight:new(signalId, trafficLightModel, redStructure, greenStructure, yellowStructure, requestStructure)
     assert(signalId, "Specify a signalId")
-    assert(ampelTyp, "Specify a ampelTyp")
-    local error = string.format("Signal ID already used: %s - %s", signalId, ampelTyp.name)
-    assert(
-        not registeredSignals[tostring(signalId)] or registeredSignals[tostring(signalId)].ampelTyp == ampelTyp,
-        error
-    )
+    assert(trafficLightModel, "Specify a trafficLightModel")
+    local error = string.format("Signal ID already used: %s - %s", signalId, trafficLightModel.name)
+    assert(not registeredSignals[tostring(signalId)] or registeredSignals[tostring(signalId)].trafficLightModel ==
+               trafficLightModel, error)
     EEPShowInfoSignal(signalId, false)
     local o = {
         signalId = signalId,
-        ampelTyp = ampelTyp,
-        phase = TrafficLightState.ROT,
-        anforderung = false,
+        trafficLightModel = trafficLightModel,
+        phase = TrafficLightState.RED,
+        hasRequest = false,
         debug = false,
-        richtungsInfo = "",
-        schaltungsInfo = "",
-        aufbauInfo = "" .. tostring(signalId),
-        richtungen = {},
-        lichtImmos = {},
-        achsenImmos = {}
+        laneInfo = "",
+        circuitInfo = "",
+        buildInfo = "" .. tostring(signalId),
+        lanes = {},
+        ---@type table<LightStructureTrafficLight,boolean>
+        lightStructures = {},
+        ---@type table<AxisStructureTrafficLight,boolean>
+        axisStructures = {}
     }
     self.__index = self
     o = setmetatable(o, self)
 
-    if rotImmo or gruenImmo or gelbImmo or anforderungImmo then
-        o:fuegeLichtImmoHinzu(rotImmo, gruenImmo, gelbImmo, anforderungImmo)
+    if redStructure or greenStructure or yellowStructure or requestStructure then
+        o:addLightStructure(redStructure, greenStructure, yellowStructure, requestStructure)
     end
 
     registeredSignals[tostring(signalId)] = o
     return o
 end
 
---- Schaltet das Licht der angegebenen Immobilien beim Schalten der Ampel auf rot, gelb, grÃ¼n oder Anforderung
--- @param rotImmo Name der Immobilie, deren Licht eingeschaltet wird, wenn die Ampel rot oder rot-gelb ist
--- @param gruenImmo Name der Immobilie,  deren Licht eingeschaltet wird, wenn die Ampel grÃ¼n ist
--- @param gelbImmo Name der Immobilie,  deren Licht eingeschaltet wird, wenn die Ampel gelb oder rot-gelb ist
--- @param anforderungImmo Name der Immobilie,  deren Licht eingeschaltet wird, wenn die Ampel eine Anforderung erkennt
+--- Schaltet das Licht der angegebenen Immobilien beim Schalten der Ampel auf rot, gelb, grün oder Anforderung
+-- @param redStructure Name der Immobilie, deren Licht eingeschaltet wird, wenn die Ampel rot oder rot-gelb ist
+-- @param greenStructure Name der Immobilie, deren Licht eingeschaltet wird, wenn die Ampel grün ist
+-- @param yellowStructure Name der Immobilie, deren Licht eingeschaltet wird, wenn die Ampel gelb oder rot-gelb ist
+-- @param requestStructure Name der Immobilie, deren Licht eingeschaltet wird, wenn die Ampel eine Anforderung erkennt
 --
-function TrafficLight:fuegeLichtImmoHinzu(rotImmo, gruenImmo, gelbImmo, anforderungImmo)
-    local lichtAmpel = LightStructureTrafficLight:neu(rotImmo, gruenImmo, gelbImmo, anforderungImmo)
-    self.lichtImmos[lichtAmpel] = true
+function TrafficLight:addLightStructure(redStructure, greenStructure, yellowStructure, requestStructure)
+    local lightStructure = LightStructureTrafficLight:new(redStructure, greenStructure, yellowStructure,
+                                                          requestStructure)
+    self.lightStructures[lightStructure] = true
     return self
 end
 
---- Ã„ndert die Achsstellung der angegebenen Immobilien beim Schalten der Ampel auf rot, gelb, grÃ¼n oder FuÃŸgÃ¤nger
--- @param immoName Name der Immobilie, deren Achse gesteuert werden soll
--- @param achsName Name der Achse in der Immobilie, die gesteuert werden soll
--- @param grundStellung Grundstellung der Achse (wird eingestellt, wenn eine Stellung nicht angegeben wurde
--- @param stellungRot Achsstellung bei rot
--- @param stellungGruen Achsstellung bei grÃ¼n
--- @param stellungGelb Achsstellung bei gelb
--- @param stellungFG Achsstellung bei FG
+--- Ändert die Achsstellung der angegebenen Immobilien beim Schalten der Ampel auf rot, gelb, grün oder Fußgänger
+-- @param structureName Name der Immobilie, deren Achse gesteuert werden soll
+-- @param axisName Name der Achse in der Immobilie, die gesteuert werden soll
+-- @param positionDefault Grundstellung der Achse (wird eingestellt, wenn eine Stellung nicht angegeben wurde
+-- @param positionRed Achsstellung bei rot
+-- @param positionGreen Achsstellung bei grün
+-- @param positionYellow Achsstellung bei gelb
+-- @param positionRedYellow Achsstellung bei gelbrot
+-- @param positionPedestrian Achsstellung bei FG
 --
-function TrafficLight:fuegeAchsenImmoHinzu(
-    immoName,
-    achsName,
-    grundStellung,
-    stellungRot,
-    stellungGruen,
-    stellungGelb,
-    stellungFG)
-    local achsAmpel =
-        AxisStructureTrafficLight:neu(immoName, achsName, grundStellung, stellungRot, stellungGruen, stellungGelb, stellungFG)
-    self.achsenImmos[achsAmpel] = true
+function TrafficLight:addAxisStructure(structureName, axisName, positionDefault, positionRed, positionGreen,
+                                       positionRedYellow, positionPedestrian)
+    local axisStructure = AxisStructureTrafficLight:new(structureName, axisName, positionDefault, positionRed,
+                                                        positionGreen, positionRedYellow, positionPedestrian)
+    self.axisStructures[axisStructure] = true
     return self
 end
 
---- Aktualisiert den Text fÃ¼r die aktuellen Schaltung dieser Ampel
--- @param schaltungsInfo TippText fÃ¼r die Schaltung
+--- Aktualisiert den Text für die aktuellen Schaltung dieser Ampel
+-- @param circuitInfo TippText für die Schaltung
 --
-function TrafficLight:setzeSchaltungsInfo(schaltungsInfo)
-    self.schaltungsInfo = schaltungsInfo
-end
+function TrafficLight:setCircuitInfo(circuitInfo) self.circuitInfo = circuitInfo end
 
---- Aktualsisiert den Text fÃ¼r die Richtungen dieser Ampel
--- @param richtungsInfo TippText fÃ¼r die Richtung
+--- Aktualsisiert den Text für die Richtungen dieser Ampel
+-- @param laneInfo TippText für die Richtung
 --
-function TrafficLight:setzeRichtungsInfo(richtungsInfo)
-    self.richtungsInfo = richtungsInfo
-end
+function TrafficLight:setLaneInfo(laneInfo) self.laneInfo = laneInfo end
 
 --- Stellt die vorher gesetzten Tipp-Texte dar.
 --
-function TrafficLight:aktualisiereInfo()
+function TrafficLight:refreshInfo()
     local showRequests = Crossing.zeigeAnforderungenAlsInfo
     local showSwitching = Crossing.zeigeSchaltungAlsInfo
     local showAllSignals = Crossing.zeigeSignalIdsAllerSignale
-    local zeigeInfo = showRequests or showSwitching or showAllSignals
+    local showInfo = showRequests or showSwitching or showAllSignals
 
-    EEPShowInfoSignal(self.signalId, zeigeInfo)
-    if zeigeInfo then
+    EEPShowInfoSignal(self.signalId, showInfo)
+    if showInfo then
         local infoText = "<j><b>Ampel ID: " .. fmt.hintergrund_grau(self.signalId) .. "</b></j>"
-        infoText = infoText .. "<br>" .. self.ampelTyp.name
+        infoText = infoText .. "<br>" .. self.trafficLightModel.name
 
         if Crossing.zeigeSchaltungAlsInfo then
-            if infoText:len() > 0 then
-                infoText = infoText .. "<br>___________________________<br>"
-            end
-            infoText = infoText .. self.schaltungsInfo
+            if infoText:len() > 0 then infoText = infoText .. "<br>___________________________<br>" end
+            infoText = infoText .. self.circuitInfo
         end
 
         if showSwitching and self.phase and self.grund then
-            if infoText:len() > 0 then
-                infoText = infoText .. "<br><br>"
-            end
-            infoText = infoText .. " " .. self.phase .. " (" .. self.grund .. ")"
+            if infoText:len() > 0 then infoText = infoText .. "<br><br>" end
+            infoText = infoText .. string.format(" %s (%s) ", self.phase, self.grund)
         end
 
         if showRequests then
-            if infoText:len() > 0 then
-                infoText = infoText .. "<br>___________________________<br>"
-            end
-            infoText = infoText .. self.richtungsInfo
+            if infoText:len() > 0 then infoText = infoText .. "<br>___________________________<br>" end
+            infoText = infoText .. self.laneInfo
         end
         assert(infoText:len() < 1023)
         EEPChangeInfoSignal(self.signalId, infoText)
@@ -149,112 +135,98 @@ end
 -- @param phase TrafficLightState.xxx
 -- @param grund z.B. Name der Schaltung
 --
-function TrafficLight:schalte(phase, grund)
+function TrafficLight:switchTo(phase, grund)
     assert(phase)
     self.phase = phase
-    local immoLichtDbg = self:schalteImmoLicht()
-    local immoAchseDbg = self:schalteImmoAchsen()
+    local lightDbg = self:switchStructureLight()
+    local structureDbg = self:switchStructureAxis()
 
-    local sigIndex = self.ampelTyp:signalIndexFuer(self.phase)
+    local sigIndex = self.trafficLightModel:signalIndexFuer(self.phase)
     if (self.debug or TrafficLight.debug) then
         print(
             string.format("[TrafficLight    ] Schalte Ampel %04d auf %s (%01d)", self.signalId, self.phase, sigIndex) ..
-                immoLichtDbg .. immoAchseDbg .. " - " .. grund
-        )
+                lightDbg .. structureDbg .. " - " .. grund)
     end
-    self:schalteSignal(sigIndex)
+    self:switchSignal(sigIndex)
 end
 
-function TrafficLight:schalteImmoLicht()
+function TrafficLight:switchStructureLight()
     local immoDbg = ""
-    for lichtAmpel in pairs(self.lichtImmos) do
-        if lichtAmpel.rotImmo then
-            immoDbg =
-                immoDbg ..
-                string.format(
-                    ", Licht in %s: %s",
-                    lichtAmpel.rotImmo,
-                    (self.phase == TrafficLightState.ROT or self.phase == TrafficLightState.ROTGELB) and "an" or "aus"
-                )
-            EEPStructureSetLight(lichtAmpel.rotImmo, self.phase == TrafficLightState.ROT or self.phase == TrafficLightState.ROTGELB)
+    for lightTL in pairs(self.lightStructures) do
+        if lightTL.redStructure then
+            immoDbg = immoDbg .. string.format(", Licht in %s: %s", lightTL.redStructure, (self.phase ==
+                                                   TrafficLightState.RED or self.phase == TrafficLightState.REDYELLOW) and
+                                                   "an" or "aus")
+            EEPStructureSetLight(lightTL.redStructure,
+                                 self.phase == TrafficLightState.RED or self.phase == TrafficLightState.REDYELLOW)
         end
-        if lichtAmpel.gelbImmo then
-            immoDbg =
-                immoDbg ..
-                string.format(
-                    ", Licht in %s: %s",
-                    lichtAmpel.gelbImmo,
-                    (self.phase == TrafficLightState.GELB or self.phase == TrafficLightState.ROTGELB) and "an" or "aus"
-                )
-            EEPStructureSetLight(lichtAmpel.gelbImmo, self.phase == TrafficLightState.GELB or self.phase == TrafficLightState.ROTGELB)
+        if lightTL.yellowStructure then
+            immoDbg = immoDbg .. string.format(", Licht in %s: %s", lightTL.yellowStructure, (self.phase ==
+                                                   TrafficLightState.YELLOW or self.phase == TrafficLightState.REDYELLOW) and
+                                                   "an" or "aus")
+            EEPStructureSetLight(lightTL.yellowStructure,
+                                 self.phase == TrafficLightState.YELLOW or self.phase == TrafficLightState.REDYELLOW)
         end
-        if lichtAmpel.gruenImmo then
-            immoDbg =
-                immoDbg ..
-                string.format(
-                    ", Licht in %s: %s",
-                    lichtAmpel.gruenImmo,
-                    (self.phase == TrafficLightState.GRUEN) and "an" or "aus"
-                )
-            EEPStructureSetLight(lichtAmpel.gruenImmo, self.phase == TrafficLightState.GRUEN)
+        if lightTL.greenStructure then
+            immoDbg = immoDbg ..
+                          string.format(", Licht in %s: %s", lightTL.greenStructure,
+                                        (self.phase == TrafficLightState.GREEN) and "an" or "aus")
+            EEPStructureSetLight(lightTL.greenStructure, self.phase == TrafficLightState.GREEN)
         end
     end
     return immoDbg
 end
 
-function TrafficLight:schalteImmoAchsen()
+function TrafficLight:switchStructureAxis()
     local immoDbg = ""
-    for achsenAmpel in pairs(self.achsenImmos) do
-        local achsStellung = achsenAmpel.grundStellung
+    for axisTL in pairs(self.axisStructures) do
+        local position = axisTL.positionDefault
 
-        if achsenAmpel.stellungRotGelb and self.phase == TrafficLightState.ROTGELB then
-            achsStellung = achsenAmpel.stellungRotGelb
-        elseif achsenAmpel.stellungGelb and (self.phase == TrafficLightState.GELB or self.phase == TrafficLightState.ROTGELB) then
-            achsStellung = achsenAmpel.stellungGelb
-        elseif achsenAmpel.stellungRot and self.phase == TrafficLightState.ROT then
-            achsStellung = achsenAmpel.stellungRot
-        elseif achsenAmpel.stellungGruen and self.phase == TrafficLightState.GRUEN then
-            achsStellung = achsenAmpel.stellungGruen
-        elseif achsenAmpel.stellungFG and self.phase == TrafficLightState.FG then
-            achsStellung = achsenAmpel.stellungFG
+        if axisTL.positionRedYellow and self.phase == TrafficLightState.REDYELLOW then
+            position = axisTL.positionRedYellow
+        elseif axisTL.positionRed and
+            (self.phase == TrafficLightState.YELLOW or self.phase == TrafficLightState.REDYELLOW) then
+            position = axisTL.positionRed
+        elseif axisTL.positionRed and self.phase == TrafficLightState.RED then
+            position = axisTL.positionRed
+        elseif axisTL.positionGreen and self.phase == TrafficLightState.GREEN then
+            position = axisTL.positionGreen
+        elseif axisTL.positionPedestrian and self.phase == TrafficLightState.PEDESTRIAN then
+            position = axisTL.positionPedestrian
         end
 
-        immoDbg =
-            immoDbg .. string.format(", Achse %s in %s auf: %d", achsenAmpel.achse, achsenAmpel.immoName, achsStellung)
-        EEPStructureSetAxis(achsenAmpel.immoName, achsenAmpel.achse, achsStellung)
+        immoDbg = immoDbg .. string.format(", Achse %s in %s auf: %d", axisTL.axisName, axisTL.structureName, position)
+        EEPStructureSetAxis(axisTL.structureName, axisTL.axisName, position)
     end
     return immoDbg
 end
 
-function TrafficLight:schalteSignal(sigIndex)
-    EEPSetSignal(self.signalId, sigIndex, 1)
-end
+function TrafficLight:switchSignal(sigIndex) EEPSetSignal(self.signalId, sigIndex, 1) end
 
---- Setzt die Anforderung fuer eine Ampel (damit sie weiÃŸ, ob eine Anforderung vorliegt)
--- @param anforderung - true oder false
--- @param richtung - Lane, fÃ¼r welche die Anforderung vorliegt
-function TrafficLight:aktualisiereAnforderung(richtung)
+--- Setzt die Anforderung fuer eine Ampel (damit sie weiß, ob eine Anforderung vorliegt)
+--- @param lane Lane, für welche die Anforderung vorliegt
+function TrafficLight:refreshRequests(lane)
     local immoDbg = ""
-    self.richtungen[richtung] = true
-    local anforderung = richtung:anforderungVorhanden()
+    self.lanes[lane] = true
+    local hasRequest = lane:hasRequest()
 
-    for lichtAmpel in pairs(self.lichtImmos) do
-        if lichtAmpel.anforderungImmo then
-            immoDbg =
-                immoDbg ..
-                string.format(", Licht in %s: %s", lichtAmpel.anforderungImmo, (anforderung) and "an" or "aus")
-            EEPStructureSetLight(lichtAmpel.anforderungImmo, anforderung)
+    for lightTL in pairs(self.lightStructures) do
+        if lightTL.requestStructure then
+            immoDbg = immoDbg ..
+                          string.format(", Licht in %s: %s", lightTL.requestStructure, (hasRequest) and "an" or "aus")
+            EEPStructureSetLight(lightTL.requestStructure, hasRequest)
         end
     end
 
     if (self.debug or TrafficLight.debug) and immoDbg ~= "" then
         print(string.format("[TrafficLight    ] Schalte Ampel %04d", self.signalId) .. immoDbg)
     end
-    self:aktualisiereInfo()
+    self:refreshInfo()
 end
 
 function TrafficLight:print()
-    print(string.format("[TrafficLight    ] Ampel %04d: %s (%s)", self.signalId, self.phase, self.ampelTyp.name))
+    print(
+        string.format("[TrafficLight    ] Ampel %04d: %s (%s)", self.signalId, self.phase, self.trafficLightModel.name))
 end
 
 return TrafficLight

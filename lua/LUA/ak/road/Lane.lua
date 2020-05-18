@@ -17,35 +17,24 @@ Lane.SchaltungsTyp.ANFORDERUNG = "ANFORDERUNG"
 Lane.SchaltungsTyp.NORMAL = "NORMAL"
 Lane.SchaltungsTyp.FUSSGAENGER = "FUSSGAENGER"
 
-function Lane.schalteAmpeln(ampeln, phase, grund)
+function Lane.schalteAmpeln(lanes, phase, grund)
     assert(
-        phase == TrafficLightState.GRUEN or phase == TrafficLightState.ROTGELB or phase == TrafficLightState.GELB
-        or phase == TrafficLightState.ROT or phase == TrafficLightState.FG
-    )
-    for richtung in pairs(ampeln) do
-        richtung:schalte(phase, grund)
-    end
+        phase == TrafficLightState.GREEN or phase == TrafficLightState.REDYELLOW or phase == TrafficLightState.YELLOW or
+            phase == TrafficLightState.RED or phase == TrafficLightState.PEDESTRIAN)
+    for richtung in pairs(lanes) do richtung:switchTo(phase, grund) end
 end
 
-function Lane.getTyp()
-    return "Lane"
-end
+function Lane.getTyp() return "Lane" end
 
-function Lane:getName()
-    return self.name
-end
+function Lane:getName() return self.name end
 
-function Lane:getSchaltungsTyp()
-    return self.schaltungsTyp
-end
+function Lane:getSchaltungsTyp() return self.schaltungsTyp end
 
 function Lane:setSchaltungsTyp(schaltungsTyp)
     assert(schaltungsTyp)
-    assert(
-        self.schaltungsTyp == Lane.SchaltungsTyp.NICHT_VERWENDET or self.schaltungsTyp == schaltungsTyp,
-        "Diese Richtung hatte schon den Schaltungstyp: '" ..
-        self.schaltungsTyp .. "' und kann daher nicht auf '" .. schaltungsTyp .. "' gesetzt werden."
-    )
+    assert(self.schaltungsTyp == Lane.SchaltungsTyp.NICHT_VERWENDET or self.schaltungsTyp == schaltungsTyp,
+           "Diese Richtung hatte schon den Schaltungstyp: '" .. self.schaltungsTyp .. "' und kann daher nicht auf '" ..
+               schaltungsTyp .. "' gesetzt werden.")
     self.schaltungsTyp = schaltungsTyp
 end
 
@@ -64,7 +53,7 @@ function Lane:pruefeAnforderungen()
         text = text .. fmt.rot(self.name)
     end
 
-    text = text .. ": " .. (self:anforderungVorhanden() and fmt.hellgrau("BELEGT") or fmt.hellgrau("-FREI-")) .. " "
+    text = text .. ": " .. (self:hasRequest() and fmt.hellgrau("BELEGT") or fmt.hellgrau("-FREI-")) .. " "
     if self.verwendeZaehlStrassen then
         text = text .. "(Strasse)"
     elseif self.verwendeZaehlAmpeln then
@@ -74,14 +63,10 @@ function Lane:pruefeAnforderungen()
     end
 
     self.anforderungsText = text
-    self:aktualisiereAnforderung()
+    self:refreshRequests()
 end
 
-function Lane:aktualisiereAnforderung()
-    for _, ampel in pairs(self.ampeln) do
-        ampel:aktualisiereAnforderung(self)
-    end
-end
+function Lane:refreshRequests() for _, ampel in pairs(self.ampeln) do ampel:refreshRequests(self) end end
 
 function Lane:getPrio()
     local verwendeZaehlStrassen = self:pruefeAnforderungenAnStrassen()
@@ -100,25 +85,19 @@ function Lane:getPrio()
     return self.warteZeit > prio and self.warteZeit or prio
 end
 
-function Lane:getAnforderungsText()
-    return self.anforderungsText or "KEINE ANFORDERUNG"
-end
+function Lane:getAnforderungsText() return self.anforderungsText or "KEINE ANFORDERUNG" end
 
 function Lane:zaehleAnStrasseAlle(strassenId)
     self.verwendeZaehlStrassen = true
     EEPRegisterRoadTrack(strassenId)
-    if not self.zaehlStrassen[strassenId] then
-        self.zaehlStrassen[strassenId] = {}
-    end
+    if not self.zaehlStrassen[strassenId] then self.zaehlStrassen[strassenId] = {} end
     return self
 end
 
 function Lane:zaehleAnStrasseBeiRoute(strassenId, route)
     self.verwendeZaehlStrassen = true
     EEPRegisterRoadTrack(strassenId)
-    if not self.zaehlStrassen[strassenId] then
-        self.zaehlStrassen[strassenId] = {}
-    end
+    if not self.zaehlStrassen[strassenId] then self.zaehlStrassen[strassenId] = {} end
     self.zaehlStrassen[strassenId][route] = true
     return self
 end
@@ -154,17 +133,13 @@ end
 function Lane:zaehleAnAmpelAlle(signalId)
     self.verwendeZaehlAmpeln = true
     assert(signalId, "Keine signalId angegeben")
-    if not self.zaehlAmpeln[signalId] then
-        self.zaehlAmpeln[signalId] = {}
-    end
+    if not self.zaehlAmpeln[signalId] then self.zaehlAmpeln[signalId] = {} end
     return self
 end
 
 function Lane:zaehleAnAmpelBeiRoute(signalId, route)
     self.verwendeZaehlAmpeln = true
-    if not self.zaehlAmpeln[signalId] then
-        self.zaehlAmpeln[signalId] = {}
-    end
+    if not self.zaehlAmpeln[signalId] then self.zaehlAmpeln[signalId] = {} end
     self.zaehlAmpeln[signalId][route] = true
     return self
 end
@@ -199,38 +174,32 @@ end
 
 function Lane:betritt()
     self.fahrzeuge = self.fahrzeuge + 1
-    self:aktualisiereAnforderung()
+    self:refreshRequests()
     self:save()
 end
 
 function Lane:verlasse(signalaufrot, fahrzeugName)
     self.fahrzeuge = self.fahrzeuge - 1
-    if self.fahrzeuge < 0 then
-        self.fahrzeuge = 0
-    end
-    self:aktualisiereAnforderung()
+    if self.fahrzeuge < 0 then self.fahrzeuge = 0 end
+    self:refreshRequests()
     self:save()
 
-    if signalaufrot and not self:anforderungVorhanden() then
-        local richtungen = {}
-        richtungen[self] = true
+    if signalaufrot and not self:hasRequest() then
+        local lanes = {}
+        lanes[self] = true
 
-        Lane.schalteAmpeln(richtungen, TrafficLightState.GELB, "Fahrzeug verlassen: " .. fahrzeugName)
+        Lane.schalteAmpeln(lanes, TrafficLightState.YELLOW, "Fahrzeug verlassen: " .. fahrzeugName)
 
-        local toRed =
-            Task:neu(
-                function()
-                    Lane.schalteAmpeln(richtungen, TrafficLightState.ROT, "Fahrzeug verlassen: " .. fahrzeugName)
-                end,
-                "Schalte " .. self.name .. " auf rot."
-        )
+        local toRed = Task:new(function()
+            Lane.schalteAmpeln(lanes, TrafficLightState.RED, "Fahrzeug verlassen: " .. fahrzeugName)
+        end, "Schalte " .. self.name .. " auf rot.")
         Scheduler:scheduleTask(2, toRed)
     end
 end
 
 function Lane:setzeFahrzeugeZurueck()
     self.fahrzeuge = 0
-    self:aktualisiereAnforderung()
+    self:refreshRequests()
     self:save()
 end
 
@@ -244,9 +213,7 @@ function Lane:setzeWartezeitZurueck()
     self:save()
 end
 
-function Lane:anforderungVorhanden()
-    return self.fahrzeuge > 0 or self.anforderungAnSignal or self.anforderungAnStrasse
-end
+function Lane:hasRequest() return self.fahrzeuge > 0 or self.anforderungAnSignal or self.anforderungAnStrasse end
 
 function Lane:save()
     if self.eepSaveId ~= -1 then
@@ -254,7 +221,7 @@ function Lane:save()
         data["f"] = tostring(self.fahrzeuge)
         data["w"] = tostring(self.warteZeit)
         data["p"] = tostring(self.phase)
-        StorageUtility.storageeTabelle(self.eepSaveId, data, "Lane " .. self.name)
+        StorageUtility.saveTable(self.eepSaveId, data, "Lane " .. self.name)
     end
 end
 
@@ -263,47 +230,35 @@ function Lane:load()
         local data = StorageUtility.ladeTabelle(self.eepSaveId, "Lane " .. self.name)
         self.fahrzeuge = data["f"] and tonumber(data["f"]) or 0
         self.warteZeit = data["w"] and tonumber(data["w"]) or 0
-        self.phase = data["p"] or TrafficLightState.ROT
+        self.phase = data["p"] or TrafficLightState.RED
         self:pruefeAnforderungen()
-        self:schalte(self.phase, "Neu geladen")
+        self:switchTo(self.phase, "Neu geladen")
     else
         self.fahrzeuge = 0
         self.warteZeit = 0
-        self.phase = TrafficLightState.ROT
+        self.phase = TrafficLightState.RED
     end
 end
 
-function Lane:getWarteZeit()
-    return self.warteZeit
-end
+function Lane:getWarteZeit() return self.warteZeit end
 
-function Lane:getFahrzeuge()
-    return self.fahrzeuge
-end
+function Lane:getFahrzeuge() return self.fahrzeuge end
 
-function Lane:getRichtungSaveId()
-    return self.richtungSaveId
-end
+function Lane:getRichtungSaveId() return self.richtungSaveId end
 
-function Lane:getRichtungsInfo()
-    return self.richtungsInfo
-end
+function Lane:getLaneInfo() return self.laneInfo end
 
 function Lane:setFahrzeugMultiplikator(fahrzeugMultiplikator)
     self.fahrzeugMultiplikator = fahrzeugMultiplikator
     return self
 end
 
-function Lane:schalte(phase, grund)
-    for _, ampel in pairs(self.ampeln) do
-        ampel:schalte(phase, grund)
-    end
+function Lane:switchTo(phase, grund)
+    for _, ampel in pairs(self.ampeln) do ampel:switchTo(phase, grund) end
     self.phase = phase
 end
 
-function Lane:setRichtungen(...)
-    self.richtungen = ... or {"LEFT", "STRAIGHT", "RIGHT"}
-end
+function Lane:setRichtungen(...) self.directions = ... or {"LEFT", "STRAIGHT", "RIGHT"} end
 
 function Lane:setTrafficType(trafficType)
     if trafficType ~= "TRAM" and trafficType ~= "PEDESTRIAN" and trafficType ~= "NORMAL" then
@@ -318,16 +273,14 @@ end
 -- @param eepSaveId Id fuer das Speichern der Richtung
 -- @param ... eine oder mehrere Ampeln
 --
-function Lane:neu(name, eepSaveId, ampeln, richtungen, trafficType)
+function Lane:new(name, eepSaveId, ampeln, directions, trafficType)
     assert(name, 'Bitte geben Sie den Namen "name" fuer diese Richtung an.')
     assert(type(name) == "string", "Name ist kein String")
     assert(eepSaveId, 'Bitte geben Sie den Wert "eepSaveId" fuer diese Richtung an.')
     assert(type(eepSaveId) == "number")
     assert(ampeln, 'Bitte geben Sie den Wert "ampeln" fuer diese Richtung an.')
-    --assert(signalId, "Bitte geben Sie den Wert \"signalId\" fuer diese Richtung an.")
-    if eepSaveId ~= -1 then
-        StorageUtility.registriereId(eepSaveId, "Richtung " .. name)
-    end
+    -- assert(signalId, "Bitte geben Sie den Wert \"signalId\" fuer diese Richtung an.")
+    if eepSaveId ~= -1 then StorageUtility.registriereId(eepSaveId, "Richtung " .. name) end
     local o = {
         fahrzeugMultiplikator = 1,
         name = name,
@@ -338,7 +291,7 @@ function Lane:neu(name, eepSaveId, ampeln, richtungen, trafficType)
         zaehlAmpeln = {},
         verwendeZaehlStrassen = false,
         zaehlStrassen = {},
-        richtungen = richtungen or {"LEFT", "STRAIGHT", "RIGHT"},
+        directions = directions or {"LEFT", "STRAIGHT", "RIGHT"},
         trafficType = trafficType or "NORMAL"
     }
 

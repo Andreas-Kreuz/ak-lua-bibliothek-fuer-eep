@@ -1,68 +1,48 @@
 print("Loading ak.road.AxisStructureTrafficLight ...")
 
 ---@class AxisStructureTrafficLight
+---@field structureName string Name der Immobilie, deren Achse gesteuert werden soll
+---@field axisName string Name der Achse in der Immobilie, die gesteuert werden soll
+---@field positionDefault number Grundstellung der Achse (wird eingestellt, wenn eine Stellung nicht angegeben wurde
+---@field positionRed number Achsstellung bei rot
+---@field positionGreen number Achsstellung bei grün
+---@field positionYellow number Achsstellung bei gelb
+---@field positionRedYellow number Achsstellung bei gelb
+---@field positionPedestrian number Achsstellung bei FG
 local AxisStructureTrafficLight = {}
-function AxisStructureTrafficLight.neuAusTabelle(tabelle)
-    return AxisStructureTrafficLight:neu(
-        tabelle.immoName,
-        tabelle.achse,
-        tabelle.grundStellung,
-        tabelle.stellungRot,
-        tabelle.stellungGruen,
-        tabelle.stellungGelb,
-        tabelle.stellungRotGelb,
-        tabelle.stellungFG
-    )
-end
 
---- Ã„ndert die Achsstellung der angegebenen Immobilien beim Schalten der Ampel auf rot, gelb, grÃ¼n oder FuÃŸgÃ¤nger
--- @param immoName Name der Immobilie, deren Achse gesteuert werden soll
--- @param achsName Name der Achse in der Immobilie, die gesteuert werden soll
--- @param grundStellung Grundstellung der Achse (wird eingestellt, wenn eine Stellung nicht angegeben wurde
--- @param stellungRot Achsstellung bei rot
--- @param stellungGruen Achsstellung bei grÃ¼n
--- @param stellungGelb Achsstellung bei gelb
--- @param stellungFG Achsstellung bei FG
+--- Ändert die Achsstellung der angegebenen Immobilien beim Schalten der Ampel auf rot, gelb, grün oder Fußgänger
+---@param structureName string Name der Immobilie, deren Achse gesteuert werden soll
+---@param axisName string Name der Achse in der Immobilie, die gesteuert werden soll
+---@param positionDefault number Grundstellung der Achse (wird eingestellt, wenn eine Stellung nicht angegeben wurde
+---@param positionRed number Achsstellung bei rot
+---@param positionGreen number Achsstellung bei grün
+---@param positionYellow number Achsstellung bei gelb
+---@param positionRedYellow number Achsstellung bei gelb
+---@param positionPedestrian number Achsstellung bei FG
 --
-function AxisStructureTrafficLight:neu(
-    immoName,
-    achse,
-    grundStellung,
-    stellungRot,
-    stellungGruen,
-    stellungGelb,
-    stellungRotGelb,
-    stellungFG)
-    assert(immoName)
-    assert(type(immoName) == "string")
-    assert(achse)
-    assert(type(achse) == "string")
-    assert(EEPStructureGetAxis(immoName, achse))
-    assert(type(grundStellung) == "number")
-    if stellungRot then
-        assert(type(stellungRot) == "number")
-    end
-    if stellungGruen then
-        assert(type(stellungGruen) == "number")
-    end
-    if stellungGelb then
-        assert(type(stellungGelb) == "number")
-    end
-    if stellungRotGelb then
-        assert(type(stellungRotGelb) == "number")
-    end
-    if stellungFG then
-        assert(type(stellungFG) == "number")
-    end
+function AxisStructureTrafficLight:new(structureName, axisName, positionDefault, positionRed, positionGreen,
+                                       positionYellow, positionRedYellow, positionPedestrian)
+    assert(structureName)
+    assert(type(structureName) == "string")
+    assert(axisName)
+    assert(type(axisName) == "string")
+    assert(EEPStructureGetAxis(structureName, axisName))
+    assert(type(positionDefault) == "number")
+    if positionRed then assert(type(positionRed) == "number") end
+    if positionGreen then assert(type(positionGreen) == "number") end
+    if positionYellow then assert(type(positionYellow) == "number") end
+    if positionRedYellow then assert(type(positionRedYellow) == "number") end
+    if positionPedestrian then assert(type(positionPedestrian) == "number") end
     local o = {
-        immoName = immoName,
-        achse = achse,
-        grundStellung = grundStellung,
-        stellungRot = stellungRot,
-        stellungGruen = stellungGruen,
-        stellungGelb = stellungGelb or stellungRot,
-        stellungFG = stellungFG,
-        stellungRotGelb = stellungRotGelb
+        structureName = structureName,
+        axisName = axisName,
+        positionDefault = positionDefault,
+        positionRed = positionRed,
+        positionGreen = positionGreen,
+        positionYellow = positionYellow or positionRed,
+        positionPedestrian = positionPedestrian,
+        positionRedYellow = positionRedYellow
     }
     self.__index = self
     o = setmetatable(o, self)

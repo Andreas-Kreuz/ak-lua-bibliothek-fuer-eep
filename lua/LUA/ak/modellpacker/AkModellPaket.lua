@@ -1,7 +1,7 @@
 local AkModellPacker = require("ak.modellpacker.AkModellPacker")
 
 local AkModellPaket = {}
-function AkModellPaket:neu(eepVersion, deutscherName, deutscheBeschreibung)
+function AkModellPaket:new(eepVersion, deutscherName, deutscheBeschreibung)
     local o = {}
     setmetatable(o, self)
     self.__index = self

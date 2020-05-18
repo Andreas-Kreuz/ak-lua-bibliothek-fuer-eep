@@ -16,7 +16,7 @@ function CrossingCircuit:getName()
     return self.name
 end
 
-function CrossingCircuit:neu(name)
+function CrossingCircuit:new(name)
     local o = {}
     setmetatable(o, self)
     self.__index = self

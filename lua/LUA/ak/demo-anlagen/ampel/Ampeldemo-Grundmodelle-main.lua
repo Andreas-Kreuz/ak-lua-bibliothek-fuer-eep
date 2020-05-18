@@ -49,12 +49,12 @@ end
 -- Fuer die Signalstellung siehe Auswahlbox unter "Auswahl des Signalbegriffs"
 -- bei Rechtsklick auf das Signal im 2D Editor
 ----------------------------------------------------------------------------------------------------------------------
-Grundmodell_Ampel_3 = TrafficLightModel:neu("Grundmodell Ampel 3", -- Name des Modells
+Grundmodell_Ampel_3 = TrafficLightModel:new("Grundmodell Ampel 3", -- Name des Modells
     2, -- Signalstellung fuer rot   (2. Stellung)
     1, -- Signalstellung fuer gruen (1. Stellung)
     3) -- Signalstellung fuer gelb  (3. Stellung)
 
-Grundmodell_Ampel_3_FG = TrafficLightModel:neu("Grundmodell Ampel 3 FG", -- Name des Modells
+Grundmodell_Ampel_3_FG = TrafficLightModel:new("Grundmodell Ampel 3 FG", -- Name des Modells
     2, -- Signalstellung fuer rot   (2. Stellung)
     2, -- Signalstellung fuer rot   (2. Stellung)
     2, -- Signalstellung fuer rot   (2. Stellung)
@@ -83,11 +83,11 @@ Grundmodell_Ampel_3_FG = TrafficLightModel:neu("Grundmodell Ampel 3 FG", -- Name
 --      |              |             |      +------------------ neue Ampel für diese Richtung (
 --      |              |             |      |           +------ Signal-ID dieser Ampel
 --      |              |             |      |           |   +-- Modell dieser Ampel - weiss wo rot, gelb und gruen ist
-k2_r1 = Lane:neu("Richtung 1", 121, { TrafficLight:neu(32, Grundmodell_Ampel_3) })
-k2_r2 = Lane:neu("Richtung 2", 122, { TrafficLight:neu(31, Grundmodell_Ampel_3) })
-k2_r3 = Lane:neu("Richtung 3", 123, { TrafficLight:neu(34, Grundmodell_Ampel_3) })
-k2_r4 = Lane:neu("Richtung 4", 124, { TrafficLight:neu(33, Grundmodell_Ampel_3) })
-k2_r5 = Lane:neu("Richtung 5", 125, { TrafficLight:neu(30, Grundmodell_Ampel_3) })
+k2_r1 = Lane:new("Richtung 1", 121, { TrafficLight:new(32, Grundmodell_Ampel_3) })
+k2_r2 = Lane:new("Richtung 2", 122, { TrafficLight:new(31, Grundmodell_Ampel_3) })
+k2_r3 = Lane:new("Richtung 3", 123, { TrafficLight:new(34, Grundmodell_Ampel_3) })
+k2_r4 = Lane:new("Richtung 4", 124, { TrafficLight:new(33, Grundmodell_Ampel_3) })
+k2_r5 = Lane:new("Richtung 5", 125, { TrafficLight:new(30, Grundmodell_Ampel_3) })
 
 k2_r1:setRichtungen({ 'RIGHT' })
 k2_r2:setRichtungen({ 'STRAIGHT' })
@@ -103,26 +103,26 @@ k2_r5:setRichtungen({ 'LEFT', 'RIGHT' })
 -- Eine Schaltung bestimmt, welche Richtungen gleichzeitig auf grün geschaltet werden dürfen, alle anderen sind rot
 
 --- Kreuzung 2: Schaltung 1
-local k2_schaltung1 = CrossingCircuit:neu("Schaltung 1")
+local k2_schaltung1 = CrossingCircuit:new("Schaltung 1")
 k2_schaltung1:fuegeRichtungHinzu(k2_r1)
 k2_schaltung1:fuegeRichtungHinzu(k2_r2)
 k2_schaltung1:fuegeRichtungHinzu(k2_r3)
 
 --- Kreuzung 2: Schaltung 2
-local k2_schaltung2 = CrossingCircuit:neu("Schaltung 2")
+local k2_schaltung2 = CrossingCircuit:new("Schaltung 2")
 k2_schaltung2:fuegeRichtungHinzu(k2_r1)
 k2_schaltung2:fuegeRichtungHinzu(k2_r2)
 
 --- Kreuzung 2: Schaltung 3
-local k2_schaltung3 = CrossingCircuit:neu("Schaltung 3")
+local k2_schaltung3 = CrossingCircuit:new("Schaltung 3")
 k2_schaltung3:fuegeRichtungHinzu(k2_r3)
 k2_schaltung3:fuegeRichtungHinzu(k2_r4)
 
 --- Kreuzung 2: Schaltung 4
-local k2_schaltung4 = CrossingCircuit:neu("Schaltung 4")
+local k2_schaltung4 = CrossingCircuit:new("Schaltung 4")
 k2_schaltung4:fuegeRichtungHinzu(k2_r5)
 
-k2 = Crossing:neu("Kreuzung 2")
+k2 = Crossing:new("Kreuzung 2")
 k2:fuegeSchaltungHinzu(k2_schaltung1)
 k2:fuegeSchaltungHinzu(k2_schaltung2)
 k2:fuegeSchaltungHinzu(k2_schaltung3)
@@ -141,14 +141,14 @@ k2:fuegeSchaltungHinzu(k2_schaltung4)
 --      |        |             |      +------------------ neue Ampel für diese Richtung (
 --      |        |             |      |           +------ Signal-ID dieser Ampel
 --      |        |             |      |           |   +-- Modell dieser Ampel - weiss wo rot, gelb und gruen ist
-k1_r1 = Lane:neu("Richtung 1", 101, { TrafficLight:neu(17, Grundmodell_Ampel_3) })
-k1_r2 = Lane:neu("Richtung 2", 102, { TrafficLight:neu(13, Grundmodell_Ampel_3) })
-k1_r3 = Lane:neu("Richtung 3", 103, { TrafficLight:neu(12, Grundmodell_Ampel_3) })
-k1_r4 = Lane:neu("Richtung 4", 104, { TrafficLight:neu(11, Grundmodell_Ampel_3) })
-k1_r5 = Lane:neu("Richtung 5", 105, { TrafficLight:neu(10, Grundmodell_Ampel_3) })
-k1_r6 = Lane:neu("Richtung 6", 106, { TrafficLight:neu(09, Grundmodell_Ampel_3) })
-k1_r7 = Lane:neu("Richtung 7", 107, { TrafficLight:neu(16, Grundmodell_Ampel_3) })
-k1_r8 = Lane:neu("Richtung 8", 108, { TrafficLight:neu(15, Grundmodell_Ampel_3) })
+k1_r1 = Lane:new("Richtung 1", 101, { TrafficLight:new(17, Grundmodell_Ampel_3) })
+k1_r2 = Lane:new("Richtung 2", 102, { TrafficLight:new(13, Grundmodell_Ampel_3) })
+k1_r3 = Lane:new("Richtung 3", 103, { TrafficLight:new(12, Grundmodell_Ampel_3) })
+k1_r4 = Lane:new("Richtung 4", 104, { TrafficLight:new(11, Grundmodell_Ampel_3) })
+k1_r5 = Lane:new("Richtung 5", 105, { TrafficLight:new(10, Grundmodell_Ampel_3) })
+k1_r6 = Lane:new("Richtung 6", 106, { TrafficLight:new(09, Grundmodell_Ampel_3) })
+k1_r7 = Lane:new("Richtung 7", 107, { TrafficLight:new(16, Grundmodell_Ampel_3) })
+k1_r8 = Lane:new("Richtung 8", 108, { TrafficLight:new(15, Grundmodell_Ampel_3) })
 
 k1_r1:setRichtungen({ 'STRAIGHT', 'RIGHT' })
 k1_r2:setRichtungen({ 'LEFT' })
@@ -159,15 +159,15 @@ k1_r6:setRichtungen({ 'LEFT' })
 k1_r7:setRichtungen({ 'STRAIGHT', 'RIGHT' })
 k1_r8:setRichtungen({ 'LEFT' })
 
-local k1_r1_5_fg = Lane:neu("Richtung 1+5 FG", -1, {
+local k1_r1_5_fg = Lane:new("Richtung 1+5 FG", -1, {
     -- keine Speicher-ID fuer Fussgaenger notwendig (-1)
-    TrafficLight:neu(40, Grundmodell_Ampel_3_FG), TrafficLight:neu(41, Grundmodell_Ampel_3_FG),
-    TrafficLight:neu(36, Grundmodell_Ampel_3_FG), TrafficLight:neu(37, Grundmodell_Ampel_3_FG)
+    TrafficLight:new(40, Grundmodell_Ampel_3_FG), TrafficLight:new(41, Grundmodell_Ampel_3_FG),
+    TrafficLight:new(36, Grundmodell_Ampel_3_FG), TrafficLight:new(37, Grundmodell_Ampel_3_FG)
 })
-local k1_r3_7_fg = Lane:neu("Richtung 3+7 FG", -1, {
+local k1_r3_7_fg = Lane:new("Richtung 3+7 FG", -1, {
     -- keine Speicher-ID fuer Fussgaenger notwendig (-1)
-    TrafficLight:neu(38, Grundmodell_Ampel_3_FG), TrafficLight:neu(39, Grundmodell_Ampel_3_FG),
-    TrafficLight:neu(42, Grundmodell_Ampel_3_FG), TrafficLight:neu(43, Grundmodell_Ampel_3_FG)
+    TrafficLight:new(38, Grundmodell_Ampel_3_FG), TrafficLight:new(39, Grundmodell_Ampel_3_FG),
+    TrafficLight:new(42, Grundmodell_Ampel_3_FG), TrafficLight:new(43, Grundmodell_Ampel_3_FG)
 })
 
 k1_r1_5_fg:setTrafficType('PEDESTRIAN')
@@ -181,28 +181,28 @@ k1_r3_7_fg:setTrafficType('PEDESTRIAN')
 -- Eine Schaltung bestimmt, welche Richtungen gleichzeitig auf grün geschaltet werden dürfen, alle anderen sind rot
 
 --- Kreuzung 1: Schaltung 1
-local k1_schaltung1 = CrossingCircuit:neu("Schaltung 1")
+local k1_schaltung1 = CrossingCircuit:new("Schaltung 1")
 k1_schaltung1:fuegeRichtungHinzu(k1_r1)
 k1_schaltung1:fuegeRichtungHinzu(k1_r5)
 k1_schaltung1:fuegeRichtungFuerFussgaengerHinzu(k1_r1_5_fg)
 
 --- Kreuzung 1: Schaltung 2
-local k1_schaltung2 = CrossingCircuit:neu("Schaltung 2")
+local k1_schaltung2 = CrossingCircuit:new("Schaltung 2")
 k1_schaltung2:fuegeRichtungHinzu(k1_r2)
 k1_schaltung2:fuegeRichtungHinzu(k1_r6)
 
 --- Kreuzung 1: Schaltung 3
-local k1_schaltung3 = CrossingCircuit:neu("Schaltung 3")
+local k1_schaltung3 = CrossingCircuit:new("Schaltung 3")
 k1_schaltung3:fuegeRichtungHinzu(k1_r3)
 k1_schaltung3:fuegeRichtungHinzu(k1_r7)
 k1_schaltung3:fuegeRichtungFuerFussgaengerHinzu(k1_r3_7_fg)
 
 --- Kreuzung 1: Schaltung 4
-local k1_schaltung4 = CrossingCircuit:neu("Schaltung 4")
+local k1_schaltung4 = CrossingCircuit:new("Schaltung 4")
 k1_schaltung4:fuegeRichtungHinzu(k1_r4)
 k1_schaltung4:fuegeRichtungHinzu(k1_r8)
 
-k1 = Crossing:neu("Kreuzung 1")
+k1 = Crossing:new("Kreuzung 1")
 k1:fuegeSchaltungHinzu(k1_schaltung1)
 k1:fuegeSchaltungHinzu(k1_schaltung2)
 k1:fuegeSchaltungHinzu(k1_schaltung3)

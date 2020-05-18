@@ -19,7 +19,7 @@ Weiterhin kann der Planer **Folgeaktionen** dann einplanen, wenn eine von Dir fe
 
 Beinhaltet eine Funktion, die später ausgeführt werden soll und einen Namen für diese Aktion der bei der Textausgabe des Planers verwendet wird.
 
-- Funktion `Task:neu(f, name)`
+- Funktion `Task:new(f, name)`
 
   Der erste Parameter `f` ist eine Lua-Funktion, die aufgerufen wird.
 
@@ -37,9 +37,9 @@ Nimmt Aktionen für die Planung entgegen und führt diese nach Ablauf einer best
 
   Der erste Parameter `offsetInSeconds` ist eine Wartezeit in Sekunden, bevor die Aktion gestartet wird.
 
-  Der zweite Parameter `newTask` ist ein `Task`, der mit `Task:neu(f, name)` erstellt wurde.
+  Der zweite Parameter `newTask` ist ein `Task`, der mit `Task:new(f, name)` erstellt wurde.
 
-  Der dritte Parameter `precedingTask` ist **optional** und ein `Task`, der mit `Task:neu(f, name)` erstellt wurde. Wird die Vorgängeraktion angegeben, so wird die einzuplanende Aktionen eingeplant sobald die Vorgängeraktion durchgeführt wurde (nach der angegebenen Zeitspanne).<br>
+  Der dritte Parameter `precedingTask` ist **optional** und ein `Task`, der mit `Task:new(f, name)` erstellt wurde. Wird die Vorgängeraktion angegeben, so wird die einzuplanende Aktionen eingeplant sobald die Vorgängeraktion durchgeführt wurde (nach der angegebenen Zeitspanne).<br>
   Wird die Vorgängeraktion nicht angegeben, so wird die einzuplanende Aktion direkt eingeplant (nach der angegebenen Zeitspanne).
 
 - Funktion `Scheduler:runTasks()`

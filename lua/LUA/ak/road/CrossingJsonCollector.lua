@@ -9,42 +9,44 @@ local Crossing = require("ak.road.Crossing")
 local Lane = require("ak.road.Lane")
 local TrafficLightState = require("ak.road.TrafficLightState")
 
+---@param alleKreuzungen table<string,Crossing>
 local function collect(alleKreuzungen)
     local intersections = {}
     local intersectionLanes = {}
     local intersectionSwitching = {}
     local intersectionTrafficLights = {}
+    -- @type table<Lane,string>
     local alleRichtungen = {}
     local richtungsSchaltungen = {}
 
     local intersectionIdCounter = 0
-    for _, kreuzung in pairs(alleKreuzungen) do
+    for _, crossing in pairs(alleKreuzungen) do
         intersectionIdCounter = intersectionIdCounter + 1
         local intersection = {
             id = intersectionIdCounter,
-            name = kreuzung.name,
-            currentSwitching = kreuzung.aktuelleSchaltung and kreuzung.aktuelleSchaltung.name or nil,
-            manualSwitching = kreuzung.manuelleSchaltung and kreuzung.manuelleSchaltung.name or nil,
-            nextSwitching = kreuzung.nextSchaltung and kreuzung.nextSchaltung.name or nil,
-            ready = kreuzung.bereit,
-            timeForGreen = kreuzung.gruenZeit,
-            staticCams = kreuzung.staticCams
+            name = crossing.name,
+            currentSwitching = crossing.aktuelleSchaltung and crossing.aktuelleSchaltung.name or nil,
+            manualSwitching = crossing.manuelleSchaltung and crossing.manuelleSchaltung.name or nil,
+            nextSwitching = crossing.nextSchaltung and crossing.nextSchaltung.name or nil,
+            ready = crossing.bereit,
+            timeForGreen = crossing.gruenZeit,
+            staticCams = crossing.staticCams
         }
         table.insert(intersections, intersection)
 
-        for schaltung in pairs(kreuzung:getSchaltungen()) do
+        for schaltung in pairs(crossing:getSchaltungen()) do
             local switching = {
-                id = kreuzung.name .. "-" .. schaltung.name,
-                intersectionId = kreuzung.name,
+                id = crossing.name .. "-" .. schaltung.name,
+                intersectionId = crossing.name,
                 name = schaltung.name,
                 prio = schaltung.prio
             }
             table.insert(intersectionSwitching, switching)
 
-            for richtung in pairs(schaltung:getAlleRichtungen()) do
-                alleRichtungen[richtung] = intersection.id
-                richtungsSchaltungen[richtung] = richtungsSchaltungen[richtung] or {}
-                table.insert(richtungsSchaltungen[richtung], schaltung.name)
+            for lane in pairs(schaltung:getAlleRichtungen()) do
+                alleRichtungen[lane] = intersection.id
+                richtungsSchaltungen[lane] = richtungsSchaltungen[lane] or {}
+                table.insert(richtungsSchaltungen[lane], schaltung.name)
             end
         end
     end
@@ -60,15 +62,15 @@ local function collect(alleKreuzungen)
         end
 
         local phase = "NONE"
-        if lane.phase == TrafficLightState.GELB then
+        if lane.phase == TrafficLightState.YELLOW then
             phase = "YELLOW"
-        elseif lane.phase == TrafficLightState.ROT then
+        elseif lane.phase == TrafficLightState.RED then
             phase = "RED"
-        elseif lane.phase == TrafficLightState.ROTGELB then
+        elseif lane.phase == TrafficLightState.REDYELLOW then
             phase = "RED_YELLOW"
-        elseif lane.phase == TrafficLightState.GRUEN then
+        elseif lane.phase == TrafficLightState.GREEN then
             phase = "GREEN"
-        elseif lane.phase == TrafficLightState.FG then
+        elseif lane.phase == TrafficLightState.PEDESTRIAN then
             phase = "PEDESTRIAN"
         end
 
@@ -90,7 +92,7 @@ local function collect(alleKreuzungen)
             countType = countType,
             waitingTrains = {},
             waitingForGreenCyclesCount = lane.warteZeit,
-            directions = lane.richtungen,
+            directions = lane.directions,
             switchings = richtungsSchaltungen[lane] or {}
         }
         for i = 1, lane.fahrzeuge or 1, 1 do
@@ -103,7 +105,7 @@ local function collect(alleKreuzungen)
                 id = ampel.signalId,
                 type = type,
                 signalId = ampel.signalId,
-                modelId = ampel.ampelTyp.name,
+                modelId = ampel.trafficLightModel.name,
                 currentPhase = ampel.phase,
                 laneId = lane.name,
                 intersectionId = intersectionId,
@@ -111,27 +113,27 @@ local function collect(alleKreuzungen)
                 axisStructures = {}
             }
 
-            for axisStructure in pairs(ampel.achsenImmos) do
+            for axisStructure in pairs(ampel.axisStructures) do
                 local as = {
-                    structureName = axisStructure.immoName,
-                    axis = axisStructure.achse,
-                    positionDefault = axisStructure.grundStellung,
-                    positionRed = axisStructure.stellungRot,
-                    positionGreen = axisStructure.stellungGruen,
-                    positionYellow = axisStructure.stellungGelb,
-                    positionPedestrants = axisStructure.stellungFG,
-                    positionRedYellow = axisStructure.stellungRotGelb
+                    structureName = axisStructure.structureName,
+                    axisName = axisStructure.axisName,
+                    positionDefault = axisStructure.positionDefault,
+                    positionRed = axisStructure.positionRed,
+                    positionGreen = axisStructure.positionGreen,
+                    positionYellow = axisStructure.positionYellow,
+                    positionPedestrian = axisStructure.positionPedestrian,
+                    positionRedYellow = axisStructure.positionRedYellow
                 }
                 table.insert(trafficLight.axisStructures, as)
             end
 
             local lsId = 0
-            for lightStructure in pairs(ampel.lichtImmos) do
+            for lightStructure in pairs(ampel.lightStructures) do
                 local ls = {
-                    structureRed = lightStructure.rotImmo,
-                    structureGreen = lightStructure.gruenImmo,
-                    structureYellow = lightStructure.gelbImmo or lightStructure.rotImmo,
-                    structureRequest = lightStructure.anforderungImmo
+                    structureRed = lightStructure.redStructure,
+                    structureGreen = lightStructure.greenStructure,
+                    structureYellow = lightStructure.yellowStructure or lightStructure.redStructure,
+                    structureRequest = lightStructure.requestStructure
                 }
                 trafficLight.lightStructures[tostring(lsId)] = ls
                 lsId = lsId + 1
