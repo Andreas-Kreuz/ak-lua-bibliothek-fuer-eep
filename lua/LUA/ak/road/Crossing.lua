@@ -243,23 +243,23 @@ function Crossing.planeSchaltungenEin()
                     if kreuzungsAmpelSchaltungen[ampel.signalId][schaltung] then
                         if kreuzungsAmpelSchaltungen[ampel.signalId][schaltung] == TrafficLightState.GREEN then
                             text = text .. "<br><j>" ..
-                                       (farbig and fmt.hintergrund_gruen(schaltung.name .. " (Gruen)") or
-                                           (schaltung.name .. " " .. fmt.hintergrund_gruen("(Gruen)")))
+                                       (farbig and fmt.bgGreen(schaltung.name .. " (Gruen)") or
+                                           (schaltung.name .. " " .. fmt.bgGreen("(Gruen)")))
                         elseif kreuzungsAmpelSchaltungen[ampel.signalId][schaltung] == TrafficLightState.YELLOW then
                             text = text .. "<br><j>" ..
-                                       (farbig and fmt.hintergrund_blau(schaltung.name .. " (Anf)") or
-                                           (schaltung.name .. " " .. fmt.hintergrund_blau("(Anf)")))
+                                       (farbig and fmt.bgBlue(schaltung.name .. " (Anf)") or
+                                           (schaltung.name .. " " .. fmt.bgBlue("(Anf)")))
                         elseif kreuzungsAmpelSchaltungen[ampel.signalId][schaltung] == TrafficLightState.PEDESTRIAN then
                             text = text .. "<br><j>" ..
-                                       (farbig and fmt.hintergrund_gelb(schaltung.name .. " (FG)") or
-                                           (schaltung.name .. " " .. fmt.hintergrund_gelb("(FG)")))
+                                       (farbig and fmt.bgYellow(schaltung.name .. " (FG)") or
+                                           (schaltung.name .. " " .. fmt.bgYellow("(FG)")))
                         else
                             assert(false)
                         end
                     else
                         text = text .. "<br><j>" ..
-                                   (farbig and fmt.hintergrund_rot(schaltung.name .. " (Rot)") or
-                                       (schaltung.name .. " " .. fmt.hintergrund_rot("(Rot)")))
+                                   (farbig and fmt.bgRed(schaltung.name .. " (Rot)") or
+                                       (schaltung.name .. " " .. fmt.bgRed("(Rot)")))
                     end
                 end
                 ampel:setCircuitInfo(text)

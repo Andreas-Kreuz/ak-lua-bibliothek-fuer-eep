@@ -44,16 +44,16 @@ function Lane:pruefeAnforderungen()
 
     local text = ""
     if self.schaltungsTyp == Lane.SchaltungsTyp.NORMAL then
-        text = text .. fmt.hintergrund_gruen(self.name)
+        text = text .. fmt.bgGreen(self.name)
     elseif self.schaltungsTyp == Lane.SchaltungsTyp.FUSSGAENGER then
-        text = text .. fmt.hintergrund_gelb(self.name)
+        text = text .. fmt.bgYellow(self.name)
     elseif self.schaltungsTyp == Lane.SchaltungsTyp.ANFORDERUNG then
-        text = text .. fmt.hintergrund_blau(self.name)
+        text = text .. fmt.bgBlue(self.name)
     else
-        text = text .. fmt.rot(self.name)
+        text = text .. fmt.red(self.name)
     end
 
-    text = text .. ": " .. (self:hasRequest() and fmt.hellgrau("BELEGT") or fmt.hellgrau("-FREI-")) .. " "
+    text = text .. ": " .. (self:hasRequest() and fmt.lightGray("BELEGT") or fmt.lightGray("-FREI-")) .. " "
     if self.verwendeZaehlStrassen then
         text = text .. "(Strasse)"
     elseif self.verwendeZaehlAmpeln then

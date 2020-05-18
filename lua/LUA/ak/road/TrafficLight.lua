@@ -108,7 +108,7 @@ function TrafficLight:refreshInfo()
 
     EEPShowInfoSignal(self.signalId, showInfo)
     if showInfo then
-        local infoText = "<j><b>Ampel ID: " .. fmt.hintergrund_grau(self.signalId) .. "</b></j>"
+        local infoText = "<j><b>Ampel ID: " .. fmt.bgGray(self.signalId) .. "</b></j>"
         infoText = infoText .. "<br>" .. self.trafficLightModel.name
 
         if Crossing.zeigeSchaltungAlsInfo then

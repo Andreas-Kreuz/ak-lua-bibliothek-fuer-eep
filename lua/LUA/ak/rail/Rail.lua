@@ -427,9 +427,9 @@ end
 function AkBlock:formattedText()
     local text = self.name .. ": "
     if self.taken then
-        text = text .. fmt.fett("BELEGT") .. " " .. fmt.kursiv(self.trainName and self.trainName or "UNBEKANNT")
+        text = text .. fmt.bold("BELEGT") .. " " .. fmt.italic(self.trainName and self.trainName or "UNBEKANNT")
     else
-        text = text .. fmt.fett("frei")
+        text = text .. fmt.bold("frei")
     end
     return text
 end
@@ -673,9 +673,9 @@ end
 function AkRoute:formattedText()
     local text = self.name .. ": "
     if self.taken then
-        text = text .. fmt.fett("BELEGT") .. " " .. fmt.kursiv(self.trainName and self.trainName or "UNBEKANNT")
+        text = text .. fmt.bold("BELEGT") .. " " .. fmt.italic(self.trainName and self.trainName or "UNBEKANNT")
     else
-        text = text .. fmt.fett("frei")
+        text = text .. fmt.bold("frei")
     end
     return text
 end
@@ -734,7 +734,7 @@ function AkStation:removeInfoStructure(structure)
 end
 
 function AkStation:showInfo()
-    local formattedText = "<c>" .. fmt.fett(self.name) .. "\n---------------------------------------"
+    local formattedText = "<c>" .. fmt.bold(self.name) .. "\n---------------------------------------"
     for _, route in ipairs(self.tracks) do
         formattedText = formattedText .. "\n<j>" .. "- " .. route:formattedText() .. "</j><br>";
     end
@@ -798,7 +798,7 @@ function AkSignalTower:removeInfoStructure(structure)
 end
 
 function AkSignalTower:showInfo()
-    local formattedText = "<c>" .. fmt.fett(self.name) .. "\n---------------------------------------"
+    local formattedText = "<c>" .. fmt.bold(self.name) .. "\n---------------------------------------"
     for _, block in ipairs(self.tracks) do
         formattedText = formattedText .. "\n<j>" .. "- " .. block:formattedText() .. "</j><br>";
     end
