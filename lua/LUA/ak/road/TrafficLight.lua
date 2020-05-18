@@ -141,7 +141,7 @@ function TrafficLight:switchTo(phase, grund)
     local lightDbg = self:switchStructureLight()
     local structureDbg = self:switchStructureAxis()
 
-    local sigIndex = self.trafficLightModel:signalIndexFuer(self.phase)
+    local sigIndex = self.trafficLightModel:signalIndexOf(self.phase)
     if (self.debug or TrafficLight.debug) then
         print(
             string.format("[TrafficLight    ] Schalte Ampel %04d auf %s (%01d)", self.signalId, self.phase, sigIndex) ..

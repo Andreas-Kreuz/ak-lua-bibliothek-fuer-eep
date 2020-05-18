@@ -51,7 +51,7 @@ function TrafficLightModel:print()
     print(self.name)
 end
 
-function TrafficLightModel:signalIndexFuer(phase)
+function TrafficLightModel:signalIndexOf(phase)
     assert(phase)
     if phase == TrafficLightState.YELLOW then
         return self.signalIndexYellow
