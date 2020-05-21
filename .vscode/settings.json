@@ -158,5 +158,6 @@
     ],
     "lua.preferLuaCheckErrors": true,
     "lua.targetVersion": "5.3",
-    "vscode-lua-format.configPath": "lua-formatter.conf"
+    "vscode-lua-format.configPath": "lua-formatter.conf",
+    "Lua.workspace.useGitIgnore": false
 }
