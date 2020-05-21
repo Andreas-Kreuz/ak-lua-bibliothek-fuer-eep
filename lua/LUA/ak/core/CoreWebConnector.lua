@@ -1,4 +1,4 @@
-print("Loading ak.core.CoreWebConnector ...")
+if AkDebugLoad then print("Loading ak.core.CoreWebConnector ...") end
 local CoreWebConnector = {}
 local ServerController = require("ak.io.ServerController")
 local knownModules = nil

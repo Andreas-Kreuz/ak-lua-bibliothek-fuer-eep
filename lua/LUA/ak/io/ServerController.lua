@@ -8,7 +8,7 @@ local ServerController = require("ak.io.ServerController")
 --]]
 -- @author Andreas Kreuz
 -- @release 0.9.0
-print("Loading ak.io.ServerController ...")
+if AkDebugLoad then print("Loading ak.io.ServerController ...") end
 local AkWebServerIo = require("ak.io.AkWebServerIo")
 local AkCommandExecutor = require("ak.io.AkCommandExecutor")
 local os = require("os")

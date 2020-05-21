@@ -1,4 +1,4 @@
-print("Loading ak.road.Crossing ...")
+if AkDebugLoad then print("Loading ak.road.Crossing ...") end
 
 local Task = require("ak.scheduler.Task")
 local Scheduler = require("ak.scheduler.Scheduler")

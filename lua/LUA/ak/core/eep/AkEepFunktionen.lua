@@ -1,4 +1,4 @@
-print("Loading ak.core.eep.AkEepFunktionen ...")
+if AkDebugLoad then print("Loading ak.core.eep.AkEepFunktionen ...") end
 
 ------------------
 -- EEP Functions

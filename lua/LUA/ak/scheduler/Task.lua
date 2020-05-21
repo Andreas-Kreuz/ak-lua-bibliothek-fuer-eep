@@ -1,4 +1,4 @@
-print("Loading ak.scheduler.Task ...")
+if AkDebugLoad then print("Loading ak.scheduler.Task ...") end
 
 
 ---------------------------------------

@@ -1,4 +1,4 @@
-print("Loading ak.storage.StorageUtility ...")
+if AkDebugLoad then print("Loading ak.storage.StorageUtility ...") end
 
 local speicherPlaetze = {}
 local gespeicherteWerte = {}

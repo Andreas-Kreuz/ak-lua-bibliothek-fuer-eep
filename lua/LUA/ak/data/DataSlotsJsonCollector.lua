@@ -1,4 +1,4 @@
-print("Loading ak.data.DataSlotsJsonCollector ...")
+if AkDebugLoad then print("Loading ak.data.DataSlotsJsonCollector ...") end
 
 local DataSlotsJsonCollector = {}
 local enabled = true

@@ -1,4 +1,4 @@
-print("Loading ak.road.TrafficLightModel ...")
+if AkDebugLoad then print("Loading ak.road.TrafficLightModel ...") end
 
 local TrafficLightState = require("ak.road.TrafficLightState")
 ------------------------------------------------------------------------------------------

@@ -1,4 +1,4 @@
-print("Loading ak.road.LightStructureTrafficLight ...")
+if AkDebugLoad then print("Loading ak.road.LightStructureTrafficLight ...") end
 
 ---@class LightStructureTrafficLight
 local LightStructureTrafficLight = {}

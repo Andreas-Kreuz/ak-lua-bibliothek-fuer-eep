@@ -1,4 +1,4 @@
-print("Loading Bus ...")
+if AkDebugLoad then print("Loading Bus ...") end
 
 -----------------------
 -- Bushaltestellen

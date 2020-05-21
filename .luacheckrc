@@ -1,5 +1,6 @@
 read_globals = {
     "AkAktion",
+    "AkDebugLoad",
     "Scheduler",
     "AkSpeicherHilfe",
     "AkStartMitDebug",

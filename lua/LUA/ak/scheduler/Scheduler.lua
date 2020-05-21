@@ -1,4 +1,4 @@
-print("Loading ak.scheduler.Scheduler ...")
+if AkDebugLoad then print("Loading ak.scheduler.Scheduler ...") end
 local os = require("os")
 
 local secondsPerDay = 24 * 60 * 60

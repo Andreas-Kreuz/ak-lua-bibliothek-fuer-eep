@@ -1,4 +1,4 @@
-print("Loading ak.core.ModuleRegistry ...")
+if AkDebugLoad then print("Loading ak.core.ModuleRegistry ...") end
 local ModuleRegistry = {}
 
 local os = require("os")

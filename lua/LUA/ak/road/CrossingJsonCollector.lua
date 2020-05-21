@@ -1,4 +1,4 @@
-print("Loading ak.road.CrossingJsonCollector ...")
+if AkDebugLoad then print("Loading ak.road.CrossingJsonCollector ...") end
 
 ---@class CrossingJsonCollector
 CrossingJsonCollector = {}

@@ -1,4 +1,4 @@
-print("Loading ak.road.TrafficLightModelJsonCollector ...")
+if AkDebugLoad then print("Loading ak.road.TrafficLightModelJsonCollector ...") end
 
 ---@class TrafficLightModelJsonCollector
 TrafficLightModelJsonCollector = {}
