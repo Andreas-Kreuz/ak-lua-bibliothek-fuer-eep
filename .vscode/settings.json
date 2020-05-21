@@ -150,8 +150,9 @@
         "AkDebugLoad"
     ],
     "Lua.workspace.ignoreDir": [
-        "lua/Resourcen/**/*.lua",
-        "lua/Resourcen"
+        ".vscode",
+        "lua/Resourcen",
+        "lua/modell-pakete"
     ],
     "Lua.diagnostics.disable": [
         "lowercase-global"
