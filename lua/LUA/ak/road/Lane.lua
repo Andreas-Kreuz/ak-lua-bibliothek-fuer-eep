@@ -192,10 +192,10 @@ function Lane:vehicleLeft(swithToRed, vehicleName)
         local lanes = {}
         lanes[self] = true
 
-        Lane.switchTrafficLights(lanes, TrafficLightState.YELLOW, "Fahrzeug verlassen: " .. vehicleName)
+        Lane.switchTrafficLights(lanes, TrafficLightState.YELLOW, "Vehicle left: " .. vehicleName)
 
         local toRed = Task:new(function()
-            Lane.switchTrafficLights(lanes, TrafficLightState.RED, "Fahrzeug verlassen: " .. vehicleName)
+            Lane.switchTrafficLights(lanes, TrafficLightState.RED, "Vehicle left: " .. vehicleName)
         end, "Schalte " .. self.name .. " auf rot.")
         Scheduler:scheduleTask(2, toRed)
     end
