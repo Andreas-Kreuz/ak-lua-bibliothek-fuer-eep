@@ -87,10 +87,11 @@ end
 
 function Lane:getAnforderungsText() return self.anforderungsText or "KEINE ANFORDERUNG" end
 
-function Lane:zaehleAnStrasseAlle(strassenId)
+---@param roadId number Road Track ID
+function Lane:zaehleAnStrasseAlle(roadId)
     self.verwendeZaehlStrassen = true
-    EEPRegisterRoadTrack(strassenId)
-    if not self.zaehlStrassen[strassenId] then self.zaehlStrassen[strassenId] = {} end
+    EEPRegisterRoadTrack(roadId)
+    if not self.zaehlStrassen[roadId] then self.zaehlStrassen[roadId] = {} end
     return self
 end
 
@@ -130,6 +131,7 @@ function Lane:checkRoadRequests()
     self.hasRequestOnRoad = anforderungGefunden
 end
 
+---@param signalId number Signal ID
 function Lane:zaehleAnAmpelAlle(signalId)
     self.verwendeZaehlAmpeln = true
     assert(signalId, "Keine signalId angegeben")
@@ -137,6 +139,8 @@ function Lane:zaehleAnAmpelAlle(signalId)
     return self
 end
 
+---@param signalId number Signal ID
+---@param route string Route name
 function Lane:zaehleAnAmpelBeiRoute(signalId, route)
     self.verwendeZaehlAmpeln = true
     if not self.zaehlAmpeln[signalId] then self.zaehlAmpeln[signalId] = {} end
