@@ -22,7 +22,7 @@ describe("EepFunktionen.lua", function()
         end)
     end)
 
-    describe("Simulating signals on train", function()
+    describe("EEPGetSignalTrainsCount / EEPGetSignalTrainName - Simulating signals on train", function()
         insulate("single train in queue", function()
             local EEPSimulator = require("ak.core.eep.AkEepFunktionen")
             EEPSimulator.queueTrainOnSignal(54, "#train1")
