@@ -91,7 +91,7 @@ local function collect(alleKreuzungen)
             type = type,
             countType = countType,
             waitingTrains = {},
-            waitingForGreenCyclesCount = lane.warteZeit,
+            waitingForGreenCyclesCount = lane.waitCount,
             directions = lane.directions,
             switchings = richtungsSchaltungen[lane] or {}
         }

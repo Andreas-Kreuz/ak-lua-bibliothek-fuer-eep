@@ -12,9 +12,7 @@ local function currentSecondsSinceMidnight()
     else
         print("[Scheduler] System time!")
         local time = os.date("*t")
-        calculatedSeconds = os.time{
-            year = 1970, month = 1, day = 1, hour = time.hour, min = time.min, sec = time.sec
-        }
+        calculatedSeconds = os.time {year = 1970, month = 1, day = 1, hour = time.hour, min = time.min, sec = time.sec}
     end
     return calculatedSeconds
 end
@@ -25,7 +23,7 @@ end
 local Scheduler = {ready = true}
 Scheduler.debug = AkStartMitDebug or false
 Scheduler.scheduledTasks = {}
-Scheduler.futureTasks = {}-- Wird zu self.eingeplanteAktionen hinzugefuegt
+Scheduler.futureTasks = {} -- Wird zu self.eingeplanteAktionen hinzugefuegt
 Scheduler.lastRuntime = 0
 
 function Scheduler:runTasks()
@@ -55,8 +53,9 @@ function Scheduler:runTasks()
         for currentTask in pairs(scheduledTasks) do
             self.scheduledTasks[currentTask] = nil
             for successorAction, offsetSeconds in pairs(currentTask.subsequentTask) do
-                if Scheduler.debug then print("[Scheduler] Planning Task: '" .. successorAction.name .. "' in " .. offsetSeconds
-                    .. " seconds (at " .. currentSecondsSinceMidnight() + offsetSeconds .. ")")
+                if Scheduler.debug then
+                    print("[Scheduler] Planning Task: '" .. successorAction.name .. "' in " .. offsetSeconds ..
+                              " seconds (at " .. currentSecondsSinceMidnight() + offsetSeconds .. ")")
                 end
                 self.scheduledTasks[successorAction] = currentSecondsSinceMidnight() + offsetSeconds
             end
@@ -68,7 +67,8 @@ function Scheduler:runTasks()
 end
 
 --- the newAction will be called after offsetSeconds milliseconds of the current action
----@param offsetInSeconds number Zeitspanne nach der die einzuplanende Aktion ausgefhrt werden soll kann nicht groesser sein als AkSekundenProTag
+---@param offsetInSeconds number Zeitspanne nach der die einzuplanende Aktion ausgeführt werden soll kann nicht
+---                              groesser sein als AkSekundenProTag
 ---@param newTask Task the new action to be performed
 ---@param precedingTask Task optional - wenn angegeben, wird die neue Aktion eingeplant, wenn die zeitspanneInSekunden
 -- nach Ausfuehren der vorgaengerAktion vergangen ist
@@ -79,8 +79,8 @@ function Scheduler:scheduleTask(offsetInSeconds, newTask, precedingTask)
 
     local previousTaskFound = false
     if precedingTask then
-        previousTaskFound = scheduleAfter(self.scheduledTasks, newTask, offsetInSeconds, precedingTask)
-            or scheduleAfter(self.futureTasks, newTask, offsetInSeconds, precedingTask)
+        previousTaskFound = scheduleAfter(self.scheduledTasks, newTask, offsetInSeconds, precedingTask) or
+                                scheduleAfter(self.futureTasks, newTask, offsetInSeconds, precedingTask)
         if not previousTaskFound then
             print("[Scheduler] DID NOT FIND PREDECESSOR TASK FOR! : " .. precedingTask.name .. " --> " .. newTask.name)
         end
@@ -88,9 +88,9 @@ function Scheduler:scheduleTask(offsetInSeconds, newTask, precedingTask)
 
     if not previousTaskFound and not self.scheduledTasks[newTask] then
         self.futureTasks[newTask] = currentSecondsSinceMidnight() + offsetInSeconds
-        if Scheduler.debug then print("[Scheduler] Plane Aktion: '" .. newTask.name
-            .. "' in " .. offsetInSeconds .. " Sekunden (um "
-            .. currentSecondsSinceMidnight() + offsetInSeconds .. ")")
+        if Scheduler.debug then
+            print("[Scheduler] Plane Aktion: '" .. newTask.name .. "' in " .. offsetInSeconds .. " Sekunden (um " ..
+                      currentSecondsSinceMidnight() + offsetInSeconds .. ")")
         end
     end
 end

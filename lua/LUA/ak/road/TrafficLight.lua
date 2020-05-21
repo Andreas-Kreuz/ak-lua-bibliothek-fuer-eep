@@ -154,16 +154,17 @@ function TrafficLight:switchStructureLight()
     local immoDbg = ""
     for lightTL in pairs(self.lightStructures) do
         if lightTL.redStructure then
-            immoDbg = immoDbg .. string.format(", Licht in %s: %s", lightTL.redStructure, (self.phase ==
-                                                   TrafficLightState.RED or self.phase == TrafficLightState.REDYELLOW) and
-                                                   "an" or "aus")
+            local onOff = (self.phase == TrafficLightState.RED or self.phase == TrafficLightState.REDYELLOW) and "an" or
+                              "aus"
+
+            immoDbg = immoDbg .. string.format(", Licht in %s: %s", lightTL.redStructure, onOff)
             EEPStructureSetLight(lightTL.redStructure,
                                  self.phase == TrafficLightState.RED or self.phase == TrafficLightState.REDYELLOW)
         end
         if lightTL.yellowStructure then
-            immoDbg = immoDbg .. string.format(", Licht in %s: %s", lightTL.yellowStructure, (self.phase ==
-                                                   TrafficLightState.YELLOW or self.phase == TrafficLightState.REDYELLOW) and
-                                                   "an" or "aus")
+            local onOff =
+                (self.phase == TrafficLightState.YELLOW or self.phase == TrafficLightState.REDYELLOW) and "an" or "aus"
+            immoDbg = immoDbg .. string.format(", Licht in %s: %s", lightTL.yellowStructure, onOff)
             EEPStructureSetLight(lightTL.yellowStructure,
                                  self.phase == TrafficLightState.YELLOW or self.phase == TrafficLightState.REDYELLOW)
         end

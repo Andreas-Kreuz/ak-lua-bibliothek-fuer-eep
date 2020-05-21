@@ -170,9 +170,9 @@ Es gibt drei Möglichkeiten Fahrzeuge zu erkennen:
 
    Es werden zwei Kontaktpunkte benötigt:
 
-   1. _Richtung betreten_<br> Rufe im Kontaktpunkt die Funktion `meineRichtung:betritt()` auf, wenn ein Fahrzeug den Bereich betritt.
+   1. _Richtung betreten_<br> Rufe im Kontaktpunkt die Funktion `meineRichtung:vehicleEntered()` auf, wenn ein Fahrzeug den Bereich betritt.
 
-   2. _Richtung verlassen_<br> Rufe im Kontaktpunkt die Funktion `meineRichtung:verlasse(signalaufrot, fahrzeugName)` auf, wenn ein Fahrzeug den Bereich verläßt.
+   2. _Richtung verlassen_<br> Rufe im Kontaktpunkt die Funktion `meineRichtung:vehicleLeft(switchToRed, fahrzeugName)` auf, wenn ein Fahrzeug den Bereich verläßt.
 
       Wenn das Fahrzeug die Richtung verläßt, dann kann es die Ampel auf rot setzen, wenn gewünscht.
 
@@ -222,10 +222,10 @@ Muss in `EEPMain()` aufgerufen werden - plant die Umschaltung von Kreuzungsschal
 
 - **Richtungen mit Anforderungen benötigen zwingend Zählfunktionen** für die Fahrzeuge dieser Richtung. Für andere Richtungen ist dies optional.
 
-  - `richtung:betritt()` - im Kontaktpunkt aufrufen, wenn eine Richtung betreten wird (z.B. 50m vor der Ampel; aber nur auf dieser Richtungsfahrbahn)
+  - `richtung:vehicleEntered()` - im Kontaktpunkt aufrufen, wenn eine Richtung betreten wird (z.B. 50m vor der Ampel; aber nur auf dieser Richtungsfahrbahn)
 
-  - `richtung:verlasse(signalaufrot, Zugname)` - im Kontaktpunkt aufrufen, wenn eine Richtung verlassen wird (hinter der Ampel)
+  - `richtung:vehicleLeft(switchToRed, Zugname)` - im Kontaktpunkt aufrufen, wenn eine Richtung verlassen wird (hinter der Ampel)
 
-    `signalaufrot` sollte nur für Richtungen mit Anforderung auf `true` gesetzt werden. Es sorgt dafür, dass die Richtungsampeln sofort auf rot gesetzt werden, wenn keine Anforderung mehr vorliegt.
+    `switchToRed` sollte nur für Richtungen mit Anforderung auf `true` gesetzt werden. Es sorgt dafür, dass die Richtungsampeln sofort auf rot gesetzt werden, wenn keine Anforderung mehr vorliegt.
 
     **Beachte:** Die Zählfunktionen müssen beim Betreten und Verlassen einer Richtung verwendet werden.

@@ -8,7 +8,7 @@ local Lane = require("ak.road.Lane")
 ---@class CrossingCircuit
 local CrossingCircuit = {}
 
-function CrossingCircuit.getTyp()
+function CrossingCircuit.getType()
     return "CrossingCircuit"
 end
 
@@ -64,19 +64,19 @@ end
 
 function CrossingCircuit:fuegeRichtungHinzu(richtung)
     assert(richtung, "Bitte ein gueltige Richtung angeben")
-    richtung:setSchaltungsTyp(Lane.SchaltungsTyp.NORMAL)
+    richtung:setLaneType(Lane.SchaltungsTyp.NORMAL)
     self.richtungenNormal[richtung] = true
 end
 
 function CrossingCircuit:addRichtungMitAnforderung(richtung)
     assert(richtung, "Bitte ein gueltige Richtung angeben")
-    richtung:setSchaltungsTyp(Lane.SchaltungsTyp.ANFORDERUNG)
+    richtung:setLaneType(Lane.SchaltungsTyp.ANFORDERUNG)
     self.richtungenMitAnforderung[richtung] = true
 end
 
 function CrossingCircuit:fuegeRichtungFuerFussgaengerHinzu(richtung)
     assert(richtung, "Bitte ein gueltige Richtung angeben")
-    richtung:setSchaltungsTyp(Lane.SchaltungsTyp.FUSSGAENGER)
+    richtung:setLaneType(Lane.SchaltungsTyp.FUSSGAENGER)
     self.richtungenFuerFussgaenger[richtung] = true
 end
 
@@ -93,18 +93,18 @@ function CrossingCircuit:nachPrioSortierteRichtungen()
     for richtung in pairs(self.richtungenNormal) do
         table.insert(sortierteRichtungen, richtung)
         anzahlDerRichtungen = anzahlDerRichtungen + 1
-        gesamtPrio = gesamtPrio + richtung:getPrio()
+        gesamtPrio = gesamtPrio + richtung:calculatePriority()
     end
     for richtung in pairs(self.richtungenFuerFussgaenger) do
         table.insert(sortierteRichtungen, richtung)
         anzahlDerRichtungen = anzahlDerRichtungen + 1
-        gesamtPrio = gesamtPrio + richtung:getPrio()
+        gesamtPrio = gesamtPrio + richtung:calculatePriority()
     end
     local durchschnittsPrio = gesamtPrio / anzahlDerRichtungen
     local sortierFunktion = function(richtung1, richtung2)
-        if richtung1:getPrio() > richtung2:getPrio() then
+        if richtung1:calculatePriority() > richtung2:calculatePriority() then
             return true
-        elseif richtung1:getPrio() < richtung2:getPrio() then
+        elseif richtung1:calculatePriority() < richtung2:calculatePriority() then
             return false
         end
         return (richtung1.name < richtung2.name)
@@ -159,14 +159,14 @@ function CrossingCircuit.hoeherePrioAls(schaltung1, schaltung2)
     end
 end
 
-function CrossingCircuit:getPrio()
+function CrossingCircuit:calculatePriority()
     local _, _, prio = self:nachPrioSortierteRichtungen()
     return prio
 end
 
-function CrossingCircuit:setzeWartezeitZurueck()
+function CrossingCircuit:resetWaitCount()
     for richtung in pairs(self.richtungenNormal) do
-        richtung:setzeWartezeitZurueck()
+        richtung:resetWaitCount()
     end
 end
 

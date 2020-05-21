@@ -56,7 +56,7 @@ function Crossing.schalteAutomatisch(nameDerKreuzung)
     if k then k:setAutomatikModus() end
 end
 
-function Crossing.getTyp() return "Crossing" end
+function Crossing.getType() return "Crossing" end
 
 function Crossing:getName() return self.name end
 
@@ -67,11 +67,11 @@ function Crossing:getAktuelleSchaltung() return self.aktuelleSchaltung end
 function Crossing:setzeWarteZeitZurueck(nextSchaltung)
     local increaseRichtungen = {}
     for schaltung in pairs(self.schaltungen) do
-        assert(schaltung.getTyp() == "CrossingCircuit", "Found: " .. schaltung.getTyp())
+        assert(schaltung.getType() == "CrossingCircuit", "Found: " .. schaltung.getType())
         for richtung in pairs(schaltung:getNormaleRichtungen()) do
-            assert(richtung.getTyp() == "Lane", "Found: " .. richtung.getTyp())
+            assert(richtung.getType() == "Lane", "Found: " .. richtung.getType())
             if nextSchaltung:getNormaleRichtungen()[richtung] then
-                richtung:setzeWartezeitZurueck()
+                richtung:resetWaitCount()
             else
                 increaseRichtungen[richtung] = true
             end
@@ -79,8 +79,8 @@ function Crossing:setzeWarteZeitZurueck(nextSchaltung)
     end
 
     for richtung in pairs(increaseRichtungen) do
-        assert(richtung.getTyp() == "Lane", "Found: " .. richtung.getTyp())
-        richtung:erhoeheWartezeit()
+        assert(richtung.getType() == "Lane", "Found: " .. richtung.getType())
+        richtung:incrementWaitCount()
     end
     self.aktuelleSchaltung = nextSchaltung
 end
@@ -133,9 +133,9 @@ function Crossing.zaehlerZuruecksetzen()
     for _, kreuzung in ipairs(AkAllKreuzungen) do
         print("[Crossing ] SETZE ZURUECK: " .. kreuzung.name)
         for schaltung in pairs(kreuzung:getSchaltungen()) do
-            for richtung in pairs(schaltung:getNormaleRichtungen()) do richtung:setzeFahrzeugeZurueck() end
+            for richtung in pairs(schaltung:getNormaleRichtungen()) do richtung:resetVehicleCounter() end
             for richtung in pairs(schaltung:getRichtungenMitAnforderung()) do
-                richtung:setzeFahrzeugeZurueck()
+                richtung:resetVehicleCounter()
             end
         end
     end
@@ -177,7 +177,7 @@ function Crossing.planeSchaltungenEin()
             for richtung in pairs(schaltung:getRichtungFuerFussgaenger()) do alleRichtungen[richtung] = true end
         end
 
-        for richtung in pairs(alleRichtungen) do richtung:pruefeAnforderungen() end
+        for richtung in pairs(alleRichtungen) do richtung:checkRequests() end
     end
 
     --- Diese Funktion sucht sich aus den Ampeln die mit der passenden Richtung
@@ -268,7 +268,7 @@ function Crossing.planeSchaltungenEin()
             do
                 local text = "<j><b>Richtung / Wartezeit</b></j>"
                 for richtung in pairs(kreuzungsAmpelSchaltungen[ampel.signalId]["lanes"]) do
-                    text = text .. "<br>" .. richtung:getAnforderungsText() .. " / " .. richtung.warteZeit
+                    text = text .. "<br>" .. richtung:getAnforderungsText() .. " / " .. richtung.waitCount
                 end
                 ampel:setLaneInfo(text)
             end
@@ -289,7 +289,7 @@ function Crossing.planeSchaltungenEin()
     end
 
     ---------------------------
-    -- Funktion schalteAmpeln
+    -- Funktion switchTrafficLights
     ---------------------------
     local function AkSchalteKreuzung(kreuzung)
         -- if Crossing.debug then print(string.format("[Crossing ] Schalte Kreuzung %s: %s",
@@ -385,29 +385,29 @@ function Crossing.planeSchaltungenEin()
             end
 
             local fussgaengerAufRot = Task:new(function()
-                Lane.schalteAmpeln(richtungenAufFussgaengerRot, TrafficLightState.RED, currentName)
+                Lane.switchTrafficLights(richtungenAufFussgaengerRot, TrafficLightState.RED, currentName)
             end, "Schalte " .. currentName .. " auf Fussgaenger Rot")
             Scheduler:scheduleTask(3, fussgaengerAufRot)
 
             local alteAmpelnAufGelb = Task:new(function()
-                Lane.schalteAmpeln(richtungenAufRot, TrafficLightState.YELLOW, currentName)
+                Lane.switchTrafficLights(richtungenAufRot, TrafficLightState.YELLOW, currentName)
             end, "Schalte " .. currentName .. " auf gelb")
             Scheduler:scheduleTask(0, alteAmpelnAufGelb, fussgaengerAufRot)
 
             local alteAmpelnAufRot = Task:new(function()
-                Lane.schalteAmpeln(richtungenAufRot, TrafficLightState.RED, currentName)
+                Lane.switchTrafficLights(richtungenAufRot, TrafficLightState.RED, currentName)
                 kreuzung:setzeWarteZeitZurueck(nextSchaltung)
             end, "Schalte " .. currentName .. " auf rot")
             Scheduler:scheduleTask(2, alteAmpelnAufRot, alteAmpelnAufGelb)
 
             local neueAmpelnAufRotGelb = Task:new(function()
-                Lane.schalteAmpeln(richtungenAufGruen, TrafficLightState.REDYELLOW, nextName)
-                Lane.schalteAmpeln(richtungenAufFussgaengerGruen, TrafficLightState.PEDESTRIAN, nextName)
+                Lane.switchTrafficLights(richtungenAufGruen, TrafficLightState.REDYELLOW, nextName)
+                Lane.switchTrafficLights(richtungenAufFussgaengerGruen, TrafficLightState.PEDESTRIAN, nextName)
             end, "Schalte " .. nextName .. " auf rot-gelb")
             Scheduler:scheduleTask(3, neueAmpelnAufRotGelb, alteAmpelnAufRot)
 
             local neueAmpelnAufGruen = Task:new(function()
-                Lane.schalteAmpeln(richtungenAufGruen, TrafficLightState.GREEN, nextName)
+                Lane.switchTrafficLights(richtungenAufGruen, TrafficLightState.GREEN, nextName)
                 kreuzung:setGeschaltet(true)
             end, "Schalte " .. nextName .. " auf gruen")
             Scheduler:scheduleTask(1, neueAmpelnAufGruen, neueAmpelnAufRotGelb)

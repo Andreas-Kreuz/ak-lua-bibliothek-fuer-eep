@@ -44,9 +44,9 @@ StorageUtility.debug = false
 Crossing.debug = true
 KpBetritt(k1_r8)
 KpBetritt(k1_r8)
-assert(k1_r8.fahrzeuge == 2, k1_r8.anzahlFahrzeuge)
+assert(k1_r8.vehicleCount == 2, k1_r8.anzahlFahrzeuge)
 Crossing.zaehlerZuruecksetzen()
-assert(k1_r8.fahrzeuge == 0)
+assert(k1_r8.vehicleCount == 0)
 -------------------------------------------------------------------
 local function run()
     EEPTime = EEPTime + 20

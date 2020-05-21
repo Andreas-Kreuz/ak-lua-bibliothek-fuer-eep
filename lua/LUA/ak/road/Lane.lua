@@ -17,20 +17,20 @@ Lane.SchaltungsTyp.ANFORDERUNG = "ANFORDERUNG"
 Lane.SchaltungsTyp.NORMAL = "NORMAL"
 Lane.SchaltungsTyp.FUSSGAENGER = "FUSSGAENGER"
 
-function Lane.schalteAmpeln(lanes, phase, grund)
+function Lane.switchTrafficLights(lanes, phase, grund)
     assert(
         phase == TrafficLightState.GREEN or phase == TrafficLightState.REDYELLOW or phase == TrafficLightState.YELLOW or
             phase == TrafficLightState.RED or phase == TrafficLightState.PEDESTRIAN)
     for richtung in pairs(lanes) do richtung:switchTo(phase, grund) end
 end
 
-function Lane.getTyp() return "Lane" end
+function Lane.getType() return "Lane" end
 
 function Lane:getName() return self.name end
 
-function Lane:getSchaltungsTyp() return self.schaltungsTyp end
+function Lane:getLaneType() return self.schaltungsTyp end
 
-function Lane:setSchaltungsTyp(schaltungsTyp)
+function Lane:setLaneType(schaltungsTyp)
     assert(schaltungsTyp)
     assert(self.schaltungsTyp == Lane.SchaltungsTyp.NICHT_VERWENDET or self.schaltungsTyp == schaltungsTyp,
            "Diese Richtung hatte schon den Schaltungstyp: '" .. self.schaltungsTyp .. "' und kann daher nicht auf '" ..
@@ -38,9 +38,9 @@ function Lane:setSchaltungsTyp(schaltungsTyp)
     self.schaltungsTyp = schaltungsTyp
 end
 
-function Lane:pruefeAnforderungen()
-    self:pruefeAnforderungenAnStrassen()
-    self:pruefeAnforderungenAnSignalen()
+function Lane:checkRequests()
+    self:checkRoadRequests()
+    self:checkSignalRequests()
 
     local text = ""
     if self.schaltungsTyp == Lane.SchaltungsTyp.NORMAL then
@@ -59,7 +59,7 @@ function Lane:pruefeAnforderungen()
     elseif self.verwendeZaehlAmpeln then
         text = text .. "(Ampel)"
     else
-        text = text .. "(" .. self.fahrzeuge .. " gezaehlt)"
+        text = text .. "(" .. self.vehicleCount .. " gezaehlt)"
     end
 
     self.anforderungsText = text
@@ -68,21 +68,21 @@ end
 
 function Lane:refreshRequests() for _, ampel in pairs(self.ampeln) do ampel:refreshRequests(self) end end
 
-function Lane:getPrio()
-    local verwendeZaehlStrassen = self:pruefeAnforderungenAnStrassen()
+function Lane:calculatePriority()
+    local verwendeZaehlStrassen = self:checkRoadRequests()
     if verwendeZaehlStrassen then
-        local prio = (self.anforderungAnStrasse and 1 or 0) * 3 * self.fahrzeugMultiplikator
-        return self.warteZeit > prio and self.warteZeit or prio
+        local prio = (self.hasRequestOnRoad and 1 or 0) * 3 * self.fahrzeugMultiplikator
+        return self.waitCount > prio and self.waitCount or prio
     end
 
-    local verwendeZaehlAmpeln = self:pruefeAnforderungenAnSignalen()
+    local verwendeZaehlAmpeln = self:checkSignalRequests()
     if verwendeZaehlAmpeln then
-        local prio = (self.anforderungAnSignal and 1 or 0) * 3 * self.fahrzeugMultiplikator
-        return self.warteZeit > prio and self.warteZeit or prio
+        local prio = (self.hasRequestOnSignal and 1 or 0) * 3 * self.fahrzeugMultiplikator
+        return self.waitCount > prio and self.waitCount or prio
     end
 
-    local prio = self.fahrzeuge * 3 * self.fahrzeugMultiplikator
-    return self.warteZeit > prio and self.warteZeit or prio
+    local prio = self.vehicleCount * 3 * self.fahrzeugMultiplikator
+    return self.waitCount > prio and self.waitCount or prio
 end
 
 function Lane:getAnforderungsText() return self.anforderungsText or "KEINE ANFORDERUNG" end
@@ -102,7 +102,7 @@ function Lane:zaehleAnStrasseBeiRoute(strassenId, route)
     return self
 end
 
-function Lane:pruefeAnforderungenAnStrassen()
+function Lane:checkRoadRequests()
     local anforderungGefunden = false
     for strassenId, routen in pairs(self.zaehlStrassen) do
         local ok, wartend, zugName = EEPIsRoadTrackReserved(strassenId, true)
@@ -127,7 +127,7 @@ function Lane:pruefeAnforderungenAnStrassen()
             break
         end
     end
-    self.anforderungAnStrasse = anforderungGefunden
+    self.hasRequestOnRoad = anforderungGefunden
 end
 
 function Lane:zaehleAnAmpelAlle(signalId)
@@ -144,7 +144,7 @@ function Lane:zaehleAnAmpelBeiRoute(signalId, route)
     return self
 end
 
-function Lane:pruefeAnforderungenAnSignalen()
+function Lane:checkSignalRequests()
     local anforderungGefunden = false
     for signalId, routen in pairs(self.zaehlAmpeln) do
         local wartend = EEPGetSignalTrainsCount(signalId)
@@ -169,57 +169,57 @@ function Lane:pruefeAnforderungenAnSignalen()
             break
         end
     end
-    self.anforderungAnSignal = anforderungGefunden
+    self.hasRequestOnSignal = anforderungGefunden
 end
 
-function Lane:betritt()
-    self.fahrzeuge = self.fahrzeuge + 1
+function Lane:vehicleEntered()
+    self.vehicleCount = self.vehicleCount + 1
     self:refreshRequests()
     self:save()
 end
 
-function Lane:verlasse(signalaufrot, fahrzeugName)
-    self.fahrzeuge = self.fahrzeuge - 1
-    if self.fahrzeuge < 0 then self.fahrzeuge = 0 end
+function Lane:vehicleLeft(swithToRed, vehicleName)
+    self.vehicleCount = self.vehicleCount - 1
+    if self.vehicleCount < 0 then self.vehicleCount = 0 end
     self:refreshRequests()
     self:save()
 
-    if signalaufrot and not self:hasRequest() then
+    if swithToRed and not self:hasRequest() then
         local lanes = {}
         lanes[self] = true
 
-        Lane.schalteAmpeln(lanes, TrafficLightState.YELLOW, "Fahrzeug verlassen: " .. fahrzeugName)
+        Lane.switchTrafficLights(lanes, TrafficLightState.YELLOW, "Fahrzeug verlassen: " .. vehicleName)
 
         local toRed = Task:new(function()
-            Lane.schalteAmpeln(lanes, TrafficLightState.RED, "Fahrzeug verlassen: " .. fahrzeugName)
+            Lane.switchTrafficLights(lanes, TrafficLightState.RED, "Fahrzeug verlassen: " .. vehicleName)
         end, "Schalte " .. self.name .. " auf rot.")
         Scheduler:scheduleTask(2, toRed)
     end
 end
 
-function Lane:setzeFahrzeugeZurueck()
-    self.fahrzeuge = 0
+function Lane:resetVehicleCounter()
+    self.vehicleCount = 0
     self:refreshRequests()
     self:save()
 end
 
-function Lane:erhoeheWartezeit()
-    self.warteZeit = self.warteZeit + 1
+function Lane:incrementWaitCount()
+    self.waitCount = self.waitCount + 1
     self:save()
 end
 
-function Lane:setzeWartezeitZurueck()
-    self.warteZeit = 0
+function Lane:resetWaitCount()
+    self.waitCount = 0
     self:save()
 end
 
-function Lane:hasRequest() return self.fahrzeuge > 0 or self.anforderungAnSignal or self.anforderungAnStrasse end
+function Lane:hasRequest() return self.vehicleCount > 0 or self.hasRequestOnSignal or self.hasRequestOnRoad end
 
 function Lane:save()
     if self.eepSaveId ~= -1 then
         local data = {}
-        data["f"] = tostring(self.fahrzeuge)
-        data["w"] = tostring(self.warteZeit)
+        data["f"] = tostring(self.vehicleCount)
+        data["w"] = tostring(self.waitCount)
         data["p"] = tostring(self.phase)
         StorageUtility.saveTable(self.eepSaveId, data, "Lane " .. self.name)
     end
@@ -228,21 +228,21 @@ end
 function Lane:load()
     if self.eepSaveId ~= -1 then
         local data = StorageUtility.ladeTabelle(self.eepSaveId, "Lane " .. self.name)
-        self.fahrzeuge = data["f"] and tonumber(data["f"]) or 0
-        self.warteZeit = data["w"] and tonumber(data["w"]) or 0
+        self.vehicleCount = data["f"] and tonumber(data["f"]) or 0
+        self.waitCount = data["w"] and tonumber(data["w"]) or 0
         self.phase = data["p"] or TrafficLightState.RED
-        self:pruefeAnforderungen()
+        self:checkRequests()
         self:switchTo(self.phase, "Neu geladen")
     else
-        self.fahrzeuge = 0
-        self.warteZeit = 0
+        self.vehicleCount = 0
+        self.waitCount = 0
         self.phase = TrafficLightState.RED
     end
 end
 
-function Lane:getWarteZeit() return self.warteZeit end
+function Lane:getWarteZeit() return self.waitCount end
 
-function Lane:getFahrzeuge() return self.fahrzeuge end
+function Lane:getVehicleCount() return self.vehicleCount end
 
 function Lane:getRichtungSaveId() return self.richtungSaveId end
 
