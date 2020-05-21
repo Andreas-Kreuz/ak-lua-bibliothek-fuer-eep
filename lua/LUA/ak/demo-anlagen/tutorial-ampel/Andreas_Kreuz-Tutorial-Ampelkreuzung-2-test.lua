@@ -1,5 +1,5 @@
 print("Loading AkEepFunctions ...")
-local AkEEPHilfe = require("ak.core.eep.AkEepFunktionen")
+local EepSimulator = require("ak.core.eep.AkEepFunktionen")
 
 local Scheduler = require("ak.scheduler.Scheduler")
 local TrafficLight = require("ak.road.TrafficLight")
@@ -43,9 +43,7 @@ local function run()
     EEPMain()
 end
 
-AkEEPHilfe.zahlDerZuegeAnSignal[14] = 1
-AkEEPHilfe.namenDerZuegeAnSignal[14] = {}
-AkEEPHilfe.namenDerZuegeAnSignal[14][1] = "#Zug1"
+EepSimulator.queueTrainOnSignal(14, "#Zug1")
 EEPSetTrainRoute("#Zug1", "Meine Route 1")
 
 assert(true == os.verwendeZaehlAmpeln)

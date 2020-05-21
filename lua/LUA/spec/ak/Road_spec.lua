@@ -47,22 +47,19 @@ describe("Road.lua", function()
             end)
 
             insulate("mit Zähler, mit Anforderung", function()
-                local AkEEPHilfe = require("ak.core.eep.AkEepFunktionen")
+                local EepSimulator = require("ak.core.eep.AkEepFunktionen")
                 local TrafficLightModel = require("ak.road.TrafficLightModel")
                 local TrafficLight = require("ak.road.TrafficLight")
                 local Lane = require("ak.road.Lane")
 
                 EEPSetTrainRoute("#Auto1", "Meine Route 1")
-                AkEEPHilfe.zahlDerZuegeAnSignal[55] = 0
-                AkEEPHilfe.namenDerZuegeAnSignal[55] = {}
+                EepSimulator.removeAllTrainFromSignal(55)
 
                 local richtung1 = Lane:new("Richtung 1", 35, {
                     TrafficLight:new(55, TrafficLightModel.Unsichtbar_2er)
                 })
                 richtung1:zaehleAnAmpelAlle(55)
-                AkEEPHilfe.zahlDerZuegeAnSignal[55] = 1
-                AkEEPHilfe.namenDerZuegeAnSignal[55] = {}
-                AkEEPHilfe.namenDerZuegeAnSignal[55][1] = "#Auto1"
+                EepSimulator.queueTrainOnSignal(55, "#Auto1")
 
                 richtung1:checkRequests()
                 it("Es liegt eine Anforderungen an", function()
@@ -118,7 +115,7 @@ describe("Road.lua", function()
         end)
 
         insulate("mit Zähler, mit Anforderung", function()
-            local AkEEPHilfe = require("ak.core.eep.AkEepFunktionen")
+            local EepSimulator = require("ak.core.eep.AkEepFunktionen")
             local TrafficLightModel = require("ak.road.TrafficLightModel")
             local TrafficLight = require("ak.road.TrafficLight")
             local Lane = require("ak.road.Lane")
@@ -129,7 +126,7 @@ describe("Road.lua", function()
                 TrafficLight:new(55, TrafficLightModel.Unsichtbar_2er)
             })
             richtung1:zaehleAnStrasseAlle(55)
-            AkEEPHilfe.setzeZugAufStrasse(55, "#Auto1")
+            EepSimulator.setzeZugAufStrasse(55, "#Auto1")
 
             richtung1:checkRequests()
             it("Es liegt eine Anforderungen an", function()
@@ -140,7 +137,7 @@ describe("Road.lua", function()
 
     describe(".zaehleAnStrasseRoute()", function()
         insulate("mit Zähler, mit Anforderung", function()
-            local AkEEPHilfe = require("ak.core.eep.AkEepFunktionen")
+            local EepSimulator = require("ak.core.eep.AkEepFunktionen")
             local TrafficLightModel = require("ak.road.TrafficLightModel")
             local TrafficLight = require("ak.road.TrafficLight")
             local Lane = require("ak.road.Lane")
@@ -152,7 +149,7 @@ describe("Road.lua", function()
                 TrafficLight:new(55, TrafficLightModel.Unsichtbar_2er)
             })
             richtung1:zaehleAnStrasseBeiRoute(55, "Meine Route 1")
-            AkEEPHilfe.setzeZugAufStrasse(55, "#Auto2")
+            EepSimulator.setzeZugAufStrasse(55, "#Auto2")
 
             richtung1:checkRequests()
             it("Es liegt keine Anforderungen an", function()
@@ -161,7 +158,7 @@ describe("Road.lua", function()
         end)
 
         insulate("mit Zähler, mit Anforderung", function()
-            local AkEEPHilfe = require("ak.core.eep.AkEepFunktionen")
+            local EepSimulator = require("ak.core.eep.AkEepFunktionen")
             local TrafficLightModel = require("ak.road.TrafficLightModel")
             local TrafficLight = require("ak.road.TrafficLight")
             local Lane = require("ak.road.Lane")
@@ -174,7 +171,7 @@ describe("Road.lua", function()
                 TrafficLight:new(55, TrafficLightModel.Unsichtbar_2er)
             })
             richtung1:zaehleAnStrasseBeiRoute(55, "Meine Route 1")
-            AkEEPHilfe.setzeZugAufStrasse(55, "#Auto1")
+            EepSimulator.setzeZugAufStrasse(55, "#Auto1")
 
             richtung1:checkRequests()
             it("Es liegt eine Anforderungen an", function()

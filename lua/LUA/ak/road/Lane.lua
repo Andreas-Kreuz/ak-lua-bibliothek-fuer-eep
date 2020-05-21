@@ -269,9 +269,11 @@ function Lane:setTrafficType(trafficType)
 end
 
 --- Erzeugt eine Richtung, welche durch eine Ampel gesteuert wird.
--- @param name Name der Richtung einer Kreuzung
--- @param eepSaveId Id fuer das Speichern der Richtung
--- @param ... eine oder mehrere Ampeln
+---@param name string @Name der Richtung einer Kreuzung
+---@param eepSaveId number, @EEPSaveSlot-Id fuer das Speichern der Richtung
+---@param ampeln table<number, TrafficLight> @eine oder mehrere Ampeln
+---@param directions string[] eine oder mehrere Ampeln
+---@param trafficType string eine oder mehrere Ampeln
 --
 function Lane:new(name, eepSaveId, ampeln, directions, trafficType)
     assert(name, 'Bitte geben Sie den Namen "name" fuer diese Richtung an.')
