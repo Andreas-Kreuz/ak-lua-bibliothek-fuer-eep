@@ -16,8 +16,12 @@ local EepSimulator = {}
 local signalsTrainCount = {}
 ---@type string[]
 local signalsTrainNames = {}
-EepSimulator.routenDerZuege = {}
-EepSimulator.registrierteStrassen = {}
+---@type table<trainname string,routename string> train name to route name
+local trainRoutes = {}
+---@type table<number,string>
+local registeredRoadTracks = {}
+---@type table<number,string>
+local registeredRailTracks = {}
 
 local function updateTrainListSize(signalId)
     local count = 0
@@ -63,10 +67,9 @@ function EepSimulator.removeAllTrainFromSignal(signalId)
     updateTrainListSize(signalId)
 end
 
-function EepSimulator.setzeZugAufStrasse(trackId, zugname) EepSimulator.registrierteStrassen[trackId] = zugname end
+function EepSimulator.setzeZugAufStrasse(trackId, zugname) registeredRoadTracks[trackId] = zugname end
 
-EepSimulator.registrierteGleise = {}
-function EepSimulator.setzeZugAufGleis(trackId, zugname) EepSimulator.registrierteGleise[trackId] = zugname end
+function EepSimulator.setzeZugAufGleis(trackId, zugname) registeredRailTracks[trackId] = zugname end
 
 local signale = {}
 local switches = {}
@@ -243,16 +246,14 @@ function EEPStructureSetPosition(immoName, rotX, rotY, rotZ) end
 -- Neu ab EEP 11 - Plugin 2 --
 ------------------------------
 --- Route aendern
--- @param trainName Name des Zuges
--- @param route Name der Route
-function EEPSetTrainRoute(trainName, route) EepSimulator.routenDerZuege[trainName] = route end
+---@param trainName string Name des Zuges
+---@param route string Name der Route
+function EEPSetTrainRoute(trainName, route) trainRoutes[trainName] = route end
 
 --- Route abfragen
--- @param trainName Name des Zuges
--- @return ok, routeName (ok und Name der Route)
-function EEPGetTrainRoute(trainName)
-    return true, EepSimulator.routenDerZuege[trainName] and EepSimulator.routenDerZuege[trainName] or "Alle"
-end
+---@param trainName string Name des Zuges
+---@return boolean ok, routeName string (ok und Name der Route)
+function EEPGetTrainRoute(trainName) return true, trainRoutes[trainName] and trainRoutes[trainName] or "Alle" end
 
 --- Licht ein oder ausschalten
 -- @param trainName Name des Zuges
@@ -303,7 +304,7 @@ function EEPSetTrainAxis(trainName, achse, stellung) end
 --- Registriert ein Gleis fuer die Besetztabfrage.
 -- @param trackId Id des Gleises
 function EEPRegisterRailTrack(trackId)
-    if EepSimulator.registrierteGleise[trackId] == nil then EepSimulator.registrierteGleise[trackId] = false end
+    if registeredRailTracks[trackId] == nil then registeredRailTracks[trackId] = false end
     if (trackId <= 11) then return true end
 end
 
@@ -316,37 +317,37 @@ end
 -- dritter Wert: Name des Zuges auf dem Gleis
 function EEPIsRailTrackReserved(trackId, returnTrainName)
     if returnTrainName then
-        return (EepSimulator.registrierteGleise[trackId] ~= nil and true or false),
-               (EepSimulator.registrierteGleise[trackId] ~= false and true or false),
-               (returnTrainName and EepSimulator.registrierteGleise[trackId] or nil)
+        return (registeredRailTracks[trackId] ~= nil and true or false),
+               (registeredRailTracks[trackId] ~= false and true or false),
+               (returnTrainName and registeredRailTracks[trackId] or nil)
     else
-        return (EepSimulator.registrierteGleise[trackId] ~= nil and true or false),
-               (EepSimulator.registrierteGleise[trackId] ~= false and true or false)
+        return (registeredRailTracks[trackId] ~= nil and true or false),
+               (registeredRailTracks[trackId] ~= false and true or false)
     end
 end
 
 --- Registriert ein Gleis fuer die Besetztabfrage.
 -- @param trackId Id des Gleises
 function EEPRegisterRoadTrack(trackId)
-    if EepSimulator.registrierteStrassen[trackId] == nil then EepSimulator.registrierteStrassen[trackId] = false end
+    if registeredRoadTracks[trackId] == nil then registeredRoadTracks[trackId] = false end
     if (trackId <= 11) then return true end
 end
 
 --- Fragt ab, ob ein Gleis besetzt ist.
--- @param trackId Id des Gleises
--- @param returnTrainName wenn true, wird als dritter Wert der Zugname
--- @return
+---@param trackId number Id des Gleises
+---@param returnTrainName boolean wenn true, wird als dritter Wert der Zugname
+-- @return boolean, boolean, string
 -- Erster Wert: true, wenn Gleis existiert und registriert,
 -- zweiter Wert: true, wenn besetzt,
 -- dritter Wert: Name des Zuges auf dem Gleis
 function EEPIsRoadTrackReserved(trackId, returnTrainName)
     if returnTrainName then
-        return (EepSimulator.registrierteStrassen[trackId] ~= nil and true or false),
-               (EepSimulator.registrierteStrassen[trackId] ~= false and true or false),
-               (returnTrainName and EepSimulator.registrierteStrassen[trackId] or nil)
+        return (registeredRoadTracks[trackId] ~= nil and true or false),
+               (registeredRoadTracks[trackId] ~= false and true or false),
+               (returnTrainName and registeredRoadTracks[trackId] or nil)
     else
-        return (EepSimulator.registrierteStrassen[trackId] ~= nil and true or false),
-               (EepSimulator.registrierteStrassen[trackId] ~= false and true or false)
+        return (registeredRoadTracks[trackId] ~= nil and true or false),
+               (registeredRoadTracks[trackId] ~= false and true or false)
     end
 end
 
