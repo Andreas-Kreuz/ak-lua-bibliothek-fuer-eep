@@ -158,10 +158,17 @@
     "EEPVer",
     "AkDebugLoad"
   ],
-  "Lua.workspace.ignoreDir": [".vscode", "lua/Resourcen", "lua/modell-pakete", "web-app", "web-server"],
   "Lua.diagnostics.disable": ["lowercase-global"],
+  "Lua.workspace.ignoreDir": [
+    ".vscode",
+    "lua/Resourcen",
+    "lua/Resourcen/Anlagen",
+    "lua/modell-pakete",
+    "web-app",
+    "web-server"
+  ],
+  "Lua.workspace.useGitIgnore": false,
   "lua.preferLuaCheckErrors": true,
   "lua.targetVersion": "5.3",
-  "vscode-lua-format.configPath": "lua-formatter.conf",
-  "Lua.workspace.useGitIgnore": false
+  "vscode-lua-format.configPath": "lua-formatter.conf"
 }
