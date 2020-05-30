@@ -16,6 +16,9 @@ Lane.debug = false
 ---@param lane Lane the current lane, where the correction will take place
 ---@param trainName string Name of the train
 local function addTrainToQueue(lane, trainName)
+    assert(not trainName:find(","), "FEHLER: FAHRZEUGE DÜRFEN KEIN KOMMA ',' IM NAMEN HABEN: " .. trainName)
+    assert(not trainName:find("|"), "FEHLER: FAHRZEUGE DÜRFEN KEIN PIPE '!' IM NAMEN HABEN: " .. trainName)
+
     if trainName and not lane.signalsUsedForCounting then
         lane.queue:push(trainName)
 
@@ -58,14 +61,14 @@ local function popTrainFromQueue(lane, trainName)
         end
         for _ = 1, numberOfPops, 1 do
             local trainFromQueue = lane.queue:pop()
-            if trainFromQueue ~= trainName and Lane.debug then
+            if Lane.debug and trainFromQueue ~= trainName then
                 print(string.format("AUTOCORRECT %s: Removed additional train %s", lane.name, trainFromQueue))
             end
         end
 
         -- Fix queue length
         if lane.vehicleCount ~= lane.queue:size() then
-            if Lane.debug then
+            if Lane.debug and numberOfPops == 1 then
                 print(string.format("AUTOCORRECT %s: New vehicle count from queue length: %d; Current count: %d",
                                     lane.name, lane.queue:size(), lane.vehicleCount))
             end
@@ -307,7 +310,7 @@ end
 ---@param swithToRed boolean indicates, if this lane shall switch to red immediately FIXME --> Shall be in Lane
 ---@param trainName string name of the vehicle, i.e. train name in EEP
 function Lane:vehicleLeft(swithToRed, trainName)
-    self.vehicleCount = self.vehicleCount - 1 > 0 and self.vehicleCount - 1 or 0
+    self.vehicleCount = self.vehicleCount > 0 and self.vehicleCount - 1 or 0
     popTrainFromQueue(self, trainName)
     self:refreshRequests()
     save(self)
