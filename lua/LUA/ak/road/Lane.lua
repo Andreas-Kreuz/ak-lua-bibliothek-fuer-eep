@@ -16,6 +16,14 @@ Lane.SchaltungsTyp.NICHT_VERWENDET = "NICHT VERWENDET"
 Lane.SchaltungsTyp.ANFORDERUNG = "ANFORDERUNG"
 Lane.SchaltungsTyp.NORMAL = "NORMAL"
 Lane.SchaltungsTyp.FUSSGAENGER = "FUSSGAENGER"
+Lane.Directions = {
+    LEFT = "LEFT",
+    HALF_LEFT = "HALF-LEFT",
+    STRAIGHT = "STRAIGHT",
+    HALF_RIGHT = "HALF-RIGHT",
+    RIGHT = "RIGHT"
+}
+Lane.Type = {CAR = "CAR", TRAM = "TRAM", PEDESTRIAN = "PEDESTRIAN", BICYCLE = "BICYCLE"}
 
 function Lane.switchTrafficLights(lanes, phase, grund)
     assert(
