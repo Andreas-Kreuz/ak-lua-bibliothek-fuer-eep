@@ -7,6 +7,14 @@ local StorageUtility = require("ak.storage.StorageUtility")
 local TrafficLightState = require("ak.road.TrafficLightState")
 local fmt = require("ak.core.eep.AkTippTextFormat")
 
+-- Lane starts here
+---@class Lane
+local Lane = {}
+Lane.debug = false
+
+---If trainname is provided, this function will add the train to the lane's queue
+---@param lane Lane the current lane, where the correction will take place
+---@param trainName string Name of the train
 local function addTrainToQueue(lane, trainName)
     if trainName and not lane.signalsUsedForCounting then
         lane.queue:push(trainName)
@@ -20,7 +28,7 @@ local function addTrainToQueue(lane, trainName)
     end
 end
 
----If trainname is provided, this function will remove the trains from the current queue
+---If trainname is provided, this function will remove the trains from the lane's queue
 ---@param lane Lane the current lane, where the correction will take place
 ---@param trainName string Name of the train
 local function popTrainFromQueue(lane, trainName)
@@ -34,21 +42,23 @@ local function popTrainFromQueue(lane, trainName)
         end
 
         -- Remove train and fix queue
-        if (numberOfPops > 1) then
+        if numberOfPops > 1 and Lane.debug then
             print(string.format("AUTOCORRECT %s: Have to remove %d trains to get to %s", lane.name, numberOfPops,
                                 trainName))
         end
         for _ = 1, numberOfPops, 1 do
             local trainFromQueue = lane.queue:pop()
-            if trainFromQueue ~= trainName then
+            if trainFromQueue ~= trainName and Lane.debug then
                 print(string.format("AUTOCORRECT %s: Removed additional train %s", lane.name, trainFromQueue))
             end
         end
 
         -- Fix queue length
         if lane.vehicleCount ~= lane.queue:size() then
-            print(string.format("AUTOCORRECT %s: New vehicle count from queue length: %d; Current count: %d",
-                                lane.name, lane.queue:size(), lane.vehicleCount))
+            if Lane.debug then
+                print(string.format("AUTOCORRECT %s: New vehicle count from queue length: %d; Current count: %d",
+                                    lane.name, lane.queue:size(), lane.vehicleCount))
+            end
             lane.vehicleCount = lane.queue:size()
         end
     end
@@ -100,8 +110,6 @@ end
 --------------------
 -- Klasse Richtung
 --------------------
----@class Lane
-local Lane = {}
 Lane.SchaltungsTyp = {}
 Lane.SchaltungsTyp.NICHT_VERWENDET = "NICHT VERWENDET"
 Lane.SchaltungsTyp.ANFORDERUNG = "ANFORDERUNG"
@@ -308,9 +316,7 @@ function Lane:vehicleLeft(swithToRed, trainName)
 end
 
 function Lane:resetVehicles()
-    while not self.queue:isEmpty() do
-        self.queue:pop()
-    end
+    while not self.queue:isEmpty() do self.queue:pop() end
     self.vehicleCount = 0
     self:refreshRequests()
     save(self)
