@@ -201,8 +201,8 @@ function ServerController.communicateWithServer(modulus)
         local format = (printFirstTime and "INITIALIZATION" or "WARNING") ..
                            ": ServerController.communicateWithServer() time is %3.0f ms --- " ..
                            "waitForServer: %.0f ms, " .. "initialize: %.0f ms, " .. "commands: %2.0f ms, " ..
-                           "collect: %3.0f ms, " .. " expand: %3.0f ms " .. " encode: %3.0f ms " .. " write: %.0f ms " ..
-                           "(allowed: %.0f ms)"
+                           "collect: %3.0f ms, " .. " expand: %3.0f ms " .. " encode: %3.0f ms " .. " write: %.0f ms" ..
+                           " (allowed: %.0f ms)"
         print(string.format(format, (timeDiff) * 1000, (overallTime1 - overallTime0) * 1000,
                             (overallTime2 - overallTime1) * 1000, (overallTime3 - overallTime2) * 1000,
                             (overallTime4 - overallTime3) * 1000, (overallTime5 - overallTime4) * 1000,
