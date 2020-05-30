@@ -16,8 +16,8 @@ Lane.debug = false
 ---@param lane Lane the current lane, where the correction will take place
 ---@param trainName string Name of the train
 local function addTrainToQueue(lane, trainName)
-    assert(not trainName:find(","), "FEHLER: FAHRZEUGE DÜRFEN KEIN KOMMA ',' IM NAMEN HABEN: " .. trainName)
-    assert(not trainName:find("|"), "FEHLER: FAHRZEUGE DÜRFEN KEIN PIPE '!' IM NAMEN HABEN: " .. trainName)
+    assert(not trainName:find(","), "ERROR: TRAIN NAMES MUST NOT CONTAIN ',' - Please fix: " .. trainName)
+    assert(not trainName:find("|"), "ERROR: TRAIN NAMES MUST NOT CONTAIN '|' - Please fix: " .. trainName)
 
     if trainName and not lane.signalsUsedForCounting then
         lane.queue:push(trainName)
