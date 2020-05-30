@@ -95,8 +95,8 @@ local function collect(alleKreuzungen)
             directions = lane.directions,
             switchings = richtungsSchaltungen[lane] or {}
         }
-        for i = 1, lane.fahrzeuge or 1, 1 do
-            o.waitingTrains[i] = "?"
+        for i, f in pairs(lane.queue:elements()) do
+            o.waitingTrains[i] = f
         end
         table.insert(intersectionLanes, o)
 
