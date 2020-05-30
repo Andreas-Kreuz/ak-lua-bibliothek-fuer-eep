@@ -1,4 +1,4 @@
-print "Loading ak.data.TimeJsonCollector ..."
+if AkDebugLoad then print("Loading ak.data.TimeJsonCollector ...") end
 TimeJsonCollector = {}
 local enabled = true
 local initialized = false

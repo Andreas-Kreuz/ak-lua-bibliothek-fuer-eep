@@ -1,4 +1,4 @@
-print "Loading ak.data.TrackCollector ..."
+if AkDebugLoad then print("Loading ak.data.TrackCollector ...") end
 local TrackCollector = {}
 local os = require("os")
 

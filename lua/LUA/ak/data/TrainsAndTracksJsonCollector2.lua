@@ -1,4 +1,4 @@
-print "Loading ak.data.TrainsAndTracksJsonCollector ..."
+if AkDebugLoad then print("Loading ak.data.TrainsAndTracksJsonCollector ...") end
 TrainsAndTracksJsonCollector = {}
 local os = require("os")
 local enabled = true

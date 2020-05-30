@@ -1,4 +1,4 @@
-print "Loading ak.data.SchedulerLuaModule ..."
+if AkDebugLoad then print("Loading ak.data.SchedulerLuaModule ...") end
 SchedulerLuaModule = {}
 SchedulerLuaModule.id = "725585f1-cfee-4237-97e1-135c5e9f4d02"
 SchedulerLuaModule.enabled = true

@@ -1,4 +1,4 @@
-print "Loading ak.data.SignalJsonCollector ..."
+if AkDebugLoad then print("Loading ak.data.SignalJsonCollector ...") end
 local SignalJsonCollector = {}
 local enabled = true
 local initialized = false
