@@ -19,6 +19,9 @@ local function addTrainToQueue(lane, trainName)
     if trainName and not lane.signalsUsedForCounting then
         lane.queue:push(trainName)
 
+        -- Remember the "first good vehicle"
+        lane.firstGoodTrain = lane.firstGoodTrain or trainName
+
         -- Fix queue length
         if lane.vehicleCount ~= lane.queue:size() then
             print(string.format("AUTOCORRECT %s: New vehicle count from queue length: %d; Current count: %d",
@@ -33,10 +36,17 @@ end
 ---@param trainName string Name of the train
 local function popTrainFromQueue(lane, trainName)
     if trainName and not lane.signalsUsedForCounting then
+        if trainName == lane.firstGoodTrain then lane.firstGoodTrain = nil end
+
         local numberOfPops = lane.queue:size()
         for i, trainFromQueue in pairs(lane.queue:elements()) do
             if trainFromQueue == trainName then
                 numberOfPops = i
+                break
+            end
+
+            if trainFromQueue == lane.firstGoodTrain then
+                numberOfPops = i - 1
                 break
             end
         end
