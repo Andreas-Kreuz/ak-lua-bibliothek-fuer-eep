@@ -5,8 +5,7 @@
 -- Do NOT use this class manually
 -- Use this class in XxxWebConnector to register JsonCollectors and commands
 local ServerController = require("ak.io.ServerController")
---]]
--- @author Andreas Kreuz
+--]] -- @author Andreas Kreuz
 -- @release 0.9.0
 if AkDebugLoad then print("Loading ak.io.ServerController ...") end
 local AkWebServerIo = require("ak.io.AkWebServerIo")
@@ -14,6 +13,7 @@ local AkCommandExecutor = require("ak.io.AkCommandExecutor")
 local os = require("os")
 
 local ServerController = {}
+ServerController.debug = AkDebugLoad or false
 ServerController.programVersion = "0.9.0"
 local json
 
@@ -23,7 +23,7 @@ local json
 function ServerController.useDlls(enableDlls)
     if enableDlls then
         package.cpath = package.cpath .. ";.\\LUA\\ak\\?.dll"
-        print(package.cpath)
+        if ServerController.debug then print(package.cpath) end
         json = require("cjson")
         -- Important: Empty tables must not be packed as objects {}, but as lists []
         json.encode_empty_table_as_object(false)
@@ -47,9 +47,7 @@ local collectedData = {}
 local checksum = 0
 local initialized = false
 
-function ServerController.addAcceptedRemoteFunction(fName, f)
-    AkCommandExecutor.addAcceptedRemoteFunction(fName, f)
-end
+function ServerController.addAcceptedRemoteFunction(fName, f) AkCommandExecutor.addAcceptedRemoteFunction(fName, f) end
 
 local function fillApiEntriesV1(orderedKeys)
     collectedData["api-entries"] = {}
@@ -58,27 +56,15 @@ local function fillApiEntriesV1(orderedKeys)
     local apiEntry
     for _, key in ipairs(orderedKeys) do
         local count = 0
-        for _ in pairs(collectedData[key]) do
-            count = count + 1
-        end
+        for _ in pairs(collectedData[key]) do count = count + 1 end
 
-        local o = {
-            name = key,
-            url = "/api/v1/" .. key,
-            count = count,
-            checksum = checksum,
-            updated = true
-        }
+        local o = {name = key, url = "/api/v1/" .. key, count = count, checksum = checksum, updated = true}
         table.insert(apiEntries, o)
 
-        if o.name == "api-entries" then
-            apiEntry = o
-        end
+        if o.name == "api-entries" then apiEntry = o end
     end
 
-    if apiEntry then
-        apiEntry.count = #apiEntries
-    end
+    if apiEntry then apiEntry.count = #apiEntries end
 
     collectedData["api-entries"] = apiEntries
 end
@@ -88,7 +74,9 @@ local function initializeJsonCollector(jsonCollector)
     jsonCollector.initialize()
     local t1 = os.clock()
     local timeDiff = t1 - t0
-    print(string.format('ServerController: initialize() %4.0f ms for "%s"', timeDiff * 1000, jsonCollector.name))
+    if ServerController.debug then
+        print(string.format('ServerController: initialize() %4.0f ms for "%s"', timeDiff * 1000, jsonCollector.name))
+    end
 end
 
 local function collectFrom(jsonCollector, printFirstTime)
@@ -96,7 +84,7 @@ local function collectFrom(jsonCollector, printFirstTime)
     local newData = jsonCollector.collectData()
     local t1 = os.clock()
     local timeDiff = t1 - t0
-    if timeDiff > 0.01 or printFirstTime then
+    if ServerController.debug and (timeDiff > 0.01 or printFirstTime) then
         print(string.format('ServerController:collectData() %4.0f ms for "%s"', timeDiff * 1000, jsonCollector.name))
     end
     return newData
@@ -105,19 +93,15 @@ end
 local function collectData(printFirstTime)
     for _, jsonCollector in pairs(registeredJsonCollectors) do
         local newData = collectFrom(jsonCollector, printFirstTime)
-        for key, value in pairs(newData) do
-            collectedData[key] = value
-        end
+        for key, value in pairs(newData) do collectedData[key] = value end
     end
 end
 
 --- Initialize data.
 -- do it once
 local function initialize()
-    print("ServerController: initialize()")
-    for _, jsonCollector in pairs(registeredJsonCollectors) do
-        initializeJsonCollector(jsonCollector)
-    end
+    if ServerController.debug then print("ServerController: initialize()") end
+    for _, jsonCollector in pairs(registeredJsonCollectors) do initializeJsonCollector(jsonCollector) end
 
     initialized = true
 end
@@ -125,29 +109,23 @@ end
 function ServerController.addJsonCollector(...)
     for _, jsonCollector in ipairs({...}) do
         -- Check the jsonCollector
-        assert(
-            jsonCollector.name and type(jsonCollector.name) == "string",
-            --"Der Name des Moduls muss gesetzt und ein String sein"
-            "The name of the module must be defined and is has to be a string"
-        )
-        assert(
-            jsonCollector.initialize and type(jsonCollector.initialize) == "function",
-            --"Das Modul muss eine Funktion initialize() besitzen"
-            string.format("jsonCollector %s must have a function initialize()", jsonCollector.name)
-        )
-        assert(
-            jsonCollector.collectData and type(jsonCollector.collectData) == "function",
-            --"Das Modul muss eine Funktion collectData() besitzen"
-            string.format("jsonCollector %s must have a function collectData()", jsonCollector.name)
-        )
+        assert(jsonCollector.name and type(jsonCollector.name) == "string",
+        -- "Der Name des Moduls muss gesetzt und ein String sein"
+               "The name of the module must be defined and is has to be a string")
+        assert(jsonCollector.initialize and type(jsonCollector.initialize) == "function",
+        -- "Das Modul muss eine Funktion initialize() besitzen"
+               string.format("jsonCollector %s must have a function initialize()", jsonCollector.name))
+        assert(jsonCollector.collectData and type(jsonCollector.collectData) == "function",
+        -- "Das Modul muss eine Funktion collectData() besitzen"
+               string.format("jsonCollector %s must have a function collectData()", jsonCollector.name))
 
         -- Remember the jsonCollector by it's name
-        print(string.format("ServerController.addJsonCollector(%s)", jsonCollector.name))
+        if ServerController.debug then
+            print(string.format("ServerController.addJsonCollector(%s)", jsonCollector.name))
+        end
         registeredJsonCollectors[jsonCollector.name] = jsonCollector
 
-        if initialized then
-            initializeJsonCollector(jsonCollector)
-        end
+        if initialized then initializeJsonCollector(jsonCollector) end
     end
 end
 
@@ -167,13 +145,9 @@ local function expandData()
     return exportData, orderedKeys
 end
 
-local function encode(exportData)
-    return json.encode(exportData)
-end
+local function encode(exportData) return json.encode(exportData) end
 
-local function writeData(jsonString)
-    AkWebServerIo.updateJsonFile(jsonString)
-end
+local function writeData(jsonString) AkWebServerIo.updateJsonFile(jsonString) end
 
 local i = -1
 
@@ -183,9 +157,7 @@ local i = -1
 -- @param modulus Repetion frequency (1: every 200 ms, 5: every second, ...)
 function ServerController.communicateWithServer(modulus)
     -- default value for optional parameter
-    if not modulus or type(modulus) ~= "number" then
-        modulus = 5
-    end
+    if not modulus or type(modulus) ~= "number" then modulus = 5 end
     i = i + 1
 
     local overallTime0 = os.clock()
@@ -225,30 +197,17 @@ function ServerController.communicateWithServer(modulus)
     local overallTime7 = os.clock()
     local timeDiff = overallTime7 - overallTime0
     local allowedTimeDiff = modulus * 0.200
-    if printFirstTime or timeDiff > allowedTimeDiff then
-        local format =
-            (printFirstTime and "INITIALIZATION" or "WARNING") ..
-            ": ServerController.communicateWithServer() time is %3.0f ms --- " ..
-                "waitForServer: %.0f ms, " ..
-                    "initialize: %.0f ms, " ..
-                        "commands: %2.0f ms, " ..
-                            "collect: %3.0f ms, " ..
-                                " expand: %3.0f ms " ..
-                                    " encode: %3.0f ms " .. " write: %.0f ms " .. "(allowed: %.0f ms)"
-        print(
-            string.format(
-                format,
-                (timeDiff) * 1000,
-                (overallTime1 - overallTime0) * 1000,
-                (overallTime2 - overallTime1) * 1000,
-                (overallTime3 - overallTime2) * 1000,
-                (overallTime4 - overallTime3) * 1000,
-                (overallTime5 - overallTime4) * 1000,
-                (overallTime6 - overallTime5) * 1000,
-                (overallTime7 - overallTime6) * 1000,
-                (allowedTimeDiff) * 1000
-            )
-        )
+    if ServerController.debug and printFirstTime or timeDiff > allowedTimeDiff then
+        local format = (printFirstTime and "INITIALIZATION" or "WARNING") ..
+                           ": ServerController.communicateWithServer() time is %3.0f ms --- " ..
+                           "waitForServer: %.0f ms, " .. "initialize: %.0f ms, " .. "commands: %2.0f ms, " ..
+                           "collect: %3.0f ms, " .. " expand: %3.0f ms " .. " encode: %3.0f ms " .. " write: %.0f ms " ..
+                           "(allowed: %.0f ms)"
+        print(string.format(format, (timeDiff) * 1000, (overallTime1 - overallTime0) * 1000,
+                            (overallTime2 - overallTime1) * 1000, (overallTime3 - overallTime2) * 1000,
+                            (overallTime4 - overallTime3) * 1000, (overallTime5 - overallTime4) * 1000,
+                            (overallTime6 - overallTime5) * 1000, (overallTime7 - overallTime6) * 1000,
+                            (allowedTimeDiff) * 1000))
     end
 end
 
