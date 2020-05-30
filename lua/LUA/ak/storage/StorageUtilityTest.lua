@@ -9,9 +9,9 @@ StorageUtility.debug = false
 -- Sinnvoll zu nutzen, wenn man jedem Signal oder anderen Dingen eine eindeutige ID
 -- geben möchte
 ------------------------------------------------------------------------------------
-StorageUtility.registriereId(800, "Speicherplatz 800")
+StorageUtility.registerId(800, "Speicherplatz 800")
 -- Ein weiterer Aufruf mit dem selben Speicherplatz würde fehlschlagen (Test muss mit pcall erfolgen)
-if pcall(StorageUtility.registriereId, 800, "Speicherplatz 800") then
+if pcall(StorageUtility.registerId, 800, "Speicherplatz 800") then
     assert(false, "Wenn das auftritt, dann wurde Speicherplatz 800 mehrfach angefragt.")
 else
     print("Alles ok: Speicherplatz 800 konnte nicht doppelt verwendet werden.")
@@ -63,7 +63,7 @@ end
 
 
 do
-    local geladene_daten = StorageUtility.ladeTabelle(700, "Meine Daten")
+    local geladene_daten = StorageUtility.loadTable(700, "Meine Daten")
 
     -- Die Daten werden gelesen und aus der Tabelle in eigene Werte gespeichert.
     -- Dabei ist die Typumwandlung wichtig
@@ -117,7 +117,7 @@ do
 end
 
 do
-    local geladene_daten = StorageUtility.ladeTabelle(600, "Meine Daten")
+    local geladene_daten = StorageUtility.loadTable(600, "Meine Daten")
 
     -- Nach dem Laden müssen die Werte aus der Tabelle wieder den Variablen zugeordnet werden.
     -- Dabei ist die Rückumwandlung vom string zum korrekten Typ wichtig (tonumber und StorageUtility.toboolean)

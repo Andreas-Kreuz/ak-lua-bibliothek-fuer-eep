@@ -239,7 +239,7 @@ end
 
 function Lane:load()
     if self.eepSaveId ~= -1 then
-        local data = StorageUtility.ladeTabelle(self.eepSaveId, "Lane " .. self.name)
+        local data = StorageUtility.loadTable(self.eepSaveId, "Lane " .. self.name)
         self.vehicleCount = data["f"] and tonumber(data["f"]) or 0
         self.waitCount = data["w"] and tonumber(data["w"]) or 0
         self.phase = data["p"] or TrafficLightState.RED
@@ -294,7 +294,7 @@ function Lane:new(name, eepSaveId, ampeln, directions, trafficType)
     assert(type(eepSaveId) == "number")
     assert(ampeln, 'Bitte geben Sie den Wert "ampeln" fuer diese Richtung an.')
     -- assert(signalId, "Bitte geben Sie den Wert \"signalId\" fuer diese Richtung an.")
-    if eepSaveId ~= -1 then StorageUtility.registriereId(eepSaveId, "Richtung " .. name) end
+    if eepSaveId ~= -1 then StorageUtility.registerId(eepSaveId, "Lane " .. name) end
     local o = {
         fahrzeugMultiplikator = 1,
         name = name,

@@ -279,7 +279,7 @@ AkBlock.__index = AkBlock
 function AkBlock.new(name, eepSaveId)
     assert(type(name) == "string")
     assert(type(eepSaveId) == "number")
-    StorageUtility.registriereId(eepSaveId, name)
+    StorageUtility.registerId(eepSaveId, name)
     local self = setmetatable({}, AkBlock)
     self.name = name
     self.eepSaveId = eepSaveId
@@ -343,7 +343,7 @@ function AkBlock:save()
 end
 
 function AkBlock:load()
-    local data = StorageUtility.ladeTabelle(self.eepSaveId, "Block " .. self.name)
+    local data = StorageUtility.loadTable(self.eepSaveId, "Block " .. self.name)
     self.taken = StorageUtility.toboolean(data["b"])
     self.trainDirection = data["r"] and data["r"] or nil
     self.trainName = data["z"] and data["z"] or nil
@@ -450,7 +450,7 @@ function AkRoute.new(eepSaveId, direction, block1, block2, signals, switches, cr
     assert(type(signals) == "table")
     assert(type(switches) == "table")
     if (crossings) then assert(type(crossings) == "table") end
-    StorageUtility.registriereId(eepSaveId, block1.name .. " -> " .. direction .. " -> " .. block2.name)
+    StorageUtility.registerId(eepSaveId, block1.name .. " -> " .. direction .. " -> " .. block2.name)
 
     local self = setmetatable({}, AkRoute)
     self.eepSaveId = eepSaveId
@@ -659,7 +659,7 @@ function AkRoute:save()
 end
 
 function AkRoute:load()
-    local data = StorageUtility.ladeTabelle(self.eepSaveId, "FS " .. self.name)
+    local data = StorageUtility.loadTable(self.eepSaveId, "FS " .. self.name)
     self.taken = StorageUtility.toboolean(data["b"])
     self.trainName = data["z"] and data["z"] or nil
     self.securedTime = data["t"] and tonumber(data["t"]) or -1

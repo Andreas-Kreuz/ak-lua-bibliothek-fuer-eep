@@ -1,9 +1,9 @@
 if AkDebugLoad then print("Loading ak.storage.StorageUtility ...") end
 
-local speicherPlaetze = {}
-local gespeicherteWerte = {}
+local saveSlots = {}
+local savedValues = {}
 local StorageUtility = {}
-StorageUtility.debugDatei = "StorageUtilityWerte.txt"
+StorageUtility.debugDatei = "StorageUtilityValues.txt"
 StorageUtility.debug = AkStartMitDebug or false
 
 --- Prueft einen EEP-Speicherslot zwischen 1 und 1000 und markiert ihn als benutzt.
@@ -14,24 +14,22 @@ StorageUtility.debug = AkStartMitDebug or false
 -- @param eepSaveId 1-1000 - Speicherplatz in EEP
 -- @param name optional: Name des Speicherortes fuer Debug-Anzeige
 --
-function StorageUtility.registriereId(eepSaveId, name)
+function StorageUtility.registerId(eepSaveId, name)
     name = name and name or "?"
     assert(type(eepSaveId) == "number" and eepSaveId > 0 and eepSaveId <= 1000, "Falsche eepSaveId " .. eepSaveId)
-    assert(speicherPlaetze[eepSaveId] == nil, "Speicher-ID ist bereits vergeben: "
-            .. eepSaveId .. " (" .. (speicherPlaetze[eepSaveId] and speicherPlaetze[eepSaveId] or "nil") .. ")"
-            .. "\n" .. debug.traceback())
-    speicherPlaetze[eepSaveId] = name
+    assert(saveSlots[eepSaveId] == nil,
+           "Speicher-ID ist bereits vergeben: " .. eepSaveId .. " (" ..
+               (saveSlots[eepSaveId] and saveSlots[eepSaveId] or "nil") .. ")" .. "\n" .. debug.traceback())
+    saveSlots[eepSaveId] = name
 end
 
-function StorageUtility.getName(eepSaveId)
-    return speicherPlaetze[eepSaveId]
-end
+function StorageUtility.getName(eepSaveId) return saveSlots[eepSaveId] end
 
 --- Laedt die Daten aus dem Speicherslot in eine neue Tabelle.
 --- Das Speichern der Daten sollte komma-separiert erfolgen, z.B.:
 --- belegt = true, anzahl = 15
 --- Dann koennen die Daten wie folgt aus der Tabelle geladen werden:
---- local t = StorageUtility.ladeTabelle(eepSaveId, "Name")
+--- local t = StorageUtility.loadTable(eepSaveId, "Name")
 --- local belegt = t["belegt"]
 --- local anzahl = t["anzahl"]
 --- ---------------------------------------------------------------
@@ -39,21 +37,23 @@ end
 --- Storage should have been done in Table Syntax, e.g.:
 --- traffic = true, count = 15
 --- Then loading can be done with these functions as follows:
---- local t = StorageUtility.ladeTabelle(eepSaveId, "Name")
+--- local t = StorageUtility.loadTable(eepSaveId, "Name")
 --- local traffic = t["traffic"]
 --- local count = t["count"]-- @param eepSaveId
 -- @param eepSaveId 1-1000 - Speicherplatz in EEP
 -- @param name optional: Name des Speicherortes fuer Debug-Anzeige
 --
-function StorageUtility.ladeTabelle(eepSaveId, name)
+function StorageUtility.loadTable(eepSaveId, name)
     name = name and name or "?"
     local hResult, data = EEPLoadData(eepSaveId)
     if hResult then
-        if StorageUtility.debug then print("[StorageUtility  ] Laden: [OK] - "
-                .. eepSaveId .. " - " .. name .. " gefunden: " .. data) end
+        if StorageUtility.debug then
+            print("[StorageUtility  ] Laden: [OK] - " .. eepSaveId .. " - " .. name .. " gefunden: " .. data)
+        end
     else
-        if StorageUtility.debug then print("[StorageUtility  ] Laden: [!!] - "
-                .. eepSaveId .. " - " .. name .. " nicht gefunden!") end
+        if StorageUtility.debug then
+            print("[StorageUtility  ] Laden: [!!] - " .. eepSaveId .. " - " .. name .. " nicht gefunden!")
+        end
     end
 
     local t = {}
@@ -78,8 +78,10 @@ local function pairsByKeys(t, f)
     local i = 0 -- iterator variable
     local iter = function() -- iterator function
         i = i + 1
-        if a[i] == nil then return nil
-        else return a[i], t[a[i]]
+        if a[i] == nil then
+            return nil
+        else
+            return a[i], t[a[i]]
         end
     end
     return iter
@@ -108,13 +110,11 @@ function StorageUtility.saveTable(eepSaveId, table, name)
     end
     local hresult = EEPSaveData(eepSaveId, text)
     if StorageUtility.debug then
-        print("[StorageUtility  ] Speichern [" .. (hresult and "OK" or "!!") .. "] - " .. eepSaveId
-                .. " - " .. name .. " gespeichert: " .. text)
+        print("[StorageUtility  ] Speichern [" .. (hresult and "OK" or "!!") .. "] - " .. eepSaveId .. " - " .. name ..
+                  " gespeichert: " .. text)
     end
-    gespeicherteWerte[eepSaveId] = text
-    if StorageUtility.debug then
-        StorageUtility.aktualisiereDebugDatei()
-    end
+    savedValues[eepSaveId] = text
+    if StorageUtility.debug then StorageUtility.updateDebugFile() end
 end
 
 --- Konvertiert einen Wert in ein boolean
@@ -122,17 +122,13 @@ end
 --- Converts a value to boolean
 -- @param value optional: Name des Speicherortes fuer Debug-Anzeige
 --
-function StorageUtility.toboolean(value)
-    return (value and value == "true") and true or false
-end
+function StorageUtility.toboolean(value) return (value and value == "true") and true or false end
 
-function StorageUtility.aktualisiereDebugDatei()
+function StorageUtility.updateDebugFile()
     local datei = assert(io.open(StorageUtility.debugDatei, "w"))
     local ausgabe = ""
     for i = 1, 1000 do
-        if gespeicherteWerte[i] then
-            ausgabe = ausgabe .. "DS_" .. i .. " = \"" .. gespeicherteWerte[i] .. "\"\n"
-        end
+        if savedValues[i] then ausgabe = ausgabe .. "DS_" .. i .. " = \"" .. savedValues[i] .. "\"\n" end
     end
     datei:write(ausgabe .. "\n")
     datei:close()
@@ -141,12 +137,8 @@ end
 --- Lädt
 for i = 1, 1000 do
     local hResult, data = EEPLoadData(i)
-    if hResult then
-        gespeicherteWerte[i] = data
-    end
-    if StorageUtility.debug then
-        StorageUtility.aktualisiereDebugDatei()
-    end
+    if hResult then savedValues[i] = data end
+    if StorageUtility.debug then StorageUtility.updateDebugFile() end
 end
 
 return StorageUtility
