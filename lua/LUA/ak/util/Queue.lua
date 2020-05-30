@@ -12,7 +12,7 @@ end
 ---@return boolean true if the queue is empty
 function Queue:isEmpty() return self.last - self.first == -1 end
 
----Tells if the queue is empty
+---Tells the number of elements currently in the queue
 ---@return number number of elements in the queue
 function Queue:size() return self.last + 1 - self.first end
 
