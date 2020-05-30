@@ -2,6 +2,7 @@ if AkDebugLoad then print("Loading ak.core.ModuleRegistry ...") end
 local ModuleRegistry = {}
 
 local os = require("os")
+ModuleRegistry.debug = AkDebugLoad or false
 local ServerController = require("ak.io.ServerController")
 local enableServer = true
 local initialized = false
@@ -18,14 +19,10 @@ function ModuleRegistry.registerModules(...)
         -- Check the module
         assert(module.name and type(module.name) == "string", "A module must have a string name")
         assert(type(module.enabled) == "boolean", string.format("Module %s must have a boolean enabled", module.name))
-        assert(
-            module.init and type(module.init) == "function",
-            string.format("Module %s must have a function init()", module.name)
-        )
-        assert(
-            module.run and type(module.run) == "function",
-            string.format("Module %s must have a function run()", module.name)
-        )
+        assert(module.init and type(module.init) == "function",
+               string.format("Module %s must have a function init()", module.name))
+        assert(module.run and type(module.run) == "function",
+               string.format("Module %s must have a function run()", module.name))
 
         -- Remember the module by it's name
         registeredLuaModules[module.name] = module
@@ -57,22 +54,24 @@ function ModuleRegistry.useDlls(enableDlls)
 end
 
 local function initTask(module)
-    --print(string.format('Begin ModuleRegistry.initTask() for "%s"', module.name))
+    if ModuleRegistry.debug then print(string.format('Begin ModuleRegistry.initTask() for "%s"', module.name)) end
     local t0 = os.clock()
     module.init()
     local t1 = os.clock()
     local timeDiff = t1 - t0
-    print(string.format('ModuleRegistry.initTask() %.3f seconds for "%s"', timeDiff, module.name))
+    if ModuleRegistry.debug then
+        print(string.format('ModuleRegistry.initTask() %.3f seconds for "%s"', timeDiff, module.name))
+    end
 end
 
 local function runTask(module)
-    --print(string.format('Begin ModuleRegistry.runTask() for "%s"', module.name))
+    if ModuleRegistry.debug then print(string.format('Begin ModuleRegistry.runTask() for "%s"', module.name)) end
     local t0 = os.clock()
     module.run()
     local t1 = os.clock()
     local timeDiff = t1 - t0
-    --print(string.format('ModuleRegistry.runTask() %.3f seconds for "%s"', timeDiff, module.name)) --###
-    if timeDiff > 0.001 then
+    -- print(string.format('ModuleRegistry.runTask() %.3f seconds for "%s"', timeDiff, module.name)) --###
+    if timeDiff > 0.005 then
         print(string.format('WARNING: ModuleRegistry.runTask() %.3f seconds for "%s"', timeDiff, module.name))
     end
 end
@@ -81,9 +80,7 @@ end
 -- This will init all registeredLuaModules
 function ModuleRegistry.initTasks()
     if not initialized then
-        for _, module in pairs(registeredLuaModules) do
-            initTask(module)
-        end
+        for _, module in pairs(registeredLuaModules) do initTask(module) end
 
         initialized = true
     end
@@ -94,14 +91,10 @@ end
 -- @param cycleCount Repetion frequency (1: every 200 ms, 5: every second, ...)
 function ModuleRegistry.runTasks(cycleCount)
     local t1 = os.clock()
-    if not initialized then
-        ModuleRegistry.initTasks()
-    end
+    if not initialized then ModuleRegistry.initTasks() end
 
     local t2 = os.clock()
-    for _, module in pairs(registeredLuaModules) do
-        runTask(module)
-    end
+    for _, module in pairs(registeredLuaModules) do runTask(module) end
 
     local t3 = os.clock()
     if enableServer then
@@ -111,24 +104,16 @@ function ModuleRegistry.runTasks(cycleCount)
     end
     local t4 = os.clock()
 
-    print(
-        string.format(
-            "ModuleRegistry.runTasks(cycleCount) time: %.0f ms (%.0f ms init, %.0f ms runTask, %.0f ms serveData)",
-            (t4 - t1) * 1000,
-            (t2 - t1) * 1000,
-            (t3 - t2) * 1000,
-            (t4 - t3) * 1000
-        )
-    )
+    if ModuleRegistry.debug then
+        print(string.format(
+                  "ModuleRegistry.runTasks(cycleCount) time: %.0f ms (%.0f ms init, %.0f ms runTask, %.0f ms serveData)",
+                  (t4 - t1) * 1000, (t2 - t1) * 1000, (t3 - t2) * 1000, (t4 - t3) * 1000))
+    end
 end
 
-function ModuleRegistry.activateServer()
-    enableServer = true
-end
+function ModuleRegistry.activateServer() enableServer = true end
 
-function ModuleRegistry.deactivateServer()
-    enableServer = false
-end
+function ModuleRegistry.deactivateServer() enableServer = false end
 
 -- Register the core module to hold basic data
 do
