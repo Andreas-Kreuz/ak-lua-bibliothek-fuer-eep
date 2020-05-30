@@ -35,7 +35,7 @@ setmetatable(_ENV, {
 function KpBetritt(richtung)
     assert(richtung, "richtung darf nicht nil sein. Richtige Lua-Funktion im Kontaktpunkt?")
     --print(richtung.name .. " betreten durch: " .. Zugname)
-    richtung:vehicleEntered()
+    richtung:vehicleEntered(Zugname)
 end
 
 function KpVerlasse(richtung, switchToRed)
@@ -83,11 +83,11 @@ Grundmodell_Ampel_3_FG = TrafficLightModel:new("Grundmodell Ampel 3 FG", -- Name
 --      |              |             |      +------------------ neue Ampel für diese Richtung (
 --      |              |             |      |           +------ Signal-ID dieser Ampel
 --      |              |             |      |           |   +-- Modell dieser Ampel - weiss wo rot, gelb und gruen ist
-k2_r1 = Lane:new("Richtung 1", 121, { TrafficLight:new(32, Grundmodell_Ampel_3) })
-k2_r2 = Lane:new("Richtung 2", 122, { TrafficLight:new(31, Grundmodell_Ampel_3) })
-k2_r3 = Lane:new("Richtung 3", 123, { TrafficLight:new(34, Grundmodell_Ampel_3) })
-k2_r4 = Lane:new("Richtung 4", 124, { TrafficLight:new(33, Grundmodell_Ampel_3) })
-k2_r5 = Lane:new("Richtung 5", 125, { TrafficLight:new(30, Grundmodell_Ampel_3) })
+k2_r1 = Lane:new("Richtung 1 - K2", 121, { TrafficLight:new(32, Grundmodell_Ampel_3) })
+k2_r2 = Lane:new("Richtung 2 - K2", 122, { TrafficLight:new(31, Grundmodell_Ampel_3) })
+k2_r3 = Lane:new("Richtung 3 - K2", 123, { TrafficLight:new(34, Grundmodell_Ampel_3) })
+k2_r4 = Lane:new("Richtung 4 - K2", 124, { TrafficLight:new(33, Grundmodell_Ampel_3) })
+k2_r5 = Lane:new("Richtung 5 - K2", 125, { TrafficLight:new(30, Grundmodell_Ampel_3) })
 
 k2_r1:setRichtungen({ 'RIGHT' })
 k2_r2:setRichtungen({ 'STRAIGHT' })
@@ -136,19 +136,19 @@ k2:fuegeSchaltungHinzu(k2_schaltung4)
 
 --      +------------------------------------------------------ Neue Richtung
 --      |        +--------------------------------------- Name der Richtung
---      |        |             +------------------------- Speicher ID - um die Anzahl der Fahrzeuge
---      |        |             |                                        und die Wartezeit zu speichern
---      |        |             |      +------------------ neue Ampel für diese Richtung (
---      |        |             |      |           +------ Signal-ID dieser Ampel
---      |        |             |      |           |   +-- Modell dieser Ampel - weiss wo rot, gelb und gruen ist
-k1_r1 = Lane:new("Richtung 1", 101, { TrafficLight:new(17, Grundmodell_Ampel_3) })
-k1_r2 = Lane:new("Richtung 2", 102, { TrafficLight:new(13, Grundmodell_Ampel_3) })
-k1_r3 = Lane:new("Richtung 3", 103, { TrafficLight:new(12, Grundmodell_Ampel_3) })
-k1_r4 = Lane:new("Richtung 4", 104, { TrafficLight:new(11, Grundmodell_Ampel_3) })
-k1_r5 = Lane:new("Richtung 5", 105, { TrafficLight:new(10, Grundmodell_Ampel_3) })
-k1_r6 = Lane:new("Richtung 6", 106, { TrafficLight:new(09, Grundmodell_Ampel_3) })
-k1_r7 = Lane:new("Richtung 7", 107, { TrafficLight:new(16, Grundmodell_Ampel_3) })
-k1_r8 = Lane:new("Richtung 8", 108, { TrafficLight:new(15, Grundmodell_Ampel_3) })
+--      |        |                  +------------------------- Speicher ID - um die Anzahl der Fahrzeuge
+--      |        |                  |                                        und die Wartezeit zu speichern
+--      |        |                  |      +------------------ neue Ampel für diese Richtung (
+--      |        |                  |      |           +------ Signal-ID dieser Ampel
+--      |        |                  |      |           |   +-- Modell dieser Ampel - weiss wo rot, gelb und gruen ist
+k1_r1 = Lane:new("Richtung 1 - K1", 101, { TrafficLight:new(17, Grundmodell_Ampel_3) })
+k1_r2 = Lane:new("Richtung 2 - K1", 102, { TrafficLight:new(13, Grundmodell_Ampel_3) })
+k1_r3 = Lane:new("Richtung 3 - K1", 103, { TrafficLight:new(12, Grundmodell_Ampel_3) })
+k1_r4 = Lane:new("Richtung 4 - K1", 104, { TrafficLight:new(11, Grundmodell_Ampel_3) })
+k1_r5 = Lane:new("Richtung 5 - K1", 105, { TrafficLight:new(10, Grundmodell_Ampel_3) })
+k1_r6 = Lane:new("Richtung 6 - K1", 106, { TrafficLight:new(09, Grundmodell_Ampel_3) })
+k1_r7 = Lane:new("Richtung 7 - K1", 107, { TrafficLight:new(16, Grundmodell_Ampel_3) })
+k1_r8 = Lane:new("Richtung 8 - K1", 108, { TrafficLight:new(15, Grundmodell_Ampel_3) })
 
 k1_r1:setRichtungen({ 'STRAIGHT', 'RIGHT' })
 k1_r2:setRichtungen({ 'LEFT' })

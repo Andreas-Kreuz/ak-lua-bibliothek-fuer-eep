@@ -75,7 +75,7 @@ local function collect(alleKreuzungen)
         end
 
         local countType = "CONTACTS"
-        if lane.verwendeZaehlAmpeln then
+        if lane.signalsUsedForCounting then
             countType = "SIGNALS"
         elseif lane.verwendeZaehlStrassen then
             countType = "TRACKS"

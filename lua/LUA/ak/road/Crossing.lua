@@ -133,9 +133,9 @@ function Crossing.zaehlerZuruecksetzen()
     for _, kreuzung in ipairs(AkAllKreuzungen) do
         print("[Crossing ] SETZE ZURUECK: " .. kreuzung.name)
         for schaltung in pairs(kreuzung:getSchaltungen()) do
-            for richtung in pairs(schaltung:getNormaleRichtungen()) do richtung:resetVehicleCounter() end
+            for richtung in pairs(schaltung:getNormaleRichtungen()) do richtung:resetVehicles() end
             for richtung in pairs(schaltung:getRichtungenMitAnforderung()) do
-                richtung:resetVehicleCounter()
+                richtung:resetVehicles()
             end
         end
     end

@@ -29,7 +29,7 @@ setmetatable(_ENV, {
 --------------------------------------------
 function KpBetritt(richtung)
     assert(richtung, "richtung darf nicht nil sein. Richtige Lua-Funktion im Kontaktpunkt?")
-    richtung:vehicleEntered()
+    richtung:vehicleEntered(Zugname)
 end
 
 function KpVerlasse(richtung, switchToRed)

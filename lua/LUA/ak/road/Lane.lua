@@ -1,10 +1,101 @@
 if AkDebugLoad then print("Loading ak.road.Lane ...") end
 
+local Queue = require("ak.util.Queue")
 local Task = require("ak.scheduler.Task")
 local Scheduler = require("ak.scheduler.Scheduler")
 local StorageUtility = require("ak.storage.StorageUtility")
 local TrafficLightState = require("ak.road.TrafficLightState")
 local fmt = require("ak.core.eep.AkTippTextFormat")
+
+local function addTrainToQueue(lane, trainName)
+    if trainName and not lane.signalsUsedForCounting then
+        lane.queue:push(trainName)
+
+        -- Fix queue length
+        if lane.vehicleCount ~= lane.queue:size() then
+            print(string.format("AUTOCORRECT %s: New vehicle count from queue length: %d; Current count: %d",
+                                lane.name, lane.queue:size(), lane.vehicleCount))
+            lane.vehicleCount = lane.queue:size()
+        end
+    end
+end
+
+---If trainname is provided, this function will remove the trains from the current queue
+---@param lane Lane the current lane, where the correction will take place
+---@param trainName string Name of the train
+local function popTrainFromQueue(lane, trainName)
+    if trainName and not lane.signalsUsedForCounting then
+        local numberOfPops = lane.queue:size()
+        for i, trainFromQueue in pairs(lane.queue:elements()) do
+            if trainFromQueue == trainName then
+                numberOfPops = i
+                break
+            end
+        end
+
+        -- Remove train and fix queue
+        if (numberOfPops > 1) then
+            print(string.format("AUTOCORRECT %s: Have to remove %d trains to get to %s", lane.name, numberOfPops,
+                                trainName))
+        end
+        for _ = 1, numberOfPops, 1 do
+            local trainFromQueue = lane.queue:pop()
+            if trainFromQueue ~= trainName then
+                print(string.format("AUTOCORRECT %s: Removed additional train %s", lane.name, trainFromQueue))
+            end
+        end
+
+        -- Fix queue length
+        if lane.vehicleCount ~= lane.queue:size() then
+            print(string.format("AUTOCORRECT %s: New vehicle count from queue length: %d; Current count: %d",
+                                lane.name, lane.queue:size(), lane.vehicleCount))
+            lane.vehicleCount = lane.queue:size()
+        end
+    end
+end
+local function queueToText(queue) return table.concat(queue:elements(), "|") end
+
+local function queueFromText(pipeSeparatedText, count)
+    local queue = Queue:new()
+    if pipeSeparatedText then
+        for trainName in string.gmatch(pipeSeparatedText, "[^|]+") do
+            -- print(trainName)
+            queue:push(trainName)
+        end
+    else
+        -- For compatibility with old versions, we fill with generic names
+        for i = 1, count, 1 do queue:push("train " .. i) end
+    end
+    return queue
+end
+
+local function save(lane)
+    if lane.eepSaveId ~= -1 then
+        local data = {}
+        data["f"] = tostring(lane.vehicleCount)
+        data["w"] = tostring(lane.waitCount)
+        data["p"] = tostring(lane.phase)
+        data["q"] = queueToText(lane.queue)
+        StorageUtility.saveTable(lane.eepSaveId, data, "Lane " .. lane.name)
+    end
+end
+
+local function load(lane)
+    if lane.eepSaveId ~= -1 then
+        local data = StorageUtility.loadTable(lane.eepSaveId, "Lane " .. lane.name)
+        lane.vehicleCount = data["f"] and tonumber(data["f"]) or 0
+        lane.waitCount = data["w"] and tonumber(data["w"]) or 0
+        lane.phase = data["p"] or TrafficLightState.RED
+        lane.queue = queueFromText(data["q"], lane.vehicleCount)
+        lane:checkRequests()
+        lane:switchTo(lane.phase, "Neu geladen")
+    else
+        lane.vehicleCount = 0
+        lane.waitCount = 0
+        lane.phase = TrafficLightState.RED
+        lane.queue = Queue:new()
+    end
+end
 
 --------------------
 -- Klasse Richtung
@@ -26,9 +117,8 @@ Lane.Directions = {
 Lane.Type = {CAR = "CAR", TRAM = "TRAM", PEDESTRIAN = "PEDESTRIAN", BICYCLE = "BICYCLE"}
 
 function Lane.switchTrafficLights(lanes, phase, grund)
-    assert(
-        phase == TrafficLightState.GREEN or phase == TrafficLightState.REDYELLOW or phase == TrafficLightState.YELLOW or
-            phase == TrafficLightState.RED or phase == TrafficLightState.PEDESTRIAN)
+    assert(phase == TrafficLightState.GREEN or phase == TrafficLightState.REDYELLOW or phase ==
+               TrafficLightState.YELLOW or phase == TrafficLightState.RED or phase == TrafficLightState.PEDESTRIAN)
     for richtung in pairs(lanes) do richtung:switchTo(phase, grund) end
 end
 
@@ -64,7 +154,7 @@ function Lane:checkRequests()
     text = text .. ": " .. (self:hasRequest() and fmt.lightGray("BELEGT") or fmt.lightGray("-FREI-")) .. " "
     if self.verwendeZaehlStrassen then
         text = text .. "(Strasse)"
-    elseif self.verwendeZaehlAmpeln then
+    elseif self.signalsUsedForCounting then
         text = text .. "(Ampel)"
     else
         text = text .. "(" .. self.vehicleCount .. " gezaehlt)"
@@ -83,8 +173,8 @@ function Lane:calculatePriority()
         return self.waitCount > prio and self.waitCount or prio
     end
 
-    local verwendeZaehlAmpeln = self:checkSignalRequests()
-    if verwendeZaehlAmpeln then
+    local signalsUsedForCounting = self:checkSignalRequests()
+    if signalsUsedForCounting then
         local prio = (self.hasRequestOnSignal and 1 or 0) * 3 * self.fahrzeugMultiplikator
         return self.waitCount > prio and self.waitCount or prio
     end
@@ -141,7 +231,7 @@ end
 
 ---@param signalId number Signal ID
 function Lane:zaehleAnAmpelAlle(signalId)
-    self.verwendeZaehlAmpeln = true
+    self.signalsUsedForCounting = true
     assert(signalId, "Keine signalId angegeben")
     if not self.zaehlAmpeln[signalId] then self.zaehlAmpeln[signalId] = {} end
     return self
@@ -150,7 +240,7 @@ end
 ---@param signalId number Signal ID
 ---@param route string Route name
 function Lane:zaehleAnAmpelBeiRoute(signalId, route)
-    self.verwendeZaehlAmpeln = true
+    self.signalsUsedForCounting = true
     if not self.zaehlAmpeln[signalId] then self.zaehlAmpeln[signalId] = {} end
     self.zaehlAmpeln[signalId][route] = true
     return self
@@ -184,73 +274,59 @@ function Lane:checkSignalRequests()
     self.hasRequestOnSignal = anforderungGefunden
 end
 
-function Lane:vehicleEntered()
+--- Das Fahrzeug "vehicle" hat die Fahrspur betretent --> Rufe diese Funktion vom Kontaktpunkt aus auf
+--- The vehicle entered this lane -> call this in a contact point
+---@param trainName string name of the vehicle, i.e. train name in EEP
+function Lane:vehicleEntered(trainName)
     self.vehicleCount = self.vehicleCount + 1
+    addTrainToQueue(self, trainName)
     self:refreshRequests()
-    self:save()
+    save(self)
 end
 
-function Lane:vehicleLeft(swithToRed, vehicleName)
-    self.vehicleCount = self.vehicleCount - 1
-    if self.vehicleCount < 0 then self.vehicleCount = 0 end
+--- Das Fahrzeug "vehicle" hat die Fahrspur verlassen --> Rufe diese Funktion vom Kontaktpunkt aus auf
+--- The vehicle left this lane -> call this in a contact point
+---@param swithToRed boolean indicates, if this lane shall switch to red immediately FIXME --> Shall be in Lane
+---@param trainName string name of the vehicle, i.e. train name in EEP
+function Lane:vehicleLeft(swithToRed, trainName)
+    self.vehicleCount = self.vehicleCount - 1 > 0 and self.vehicleCount - 1 or 0
+    popTrainFromQueue(self, trainName)
     self:refreshRequests()
-    self:save()
+    save(self)
 
     if swithToRed and not self:hasRequest() then
         local lanes = {}
         lanes[self] = true
 
-        Lane.switchTrafficLights(lanes, TrafficLightState.YELLOW, "Vehicle left: " .. vehicleName)
+        Lane.switchTrafficLights(lanes, TrafficLightState.YELLOW, "Vehicle left: " .. trainName)
 
         local toRed = Task:new(function()
-            Lane.switchTrafficLights(lanes, TrafficLightState.RED, "Vehicle left: " .. vehicleName)
+            Lane.switchTrafficLights(lanes, TrafficLightState.RED, "Vehicle left: " .. trainName)
         end, "Schalte " .. self.name .. " auf rot.")
         Scheduler:scheduleTask(2, toRed)
     end
 end
 
-function Lane:resetVehicleCounter()
+function Lane:resetVehicles()
+    while not self.queue:isEmpty() do
+        self.queue:pop()
+    end
     self.vehicleCount = 0
     self:refreshRequests()
-    self:save()
+    save(self)
 end
 
 function Lane:incrementWaitCount()
     self.waitCount = self.waitCount + 1
-    self:save()
+    save(self)
 end
 
 function Lane:resetWaitCount()
     self.waitCount = 0
-    self:save()
+    save(self)
 end
 
 function Lane:hasRequest() return self.vehicleCount > 0 or self.hasRequestOnSignal or self.hasRequestOnRoad end
-
-function Lane:save()
-    if self.eepSaveId ~= -1 then
-        local data = {}
-        data["f"] = tostring(self.vehicleCount)
-        data["w"] = tostring(self.waitCount)
-        data["p"] = tostring(self.phase)
-        StorageUtility.saveTable(self.eepSaveId, data, "Lane " .. self.name)
-    end
-end
-
-function Lane:load()
-    if self.eepSaveId ~= -1 then
-        local data = StorageUtility.loadTable(self.eepSaveId, "Lane " .. self.name)
-        self.vehicleCount = data["f"] and tonumber(data["f"]) or 0
-        self.waitCount = data["w"] and tonumber(data["w"]) or 0
-        self.phase = data["p"] or TrafficLightState.RED
-        self:checkRequests()
-        self:switchTo(self.phase, "Neu geladen")
-    else
-        self.vehicleCount = 0
-        self.waitCount = 0
-        self.phase = TrafficLightState.RED
-    end
-end
 
 function Lane:getWarteZeit() return self.waitCount end
 
@@ -301,7 +377,7 @@ function Lane:new(name, eepSaveId, ampeln, directions, trafficType)
         eepSaveId = eepSaveId,
         ampeln = ampeln,
         schaltungsTyp = Lane.SchaltungsTyp.NICHT_VERWENDET,
-        verwendeZaehlAmpeln = false,
+        signalsUsedForCounting = false,
         zaehlAmpeln = {},
         verwendeZaehlStrassen = false,
         zaehlStrassen = {},
@@ -311,7 +387,7 @@ function Lane:new(name, eepSaveId, ampeln, directions, trafficType)
 
     self.__index = self
     setmetatable(o, self)
-    o:load()
+    load(o)
     return o
 end
 

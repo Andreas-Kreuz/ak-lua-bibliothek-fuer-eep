@@ -170,9 +170,9 @@ Es gibt drei Möglichkeiten Fahrzeuge zu erkennen:
 
    Es werden zwei Kontaktpunkte benötigt:
 
-   1. _Richtung betreten_<br> Rufe im Kontaktpunkt die Funktion `meineRichtung:vehicleEntered()` auf, wenn ein Fahrzeug den Bereich betritt.
+   1. _Richtung betreten_<br> Rufe im Kontaktpunkt die Funktion `meineRichtung:vehicleEntered(Zugname)` auf, wenn ein Fahrzeug den Bereich betritt.
 
-   2. _Richtung verlassen_<br> Rufe im Kontaktpunkt die Funktion `meineRichtung:vehicleLeft(switchToRed, fahrzeugName)` auf, wenn ein Fahrzeug den Bereich verläßt.
+   2. _Richtung verlassen_<br> Rufe im Kontaktpunkt die Funktion `meineRichtung:vehicleLeft(switchToRed, Zugname)` auf, wenn ein Fahrzeug den Bereich verläßt.
 
       Wenn das Fahrzeug die Richtung verläßt, dann kann es die Ampel auf rot setzen, wenn gewünscht.
 
@@ -222,7 +222,7 @@ Muss in `EEPMain()` aufgerufen werden - plant die Umschaltung von Kreuzungsschal
 
 - **Richtungen mit Anforderungen benötigen zwingend Zählfunktionen** für die Fahrzeuge dieser Richtung. Für andere Richtungen ist dies optional.
 
-  - `richtung:vehicleEntered()` - im Kontaktpunkt aufrufen, wenn eine Richtung betreten wird (z.B. 50m vor der Ampel; aber nur auf dieser Richtungsfahrbahn)
+  - `richtung:vehicleEntered(Zugname)` - im Kontaktpunkt aufrufen, wenn eine Richtung betreten wird (z.B. 50m vor der Ampel; aber nur auf dieser Richtungsfahrbahn)
 
   - `richtung:vehicleLeft(switchToRed, Zugname)` - im Kontaktpunkt aufrufen, wenn eine Richtung verlassen wird (hinter der Ampel)
 
