@@ -250,9 +250,9 @@ function EEPStructureSetPosition(immoName, rotX, rotY, rotZ) end
 ---@param route string Name der Route
 function EEPSetTrainRoute(trainName, route) trainRoutes[trainName] = route end
 
---- Route abfragen
+--- Route abfragen - return ok und Name der Route
 ---@param trainName string Name des Zuges
----@return boolean ok, routeName string (ok und Name der Route)
+---@return boolean, string
 function EEPGetTrainRoute(trainName) return true, trainRoutes[trainName] and trainRoutes[trainName] or "Alle" end
 
 --- Licht ein oder ausschalten
