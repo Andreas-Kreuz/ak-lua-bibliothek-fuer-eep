@@ -89,11 +89,11 @@ k2_r3 = Lane:new("Richtung 3 - K2", 123, { TrafficLight:new(34, Grundmodell_Ampe
 k2_r4 = Lane:new("Richtung 4 - K2", 124, { TrafficLight:new(33, Grundmodell_Ampel_3) })
 k2_r5 = Lane:new("Richtung 5 - K2", 125, { TrafficLight:new(30, Grundmodell_Ampel_3) })
 
-k2_r1:setRichtungen({ 'RIGHT' })
-k2_r2:setRichtungen({ 'STRAIGHT' })
-k2_r3:setRichtungen({ 'STRAIGHT' })
-k2_r4:setRichtungen({ 'LEFT' })
-k2_r5:setRichtungen({ 'LEFT', 'RIGHT' })
+k2_r1:setDirections({ 'RIGHT' })
+k2_r2:setDirections({ 'STRAIGHT' })
+k2_r3:setDirections({ 'STRAIGHT' })
+k2_r4:setDirections({ 'LEFT' })
+k2_r5:setDirections({ 'LEFT', 'RIGHT' })
 
 
 --region K1-Schaltungen
@@ -150,14 +150,14 @@ k1_r6 = Lane:new("Richtung 6 - K1", 106, { TrafficLight:new(09, Grundmodell_Ampe
 k1_r7 = Lane:new("Richtung 7 - K1", 107, { TrafficLight:new(16, Grundmodell_Ampel_3) })
 k1_r8 = Lane:new("Richtung 8 - K1", 108, { TrafficLight:new(15, Grundmodell_Ampel_3) })
 
-k1_r1:setRichtungen({ 'STRAIGHT', 'RIGHT' })
-k1_r2:setRichtungen({ 'LEFT' })
-k1_r3:setRichtungen({ 'STRAIGHT', 'RIGHT' })
-k1_r4:setRichtungen({ 'LEFT' })
-k1_r5:setRichtungen({ 'STRAIGHT', 'RIGHT' })
-k1_r6:setRichtungen({ 'LEFT' })
-k1_r7:setRichtungen({ 'STRAIGHT', 'RIGHT' })
-k1_r8:setRichtungen({ 'LEFT' })
+k1_r1:setDirections({ 'STRAIGHT', 'RIGHT' })
+k1_r2:setDirections({ 'LEFT' })
+k1_r3:setDirections({ 'STRAIGHT', 'RIGHT' })
+k1_r4:setDirections({ 'LEFT' })
+k1_r5:setDirections({ 'STRAIGHT', 'RIGHT' })
+k1_r6:setDirections({ 'LEFT' })
+k1_r7:setDirections({ 'STRAIGHT', 'RIGHT' })
+k1_r8:setDirections({ 'LEFT' })
 
 local k1_r1_5_fg = Lane:new("Richtung 1+5 FG", -1, {
     -- keine Speicher-ID fuer Fussgaenger notwendig (-1)

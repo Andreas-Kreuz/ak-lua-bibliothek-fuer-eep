@@ -22,14 +22,14 @@ Crossing.zeigeSchaltungAlsInfo = false
 --   |        |     |      |           +------ Signal-ID dieser Ampel
 --   |        |     |      |           |   +-- Modell kann rot, gelb, gruen und FG schalten
 n1 = Lane:new("N1", 100, { TrafficLight:new(12, TrafficLightModel.JS2_3er_mit_FG) })
-n1:setRichtungen({ 'STRAIGHT', 'RIGHT' })
+n1:setDirections({ 'STRAIGHT', 'RIGHT' })
 
 -- Die Richtung N2 hat zwei Ampeln fuer's Linksabbiegen, 9 mit Fussgaengerampel und 17 ohne
 n2 = Lane:new("N2", 101, {
     TrafficLight:new(9, TrafficLightModel.JS2_3er_mit_FG),
     TrafficLight:new(17, TrafficLightModel.JS2_3er_ohne_FG)
 })
-n2:setRichtungen({ 'LEFT' })
+n2:setDirections({ 'LEFT' })
 
 -- Die Richtungen für Fussgaenger haben auch je zwei Ampeln
 fg_n1 = Lane:new("FG_N1", 102, {
@@ -49,8 +49,8 @@ o2 = Lane:new("O2", 105, {
     TrafficLight:new(16, TrafficLightModel.JS2_3er_mit_FG),
     TrafficLight:new(18, TrafficLightModel.JS2_3er_ohne_FG)
 })
-o1:setRichtungen({ 'STRAIGHT', 'RIGHT' })
-o2:setRichtungen({ 'LEFT' })
+o1:setDirections({ 'STRAIGHT', 'RIGHT' })
+o2:setDirections({ 'LEFT' })
 fg_o = Lane:new("FG_O", 106, {
     TrafficLight:new(14, TrafficLightModel.JS2_3er_mit_FG), -- Wird geteilt mit O1
     TrafficLight:new(16, TrafficLightModel.JS2_3er_mit_FG) -- Wird geteilt mit O2
@@ -63,8 +63,8 @@ s2 = Lane:new("S2", 108, {
     TrafficLight:new(10, TrafficLightModel.JS2_3er_mit_FG),
     TrafficLight:new(19, TrafficLightModel.JS2_3er_ohne_FG)
 })
-s1:setRichtungen({ 'STRAIGHT', 'RIGHT' })
-s2:setRichtungen({ 'LEFT' })
+s1:setDirections({ 'STRAIGHT', 'RIGHT' })
+s2:setDirections({ 'LEFT' })
 
 fg_s1 = Lane:new("FG_S1", 109, {
     TrafficLight:new(10, TrafficLightModel.JS2_3er_mit_FG), -- Wird geteilt mit S2
@@ -84,8 +84,8 @@ w2 = Lane:new("W2", 112, {
     TrafficLight:new(15, TrafficLightModel.JS2_3er_mit_FG),
     TrafficLight:new(24, TrafficLightModel.JS2_3er_ohne_FG)
 })
-w1:setRichtungen({ 'STRAIGHT', 'RIGHT' })
-w2:setRichtungen({ 'LEFT' })
+w1:setDirections({ 'STRAIGHT', 'RIGHT' })
+w2:setDirections({ 'LEFT' })
 fg_w = Lane:new("FG_W", 113, {
     TrafficLight:new(13, TrafficLightModel.JS2_3er_mit_FG), -- Wird geteilt mit O1
     TrafficLight:new(15, TrafficLightModel.JS2_3er_mit_FG) -- Wird geteilt mit O2

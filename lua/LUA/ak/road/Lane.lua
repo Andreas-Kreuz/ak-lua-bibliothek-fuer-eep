@@ -347,7 +347,7 @@ end
 
 function Lane:hasRequest() return self.vehicleCount > 0 or self.hasRequestOnSignal or self.hasRequestOnRoad end
 
-function Lane:getWarteZeit() return self.waitCount end
+function Lane:getWaitCount() return self.waitCount end
 
 function Lane:getVehicleCount() return self.vehicleCount end
 
@@ -365,10 +365,16 @@ function Lane:switchTo(phase, grund)
     self.phase = phase
 end
 
-function Lane:setRichtungen(...) self.directions = ... or {"LEFT", "STRAIGHT", "RIGHT"} end
+function Lane:setDirections(...)
+    for _, direction in pairs(...) do
+        if not Lane.Type[direction] then print("No such direction: " .. direction) end
+    end
+
+    self.directions = ... or {"LEFT", "STRAIGHT", "RIGHT"}
+end
 
 function Lane:setTrafficType(trafficType)
-    if trafficType ~= "TRAM" and trafficType ~= "PEDESTRIAN" and trafficType ~= "NORMAL" then
+    if not Lane.Type[trafficType] then
         print("No such traffic type: " .. trafficType)
     else
         self.trafficType = trafficType
