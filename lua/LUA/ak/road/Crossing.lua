@@ -315,7 +315,7 @@ function Crossing.planeSchaltungenEin()
                     richtungenAktuellGruen[richtung] = true
                     richtungenAufRot[richtung] = true
                 end
-                for richtung in pairs(aktuelleSchaltung.richtungenFuerFussgaenger) do
+                for richtung in pairs(aktuelleSchaltung.pedestrianCrossings) do
                     richtungenAktuellFussgaengerGruen[richtung] = true
                     richtungenAufFussgaengerRot[richtung] = true
                 end
@@ -366,7 +366,7 @@ function Crossing.planeSchaltungenEin()
             end
 
             -- Fussgaenger auf gruen schalten
-            for richtungDanachGruen in pairs(nextSchaltung.richtungenFuerFussgaenger) do
+            for richtungDanachGruen in pairs(nextSchaltung.pedestrianCrossings) do
                 if richtungenAktuellFussgaengerGruen[richtungDanachGruen] then
                     -- Ampel nicht auf rot schalten, da sie in der naechsten Schaltung enthalten ist
                     richtungenAufFussgaengerRot[richtungDanachGruen] = nil

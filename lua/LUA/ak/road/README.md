@@ -182,9 +182,9 @@ Wird dazu verwendet, mehrere Richtungen gleichzeitig zu schalten. Es muss sicher
 
 - `function CrossingCircuit:new(name)` - legt eine neue Schaltung an
 
-- `function CrossingCircuit:fuegeRichtungHinzu(richtung)` fügt eine Richtung hinzu, für die mit den Zyklen Rot, Rot-Gelb, Gruen und Gelb geschaltet wird.
+- `function CrossingCircuit:addLane(richtung)` fügt eine Richtung hinzu, für die mit den Zyklen Rot, Rot-Gelb, Gruen und Gelb geschaltet wird.
 
-- `function CrossingCircuit:fuegeRichtungFuerFussgaengerHinzu(richtung)` fügt eine Richtung hinzu, für die mit den Zyklen Rot, Gruen_Fussgaenger geschaltet wird.
+- `function CrossingCircuit:addPedestrianCrossing(richtung)` fügt eine Richtung hinzu, für die mit den Zyklen Rot, Gruen_Fussgaenger geschaltet wird.
 
 - `function CrossingCircuit:fuegeRichtungMitAnforderungHinzu(richtung)` fügt eine Richtung hinzu, für die mit den Zyklen Rot, Rot-Gelb, Gruen und Gelb geschaltet wird.
 

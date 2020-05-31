@@ -1,5 +1,6 @@
 if AkDebugLoad then print("Loading ak.road.TrafficLight ...") end
 
+---@class Queue<T>
 local Queue = {}
 function Queue:new()
     local o = {first = 0, last = -1, list = {}}
@@ -35,6 +36,7 @@ function Queue:pop()
     return value
 end
 
+---@return any[]
 function Queue:elements()
     local elems = {}
     for i = self.first, self.last, 1 do

@@ -1,6 +1,7 @@
 if AkDebugLoad then print("Loading ak.road.CrossingCircuit ...") end
 
 local Lane = require("ak.road.Lane")
+local LaneSettings = require("ak.road.LaneSettings")
 
 ------------------------------------------------------
 -- Klasse Richtungsschaltung (schaltet mehrere Ampeln)
@@ -8,13 +9,9 @@ local Lane = require("ak.road.Lane")
 ---@class CrossingCircuit
 local CrossingCircuit = {}
 
-function CrossingCircuit.getType()
-    return "CrossingCircuit"
-end
+function CrossingCircuit.getType() return "CrossingCircuit" end
 
-function CrossingCircuit:getName()
-    return self.name
-end
+function CrossingCircuit:getName() return self.name end
 
 function CrossingCircuit:new(name)
     local o = {}
@@ -22,50 +19,35 @@ function CrossingCircuit:new(name)
     self.__index = self
     o.name = name
     o.prio = 0
-    o.richtungenNormal = {}
+    o.lanes = {}
     o.richtungenMitAnforderung = {}
-    o.richtungenFuerFussgaenger = {}
+    o.pedestrianCrossings = {}
     return o
 end
 
 function CrossingCircuit:getAlleRichtungen()
     local alle = {}
-    for richtung in pairs(self.richtungenNormal) do
-        alle[richtung] = "NORMAL"
-    end
-    for richtung in pairs(self.richtungenMitAnforderung) do
-        alle[richtung] = "REQUEST"
-    end
-    for richtung in pairs(self.richtungenFuerFussgaenger) do
-        alle[richtung] = "PEDESTRIANTS"
-    end
+    for richtung in pairs(self.lanes) do alle[richtung] = "NORMAL" end
+    for richtung in pairs(self.richtungenMitAnforderung) do alle[richtung] = "REQUEST" end
+    for richtung in pairs(self.pedestrianCrossings) do alle[richtung] = "PEDESTRIANTS" end
     return alle
 end
 
-function CrossingCircuit:getNormaleRichtungen()
-    return self.richtungenNormal
-end
+function CrossingCircuit:getNormaleRichtungen() return self.lanes end
 
 function CrossingCircuit:richtungenAlsTextZeile()
     local s = ""
-    for richtung in pairs(self.richtungenNormal) do
-        s = s .. ", " .. richtung.name
-    end
-    for richtung in pairs(self.richtungenMitAnforderung) do
-        s = s .. ", " .. richtung.name
-    end
+    for richtung in pairs(self.lanes) do s = s .. ", " .. richtung.name end
+    for richtung in pairs(self.richtungenMitAnforderung) do s = s .. ", " .. richtung.name end
     s = s:sub(3)
     return s
 end
 
-function CrossingCircuit:getRichtungenMitAnforderung()
-    return self.richtungenMitAnforderung
-end
+function CrossingCircuit:getRichtungenMitAnforderung() return self.richtungenMitAnforderung end
 
-function CrossingCircuit:fuegeRichtungHinzu(richtung)
-    assert(richtung, "Bitte ein gueltige Richtung angeben")
-    richtung:setLaneType(Lane.SchaltungsTyp.NORMAL)
-    self.richtungenNormal[richtung] = true
+function CrossingCircuit:addLane(lane, directions, routes, switchingType)
+    assert(lane, "Bitte ein gueltige Richtung angeben")
+    self.lanes[lane] = LaneSettings:new(lane, directions, routes, switchingType)
 end
 
 function CrossingCircuit:addRichtungMitAnforderung(richtung)
@@ -74,15 +56,13 @@ function CrossingCircuit:addRichtungMitAnforderung(richtung)
     self.richtungenMitAnforderung[richtung] = true
 end
 
-function CrossingCircuit:fuegeRichtungFuerFussgaengerHinzu(richtung)
+function CrossingCircuit:addPedestrianCrossing(richtung)
     assert(richtung, "Bitte ein gueltige Richtung angeben")
     richtung:setLaneType(Lane.SchaltungsTyp.FUSSGAENGER)
-    self.richtungenFuerFussgaenger[richtung] = true
+    self.pedestrianCrossings[richtung] = true
 end
 
-function CrossingCircuit:getRichtungFuerFussgaenger()
-    return self.richtungenFuerFussgaenger
-end
+function CrossingCircuit:getRichtungFuerFussgaenger() return self.pedestrianCrossings end
 
 --- Gibt alle Richtungen nach Prioritaet zurueck, sowie deren Anzahl und deren Durchschnittsprioritùt
 -- @return sortierteRichtungen, anzahlDerRichtungen, durchschnittsPrio
@@ -90,12 +70,12 @@ function CrossingCircuit:nachPrioSortierteRichtungen()
     local sortierteRichtungen = {}
     local anzahlDerRichtungen = 0
     local gesamtPrio = 0
-    for richtung in pairs(self.richtungenNormal) do
+    for richtung in pairs(self.lanes) do
         table.insert(sortierteRichtungen, richtung)
         anzahlDerRichtungen = anzahlDerRichtungen + 1
         gesamtPrio = gesamtPrio + richtung:calculatePriority()
     end
-    for richtung in pairs(self.richtungenFuerFussgaenger) do
+    for richtung in pairs(self.pedestrianCrossings) do
         table.insert(sortierteRichtungen, richtung)
         anzahlDerRichtungen = anzahlDerRichtungen + 1
         gesamtPrio = gesamtPrio + richtung:calculatePriority()
@@ -118,18 +98,10 @@ end
 -- @return sortierteRichtungen
 function CrossingCircuit:nachNameSortierteRichtungen()
     local sortierteRichtungen = {}
-    for richtung in pairs(self.richtungenNormal) do
-        table.insert(sortierteRichtungen, richtung)
-    end
-    for richtung in pairs(self.richtungenMitAnforderung) do
-        table.insert(sortierteRichtungen, richtung)
-    end
-    for richtung in pairs(self.richtungenFuerFussgaenger) do
-        table.insert(sortierteRichtungen, richtung)
-    end
-    local sortierFunktion = function(richtung1, richtung2)
-        return (richtung1.name < richtung2.name)
-    end
+    for richtung in pairs(self.lanes) do table.insert(sortierteRichtungen, richtung) end
+    for richtung in pairs(self.richtungenMitAnforderung) do table.insert(sortierteRichtungen, richtung) end
+    for richtung in pairs(self.pedestrianCrossings) do table.insert(sortierteRichtungen, richtung) end
+    local sortierFunktion = function(richtung1, richtung2) return (richtung1.name < richtung2.name) end
     table.sort(sortierteRichtungen, sortierFunktion)
     return sortierteRichtungen
 end
@@ -164,10 +136,6 @@ function CrossingCircuit:calculatePriority()
     return prio
 end
 
-function CrossingCircuit:resetWaitCount()
-    for richtung in pairs(self.richtungenNormal) do
-        richtung:resetWaitCount()
-    end
-end
+function CrossingCircuit:resetWaitCount() for richtung in pairs(self.lanes) do richtung:resetWaitCount() end end
 
 return CrossingCircuit

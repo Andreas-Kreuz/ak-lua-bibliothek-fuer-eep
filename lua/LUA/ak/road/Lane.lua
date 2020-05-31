@@ -4,6 +4,7 @@ local Queue = require("ak.util.Queue")
 local Task = require("ak.scheduler.Task")
 local Scheduler = require("ak.scheduler.Scheduler")
 local StorageUtility = require("ak.storage.StorageUtility")
+local LaneSwitching = require("ak.road.LaneSwitching")
 local TrafficLightState = require("ak.road.TrafficLightState")
 local fmt = require("ak.core.eep.AkTippTextFormat")
 
@@ -123,11 +124,14 @@ end
 --------------------
 -- Klasse Richtung
 --------------------
-Lane.SchaltungsTyp = {}
-Lane.SchaltungsTyp.NICHT_VERWENDET = "NICHT VERWENDET"
-Lane.SchaltungsTyp.ANFORDERUNG = "ANFORDERUNG"
-Lane.SchaltungsTyp.NORMAL = "NORMAL"
-Lane.SchaltungsTyp.FUSSGAENGER = "FUSSGAENGER"
+---@class LaneRequestType
+Lane.SchaltungsTyp = {
+    NICHT_VERWENDET = "NICHT VERWENDET",
+    ANFORDERUNG = "ANFORDERUNG",
+    NORMAL = "NORMAL",
+    FUSSGAENGER = "FUSSGAENGER"
+}
+---@class LaneDirection
 Lane.Directions = {
     LEFT = "LEFT",
     HALF_LEFT = "HALF-LEFT",
@@ -135,6 +139,7 @@ Lane.Directions = {
     HALF_RIGHT = "HALF-RIGHT",
     RIGHT = "RIGHT"
 }
+---@class LaneType
 Lane.Type = {CAR = "CAR", TRAM = "TRAM", PEDESTRIAN = "PEDESTRIAN", BICYCLE = "BICYCLE"}
 
 function Lane.switchTrafficLights(lanes, phase, grund)
@@ -157,6 +162,30 @@ function Lane:setLaneType(schaltungsTyp)
     self.schaltungsTyp = schaltungsTyp
 end
 
+function Lane:getVehicleCount(routes)
+    local count = 0
+    if #routes == 0 then
+        count = self.vehicleCount
+    else
+        for i, vehicleName in pairs(self.queue:elements()) do
+            local trainRoute = EEPGetTrainRoute(vehicleName)
+            local routeMatches = false
+            for _, route in pairs(routes) do
+                if route == trainRoute then
+                    routeMatches = true
+                    break
+                end
+            end
+
+            if not routeMatches then
+                count = i
+                break
+            end
+        end
+    end
+end
+
+-- FIXME MOVE TO SWITCHING
 function Lane:checkRequests()
     self:checkRoadRequests()
     self:checkSignalRequests()
@@ -185,8 +214,10 @@ function Lane:checkRequests()
     self:refreshRequests()
 end
 
+-- FIXME MOVE TO SWITCHING
 function Lane:refreshRequests() for _, ampel in pairs(self.ampeln) do ampel:refreshRequests(self) end end
 
+-- FIXME MOVE TO SWITCHING
 function Lane:calculatePriority()
     local verwendeZaehlStrassen = self:checkRoadRequests()
     if verwendeZaehlStrassen then
@@ -204,6 +235,7 @@ function Lane:calculatePriority()
     return self.waitCount > prio and self.waitCount or prio
 end
 
+-- FIXME MOVE TO SWITCHING
 function Lane:getAnforderungsText() return self.anforderungsText or "KEINE ANFORDERUNG" end
 
 ---@param roadId number Road Track ID
@@ -295,7 +327,7 @@ function Lane:checkSignalRequests()
     self.hasRequestOnSignal = anforderungGefunden
 end
 
---- Das Fahrzeug "vehicle" hat die Fahrspur betretent --> Rufe diese Funktion vom Kontaktpunkt aus auf
+--- Das Fahrzeug "vehicle" hat die Fahrspur betreten --> Rufe diese Funktion vom Kontaktpunkt aus auf
 --- The vehicle entered this lane -> call this in a contact point
 ---@param trainName string name of the vehicle, i.e. train name in EEP
 function Lane:vehicleEntered(trainName)
@@ -345,15 +377,12 @@ function Lane:resetWaitCount()
     save(self)
 end
 
+-- FIXME REPLACE BY QUEUE
 function Lane:hasRequest() return self.vehicleCount > 0 or self.hasRequestOnSignal or self.hasRequestOnRoad end
 
 function Lane:getWaitCount() return self.waitCount end
 
 function Lane:getVehicleCount() return self.vehicleCount end
-
-function Lane:getRichtungSaveId() return self.richtungSaveId end
-
-function Lane:getLaneInfo() return self.laneInfo end
 
 function Lane:setFahrzeugMultiplikator(fahrzeugMultiplikator)
     self.fahrzeugMultiplikator = fahrzeugMultiplikator
@@ -379,6 +408,13 @@ function Lane:setTrafficType(trafficType)
     else
         self.trafficType = trafficType
     end
+end
+
+---Legt eine Schaltung bestimmter Ampeln an, z.B. geradeaus für diese Spur
+function Lane:addSwitching(visibleTrafficLights, directions, routes, switchingType)
+    local switching = LaneSwitching:new(self, visibleTrafficLights, directions, routes, switchingType)
+    self.switchings[directions] = switching
+    return switching
 end
 
 --- Erzeugt eine Richtung, welche durch eine Ampel gesteuert wird.
@@ -407,6 +443,7 @@ function Lane:new(name, eepSaveId, ampeln, directions, trafficType)
         verwendeZaehlStrassen = false,
         zaehlStrassen = {},
         directions = directions or {"LEFT", "STRAIGHT", "RIGHT"},
+        switchings = {},
         trafficType = trafficType or "NORMAL"
     }
 

@@ -109,22 +109,22 @@ ws:zaehleAnStrasseAlle(2) -- Erfasst Anforderungen, wenn ein Fahrzeug auf Strass
 
 --- Tutorial 2: Schaltung 1
 local sch1 = CrossingCircuit:new("Schaltung 1")
-sch1:fuegeRichtungHinzu(o1)
-sch1:fuegeRichtungHinzu(os)
-sch1:fuegeRichtungHinzu(w1)
-sch1:fuegeRichtungHinzu(ws)
-sch1:fuegeRichtungFuerFussgaengerHinzu(fg_n)
+sch1:addLane(o1)
+sch1:addLane(os)
+sch1:addLane(w1)
+sch1:addLane(ws)
+sch1:addPedestrianCrossing(fg_n)
 
 --- Tutorial 2: Schaltung 2
 local sch2 = CrossingCircuit:new("Schaltung 2")
-sch2:fuegeRichtungHinzu(w2)
-sch2:fuegeRichtungFuerFussgaengerHinzu(fg_o)
+sch2:addLane(w2)
+sch2:addPedestrianCrossing(fg_o)
 
 --- Tutorial 2: Schaltung 3
 local sch3 = CrossingCircuit:new("Schaltung 3")
-sch3:fuegeRichtungHinzu(n)
-sch3:fuegeRichtungFuerFussgaengerHinzu(fg_o)
-sch3:fuegeRichtungFuerFussgaengerHinzu(fg_w)
+sch3:addLane(n)
+sch3:addPedestrianCrossing(fg_o)
+sch3:addPedestrianCrossing(fg_w)
 
 k1 = Crossing:new("Tutorial 2")
 k1:fuegeSchaltungHinzu(sch1)
