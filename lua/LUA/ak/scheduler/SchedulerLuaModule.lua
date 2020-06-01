@@ -1,29 +1,27 @@
-if AkDebugLoad then print("Loading ak.data.SchedulerLuaModule ...") end
+if AkDebugLoad then print("Loading ak.scheduler.SchedulerLuaModule ...") end
 SchedulerLuaModule = {}
 SchedulerLuaModule.id = "725585f1-cfee-4237-97e1-135c5e9f4d02"
 SchedulerLuaModule.enabled = true
 local initialized = false
 -- Jedes Modul hat einen eindeutigen Namen
-SchedulerLuaModule.name = "ak.data.SchedulerLuaModule"
+SchedulerLuaModule.name = "ak.scheduler.SchedulerLuaModule"
 local Scheduler = require("ak.scheduler.Scheduler")
 
 --- Diese Funktion wird einmalig durch ModuleRegistry.initTasks() aufgerufen
--- Ist ein Modul fÃ¼r EEPWeb vorhanden, dann solltes in dieser Funktion aufgerufen werden
+-- Ist ein Modul für EEPWeb vorhanden, dann solltes in dieser Funktion aufgerufen werden
 -- @author Andreas Kreuz
 function SchedulerLuaModule.init()
-    if not SchedulerLuaModule.enabled or initialized then
-        return
-    end
+    if not SchedulerLuaModule.enabled or initialized then return end
 
-    -- Hier wird der CoreWebConnector registriert, so dass die Kommunikation mit der WebApp funktioniert
+    -- Hier wird der SchedulerWebConnector registriert, so dass die Kommunikation mit der WebApp funktioniert
     -- Not there yet
-    --local PlanerWebConnector = require("ak.scheduler.PlanerWebConnector")
-    --PlanerWebConnector.registerJsonCollectors();
+    -- local SchedulerWebConnector = require("ak.scheduler.SchedulerWebConnector")
+    -- SchedulerWebConnector.registerJsonCollectors();
 
     initialized = true
 end
 
---- Diese Funktion wird regelmÃ¤ÃŸig durch ModuleRegistry.runTasks() aufgerufen
+--- Diese Funktion wird regelmäßig durch ModuleRegistry.runTasks() aufgerufen
 -- @author Andreas Kreuz
 function SchedulerLuaModule.run()
     if not SchedulerLuaModule.enabled then
@@ -31,7 +29,7 @@ function SchedulerLuaModule.run()
         return
     end
 
-    -- Hier folgen die wiederkehrenden Funktionen jedes Moduls (mÃ¼ssen dann nicht in EEPMain aufgerufen werden)
+    -- Hier folgen die wiederkehrenden Funktionen jedes Moduls (müssen dann nicht in EEPMain aufgerufen werden)
     Scheduler:runTasks()
 end
 

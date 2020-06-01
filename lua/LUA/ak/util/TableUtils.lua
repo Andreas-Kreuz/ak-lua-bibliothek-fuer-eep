@@ -14,7 +14,7 @@ end
 
 function TableUtils.sameListEntries(t1, t2)
     local entries1 = {}
-    for _, v1 in ipairs(t1) do entries1.v1 = true end
+    for _, v1 in ipairs(t1) do entries1[v1] = true end
     local entries2 = {}
     for _, v2 in ipairs(t2) do
         if not entries1[v2] then return false end
@@ -45,5 +45,12 @@ local function deepDictCompare(t1, t2, ignore_mt)
     return true
 end
 TableUtils.deepDictCompare = deepDictCompare
+
+---@param array table
+function TableUtils.clearArray(array)
+    for i = 1, #array, 1 do
+        array[i] = nil
+    end
+end
 
 return TableUtils

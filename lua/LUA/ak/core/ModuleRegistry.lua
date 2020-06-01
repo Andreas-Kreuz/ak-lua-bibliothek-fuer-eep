@@ -1,13 +1,32 @@
 if AkDebugLoad then print("Loading ak.core.ModuleRegistry ...") end
-local ModuleRegistry = {}
-
+local TableUtils = require("ak.util.TableUtils")
 local os = require("os")
-ModuleRegistry.debug = AkDebugLoad or false
 local ServerController = require("ak.io.ServerController")
+
+local ModuleRegistry = {}
+ModuleRegistry.debug = AkDebugLoad or false
 local enableServer = true
 local initialized = false
--- @type name
+---@type <table,LuaModule>
 local registeredLuaModules = {}
+---@type string[]
+local executionOrderModuleNames = {}
+
+local function updateModuleOrder()
+    TableUtils.clearArray(executionOrderModuleNames)
+    for moduleName in pairs(registeredLuaModules) do table.insert(executionOrderModuleNames, moduleName) end
+    table.sort(executionOrderModuleNames, function(n1, n2)
+        if n1 == "ak.scheduler.SchedulerLuaModule" then return true end
+        if n2 == "ak.scheduler.SchedulerLuaModule" then return false end
+        return n1 < n2
+    end)
+end
+
+function ModuleRegistry.getModuleNames()
+    local copy = {}
+    for i, v in ipairs(executionOrderModuleNames) do copy[i] = v end
+    return copy
+end
 
 ---
 -- Registers a module to be used in EEP Web
@@ -28,6 +47,8 @@ function ModuleRegistry.registerModules(...)
         registeredLuaModules[module.name] = module
     end
 
+    updateModuleOrder()
+
     -- pass the modules to the caller in the EEP script
     return registeredLuaModules
 end
@@ -43,6 +64,7 @@ function ModuleRegistry.unregisterModules(...)
         -- Remove the module by it's name
         registeredLuaModules[module.name] = nil
     end
+    updateModuleOrder()
 end
 
 -- ACHTUNG: DIE VERWENDUNG ERFOLGT AUF EIGENE GEFAHR. ES IST GUT MÖGLICH,
@@ -54,25 +76,25 @@ function ModuleRegistry.useDlls(enableDlls)
 end
 
 local function initTask(module)
-    if ModuleRegistry.debug then print(string.format('Begin ModuleRegistry.initTask() for "%s"', module.name)) end
+    if ModuleRegistry.debug then print(string.format('[ModuleRegistry] Begin initTask() for "%s"', module.name)) end
     local t0 = os.clock()
     module.init()
     local t1 = os.clock()
     local timeDiff = t1 - t0
     if ModuleRegistry.debug then
-        print(string.format('ModuleRegistry.initTask() %.3f seconds for "%s"', timeDiff, module.name))
+        print(string.format('[ModuleRegistry].initTask() %.3f seconds for "%s"', timeDiff, module.name))
     end
 end
 
 local function runTask(module)
-    if ModuleRegistry.debug then print(string.format('Begin ModuleRegistry.runTask() for "%s"', module.name)) end
+    if ModuleRegistry.debug then print(string.format('[ModuleRegistry] Begin runTask() for "%s"', module.name)) end
     local t0 = os.clock()
     module.run()
     local t1 = os.clock()
     local timeDiff = t1 - t0
-    -- print(string.format('ModuleRegistry.runTask() %.3f seconds for "%s"', timeDiff, module.name)) --###
-    if timeDiff > 0.005 then
-        print(string.format('WARNING: ModuleRegistry.runTask() %.3f seconds for "%s"', timeDiff, module.name))
+    -- print(string.format('[ModuleRegistry].runTask() %.3f seconds for "%s"', timeDiff, module.name))
+    if ModuleRegistry.debug and timeDiff > 0.01 then
+        print(string.format('[ModuleRegistry] WARNING: runTask() %.3f seconds for "%s"', timeDiff, module.name))
     end
 end
 
@@ -80,7 +102,7 @@ end
 -- This will init all registeredLuaModules
 function ModuleRegistry.initTasks()
     if not initialized then
-        for _, module in pairs(registeredLuaModules) do initTask(module) end
+        for _, moduleName in ipairs(executionOrderModuleNames) do initTask(registeredLuaModules[moduleName]) end
 
         initialized = true
     end
@@ -94,7 +116,7 @@ function ModuleRegistry.runTasks(cycleCount)
     if not initialized then ModuleRegistry.initTasks() end
 
     local t2 = os.clock()
-    for _, module in pairs(registeredLuaModules) do runTask(module) end
+    for _, moduleName in ipairs(executionOrderModuleNames) do runTask(registeredLuaModules[moduleName]) end
 
     local t3 = os.clock()
     if enableServer then
@@ -105,7 +127,7 @@ function ModuleRegistry.runTasks(cycleCount)
     local t4 = os.clock()
 
     if ModuleRegistry.debug then
-        print(string.format("ModuleRegistry.runTasks(cycleCount) time: %.0f ms " ..
+        print(string.format("[ModuleRegistry] runTasks(cycleCount) time: %.0f ms " ..
                                 "(%.0f ms init, %.0f ms runTask, %.0f ms serveData)", (t4 - t1) * 1000,
                             (t2 - t1) * 1000, (t3 - t2) * 1000, (t4 - t3) * 1000))
     end

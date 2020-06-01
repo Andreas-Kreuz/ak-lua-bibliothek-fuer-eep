@@ -5,10 +5,10 @@ local enabled = true
 local initialized = false
 ModulesJsonCollector.name = "ak.core.ModulesJsonCollector"
 ---@type table<string,LuaModule>
-local knownModules = nil
+local registeredLuaModules = nil
 
-function ModulesJsonCollector.setRegisteredLuaModules(registeredLuaModules)
-    knownModules = registeredLuaModules
+function ModulesJsonCollector.setRegisteredLuaModules(modules)
+    registeredLuaModules = modules
 end
 
 function ModulesJsonCollector.initialize()
@@ -22,7 +22,7 @@ end
 function ModulesJsonCollector.collectData()
     local moduleInfo = {}
     moduleInfo.modules = {}
-    for moduleName, module in pairs(knownModules) do
+    for moduleName, module in pairs(registeredLuaModules) do
         table.insert(
             moduleInfo.modules,
             {
