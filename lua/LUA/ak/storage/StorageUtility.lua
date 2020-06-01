@@ -67,7 +67,7 @@ function StorageUtility.loadTable(eepSaveId, name)
     return t
 end
 
---- Hilfsroutine fÃ¼r die sortierte Ausgabe einer Tabelle
+--- Hilfsroutine für die sortierte Ausgabe einer Tabelle
 -- @param t eine Tabelle
 -- @param f optionale Sortierfunktion
 --
@@ -111,7 +111,8 @@ function StorageUtility.saveTable(eepSaveId, table, name)
     local hresult = EEPSaveData(eepSaveId, text)
     if StorageUtility.debug then
         print(
-                  " gespeichert: " .. text)
+            "[StorageUtility  ] Speichern [" .. (hresult and "OK" or "!!") .. "] - " .. eepSaveId .. " - " .. name ..
+                " gespeichert: " .. text)
     end
     savedValues[eepSaveId] = text
     if StorageUtility.debug then StorageUtility.updateDebugFile() end
@@ -134,7 +135,12 @@ function StorageUtility.updateDebugFile()
     datei:close()
 end
 
---- LÃ¤dt
+function StorageUtility.reset()
+    saveSlots = {}
+    savedValues = {}
+end
+
+--- Lädt
 for i = 1, 1000 do
     local hResult, data = EEPLoadData(i)
     if hResult then savedValues[i] = data end
