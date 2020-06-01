@@ -639,4 +639,6 @@ function EEPRoadTrackSetTextureText(id, flaeche, text) end
 function EEPTramTrackSetTextureText(id, flaeche, text) end
 function EEPAuxiliaryTrackSetTextureText(id, flaeche, text) end
 
+function EEPPause(value) end
+
 return EepSimulator
