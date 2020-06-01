@@ -151,18 +151,18 @@ Es gibt drei Möglichkeiten Fahrzeuge zu erkennen:
 
    Über diese Funktion wird erkannt, wie viele Fahrzeuge zwischen einem bestimmten Vor- und Hauptsignal auf dem Straßenstück warten.
 
-   - Um die Richtung zu priorisieren, wenn sich **ein beliebiges Fahrzeug** auf der Straße vor der Ampel befindet, muss die signalID der Ampel einmalig hinterlegt werden: `meineRichtung:zaehleAnAmpelAlle(signalId)`
+   - Um die Richtung zu priorisieren, wenn sich **ein beliebiges Fahrzeug** auf der Straße vor der Ampel befindet, muss die signalID der Ampel einmalig hinterlegt werden: `lane:zaehleAnAmpelAlle()`
 
-   - Um die Richtung nur dann zu Priorisieren, wenn ein bestimmtes Fahrzeug an der Ampel wartet, kann stattdessen die Funktion mit Route verwendet werden: `meineRichtung:zaehleAnAmpelBeiRoute(strassenId, route)`<br>
+   - Um die Richtung nur dann zu Priorisieren, wenn ein bestimmtes Fahrzeug an der Ampel wartet, kann stattdessen die Funktion mit Route verwendet werden: `lane:zaehleAnAmpelBeiRoute(route)`<br>
      Diese Funktion prüft, ob das erste Fahrzeug an der Ampel die passende Route hat.
 
 2. **Fahrzeuge auf der Straße vor dem Signal erkennen**
 
    Über diese Funktion wird erkannt, ob sich _ein_ Fahrzeuge auf dem Straßenstück befindet.
 
-   - Um die Richtung zu priorisieren, wenn sich **ein beliebiges Fahrzeug** auf der Straße vor der Ampel befindet, muss die ID des Straßenstücks einmalig hinterlegt werden: `meineRichtung:zaehleAnStrasseAlle(strassenId)``
+   - Um die Richtung zu priorisieren, wenn sich **ein beliebiges Fahrzeug** auf der Straße vor der Ampel befindet, muss die ID des Straßenstücks einmalig hinterlegt werden: `lane:zaehleAnStrasseAlle(strassenId)``
 
-   - Um die Richtung nur dann zu Priorisieren, wenn sich ein bestimmtes Fahrzeug auf der Straße vor der Ampel befindet, kann stattdessen die Funktion mit Route verwendet werden: `meineRichtung:zaehleAnStrasseBeiRoute(strassenId, route)`
+   - Um die Richtung nur dann zu Priorisieren, wenn sich ein bestimmtes Fahrzeug auf der Straße vor der Ampel befindet, kann stattdessen die Funktion mit Route verwendet werden: `lane:zaehleAnStrasseBeiRoute(strassenId, route)`
 
 3. **Fahrzeuge mit Kontaktpunkten zählen**
 
@@ -170,9 +170,9 @@ Es gibt drei Möglichkeiten Fahrzeuge zu erkennen:
 
    Es werden zwei Kontaktpunkte benötigt:
 
-   1. _Richtung betreten_<br> Rufe im Kontaktpunkt die Funktion `meineRichtung:vehicleEntered(Zugname)` auf, wenn ein Fahrzeug den Bereich betritt.
+   1. _Richtung betreten_<br> Rufe im Kontaktpunkt die Funktion `lane:vehicleEntered(Zugname)` auf, wenn ein Fahrzeug den Bereich betritt.
 
-   2. _Richtung verlassen_<br> Rufe im Kontaktpunkt die Funktion `meineRichtung:vehicleLeft(switchToRed, Zugname)` auf, wenn ein Fahrzeug den Bereich verläßt.
+   2. _Richtung verlassen_<br> Rufe im Kontaktpunkt die Funktion `lane:vehicleLeft(switchToRed, Zugname)` auf, wenn ein Fahrzeug den Bereich verlässt.
 
       Wenn das Fahrzeug die Richtung verläßt, dann kann es die Ampel auf rot setzen, wenn gewünscht.
 

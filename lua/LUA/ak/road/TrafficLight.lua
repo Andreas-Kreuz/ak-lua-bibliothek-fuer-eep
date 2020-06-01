@@ -44,7 +44,8 @@ function TrafficLight:new(signalId, trafficLightModel, redStructure, greenStruct
         ---@type table<LightStructureTrafficLight,boolean>
         lightStructures = {},
         ---@type table<AxisStructureTrafficLight,boolean>
-        axisStructures = {}
+        axisStructures = {},
+        type = "TrafficLight"
     }
     self.__index = self
     o = setmetatable(o, self)
@@ -130,6 +131,10 @@ function TrafficLight:refreshInfo()
     end
 end
 
+function TrafficLight.switchAll(trafficLights, phase, grund)
+    for tl in pairs(trafficLights) do tl:switchTo(phase, grund) end
+end
+
 ---
 -- @param signalId ID der Ampel auf der Anlage (Eine Ampel von diesem Typ sollte auf der Anlage sein)
 -- @param phase TrafficLightState.xxx
@@ -154,16 +159,16 @@ function TrafficLight:switchStructureLight()
     local immoDbg = ""
     for lightTL in pairs(self.lightStructures) do
         if lightTL.redStructure then
-            local onOff = (self.phase == TrafficLightState.RED or self.phase == TrafficLightState.REDYELLOW) and "an" or
-                              "aus"
+            local onOff =
+                (self.phase == TrafficLightState.RED or self.phase == TrafficLightState.REDYELLOW) and "an" or "aus"
 
             immoDbg = immoDbg .. string.format(", Licht in %s: %s", lightTL.redStructure, onOff)
             EEPStructureSetLight(lightTL.redStructure,
                                  self.phase == TrafficLightState.RED or self.phase == TrafficLightState.REDYELLOW)
         end
         if lightTL.yellowStructure then
-            local onOff =
-                (self.phase == TrafficLightState.YELLOW or self.phase == TrafficLightState.REDYELLOW) and "an" or "aus"
+            local onOff = (self.phase == TrafficLightState.YELLOW or self.phase == TrafficLightState.REDYELLOW) and
+                              "an" or "aus"
             immoDbg = immoDbg .. string.format(", Licht in %s: %s", lightTL.yellowStructure, onOff)
             EEPStructureSetLight(lightTL.yellowStructure,
                                  self.phase == TrafficLightState.YELLOW or self.phase == TrafficLightState.REDYELLOW)
@@ -196,7 +201,8 @@ function TrafficLight:switchStructureAxis()
             position = axisTL.positionPedestrian
         end
 
-        immoDbg = immoDbg .. string.format(", Achse %s in %s auf: %d", axisTL.axisName, axisTL.structureName, position)
+        immoDbg = immoDbg ..
+                      string.format(", Achse %s in %s auf: %d", axisTL.axisName, axisTL.structureName, position)
         EEPStructureSetAxis(axisTL.structureName, axisTL.axisName, position)
     end
     return immoDbg
@@ -226,8 +232,8 @@ function TrafficLight:refreshRequests(lane)
 end
 
 function TrafficLight:print()
-    print(
-        string.format("[TrafficLight    ] Ampel %04d: %s (%s)", self.signalId, self.phase, self.trafficLightModel.name))
+    print(string.format("[TrafficLight    ] Ampel %04d: %s (%s)", self.signalId, self.phase,
+                        self.trafficLightModel.name))
 end
 
 return TrafficLight

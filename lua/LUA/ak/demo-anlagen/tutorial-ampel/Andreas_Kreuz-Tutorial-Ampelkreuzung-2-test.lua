@@ -46,7 +46,7 @@ end
 EepSimulator.queueTrainOnSignal(14, "#Zug1")
 EEPSetTrainRoute("#Zug1", "Meine Route 1")
 
-assert(true == os.signalsUsedForCounting)
+assert(true == os.signalUsedForRequest)
 os:checkSignalRequests()
 assert(true == os.anforderungAnSignal)
 

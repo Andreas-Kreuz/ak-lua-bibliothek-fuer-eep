@@ -65,28 +65,19 @@ function Crossing:getSchaltungen() return self.schaltungen end
 function Crossing:getAktuelleSchaltung() return self.aktuelleSchaltung end
 
 function Crossing:setzeWarteZeitZurueck(nextSchaltung)
-    local increaseRichtungen = {}
-    for schaltung in pairs(self.schaltungen) do
-        assert(schaltung.getType() == "CrossingCircuit", "Found: " .. schaltung.getType())
-        for richtung in pairs(schaltung:getNormaleRichtungen()) do
-            assert(richtung.getType() == "Lane", "Found: " .. richtung.getType())
-            if nextSchaltung:getNormaleRichtungen()[richtung] then
-                richtung:resetWaitCount()
-            else
-                increaseRichtungen[richtung] = true
-            end
+    for _, lane in pairs(self.lanes) do
+        if nextSchaltung:getNormaleRichtungen()[lane] then
+            lane:resetWaitCount()
+        else
+            lane:incrementWaitCount()
         end
-    end
-
-    for richtung in pairs(increaseRichtungen) do
-        assert(richtung.getType() == "Lane", "Found: " .. richtung.getType())
-        richtung:incrementWaitCount()
     end
     self.aktuelleSchaltung = nextSchaltung
 end
 
 function Crossing:getNextSchaltung() return self.nextSchaltung end
 
+---@return CrossingCircuit
 function Crossing:calculateNextSchaltung()
     if self.manuelleSchaltung then
         self.nextSchaltung = self.manuelleSchaltung
@@ -130,13 +121,11 @@ function Crossing:getGruenZeitSekunden() return self.gruenZeit end
 function Crossing:fuegeStatischeKameraHinzu(kameraName) table.insert(self.staticCams, kameraName) end
 
 function Crossing.zaehlerZuruecksetzen()
-    for _, kreuzung in ipairs(AkAllKreuzungen) do
+    for _, kreuzung in pairs(AkAllKreuzungen) do
         print("[Crossing ] SETZE ZURUECK: " .. kreuzung.name)
         for schaltung in pairs(kreuzung:getSchaltungen()) do
             for richtung in pairs(schaltung:getNormaleRichtungen()) do richtung:resetVehicles() end
-            for richtung in pairs(schaltung:getRichtungenMitAnforderung()) do
-                richtung:resetVehicles()
-            end
+            for richtung in pairs(schaltung:getRichtungenMitAnforderung()) do richtung:resetVehicles() end
         end
     end
 end
@@ -150,6 +139,8 @@ function Crossing:new(name)
         name = name,
         aktuelleSchaltung = nil,
         schaltungen = {},
+        lanes = {},
+        pedestrianCrossings = {},
         bereit = true,
         geschaltet = true,
         gruenZeit = 15,
@@ -157,10 +148,38 @@ function Crossing:new(name)
     }
     self.__index = self
     setmetatable(o, self)
-    table.insert(AkAllKreuzungen, o)
-    table.sort(AkAllKreuzungen, function(int1, int2) return int1.name < int2.name end)
     Crossing.alleKreuzungen[name] = o
+    AkAllKreuzungen[name] = o
+    table.sort(AkAllKreuzungen, function(name1, name2) return name1 < name2 end)
     return o
+end
+
+--- Erzeugt eine Richtung, welche durch eine Ampel gesteuert wird.
+---@param name string @Name der Richtung einer Kreuzung
+---@param eepSaveId number, @EEPSaveSlot-Id fuer das Speichern der Richtung
+---@param trafficLight TrafficLight @eine oder mehrere Ampeln
+---@param directions string[] eine oder mehrere Ampeln
+---@param trafficType string eine oder mehrere Ampeln
+function Crossing:newLane(name, eepSaveId, trafficLight, directions, trafficType)
+    local lane = Lane:new(name, eepSaveId, trafficLight, directions, trafficType)
+    self.lanes[lane.name] = lane
+    return lane
+end
+
+--- Erzeugt eine Richtung, welche durch eine Ampel gesteuert wird.
+---@param name string @Name of the Pedestrian Crossing einer Kreuzung
+function Crossing:newPedestrianCrossing(name)
+    local lane = Lane:new(name, -1, {}, {}, Lane.TrafficType.PEDESTRIAN)
+    self.pedestrianCrossings[lane.name] = lane
+    return lane
+end
+
+--- Erzeugt eine Richtung, welche durch eine Ampel gesteuert wird.
+---@param name string @Name of the Pedestrian Crossing einer Kreuzung
+function Crossing:newSwitching(name)
+    local switching = CrossingCircuit:new(name)
+    self.schaltungen[switching] = true
+    return switching
 end
 
 local aufbauHilfeErzeugt = Crossing.zeigeSignalIdsAllerSignale
@@ -170,85 +189,54 @@ function Crossing.planeSchaltungenEin()
     -- raus und setzt deren Texte auf die aktuelle Schaltung
     -- @param kreuzung
     local function aktualisiereAnforderungen(kreuzung)
-        local alleRichtungen = {}
-        for schaltung in pairs(kreuzung:getSchaltungen()) do
-            for richtung in pairs(schaltung:getNormaleRichtungen()) do alleRichtungen[richtung] = true end
-            for richtung in pairs(schaltung:getRichtungenMitAnforderung()) do alleRichtungen[richtung] = true end
-            for richtung in pairs(schaltung:getRichtungFuerFussgaenger()) do alleRichtungen[richtung] = true end
-        end
-
-        for richtung in pairs(alleRichtungen) do richtung:checkRequests() end
+        for _, lane in pairs(kreuzung.lanes) do lane:checkRequests() end
     end
 
     --- Diese Funktion sucht sich aus den Ampeln die mit der passenden Richtung
     -- raus und setzt deren Texte auf die aktuelle Schaltung
     -- @param kreuzung
-    local function zeigeSchaltung(kreuzung)
+    local function showSwitching(kreuzung)
         aktualisiereAnforderungen(kreuzung)
 
         local kreuzungsAmpeln = {}
         local kreuzungsAmpelSchaltungen = {}
 
-        local tnames = {}
-        for k in pairs(kreuzung:getSchaltungen()) do table.insert(tnames, k) end
+        -- sort the circuits
+        local sortedCircuits = {}
+        for k in pairs(kreuzung:getSchaltungen()) do table.insert(sortedCircuits, k) end
+        table.sort(sortedCircuits, function(schaltung1, schaltung2) return (schaltung1.name < schaltung2.name) end)
 
-        -- sort the keys
-        table.sort(tnames, function(schaltung1, schaltung2) return (schaltung1.name < schaltung2.name) end)
-        for _, schaltung in ipairs(tnames) do
-            for richtung in pairs(schaltung:getNormaleRichtungen()) do
-                for _, ampel in pairs(richtung.ampeln) do
-                    -- print(schaltung.name, richtung.name, ampel.signalId, TrafficLightState.GREEN)
-                    kreuzungsAmpelSchaltungen[ampel.signalId] = kreuzungsAmpelSchaltungen[ampel.signalId] or {}
-                    kreuzungsAmpelSchaltungen[ampel.signalId][schaltung] = TrafficLightState.GREEN
-                    kreuzungsAmpelSchaltungen[ampel.signalId]["lanes"] =
-                        kreuzungsAmpelSchaltungen[ampel.signalId]["lanes"] or {}
-                    kreuzungsAmpelSchaltungen[ampel.signalId]["lanes"][richtung] = TrafficLightState.GREEN
-                    kreuzungsAmpeln[ampel] = true
-                end
+        for _, schaltung in ipairs(sortedCircuits) do
+            for _, ampel in pairs(schaltung.trafficLights) do
+                -- print(schaltung.name, richtung.name, ampel.signalId, TrafficLightState.GREEN)
+                kreuzungsAmpelSchaltungen[ampel.signalId] = kreuzungsAmpelSchaltungen[ampel.signalId] or {}
+                kreuzungsAmpelSchaltungen[ampel.signalId][schaltung] = TrafficLightState.GREEN
+                -- kreuzungsAmpelSchaltungen[tl.signalId]["lanes"] =
+                --     kreuzungsAmpelSchaltungen[tl.signalId]["lanes"] or {}
+                -- kreuzungsAmpelSchaltungen[tl.signalId]["lanes"][richtung] = TrafficLightState.GREEN
+                kreuzungsAmpeln[ampel] = true
             end
-            for richtung in pairs(schaltung:getRichtungenMitAnforderung()) do
-                for _, ampel in pairs(richtung.ampeln) do
-                    -- print(schaltung.name, ampel.signalId, TrafficLightState.YELLOW)
-                    kreuzungsAmpelSchaltungen[ampel.signalId] = kreuzungsAmpelSchaltungen[ampel.signalId] or {}
-                    kreuzungsAmpelSchaltungen[ampel.signalId][schaltung] = TrafficLightState.YELLOW
-                    kreuzungsAmpelSchaltungen[ampel.signalId]["lanes"] =
-                        kreuzungsAmpelSchaltungen[ampel.signalId]["lanes"] or {}
-                    kreuzungsAmpelSchaltungen[ampel.signalId]["lanes"][richtung] = TrafficLightState.YELLOW
-                    kreuzungsAmpeln[ampel] = true
-                end
-            end
-            for richtung in pairs(schaltung:getRichtungFuerFussgaenger()) do
-                for _, ampel in pairs(richtung.ampeln) do
-                    -- print(schaltung.name, ampel.signalId, TrafficLightState.PEDESTRIAN)
-                    kreuzungsAmpelSchaltungen[ampel.signalId] = kreuzungsAmpelSchaltungen[ampel.signalId] or {}
-                    kreuzungsAmpelSchaltungen[ampel.signalId][schaltung] = TrafficLightState.PEDESTRIAN
-                    kreuzungsAmpelSchaltungen[ampel.signalId]["lanes"] =
-                        kreuzungsAmpelSchaltungen[ampel.signalId]["lanes"] or {}
-                    kreuzungsAmpelSchaltungen[ampel.signalId]["lanes"][richtung] = TrafficLightState.PEDESTRIAN
-                    kreuzungsAmpeln[ampel] = true
-                end
+            for _, ampel in pairs(schaltung.pedestrianLights) do
+                -- print(schaltung.name, ampel.signalId, TrafficLightState.PEDESTRIAN)
+                kreuzungsAmpelSchaltungen[ampel.signalId] = kreuzungsAmpelSchaltungen[ampel.signalId] or {}
+                kreuzungsAmpelSchaltungen[ampel.signalId][schaltung] = TrafficLightState.PEDESTRIAN
+                -- kreuzungsAmpelSchaltungen[pl.signalId]["lanes"] =
+                --     kreuzungsAmpelSchaltungen[pl.signalId]["lanes"] or {}
+                -- kreuzungsAmpelSchaltungen[pl.signalId]["lanes"][richtung] = TrafficLightState.PEDESTRIAN
+                kreuzungsAmpeln[ampel] = true
             end
         end
 
         for ampel in pairs(kreuzungsAmpeln) do
-            local sortierteNamen = {}
-            for k in pairs(kreuzung:getSchaltungen()) do table.insert(sortierteNamen, k) end
-            table.sort(sortierteNamen, function(schaltung1, schaltung2)
-                return (schaltung1.name < schaltung2.name)
-            end)
             do
                 local text = "<j><b>Schaltung:</b></j>"
-                for _, schaltung in ipairs(sortierteNamen) do
+                for _, schaltung in ipairs(sortedCircuits) do
                     local farbig = schaltung == kreuzung:getAktuelleSchaltung()
                     if kreuzungsAmpelSchaltungen[ampel.signalId][schaltung] then
                         if kreuzungsAmpelSchaltungen[ampel.signalId][schaltung] == TrafficLightState.GREEN then
                             text = text .. "<br><j>" ..
                                        (farbig and fmt.bgGreen(schaltung.name .. " (Gruen)") or
                                            (schaltung.name .. " " .. fmt.bgGreen("(Gruen)")))
-                        elseif kreuzungsAmpelSchaltungen[ampel.signalId][schaltung] == TrafficLightState.YELLOW then
-                            text = text .. "<br><j>" ..
-                                       (farbig and fmt.bgBlue(schaltung.name .. " (Anf)") or
-                                           (schaltung.name .. " " .. fmt.bgBlue("(Anf)")))
                         elseif kreuzungsAmpelSchaltungen[ampel.signalId][schaltung] == TrafficLightState.PEDESTRIAN then
                             text = text .. "<br><j>" ..
                                        (farbig and fmt.bgYellow(schaltung.name .. " (FG)") or
@@ -265,13 +253,13 @@ function Crossing.planeSchaltungenEin()
                 ampel:setCircuitInfo(text)
             end
 
-            do
-                local text = "<j><b>Richtung / Wartezeit</b></j>"
-                for richtung in pairs(kreuzungsAmpelSchaltungen[ampel.signalId]["lanes"]) do
-                    text = text .. "<br>" .. richtung:getAnforderungsText() .. " / " .. richtung.waitCount
-                end
-                ampel:setLaneInfo(text)
-            end
+            -- do
+            --     local text = "<j><b>Richtung / Wartezeit</b></j>"
+            --     for richtung in pairs(kreuzungsAmpelSchaltungen[ampel.signalId]["lanes"]) do
+            --         text = text .. "<br>" .. richtung:getAnforderungsText() .. " / " .. richtung.waitCount
+            --     end
+            --     ampel:setLaneInfo(text)
+            -- end
 
             ampel:refreshInfo()
         end
@@ -285,147 +273,91 @@ function Crossing.planeSchaltungenEin()
                 EEPChangeInfoSignal(signalId, "<j>Signal: " .. signalId)
             end
         end
-        for _, kreuzung in ipairs(AkAllKreuzungen) do zeigeSchaltung(kreuzung) end
+        for _, kreuzung in pairs(AkAllKreuzungen) do showSwitching(kreuzung) end
     end
 
     ---------------------------
     -- Funktion switchTrafficLights
     ---------------------------
-    local function AkSchalteKreuzung(kreuzung)
-        -- if Crossing.debug then print(string.format("[Crossing ] Schalte Kreuzung %s: %s",
-        -- kreuzung:getName(), kreuzung:isBereit() and "Ja" or "Nein")) end
-        if kreuzung:isBereit() and kreuzung:isGeschaltet() then
-            kreuzung:setGeschaltet(false)
-            kreuzung:setBereit(false)
-            local nextSchaltung = kreuzung:calculateNextSchaltung()
-            local nextName = kreuzung.name .. " " .. nextSchaltung:getName()
-            local aktuelleSchaltung = kreuzung:getAktuelleSchaltung()
-            local currentName = aktuelleSchaltung and kreuzung.name .. " " .. aktuelleSchaltung:getName() or
-                                    kreuzung.name .. " Rot fuer alle"
-            local richtungenAufRot = {}
-            local richtungenAufGruen = {}
-            local richtungenAufFussgaengerRot = {}
-            local richtungenAufFussgaengerGruen = {}
-            local richtungenAktuellGruen = {}
-            local richtungenAktuellFussgaengerGruen = {}
+    local function switch(crossing)
+        if Crossing.debug then
+            print(string.format("[Crossing ] Schalte Kreuzung %s: %s", crossing:getName(),
+                                crossing:isBereit() and "Ja" or "Nein"))
+        end
+        if crossing:isBereit() and crossing:isGeschaltet() then
+            local TrafficLight = require("ak.road.TrafficLight")
+            crossing:setGeschaltet(false)
+            crossing:setBereit(false)
+            ---@type CrossingCircuit
+            local nextCircuit = crossing:calculateNextSchaltung()
+            local nextName = crossing.name .. " " .. nextCircuit:getName()
+            local currentCircuit = crossing:getAktuelleSchaltung()
+            local currentName =
+                currentCircuit and crossing.name .. " " .. currentCircuit:getName() or crossing.name ..
+                    " Rot fuer alle"
 
-            -- aktuelle Richtungen für alle Schaltungen auf rot schalten:
-            if aktuelleSchaltung then
-                for richtung in pairs(aktuelleSchaltung:getNormaleRichtungen()) do
-                    richtungenAktuellGruen[richtung] = true
-                    richtungenAufRot[richtung] = true
-                end
-                for richtung in pairs(aktuelleSchaltung.pedestrianCrossings) do
-                    richtungenAktuellFussgaengerGruen[richtung] = true
-                    richtungenAufFussgaengerRot[richtung] = true
-                end
-            else
-                -- Wenn es keine aktuellen Richtung gibt, müssen alle auf rot gesetzt werden:
-                if Crossing.debug then
-                    print("[Crossing ] Setze alle Richtungen fuer " .. kreuzung.name .. " auf rot")
-                end
-                for schaltung in pairs(kreuzung:getSchaltungen()) do
-                    for richtung in pairs(schaltung:getNormaleRichtungen()) do
-                        richtungenAufRot[richtung] = true
-                        richtungenAufFussgaengerRot[richtung] = true
-                    end
-                    for richtung in pairs(schaltung:getRichtungenMitAnforderung()) do
-                        richtungenAufRot[richtung] = true
-                        richtungenAufFussgaengerRot[richtung] = true
-                    end
-                end
-            end
-
-            -- RichtungenMitAnforderung werden nur geschaltet, wenn eine Anforderung vorliegt.
-            for richtungDanachGruen in pairs(nextSchaltung:getRichtungenMitAnforderung()) do
-                if richtungenAktuellGruen[richtungDanachGruen] then
-                    richtungenAufRot[richtungDanachGruen] = nil
-                else
-                    if richtungDanachGruen:hasRequest() then
-                        if Crossing.debug then
-                            print("[Crossing ] Plane neue Ampel " .. richtungDanachGruen.eepSaveId .. " auf Gruen: " ..
-                                      richtungDanachGruen:getName())
-                        end
-                        richtungenAufGruen[richtungDanachGruen] = true
-                    end
-                end
-            end
-
-            -- "Normale" Richtungen werden immer geschaltet
-            for richtungDanachGruen in pairs(nextSchaltung:getNormaleRichtungen()) do
-                if richtungenAktuellGruen[richtungDanachGruen] then
-                    -- Ampel nicht auf rot schalten, da sie in der naechsten Schaltung enthalten ist
-                    richtungenAufRot[richtungDanachGruen] = nil
-                else
-                    if Crossing.debug then
-                        print("[Crossing ] Richtung " .. richtungDanachGruen:getName() ..
-                                  " wird fuer Autos auf gruen geschaltet.")
-                    end
-                    richtungenAufGruen[richtungDanachGruen] = true
-                end
-            end
-
-            -- Fussgaenger auf gruen schalten
-            for richtungDanachGruen in pairs(nextSchaltung.pedestrianCrossings) do
-                if richtungenAktuellFussgaengerGruen[richtungDanachGruen] then
-                    -- Ampel nicht auf rot schalten, da sie in der naechsten Schaltung enthalten ist
-                    richtungenAufFussgaengerRot[richtungDanachGruen] = nil
-                else
-                    richtungenAufFussgaengerGruen[richtungDanachGruen] = true
-                    if Crossing.debug then
-                        print("[Crossing ] Richtung " .. richtungDanachGruen:getName() ..
-                                  " wird fuer FG auf gruen geschaltet.")
-                    end
-                end
-            end
+            local lanesToTurnRed, lanesToTurnGreen = nextCircuit:lanesToTurnRedAndGreen(currentCircuit)
+            local trafficLightsToTurnRed, trafficLightsToTurnGreen =
+                nextCircuit:trafficLightsToTurnRedAndGreen(currentCircuit)
+            local pedestrianLightsToTurnRed, pedestrianLightsToTurnGreen =
+                nextCircuit:pedestrianLightsToTurnRedAndGreen(currentCircuit)
 
             if Crossing.debug then
-                print("[Crossing ] Schalte " .. kreuzung:getName() .. " zu " .. nextSchaltung:getName() .. " (" ..
-                          nextSchaltung:richtungenAlsTextZeile() .. ")")
+                print("[Crossing ] Schalte " .. crossing:getName() .. " zu " .. nextCircuit:getName() .. " (" ..
+                          nextCircuit:richtungenAlsTextZeile() .. ")")
             end
 
-            local fussgaengerAufRot = Task:new(function()
-                Lane.switchTrafficLights(richtungenAufFussgaengerRot, TrafficLightState.RED, currentName)
+            local turnPedestrianRed = Task:new(function()
+                TrafficLight.switchAll(pedestrianLightsToTurnRed, TrafficLightState.RED,
+                                       "Schalte " .. currentName .. " auf Fussgaenger Rot")
             end, "Schalte " .. currentName .. " auf Fussgaenger Rot")
-            Scheduler:scheduleTask(3, fussgaengerAufRot)
+            Scheduler:scheduleTask(3, turnPedestrianRed)
 
-            local alteAmpelnAufGelb = Task:new(function()
-                Lane.switchTrafficLights(richtungenAufRot, TrafficLightState.YELLOW, currentName)
+            -- * Hier könnte noch die DDR-Schaltung rein (2 Sekunden grün-gelb)
+
+            local turnTrafficLightsYellow = Task:new(function()
+                TrafficLight.switchAll(trafficLightsToTurnRed, TrafficLightState.YELLOW,
+                                       "Schalte " .. currentName .. " auf gelb")
+                Lane.switchLanes(lanesToTurnRed, TrafficLightState.RED, "Schalte " .. currentName .. " auf gelb")
             end, "Schalte " .. currentName .. " auf gelb")
-            Scheduler:scheduleTask(0, alteAmpelnAufGelb, fussgaengerAufRot)
+            Scheduler:scheduleTask(0, turnTrafficLightsYellow, turnPedestrianRed)
 
-            local alteAmpelnAufRot = Task:new(function()
-                Lane.switchTrafficLights(richtungenAufRot, TrafficLightState.RED, currentName)
-                kreuzung:setzeWarteZeitZurueck(nextSchaltung)
+            local turnTrafficLightsRed = Task:new(function()
+                TrafficLight.switchAll(trafficLightsToTurnRed, TrafficLightState.RED, currentName)
+                crossing:setzeWarteZeitZurueck(nextCircuit)
             end, "Schalte " .. currentName .. " auf rot")
-            Scheduler:scheduleTask(2, alteAmpelnAufRot, alteAmpelnAufGelb)
+            Scheduler:scheduleTask(2, turnTrafficLightsRed, turnTrafficLightsYellow)
 
-            local neueAmpelnAufRotGelb = Task:new(function()
-                Lane.switchTrafficLights(richtungenAufGruen, TrafficLightState.REDYELLOW, nextName)
-                Lane.switchTrafficLights(richtungenAufFussgaengerGruen, TrafficLightState.PEDESTRIAN, nextName)
+            local turnNextTrafficLightsYellow = Task:new(function()
+                TrafficLight.switchAll(trafficLightsToTurnGreen, TrafficLightState.YELLOW,
+                                       "Schalte " .. nextName .. " auf rot-gelb")
+                TrafficLight.switchAll(pedestrianLightsToTurnGreen, TrafficLightState.PEDESTRIAN,
+                                       "Schalte " .. nextName .. " auf rot-gelb")
             end, "Schalte " .. nextName .. " auf rot-gelb")
-            Scheduler:scheduleTask(3, neueAmpelnAufRotGelb, alteAmpelnAufRot)
+            Scheduler:scheduleTask(3, turnNextTrafficLightsYellow, turnTrafficLightsRed)
 
-            local neueAmpelnAufGruen = Task:new(function()
-                Lane.switchTrafficLights(richtungenAufGruen, TrafficLightState.GREEN, nextName)
-                kreuzung:setGeschaltet(true)
+            local turnNextTrafficLightsGreen = Task:new(function()
+                TrafficLight.switchAll(trafficLightsToTurnGreen, TrafficLightState.GREEN,
+                                       "Schalte " .. nextName .. " auf gruen")
+                Lane.switchLanes(lanesToTurnGreen, TrafficLightState.GREEN, "Schalte " .. nextName .. " auf gruen")
+                crossing:setGeschaltet(true)
             end, "Schalte " .. nextName .. " auf gruen")
-            Scheduler:scheduleTask(1, neueAmpelnAufGruen, neueAmpelnAufRotGelb)
+            Scheduler:scheduleTask(1, turnNextTrafficLightsGreen, turnNextTrafficLightsYellow)
 
-            local kreuzungFertigSchalten = Task:new(function()
+            local changeToReadyStatus = Task:new(function()
                 if Crossing.debug then
-                    print("[Crossing ] " .. kreuzung.name .. ": Fahrzeuge sind gefahren, kreuzung ist dann frei.")
+                    print("[Crossing ] " .. crossing.name .. ": Fahrzeuge sind gefahren, kreuzung ist dann frei.")
                 end
-                kreuzung:setBereit(true)
-            end, kreuzung.name .. " ist nun bereit (war " .. kreuzung:getGruenZeitSekunden() ..
-                                                        "s auf gruen geschaltet)")
-            Scheduler:scheduleTask(kreuzung:getGruenZeitSekunden(), kreuzungFertigSchalten, neueAmpelnAufGruen)
+                crossing:setBereit(true)
+            end, crossing.name .. " ist nun bereit (war " .. crossing:getGruenZeitSekunden() ..
+                                                     "s auf gruen geschaltet)")
+            Scheduler:scheduleTask(crossing:getGruenZeitSekunden(), changeToReadyStatus, turnNextTrafficLightsGreen)
         end
     end
 
-    for _, kreuzung in ipairs(AkAllKreuzungen) do
-        AkSchalteKreuzung(kreuzung)
-        zeigeSchaltung(kreuzung)
+    for _, kreuzung in pairs(AkAllKreuzungen) do
+        switch(kreuzung)
+        showSwitching(kreuzung)
     end
 end
 

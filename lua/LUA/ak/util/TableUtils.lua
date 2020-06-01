@@ -12,13 +12,13 @@ function TableUtils.readOnlyTable(tb)
     return proxy
 end
 
-function TableUtils.sameListEntries(t1, t2)
+function TableUtils.sameArrayEntries(t1, t2)
     local entries1 = {}
     for _, v1 in ipairs(t1) do entries1[v1] = true end
     local entries2 = {}
     for _, v2 in ipairs(t2) do
         if not entries1[v2] then return false end
-        entries2.v2 = true
+        entries2[v2] = true
     end
 
     for k in pairs(entries1) do if not entries2[k] then return false end end

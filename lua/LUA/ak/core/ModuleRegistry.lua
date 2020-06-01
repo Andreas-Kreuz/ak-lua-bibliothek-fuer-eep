@@ -7,7 +7,7 @@ local ModuleRegistry = {}
 ModuleRegistry.debug = AkDebugLoad or false
 local enableServer = true
 local initialized = false
----@type <table,LuaModule>
+---@type table<string,LuaModule>
 local registeredLuaModules = {}
 ---@type string[]
 local executionOrderModuleNames = {}

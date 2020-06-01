@@ -89,7 +89,7 @@ os = Lane:new("OS", 107, {
         "#27_Straba Signal anhalten", --   gelb  schaltet das Licht dieser Immobilie ein
         "#26_Straba Signal A") --    Anforderung schaltet das Licht dieser Immobilie ein
 })
-os:zaehleAnAmpelAlle(14) -- Erfasst Anforderungen, wenn ein Fahrzeug an Signal 14 steht
+os:zaehleAnAmpelAlle() -- Erfasst Anforderungen, wenn ein Fahrzeug an Signal 14 steht
 
 ws = Lane:new("WS", 108, {
     TrafficLight:new(15, TrafficLightModel.Unsichtbar_2er,

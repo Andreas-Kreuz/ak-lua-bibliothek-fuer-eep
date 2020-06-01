@@ -2,12 +2,14 @@ if AkDebugLoad then print("Loading ak.road.CrossingCircuit ...") end
 
 local Lane = require("ak.road.Lane")
 local LaneSettings = require("ak.road.LaneSettings")
+local TableUtils = require("ak.util.TableUtils")
 
 ------------------------------------------------------
 -- Klasse Richtungsschaltung (schaltet mehrere Ampeln)
 ------------------------------------------------------
 ---@class CrossingCircuit
 local CrossingCircuit = {}
+CrossingCircuit.debug = AkDebugLoad
 
 function CrossingCircuit.getType() return "CrossingCircuit" end
 
@@ -19,15 +21,98 @@ function CrossingCircuit:new(name)
     self.__index = self
     o.name = name
     o.prio = 0
+    ---@type table<number,TrafficLight>
+    o.trafficLights = {}
+    ---@type table<number,TrafficLight>
+    o.pedestrianLights = {}
+    ---@type table<Lane,LaneSettings>
     o.lanes = {}
     o.richtungenMitAnforderung = {}
     o.pedestrianCrossings = {}
     return o
 end
 
+---This will calculate all lanes
+---@return Lane[], Lane[]
+function CrossingCircuit:lanesToTurnRedAndGreen(currentCircuit)
+    if CrossingCircuit.debug then
+        print(string.format("[CrossingCircuit] lanes from %s to %s", currentCircuit and currentCircuit.name or "NONE",
+                            self.name))
+    end
+
+    local lanesToTurnRed = {}
+    local lanesToTurnGreen = {}
+
+    -- Calculate lanes to turn red and green
+    if currentCircuit then
+        for lane, currentLaneSettings in pairs(currentCircuit.lanes) do
+            if not self.lanes[lane] or
+                not TableUtils.sameArrayEntries(self.lanes[lane].directions, currentLaneSettings.directions) then
+                if CrossingCircuit.debug then
+                    print(string.format("[CrossingCircuit] turn red: %s", lane.name))
+                end
+                lanesToTurnRed[lane] = true
+            end
+        end
+    end
+    for lane, newLaneSettings in pairs(self.lanes) do
+        if not currentCircuit or not currentCircuit.lanes[lane] or
+            not TableUtils.sameArrayEntries(currentCircuit.lanes[lane].directions, newLaneSettings.directions) then
+            if CrossingCircuit.debug then
+                print(string.format("[CrossingCircuit] turn green: %s", lane.name))
+            end
+            lanesToTurnGreen[lane] = true
+        end
+    end
+    return lanesToTurnRed, lanesToTurnGreen
+end
+
+---This will calculate all trafficLights to turn red and green
+---@return TrafficLight[], TrafficLight[]
+function CrossingCircuit:trafficLightsToTurnRedAndGreen(currentCircuit)
+    local trafficLightsToTurnRed = {}
+    local trafficLightsToTurnGreen = {}
+
+    -- Calculate trafficLights to turn red and green
+    if currentCircuit then
+        for id, currentTrafficLight in pairs(currentCircuit.trafficLights) do
+            if not self.trafficLights[id] or self.trafficLights[id].model ~= currentTrafficLight.model then
+                trafficLightsToTurnRed[currentTrafficLight] = true
+            end
+        end
+    end
+    for id, newTrafficLight in pairs(self.trafficLights) do
+        if not currentCircuit or not currentCircuit.trafficLights[id] or currentCircuit.trafficLights[id].model ~=
+            newTrafficLight.model then trafficLightsToTurnGreen[newTrafficLight] = true end
+    end
+
+    return trafficLightsToTurnRed, trafficLightsToTurnGreen
+end
+
+---This will calculate all pedestrianLights to turn red and green
+---@return TrafficLight[], TrafficLight[]
+function CrossingCircuit:pedestrianLightsToTurnRedAndGreen(currentCircuit)
+    local pedestrianLightsToTurnRed = {}
+    local pedestrianLightsToTurnGreen = {}
+
+    -- Calculate trafficLights to turn red and green
+    if currentCircuit then
+        for id, currentTrafficLight in pairs(currentCircuit.pedestrianLights) do
+            if not self.pedestrianLights[id] then pedestrianLightsToTurnRed[currentTrafficLight] = true end
+        end
+    end
+    for id, newTrafficLight in pairs(self.pedestrianLights) do
+        if not currentCircuit or not currentCircuit.trafficLights[id] then
+            pedestrianLightsToTurnGreen[newTrafficLight] = true
+        end
+    end
+
+    return pedestrianLightsToTurnRed, pedestrianLightsToTurnGreen
+end
+
 function CrossingCircuit:getAlleRichtungen()
     local alle = {}
-    for richtung in pairs(self.lanes) do alle[richtung] = "NORMAL" end
+    for lane in pairs(self.lanes) do alle[lane] = "NORMAL" end
     for richtung in pairs(self.richtungenMitAnforderung) do alle[richtung] = "REQUEST" end
     for richtung in pairs(self.pedestrianCrossings) do alle[richtung] = "PEDESTRIANTS" end
     return alle
@@ -48,6 +133,17 @@ function CrossingCircuit:getRichtungenMitAnforderung() return self.richtungenMit
 function CrossingCircuit:addLane(lane, directions, routes, switchingType)
     assert(lane, "Bitte ein gueltige Richtung angeben")
     self.lanes[lane] = LaneSettings:new(lane, directions, routes, switchingType)
+    return self
+end
+
+function CrossingCircuit:addTrafficLight(trafficLight)
+    self.trafficLights[trafficLight.signalId] = trafficLight
+    return self
+end
+
+function CrossingCircuit:addPedestrianLight(trafficLight)
+    self.pedestrianLights[trafficLight.signalId] = trafficLight
+    return self
 end
 
 function CrossingCircuit:addRichtungMitAnforderung(richtung)
@@ -64,7 +160,7 @@ end
 
 function CrossingCircuit:getRichtungFuerFussgaenger() return self.pedestrianCrossings end
 
---- Gibt alle Richtungen nach Prioritaet zurueck, sowie deren Anzahl und deren Durchschnittsprioritùt
+--- Gibt alle Richtungen nach Prioritaet zurueck, sowie deren Anzahl und deren Durchschnittspriorit‰t
 -- @return sortierteRichtungen, anzahlDerRichtungen, durchschnittsPrio
 function CrossingCircuit:nachPrioSortierteRichtungen()
     local sortierteRichtungen = {}

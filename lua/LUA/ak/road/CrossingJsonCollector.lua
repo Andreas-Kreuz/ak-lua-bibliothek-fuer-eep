@@ -20,6 +20,8 @@ local function collect(alleKreuzungen)
     local richtungsSchaltungen = {}
 
     local intersectionIdCounter = 0
+    -- FIXME table.sort(alleKreuzungen, function(a, b) return a.name < b.name end)
+
     for _, crossing in pairs(alleKreuzungen) do
         intersectionIdCounter = intersectionIdCounter + 1
         local intersection = {
@@ -33,6 +35,8 @@ local function collect(alleKreuzungen)
             staticCams = crossing.staticCams
         }
         table.insert(intersections, intersection)
+
+        local trafficLights = {}
 
         for schaltung in pairs(crossing:getSchaltungen()) do
             local switching = {
@@ -48,67 +52,19 @@ local function collect(alleKreuzungen)
                 richtungsSchaltungen[lane] = richtungsSchaltungen[lane] or {}
                 table.insert(richtungsSchaltungen[lane], schaltung.name)
             end
-        end
-    end
 
-    for lane, intersectionId in pairs(alleRichtungen) do
-        local type
-        if (lane.schaltungsTyp == Lane.SchaltungsTyp.FUSSGAENGER) then
-            type = "PEDESTRIAN"
-        elseif (lane.trafficType == "TRAM") then
-            type = "TRAM"
-        else
-            type = "NORMAL"
+            for id, trafficLight in pairs(schaltung.trafficLights) do trafficLights[id] = trafficLight end
+            for id, trafficLight in pairs(schaltung.pedestrianLights) do trafficLights[id] = trafficLight end
         end
 
-        local phase = "NONE"
-        if lane.phase == TrafficLightState.YELLOW then
-            phase = "YELLOW"
-        elseif lane.phase == TrafficLightState.RED then
-            phase = "RED"
-        elseif lane.phase == TrafficLightState.REDYELLOW then
-            phase = "RED_YELLOW"
-        elseif lane.phase == TrafficLightState.GREEN then
-            phase = "GREEN"
-        elseif lane.phase == TrafficLightState.PEDESTRIAN then
-            phase = "PEDESTRIAN"
-        end
-
-        local countType = "CONTACTS"
-        if lane.signalsUsedForCounting then
-            countType = "SIGNALS"
-        elseif lane.verwendeZaehlStrassen then
-            countType = "TRACKS"
-        end
-
-        local o = {
-            id = intersectionId .. "-" .. lane.name,
-            intersectionId = intersectionId,
-            name = lane.name,
-            phase = phase,
-            vehicleMultiplier = lane.fahrzeugMultiplikator,
-            eepSaveId = lane.eepSaveId,
-            type = type,
-            countType = countType,
-            waitingTrains = {},
-            waitingForGreenCyclesCount = lane.waitCount,
-            directions = lane.directions,
-            switchings = richtungsSchaltungen[lane] or {}
-        }
-        for i, f in pairs(lane.queue:elements()) do
-            o.waitingTrains[i] = f
-        end
-        table.insert(intersectionLanes, o)
-
-        for _, ampel in pairs(lane.ampeln) do
+        for _, ampel in pairs(trafficLights) do
             local trafficLight = {
                 id = ampel.signalId,
                 type = type,
                 signalId = ampel.signalId,
                 modelId = ampel.trafficLightModel.name,
                 currentPhase = ampel.phase,
-                laneId = lane.name,
-                intersectionId = intersectionId,
+                intersectionId = intersectionIdCounter,
                 lightStructures = {},
                 axisStructures = {}
             }
@@ -143,21 +99,66 @@ local function collect(alleKreuzungen)
         end
     end
 
+    for lane, intersectionId in pairs(alleRichtungen) do
+        local type
+        if (lane.schaltungsTyp == Lane.SchaltungsTyp.FUSSGAENGER) then
+            type = "PEDESTRIAN"
+        elseif (lane.trafficType == "TRAM") then
+            type = "TRAM"
+        else
+            type = "NORMAL"
+        end
+
+        local phase = "NONE"
+        if lane.phase == TrafficLightState.YELLOW then
+            phase = "YELLOW"
+        elseif lane.phase == TrafficLightState.RED then
+            phase = "RED"
+        elseif lane.phase == TrafficLightState.REDYELLOW then
+            phase = "RED_YELLOW"
+        elseif lane.phase == TrafficLightState.GREEN then
+            phase = "GREEN"
+        elseif lane.phase == TrafficLightState.PEDESTRIAN then
+            phase = "PEDESTRIAN"
+        end
+
+        local countType = "CONTACTS"
+        if lane.signalUsedForRequest then
+            countType = "SIGNALS"
+        elseif lane.tracksUsedForRequest then
+            countType = "TRACKS"
+        end
+
+        local o = {
+            id = intersectionId .. "-" .. lane.name,
+            intersectionId = intersectionId,
+            name = lane.name,
+            phase = phase,
+            vehicleMultiplier = lane.fahrzeugMultiplikator,
+            eepSaveId = lane.eepSaveId,
+            type = type,
+            countType = countType,
+            waitingTrains = {},
+            waitingForGreenCyclesCount = lane.waitCount,
+            directions = lane.directions,
+            switchings = richtungsSchaltungen[lane] or {}
+        }
+        for i, f in pairs(lane.queue:elements()) do o.waitingTrains[i] = f end
+        table.insert(intersectionLanes, o)
+    end
+
     local function padnum(d)
         local dec, n = string.match(d, "(%.?)0*(.+)")
         return #dec > 0 and ("%.12f"):format(d) or ("%s%03d%s"):format(dec, #n, n)
     end
 
-    table.sort(
-        intersectionLanes,
-        function(o1, o2)
-            local a = o1.name
-            local b = o2.name
+    table.sort(intersectionLanes, function(o1, o2)
+        local a = o1.name
+        local b = o2.name
 
-            return tostring(a):gsub("%.?%d+", padnum) .. ("%3d"):format(#b) <
-                tostring(b):gsub("%.?%d+", padnum) .. ("%3d"):format(#a)
-        end
-    )
+        return tostring(a):gsub("%.?%d+", padnum) .. ("%3d"):format(#b) < tostring(b):gsub("%.?%d+", padnum) ..
+                   ("%3d"):format(#a)
+    end)
 
     return {
         ["intersections"] = intersections,
@@ -175,16 +176,14 @@ local function collectModuleSettings()
             ["type"] = "boolean",
             ["value"] = Crossing.zeigeAnforderungenAlsInfo,
             ["eepFunction"] = "Crossing.setZeigeAnforderungenAlsInfo"
-        },
-        {
+        }, {
             ["category"] = "Kreuzung",
             ["name"] = "Schaltungen als TippText",
             ["description"] = "Zeigt für alle Ampeln einen TippText mit den Schaltungen",
             ["type"] = "boolean",
             ["value"] = Crossing.zeigeSchaltungAlsInfo,
             ["eepFunction"] = "Crossing.setZeigeSchaltungAlsInfo"
-        },
-        {
+        }, {
             ["category"] = "Signale",
             ["name"] = "Signal-ID als TippText",
             ["description"] = "Zeigt an jedem Signal dessen Nummer als TippText",
@@ -196,21 +195,15 @@ local function collectModuleSettings()
 end
 
 function CrossingJsonCollector.initialize()
-    if not enabled or initialized then
-        return
-    end
+    if not enabled or initialized then return end
 
     initialized = true
 end
 
 function CrossingJsonCollector.collectData()
-    if not enabled then
-        return
-    end
+    if not enabled then return end
 
-    if not initialized then
-        CrossingJsonCollector.initialize()
-    end
+    if not initialized then CrossingJsonCollector.initialize() end
 
     local data = collect(Crossing.alleKreuzungen)
     data["intersection-module-settings"] = collectModuleSettings()

@@ -9,7 +9,7 @@ describe("Lane ...", function()
             local signalId = 55
 
             StorageUtility.saveTable(34, { f = "4" })
-            local lane = Lane:new("Lane A", 34, {TrafficLight:new(signalId, TrafficLightModel.Unsichtbar_2er)})
+            local lane = Lane:new("Lane A", 34, TrafficLight:new(signalId, TrafficLightModel.Unsichtbar_2er))
             insulate("Vehicles have generic names", function()
                 it("Queue looks as follows", function()
                     assert.are.same({ "train 1", "train 2", "train 3", "train 4" }, lane.queue:elements())
@@ -64,11 +64,11 @@ describe("Lane ...", function()
 
             -- Set the route for train "#Car1"
             EEPSetTrainRoute("#Car1", "Some Route")
-            local lane = Lane:new("Lane A", 34, {TrafficLight:new(signalId, TrafficLightModel.Unsichtbar_2er)})
+            local lane = Lane:new("Lane A", 34, TrafficLight:new(signalId, TrafficLightModel.Unsichtbar_2er))
 
-            it("Traffic lights are not used", function() assert.is_false(lane.signalsUsedForCounting) end)
+            it("Traffic lights are not used", function() assert.is_false(lane.signalUsedForRequest) end)
             it("Traffic lights there is no entry in the table",
-               function() for x in pairs(lane.zaehlAmpeln) do assert(false, x) end end)
+               function() for x in pairs(lane.routesToCount) do assert(false, x) end end)
             lane:checkRequests()
         end)
 
@@ -81,13 +81,13 @@ describe("Lane ...", function()
 
             -- Set the route for train "#Car1"
             EEPSetTrainRoute("#Car1", "Some Route")
-            local lane = Lane:new("Lane A", 34, {TrafficLight:new(signalId, TrafficLightModel.Unsichtbar_2er)})
+            local lane = Lane:new("Lane A", 34, TrafficLight:new(signalId, TrafficLightModel.Unsichtbar_2er))
 
-            lane:zaehleAnAmpelAlle(signalId)
+            lane:zaehleAnAmpelAlle()
             lane:checkRequests()
 
             it("No trains waiting on signal", function() assert.equals(0, EEPGetSignalTrainsCount(signalId)) end)
-            it("Traffic lights are used", function() assert.is_true(lane.signalsUsedForCounting) end)
+            it("Traffic lights are used", function() assert.is_true(lane.signalUsedForRequest) end)
             it("There is no request", function() assert.is_false(lane.hasRequestOnSignal) end)
         end)
 
@@ -102,15 +102,15 @@ describe("Lane ...", function()
             EEPSetTrainRoute("#Car1", "Some Route")
 
             EepSimulator.queueTrainOnSignal(signalId, "#Car1")
-            local lane = Lane:new("Lane A", 34, {TrafficLight:new(signalId, TrafficLightModel.Unsichtbar_2er)})
-            lane:zaehleAnAmpelAlle(signalId)
+            local lane = Lane:new("Lane A", 34, TrafficLight:new(signalId, TrafficLightModel.Unsichtbar_2er))
+            lane:zaehleAnAmpelAlle()
             lane:checkRequests()
 
             it("No trains waiting on signal", function() assert.equals(1, EEPGetSignalTrainsCount(signalId)) end)
             it("No trains waiting on signal", function()
                 assert.equals("#Car1", EEPGetSignalTrainName(signalId, 1))
             end)
-            it("Traffic lights are used", function() assert.is_true(lane.signalsUsedForCounting) end)
+            it("Traffic lights are used", function() assert.is_true(lane.signalUsedForRequest) end)
             it("There is a request on the lane signal", function() assert.is_true(lane.hasRequestOnSignal) end)
         end)
     end)
@@ -126,8 +126,8 @@ describe("Lane ...", function()
             EEPSetTrainRoute("#Car1", "Matching Route")
             EEPSetTrainRoute("#Car2", "Non-Matching Route")
 
-            local lane = Lane:new("Richtung 1", 35, {TrafficLight:new(signalId, TrafficLightModel.Unsichtbar_2er)})
-            lane:zaehleAnAmpelBeiRoute(signalId, "Matching Route")
+            local lane = Lane:new("Richtung 1", 35, TrafficLight:new(signalId, TrafficLightModel.Unsichtbar_2er))
+            lane:zaehleAnAmpelBeiRoute("Matching Route")
             EepSimulator.queueTrainOnSignal(signalId, "#Car2")
 
             lane:checkRequests()
@@ -144,8 +144,8 @@ describe("Lane ...", function()
             EEPSetTrainRoute("#Car1", "Matching Route")
             EEPSetTrainRoute("#Car2", "Non-Matching Route")
 
-            local lane = Lane:new("Richtung 1", 35, {TrafficLight:new(signalId, TrafficLightModel.Unsichtbar_2er)})
-            lane:zaehleAnAmpelBeiRoute(signalId, "Matching Route")
+            local lane = Lane:new("Richtung 1", 35, TrafficLight:new(signalId, TrafficLightModel.Unsichtbar_2er))
+            lane:zaehleAnAmpelBeiRoute("Matching Route")
             EepSimulator.queueTrainOnSignal(signalId, "#Car1")
 
             lane:checkRequests()
@@ -162,8 +162,8 @@ describe("Lane ...", function()
             EEPSetTrainRoute("#Car1", "Non-Matching Route")
             EEPSetTrainRoute("#Car2", "Matching Route")
 
-            local lane = Lane:new("Richtung 1", 35, {TrafficLight:new(signalId, TrafficLightModel.Unsichtbar_2er)})
-            lane:zaehleAnAmpelBeiRoute(signalId, "Matching Route")
+            local lane = Lane:new("Richtung 1", 35, TrafficLight:new(signalId, TrafficLightModel.Unsichtbar_2er))
+            lane:zaehleAnAmpelBeiRoute("Matching Route")
             EepSimulator.queueTrainOnSignal(signalId, "#Car1")
             EepSimulator.queueTrainOnSignal(signalId, "#Car2")
 
@@ -181,8 +181,8 @@ describe("Lane ...", function()
             EEPSetTrainRoute("#Car1", "Matching Route")
             EEPSetTrainRoute("#Car2", "Non-Matching Route")
 
-            local lane = Lane:new("Richtung 1", 35, {TrafficLight:new(signalId, TrafficLightModel.Unsichtbar_2er)})
-            lane:zaehleAnAmpelBeiRoute(signalId, "Matching Route")
+            local lane = Lane:new("Richtung 1", 35, TrafficLight:new(signalId, TrafficLightModel.Unsichtbar_2er))
+            lane:zaehleAnAmpelBeiRoute("Matching Route")
             EepSimulator.queueTrainOnSignal(signalId, "#Car1")
             EepSimulator.queueTrainOnSignal(signalId, "#Car2")
 
@@ -200,11 +200,11 @@ describe("Lane ...", function()
 
             -- Set the route for train "#Car1"
             EEPSetTrainRoute("#Car1", "Some Route")
-            local lane = Lane:new("Lane A", 34, {TrafficLight:new(66, TrafficLightModel.Unsichtbar_2er)})
+            local lane = Lane:new("Lane A", 34, TrafficLight:new(66, TrafficLightModel.Unsichtbar_2er))
 
-            it("Traffic lights are not used", function() assert.is_false(lane.verwendeZaehlStrassen) end)
+            it("Traffic lights are not used", function() assert.is_false(lane.tracksUsedForRequest) end)
             it("Traffic lights there is no entry in the table",
-               function() for x in pairs(lane.zaehlStrassen) do assert(false, x) end end)
+               function() for x in pairs(lane.tracksForRequests) do assert(false, x) end end)
             lane:checkRequests()
         end)
 
@@ -217,13 +217,13 @@ describe("Lane ...", function()
 
             -- Set the route for train "#Car1"
             EEPSetTrainRoute("#Car1", "Some Route")
-            local lane = Lane:new("Lane A", 34, {TrafficLight:new(66, TrafficLightModel.Unsichtbar_2er)})
+            local lane = Lane:new("Lane A", 34, TrafficLight:new(66, TrafficLightModel.Unsichtbar_2er))
 
             lane:zaehleAnStrasseAlle(roadId)
             lane:checkRequests()
 
             it("No trains waiting on signal", function() assert.equals(0, EEPGetSignalTrainsCount(roadId)) end)
-            it("Traffic lights are used", function() assert.is_true(lane.verwendeZaehlStrassen) end)
+            it("Traffic lights are used", function() assert.is_true(lane.tracksUsedForRequest) end)
             it("There is no request", function() assert.is_false(lane.hasRequestOnRoad) end)
         end)
 
@@ -238,7 +238,7 @@ describe("Lane ...", function()
             EEPSetTrainRoute("#Car1", "Some Route")
 
             EepSimulator.setzeZugAufStrasse(roadId, "#Car1")
-            local lane = Lane:new("Lane A", 34, {TrafficLight:new(66, TrafficLightModel.Unsichtbar_2er)})
+            local lane = Lane:new("Lane A", 34, TrafficLight:new(66, TrafficLightModel.Unsichtbar_2er))
             lane:zaehleAnStrasseAlle(roadId)
             lane:checkRequests()
 
@@ -248,7 +248,7 @@ describe("Lane ...", function()
                 assert.equals(true, trackOccupied)
                 assert.equals("#Car1", trainName)
             end)
-            it("- Road counting is used", function() assert.is_true(lane.verwendeZaehlStrassen) end)
+            it("- Road counting is used", function() assert.is_true(lane.tracksUsedForRequest) end)
             it("- There is a request on the road track", function() assert.is_true(lane.hasRequestOnRoad) end)
         end)
     end)
@@ -263,7 +263,7 @@ describe("Lane ...", function()
             EEPSetTrainRoute("#Car1", "Matching Route")
             EEPSetTrainRoute("#Car2", "Non-Matching Route")
 
-            local lane = Lane:new("Richtung 1", 35, {TrafficLight:new(55, TrafficLightModel.Unsichtbar_2er)})
+            local lane = Lane:new("Richtung 1", 35, TrafficLight:new(55, TrafficLightModel.Unsichtbar_2er))
             lane:zaehleAnStrasseBeiRoute(55, "Matching Route")
             EepSimulator.setzeZugAufStrasse(55, "#Car2")
 
@@ -280,7 +280,7 @@ describe("Lane ...", function()
             EEPSetTrainRoute("#Car1", "Matching Route")
             EEPSetTrainRoute("#Car2", "Non-Matching Route")
 
-            local lane = Lane:new("Richtung 1", 35, {TrafficLight:new(55, TrafficLightModel.Unsichtbar_2er)})
+            local lane = Lane:new("Richtung 1", 35, TrafficLight:new(55, TrafficLightModel.Unsichtbar_2er))
             lane:zaehleAnStrasseBeiRoute(55, "Matching Route")
             EepSimulator.setzeZugAufStrasse(55, "#Car1")
 

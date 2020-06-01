@@ -4,7 +4,6 @@ local Queue = require("ak.util.Queue")
 local Task = require("ak.scheduler.Task")
 local Scheduler = require("ak.scheduler.Scheduler")
 local StorageUtility = require("ak.storage.StorageUtility")
-local LaneSwitching = require("ak.road.LaneSwitching")
 local TrafficLightState = require("ak.road.TrafficLightState")
 local fmt = require("ak.core.eep.AkTippTextFormat")
 
@@ -20,7 +19,7 @@ local function addTrainToQueue(lane, trainName)
     assert(not trainName:find(","), "ERROR: TRAIN NAMES MUST NOT CONTAIN ',' - Please fix: " .. trainName)
     assert(not trainName:find("|"), "ERROR: TRAIN NAMES MUST NOT CONTAIN '|' - Please fix: " .. trainName)
 
-    if trainName and not lane.signalsUsedForCounting then
+    if trainName and not lane.signalUsedForRequest then
         lane.queue:push(trainName)
 
         -- Remember the "first good vehicle"
@@ -39,7 +38,7 @@ end
 ---@param lane Lane the current lane, where the correction will take place
 ---@param trainName string Name of the train
 local function popTrainFromQueue(lane, trainName)
-    if trainName and not lane.signalsUsedForCounting then
+    if trainName and not lane.signalUsedForRequest then
         if trainName == lane.firstGoodTrain then lane.firstGoodTrain = nil end
 
         local numberOfPops = lane.queue:size()
@@ -148,6 +147,18 @@ function Lane.switchTrafficLights(lanes, phase, grund)
     for richtung in pairs(lanes) do richtung:switchTo(phase, grund) end
 end
 
+function Lane.switchLanes(lanes, phase, grund)
+    assert(phase == TrafficLightState.GREEN or phase == TrafficLightState.REDYELLOW or phase ==
+               TrafficLightState.YELLOW or phase == TrafficLightState.RED or phase == TrafficLightState.PEDESTRIAN)
+    for lane in pairs(lanes) do
+        if Lane.debug then
+            print(string.format("[Lane] Switching traffic light %d to %s (%s - %s)", lane.trafficLight.signalId,
+                                phase, lane.name, grund))
+        end
+        lane:switchTo(phase, grund)
+    end
+end
+
 function Lane.getType() return "Lane" end
 
 function Lane:getName() return self.name end
@@ -183,6 +194,7 @@ function Lane:getVehicleCount(routes)
             end
         end
     end
+    return count
 end
 
 -- FIXME MOVE TO SWITCHING
@@ -202,9 +214,9 @@ function Lane:checkRequests()
     end
 
     text = text .. ": " .. (self:hasRequest() and fmt.lightGray("BELEGT") or fmt.lightGray("-FREI-")) .. " "
-    if self.verwendeZaehlStrassen then
+    if self.tracksUsedForRequest then
         text = text .. "(Strasse)"
-    elseif self.signalsUsedForCounting then
+    elseif self.signalUsedForRequest then
         text = text .. "(Ampel)"
     else
         text = text .. "(" .. self.vehicleCount .. " gezaehlt)"
@@ -215,18 +227,18 @@ function Lane:checkRequests()
 end
 
 -- FIXME MOVE TO SWITCHING
-function Lane:refreshRequests() for _, ampel in pairs(self.ampeln) do ampel:refreshRequests(self) end end
+function Lane:refreshRequests() self.trafficLight:refreshRequests(self) end
 
 -- FIXME MOVE TO SWITCHING
 function Lane:calculatePriority()
-    local verwendeZaehlStrassen = self:checkRoadRequests()
-    if verwendeZaehlStrassen then
+    local tracksUsedForRequest = self:checkRoadRequests()
+    if tracksUsedForRequest then
         local prio = (self.hasRequestOnRoad and 1 or 0) * 3 * self.fahrzeugMultiplikator
         return self.waitCount > prio and self.waitCount or prio
     end
 
-    local signalsUsedForCounting = self:checkSignalRequests()
-    if signalsUsedForCounting then
+    local signalUsedForRequest = self:checkSignalRequests()
+    if signalUsedForRequest then
         local prio = (self.hasRequestOnSignal and 1 or 0) * 3 * self.fahrzeugMultiplikator
         return self.waitCount > prio and self.waitCount or prio
     end
@@ -240,23 +252,23 @@ function Lane:getAnforderungsText() return self.anforderungsText or "KEINE ANFOR
 
 ---@param roadId number Road Track ID
 function Lane:zaehleAnStrasseAlle(roadId)
-    self.verwendeZaehlStrassen = true
+    self.tracksUsedForRequest = true
     EEPRegisterRoadTrack(roadId)
-    if not self.zaehlStrassen[roadId] then self.zaehlStrassen[roadId] = {} end
+    if not self.tracksForRequests[roadId] then self.tracksForRequests[roadId] = {} end
     return self
 end
 
 function Lane:zaehleAnStrasseBeiRoute(strassenId, route)
-    self.verwendeZaehlStrassen = true
+    self.tracksUsedForRequest = true
     EEPRegisterRoadTrack(strassenId)
-    if not self.zaehlStrassen[strassenId] then self.zaehlStrassen[strassenId] = {} end
-    self.zaehlStrassen[strassenId][route] = true
+    if not self.tracksForRequests[strassenId] then self.tracksForRequests[strassenId] = {} end
+    self.tracksForRequests[strassenId][route] = true
     return self
 end
 
 function Lane:checkRoadRequests()
     local anforderungGefunden = false
-    for strassenId, routen in pairs(self.zaehlStrassen) do
+    for strassenId, routen in pairs(self.tracksForRequests) do
         local ok, wartend, zugName = EEPIsRoadTrackReserved(strassenId, true)
         assert(ok)
 
@@ -282,49 +294,49 @@ function Lane:checkRoadRequests()
     self.hasRequestOnRoad = anforderungGefunden
 end
 
----@param signalId number Signal ID
-function Lane:zaehleAnAmpelAlle(signalId)
-    self.signalsUsedForCounting = true
-    assert(signalId, "Keine signalId angegeben")
-    if not self.zaehlAmpeln[signalId] then self.zaehlAmpeln[signalId] = {} end
+---Zähle alle Fahrzeuge am Signal
+---Count on the lane's traffic signal
+function Lane:zaehleAnAmpelAlle()
+    self.signalUsedForRequest = true
     return self
 end
 
----@param signalId number Signal ID
----@param route string Route name
-function Lane:zaehleAnAmpelBeiRoute(signalId, route)
-    self.signalsUsedForCounting = true
-    if not self.zaehlAmpeln[signalId] then self.zaehlAmpeln[signalId] = {} end
-    self.zaehlAmpeln[signalId][route] = true
+---Zähle die Fahrzeuge einer bestimmten Route am Signal
+---Count trains of a certain route on the lane's traffic signal
+---@param route string single route name
+function Lane:zaehleAnAmpelBeiRoute(route)
+    self.signalUsedForRequest = true
+    self.routesToCount[route] = true
     return self
 end
 
 function Lane:checkSignalRequests()
-    local anforderungGefunden = false
-    for signalId, routen in pairs(self.zaehlAmpeln) do
-        local wartend = EEPGetSignalTrainsCount(signalId)
+    local requestFound = false
+    if self.signalUsedForRequest then
+        local wartend = EEPGetSignalTrainsCount(self.trafficLight.signalId)
 
         if wartend > 0 then
-            local zugName = EEPGetSignalTrainName(signalId, 1)
-            assert(zugName, "Kein Zug an Signal: " .. signalId)
-            local found, zugRoute = EEPGetTrainRoute(zugName)
-            assert(found, "Zug nicht gefunden in EEPGetTrainRoute: " .. zugName)
+            local trainName = EEPGetSignalTrainName(self.trafficLight.signalId, 1)
+            assert(trainName, "Kein Zug an Signal: " .. self.trafficLight.signalId)
+            local found, trainRoute = EEPGetTrainRoute(trainName)
+            assert(found, "Zug nicht gefunden in EEPGetTrainRoute: " .. trainName)
 
-            local zugGefunden = false
-            local filterNachRoute = false
-            for erlaubteRoute in pairs(routen) do
-                filterNachRoute = true
-                if erlaubteRoute == zugRoute then
-                    zugGefunden = true
-                    break
+            local haveRoutes = false
+            local trainFound = false
+            if self.routesToCount then
+                for matchingRoute in pairs(self.routesToCount) do
+                    haveRoutes = true
+                    if matchingRoute == trainRoute then
+                        trainFound = true
+                        break
+                    end
                 end
             end
 
-            anforderungGefunden = not filterNachRoute or zugGefunden
-            break
+            requestFound = not haveRoutes or trainFound
         end
     end
-    self.hasRequestOnSignal = anforderungGefunden
+    self.hasRequestOnSignal = requestFound
 end
 
 --- Das Fahrzeug "vehicle" hat die Fahrspur betreten --> Rufe diese Funktion vom Kontaktpunkt aus auf
@@ -390,7 +402,7 @@ function Lane:setFahrzeugMultiplikator(fahrzeugMultiplikator)
 end
 
 function Lane:switchTo(phase, grund)
-    for _, ampel in pairs(self.ampeln) do ampel:switchTo(phase, grund) end
+    self.trafficLight:switchTo(phase, grund)
     self.phase = phase
 end
 
@@ -410,41 +422,37 @@ function Lane:setTrafficType(trafficType)
     end
 end
 
----Legt eine Schaltung bestimmter Ampeln an, z.B. geradeaus für diese Spur
-function Lane:addSwitching(visibleTrafficLights, directions, routes, switchingType)
-    local switching = LaneSwitching:new(self, visibleTrafficLights, directions, routes, switchingType)
-    self.switchings[directions] = switching
-    return switching
-end
-
 --- Erzeugt eine Richtung, welche durch eine Ampel gesteuert wird.
 ---@param name string @Name der Richtung einer Kreuzung
 ---@param eepSaveId number, @EEPSaveSlot-Id fuer das Speichern der Richtung
----@param ampeln table<number, TrafficLight> @eine oder mehrere Ampeln
+---@param trafficLight TrafficLight @genau eine Ampeln
 ---@param directions string[] eine oder mehrere Ampeln
 ---@param trafficType string eine oder mehrere Ampeln
---
-function Lane:new(name, eepSaveId, ampeln, directions, trafficType)
+---@return Lane
+function Lane:new(name, eepSaveId, trafficLight, directions, trafficType)
     assert(name, 'Bitte geben Sie den Namen "name" fuer diese Richtung an.')
     assert(type(name) == "string", "Name ist kein String")
     assert(eepSaveId, 'Bitte geben Sie den Wert "eepSaveId" fuer diese Richtung an.')
     assert(type(eepSaveId) == "number")
-    assert(ampeln, 'Bitte geben Sie den Wert "ampeln" fuer diese Richtung an.')
+    assert(trafficLight, 'Specify a single "trafficLight" for this lane (the one, where the traffic is queued).')
+    assert(trafficLight.type == "TrafficLight",
+           'Specify a single "trafficLight" for this lane (the one, where the traffic is queued).')
     -- assert(signalId, "Bitte geben Sie den Wert \"signalId\" fuer diese Richtung an.")
     if eepSaveId ~= -1 then StorageUtility.registerId(eepSaveId, "Lane " .. name) end
     local o = {
-        fahrzeugMultiplikator = 1,
         name = name,
         eepSaveId = eepSaveId,
-        ampeln = ampeln,
+        trafficLight = trafficLight,
         schaltungsTyp = Lane.SchaltungsTyp.NICHT_VERWENDET,
-        signalsUsedForCounting = false,
-        zaehlAmpeln = {},
-        verwendeZaehlStrassen = false,
-        zaehlStrassen = {},
+        routesToCount = {},
+        signalUsedForRequest = false,
+        tracksUsedForRequest = false,
+        tracksForRequests = {},
         directions = directions or {"LEFT", "STRAIGHT", "RIGHT"},
         switchings = {},
-        trafficType = trafficType or "NORMAL"
+        trafficType = trafficType or "NORMAL",
+        fahrzeugMultiplikator = 1,
+        activeLaneSettings = nil
     }
 
     self.__index = self

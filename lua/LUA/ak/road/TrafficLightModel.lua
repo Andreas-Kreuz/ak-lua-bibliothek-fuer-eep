@@ -18,7 +18,6 @@ TrafficLightModel.allModels = {}
 -- @param signalIndexPedestrian Index der Signalstellung in der die Fussgaenger gruen haben und die Autos rot
 -- @param signalIndexSwitchOff Index der Signalstellung in der die Ampel komplett aus ist
 -- @param signalIndexBlinkYellow Index der Signalstellung in der die Ampel gelb blinkt ohne den Verkehr zu beeinflussen
---
 function TrafficLightModel:new(
     name,
     signalIndexRed,
@@ -38,8 +37,8 @@ function TrafficLightModel:new(
         signalIndexYellow = signalIndexYellow or signalIndexRed,
         signalIndexRedYellow = signalIndexRedYellow or signalIndexRed,
         signalIndexPedestrian = signalIndexPedestrian,
-        signalIndexSwitchOff = signalIndexSwitchOff,
-        signalIndexBlinkYellow = signalIndexBlinkYellow
+        signalIndexSwitchOff = signalIndexSwitchOff or signalIndexGreen,
+        signalIndexBlinkYellow = signalIndexBlinkYellow or signalIndexSwitchOff
     }
     self.__index = self
     local x = setmetatable(o, self)
@@ -86,6 +85,7 @@ TrafficLightModel.NP1_3er_ohne_FG = TrafficLightModel:new("Ampel_NP1_ohne_FG", 1
 -- Fuer die Ampeln von JS2 - http://eepshopping.de - Ampel-Baukasten (V80NJS20039)
 -- Diese Signale sind teilweise mit und ohne Fussgaenger
 TrafficLightModel.JS2_2er_nur_FG = TrafficLightModel:new("Ak_Ampel_2er_nur_FG", 1, 1, 1, 1, 2, 3, 3)
+TrafficLightModel.JS2_2er_OFF_YELLOW_GREEN = TrafficLightModel:new("Ampel_2er_Aus_Gelb-Grün", 1, 3, 5, 1, 1, 2, 6)
 TrafficLightModel.JS2_3er_mit_FG = TrafficLightModel:new("Ampel_3er_XXX_mit_FG", 1, 3, 5, 2, 6, 7, 8)
 TrafficLightModel.JS2_3er_ohne_FG = TrafficLightModel:new("Ampel_3er_XXX_ohne_FG", 1, 3, 5, 2, 1, 6, 7)
 
