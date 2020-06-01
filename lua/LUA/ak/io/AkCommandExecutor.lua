@@ -35,7 +35,7 @@ AkCommandExecutor.addAcceptedRemoteFunction("EEPPause", EEPPause)
 -- Accept all EEP*Set functions
 for name, value in pairs(_G) do
     if string.find(name, "^EEP.*Set") and type(value) == "function" then
-        --print(string.format("Adding %s to acceptedRemoteFunctions", name))
+        -- print(string.format("Adding %s to acceptedRemoteFunctions", name))
         AkCommandExecutor.addAcceptedRemoteFunction(name, value)
     end
 end
@@ -54,9 +54,7 @@ function AkCommandExecutor.callSavely(functionAndArgs)
 
     if f then
         local status, error = pcall(f, table.unpack(args))
-        if not status then
-            print(error)
-        end
+        if not status then print(error) end
     else
         print("Aufruf von " .. fName .. " nicht erlaubt")
     end
