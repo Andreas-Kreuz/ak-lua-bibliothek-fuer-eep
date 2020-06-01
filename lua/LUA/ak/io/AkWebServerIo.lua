@@ -3,6 +3,7 @@ local AkCommandExecutor = require("ak.io.AkCommandExecutor")
 local os = require("os")
 
 local AkWebServerIo = {}
+AkWebServerIo.debug = AkDebugLoad
 
 --- Prüfe ob das Verzeichnis existiert und Dateien geschrieben werden können.
 -- Call this function via pcall to catch any exceptions
@@ -148,13 +149,13 @@ local serverWasListeningLastTime = true
 function AkWebServerIo.checkWebServer()
     if fileExists(watchFileNameServer) then -- file: ak-server.iswatching
         if fileExists(watchFileNameLua) then -- file: ak-eep-out-json.isfinished
-            if serverWasReadyLastTime then
+            if AkWebServerIo.debug and serverWasReadyLastTime then
                 print("SERVER IS NOT READY")
             end
             serverWasReadyLastTime = false
             return false
         else
-            if not serverWasReadyLastTime or not serverWasListeningLastTime then
+            if  AkWebServerIo.debug and (not serverWasReadyLastTime or not serverWasListeningLastTime) then
                 print("SERVER IS READY AND LISTENING")
             end
             serverWasReadyLastTime = true
@@ -162,7 +163,7 @@ function AkWebServerIo.checkWebServer()
             return true
         end
     else
-        if serverWasListeningLastTime then
+        if AkWebServerIo.debug and serverWasListeningLastTime then
             print("SERVER IS NOT LISTENING")
         end
         serverWasListeningLastTime = false
