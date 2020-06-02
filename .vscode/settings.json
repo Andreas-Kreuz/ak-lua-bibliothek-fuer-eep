@@ -172,7 +172,7 @@
   "Lua.workspace.ignoreDir": [
     ".vscode",
     "lua/Resourcen",
-    "lua/Resourcen/Anlagen",
+    "lua/Resourcen/Anlagen/*/*.lua",
     "lua/modell-pakete",
     "web-app",
     "web-server"
