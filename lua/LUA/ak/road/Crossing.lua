@@ -329,7 +329,7 @@ function Crossing.planeSchaltungenEin()
             Scheduler:scheduleTask(2, turnTrafficLightsRed, turnTrafficLightsYellow)
 
             local turnNextTrafficLightsYellow = Task:new(function()
-                TrafficLight.switchAll(trafficLightsToTurnGreen, TrafficLightState.YELLOW,
+                TrafficLight.switchAll(trafficLightsToTurnGreen, TrafficLightState.REDYELLOW,
                                        "Schalte " .. nextName .. " auf rot-gelb")
                 TrafficLight.switchAll(pedestrianLightsToTurnGreen, TrafficLightState.PEDESTRIAN,
                                        "Schalte " .. nextName .. " auf rot-gelb")

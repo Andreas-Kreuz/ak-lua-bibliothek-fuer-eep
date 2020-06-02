@@ -275,8 +275,9 @@ insulate("Check traffic light switching", function()
     local U_R = 2
     local U_G = 1
     local RED = 1
-    local YEL = 5
+    local RYE = 2
     local GRE = 3
+    local YEL = 5
     local _P_ = 6
 
     EEPSetSignal(11, U_R)
@@ -499,14 +500,14 @@ insulate("Check traffic light switching", function()
         it("# step6 - Signal L3 (13) ", function() assert.equals(U_R, step6SignalAxisL3) end)
         it("# step6 - Signal L4 (14) ", function() assert.equals(U_R, step6SignalAxisL4) end)
         it("# step6 - Crossing ready    ", function() assert.is_false(step6Ready) end)
-        it("# step6 - Signal K1 (23) ", function() assert.equals(YEL, step6SignalAxisK1) end)
-        it("# step6 - Signal K2 (24) ", function() assert.equals(YEL, step6SignalAxisK2) end)
+        it("# step6 - Signal K1 (23) ", function() assert.equals(RYE, step6SignalAxisK1) end)
+        it("# step6 - Signal K2 (24) ", function() assert.equals(RYE, step6SignalAxisK2) end)
         it("# step6 - Signal K3 (25) ", function() assert.equals(_P_, step6SignalAxisK3) end)
         it("# step6 - Signal K5 (27) ", function() assert.equals(RED, step6SignalAxisK5) end)
         it("# step6 - Signal K6 (28) ", function() assert.equals(_P_, step6SignalAxisK6) end)
         it("# step6 - Signal K7 (29) ", function() assert.equals(RED, step6SignalAxisK7) end)
         it("# step6 - Signal K8 (30) ", function() assert.equals(RED, step6SignalAxisK8) end)
-        it("# step6 - Signal K9 (31) ", function() assert.equals(YEL, step6SignalAxisK9) end)
+        it("# step6 - Signal K9 (31) ", function() assert.equals(RYE, step6SignalAxisK9) end)
     end
 
     lane1:vehicleLeft(false, "#Car1a")
@@ -752,8 +753,8 @@ insulate("Check traffic light switching", function()
         it("# step12 - Signal K3 (25) ", function() assert.equals(RED, step12SignalAxisK3) end)
         it("# step12 - Signal K5 (27) ", function() assert.equals(RED, step12SignalAxisK5) end)
         it("# step12 - Signal K6 (28) ", function() assert.equals(RED, step12SignalAxisK6) end)
-        it("# step12 - Signal K7 (29) ", function() assert.equals(YEL, step12SignalAxisK7) end)
-        it("# step12 - Signal K8 (30) ", function() assert.equals(YEL, step12SignalAxisK8) end)
+        it("# step12 - Signal K7 (29) ", function() assert.equals(RED, step12SignalAxisK7) end) -- NOT YELLOW SPECIAL!
+        it("# step12 - Signal K8 (30) ", function() assert.equals(RYE, step12SignalAxisK8) end)
         it("# step12 - Signal K9 (31) ", function() assert.equals(GRE, step12SignalAxisK9) end)
     end
 
