@@ -25,7 +25,7 @@ function Queue:push(value)
     self.list[last] = value
 end
 
---- Receives the value at the queues beginning
+--- Receives the value at the queues beginning and removes it from the queue
 ---@return any
 function Queue:pop()
     local first = self.first
@@ -34,6 +34,13 @@ function Queue:pop()
     self.list[first] = nil -- to allow garbage collection
     self.first = first + 1
     return value
+end
+
+--- Receives the value at the queues beginning
+---@return any
+function Queue:firstElement()
+    local first = self.first
+    return self.list[first]
 end
 
 ---@return any[]
