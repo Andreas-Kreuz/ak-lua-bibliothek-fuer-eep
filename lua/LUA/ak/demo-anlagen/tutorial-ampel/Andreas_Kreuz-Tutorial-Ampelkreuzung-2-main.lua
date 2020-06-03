@@ -32,9 +32,9 @@ function KpBetritt(richtung)
     richtung:vehicleEntered(Zugname)
 end
 
-function KpVerlasse(richtung, switchToRed)
+function KpVerlasse(richtung)
     assert(richtung, "richtung darf nicht nil sein. Richtige Lua-Funktion im Kontaktpunkt?")
-    richtung:vehicleLeft(switchToRed, Zugname)
+    richtung:vehicleLeft(Zugname)
 end
 
 -------------------------------------------------------------------------------
@@ -89,7 +89,7 @@ os = Lane:new("OS", 107, {
         "#27_Straba Signal anhalten", --   gelb  schaltet das Licht dieser Immobilie ein
         "#26_Straba Signal A") --    Anforderung schaltet das Licht dieser Immobilie ein
 })
-os:zaehleAnAmpelAlle() -- Erfasst Anforderungen, wenn ein Fahrzeug an Signal 14 steht
+os:useSignalForQueue() -- Erfasst Anforderungen, wenn ein Fahrzeug an Signal 14 steht
 
 ws = Lane:new("WS", 108, {
     TrafficLight:new(15, TrafficLightModel.Unsichtbar_2er,
@@ -98,7 +98,7 @@ ws = Lane:new("WS", 108, {
         "#31_Straba Signal anhalten", --   gelb  schaltet das Licht dieser Immobilie ein
         "#33_Straba Signal A") --    Anforderung schaltet das Licht dieser Immobilie ein
 })
-ws:zaehleAnStrasseAlle(2) -- Erfasst Anforderungen, wenn ein Fahrzeug auf Strasse 2 steht
+ws:useTracklForQueue(2) -- Erfasst Anforderungen, wenn ein Fahrzeug auf Strasse 2 steht
 
 
 --------------------------------------------------------------

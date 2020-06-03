@@ -20,6 +20,7 @@ function CrossingCircuit:new(name)
     setmetatable(o, self)
     self.__index = self
     o.name = name
+    o.crossing = nil
     o.prio = 0
     ---@type table<number,TrafficLight>
     o.trafficLights = {}
@@ -138,11 +139,17 @@ end
 
 function CrossingCircuit:addTrafficLight(trafficLight)
     self.trafficLights[trafficLight.signalId] = trafficLight
+    -- if self.crossing then
+    --     self.crossing.trafficLights[trafficLight] = true
+    -- end
     return self
 end
 
 function CrossingCircuit:addPedestrianLight(trafficLight)
     self.pedestrianLights[trafficLight.signalId] = trafficLight
+    -- if self.crossing then
+    --     self.crossing.pedestrianLights[trafficLight] = true
+    -- end
     return self
 end
 

@@ -151,7 +151,7 @@ Es gibt drei Möglichkeiten Fahrzeuge zu erkennen:
 
    Über diese Funktion wird erkannt, wie viele Fahrzeuge zwischen einem bestimmten Vor- und Hauptsignal auf dem Straßenstück warten.
 
-   - Um die Richtung zu priorisieren, wenn sich **ein beliebiges Fahrzeug** auf der Straße vor der Ampel befindet, muss die signalID der Ampel einmalig hinterlegt werden: `lane:zaehleAnAmpelAlle()`
+   - Um die Richtung zu priorisieren, wenn sich **ein beliebiges Fahrzeug** auf der Straße vor der Ampel befindet, muss die signalID der Ampel einmalig hinterlegt werden: `lane:useSignalForQueue()`
 
    - Um die Richtung nur dann zu Priorisieren, wenn ein bestimmtes Fahrzeug an der Ampel wartet, kann stattdessen die Funktion mit Route verwendet werden: `lane:zaehleAnAmpelBeiRoute(route)`<br>
      Diese Funktion prüft, ob das erste Fahrzeug an der Ampel die passende Route hat.
@@ -160,7 +160,7 @@ Es gibt drei Möglichkeiten Fahrzeuge zu erkennen:
 
    Über diese Funktion wird erkannt, ob sich _ein_ Fahrzeuge auf dem Straßenstück befindet.
 
-   - Um die Richtung zu priorisieren, wenn sich **ein beliebiges Fahrzeug** auf der Straße vor der Ampel befindet, muss die ID des Straßenstücks einmalig hinterlegt werden: `lane:zaehleAnStrasseAlle(strassenId)``
+   - Um die Richtung zu priorisieren, wenn sich **ein beliebiges Fahrzeug** auf der Straße vor der Ampel befindet, muss die ID des Straßenstücks einmalig hinterlegt werden: `lane:useTracklForQueue(strassenId)``
 
    - Um die Richtung nur dann zu Priorisieren, wenn sich ein bestimmtes Fahrzeug auf der Straße vor der Ampel befindet, kann stattdessen die Funktion mit Route verwendet werden: `lane:zaehleAnStrasseBeiRoute(strassenId, route)`
 
@@ -172,7 +172,7 @@ Es gibt drei Möglichkeiten Fahrzeuge zu erkennen:
 
    1. _Richtung betreten_<br> Rufe im Kontaktpunkt die Funktion `lane:vehicleEntered(Zugname)` auf, wenn ein Fahrzeug den Bereich betritt.
 
-   2. _Richtung verlassen_<br> Rufe im Kontaktpunkt die Funktion `lane:vehicleLeft(switchToRed, Zugname)` auf, wenn ein Fahrzeug den Bereich verlässt.
+   2. _Richtung verlassen_<br> Rufe im Kontaktpunkt die Funktion `lane:vehicleLeft(Zugname)` auf, wenn ein Fahrzeug den Bereich verlässt.
 
       Wenn das Fahrzeug die Richtung verläßt, dann kann es die Ampel auf rot setzen, wenn gewünscht.
 
@@ -224,8 +224,6 @@ Muss in `EEPMain()` aufgerufen werden - plant die Umschaltung von Kreuzungsschal
 
   - `richtung:vehicleEntered(Zugname)` - im Kontaktpunkt aufrufen, wenn eine Richtung betreten wird (z.B. 50m vor der Ampel; aber nur auf dieser Richtungsfahrbahn)
 
-  - `richtung:vehicleLeft(switchToRed, Zugname)` - im Kontaktpunkt aufrufen, wenn eine Richtung verlassen wird (hinter der Ampel)
-
-    `switchToRed` sollte nur für Richtungen mit Anforderung auf `true` gesetzt werden. Es sorgt dafür, dass die Richtungsampeln sofort auf rot gesetzt werden, wenn keine Anforderung mehr vorliegt.
+  - `richtung:vehicleLeft(Zugname)` - im Kontaktpunkt aufrufen, wenn eine Richtung verlassen wird (hinter der Ampel)
 
     **Beachte:** Die Zählfunktionen müssen beim Betreten und Verlassen einer Richtung verwendet werden.

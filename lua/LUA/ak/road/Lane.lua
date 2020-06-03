@@ -1,8 +1,6 @@
 if AkDebugLoad then print("Loading ak.road.Lane ...") end
 
 local Queue = require("ak.util.Queue")
-local Task = require("ak.scheduler.Task")
-local Scheduler = require("ak.scheduler.Scheduler")
 local StorageUtility = require("ak.storage.StorageUtility")
 local TrafficLightState = require("ak.road.TrafficLightState")
 local fmt = require("ak.core.eep.AkTippTextFormat")
@@ -11,6 +9,14 @@ local fmt = require("ak.core.eep.AkTippTextFormat")
 ---@class Lane
 local Lane = {}
 Lane.debug = false
+
+-- Might bring some performance
+local EEPGetSignal = EEPGetSignal
+local EEPGetTrainRoute = EEPGetTrainRoute
+local EEPRegisterRoadTrack = EEPRegisterRoadTrack
+local EEPIsRoadTrackReserved = EEPIsRoadTrackReserved
+local EEPGetSignalTrainsCount = EEPGetSignalTrainsCount
+local EEPGetSignalTrainName = EEPGetSignalTrainName
 
 ---If trainname is provided, this function will add the train to the lane's queue
 ---@param lane Lane the current lane, where the correction will take place
@@ -31,6 +37,10 @@ local function addTrainToQueue(lane, trainName)
                                 lane.name, lane.queue:size(), lane.vehicleCount))
             lane.vehicleCount = lane.queue:size()
         end
+    end
+    if lane.queue:size() == 1 then
+        local _, route = EEPGetTrainRoute(lane.queue:firstElement())
+        lane.firstVehiclesRoute = route
     end
 end
 
@@ -75,6 +85,8 @@ local function popTrainFromQueue(lane, trainName)
             lane.vehicleCount = lane.queue:size()
         end
     end
+    local _, route = EEPGetTrainRoute(lane.queue:firstElement())
+    lane.firstVehiclesRoute = route
 end
 local function queueToText(queue) return table.concat(queue:elements(), "|") end
 
@@ -120,6 +132,30 @@ local function load(lane)
     end
 end
 
+local function refreshRequests(lane)
+    if lane.requestTrafficLights then
+        ---@type Queue
+        local queue = lane.queue
+        local queuedRoutes = {}
+        local carsInQueue = not queue:isEmpty()
+        for _, car in ipairs(queue:elements()) do
+            local _, route = EEPGetTrainRoute(car)
+            queuedRoutes[route] = true
+        end
+
+        local requests = {}
+
+        for route, trafficLights in pairs(lane.requestTrafficLights) do
+            local haveRequest = queuedRoutes[route] or (route == "!ALL!" and carsInQueue)
+            for _, trafficLight in ipairs(trafficLights) do
+                if not requests[trafficLight] then requests[trafficLight] = haveRequest end
+            end
+        end
+
+        for trafficLight, haveRequest in pairs(requests) do trafficLight:showRequestOnSignal(haveRequest) end
+    end
+end
+
 --------------------
 -- Klasse Richtung
 --------------------
@@ -140,6 +176,58 @@ Lane.Directions = {
 }
 ---@class LaneType
 Lane.Type = {CAR = "CAR", TRAM = "TRAM", PEDESTRIAN = "PEDESTRIAN", BICYCLE = "BICYCLE"}
+
+---Fügt eine Ampel hinzu nach deren Grün (oder Aus!) gefahren werden darf. Diese Ampel darf nicht die Ampel der
+---Fahrspur sein.
+---Optional können die Routen mitgegeben werden, für die das Losfahren erlaubt ist.
+---
+---Sets the traffic light which is used to drive. This traffic light must not be the lanes signal!
+---Optionally some Route names can be added, which are allowed to drive on this traffic light
+---@param trafficLight TrafficLight
+function Lane:driveOn(trafficLight, ...)
+    assert(trafficLight.type == "TrafficLight")
+    if ... then for _, route in ipairs(...) do assert("string" == type(route)) end end
+    self.trafficLightsTodriveOn = self.trafficLightsTodriveOn or {}
+    self.trafficLightsTodriveOn[trafficLight] = {...}
+end
+
+---Liefert true, wenn das erste Fahrzeug fahren darf (anhand der für die Fahrspur gültigen Ampeln)
+---Is true, if the first vehicle can drive (according to the lane's traffic lights)
+function Lane:canDrive()
+    local haveGreen = false
+    local greenTrafficLights = {}
+    for trafficLight in pairs(self.trafficLightsTodriveOn) do
+        local signalIndex = EEPGetSignal(trafficLight.signalId)
+        if signalIndex == trafficLight.trafficLightModel.signalIndexGreen or signalIndex ==
+            trafficLight.trafficLightModel.signalIndexOff or signalIndex ==
+            trafficLight.trafficLightModel.signalIndexOffBlinking then
+            haveGreen = true
+            table.insert(greenTrafficLights, trafficLight)
+        end
+    end
+
+    if haveGreen then
+        local driveOnAnyRoute
+        local matchesFirstVehicle
+        for _, trafficLight in ipairs(greenTrafficLights) do
+            local allowedRoutes = self.trafficLightsTodriveOn[trafficLight]
+            driveOnAnyRoute = true
+            matchesFirstVehicle = false
+            for _, route in ipairs(allowedRoutes) do
+                driveOnAnyRoute = false
+                if route == self.firstVehiclesRoute then
+                    matchesFirstVehicle = true
+                    break
+                end
+            end
+            if driveOnAnyRoute or matchesFirstVehicle then break end
+        end
+
+        return driveOnAnyRoute or matchesFirstVehicle
+    else
+        return false
+    end
+end
 
 function Lane.switchTrafficLights(lanes, phase, grund)
     assert(phase == TrafficLightState.GREEN or phase == TrafficLightState.REDYELLOW or phase ==
@@ -197,10 +285,12 @@ function Lane:getVehicleCount(routes)
     return count
 end
 
--- FIXME MOVE TO SWITCHING
 function Lane:checkRequests()
-    self:checkRoadRequests()
-    self:checkSignalRequests()
+    if self.signalUsedForRequest then
+        self:resetQueueFromSignal()
+    elseif self.tracksUsedForRequest then
+        self:resetQueueFromRoadTracks()
+    end
 
     local text = ""
     if self.schaltungsTyp == Lane.SchaltungsTyp.NORMAL then
@@ -213,7 +303,7 @@ function Lane:checkRequests()
         text = text .. fmt.red(self.name)
     end
 
-    text = text .. ": " .. (self:hasRequest() and fmt.lightGray("BELEGT") or fmt.lightGray("-FREI-")) .. " "
+    text = text .. ": " .. (not self.queue:isEmpty() and fmt.lightGray("BELEGT") or fmt.lightGray("-FREI-")) .. " "
     if self.tracksUsedForRequest then
         text = text .. "(Strasse)"
     elseif self.signalUsedForRequest then
@@ -223,120 +313,64 @@ function Lane:checkRequests()
     end
 
     self.anforderungsText = text
-    self:refreshRequests()
+    refreshRequests(self)
 end
 
--- FIXME MOVE TO SWITCHING
-function Lane:refreshRequests() self.trafficLight:refreshRequests(self) end
-
--- FIXME MOVE TO SWITCHING
 function Lane:calculatePriority()
-    local tracksUsedForRequest = self:checkRoadRequests()
-    if tracksUsedForRequest then
-        local prio = (self.hasRequestOnRoad and 1 or 0) * 3 * self.fahrzeugMultiplikator
-        return self.waitCount > prio and self.waitCount or prio
-    end
-
-    local signalUsedForRequest = self:checkSignalRequests()
-    if signalUsedForRequest then
-        local prio = (self.hasRequestOnSignal and 1 or 0) * 3 * self.fahrzeugMultiplikator
-        return self.waitCount > prio and self.waitCount or prio
-    end
-
-    local prio = self.vehicleCount * 3 * self.fahrzeugMultiplikator
+    local vehicleCount = self.queue:size()
+    local prio = vehicleCount * 3 * self.fahrzeugMultiplikator
     return self.waitCount > prio and self.waitCount or prio
 end
 
--- FIXME MOVE TO SWITCHING
 function Lane:getAnforderungsText() return self.anforderungsText or "KEINE ANFORDERUNG" end
 
 ---@param roadId number Road Track ID
-function Lane:zaehleAnStrasseAlle(roadId)
+function Lane:useTracklForQueue(roadId)
+    assert(not self.signalUsedForRequest, "CANNOT COUNT ON SIGNALS AND TRACKS")
     self.tracksUsedForRequest = true
     EEPRegisterRoadTrack(roadId)
-    if not self.tracksForRequests[roadId] then self.tracksForRequests[roadId] = {} end
+    if not self.tracksForRequests[roadId] then self.tracksForRequests[roadId] = true end
     return self
 end
 
-function Lane:zaehleAnStrasseBeiRoute(strassenId, route)
-    self.tracksUsedForRequest = true
-    EEPRegisterRoadTrack(strassenId)
-    if not self.tracksForRequests[strassenId] then self.tracksForRequests[strassenId] = {} end
-    self.tracksForRequests[strassenId][route] = true
-    return self
-end
-
-function Lane:checkRoadRequests()
-    local anforderungGefunden = false
-    for strassenId, routen in pairs(self.tracksForRequests) do
-        local ok, wartend, zugName = EEPIsRoadTrackReserved(strassenId, true)
+function Lane:resetQueueFromRoadTracks()
+    for _ = 1, self.queue:size(), 1 do self.queue:pop() end
+    for strassenId in pairs(self.tracksForRequests) do
+        local ok, waiting, trainName = EEPIsRoadTrackReserved(strassenId, true)
         assert(ok)
 
-        if wartend then
-            assert(zugName, "Kein Zug auf Strasse: " .. strassenId)
-            local found, zugRoute = EEPGetTrainRoute(zugName)
-            assert(found, "Zug nicht gefunden in EEPGetTrainRoute: " .. zugName)
-
-            local zugGefunden = false
-            local filterNachRoute = false
-            for erlaubteRoute in pairs(routen) do
-                filterNachRoute = true
-                if erlaubteRoute == zugRoute then
-                    zugGefunden = true
-                    break
-                end
-            end
-
-            anforderungGefunden = not filterNachRoute or zugGefunden
-            break
+        if waiting then
+            assert(trainName, "Kein Zug auf Strasse: " .. strassenId)
+            self.queue:push(trainName)
         end
     end
-    self.hasRequestOnRoad = anforderungGefunden
+end
+
+function Lane:showRequestsOn(trafficLight, ...)
+    local routes = ... and {...} or {"!ALL!"}
+    self.requestTrafficLights = self.requestTrafficLights or {}
+    for _, route in ipairs(routes) do
+        self.requestTrafficLights[route] = self.requestTrafficLights[route] or {}
+        table.insert(self.requestTrafficLights[route], trafficLight)
+    end
 end
 
 ---Zähle alle Fahrzeuge am Signal
 ---Count on the lane's traffic signal
-function Lane:zaehleAnAmpelAlle()
+function Lane:useSignalForQueue()
+    assert(not self.tracksUsedForRequest, "CANNOT COUNT ON SIGNALS AND TRACKS")
     self.signalUsedForRequest = true
     return self
 end
 
----Zähle die Fahrzeuge einer bestimmten Route am Signal
----Count trains of a certain route on the lane's traffic signal
----@param route string single route name
-function Lane:zaehleAnAmpelBeiRoute(route)
-    self.signalUsedForRequest = true
-    self.routesToCount[route] = true
-    return self
-end
+function Lane:resetQueueFromSignal()
+    for _ = 1, self.queue:size(), 1 do self.queue:pop() end
 
-function Lane:checkSignalRequests()
-    local requestFound = false
-    if self.signalUsedForRequest then
-        local wartend = EEPGetSignalTrainsCount(self.trafficLight.signalId)
-
-        if wartend > 0 then
-            local trainName = EEPGetSignalTrainName(self.trafficLight.signalId, 1)
-            assert(trainName, "Kein Zug an Signal: " .. self.trafficLight.signalId)
-            local found, trainRoute = EEPGetTrainRoute(trainName)
-            assert(found, "Zug nicht gefunden in EEPGetTrainRoute: " .. trainName)
-
-            local haveRoutes = false
-            local trainFound = false
-            if self.routesToCount then
-                for matchingRoute in pairs(self.routesToCount) do
-                    haveRoutes = true
-                    if matchingRoute == trainRoute then
-                        trainFound = true
-                        break
-                    end
-                end
-            end
-
-            requestFound = not haveRoutes or trainFound
-        end
+    local wartend = EEPGetSignalTrainsCount(self.trafficLight.signalId)
+    for i = 1, wartend, 1 do
+        local trainName = EEPGetSignalTrainName(self.trafficLight.signalId, i)
+        self.queue:push(trainName)
     end
-    self.hasRequestOnSignal = requestFound
 end
 
 --- Das Fahrzeug "vehicle" hat die Fahrspur betreten --> Rufe diese Funktion vom Kontaktpunkt aus auf
@@ -345,7 +379,7 @@ end
 function Lane:vehicleEntered(trainName)
     self.vehicleCount = self.vehicleCount + 1
     addTrainToQueue(self, trainName)
-    self:refreshRequests()
+    refreshRequests(self)
     save(self)
 end
 
@@ -353,29 +387,17 @@ end
 --- The vehicle left this lane -> call this in a contact point
 ---@param swithToRed boolean indicates, if this lane shall switch to red immediately FIXME --> Shall be in Lane
 ---@param trainName string name of the vehicle, i.e. train name in EEP
-function Lane:vehicleLeft(swithToRed, trainName)
+function Lane:vehicleLeft(trainName)
     self.vehicleCount = self.vehicleCount > 0 and self.vehicleCount - 1 or 0
     popTrainFromQueue(self, trainName)
-    self:refreshRequests()
+    refreshRequests(self)
     save(self)
-
-    if swithToRed and not self:hasRequest() then
-        local lanes = {}
-        lanes[self] = true
-
-        Lane.switchTrafficLights(lanes, TrafficLightState.YELLOW, "Vehicle left: " .. trainName)
-
-        local toRed = Task:new(function()
-            Lane.switchTrafficLights(lanes, TrafficLightState.RED, "Vehicle left: " .. trainName)
-        end, "Schalte " .. self.name .. " auf rot.")
-        Scheduler:scheduleTask(2, toRed)
-    end
 end
 
 function Lane:resetVehicles()
     while not self.queue:isEmpty() do self.queue:pop() end
     self.vehicleCount = 0
-    self:refreshRequests()
+    refreshRequests(self)
     save(self)
 end
 
@@ -389,8 +411,7 @@ function Lane:resetWaitCount()
     save(self)
 end
 
--- FIXME REPLACE BY QUEUE
-function Lane:hasRequest() return self.vehicleCount > 0 or self.hasRequestOnSignal or self.hasRequestOnRoad end
+function Lane:hasRequest() return not self.queue:isEmpty() end
 
 function Lane:getWaitCount() return self.waitCount end
 
@@ -451,6 +472,7 @@ function Lane:new(name, eepSaveId, trafficLight, directions, trafficType)
         directions = directions or {"LEFT", "STRAIGHT", "RIGHT"},
         switchings = {},
         trafficType = trafficType or "NORMAL",
+        vehicleCount = 0,
         fahrzeugMultiplikator = 1,
         activeLaneSettings = nil
     }

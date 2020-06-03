@@ -178,6 +178,7 @@ end
 ---@param name string @Name of the Pedestrian Crossing einer Kreuzung
 function Crossing:newSwitching(name)
     local switching = CrossingCircuit:new(name)
+    switching.crossing = self
     self.schaltungen[switching] = true
     return switching
 end
@@ -188,7 +189,7 @@ function Crossing.planeSchaltungenEin()
     --- Diese Funktion sucht sich aus den Ampeln die mit der passenden Richtung
     -- raus und setzt deren Texte auf die aktuelle Schaltung
     -- @param kreuzung
-    local function aktualisiereAnforderungen(kreuzung)
+    local function checkRequests(kreuzung)
         for _, lane in pairs(kreuzung.lanes) do lane:checkRequests() end
     end
 
@@ -196,7 +197,7 @@ function Crossing.planeSchaltungenEin()
     -- raus und setzt deren Texte auf die aktuelle Schaltung
     -- @param kreuzung
     local function showSwitching(kreuzung)
-        aktualisiereAnforderungen(kreuzung)
+        checkRequests(kreuzung)
 
         local kreuzungsAmpeln = {}
         local kreuzungsAmpelSchaltungen = {}
@@ -253,15 +254,14 @@ function Crossing.planeSchaltungenEin()
                 ampel:setCircuitInfo(text)
             end
 
-            -- do
-            --     local text = "<j><b>Richtung / Wartezeit</b></j>"
-            --     for richtung in pairs(kreuzungsAmpelSchaltungen[ampel.signalId]["lanes"]) do
-            --         text = text .. "<br>" .. richtung:getAnforderungsText() .. " / " .. richtung.waitCount
-            --     end
-            --     ampel:setLaneInfo(text)
-            -- end
-
             ampel:refreshInfo()
+        end
+
+        for _, lane in pairs(kreuzung.lanes) do
+            local trafficLight = lane.trafficLight
+            local text = "<j><b>Richtung / Wartezeit</b></j>"
+            text = text .. "<br>" .. lane:getAnforderungsText() .. " / " .. lane.waitCount
+            trafficLight:setLaneInfo(text)
         end
     end
 

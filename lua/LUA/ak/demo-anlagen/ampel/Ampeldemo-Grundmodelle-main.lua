@@ -38,10 +38,10 @@ function KpBetritt(richtung)
     richtung:vehicleEntered(Zugname)
 end
 
-function KpVerlasse(richtung, switchToRed)
+function KpVerlasse(richtung)
     assert(richtung, "richtung darf nicht nil sein. Richtige Lua-Funktion im Kontaktpunkt?")
     --print(richtung.name .. " verlassen von: " .. Zugname)
-    richtung:vehicleLeft(switchToRed, Zugname)
+    richtung:vehicleLeft(Zugname)
 end
 
 ----------------------------------------------------------------------------------------------------------------------

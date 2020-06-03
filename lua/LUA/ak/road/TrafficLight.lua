@@ -35,7 +35,6 @@ function TrafficLight:new(signalId, trafficLightModel, redStructure, greenStruct
         signalId = signalId,
         trafficLightModel = trafficLightModel,
         phase = TrafficLightState.RED,
-        hasRequest = false,
         debug = false,
         laneInfo = "",
         circuitInfo = "",
@@ -211,11 +210,9 @@ end
 function TrafficLight:switchSignal(sigIndex) EEPSetSignal(self.signalId, sigIndex, 1) end
 
 --- Setzt die Anforderung fuer eine Ampel (damit sie weiß, ob eine Anforderung vorliegt)
---- @param lane Lane, für welche die Anforderung vorliegt
-function TrafficLight:refreshRequests(lane)
+--- @param hasRequest boolean wo liegt die Anforderung an
+function TrafficLight:showRequestOnSignal(hasRequest)
     local immoDbg = ""
-    self.lanes[lane] = true
-    local hasRequest = lane:hasRequest()
 
     for lightTL in pairs(self.lightStructures) do
         if lightTL.requestStructure then

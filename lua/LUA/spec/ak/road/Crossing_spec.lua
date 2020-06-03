@@ -150,9 +150,9 @@ insulate("Crossing", function()
             end)
         end)
         describe("Car priorities for 1 car per lane (again)", function()
-            lane1:vehicleLeft(false, "#Car1a")
-            lane2:vehicleLeft(false, "#Car2a")
-            lane3:vehicleLeft(false, "#Car3a")
+            lane1:vehicleLeft("#Car1a")
+            lane2:vehicleLeft("#Car2a")
+            lane3:vehicleLeft("#Car3a")
 
             it("TrafficLights are there", function()
                 assert.equals(1.5, switchingA:calculatePriority())
@@ -161,9 +161,9 @@ insulate("Crossing", function()
             end)
         end)
         describe("Car priorities for 0 cars per lane after leaving", function()
-            lane1:vehicleLeft(false, "#Car1b")
-            lane2:vehicleLeft(false, "#Car2b")
-            lane3:vehicleLeft(false, "#Car3b")
+            lane1:vehicleLeft("#Car1b")
+            lane2:vehicleLeft("#Car2b")
+            lane3:vehicleLeft("#Car3b")
 
             it("TrafficLights are there", function()
                 assert.equals(0, switchingA:calculatePriority())
@@ -208,10 +208,16 @@ insulate("Check traffic light switching", function()
     -- local LaneSettings = require("ak.road.LaneSettings")
     local TrafficLight = require("ak.road.TrafficLight")
     local TrafficLightModel = require("ak.road.TrafficLightModel")
-    local c1Lane1Signal, c1Lane2Signal, c1Lane3Signal, c1Lane4Signal
+
+    ---@type Lane
     local lane1, lane2, lane3, lane4
+    ---@type TrafficLight
+    local c1Lane1Signal, c1Lane2Signal, c1Lane3Signal, c1Lane4Signal
+    ---@type TrafficLight
     local K1, K2, K3, K5, K6, K7, K8, K9
+    ---@type CrossingCircuit
     local switchingA, switchingB, switchingC
+    ---@type Crossing
     local crossing
 
     c1Lane1Signal = TrafficLight:new(11, TrafficLightModel.Unsichtbar_2er)
@@ -233,24 +239,32 @@ insulate("Check traffic light switching", function()
     lane3 = crossing:newLane("Lane 3 S", 3, c1Lane3Signal, Lane.Directions.LEFT)
     lane4 = crossing:newLane("Lane 4 S", 4, c1Lane4Signal, Lane.Directions.STRAIGHT)
 
+    lane1:driveOn(K1)
+    lane2:driveOn(K6)
+    lane2:driveOn(K7, "RIGHT TURN") -- .showRequestOn(K7)
+    lane3:driveOn(K8)
+    lane4:driveOn(K9)
+
     ---@type CrossingCircuit
     switchingA = crossing:newSwitching("Switching A - North South")
     switchingA:addLane(lane1)
+    switchingA:addLane(lane4)
     switchingA:addTrafficLight(K1)
     switchingA:addTrafficLight(K2)
-    switchingA:addLane(lane4)
     switchingA:addTrafficLight(K9)
     switchingA:addPedestrianLight(K3)
     switchingA:addPedestrianLight(K6)
 
+    ---@type CrossingCircuit
     switchingB = crossing:newSwitching("Switching B - South + East Right")
-    switchingB:addLane(lane2, {Lane.Directions.RIGHT}, {"RIGHT TURN"})
-    switchingB:addTrafficLight(K7)
+    switchingB:addLane(lane2)
     switchingB:addLane(lane3)
-    switchingB:addTrafficLight(K8)
     switchingB:addLane(lane4)
+    switchingB:addTrafficLight(K7)
+    switchingB:addTrafficLight(K8)
     switchingB:addTrafficLight(K9)
 
+    ---@type CrossingCircuit
     switchingC = crossing:newSwitching("Switching C - East only")
     switchingC:addLane(lane2)
     switchingC:addTrafficLight(K3)
@@ -295,7 +309,7 @@ insulate("Check traffic light switching", function()
 
     lane1:vehicleEntered("#Car1a")
 
-    do --describe("Lane switching A -> B", function()
+    do -- describe("Lane switching A -> B", function()
         local r, g = switchingB:lanesToTurnRedAndGreen(switchingA)
         it("Red   length", function() assert(1, #r) end)
         it("Red   lane1 ", function() assert(lane1, r[1]) end)
@@ -510,7 +524,7 @@ insulate("Check traffic light switching", function()
         it("# step6 - Signal K9 (31) ", function() assert.equals(RYE, step6SignalAxisK9) end)
     end
 
-    lane1:vehicleLeft(false, "#Car1a")
+    lane1:vehicleLeft("#Car1a")
     lane2:vehicleEntered("#Car2a")
 
     do
@@ -570,7 +584,7 @@ insulate("Check traffic light switching", function()
         it("# step7 - Signal K9 (31) ", function() assert.equals(GRE, step7SignalAxisK9) end)
     end
 
-    lane2:vehicleLeft(false, "#Car2a")
+    lane2:vehicleLeft("#Car2a")
     lane4:vehicleEntered("#Car4a")
 
     do
