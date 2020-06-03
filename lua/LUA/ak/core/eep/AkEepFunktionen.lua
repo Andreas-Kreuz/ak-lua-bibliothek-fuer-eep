@@ -22,6 +22,10 @@ local trainRoutes = {}
 local registeredRoadTracks = {}
 ---@type table<number,string>
 local registeredRailTracks = {}
+---@type table<string,table>
+local structures = {}
+
+local function stripImmoName(name) return name:gsub("(#%d*).*", "%1") end
 
 local function updateTrainListSize(signalId)
     local count = 0
@@ -190,11 +194,19 @@ function EEPStructureGetSmoke(immoName) end
 --- Licht einschalten
 -- @param immoName Name der Immobilie als String.
 -- @param onoff true oder false
-function EEPStructureSetLight(immoName, onoff) end
+function EEPStructureSetLight(name, onoff)
+    name = stripImmoName(name)
+    structures[name] = structures[name] or {}
+    structures[name].light = onoff
+end
 
 --- Licht abfragen
 -- @param immoName Name der Immobilie als String.
-function EEPStructureGetLight(immoName) return true, true end
+function EEPStructureGetLight(name)
+    name = stripImmoName(name)
+    structures[name] = structures[name] or {}
+    return structures[name], structures[name].light or false
+end
 
 --- Feuer einschalten
 -- @param immoName Name der Immobilie als String.
