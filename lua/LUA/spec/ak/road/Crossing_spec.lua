@@ -36,7 +36,7 @@ insulate("Crossing", function()
     local L1, L2, L3, L4
     local lane1, lane2, lane3, lane4
     local K1, K2, K3, K5, K6, K7, K8, K9
-    local switchingA, switchingB, switchingC
+    local sequenceA, sequenceB, sequenceC
     local crossing
 
     before_each(function()
@@ -54,38 +54,38 @@ insulate("Crossing", function()
         K9 = TrafficLight:new(31, TrafficLightModel.JS2_3er_mit_FG) -- SOUTH STRAIGHT (right)
 
         crossing = Crossing:new("My Crossing")
-        lane1 = crossing:newLane("Lane 1 N", 1, L1, Lane.Directions.STRAIGHT, Lane.Directions.RIGHT)
-        lane2 = crossing:newLane("Lane 2 E", 2, L2, Lane.Directions.LEFT, Lane.Directions.RIGHT)
-        lane3 = crossing:newLane("Lane 3 S", 3, L3, Lane.Directions.LEFT)
-        lane4 = crossing:newLane("Lane 4 S", 4, L4, Lane.Directions.STRAIGHT)
+        lane1 = crossing:newLane("Lane 1 N", 1, L1, {Lane.Directions.STRAIGHT, Lane.Directions.RIGHT})
+        lane2 = crossing:newLane("Lane 2 E", 2, L2, {Lane.Directions.LEFT, Lane.Directions.RIGHT})
+        lane3 = Lane:new("Lane 3 S", 3, L3, {Lane.Directions.LEFT})
+        lane4 = Lane:new("Lane 4 S", 4, L4, {Lane.Directions.STRAIGHT})
 
         ---@type CrossingCircuit
-        switchingA = crossing:newSwitching("Switching A - North South")
-        switchingA:addLane(lane1)
-        switchingA:addTrafficLight(K1)
-        switchingA:addTrafficLight(K2)
-        switchingA:addLane(lane4)
-        switchingA:addTrafficLight(K9)
-        switchingA:addPedestrianLight(K3)
-        switchingA:addPedestrianLight(K6)
+        sequenceA = crossing:newSequence("Sequence A - North South")
+        sequenceA:addLane(lane1)
+        sequenceA:addTrafficLight(K1)
+        sequenceA:addTrafficLight(K2)
+        sequenceA:addLane(lane4)
+        sequenceA:addTrafficLight(K9)
+        sequenceA:addPedestrianLight(K3)
+        sequenceA:addPedestrianLight(K6)
 
-        switchingB = crossing:newSwitching("Switching B - South + East Right")
-        switchingB:addLane(lane2, {Lane.Directions.RIGHT}, {"RIGHT TURN"})
-        switchingB:addTrafficLight(K7)
-        switchingB:addLane(lane3)
-        switchingB:addTrafficLight(K8)
-        switchingB:addLane(lane4)
-        switchingB:addTrafficLight(K9)
+        sequenceB = crossing:newSequence("Sequence B - South + East Right")
+        sequenceB:addLane(lane2, {Lane.Directions.RIGHT}, {"RIGHT TURN"})
+        sequenceB:addTrafficLight(K7)
+        sequenceB:addLane(lane3)
+        sequenceB:addTrafficLight(K8)
+        sequenceB:addLane(lane4)
+        sequenceB:addTrafficLight(K9)
 
-        switchingC = crossing:newSwitching("Switching C - East only")
-        switchingC:addLane(lane2)
-        switchingC:addTrafficLight(K3)
-        switchingC:addTrafficLight(K5)
-        switchingC:addTrafficLight(K6)
-        switchingC:addPedestrianLight(K1)
-        switchingC:addPedestrianLight(K2)
-        switchingC:addPedestrianLight(K8)
-        switchingC:addPedestrianLight(K9)
+        sequenceC = crossing:newSequence("Sequence C - East only")
+        sequenceC:addLane(lane2)
+        sequenceC:addTrafficLight(K3)
+        sequenceC:addTrafficLight(K5)
+        sequenceC:addTrafficLight(K6)
+        sequenceC:addPedestrianLight(K1)
+        sequenceC:addPedestrianLight(K2)
+        sequenceC:addPedestrianLight(K8)
+        sequenceC:addPedestrianLight(K9)
     end)
 
     after_each(function() StorageUtility.reset() end)
@@ -98,33 +98,33 @@ insulate("Crossing", function()
             assert.is_same(lane4, crossing.lanes[lane4.name])
         end)
         it("Switchings are there", function()
-            assert.is_same(true, crossing.schaltungen[switchingA])
-            assert.is_same(true, crossing.schaltungen[switchingB])
-            assert.is_same(true, crossing.schaltungen[switchingC])
+            assert.is_same(true, crossing.schaltungen[sequenceA])
+            assert.is_same(true, crossing.schaltungen[sequenceB])
+            assert.is_same(true, crossing.schaltungen[sequenceC])
         end)
         it("Lanes are there", function()
-            assert.is_truthy(switchingA.lanes[lane1])
-            assert.is_falsy(switchingA.lanes[lane2])
-            assert.is_falsy(switchingA.lanes[lane3])
-            assert.is_truthy(switchingA.lanes[lane4])
+            assert.is_truthy(sequenceA.lanes[lane1])
+            assert.is_falsy(sequenceA.lanes[lane2])
+            assert.is_falsy(sequenceA.lanes[lane3])
+            assert.is_truthy(sequenceA.lanes[lane4])
         end)
         it("TrafficLights are there", function()
-            assert.is_same(K1, switchingA.trafficLights[23])
-            assert.is_same(K2, switchingA.trafficLights[24])
-            assert.is_same(K9, switchingA.trafficLights[31])
+            assert.is_same(K1, sequenceA.trafficLights[23])
+            assert.is_same(K2, sequenceA.trafficLights[24])
+            assert.is_same(K9, sequenceA.trafficLights[31])
         end)
         it("Pedestrian TrafficLights are there", function()
-            assert.is_same(K3, switchingA.pedestrianLights[25])
-            assert.is_same(K6, switchingA.pedestrianLights[28])
+            assert.is_same(K3, sequenceA.pedestrianLights[25])
+            assert.is_same(K6, sequenceA.pedestrianLights[28])
         end)
     end)
 
     insulate("Calculate priorities", function()
         describe("No priorities at the start", function()
             it("TrafficLights are there", function()
-                assert.equals(0, switchingA:calculatePriority())
-                assert.equals(0, switchingB:calculatePriority())
-                assert.equals(0, switchingC:calculatePriority())
+                assert.equals(0, sequenceA:calculatePriority())
+                assert.equals(0, sequenceB:calculatePriority())
+                assert.equals(0, sequenceC:calculatePriority())
             end)
         end)
         describe("Same priorities on same vehicles", function()
@@ -133,9 +133,9 @@ insulate("Crossing", function()
             lane3:vehicleEntered("#Car3a")
 
             it("Car priorities for 1 car per lane", function()
-                assert.equals(1.5, switchingA:calculatePriority())
-                assert.equals(2.0, switchingB:calculatePriority())
-                assert.equals(3.0, switchingC:calculatePriority())
+                assert.equals(1.5, sequenceA:calculatePriority())
+                assert.equals(2.0, sequenceB:calculatePriority())
+                assert.equals(3.0, sequenceC:calculatePriority())
             end)
         end)
         describe("Car priorities for 2 cars per lane", function()
@@ -144,9 +144,9 @@ insulate("Crossing", function()
             lane3:vehicleEntered("#Car3b")
 
             it("TrafficLights are there", function()
-                assert.equals(3.0, switchingA:calculatePriority())
-                assert.equals(4.0, switchingB:calculatePriority())
-                assert.equals(6.0, switchingC:calculatePriority())
+                assert.equals(3.0, sequenceA:calculatePriority())
+                assert.equals(4.0, sequenceB:calculatePriority())
+                assert.equals(6.0, sequenceC:calculatePriority())
             end)
         end)
         describe("Car priorities for 1 car per lane (again)", function()
@@ -155,9 +155,9 @@ insulate("Crossing", function()
             lane3:vehicleLeft("#Car3a")
 
             it("TrafficLights are there", function()
-                assert.equals(1.5, switchingA:calculatePriority())
-                assert.equals(2.0, switchingB:calculatePriority())
-                assert.equals(3.0, switchingC:calculatePriority())
+                assert.equals(1.5, sequenceA:calculatePriority())
+                assert.equals(2.0, sequenceB:calculatePriority())
+                assert.equals(3.0, sequenceC:calculatePriority())
             end)
         end)
         describe("Car priorities for 0 cars per lane after leaving", function()
@@ -166,9 +166,9 @@ insulate("Crossing", function()
             lane3:vehicleLeft("#Car3b")
 
             it("TrafficLights are there", function()
-                assert.equals(0, switchingA:calculatePriority())
-                assert.equals(0, switchingB:calculatePriority())
-                assert.equals(0, switchingC:calculatePriority())
+                assert.equals(0, sequenceA:calculatePriority())
+                assert.equals(0, sequenceB:calculatePriority())
+                assert.equals(0, sequenceC:calculatePriority())
             end)
         end)
     end)
@@ -216,7 +216,7 @@ insulate("Check traffic light switching", function()
     ---@type TrafficLight
     local K1, K2, K3, K5, K6, K7, K8, K9
     ---@type CrossingCircuit
-    local switchingA, switchingB, switchingC
+    local sequenceA, sequenceB, sequenceC
     ---@type Crossing
     local crossing
 
@@ -234,10 +234,10 @@ insulate("Check traffic light switching", function()
     K9 = TrafficLight:new(31, TrafficLightModel.JS2_3er_mit_FG) -- SOUTH STRAIGHT (right)
 
     crossing = Crossing:new("My Crossing")
-    lane1 = crossing:newLane("Lane 1 N", 1, c1Lane1Signal, Lane.Directions.STRAIGHT, Lane.Directions.RIGHT)
-    lane2 = crossing:newLane("Lane 2 E", 2, c1Lane2Signal, Lane.Directions.LEFT, Lane.Directions.RIGHT)
-    lane3 = crossing:newLane("Lane 3 S", 3, c1Lane3Signal, Lane.Directions.LEFT)
-    lane4 = crossing:newLane("Lane 4 S", 4, c1Lane4Signal, Lane.Directions.STRAIGHT)
+    lane1 = crossing:newLane("Lane 1 N", 1, c1Lane1Signal, {Lane.Directions.STRAIGHT, Lane.Directions.RIGHT})
+    lane2 = crossing:newLane("Lane 2 E", 2, c1Lane2Signal, {Lane.Directions.LEFT, Lane.Directions.RIGHT})
+    lane3 = crossing:newLane("Lane 3 S", 3, c1Lane3Signal, {Lane.Directions.LEFT})
+    lane4 = crossing:newLane("Lane 4 S", 4, c1Lane4Signal, {Lane.Directions.STRAIGHT})
 
     lane1:driveOn(K1)
     lane2:driveOn(K6)
@@ -246,34 +246,34 @@ insulate("Check traffic light switching", function()
     lane4:driveOn(K9)
 
     ---@type CrossingCircuit
-    switchingA = crossing:newSwitching("Switching A - North South")
-    switchingA:addLane(lane1)
-    switchingA:addLane(lane4)
-    switchingA:addTrafficLight(K1)
-    switchingA:addTrafficLight(K2)
-    switchingA:addTrafficLight(K9)
-    switchingA:addPedestrianLight(K3)
-    switchingA:addPedestrianLight(K6)
+    sequenceA = crossing:newSequence("Sequence A - North South")
+    sequenceA:addLane(lane1)
+    sequenceA:addLane(lane4)
+    sequenceA:addTrafficLight(K1)
+    sequenceA:addTrafficLight(K2)
+    sequenceA:addTrafficLight(K9)
+    sequenceA:addPedestrianLight(K3)
+    sequenceA:addPedestrianLight(K6)
 
     ---@type CrossingCircuit
-    switchingB = crossing:newSwitching("Switching B - South + East Right")
-    switchingB:addLane(lane2)
-    switchingB:addLane(lane3)
-    switchingB:addLane(lane4)
-    switchingB:addTrafficLight(K7)
-    switchingB:addTrafficLight(K8)
-    switchingB:addTrafficLight(K9)
+    sequenceB = crossing:newSequence("Sequence B - South + East Right")
+    sequenceB:addLane(lane2)
+    sequenceB:addLane(lane3)
+    sequenceB:addLane(lane4)
+    sequenceB:addTrafficLight(K7)
+    sequenceB:addTrafficLight(K8)
+    sequenceB:addTrafficLight(K9)
 
     ---@type CrossingCircuit
-    switchingC = crossing:newSwitching("Switching C - East only")
-    switchingC:addLane(lane2)
-    switchingC:addTrafficLight(K3)
-    switchingC:addTrafficLight(K5)
-    switchingC:addTrafficLight(K6)
-    switchingC:addPedestrianLight(K1)
-    switchingC:addPedestrianLight(K2)
-    switchingC:addPedestrianLight(K8)
-    switchingC:addPedestrianLight(K9)
+    sequenceC = crossing:newSequence("Sequence C - East only")
+    sequenceC:addLane(lane2)
+    sequenceC:addTrafficLight(K3)
+    sequenceC:addTrafficLight(K5)
+    sequenceC:addTrafficLight(K6)
+    sequenceC:addPedestrianLight(K1)
+    sequenceC:addPedestrianLight(K2)
+    sequenceC:addPedestrianLight(K8)
+    sequenceC:addPedestrianLight(K9)
 
     local ModuleRegistry = require("ak.core.ModuleRegistry")
     local Scheduler = require("ak.scheduler.Scheduler")
@@ -298,7 +298,7 @@ insulate("Check traffic light switching", function()
     EEPSetSignal(12, U_R)
     EEPSetSignal(13, U_R)
     EEPSetSignal(14, U_R)
-    EEPSetSignal(23, RED)
+    EEPSetSignal(23, GRE)
     EEPSetSignal(24, RED)
     EEPSetSignal(25, RED)
     EEPSetSignal(27, RED)
@@ -310,7 +310,7 @@ insulate("Check traffic light switching", function()
     lane1:vehicleEntered("#Car1a")
 
     do -- describe("Lane switching A -> B", function()
-        local r, g = switchingB:lanesToTurnRedAndGreen(switchingA)
+        local r, g = sequenceB:lanesToTurnRedAndGreen(sequenceA)
         it("Red   length", function() assert(1, #r) end)
         it("Red   lane1 ", function() assert(lane1, r[1]) end)
         it("Green length", function() assert(2, #g) end)
@@ -332,9 +332,9 @@ insulate("Check traffic light switching", function()
         local step0Lane2Prio = lane2:calculatePriority() --           step0
         local step0Lane3Prio = lane3:calculatePriority() --           step0
         local step0Lane4Prio = lane4:calculatePriority() --           step0
-        local step0SwitchingAPrio = switchingA:calculatePriority() -- step0
-        local step0SwitchingBPrio = switchingB:calculatePriority() -- step0
-        local step0SwitchingCPrio = switchingC:calculatePriority() -- step0
+        local step0SwitchingAPrio = sequenceA:calculatePriority() -- step0
+        local step0SwitchingBPrio = sequenceB:calculatePriority() -- step0
+        local step0SwitchingCPrio = sequenceC:calculatePriority() -- step0
         it("# step0 - lane1 WaitCount", function() assert.equals(000, step0Line1WaitCount) end)
         it("# step0 - lane2 WaitCount", function() assert.equals(000, step0Line2WaitCount) end)
         it("# step0 - lane3 WaitCount", function() assert.equals(000, step0Line3WaitCount) end)
@@ -343,9 +343,9 @@ insulate("Check traffic light switching", function()
         it("# step0 - lane2 prio     ", function() assert.equals(000, step0Lane2Prio) end)
         it("# step0 - lane3 prio     ", function() assert.equals(000, step0Lane3Prio) end)
         it("# step0 - lane4 prio     ", function() assert.equals(000, step0Lane4Prio) end)
-        it("# step0 - switchingA prio", function() assert.equals(1.5, step0SwitchingAPrio) end)
-        it("# step0 - switchingB prio", function() assert.equals(000, step0SwitchingBPrio) end)
-        it("# step0 - switchingC prio", function() assert.equals(000, step0SwitchingCPrio) end)
+        it("# step0 - sequenceA prio", function() assert.equals(1.5, step0SwitchingAPrio) end)
+        it("# step0 - sequenceB prio", function() assert.equals(000, step0SwitchingBPrio) end)
+        it("# step0 - sequenceC prio", function() assert.equals(000, step0SwitchingCPrio) end)
         local step0Ready = crossing:isBereit() --                     step0
         local step0SignalAxisK1 = EEPGetSignal(23) -- store signal    step0
         local step0SignalAxisK2 = EEPGetSignal(24) -- store signal    step0
@@ -356,7 +356,7 @@ insulate("Check traffic light switching", function()
         local step0SignalAxisK8 = EEPGetSignal(30) -- store signal    step0
         local step0SignalAxisK9 = EEPGetSignal(31) -- store signal    step0
         it("# step0 - Crossing ready     ", function() assert.is_true(step0Ready) end)
-        it("# step0 - Signal K1 (23) ", function() assert.equals(RED, step0SignalAxisK1) end)
+        it("# step0 - Signal K1 (23) ", function() assert.equals(GRE, step0SignalAxisK1) end)
         it("# step0 - Signal K2 (24) ", function() assert.equals(RED, step0SignalAxisK2) end)
         it("# step0 - Signal K3 (25) ", function() assert.equals(RED, step0SignalAxisK3) end)
         it("# step0 - Signal K5 (27) ", function() assert.equals(RED, step0SignalAxisK5) end)
@@ -378,9 +378,9 @@ insulate("Check traffic light switching", function()
         local step1Lane2Prio = lane2:calculatePriority() --           step1
         local step1Lane3Prio = lane3:calculatePriority() --           step1
         local step1Lane4Prio = lane4:calculatePriority() --           step1
-        local step1SwitchingAPrio = switchingA:calculatePriority() -- step1
-        local step1SwitchingBPrio = switchingB:calculatePriority() -- step1
-        local step1SwitchingCPrio = switchingC:calculatePriority() -- step1
+        local step1SwitchingAPrio = sequenceA:calculatePriority() -- step1
+        local step1SwitchingBPrio = sequenceB:calculatePriority() -- step1
+        local step1SwitchingCPrio = sequenceC:calculatePriority() -- step1
         it("# step1 - lane1 WaitCount", function() assert.equals(000, step1Line1WaitCount) end)
         it("# step1 - lane2 WaitCount", function() assert.equals(000, step1Line2WaitCount) end)
         it("# step1 - lane3 WaitCount", function() assert.equals(000, step1Line3WaitCount) end)
@@ -389,9 +389,9 @@ insulate("Check traffic light switching", function()
         it("# step1 - lane2 prio     ", function() assert.equals(000, step1Lane2Prio) end)
         it("# step1 - lane3 prio     ", function() assert.equals(000, step1Lane3Prio) end)
         it("# step1 - lane4 prio     ", function() assert.equals(000, step1Lane4Prio) end)
-        it("# step1 - switchingA prio", function() assert.equals(1.5, step1SwitchingAPrio) end)
-        it("# step1 - switchingB prio", function() assert.equals(000, step1SwitchingBPrio) end)
-        it("# step1 - switchingC prio", function() assert.equals(000, step1SwitchingCPrio) end)
+        it("# step1 - sequenceA prio", function() assert.equals(1.5, step1SwitchingAPrio) end)
+        it("# step1 - sequenceB prio", function() assert.equals(000, step1SwitchingBPrio) end)
+        it("# step1 - sequenceC prio", function() assert.equals(000, step1SwitchingCPrio) end)
         local step1Ready = crossing:isBereit() --                     step1
         local step1SignalAxisK1 = EEPGetSignal(23) -- store signal    step1
         local step1SignalAxisK2 = EEPGetSignal(24) -- store signal    step1
@@ -412,88 +412,88 @@ insulate("Check traffic light switching", function()
         it("# step1 - Signal K9 (31) ", function() assert.equals(RED, step1SignalAxisK9) end)
     end
 
-    _G.EEPTime = _G.EEPTime + 200
-    ModuleRegistry.runTasks() -- First Turn old to yellow
+    -- _G.EEPTime = _G.EEPTime + 200
+    -- ModuleRegistry.runTasks() -- First Turn old to yellow + Pedestrian Red
 
-    do
-        local step3Ready = crossing:isBereit() --                     step3
-        local step3SignalAxisK1 = EEPGetSignal(23) -- store signal    step3
-        local step3SignalAxisK2 = EEPGetSignal(24) -- store signal    step3
-        local step3SignalAxisK3 = EEPGetSignal(25) -- store signal    step3
-        local step3SignalAxisK5 = EEPGetSignal(27) -- store signal    step3
-        local step3SignalAxisK6 = EEPGetSignal(28) -- store signal    step3
-        local step3SignalAxisK7 = EEPGetSignal(29) -- store signal    step3
-        local step3SignalAxisK8 = EEPGetSignal(30) -- store signal    step3
-        local step3SignalAxisK9 = EEPGetSignal(31) -- store signal    step3
-        it("# step3 - Crossing ready    ", function() assert.is_false(step3Ready) end)
-        it("# step3 - Signal K1 (23) ", function() assert.equals(RED, step3SignalAxisK1) end)
-        it("# step3 - Signal K2 (24) ", function() assert.equals(RED, step3SignalAxisK2) end)
-        it("# step3 - Signal K3 (25) ", function() assert.equals(RED, step3SignalAxisK3) end)
-        it("# step3 - Signal K5 (27) ", function() assert.equals(RED, step3SignalAxisK5) end)
-        it("# step3 - Signal K6 (28) ", function() assert.equals(RED, step3SignalAxisK6) end)
-        it("# step3 - Signal K7 (29) ", function() assert.equals(RED, step3SignalAxisK7) end)
-        it("# step3 - Signal K8 (30) ", function() assert.equals(RED, step3SignalAxisK8) end)
-        it("# step3 - Signal K9 (31) ", function() assert.equals(RED, step3SignalAxisK9) end)
-    end
+    -- do
+    --     local step3Ready = crossing:isBereit() --                     step3
+    --     local step3SignalAxisK1 = EEPGetSignal(23) -- store signal    step3
+    --     local step3SignalAxisK2 = EEPGetSignal(24) -- store signal    step3
+    --     local step3SignalAxisK3 = EEPGetSignal(25) -- store signal    step3
+    --     local step3SignalAxisK5 = EEPGetSignal(27) -- store signal    step3
+    --     local step3SignalAxisK6 = EEPGetSignal(28) -- store signal    step3
+    --     local step3SignalAxisK7 = EEPGetSignal(29) -- store signal    step3
+    --     local step3SignalAxisK8 = EEPGetSignal(30) -- store signal    step3
+    --     local step3SignalAxisK9 = EEPGetSignal(31) -- store signal    step3
+    --     it("# step3 - Crossing ready    ", function() assert.is_false(step3Ready) end)
+    --     it("# step3 - Signal K1 (23) ", function() assert.equals(RED, step3SignalAxisK1) end)
+    --     it("# step3 - Signal K2 (24) ", function() assert.equals(RED, step3SignalAxisK2) end)
+    --     it("# step3 - Signal K3 (25) ", function() assert.equals(RED, step3SignalAxisK3) end)
+    --     it("# step3 - Signal K5 (27) ", function() assert.equals(RED, step3SignalAxisK5) end)
+    --     it("# step3 - Signal K6 (28) ", function() assert.equals(RED, step3SignalAxisK6) end)
+    --     it("# step3 - Signal K7 (29) ", function() assert.equals(RED, step3SignalAxisK7) end)
+    --     it("# step3 - Signal K8 (30) ", function() assert.equals(RED, step3SignalAxisK8) end)
+    --     it("# step3 - Signal K9 (31) ", function() assert.equals(RED, step3SignalAxisK9) end)
+    -- end
 
-    _G.EEPTime = _G.EEPTime + 200
-    ModuleRegistry.runTasks() -- First Turn old to red
+    -- _G.EEPTime = _G.EEPTime + 200
+    -- ModuleRegistry.runTasks() -- First Turn old to red
 
-    do
-        local step4Ready = crossing:isBereit() --                     step4
-        local step4SignalAxisK1 = EEPGetSignal(23) -- store signal    step4
-        local step4SignalAxisK2 = EEPGetSignal(24) -- store signal    step4
-        local step4SignalAxisK3 = EEPGetSignal(25) -- store signal    step4
-        local step4SignalAxisK5 = EEPGetSignal(27) -- store signal    step4
-        local step4SignalAxisK6 = EEPGetSignal(28) -- store signal    step4
-        local step4SignalAxisK7 = EEPGetSignal(29) -- store signal    step4
-        local step4SignalAxisK8 = EEPGetSignal(30) -- store signal    step4
-        local step4SignalAxisK9 = EEPGetSignal(31) -- store signal    step4
-        it("# step4 - Crossing ready    ", function() assert.is_false(step4Ready) end)
-        it("# step4 - Signal K1 (23) ", function() assert.equals(RED, step4SignalAxisK1) end)
-        it("# step4 - Signal K2 (24) ", function() assert.equals(RED, step4SignalAxisK2) end)
-        it("# step4 - Signal K3 (25) ", function() assert.equals(RED, step4SignalAxisK3) end)
-        it("# step4 - Signal K5 (27) ", function() assert.equals(RED, step4SignalAxisK5) end)
-        it("# step4 - Signal K6 (28) ", function() assert.equals(RED, step4SignalAxisK6) end)
-        it("# step4 - Signal K7 (29) ", function() assert.equals(RED, step4SignalAxisK7) end)
-        it("# step4 - Signal K8 (30) ", function() assert.equals(RED, step4SignalAxisK8) end)
-        it("# step4 - Signal K9 (31) ", function() assert.equals(RED, step4SignalAxisK9) end)
-    end
+    -- do
+    --     local step4Ready = crossing:isBereit() --                     step4
+    --     local step4SignalAxisK1 = EEPGetSignal(23) -- store signal    step4
+    --     local step4SignalAxisK2 = EEPGetSignal(24) -- store signal    step4
+    --     local step4SignalAxisK3 = EEPGetSignal(25) -- store signal    step4
+    --     local step4SignalAxisK5 = EEPGetSignal(27) -- store signal    step4
+    --     local step4SignalAxisK6 = EEPGetSignal(28) -- store signal    step4
+    --     local step4SignalAxisK7 = EEPGetSignal(29) -- store signal    step4
+    --     local step4SignalAxisK8 = EEPGetSignal(30) -- store signal    step4
+    --     local step4SignalAxisK9 = EEPGetSignal(31) -- store signal    step4
+    --     it("# step4 - Crossing ready    ", function() assert.is_false(step4Ready) end)
+    --     it("# step4 - Signal K1 (23) ", function() assert.equals(RED, step4SignalAxisK1) end)
+    --     it("# step4 - Signal K2 (24) ", function() assert.equals(RED, step4SignalAxisK2) end)
+    --     it("# step4 - Signal K3 (25) ", function() assert.equals(RED, step4SignalAxisK3) end)
+    --     it("# step4 - Signal K5 (27) ", function() assert.equals(RED, step4SignalAxisK5) end)
+    --     it("# step4 - Signal K6 (28) ", function() assert.equals(RED, step4SignalAxisK6) end)
+    --     it("# step4 - Signal K7 (29) ", function() assert.equals(RED, step4SignalAxisK7) end)
+    --     it("# step4 - Signal K8 (30) ", function() assert.equals(RED, step4SignalAxisK8) end)
+    --     it("# step4 - Signal K9 (31) ", function() assert.equals(RED, step4SignalAxisK9) end)
+    -- end
+
+    -- _G.EEPTime = _G.EEPTime + 200
+    -- ModuleRegistry.runTasks() -- First Turn new to red_yellow
+
+    -- do
+    --     local step5Ready = crossing:isBereit() --                     step5
+    --     local step5SignalAxisL1 = EEPGetSignal(11) -- store signal    step5
+    --     local step5SignalAxisL2 = EEPGetSignal(12) -- store signal    step5
+    --     local step5SignalAxisL3 = EEPGetSignal(13) -- store signal    step5
+    --     local step5SignalAxisL4 = EEPGetSignal(14) -- store signal    step5
+    --     local step5SignalAxisK1 = EEPGetSignal(23) -- store signal    step5
+    --     local step5SignalAxisK2 = EEPGetSignal(24) -- store signal    step5
+    --     local step5SignalAxisK3 = EEPGetSignal(25) -- store signal    step5
+    --     local step5SignalAxisK5 = EEPGetSignal(27) -- store signal    step5
+    --     local step5SignalAxisK6 = EEPGetSignal(28) -- store signal    step5
+    --     local step5SignalAxisK7 = EEPGetSignal(29) -- store signal    step5
+    --     local step5SignalAxisK8 = EEPGetSignal(30) -- store signal    step5
+    --     local step5SignalAxisK9 = EEPGetSignal(31) -- store signal    step5
+    --     it("# step5 - Crossing ready    ", function() assert.is_false(step5Ready) end)
+    --     it("# step5 - Signal L1 (11) ", function() assert.equals(U_R, step5SignalAxisL1) end)
+    --     it("# step5 - Signal L2 (12) ", function() assert.equals(U_R, step5SignalAxisL2) end)
+    --     it("# step5 - Signal L3 (13) ", function() assert.equals(U_R, step5SignalAxisL3) end)
+    --     it("# step5 - Signal L4 (14) ", function() assert.equals(U_R, step5SignalAxisL4) end)
+    --     it("# step5 - Signal K1 (23) ", function() assert.equals(RED, step5SignalAxisK1) end)
+    --     it("# step5 - Signal K2 (24) ", function() assert.equals(RED, step5SignalAxisK2) end)
+    --     it("# step5 - Signal K3 (25) ", function() assert.equals(RED, step5SignalAxisK3) end)
+    --     it("# step5 - Signal K5 (27) ", function() assert.equals(RED, step5SignalAxisK5) end)
+    --     it("# step5 - Signal K6 (28) ", function() assert.equals(RED, step5SignalAxisK6) end)
+    --     it("# step5 - Signal K7 (29) ", function() assert.equals(RED, step5SignalAxisK7) end)
+    --     it("# step5 - Signal K8 (30) ", function() assert.equals(RED, step5SignalAxisK8) end)
+    --     it("# step5 - Signal K9 (31) ", function() assert.equals(RED, step5SignalAxisK9) end)
+    -- end
 
     _G.EEPTime = _G.EEPTime + 200
     ModuleRegistry.runTasks() -- First Turn new to red_yellow
-
-    do
-        local step5Ready = crossing:isBereit() --                     step5
-        local step5SignalAxisL1 = EEPGetSignal(11) -- store signal    step5
-        local step5SignalAxisL2 = EEPGetSignal(12) -- store signal    step5
-        local step5SignalAxisL3 = EEPGetSignal(13) -- store signal    step5
-        local step5SignalAxisL4 = EEPGetSignal(14) -- store signal    step5
-        local step5SignalAxisK1 = EEPGetSignal(23) -- store signal    step5
-        local step5SignalAxisK2 = EEPGetSignal(24) -- store signal    step5
-        local step5SignalAxisK3 = EEPGetSignal(25) -- store signal    step5
-        local step5SignalAxisK5 = EEPGetSignal(27) -- store signal    step5
-        local step5SignalAxisK6 = EEPGetSignal(28) -- store signal    step5
-        local step5SignalAxisK7 = EEPGetSignal(29) -- store signal    step5
-        local step5SignalAxisK8 = EEPGetSignal(30) -- store signal    step5
-        local step5SignalAxisK9 = EEPGetSignal(31) -- store signal    step5
-        it("# step5 - Crossing ready    ", function() assert.is_false(step5Ready) end)
-        it("# step5 - Signal L1 (11) ", function() assert.equals(U_R, step5SignalAxisL1) end)
-        it("# step5 - Signal L2 (12) ", function() assert.equals(U_R, step5SignalAxisL2) end)
-        it("# step5 - Signal L3 (13) ", function() assert.equals(U_R, step5SignalAxisL3) end)
-        it("# step5 - Signal L4 (14) ", function() assert.equals(U_R, step5SignalAxisL4) end)
-        it("# step5 - Signal K1 (23) ", function() assert.equals(RED, step5SignalAxisK1) end)
-        it("# step5 - Signal K2 (24) ", function() assert.equals(RED, step5SignalAxisK2) end)
-        it("# step5 - Signal K3 (25) ", function() assert.equals(RED, step5SignalAxisK3) end)
-        it("# step5 - Signal K5 (27) ", function() assert.equals(RED, step5SignalAxisK5) end)
-        it("# step5 - Signal K6 (28) ", function() assert.equals(RED, step5SignalAxisK6) end)
-        it("# step5 - Signal K7 (29) ", function() assert.equals(RED, step5SignalAxisK7) end)
-        it("# step5 - Signal K8 (30) ", function() assert.equals(RED, step5SignalAxisK8) end)
-        it("# step5 - Signal K9 (31) ", function() assert.equals(RED, step5SignalAxisK9) end)
-    end
-
-    _G.EEPTime = _G.EEPTime + 200
-    ModuleRegistry.runTasks() -- First Turn new to yellow
 
     do
         local step6Ready = crossing:isBereit() --                     step6
@@ -536,20 +536,20 @@ insulate("Check traffic light switching", function()
         local step6Lane2Prio = lane2:calculatePriority() --           step6
         local step6Lane3Prio = lane3:calculatePriority() --           step6
         local step6Lane4Prio = lane4:calculatePriority() --           step6
-        local step6SwitchingAPrio = switchingA:calculatePriority() -- step6
-        local step6SwitchingBPrio = switchingB:calculatePriority() -- step6
-        local step6SwitchingCPrio = switchingC:calculatePriority() -- step6
+        local step6SwitchingAPrio = sequenceA:calculatePriority() -- step6
+        local step6SwitchingBPrio = sequenceB:calculatePriority() -- step6
+        local step6SwitchingCPrio = sequenceC:calculatePriority() -- step6
         it("# step6 - lane1 WaitCount", function() assert.equals(000, step6Line1WaitCount) end)
-        it("# step6 - lane2 WaitCount", function() assert.equals(001, step6Line2WaitCount) end)
-        it("# step6 - lane3 WaitCount", function() assert.equals(001, step6Line3WaitCount) end)
+        it("# step6 - lane2 WaitCount", function() assert.equals(000, step6Line2WaitCount) end)
+        it("# step6 - lane3 WaitCount", function() assert.equals(000, step6Line3WaitCount) end)
         it("# step6 - lane4 WaitCount", function() assert.equals(000, step6Line4WaitCount) end)
         it("# step6 - lane1 prio     ", function() assert.equals(000, step6Lane1Prio) end)
         it("# step6 - lane2 prio     ", function() assert.equals(003, step6Lane2Prio) end)
-        it("# step6 - lane3 prio     ", function() assert.equals(001, step6Lane3Prio) end)
+        it("# step6 - lane3 prio     ", function() assert.equals(000, step6Lane3Prio) end)
         it("# step6 - lane4 prio     ", function() assert.equals(000, step6Lane4Prio) end)
-        it("# step6 - switchingA prio", function() assert.equals(000, step6SwitchingAPrio) end)
-        it("# step6 - switchingB prio", function() assert.equals(4 / 3, step6SwitchingBPrio) end)
-        it("# step6 - switchingC prio", function() assert.equals(003, step6SwitchingCPrio) end)
+        it("# step6 - sequenceA prio", function() assert.equals(000, step6SwitchingAPrio) end)
+        it("# step6 - sequenceB prio", function() assert.equals(001, step6SwitchingBPrio) end)
+        it("# step6 - sequenceC prio", function() assert.equals(003, step6SwitchingCPrio) end)
     end
 
     _G.EEPTime = _G.EEPTime + 200
@@ -596,9 +596,9 @@ insulate("Check traffic light switching", function()
         local step7Lane2Prio = lane2:calculatePriority() --           step7
         local step7Lane3Prio = lane3:calculatePriority() --           step7
         local step7Lane4Prio = lane4:calculatePriority() --           step7
-        local step7SwitchingAPrio = switchingA:calculatePriority() -- step7
-        local step7SwitchingBPrio = switchingB:calculatePriority() -- step7
-        local step7SwitchingCPrio = switchingC:calculatePriority() -- step7
+        local step7SwitchingAPrio = sequenceA:calculatePriority() -- step7
+        local step7SwitchingBPrio = sequenceB:calculatePriority() -- step7
+        local step7SwitchingCPrio = sequenceC:calculatePriority() -- step7
         it("# step7 - lane1 WaitCount", function() assert.equals(000, step7Line1WaitCount) end)
         it("# step7 - lane2 WaitCount", function() assert.equals(001, step7Line2WaitCount) end)
         it("# step7 - lane3 WaitCount", function() assert.equals(001, step7Line3WaitCount) end)
@@ -607,9 +607,9 @@ insulate("Check traffic light switching", function()
         it("# step7 - lane2 prio     ", function() assert.equals(001, step7Lane2Prio) end)
         it("# step7 - lane3 prio     ", function() assert.equals(001, step7Lane3Prio) end)
         it("# step7 - lane4 prio     ", function() assert.equals(003, step7Lane4Prio) end)
-        it("# step7 - switchingA prio", function() assert.equals(1.5, step7SwitchingAPrio) end)
-        it("# step7 - switchingB prio", function() assert.equals(5 / 3, step7SwitchingBPrio) end)
-        it("# step7 - switchingC prio", function() assert.equals(001, step7SwitchingCPrio) end)
+        it("# step7 - sequenceA prio", function() assert.equals(1.5, step7SwitchingAPrio) end)
+        it("# step7 - sequenceB prio", function() assert.equals(5 / 3, step7SwitchingBPrio) end)
+        it("# step7 - sequenceC prio", function() assert.equals(001, step7SwitchingCPrio) end)
     end
 
     _G.EEPTime = _G.EEPTime + 200

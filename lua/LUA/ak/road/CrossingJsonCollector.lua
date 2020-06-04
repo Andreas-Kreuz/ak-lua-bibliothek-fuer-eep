@@ -60,7 +60,6 @@ local function collect(alleKreuzungen)
         for _, ampel in pairs(trafficLights) do
             local trafficLight = {
                 id = ampel.signalId,
-                type = type,
                 signalId = ampel.signalId,
                 modelId = ampel.trafficLightModel.name,
                 currentPhase = ampel.phase,

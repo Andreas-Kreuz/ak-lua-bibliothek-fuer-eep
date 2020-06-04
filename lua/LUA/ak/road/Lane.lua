@@ -85,8 +85,12 @@ local function popTrainFromQueue(lane, trainName)
             lane.vehicleCount = lane.queue:size()
         end
     end
-    local _, route = EEPGetTrainRoute(lane.queue:firstElement())
-    lane.firstVehiclesRoute = route
+    if not lane.queue:isEmpty() then
+        local _, route = EEPGetTrainRoute(lane.queue:firstElement())
+        lane.firstVehiclesRoute = route
+    else
+        lane.firstVehiclesRoute = "NO VEHICLE"
+    end
 end
 local function queueToText(queue) return table.concat(queue:elements(), "|") end
 
@@ -239,6 +243,9 @@ function Lane.switchLanes(lanes, phase, grund)
     assert(phase == TrafficLightState.GREEN or phase == TrafficLightState.REDYELLOW or phase ==
                TrafficLightState.YELLOW or phase == TrafficLightState.RED or phase == TrafficLightState.PEDESTRIAN)
     for lane in pairs(lanes) do
+        assert(lane)
+        assert(type(lane) == "table", "Wrong type: " .. type(lane))
+        assert(lane.getType() == "Lane")
         if Lane.debug then
             print(string.format("[Lane] Switching traffic light %d to %s (%s - %s)", lane.trafficLight.signalId,
                                 phase, lane.name, grund))
@@ -312,7 +319,9 @@ function Lane:checkRequests()
         text = text .. "(" .. self.vehicleCount .. " gezaehlt)"
     end
 
-    self.anforderungsText = text
+    for _, vehicle in ipairs(self.queue:elements()) do text = text .. "<br>" .. vehicle end
+
+    self.requestInfoText = text
     refreshRequests(self)
 end
 
@@ -322,7 +331,7 @@ function Lane:calculatePriority()
     return self.waitCount > prio and self.waitCount or prio
 end
 
-function Lane:getAnforderungsText() return self.anforderungsText or "KEINE ANFORDERUNG" end
+function Lane:getRequestInfo() return self.requestInfoText or "KEINE ANFORDERUNG" end
 
 ---@param roadId number Road Track ID
 function Lane:useTracklForQueue(roadId)
@@ -344,6 +353,7 @@ function Lane:resetQueueFromRoadTracks()
             self.queue:push(trainName)
         end
     end
+    save(self)
 end
 
 function Lane:showRequestsOn(trafficLight, ...)
@@ -371,6 +381,7 @@ function Lane:resetQueueFromSignal()
         local trainName = EEPGetSignalTrainName(self.trafficLight.signalId, i)
         self.queue:push(trainName)
     end
+    save(self)
 end
 
 --- Das Fahrzeug "vehicle" hat die Fahrspur betreten --> Rufe diese Funktion vom Kontaktpunkt aus auf
@@ -385,7 +396,6 @@ end
 
 --- Das Fahrzeug "vehicle" hat die Fahrspur verlassen --> Rufe diese Funktion vom Kontaktpunkt aus auf
 --- The vehicle left this lane -> call this in a contact point
----@param swithToRed boolean indicates, if this lane shall switch to red immediately FIXME --> Shall be in Lane
 ---@param trainName string name of the vehicle, i.e. train name in EEP
 function Lane:vehicleLeft(trainName)
     self.vehicleCount = self.vehicleCount > 0 and self.vehicleCount - 1 or 0
@@ -464,7 +474,7 @@ function Lane:new(name, eepSaveId, trafficLight, directions, trafficType)
         name = name,
         eepSaveId = eepSaveId,
         trafficLight = trafficLight,
-        schaltungsTyp = Lane.SchaltungsTyp.NICHT_VERWENDET,
+        schaltungsTyp = Lane.SchaltungsTyp.NORMAL,
         routesToCount = {},
         signalUsedForRequest = false,
         tracksUsedForRequest = false,

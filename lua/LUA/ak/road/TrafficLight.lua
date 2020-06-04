@@ -101,17 +101,17 @@ function TrafficLight:setLaneInfo(laneInfo) self.laneInfo = laneInfo end
 --- Stellt die vorher gesetzten Tipp-Texte dar.
 --
 function TrafficLight:refreshInfo()
-    local showRequests = Crossing.zeigeAnforderungenAlsInfo
     local showSwitching = Crossing.zeigeSchaltungAlsInfo
     local showAllSignals = Crossing.zeigeSignalIdsAllerSignale
-    local showInfo = showRequests or showSwitching or showAllSignals
+    local showRequests = Crossing.zeigeAnforderungenAlsInfo and self.laneInfo:len() > 0
+    local showInfo = showSwitching or showAllSignals or showRequests
 
     EEPShowInfoSignal(self.signalId, showInfo)
     if showInfo then
         local infoText = "<j><b>Ampel ID: " .. fmt.bgGray(self.signalId) .. "</b></j>"
         infoText = infoText .. "<br>" .. self.trafficLightModel.name
 
-        if Crossing.zeigeSchaltungAlsInfo then
+        if showSwitching then
             if infoText:len() > 0 then infoText = infoText .. "<br>___________________________<br>" end
             infoText = infoText .. self.circuitInfo
         end
@@ -131,7 +131,9 @@ function TrafficLight:refreshInfo()
 end
 
 function TrafficLight.switchAll(trafficLights, phase, grund)
-    for tl in pairs(trafficLights) do tl:switchTo(phase, grund) end
+    for tl in pairs(trafficLights) do
+        tl:switchTo(phase, grund)
+    end
 end
 
 ---
@@ -143,47 +145,47 @@ function TrafficLight:switchTo(phase, grund)
     assert(phase)
     self.phase = phase
     local lightDbg = self:switchStructureLight()
-    local structureDbg = self:switchStructureAxis()
+    local axisDbg = self:switchStructureAxis()
 
     local sigIndex = self.trafficLightModel:signalIndexOf(self.phase)
     if (self.debug or TrafficLight.debug) then
         print(
             string.format("[TrafficLight    ] Schalte Ampel %04d auf %s (%01d)", self.signalId, self.phase, sigIndex) ..
-                lightDbg .. structureDbg .. " - " .. grund)
+                lightDbg .. axisDbg .. " - " .. grund)
     end
     self:switchSignal(sigIndex)
 end
 
 function TrafficLight:switchStructureLight()
-    local immoDbg = ""
+    local lightDbg = ""
     for lightTL in pairs(self.lightStructures) do
         if lightTL.redStructure then
             local onOff =
                 (self.phase == TrafficLightState.RED or self.phase == TrafficLightState.REDYELLOW) and "an" or "aus"
 
-            immoDbg = immoDbg .. string.format(", Licht in %s: %s", lightTL.redStructure, onOff)
+            lightDbg = lightDbg .. string.format(", Licht in %s: %s", lightTL.redStructure, onOff)
             EEPStructureSetLight(lightTL.redStructure,
                                  self.phase == TrafficLightState.RED or self.phase == TrafficLightState.REDYELLOW)
         end
         if lightTL.yellowStructure then
             local onOff = (self.phase == TrafficLightState.YELLOW or self.phase == TrafficLightState.REDYELLOW) and
                               "an" or "aus"
-            immoDbg = immoDbg .. string.format(", Licht in %s: %s", lightTL.yellowStructure, onOff)
+            lightDbg = lightDbg .. string.format(", Licht in %s: %s", lightTL.yellowStructure, onOff)
             EEPStructureSetLight(lightTL.yellowStructure,
                                  self.phase == TrafficLightState.YELLOW or self.phase == TrafficLightState.REDYELLOW)
         end
         if lightTL.greenStructure then
-            immoDbg = immoDbg ..
+            lightDbg = lightDbg ..
                           string.format(", Licht in %s: %s", lightTL.greenStructure,
                                         (self.phase == TrafficLightState.GREEN) and "an" or "aus")
             EEPStructureSetLight(lightTL.greenStructure, self.phase == TrafficLightState.GREEN)
         end
     end
-    return immoDbg
+    return lightDbg
 end
 
 function TrafficLight:switchStructureAxis()
-    local immoDbg = ""
+    local axisDbg = ""
     for axisTL in pairs(self.axisStructures) do
         local position = axisTL.positionDefault
 
@@ -200,11 +202,11 @@ function TrafficLight:switchStructureAxis()
             position = axisTL.positionPedestrian
         end
 
-        immoDbg = immoDbg ..
+        axisDbg = axisDbg ..
                       string.format(", Achse %s in %s auf: %d", axisTL.axisName, axisTL.structureName, position)
         EEPStructureSetAxis(axisTL.structureName, axisTL.axisName, position)
     end
-    return immoDbg
+    return axisDbg
 end
 
 function TrafficLight:switchSignal(sigIndex) EEPSetSignal(self.signalId, sigIndex, 1) end
@@ -212,18 +214,18 @@ function TrafficLight:switchSignal(sigIndex) EEPSetSignal(self.signalId, sigInde
 --- Setzt die Anforderung fuer eine Ampel (damit sie weiﬂ, ob eine Anforderung vorliegt)
 --- @param hasRequest boolean wo liegt die Anforderung an
 function TrafficLight:showRequestOnSignal(hasRequest)
-    local immoDbg = ""
+    local lightDbg = ""
 
     for lightTL in pairs(self.lightStructures) do
         if lightTL.requestStructure then
-            immoDbg = immoDbg ..
+            lightDbg = lightDbg ..
                           string.format(", Licht in %s: %s", lightTL.requestStructure, (hasRequest) and "an" or "aus")
             EEPStructureSetLight(lightTL.requestStructure, hasRequest)
         end
     end
 
-    if (self.debug or TrafficLight.debug) and immoDbg ~= "" then
-        print(string.format("[TrafficLight    ] Schalte Ampel %04d", self.signalId) .. immoDbg)
+    if (self.debug or TrafficLight.debug) and lightDbg ~= "" then
+        print(string.format("[TrafficLight    ] Schalte Ampel %04d", self.signalId) .. lightDbg)
     end
     self:refreshInfo()
 end

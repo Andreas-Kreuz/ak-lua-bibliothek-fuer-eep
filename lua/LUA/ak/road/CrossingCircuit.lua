@@ -28,7 +28,6 @@ function CrossingCircuit:new(name)
     o.pedestrianLights = {}
     ---@type table<Lane,LaneSettings>
     o.lanes = {}
-    o.richtungenMitAnforderung = {}
     o.pedestrianCrossings = {}
     return o
 end
@@ -114,7 +113,6 @@ end
 function CrossingCircuit:getAlleRichtungen()
     local alle = {}
     for lane in pairs(self.lanes) do alle[lane] = "NORMAL" end
-    for richtung in pairs(self.richtungenMitAnforderung) do alle[richtung] = "REQUEST" end
     for richtung in pairs(self.pedestrianCrossings) do alle[richtung] = "PEDESTRIANTS" end
     return alle
 end
@@ -124,16 +122,20 @@ function CrossingCircuit:getNormaleRichtungen() return self.lanes end
 function CrossingCircuit:richtungenAlsTextZeile()
     local s = ""
     for richtung in pairs(self.lanes) do s = s .. ", " .. richtung.name end
-    for richtung in pairs(self.richtungenMitAnforderung) do s = s .. ", " .. richtung.name end
     s = s:sub(3)
     return s
 end
 
-function CrossingCircuit:getRichtungenMitAnforderung() return self.richtungenMitAnforderung end
-
+--- Erzeugt eine Richtung, welche durch eine Ampel gesteuert wird.
+---@param lane Lane @Sichtbare Ampeln
+---@param directions LaneDirection[], @EEPSaveSlot-Id fuer das Speichern der Richtung
+---@param routes string[] @matching routes
+---@param switchingType LaneRequestType @typ der Anforderung (nur bei Anforderung schalten ignoriert die
+---                                      Anzahl der Rotphasen beim Umschalten)
 function CrossingCircuit:addLane(lane, directions, routes, switchingType)
     assert(lane, "Bitte ein gueltige Richtung angeben")
     self.lanes[lane] = LaneSettings:new(lane, directions, routes, switchingType)
+    if self.crossing then self.crossing.lanes[lane.name] = lane end
     return self
 end
 
@@ -145,18 +147,16 @@ function CrossingCircuit:addTrafficLight(trafficLight)
     return self
 end
 
-function CrossingCircuit:addPedestrianLight(trafficLight)
+function CrossingCircuit:addPedestrianLight(trafficLight, secondTrafficLight)
+    assert(trafficLight and trafficLight.signalId)
     self.pedestrianLights[trafficLight.signalId] = trafficLight
+    if secondTrafficLight and secondTrafficLight.signalId then
+        self.pedestrianLights[secondTrafficLight.signalId] = secondTrafficLight
+    end
     -- if self.crossing then
     --     self.crossing.pedestrianLights[trafficLight] = true
     -- end
     return self
-end
-
-function CrossingCircuit:addRichtungMitAnforderung(richtung)
-    assert(richtung, "Bitte ein gueltige Richtung angeben")
-    richtung:setLaneType(Lane.SchaltungsTyp.ANFORDERUNG)
-    self.richtungenMitAnforderung[richtung] = true
 end
 
 function CrossingCircuit:addPedestrianCrossing(richtung)
@@ -202,7 +202,6 @@ end
 function CrossingCircuit:nachNameSortierteRichtungen()
     local sortierteRichtungen = {}
     for richtung in pairs(self.lanes) do table.insert(sortierteRichtungen, richtung) end
-    for richtung in pairs(self.richtungenMitAnforderung) do table.insert(sortierteRichtungen, richtung) end
     for richtung in pairs(self.pedestrianCrossings) do table.insert(sortierteRichtungen, richtung) end
     local sortierFunktion = function(richtung1, richtung2) return (richtung1.name < richtung2.name) end
     table.sort(sortierteRichtungen, sortierFunktion)
