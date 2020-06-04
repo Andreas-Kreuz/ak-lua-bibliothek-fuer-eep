@@ -57,18 +57,18 @@ local function collect(alleKreuzungen)
             for id, trafficLight in pairs(schaltung.pedestrianLights) do trafficLights[id] = trafficLight end
         end
 
-        for _, ampel in pairs(trafficLights) do
+        for _, tl in pairs(trafficLights) do
             local trafficLight = {
-                id = ampel.signalId,
-                signalId = ampel.signalId,
-                modelId = ampel.trafficLightModel.name,
-                currentPhase = ampel.phase,
+                id = tl.signalId,
+                signalId = tl.signalId,
+                modelId = tl.trafficLightModel.name,
+                currentPhase = tl.phase,
                 intersectionId = intersectionIdCounter,
                 lightStructures = {},
                 axisStructures = {}
             }
 
-            for axisStructure in pairs(ampel.axisStructures) do
+            for axisStructure in pairs(tl.axisStructures) do
                 local as = {
                     structureName = axisStructure.structureName,
                     axisName = axisStructure.axisName,
@@ -83,7 +83,7 @@ local function collect(alleKreuzungen)
             end
 
             local lsId = 0
-            for lightStructure in pairs(ampel.lightStructures) do
+            for lightStructure in pairs(tl.lightStructures) do
                 local ls = {
                     structureRed = lightStructure.redStructure,
                     structureGreen = lightStructure.greenStructure,
