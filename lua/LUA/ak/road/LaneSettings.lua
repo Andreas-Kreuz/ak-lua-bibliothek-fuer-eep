@@ -18,9 +18,9 @@ function LaneSettings:setRoutes(routes) self.routes = routes end
 --- Erzeugt eine Richtung, welche durch eine Ampel gesteuert wird.
 ---@param lane Lane @Sichtbare Ampeln
 ---@param directions LaneDirection[], @EEPSaveSlot-Id fuer das Speichern der Richtung
+---@param routes string[] @matching routes
 ---@param switchingType LaneRequestType @typ der Anforderung (nur bei Anforderung schalten ignoriert die
 ---                                      Anzahl der Rotphasen beim Umschalten)
----@param routes string[] @matching routes
 function LaneSettings:new(lane, directions, routes, switchingType)
     local o = {
         lane = lane,
