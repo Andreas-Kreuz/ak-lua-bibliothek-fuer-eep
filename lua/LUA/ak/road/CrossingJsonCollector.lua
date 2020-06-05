@@ -39,13 +39,13 @@ local function collect(alleKreuzungen)
         local trafficLights = {}
 
         for schaltung in pairs(crossing:getSchaltungen()) do
-            local switching = {
+            local sequence = {
                 id = crossing.name .. "-" .. schaltung.name,
                 intersectionId = crossing.name,
                 name = schaltung.name,
                 prio = schaltung.prio
             }
-            table.insert(intersectionSwitching, switching)
+            table.insert(intersectionSwitching, sequence)
 
             for lane in pairs(schaltung:getAlleRichtungen()) do
                 alleRichtungen[lane] = intersection.id
@@ -100,7 +100,7 @@ local function collect(alleKreuzungen)
 
     for lane, intersectionId in pairs(alleRichtungen) do
         local type
-        if (lane.schaltungsTyp == Lane.SchaltungsTyp.FUSSGAENGER) then
+        if (lane.requestType == Lane.RequestType.FUSSGAENGER) then
             type = "PEDESTRIAN"
         elseif (lane.trafficType == "TRAM") then
             type = "TRAM"

@@ -9,7 +9,7 @@ local Lane = require("ak.road.Lane")
 -- local TrafficLightState = require("ak.road.TrafficLightState")
 -- local fmt = require("ak.core.eep.AkTippTextFormat")
 
----This will remember the lane and its settings within this switching. Each lane can have one settings only.
+---This will remember the lane and its settings within this request. Each lane can have one settings only.
 ---@class LaneSettings
 local LaneSettings = {}
 ---@param routes string[] @matching routes
@@ -19,13 +19,13 @@ function LaneSettings:setRoutes(routes) self.routes = routes end
 ---@param lane Lane @Sichtbare Ampeln
 ---@param directions LaneDirection[], @EEPSaveSlot-Id fuer das Speichern der Richtung
 ---@param routes string[] @matching routes
----@param switchingType LaneRequestType @typ der Anforderung (nur bei Anforderung schalten ignoriert die
+---@param requestType LaneRequestType @typ der Anforderung (nur bei Anforderung schalten ignoriert die
 ---                                      Anzahl der Rotphasen beim Umschalten)
-function LaneSettings:new(lane, directions, routes, switchingType)
+function LaneSettings:new(lane, directions, routes, requestType)
     local o = {
         lane = lane,
         directions = directions or {Lane.Directions.LEFT, Lane.Directions.STRAIGHT, Lane.Directions.RIGHT},
-        schaltungsTyp = switchingType or Lane.SchaltungsTyp.NICHT_VERWENDET,
+        requestType = requestType or Lane.RequestType.NICHT_VERWENDET,
         routes = routes or {},
         vehicleMultiplier = 1
     }

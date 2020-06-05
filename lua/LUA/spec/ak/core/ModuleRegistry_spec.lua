@@ -1,4 +1,4 @@
-insulate("Check traffic light switching", function()
+insulate("Check traffic light sequence", function()
     require("ak.core.eep.AkEepFunktionen")
     local ModuleRegistry = require("ak.core.ModuleRegistry")
     ModuleRegistry.registerModules(require("ak.road.CrossingLuaModul"), require("ak.scheduler.SchedulerLuaModule"))

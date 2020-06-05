@@ -13,8 +13,8 @@ local fmt = require("ak.core.eep.AkTippTextFormat")
 local AkAllKreuzungen = {}
 ---@class Crossing
 ---@field public name string @Intersection Name
----@field private aktuelleSchaltung CrossingSequence @Currently used switching
----@field private schaltungen CrossingSequence[] @All switchings of the intersection
+---@field private aktuelleSchaltung CrossingSequence @Currently used sequence
+---@field private schaltungen CrossingSequence[] @All sequences of the intersection
 ---@field private bereit boolean @If true, the Intersection can be switched
 ---@field private geschaltet boolean @If true, the intersection is switched
 ---@field private gruenZeit number @Integer value of how long the intersection will show green light
@@ -176,10 +176,10 @@ end
 --- Erzeugt eine Richtung, welche durch eine Ampel gesteuert wird.
 ---@param name string @Name of the Pedestrian Crossing einer Kreuzung
 function Crossing:newSequence(name)
-    local switching = CrossingSequence:new(name)
-    switching.crossing = self
-    self.schaltungen[switching] = true
-    return switching
+    local sequence = CrossingSequence:new(name)
+    sequence.crossing = self
+    self.schaltungen[sequence] = true
+    return sequence
 end
 
 local aufbauHilfeErzeugt = Crossing.zeigeSignalIdsAllerSignale
@@ -326,24 +326,24 @@ local function showSwitching(crossing)
     for trafficLight in pairs(trafficLights) do
         do
             local text = "<j><b>Schaltung:</b></j>"
-            for _, switching in ipairs(sortedSequences) do
-                local farbig = switching == crossing:getAktuelleSchaltung()
-                if sequences[trafficLight.signalId][switching] then
-                    if sequences[trafficLight.signalId][switching] == TrafficLightState.GREEN then
+            for _, sequence in ipairs(sortedSequences) do
+                local farbig = sequence == crossing:getAktuelleSchaltung()
+                if sequences[trafficLight.signalId][sequence] then
+                    if sequences[trafficLight.signalId][sequence] == TrafficLightState.GREEN then
                         text = text .. "<br><j>" ..
-                                   (farbig and fmt.bgGreen(switching.name .. " (Gruen)") or
-                                       (switching.name .. " " .. fmt.bgGreen("(Gruen)")))
-                    elseif sequences[trafficLight.signalId][switching] == TrafficLightState.PEDESTRIAN then
+                                   (farbig and fmt.bgGreen(sequence.name .. " (Gruen)") or
+                                       (sequence.name .. " " .. fmt.bgGreen("(Gruen)")))
+                    elseif sequences[trafficLight.signalId][sequence] == TrafficLightState.PEDESTRIAN then
                         text = text .. "<br><j>" ..
-                                   (farbig and fmt.bgYellow(switching.name .. " (FG)") or
-                                       (switching.name .. " " .. fmt.bgYellow("(FG)")))
+                                   (farbig and fmt.bgYellow(sequence.name .. " (FG)") or
+                                       (sequence.name .. " " .. fmt.bgYellow("(FG)")))
                     else
                         assert(false)
                     end
                 else
                     text = text .. "<br><j>" ..
-                               (farbig and fmt.bgRed(switching.name .. " (Rot)") or
-                                   (switching.name .. " " .. fmt.bgRed("(Rot)")))
+                               (farbig and fmt.bgRed(sequence.name .. " (Rot)") or
+                                   (sequence.name .. " " .. fmt.bgRed("(Rot)")))
                 end
             end
             trafficLight:setCircuitInfo(text)

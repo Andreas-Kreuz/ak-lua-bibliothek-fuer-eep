@@ -130,11 +130,11 @@ end
 ---@param lane Lane @Sichtbare Ampeln
 ---@param directions LaneDirection[], @EEPSaveSlot-Id fuer das Speichern der Richtung
 ---@param routes string[] @matching routes
----@param switchingType LaneRequestType @typ der Anforderung (nur bei Anforderung schalten ignoriert die
+---@param requestType LaneRequestType @typ der Anforderung (nur bei Anforderung schalten ignoriert die
 ---                                      Anzahl der Rotphasen beim Umschalten)
-function CrossingSequence:addLane(lane, directions, routes, switchingType)
+function CrossingSequence:addLane(lane, directions, routes, requestType)
     assert(lane, "Bitte ein gueltige Richtung angeben")
-    self.lanes[lane] = LaneSettings:new(lane, directions, routes, switchingType)
+    self.lanes[lane] = LaneSettings:new(lane, directions, routes, requestType)
     if self.crossing then self.crossing.lanes[lane.name] = lane end
     return self
 end
@@ -161,7 +161,7 @@ end
 
 function CrossingSequence:addPedestrianCrossing(richtung)
     assert(richtung, "Bitte ein gueltige Richtung angeben")
-    richtung:setLaneType(Lane.SchaltungsTyp.FUSSGAENGER)
+    richtung:setLaneType(Lane.RequestType.FUSSGAENGER)
     self.pedestrianCrossings[richtung] = true
 end
 

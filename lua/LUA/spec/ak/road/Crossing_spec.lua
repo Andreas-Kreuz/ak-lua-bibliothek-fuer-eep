@@ -174,7 +174,7 @@ insulate("Crossing", function()
     end)
 end)
 
-insulate("Check traffic light switching", function()
+insulate("Check traffic light sequence", function()
     -- This is the setup
     --                                |    N   |        |        |
     --                                | lane 1 |        |        |
@@ -309,7 +309,7 @@ insulate("Check traffic light switching", function()
 
     lane1:vehicleEntered("#Car1a")
 
-    do -- describe("Lane switching A -> B", function()
+    do -- describe("Lane sequence A -> B", function()
         local r, g = sequenceB:lanesToTurnRedAndGreen(sequenceA)
         it("Red   length", function() assert(1, #r) end)
         it("Red   lane1 ", function() assert(lane1, r[1]) end)

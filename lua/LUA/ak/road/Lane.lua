@@ -164,7 +164,7 @@ end
 -- Klasse Richtung
 --------------------
 ---@class LaneRequestType
-Lane.SchaltungsTyp = {
+Lane.RequestType = {
     NICHT_VERWENDET = "NICHT VERWENDET",
     ANFORDERUNG = "ANFORDERUNG",
     NORMAL = "NORMAL",
@@ -258,14 +258,14 @@ function Lane.getType() return "Lane" end
 
 function Lane:getName() return self.name end
 
-function Lane:getLaneType() return self.schaltungsTyp end
+function Lane:getLaneType() return self.requestType end
 
-function Lane:setLaneType(schaltungsTyp)
-    assert(schaltungsTyp)
-    assert(self.schaltungsTyp == Lane.SchaltungsTyp.NICHT_VERWENDET or self.schaltungsTyp == schaltungsTyp,
-           "Diese Richtung hatte schon den Schaltungstyp: '" .. self.schaltungsTyp .. "' und kann daher nicht auf '" ..
-               schaltungsTyp .. "' gesetzt werden.")
-    self.schaltungsTyp = schaltungsTyp
+function Lane:setLaneType(requestType)
+    assert(requestType)
+    assert(self.requestType == Lane.RequestType.NICHT_VERWENDET or self.requestType == requestType,
+           "Diese Richtung hatte schon den Schaltungstyp: '" .. self.requestType .. "' und kann daher nicht auf '" ..
+               requestType .. "' gesetzt werden.")
+    self.requestType = requestType
 end
 
 function Lane:getVehicleCount(routes)
@@ -300,11 +300,11 @@ function Lane:checkRequests()
     end
 
     local text = ""
-    if self.schaltungsTyp == Lane.SchaltungsTyp.NORMAL then
+    if self.requestType == Lane.RequestType.NORMAL then
         text = text .. fmt.bgGreen(self.name)
-    elseif self.schaltungsTyp == Lane.SchaltungsTyp.FUSSGAENGER then
+    elseif self.requestType == Lane.RequestType.FUSSGAENGER then
         text = text .. fmt.bgYellow(self.name)
-    elseif self.schaltungsTyp == Lane.SchaltungsTyp.ANFORDERUNG then
+    elseif self.requestType == Lane.RequestType.ANFORDERUNG then
         text = text .. fmt.bgBlue(self.name)
     else
         text = text .. fmt.red(self.name)
@@ -474,13 +474,13 @@ function Lane:new(name, eepSaveId, trafficLight, directions, trafficType)
         name = name,
         eepSaveId = eepSaveId,
         trafficLight = trafficLight,
-        schaltungsTyp = Lane.SchaltungsTyp.NORMAL,
+        requestType = Lane.RequestType.NORMAL,
         routesToCount = {},
         signalUsedForRequest = false,
         tracksUsedForRequest = false,
         tracksForRequests = {},
         directions = directions or {"LEFT", "STRAIGHT", "RIGHT"},
-        switchings = {},
+        sequences = {},
         trafficType = trafficType or "NORMAL",
         vehicleCount = 0,
         fahrzeugMultiplikator = 1,
