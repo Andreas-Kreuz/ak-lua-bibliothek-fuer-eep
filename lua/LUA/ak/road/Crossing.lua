@@ -221,7 +221,7 @@ local function switch(crossing)
         nextCircuit:pedestrianLightsToTurnRedAndGreen(currentCircuit)
 
     -- If there is no current sequence, we need to reset all old signals
-    local lastTask = nil
+    local lastTask
     if currentCircuit then
         if Crossing.debug then
             print("[Crossing ] Schalte " .. crossing:getName() .. " zu " .. nextCircuit:getName() .. " (" ..

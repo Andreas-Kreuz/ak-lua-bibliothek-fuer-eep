@@ -419,29 +419,29 @@ insulate("Check traffic light sequence", function()
         it("# step1 - Signal K9 (31) ", function() assert.equals(RED, step1SignalAxisK9) end)
     end
 
-    -- _G.EEPTime = _G.EEPTime + 200
-    -- ModuleRegistry.runTasks() -- First Turn old to yellow + Pedestrian Red
+    _G.EEPTime = _G.EEPTime + 200
+    ModuleRegistry.runTasks() -- First Turn old to yellow + Pedestrian Red
 
-    -- do
-    --     local step3Ready = crossing:isGreenPhaseFinished() --                     step3
-    --     local step3SignalAxisK1 = EEPGetSignal(23) -- store signal    step3
-    --     local step3SignalAxisK2 = EEPGetSignal(24) -- store signal    step3
-    --     local step3SignalAxisK3 = EEPGetSignal(25) -- store signal    step3
-    --     local step3SignalAxisK5 = EEPGetSignal(27) -- store signal    step3
-    --     local step3SignalAxisK6 = EEPGetSignal(28) -- store signal    step3
-    --     local step3SignalAxisK7 = EEPGetSignal(29) -- store signal    step3
-    --     local step3SignalAxisK8 = EEPGetSignal(30) -- store signal    step3
-    --     local step3SignalAxisK9 = EEPGetSignal(31) -- store signal    step3
-    --     it("# step3 - Crossing ready    ", function() assert.is_false(step3Ready) end)
-    --     it("# step3 - Signal K1 (23) ", function() assert.equals(RED, step3SignalAxisK1) end)
-    --     it("# step3 - Signal K2 (24) ", function() assert.equals(RED, step3SignalAxisK2) end)
-    --     it("# step3 - Signal K3 (25) ", function() assert.equals(RED, step3SignalAxisK3) end)
-    --     it("# step3 - Signal K5 (27) ", function() assert.equals(RED, step3SignalAxisK5) end)
-    --     it("# step3 - Signal K6 (28) ", function() assert.equals(RED, step3SignalAxisK6) end)
-    --     it("# step3 - Signal K7 (29) ", function() assert.equals(RED, step3SignalAxisK7) end)
-    --     it("# step3 - Signal K8 (30) ", function() assert.equals(RED, step3SignalAxisK8) end)
-    --     it("# step3 - Signal K9 (31) ", function() assert.equals(RED, step3SignalAxisK9) end)
-    -- end
+    do
+        local step3Ready = crossing:isGreenPhaseFinished() --                     step3
+        local step3SignalAxisK1 = EEPGetSignal(23) -- store signal    step3
+        local step3SignalAxisK2 = EEPGetSignal(24) -- store signal    step3
+        local step3SignalAxisK3 = EEPGetSignal(25) -- store signal    step3
+        local step3SignalAxisK5 = EEPGetSignal(27) -- store signal    step3
+        local step3SignalAxisK6 = EEPGetSignal(28) -- store signal    step3
+        local step3SignalAxisK7 = EEPGetSignal(29) -- store signal    step3
+        local step3SignalAxisK8 = EEPGetSignal(30) -- store signal    step3
+        local step3SignalAxisK9 = EEPGetSignal(31) -- store signal    step3
+        it("# step3 - Crossing ready    ", function() assert.is_false(step3Ready) end)
+        it("# step3 - Signal K1 (23) ", function() assert.equals(RED, step3SignalAxisK1) end)
+        it("# step3 - Signal K2 (24) ", function() assert.equals(RED, step3SignalAxisK2) end)
+        it("# step3 - Signal K3 (25) ", function() assert.equals(RED, step3SignalAxisK3) end)
+        it("# step3 - Signal K5 (27) ", function() assert.equals(RED, step3SignalAxisK5) end)
+        it("# step3 - Signal K6 (28) ", function() assert.equals(RED, step3SignalAxisK6) end)
+        it("# step3 - Signal K7 (29) ", function() assert.equals(RED, step3SignalAxisK7) end)
+        it("# step3 - Signal K8 (30) ", function() assert.equals(RED, step3SignalAxisK8) end)
+        it("# step3 - Signal K9 (31) ", function() assert.equals(RED, step3SignalAxisK9) end)
+    end
 
     -- _G.EEPTime = _G.EEPTime + 200
     -- ModuleRegistry.runTasks() -- First Turn old to red
