@@ -2,6 +2,7 @@ if AkDebugLoad then print("Loading ak.road.Crossing ...") end
 
 local Task = require("ak.scheduler.Task")
 local Scheduler = require("ak.scheduler.Scheduler")
+local StorageUtility = require("ak.storage.StorageUtility")
 local CrossingSequence = require("ak.road.CrossingSequence")
 local Lane = require("ak.road.Lane")
 local TrafficLightState = require("ak.road.TrafficLightState")
@@ -26,19 +27,44 @@ Crossing.zeigeAnforderungenAlsInfo = AkStartMitDebug or false
 Crossing.zeigeSchaltungAlsInfo = AkStartMitDebug or false
 Crossing.zeigeSignalIdsAllerSignale = false
 
+function Crossing.loadSettingsFromSlot(eepSaveId)
+    StorageUtility.registerId(eepSaveId, "Crossing settings")
+    Crossing.saveSlot = eepSaveId
+    local data = StorageUtility.loadTable(Crossing.saveSlot, "Crossing settings")
+    Crossing.zeigeAnforderungenAlsInfo = StorageUtility.toboolean(data["reqInfo"]) or
+                                             Crossing.zeigeAnforderungenAlsInfo
+    Crossing.zeigeSchaltungAlsInfo = StorageUtility.toboolean(data["seqInfo"]) or Crossing.zeigeSchaltungAlsInfo
+    Crossing.zeigeSignalIdsAllerSignale = StorageUtility.toboolean(data["sigInfo"]) or
+                                              Crossing.zeigeSignalIdsAllerSignale
+end
+
+function Crossing.saveSettings()
+    if Crossing.saveSlot then
+        local data = {
+            reqInfo = tostring(Crossing.zeigeAnforderungenAlsInfo),
+            seqInfo = tostring(Crossing.zeigeSchaltungAlsInfo),
+            sigInfo = tostring(Crossing.zeigeSignalIdsAllerSignale)
+        }
+        StorageUtility.saveTable(Crossing.saveSlot, data, "Crossing settings")
+    end
+end
+
 function Crossing.setZeigeAnforderungenAlsInfo(value)
     assert(value == true or value == false)
     Crossing.zeigeAnforderungenAlsInfo = value
+    Crossing.saveSettings()
 end
 
 function Crossing.setZeigeSchaltungAlsInfo(value)
     assert(value == true or value == false)
     Crossing.zeigeSchaltungAlsInfo = value
+    Crossing.saveSettings()
 end
 
 function Crossing.setZeigeSignalIdsAllerSignale(value)
     assert(value == true or value == false)
     Crossing.zeigeSignalIdsAllerSignale = value
+    Crossing.saveSettings()
 end
 
 function Crossing.schalteManuell(nameDerKreuzung, nameDerSchaltung)
