@@ -174,7 +174,7 @@ function TrafficLight:switchStructureLight()
             EEPStructureSetLight(lightTL.yellowStructure, onOff)
         end
         if lightTL.greenStructure then
-            local onOff = self.phase == TrafficLightState.YELLOW or self.phase == TrafficLightState.REDYELLOW
+            local onOff = self.phase == TrafficLightState.GREEN
             lightDbg = lightDbg .. string.format(", Licht in %s: %s", lightTL.greenStructure, onOff and "an" or "aus")
             EEPStructureSetLight(lightTL.greenStructure, onOff)
         end
