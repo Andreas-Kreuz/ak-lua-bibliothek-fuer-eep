@@ -108,32 +108,32 @@ function TrafficLight:refreshInfo()
 
     EEPShowInfoSignal(self.signalId, showInfo)
     if showInfo then
-        local infoText = "<j><b>Ampel ID: " .. fmt.bgGray(self.signalId) .. "</b></j>"
-        infoText = infoText .. "<br>" .. self.trafficLightModel.name
+        local divider = "<br>___________________________<br>"
+
+        local infoText = fmt.appendUpTo1023("", "<j><b>Ampel ID: " .. fmt.bgGray(self.signalId) .. "</b></j>")
+        infoText = fmt.appendUpTo1023(infoText, "<br>" .. self.trafficLightModel.name)
 
         if showSwitching then
-            if infoText:len() > 0 then infoText = infoText .. "<br>___________________________<br>" end
-            infoText = infoText .. self.circuitInfo
+            if infoText:len() > 0 then infoText = fmt.appendUpTo1023(infoText, "<br><br>") end
+            infoText = fmt.appendUpTo1023(infoText, self.circuitInfo)
         end
 
         if showSwitching and self.phase and self.grund then
-            if infoText:len() > 0 then infoText = infoText .. "<br><br>" end
-            infoText = infoText .. string.format(" %s (%s) ", self.phase, self.grund)
+            if infoText:len() > 0 then infoText = fmt.appendUpTo1023(infoText, "<br><br>") end
+            infoText = fmt.appendUpTo1023(infoText, string.format(" %s (%s) ", self.phase, self.grund))
         end
 
         if showRequests then
-            if infoText:len() > 0 then infoText = infoText .. "<br>___________________________<br>" end
-            infoText = infoText .. self.laneInfo
+            if infoText:len() > 0 then infoText = fmt.appendUpTo1023(infoText, divider) end
+            infoText = fmt.appendUpTo1023(infoText, self.laneInfo)
         end
-        assert(infoText:len() < 1023)
+
         EEPChangeInfoSignal(self.signalId, infoText)
     end
 end
 
 function TrafficLight.switchAll(trafficLights, phase, grund)
-    for tl in pairs(trafficLights) do
-        tl:switchTo(phase, grund)
-    end
+    for tl in pairs(trafficLights) do tl:switchTo(phase, grund) end
 end
 
 ---
@@ -176,8 +176,8 @@ function TrafficLight:switchStructureLight()
         end
         if lightTL.greenStructure then
             lightDbg = lightDbg ..
-                          string.format(", Licht in %s: %s", lightTL.greenStructure,
-                                        (self.phase == TrafficLightState.GREEN) and "an" or "aus")
+                           string.format(", Licht in %s: %s", lightTL.greenStructure,
+                                         (self.phase == TrafficLightState.GREEN) and "an" or "aus")
             EEPStructureSetLight(lightTL.greenStructure, self.phase == TrafficLightState.GREEN)
         end
     end
@@ -219,7 +219,7 @@ function TrafficLight:showRequestOnSignal(hasRequest)
     for lightTL in pairs(self.lightStructures) do
         if lightTL.requestStructure then
             lightDbg = lightDbg ..
-                          string.format(", Licht in %s: %s", lightTL.requestStructure, (hasRequest) and "an" or "aus")
+                           string.format(", Licht in %s: %s", lightTL.requestStructure, (hasRequest) and "an" or "aus")
             EEPStructureSetLight(lightTL.requestStructure, hasRequest)
         end
     end

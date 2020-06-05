@@ -41,6 +41,14 @@ local AkTippTextFormat = {
     end,
     red = function(text)
         return "<bgrgb=155,0,0><fgrgb=255,255,255>" .. text .. "<bgrgb=255,255,255><fgrgb=0,0,0>"
+    end,
+    appendUpTo1023 = function (text, appendix)
+        if text:len() + appendix:len() < 1023
+        then
+            return text ..appendix
+        else
+            return text
+        end
     end
 }
 
