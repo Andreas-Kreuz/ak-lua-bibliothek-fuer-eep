@@ -28,7 +28,7 @@ insulate("Crossing", function()
     require("ak.core.eep.AkEepFunktionen")
     local Lane = require("ak.road.Lane")
     local Crossing = require("ak.road.Crossing")
-    -- local CrossingCircuit = require("ak.road.CrossingCircuit")
+    -- local CrossingSequence = require("ak.road.CrossingSequence")
     -- local LaneSettings = require("ak.road.LaneSettings")
     local TrafficLight = require("ak.road.TrafficLight")
     local TrafficLightModel = require("ak.road.TrafficLightModel")
@@ -58,7 +58,7 @@ insulate("Crossing", function()
     lane3 = crossing:newLane("Lane 3 S", 3, L3, Lane.Directions.LEFT)
     lane4 = crossing:newLane("Lane 4 S", 4, L4, Lane.Directions.STRAIGHT)
 
-    ---@type CrossingCircuit
+    ---@type CrossingSequence
     switchingA = crossing:newSequence("Sequence A - North South")
     switchingA:addLane(lane1)
     switchingA:addTrafficLight(K1)

@@ -2,7 +2,7 @@ if AkDebugLoad then print("Loading ak.road.Crossing ...") end
 
 local Task = require("ak.scheduler.Task")
 local Scheduler = require("ak.scheduler.Scheduler")
-local CrossingCircuit = require("ak.road.CrossingCircuit")
+local CrossingSequence = require("ak.road.CrossingSequence")
 local Lane = require("ak.road.Lane")
 local TrafficLightState = require("ak.road.TrafficLightState")
 local fmt = require("ak.core.eep.AkTippTextFormat")
@@ -13,8 +13,8 @@ local fmt = require("ak.core.eep.AkTippTextFormat")
 local AkAllKreuzungen = {}
 ---@class Crossing
 ---@field public name string @Intersection Name
----@field private aktuelleSchaltung CrossingCircuit @Currently used switching
----@field private schaltungen CrossingCircuit[] @All switchings of the intersection
+---@field private aktuelleSchaltung CrossingSequence @Currently used switching
+---@field private schaltungen CrossingSequence[] @All switchings of the intersection
 ---@field private bereit boolean @If true, the Intersection can be switched
 ---@field private geschaltet boolean @If true, the intersection is switched
 ---@field private gruenZeit number @Integer value of how long the intersection will show green light
@@ -77,14 +77,14 @@ end
 
 function Crossing:getNextSchaltung() return self.nextSchaltung end
 
----@return CrossingCircuit
+---@return CrossingSequence
 function Crossing:calculateNextSchaltung()
     if self.manuelleSchaltung then
         self.nextSchaltung = self.manuelleSchaltung
     else
         local sortedTable = {}
         for schaltung in pairs(self.schaltungen) do table.insert(sortedTable, schaltung) end
-        table.sort(sortedTable, CrossingCircuit.hoeherePrioAls)
+        table.sort(sortedTable, CrossingSequence.hoeherePrioAls)
         self.nextSchaltung = sortedTable[1]
     end
     return self.nextSchaltung
@@ -176,7 +176,7 @@ end
 --- Erzeugt eine Richtung, welche durch eine Ampel gesteuert wird.
 ---@param name string @Name of the Pedestrian Crossing einer Kreuzung
 function Crossing:newSequence(name)
-    local switching = CrossingCircuit:new(name)
+    local switching = CrossingSequence:new(name)
     switching.crossing = self
     self.schaltungen[switching] = true
     return switching
@@ -188,7 +188,7 @@ local function allTrafficLights(circuits)
     local list = {}
 
     for sequence in pairs(circuits) do
-        assert(sequence.getType() == "CrossingCircuit", type(sequence))
+        assert(sequence.getType() == "CrossingSequence", type(sequence))
         for _, trafficLight in pairs(sequence.trafficLights) do list[trafficLight] = true end
         for _, trafficLight in pairs(sequence.pedestrianLights) do list[trafficLight] = true end
     end
@@ -209,7 +209,7 @@ local function switch(crossing)
     local TrafficLight = require("ak.road.TrafficLight")
     crossing:setGeschaltet(false)
     crossing:setBereit(false)
-    ---@type CrossingCircuit
+    ---@type CrossingSequence
     local nextCircuit = crossing:calculateNextSchaltung()
     local nextName = crossing.name .. " " .. nextCircuit:getName()
     local currentCircuit = crossing:getAktuelleSchaltung()

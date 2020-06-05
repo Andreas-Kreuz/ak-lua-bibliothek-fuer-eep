@@ -3,7 +3,7 @@ local TrafficLightModel = require("ak.road.TrafficLightModel")
 local TrafficLight = require("ak.road.TrafficLight")
 local Lane = require("ak.road.Lane")
 local Crossing = require("ak.road.Crossing")
-local CrossingCircuit = require("ak.road.CrossingCircuit")
+local CrossingSequence = require("ak.road.CrossingSequence")
 
 -- Hier kommt der Code
 Crossing.zeigeSignalIdsAllerSignale = false
@@ -100,14 +100,14 @@ fg_w:setTrafficType('PEDESTRIAN')
 -- grün geschaltet werden dürfen, alle anderen sind rot
 
 --- Tutorial 1: Schaltung 1
-local sch1 = CrossingCircuit:new("Schaltung 1")
+local sch1 = CrossingSequence:new("Schaltung 1")
 sch1:addLane(n1)
 sch1:addLane(s1)
 sch1:addPedestrianCrossing(fg_o)
 sch1:addPedestrianCrossing(fg_w)
 
 --- Tutorial 1: Schaltung 2
-local sch2 = CrossingCircuit:new("Schaltung 2")
+local sch2 = CrossingSequence:new("Schaltung 2")
 sch2:addLane(n2)
 sch2:addLane(s2)
 sch2:addPedestrianCrossing(fg_n2)
@@ -116,7 +116,7 @@ sch2:addPedestrianCrossing(fg_w)
 sch2:addPedestrianCrossing(fg_s2)
 
 --- Tutorial 1: Schaltung 3
-local sch3 = CrossingCircuit:new("Schaltung 3")
+local sch3 = CrossingSequence:new("Schaltung 3")
 sch3:addLane(o1)
 sch3:addLane(w1)
 sch3:addPedestrianCrossing(fg_n1)
@@ -125,20 +125,20 @@ sch3:addPedestrianCrossing(fg_s1)
 sch3:addPedestrianCrossing(fg_s2)
 
 --- Tutorial 1: Schaltung 4
-local sch4 = CrossingCircuit:new("Schaltung 4")
+local sch4 = CrossingSequence:new("Schaltung 4")
 sch4:addLane(o2)
 sch4:addLane(w2)
 sch4:addPedestrianCrossing(fg_n1)
 sch4:addPedestrianCrossing(fg_s1)
 
 -- --- Tutorial 1: Schaltung 5
--- local sch5 = CrossingCircuit:new("Schaltung 5")
+-- local sch5 = CrossingSequence:new("Schaltung 5")
 -- sch5:addLane(n1)
 -- sch5:addLane(n2)
 -- sch5:addPedestrianCrossing(fg_w)
 --
 -- --- Tutorial 1: Schaltung 6
--- local sch6 = CrossingCircuit:new("Schaltung 6")
+-- local sch6 = CrossingSequence:new("Schaltung 6")
 -- sch6:addLane(o1)
 -- sch6:addLane(o2)
 -- sch6:addPedestrianCrossing(fg_n1)
@@ -146,13 +146,13 @@ sch4:addPedestrianCrossing(fg_s1)
 -- sch6:addPedestrianCrossing(fg_s1)
 --
 -- --- Tutorial 1: Schaltung 7
--- local sch7 = CrossingCircuit:new("Schaltung 7")
+-- local sch7 = CrossingSequence:new("Schaltung 7")
 -- sch7:addLane(s1)
 -- sch7:addLane(s2)
 -- sch7:addPedestrianCrossing(fg_o)
 --
 -- --- Tutorial 1: Schaltung 6
--- local sch8 = CrossingCircuit:new("Schaltung 8")
+-- local sch8 = CrossingSequence:new("Schaltung 8")
 -- sch8:addLane(o1)
 -- sch8:addLane(o2)
 -- sch8:addPedestrianCrossing(fg_n1)

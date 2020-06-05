@@ -3,7 +3,7 @@ local TrafficLightModel = require("ak.road.TrafficLightModel")
 local TrafficLight = require("ak.road.TrafficLight")
 local Lane = require("ak.road.Lane")
 local Crossing = require("ak.road.Crossing")
-local CrossingCircuit = require("ak.road.CrossingCircuit")
+local CrossingSequence = require("ak.road.CrossingSequence")
 
 ------------------------------------------------
 -- Damit kommt wird die Variable "Zugname" automatisch durch EEP belegt
@@ -108,7 +108,7 @@ ws:useTracklForQueue(2) -- Erfasst Anforderungen, wenn ein Fahrzeug auf Strasse 
 -- grün geschaltet werden dürfen, alle anderen sind rot
 
 --- Tutorial 2: Schaltung 1
-local sch1 = CrossingCircuit:new("Schaltung 1")
+local sch1 = CrossingSequence:new("Schaltung 1")
 sch1:addLane(o1)
 sch1:addLane(os)
 sch1:addLane(w1)
@@ -116,12 +116,12 @@ sch1:addLane(ws)
 sch1:addPedestrianCrossing(fg_n)
 
 --- Tutorial 2: Schaltung 2
-local sch2 = CrossingCircuit:new("Schaltung 2")
+local sch2 = CrossingSequence:new("Schaltung 2")
 sch2:addLane(w2)
 sch2:addPedestrianCrossing(fg_o)
 
 --- Tutorial 2: Schaltung 3
-local sch3 = CrossingCircuit:new("Schaltung 3")
+local sch3 = CrossingSequence:new("Schaltung 3")
 sch3:addLane(n)
 sch3:addPedestrianCrossing(fg_o)
 sch3:addPedestrianCrossing(fg_w)

@@ -28,7 +28,7 @@ insulate("Crossing", function()
     require("ak.core.eep.AkEepFunktionen")
     local Lane = require("ak.road.Lane")
     local Crossing = require("ak.road.Crossing")
-    -- local CrossingCircuit = require("ak.road.CrossingCircuit")
+    -- local CrossingSequence = require("ak.road.CrossingSequence")
     -- local LaneSettings = require("ak.road.LaneSettings")
     local TrafficLight = require("ak.road.TrafficLight")
     local TrafficLightModel = require("ak.road.TrafficLightModel")
@@ -59,7 +59,7 @@ insulate("Crossing", function()
         lane3 = Lane:new("Lane 3 S", 3, L3, {Lane.Directions.LEFT})
         lane4 = Lane:new("Lane 4 S", 4, L4, {Lane.Directions.STRAIGHT})
 
-        ---@type CrossingCircuit
+        ---@type CrossingSequence
         sequenceA = crossing:newSequence("Sequence A - North South")
         sequenceA:addLane(lane1)
         sequenceA:addTrafficLight(K1)
@@ -204,7 +204,7 @@ insulate("Check traffic light switching", function()
     require("ak.core.eep.AkEepFunktionen")
     local Lane = require("ak.road.Lane")
     local Crossing = require("ak.road.Crossing")
-    local CrossingCircuit = require("ak.road.CrossingCircuit")
+    local CrossingSequence = require("ak.road.CrossingSequence")
     -- local LaneSettings = require("ak.road.LaneSettings")
     local TrafficLight = require("ak.road.TrafficLight")
     local TrafficLightModel = require("ak.road.TrafficLightModel")
@@ -215,7 +215,7 @@ insulate("Check traffic light switching", function()
     local c1Lane1Signal, c1Lane2Signal, c1Lane3Signal, c1Lane4Signal
     ---@type TrafficLight
     local K1, K2, K3, K5, K6, K7, K8, K9
-    ---@type CrossingCircuit
+    ---@type CrossingSequence
     local sequenceA, sequenceB, sequenceC
     ---@type Crossing
     local crossing
@@ -245,7 +245,7 @@ insulate("Check traffic light switching", function()
     lane3:driveOn(K8)
     lane4:driveOn(K9)
 
-    ---@type CrossingCircuit
+    ---@type CrossingSequence
     sequenceA = crossing:newSequence("Sequence A - North South")
     sequenceA:addLane(lane1)
     sequenceA:addLane(lane4)
@@ -255,7 +255,7 @@ insulate("Check traffic light switching", function()
     sequenceA:addPedestrianLight(K3)
     sequenceA:addPedestrianLight(K6)
 
-    ---@type CrossingCircuit
+    ---@type CrossingSequence
     sequenceB = crossing:newSequence("Sequence B - South + East Right")
     sequenceB:addLane(lane2)
     sequenceB:addLane(lane3)
@@ -264,7 +264,7 @@ insulate("Check traffic light switching", function()
     sequenceB:addTrafficLight(K8)
     sequenceB:addTrafficLight(K9)
 
-    ---@type CrossingCircuit
+    ---@type CrossingSequence
     sequenceC = crossing:newSequence("Sequence C - East only")
     sequenceC:addLane(lane2)
     sequenceC:addTrafficLight(K3)
@@ -283,7 +283,7 @@ insulate("Check traffic light switching", function()
     ModuleRegistry.debug = false
     Scheduler.debug = false
     Crossing.debug = false
-    CrossingCircuit.debug = false
+    CrossingSequence.debug = false
     ModuleRegistry.registerModules(require("ak.road.CrossingLuaModul"))
 
     local U_R = 2

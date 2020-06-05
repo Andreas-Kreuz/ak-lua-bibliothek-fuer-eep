@@ -6,7 +6,7 @@ local TrafficLightModel = require("ak.road.TrafficLightModel")
 local TrafficLight = require("ak.road.TrafficLight")
 local Lane = require("ak.road.Lane")
 local Crossing = require("ak.road.Crossing")
-local CrossingCircuit = require("ak.road.CrossingCircuit")
+local CrossingSequence = require("ak.road.CrossingSequence")
 TrafficLight.zeigeAnforderungen = true
 
 ------------------------------------------------
@@ -103,23 +103,23 @@ k2_r5:setDirections({ 'LEFT', 'RIGHT' })
 -- Eine Schaltung bestimmt, welche Richtungen gleichzeitig auf grün geschaltet werden dürfen, alle anderen sind rot
 
 --- Kreuzung 2: Schaltung 1
-local k2_schaltung1 = CrossingCircuit:new("Schaltung 1")
+local k2_schaltung1 = CrossingSequence:new("Schaltung 1")
 k2_schaltung1:addLane(k2_r1)
 k2_schaltung1:addLane(k2_r2)
 k2_schaltung1:addLane(k2_r3)
 
 --- Kreuzung 2: Schaltung 2
-local k2_schaltung2 = CrossingCircuit:new("Schaltung 2")
+local k2_schaltung2 = CrossingSequence:new("Schaltung 2")
 k2_schaltung2:addLane(k2_r1)
 k2_schaltung2:addLane(k2_r2)
 
 --- Kreuzung 2: Schaltung 3
-local k2_schaltung3 = CrossingCircuit:new("Schaltung 3")
+local k2_schaltung3 = CrossingSequence:new("Schaltung 3")
 k2_schaltung3:addLane(k2_r3)
 k2_schaltung3:addLane(k2_r4)
 
 --- Kreuzung 2: Schaltung 4
-local k2_schaltung4 = CrossingCircuit:new("Schaltung 4")
+local k2_schaltung4 = CrossingSequence:new("Schaltung 4")
 k2_schaltung4:addLane(k2_r5)
 
 k2 = Crossing:new("Kreuzung 2")
@@ -181,24 +181,24 @@ k1_r3_7_fg:setTrafficType('PEDESTRIAN')
 -- Eine Schaltung bestimmt, welche Richtungen gleichzeitig auf grün geschaltet werden dürfen, alle anderen sind rot
 
 --- Kreuzung 1: Schaltung 1
-local k1_schaltung1 = CrossingCircuit:new("Schaltung 1")
+local k1_schaltung1 = CrossingSequence:new("Schaltung 1")
 k1_schaltung1:addLane(k1_r1)
 k1_schaltung1:addLane(k1_r5)
 k1_schaltung1:addPedestrianCrossing(k1_r1_5_fg)
 
 --- Kreuzung 1: Schaltung 2
-local k1_schaltung2 = CrossingCircuit:new("Schaltung 2")
+local k1_schaltung2 = CrossingSequence:new("Schaltung 2")
 k1_schaltung2:addLane(k1_r2)
 k1_schaltung2:addLane(k1_r6)
 
 --- Kreuzung 1: Schaltung 3
-local k1_schaltung3 = CrossingCircuit:new("Schaltung 3")
+local k1_schaltung3 = CrossingSequence:new("Schaltung 3")
 k1_schaltung3:addLane(k1_r3)
 k1_schaltung3:addLane(k1_r7)
 k1_schaltung3:addPedestrianCrossing(k1_r3_7_fg)
 
 --- Kreuzung 1: Schaltung 4
-local k1_schaltung4 = CrossingCircuit:new("Schaltung 4")
+local k1_schaltung4 = CrossingSequence:new("Schaltung 4")
 k1_schaltung4:addLane(k1_r4)
 k1_schaltung4:addLane(k1_r8)
 

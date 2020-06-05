@@ -1,4 +1,4 @@
-if AkDebugLoad then print("Loading ak.road.CrossingCircuit ...") end
+if AkDebugLoad then print("Loading ak.road.CrossingSequence ...") end
 
 local Lane = require("ak.road.Lane")
 local LaneSettings = require("ak.road.LaneSettings")
@@ -7,15 +7,15 @@ local TableUtils = require("ak.util.TableUtils")
 ------------------------------------------------------
 -- Klasse Richtungsschaltung (schaltet mehrere Ampeln)
 ------------------------------------------------------
----@class CrossingCircuit
-local CrossingCircuit = {}
-CrossingCircuit.debug = AkDebugLoad
+---@class CrossingSequence
+local CrossingSequence = {}
+CrossingSequence.debug = AkDebugLoad
 
-function CrossingCircuit.getType() return "CrossingCircuit" end
+function CrossingSequence.getType() return "CrossingSequence" end
 
-function CrossingCircuit:getName() return self.name end
+function CrossingSequence:getName() return self.name end
 
-function CrossingCircuit:new(name)
+function CrossingSequence:new(name)
     local o = {}
     setmetatable(o, self)
     self.__index = self
@@ -34,9 +34,9 @@ end
 
 ---This will calculate all lanes
 ---@return Lane[], Lane[]
-function CrossingCircuit:lanesToTurnRedAndGreen(currentCircuit)
-    if CrossingCircuit.debug then
-        print(string.format("[CrossingCircuit] lanes from %s to %s", currentCircuit and currentCircuit.name or "NONE",
+function CrossingSequence:lanesToTurnRedAndGreen(currentCircuit)
+    if CrossingSequence.debug then
+        print(string.format("[CrossingSequence] lanes from %s to %s", currentCircuit and currentCircuit.name or "NONE",
                             self.name))
     end
 
@@ -48,8 +48,8 @@ function CrossingCircuit:lanesToTurnRedAndGreen(currentCircuit)
         for lane, currentLaneSettings in pairs(currentCircuit.lanes) do
             if not self.lanes[lane] or
                 not TableUtils.sameArrayEntries(self.lanes[lane].directions, currentLaneSettings.directions) then
-                if CrossingCircuit.debug then
-                    print(string.format("[CrossingCircuit] turn red: %s", lane.name))
+                if CrossingSequence.debug then
+                    print(string.format("[CrossingSequence] turn red: %s", lane.name))
                 end
                 lanesToTurnRed[lane] = true
             end
@@ -58,8 +58,8 @@ function CrossingCircuit:lanesToTurnRedAndGreen(currentCircuit)
     for lane, newLaneSettings in pairs(self.lanes) do
         if not currentCircuit or not currentCircuit.lanes[lane] or
             not TableUtils.sameArrayEntries(currentCircuit.lanes[lane].directions, newLaneSettings.directions) then
-            if CrossingCircuit.debug then
-                print(string.format("[CrossingCircuit] turn green: %s", lane.name))
+            if CrossingSequence.debug then
+                print(string.format("[CrossingSequence] turn green: %s", lane.name))
             end
             lanesToTurnGreen[lane] = true
         end
@@ -69,7 +69,7 @@ end
 
 ---This will calculate all trafficLights to turn red and green
 ---@return TrafficLight[], TrafficLight[]
-function CrossingCircuit:trafficLightsToTurnRedAndGreen(currentCircuit)
+function CrossingSequence:trafficLightsToTurnRedAndGreen(currentCircuit)
     local trafficLightsToTurnRed = {}
     local trafficLightsToTurnGreen = {}
 
@@ -91,7 +91,7 @@ end
 
 ---This will calculate all pedestrianLights to turn red and green
 ---@return TrafficLight[], TrafficLight[]
-function CrossingCircuit:pedestrianLightsToTurnRedAndGreen(currentCircuit)
+function CrossingSequence:pedestrianLightsToTurnRedAndGreen(currentCircuit)
     local pedestrianLightsToTurnRed = {}
     local pedestrianLightsToTurnGreen = {}
 
@@ -110,16 +110,16 @@ function CrossingCircuit:pedestrianLightsToTurnRedAndGreen(currentCircuit)
     return pedestrianLightsToTurnRed, pedestrianLightsToTurnGreen
 end
 
-function CrossingCircuit:getAlleRichtungen()
+function CrossingSequence:getAlleRichtungen()
     local alle = {}
     for lane in pairs(self.lanes) do alle[lane] = "NORMAL" end
     for richtung in pairs(self.pedestrianCrossings) do alle[richtung] = "PEDESTRIANTS" end
     return alle
 end
 
-function CrossingCircuit:getNormaleRichtungen() return self.lanes end
+function CrossingSequence:getNormaleRichtungen() return self.lanes end
 
-function CrossingCircuit:richtungenAlsTextZeile()
+function CrossingSequence:richtungenAlsTextZeile()
     local s = ""
     for richtung in pairs(self.lanes) do s = s .. ", " .. richtung.name end
     s = s:sub(3)
@@ -132,14 +132,14 @@ end
 ---@param routes string[] @matching routes
 ---@param switchingType LaneRequestType @typ der Anforderung (nur bei Anforderung schalten ignoriert die
 ---                                      Anzahl der Rotphasen beim Umschalten)
-function CrossingCircuit:addLane(lane, directions, routes, switchingType)
+function CrossingSequence:addLane(lane, directions, routes, switchingType)
     assert(lane, "Bitte ein gueltige Richtung angeben")
     self.lanes[lane] = LaneSettings:new(lane, directions, routes, switchingType)
     if self.crossing then self.crossing.lanes[lane.name] = lane end
     return self
 end
 
-function CrossingCircuit:addTrafficLight(trafficLight)
+function CrossingSequence:addTrafficLight(trafficLight)
     self.trafficLights[trafficLight.signalId] = trafficLight
     -- if self.crossing then
     --     self.crossing.trafficLights[trafficLight] = true
@@ -147,7 +147,7 @@ function CrossingCircuit:addTrafficLight(trafficLight)
     return self
 end
 
-function CrossingCircuit:addPedestrianLight(trafficLight, secondTrafficLight)
+function CrossingSequence:addPedestrianLight(trafficLight, secondTrafficLight)
     assert(trafficLight and trafficLight.signalId)
     self.pedestrianLights[trafficLight.signalId] = trafficLight
     if secondTrafficLight and secondTrafficLight.signalId then
@@ -159,17 +159,17 @@ function CrossingCircuit:addPedestrianLight(trafficLight, secondTrafficLight)
     return self
 end
 
-function CrossingCircuit:addPedestrianCrossing(richtung)
+function CrossingSequence:addPedestrianCrossing(richtung)
     assert(richtung, "Bitte ein gueltige Richtung angeben")
     richtung:setLaneType(Lane.SchaltungsTyp.FUSSGAENGER)
     self.pedestrianCrossings[richtung] = true
 end
 
-function CrossingCircuit:getRichtungFuerFussgaenger() return self.pedestrianCrossings end
+function CrossingSequence:getRichtungFuerFussgaenger() return self.pedestrianCrossings end
 
 --- Gibt alle Richtungen nach Prioritaet zurueck, sowie deren Anzahl und deren Durchschnittspriorität
 -- @return sortierteRichtungen, anzahlDerRichtungen, durchschnittsPrio
-function CrossingCircuit:nachPrioSortierteRichtungen()
+function CrossingSequence:nachPrioSortierteRichtungen()
     local sortierteRichtungen = {}
     local anzahlDerRichtungen = 0
     local gesamtPrio = 0
@@ -199,7 +199,7 @@ end
 
 ------ Gibt alle Richtungen nach Name sortiert zurueck
 -- @return sortierteRichtungen
-function CrossingCircuit:nachNameSortierteRichtungen()
+function CrossingSequence:nachNameSortierteRichtungen()
     local sortierteRichtungen = {}
     for richtung in pairs(self.lanes) do table.insert(sortierteRichtungen, richtung) end
     for richtung in pairs(self.pedestrianCrossings) do table.insert(sortierteRichtungen, richtung) end
@@ -212,7 +212,7 @@ end
 -- @param schaltung1 erste Schaltung
 -- @param schaltung2 zweite Schaltung
 --
-function CrossingCircuit.hoeherePrioAls(schaltung1, schaltung2)
+function CrossingSequence.hoeherePrioAls(schaltung1, schaltung2)
     if schaltung1 and schaltung2 then
         local _, tableSize1, avg1 = schaltung1:nachPrioSortierteRichtungen()
         local _, tableSize2, avg2 = schaltung2:nachPrioSortierteRichtungen()
@@ -233,11 +233,11 @@ function CrossingCircuit.hoeherePrioAls(schaltung1, schaltung2)
     end
 end
 
-function CrossingCircuit:calculatePriority()
+function CrossingSequence:calculatePriority()
     local _, _, prio = self:nachPrioSortierteRichtungen()
     return prio
 end
 
-function CrossingCircuit:resetWaitCount() for richtung in pairs(self.lanes) do richtung:resetWaitCount() end end
+function CrossingSequence:resetWaitCount() for richtung in pairs(self.lanes) do richtung:resetWaitCount() end end
 
-return CrossingCircuit
+return CrossingSequence
