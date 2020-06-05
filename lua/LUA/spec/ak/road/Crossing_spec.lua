@@ -4,7 +4,7 @@ insulate("Crossing", function()
     --                                | lane 1 |        |        |
     --                                |        |        |        |
     --                                |STRAIGHT|        |        |
-    --                                | +RIGHT |        |        |
+    --                             S1 | +RIGHT |        |        |
     --                             K1 |========|========|========| K2
     --                                |        |        |        |
     --                    K3          |        |        |        |
@@ -18,12 +18,12 @@ insulate("Crossing", function()
     --                       |  |                                |
     --  ------------------------------+        +        |        |
     --                    K6,         |        |        |        |
-    --                    K7          |        |        |        |
+    --                    K7          |        |        |        | S2
     --  In lane 2 all cars         K8=|========|========|========|-K9
     --  allowed to turn               |        | LEFT   |STRAIGHT|
     --  right when lane 3             |        |        |        |
     --  is turning left               |        | lane 3 | lane 4 |
-    --  (Route: RIGHT_TURN_ROUTE)         |        |   S    |    S   |
+    --  (Route: RIGHT_TURN_ROUTE)     |        |   S    |    S   |
     --
     require("ak.core.eep.AkEepFunktionen")
     local Lane = require("ak.road.Lane")
@@ -56,6 +56,14 @@ insulate("Crossing", function()
         K8 = TrafficLight:new(30, TrafficLightModel.JS2_3er_mit_FG) -- SOUTH LEFT (left)
         K9 = TrafficLight:new(31, TrafficLightModel.JS2_3er_mit_FG) -- SOUTH STRAIGHT (right)
 
+
+        local S1 = TrafficLight:new(-1, TrafficLightModel.NONE, "#5528_Straba Signal Halt",
+        "#5531_Straba Signal geradeaus", "#5529_Straba Signal anhalten",
+        "#5530_Straba Signal A")
+        local S2 = TrafficLight:new(-1, TrafficLightModel.NONE, "#5435_Straba Signal Halt",
+        "#5521_Straba Signal geradeaus", "#5520_Straba Signal anhalten",
+        "#5518_Straba Signal A")
+
         crossing = Crossing:new("My Crossing")
         lane1 = crossing:newLane("Lane 1 N", 1, L1, {Lane.Directions.STRAIGHT, Lane.Directions.RIGHT})
         lane2 = crossing:newLane("Lane 2 E", 2, L2, {Lane.Directions.LEFT, Lane.Directions.RIGHT})
@@ -67,8 +75,10 @@ insulate("Crossing", function()
         sequenceA:addLane(lane1)
         sequenceA:addTrafficLight(K1)
         sequenceA:addTrafficLight(K2)
+        sequenceA:addTrafficLight(S1)
         sequenceA:addLane(lane4)
         sequenceA:addTrafficLight(K9)
+        sequenceA:addTrafficLight(S2)
         sequenceA:addPedestrianLight(K3)
         sequenceA:addPedestrianLight(K6)
 

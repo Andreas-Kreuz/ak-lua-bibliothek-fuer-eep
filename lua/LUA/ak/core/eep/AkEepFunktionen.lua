@@ -81,12 +81,18 @@ local switches = {}
 --- Setzt das Signal signalId auf die Stellung signalStellung. Der Wert z sollte den Wert 1 haben
 -- @param signalId Id des Signals
 -- @param signalStellung Stellung des Signals
-function EEPSetSignal(signalId, signalStellung, informiereEepOnSignal) signale[signalId] = signalStellung end
+function EEPSetSignal(signalId, signalStellung, informiereEepOnSignal)
+    assert(signalId > 0)
+    signale[signalId] = signalStellung
+end
 
 --- Liefert die aktuelle Stellung des Signal x
 -- @param signalId number Id des Signals
 -- @return number Stellung des Signals
-function EEPGetSignal(signalId) return signale[signalId] and signale[signalId] or 2 end
+function EEPGetSignal(signalId)
+    assert(signalId > 0)
+    return signale[signalId] and signale[signalId] or 2
+end
 
 --- Setzt die Weiche x auf die Stellung y. Der Wert z sollte den Wert 1 haben
 function EEPSetSwitch(switchId, switchPosition, z) switches[switchId] = switchPosition end

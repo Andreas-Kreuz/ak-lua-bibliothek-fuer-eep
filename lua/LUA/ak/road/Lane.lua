@@ -162,7 +162,7 @@ end
 
 ---Liefert true, wenn das erste Fahrzeug fahren darf (anhand der für die Fahrspur gültigen Ampeln)
 ---Is true, if the first vehicle can drive (according to the lane's traffic lights)
-function updateLaneSignal(lane)
+function updateLaneSignal(lane, reason)
     if lane.trafficLightsToDriveOn then
         local haveGreen = false
         local greenTrafficLights = {}
@@ -195,7 +195,7 @@ function updateLaneSignal(lane)
         else
             canDrive = false
         end
-        lane.trafficLight:switchTo(canDrive and TrafficLightState.GREEN or TrafficLightState.RED)
+        lane.trafficLight:switchTo(canDrive and TrafficLightState.GREEN or TrafficLightState.RED, reason)
     end
 end
 
@@ -357,7 +357,7 @@ function Lane:vehicleEntered(trainName)
     self.vehicleCount = self.vehicleCount + 1
     addTrainToQueue(self, trainName)
     refreshRequests(self)
-    updateLaneSignal(self)
+    updateLaneSignal(self, trainName .. " entered")
     save(self)
 end
 
@@ -368,7 +368,7 @@ function Lane:vehicleLeft(trainName)
     self.vehicleCount = self.vehicleCount > 0 and self.vehicleCount - 1 or 0
     popTrainFromQueue(self, trainName)
     refreshRequests(self)
-    updateLaneSignal(self)
+    updateLaneSignal(self, trainName .. " left")
     save(self)
 end
 
@@ -376,7 +376,7 @@ function Lane:resetVehicles()
     while not self.queue:isEmpty() do self.queue:pop() end
     self.vehicleCount = 0
     refreshRequests(self)
-    updateLaneSignal(self)
+    updateLaneSignal(self, "Vehicles resetted")
     save(self)
 end
 
@@ -479,6 +479,7 @@ function Lane:driveOn(trafficLight, ...)
     trafficLight:addLane(self)
     self.trafficLightsToDriveOn = self.trafficLightsToDriveOn or {}
     self.trafficLightsToDriveOn[trafficLight] = {...}
+    return self
 end
 
 ---Called by the traffic light, if the traffic light changed
@@ -491,7 +492,7 @@ function Lane:trafficLightChanged(trafficLight)
                    trafficLight.signalId .. " / " .. self.trafficLight.signalId)
         assert(self.trafficLightsToDriveOn[trafficLight],
                "This lane does not drive on the given traffic light: " .. trafficLight.signalId)
-        updateLaneSignal(self)
+        updateLaneSignal(self, "Traffic Light update: ", trafficLight.signalId)
     end
 end
 

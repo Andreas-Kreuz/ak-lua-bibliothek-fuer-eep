@@ -15,7 +15,7 @@ local fmt = require("ak.core.eep.AkTippTextFormat")
 local TrafficLight = {}
 TrafficLight.debug = AkStartMitDebug or false
 local registeredSignals = {}
-
+local counter = -1
 
 ---
 ---@param signalId number ID der Ampel auf der Anlage (Eine Ampel von diesem Typ sollte auf der Anlage sein
@@ -32,13 +32,14 @@ function TrafficLight:new(signalId, trafficLightModel, redStructure, greenStruct
     assert(not registeredSignals[tostring(signalId)] or registeredSignals[tostring(signalId)].trafficLightModel ==
                trafficLightModel, error)
     EEPShowInfoSignal(signalId, false)
+    if signalId < 0 then counter = counter - 1 end
     local o = {
-        signalId = signalId,
+        signalId = signalId > 0 and signalId or counter,
         trafficLightModel = trafficLightModel,
-        phase = trafficLightModel:phaseOf(EEPGetSignal(signalId)),
+        phase = signalId > 0 and trafficLightModel:phaseOf(EEPGetSignal(signalId)) or TrafficLightState.RED,
         debug = false,
         laneInfo = "",
-        circuitInfo = "",
+        sequenceInfo = "",
         buildInfo = "" .. tostring(signalId),
         lanes = {},
         ---@type table<LightStructureTrafficLight,boolean>
@@ -90,9 +91,9 @@ function TrafficLight:addAxisStructure(structureName, axisName, positionDefault,
 end
 
 --- Aktualisiert den Text f¸r die aktuellen Schaltung dieser Ampel
--- @param circuitInfo TippText f¸r die Schaltung
+-- @param sequenceInfo TippText f¸r die Schaltung
 --
-function TrafficLight:setCircuitInfo(circuitInfo) self.circuitInfo = circuitInfo end
+function TrafficLight:setCircuitInfo(sequenceInfo) self.sequenceInfo = sequenceInfo end
 
 --- Aktualsisiert den Text f¸r die Richtungen dieser Ampel
 -- @param laneInfo TippText f¸r die Richtung
@@ -116,12 +117,12 @@ function TrafficLight:refreshInfo()
 
         if showSwitching then
             if infoText:len() > 0 then infoText = fmt.appendUpTo1023(infoText, "<br><br>") end
-            infoText = fmt.appendUpTo1023(infoText, self.circuitInfo)
+            infoText = fmt.appendUpTo1023(infoText, self.sequenceInfo)
         end
 
-        if showSwitching and self.phase and self.grund then
+        if showSwitching and self.phase and self.reason then
             if infoText:len() > 0 then infoText = fmt.appendUpTo1023(infoText, "<br><br>") end
-            infoText = fmt.appendUpTo1023(infoText, string.format(" %s (%s) ", self.phase, self.grund))
+            infoText = fmt.appendUpTo1023(infoText, string.format(" %s (%s) ", self.phase, self.reason))
         end
 
         if showRequests then
@@ -133,16 +134,16 @@ function TrafficLight:refreshInfo()
     end
 end
 
-function TrafficLight.switchAll(trafficLights, phase, grund)
-    for tl in pairs(trafficLights) do tl:switchTo(phase, grund) end
+function TrafficLight.switchAll(trafficLights, phase, reason)
+    for tl in pairs(trafficLights) do tl:switchTo(phase, reason) end
 end
 
 ---
 -- @param signalId ID der Ampel auf der Anlage (Eine Ampel von diesem Typ sollte auf der Anlage sein)
 -- @param phase TrafficLightState.xxx
--- @param grund z.B. Name der Schaltung
+-- @param reason z.B. Name der Schaltung
 --
-function TrafficLight:switchTo(phase, grund)
+function TrafficLight:switchTo(phase, reason)
     assert(phase)
     self.phase = phase
     local lightDbg = self:switchStructureLight()
@@ -152,7 +153,7 @@ function TrafficLight:switchTo(phase, grund)
     if (self.debug or TrafficLight.debug) then
         print(
             string.format("[TrafficLight    ] Schalte Ampel %04d auf %s (%01d)", self.signalId, self.phase, sigIndex) ..
-                lightDbg .. axisDbg .. " - " .. grund)
+                lightDbg .. axisDbg .. " - " .. reason)
     end
     self:switchSignal(sigIndex)
     self:changed()
@@ -211,7 +212,7 @@ function TrafficLight:switchStructureAxis()
     return axisDbg
 end
 
-function TrafficLight:switchSignal(sigIndex) EEPSetSignal(self.signalId, sigIndex, 1) end
+function TrafficLight:switchSignal(sigIndex) if self.signalId > 0 then EEPSetSignal(self.signalId, sigIndex, 1) end end
 
 --- Setzt die Anforderung fuer eine Ampel (damit sie weiﬂ, ob eine Anforderung vorliegt)
 --- @param hasRequest boolean wo liegt die Anforderung an
