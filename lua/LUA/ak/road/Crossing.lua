@@ -252,6 +252,8 @@ local function switch(crossing)
         local reason = "Schalte initial auf rot"
         trafficLightsToTurnRed = allTrafficLights(crossing.sequences)
         TrafficLight.switchAll(trafficLightsToTurnRed, TrafficLightState.RED, reason)
+        lastTask = Task:new(function() end, "clear crossing")
+        Scheduler:scheduleTask(3, lastTask)
     end
 
     local reasonRedYellow = "Schalte " .. nextName .. " auf rot-gelb"
