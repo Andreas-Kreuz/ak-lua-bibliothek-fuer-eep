@@ -94,9 +94,9 @@ end
 --- StorageUtility.storeToTable(100, t, "Meine Kreuzung")
 --- --------------------------------------------------------
 --- Stores the data of a table into an EEP data slot
--- @param eepSaveId 1-1000 - Speicherplatz in EEP
--- @param table eine Lua Tabelle mit Daten und moeglichst kurzem Key und Value
--- @param name optional: Name des Speicherortes fuer Debug-Anzeige
+-- @param eepSaveId number 1-1000 - Speicherplatz in EEP
+-- @param table table eine Lua Tabelle mit Daten und moeglichst kurzem Key und Value
+-- @param name string optional: Name des Speicherortes fuer Debug-Anzeige
 --
 function StorageUtility.saveTable(eepSaveId, table, name)
     name = name and name or "?"
