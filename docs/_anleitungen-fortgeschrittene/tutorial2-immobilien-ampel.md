@@ -61,18 +61,18 @@ Du kannst die Straßenbahnsignale mit unsichtbaren Signalen koppeln, so dass die
 Eine neue Ampel kannst Du wie folgt anlegen:
 
 * **Ohne Immobilien**: <br>
-  `TrafficLight:neu(id, modell)`<br>
+  `TrafficLight:new(id, modell)`<br>
   Für "normale" Ampeln ohne Kopplung an Immobilien mit Lichtschaltung. Das ist der Standard.
 
 * **"rot" und "grün"**:<br>
-  `TrafficLight:neu(id, modell, immoRot, immoGruen)`<br>
+  `TrafficLight:new(id, modell, immoRot, immoGruen)`<br>
   Für Zweier-Ampeln mit Lichtschaltung der Immobilien "rot" und "grün" (die gelbe Schaltphase zeigt dann "rot").
 
 * **"rot" "gelb" und "grün"**:<br>
-  `TrafficLight:neu(id, modell, immoRot, immoGruen, immoGelb, immoAnforderung)`<br>Für Dreier-Ampeln mit Lichtschaltung der Immobilien "rot" "gelb" und "grün".
+  `TrafficLight:new(id, modell, immoRot, immoGruen, immoGelb, immoAnforderung)`<br>Für Dreier-Ampeln mit Lichtschaltung der Immobilien "rot" "gelb" und "grün".
 
 * **"rot" "gelb", "grün" und "Anforderung"**:<br>
-  `TrafficLight:neu(id, modell, immoRot, immoGruen, immoGelb, immoAnforderung)`<br>Für Vierer-Ampeln mit Lichtschaltung der Immobilien "rot" "gelb", "grün" und "Anforderung". Für die Anforderung musst Du die Fahrzeuge erkennen oder zählen - wie das geht, erfährst Du in [Tutorial 3 - Priorisierung]({{ site.baseurl }}/anleitungen-fortgeschrittene/tutorial3-priorisierung).
+  `TrafficLight:new(id, modell, immoRot, immoGruen, immoGelb, immoAnforderung)`<br>Für Vierer-Ampeln mit Lichtschaltung der Immobilien "rot" "gelb", "grün" und "Anforderung". Für die Anforderung musst Du die Fahrzeuge erkennen oder zählen - wie das geht, erfährst Du in [Tutorial 3 - Priorisierung]({{ site.baseurl }}/anleitungen-fortgeschrittene/tutorial3-priorisierung).
 
 Die Werte von `immoRot`, `immoGruen`, `immoGelb` und `immoAnforderung` kannst Du ganz einfach über den Eigenschaften-Dialog der Immobilie herausfinden. Dort findest Du den kompletten Namen der Immobilie heraus, den Du in den Code übernimmst.
 
@@ -81,8 +81,8 @@ Die Werte von `immoRot`, `immoGruen`, `immoGelb` und `immoAnforderung` kannst Du
 So sieht das fertige Beispiel für eine Vierer-Ampel mit Anforderung aus:
   ```lua
   -- Richtungen fuer Strassenbahnen:
-  os = Lane:neu("OS", 107, {
-      TrafficLight:neu(14, TrafficLightModel.Unsichtbar_2er,
+  os = Lane:new("OS", 107, {
+      TrafficLight:new(14, TrafficLightModel.Unsichtbar_2er,
           "#29_Straba Signal Halt", --       rot   schaltet das Licht dieser Immobilie ein
           "#28_Straba Signal geradeaus", --  gruen schaltet das Licht dieser Immobilie ein
           "#27_Straba Signal anhalten", --   gelb  schaltet das Licht dieser Immobilie ein
@@ -98,8 +98,8 @@ Für eine Dreier-Ampel ohne Anforderung kannst Du einfach die letze Immobilie `i
 
   ```lua
   -- Richtungen fuer Strassenbahnen:
-  os = Lane:neu("OS", 107, {
-      TrafficLight:neu(14, TrafficLightModel.Unsichtbar_2er,
+  os = Lane:new("OS", 107, {
+      TrafficLight:new(14, TrafficLightModel.Unsichtbar_2er,
           "#29_Straba Signal Halt", --       rot   schaltet das Licht dieser Immobilie ein
           "#28_Straba Signal geradeaus", --  gruen schaltet das Licht dieser Immobilie ein
           "#27_Straba Signal anhalten", --   gelb  schaltet das Licht dieser Immobilie ein

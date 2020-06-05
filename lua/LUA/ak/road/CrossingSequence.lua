@@ -66,22 +66,20 @@ function CrossingSequence:pedestrianLightsToTurnRedAndGreen(currentCircuit)
         end
     end
     for id, newTrafficLight in pairs(self.pedestrianLights) do
-        if not currentCircuit or not currentCircuit.trafficLights[id] then
-            turnGreen[newTrafficLight] = true
-        end
+        if not currentCircuit or not currentCircuit.trafficLights[id] then turnGreen[newTrafficLight] = true end
     end
 
     return turnRed, turnGreen
 end
 
-function CrossingSequence:getAlleRichtungen()
+function CrossingSequence:getLanesAndPedestrianCrossings()
     local alle = {}
     for lane in pairs(self.lanes) do alle[lane] = "NORMAL" end
     for richtung in pairs(self.pedestrianCrossings) do alle[richtung] = "PEDESTRIANTS" end
     return alle
 end
 
-function CrossingSequence:getNormaleRichtungen() return self.lanes end
+function CrossingSequence:getLanes() return self.lanes end
 
 function CrossingSequence:richtungenAlsTextZeile()
     local s = ""
@@ -123,47 +121,45 @@ function CrossingSequence:addPedestrianLight(trafficLight, secondTrafficLight)
     return self
 end
 
-function CrossingSequence:addPedestrianCrossing(richtung)
-    assert(richtung, "Bitte ein gueltige Richtung angeben")
-    richtung:setLaneType(Lane.RequestType.FUSSGAENGER)
-    self.pedestrianCrossings[richtung] = true
+function CrossingSequence:addPedestrianCrossing(pedestrianCrossing)
+    assert(pedestrianCrossing, "Bitte ein gueltige Richtung angeben")
+    pedestrianCrossing:setLaneType(Lane.RequestType.FUSSGAENGER)
+    self.pedestrianCrossings[pedestrianCrossing] = true
 end
-
-function CrossingSequence:getRichtungFuerFussgaenger() return self.pedestrianCrossings end
 
 --- Gibt alle Richtungen nach Prioritaet zurueck, sowie deren Anzahl und deren Durchschnittspriorität
 -- @return sortierteRichtungen, anzahlDerRichtungen, durchschnittsPrio
-function CrossingSequence:nachPrioSortierteRichtungen()
-    local sortierteRichtungen = {}
-    local anzahlDerRichtungen = 0
-    local gesamtPrio = 0
+function CrossingSequence:lanesSortedByPriority()
+    local sortedLanes = {}
+    local laneCount = 0
+    local prioritySum = 0
     for richtung in pairs(self.lanes) do
-        table.insert(sortierteRichtungen, richtung)
-        anzahlDerRichtungen = anzahlDerRichtungen + 1
-        gesamtPrio = gesamtPrio + richtung:calculatePriority()
+        table.insert(sortedLanes, richtung)
+        laneCount = laneCount + 1
+        prioritySum = prioritySum + richtung:calculatePriority()
     end
-    for richtung in pairs(self.pedestrianCrossings) do
-        table.insert(sortierteRichtungen, richtung)
-        anzahlDerRichtungen = anzahlDerRichtungen + 1
-        gesamtPrio = gesamtPrio + richtung:calculatePriority()
+    for lane in pairs(self.pedestrianCrossings) do
+        table.insert(sortedLanes, lane)
+        laneCount = laneCount + 1
+        prioritySum = prioritySum + lane:calculatePriority()
     end
-    local durchschnittsPrio = gesamtPrio / anzahlDerRichtungen
-    local sortierFunktion = function(richtung1, richtung2)
-        if richtung1:calculatePriority() > richtung2:calculatePriority() then
+    local averagePrio = prioritySum / laneCount
+    local sortierFunktion = function(lane1, lane2)
+        if lane1:calculatePriority() > lane2:calculatePriority() then
             return true
-        elseif richtung1:calculatePriority() < richtung2:calculatePriority() then
+        elseif lane1:calculatePriority() < lane2:calculatePriority() then
             return false
         end
-        return (richtung1.name < richtung2.name)
+        return (lane1.name < lane2.name)
     end
-    table.sort(sortierteRichtungen, sortierFunktion)
-    self.prio = durchschnittsPrio
-    return sortierteRichtungen, anzahlDerRichtungen, durchschnittsPrio
+    table.sort(sortedLanes, sortierFunktion)
+    self.prio = averagePrio
+    return sortedLanes, laneCount, averagePrio
 end
 
 ------ Gibt alle Richtungen nach Name sortiert zurueck
 -- @return sortierteRichtungen
-function CrossingSequence:nachNameSortierteRichtungen()
+function CrossingSequence:lanesSortedByName()
     local sortierteRichtungen = {}
     for richtung in pairs(self.lanes) do table.insert(sortierteRichtungen, richtung) end
     for richtung in pairs(self.pedestrianCrossings) do table.insert(sortierteRichtungen, richtung) end
@@ -176,10 +172,10 @@ end
 -- @param schaltung1 erste Schaltung
 -- @param schaltung2 zweite Schaltung
 --
-function CrossingSequence.hoeherePrioAls(schaltung1, schaltung2)
+function CrossingSequence.sequencePriorityComparator(schaltung1, schaltung2)
     if schaltung1 and schaltung2 then
-        local _, tableSize1, avg1 = schaltung1:nachPrioSortierteRichtungen()
-        local _, tableSize2, avg2 = schaltung2:nachPrioSortierteRichtungen()
+        local _, tableSize1, avg1 = schaltung1:lanesSortedByPriority()
+        local _, tableSize2, avg2 = schaltung2:lanesSortedByPriority()
 
         if avg1 > avg2 then
             return true
@@ -198,7 +194,7 @@ function CrossingSequence.hoeherePrioAls(schaltung1, schaltung2)
 end
 
 function CrossingSequence:calculatePriority()
-    local _, _, prio = self:nachPrioSortierteRichtungen()
+    local _, _, prio = self:lanesSortedByPriority()
     return prio
 end
 

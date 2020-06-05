@@ -163,25 +163,20 @@ function TrafficLight:switchStructureLight()
     local lightDbg = ""
     for lightTL in pairs(self.lightStructures) do
         if lightTL.redStructure then
-            local onOff =
-                (self.phase == TrafficLightState.RED or self.phase == TrafficLightState.REDYELLOW) and "an" or "aus"
-
-            lightDbg = lightDbg .. string.format(", Licht in %s: %s", lightTL.redStructure, onOff)
-            EEPStructureSetLight(lightTL.redStructure,
-                                 self.phase == TrafficLightState.RED or self.phase == TrafficLightState.REDYELLOW)
+            local onOff = self.phase == TrafficLightState.RED or self.phase == TrafficLightState.REDYELLOW
+            lightDbg = lightDbg .. string.format(", Licht in %s: %s", lightTL.redStructure, onOff and "an" or "aus")
+            EEPStructureSetLight(lightTL.redStructure, onOff)
         end
         if lightTL.yellowStructure then
-            local onOff = (self.phase == TrafficLightState.YELLOW or self.phase == TrafficLightState.REDYELLOW) and
-                              "an" or "aus"
-            lightDbg = lightDbg .. string.format(", Licht in %s: %s", lightTL.yellowStructure, onOff)
-            EEPStructureSetLight(lightTL.yellowStructure,
-                                 self.phase == TrafficLightState.YELLOW or self.phase == TrafficLightState.REDYELLOW)
+            local onOff = self.phase == TrafficLightState.YELLOW or self.phase == TrafficLightState.REDYELLOW
+            lightDbg = lightDbg ..
+                           string.format(", Licht in %s: %s", lightTL.yellowStructure, onOff and "an" or "aus")
+            EEPStructureSetLight(lightTL.yellowStructure, onOff)
         end
         if lightTL.greenStructure then
-            lightDbg = lightDbg ..
-                           string.format(", Licht in %s: %s", lightTL.greenStructure,
-                                         (self.phase == TrafficLightState.GREEN) and "an" or "aus")
-            EEPStructureSetLight(lightTL.greenStructure, self.phase == TrafficLightState.GREEN)
+            local onOff = self.phase == TrafficLightState.YELLOW or self.phase == TrafficLightState.REDYELLOW
+            lightDbg = lightDbg .. string.format(", Licht in %s: %s", lightTL.greenStructure, onOff and "an" or "aus")
+            EEPStructureSetLight(lightTL.greenStructure, onOff)
         end
     end
     return lightDbg

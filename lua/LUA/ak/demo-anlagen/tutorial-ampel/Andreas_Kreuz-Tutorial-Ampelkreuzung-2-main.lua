@@ -127,9 +127,9 @@ sch3:addPedestrianCrossing(fg_o)
 sch3:addPedestrianCrossing(fg_w)
 
 k1 = Crossing:new("Tutorial 2")
-k1:fuegeSchaltungHinzu(sch1)
-k1:fuegeSchaltungHinzu(sch2)
-k1:fuegeSchaltungHinzu(sch3)
+k1:addSequence(sch1)
+k1:addSequence(sch2)
+k1:addSequence(sch3)
 
 local ModuleRegistry = require("ak.core.ModuleRegistry")
 ModuleRegistry.registerModules(

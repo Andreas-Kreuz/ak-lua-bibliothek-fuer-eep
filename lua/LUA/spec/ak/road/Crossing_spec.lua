@@ -111,9 +111,9 @@ insulate("Crossing", function()
             assert.is_same(lane4, crossing.lanes[lane4.name])
         end)
         it("Switchings are there", function()
-            assert.is_same(true, crossing.schaltungen[sequenceA])
-            assert.is_same(true, crossing.schaltungen[sequenceB])
-            assert.is_same(true, crossing.schaltungen[sequenceC])
+            assert.is_same(true, crossing.sequences[sequenceA])
+            assert.is_same(true, crossing.sequences[sequenceB])
+            assert.is_same(true, crossing.sequences[sequenceC])
         end)
         it("Lanes are there", function()
             assert.is_truthy(sequenceA.lanes[lane1])
@@ -353,7 +353,7 @@ insulate("Check traffic light sequence", function()
         it("# step0 - sequenceA prio", function() assert.equals(1.5, step0SwitchingAPrio) end)
         it("# step0 - sequenceB prio", function() assert.equals(000, step0SwitchingBPrio) end)
         it("# step0 - sequenceC prio", function() assert.equals(000, step0SwitchingCPrio) end)
-        local step0Ready = crossing:isBereit() --                     step0
+        local step0Ready = crossing:isGreenPhaseFinished() --                     step0
         local step0SignalAxisK1 = EEPGetSignal(23) -- store signal    step0
         local step0SignalAxisK2 = EEPGetSignal(24) -- store signal    step0
         local step0SignalAxisK3 = EEPGetSignal(25) -- store signal    step0
@@ -399,7 +399,7 @@ insulate("Check traffic light sequence", function()
         it("# step1 - sequenceA prio", function() assert.equals(1.5, step1SwitchingAPrio) end)
         it("# step1 - sequenceB prio", function() assert.equals(000, step1SwitchingBPrio) end)
         it("# step1 - sequenceC prio", function() assert.equals(000, step1SwitchingCPrio) end)
-        local step1Ready = crossing:isBereit() --                     step1
+        local step1Ready = crossing:isGreenPhaseFinished() --                     step1
         local step1SignalAxisK1 = EEPGetSignal(23) -- store signal    step1
         local step1SignalAxisK2 = EEPGetSignal(24) -- store signal    step1
         local step1SignalAxisK3 = EEPGetSignal(25) -- store signal    step1
@@ -423,7 +423,7 @@ insulate("Check traffic light sequence", function()
     -- ModuleRegistry.runTasks() -- First Turn old to yellow + Pedestrian Red
 
     -- do
-    --     local step3Ready = crossing:isBereit() --                     step3
+    --     local step3Ready = crossing:isGreenPhaseFinished() --                     step3
     --     local step3SignalAxisK1 = EEPGetSignal(23) -- store signal    step3
     --     local step3SignalAxisK2 = EEPGetSignal(24) -- store signal    step3
     --     local step3SignalAxisK3 = EEPGetSignal(25) -- store signal    step3
@@ -447,7 +447,7 @@ insulate("Check traffic light sequence", function()
     -- ModuleRegistry.runTasks() -- First Turn old to red
 
     -- do
-    --     local step4Ready = crossing:isBereit() --                     step4
+    --     local step4Ready = crossing:isGreenPhaseFinished() --                     step4
     --     local step4SignalAxisK1 = EEPGetSignal(23) -- store signal    step4
     --     local step4SignalAxisK2 = EEPGetSignal(24) -- store signal    step4
     --     local step4SignalAxisK3 = EEPGetSignal(25) -- store signal    step4
@@ -471,7 +471,7 @@ insulate("Check traffic light sequence", function()
     -- ModuleRegistry.runTasks() -- First Turn new to red_yellow
 
     -- do
-    --     local step5Ready = crossing:isBereit() --                     step5
+    --     local step5Ready = crossing:isGreenPhaseFinished() --                     step5
     --     local step5SignalAxisL1 = EEPGetSignal(11) -- store signal    step5
     --     local step5SignalAxisL2 = EEPGetSignal(12) -- store signal    step5
     --     local step5SignalAxisL3 = EEPGetSignal(13) -- store signal    step5
@@ -503,7 +503,7 @@ insulate("Check traffic light sequence", function()
     ModuleRegistry.runTasks() -- First Turn new to red_yellow
 
     do
-        local step6Ready = crossing:isBereit() --                     step6
+        local step6Ready = crossing:isGreenPhaseFinished() --                     step6
         local step6SignalAxisL1 = EEPGetSignal(11) -- store signal    step6
         local step6SignalAxisL2 = EEPGetSignal(12) -- store signal    step6
         local step6SignalAxisL3 = EEPGetSignal(13) -- store signal    step6
@@ -563,7 +563,7 @@ insulate("Check traffic light sequence", function()
     ModuleRegistry.runTasks() -- First Set ready -- Scheduler.debug = true
 
     do
-        local step7Ready = crossing:isBereit() --                     step7
+        local step7Ready = crossing:isGreenPhaseFinished() --                     step7
         local step7SignalAxisL1 = EEPGetSignal(11) -- store signal    step7
         local step7SignalAxisL2 = EEPGetSignal(12) -- store signal    step7
         local step7SignalAxisL3 = EEPGetSignal(13) -- store signal    step7
@@ -623,7 +623,7 @@ insulate("Check traffic light sequence", function()
     ModuleRegistry.runTasks() -- Second Plan switched
 
     do
-        local step8Ready = crossing:isBereit() --                     step8
+        local step8Ready = crossing:isGreenPhaseFinished() --                     step8
         local step8SignalAxisL1 = EEPGetSignal(11) -- store signal    step8
         local step8SignalAxisL2 = EEPGetSignal(12) -- store signal    step8
         local step8SignalAxisL3 = EEPGetSignal(13) -- store signal    step8
@@ -655,7 +655,7 @@ insulate("Check traffic light sequence", function()
     ModuleRegistry.runTasks() -- Second Old Pedestrians RED
 
     do
-        local step9Ready = crossing:isBereit() --                     step9
+        local step9Ready = crossing:isGreenPhaseFinished() --                     step9
         local step9SignalAxisL1 = EEPGetSignal(11) -- store signal    step9
         local step9SignalAxisL2 = EEPGetSignal(12) -- store signal    step9
         local step9SignalAxisL3 = EEPGetSignal(13) -- store signal    step9
@@ -687,7 +687,7 @@ insulate("Check traffic light sequence", function()
     ModuleRegistry.runTasks() -- Second Old Lanes YEL
 
     do
-        local step10Ready = crossing:isBereit() --                     step10
+        local step10Ready = crossing:isGreenPhaseFinished() --                     step10
         local step10SignalAxisL1 = EEPGetSignal(11) -- store signal    step10
         local step10SignalAxisL2 = EEPGetSignal(12) -- store signal    step10
         local step10SignalAxisL3 = EEPGetSignal(13) -- store signal    step10
@@ -719,7 +719,7 @@ insulate("Check traffic light sequence", function()
     ModuleRegistry.runTasks() -- Second Old Lanes RED
 
     do
-        local step11Ready = crossing:isBereit() --                     step11
+        local step11Ready = crossing:isGreenPhaseFinished() --                     step11
         local step11SignalAxisL1 = EEPGetSignal(11) -- store signal    step11
         local step11SignalAxisL2 = EEPGetSignal(12) -- store signal    step11
         local step11SignalAxisL3 = EEPGetSignal(13) -- store signal    step11
@@ -751,7 +751,7 @@ insulate("Check traffic light sequence", function()
     ModuleRegistry.runTasks() -- Second New Lanes YEL
 
     do
-        local step12Ready = crossing:isBereit() --                     step12
+        local step12Ready = crossing:isGreenPhaseFinished() --                     step12
         local step12SignalAxisL1 = EEPGetSignal(11) -- store signal    step12
         local step12SignalAxisL2 = EEPGetSignal(12) -- store signal    step12
         local step12SignalAxisL3 = EEPGetSignal(13) -- store signal    step12
@@ -783,7 +783,7 @@ insulate("Check traffic light sequence", function()
     ModuleRegistry.runTasks() -- Second New Lanes GRE
 
     do
-        local step13Ready = crossing:isBereit() --                     step13
+        local step13Ready = crossing:isGreenPhaseFinished() --                     step13
         local step13SignalAxisL1 = EEPGetSignal(11) -- store signal    step13
         local step13SignalAxisL2 = EEPGetSignal(12) -- store signal    step13
         local step13SignalAxisL3 = EEPGetSignal(13) -- store signal    step13

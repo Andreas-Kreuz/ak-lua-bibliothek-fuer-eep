@@ -111,6 +111,6 @@ TrafficLightModel.JS2_3er_ohne_FG = TrafficLightModel:new("Ampel_3er_XXX_ohne_FG
 TrafficLightModel.Unsichtbar_2er = TrafficLightModel:new("Unsichtbares Signal", 2, 1, 2, 2, 2, 1, 1)
 
 -- No traffic light
-TrafficLightModel.NONE = TrafficLightModel:new("No Signal", 1, 2, 3, 4, 5, 6, 7)
+TrafficLightModel.NONE = TrafficLightModel:new("Dummy Signal", 1, 2, 3, 4, 5, 6, 7)
 
 return TrafficLightModel

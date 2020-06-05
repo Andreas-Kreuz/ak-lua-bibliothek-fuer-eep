@@ -30,15 +30,15 @@ local function collect(alleKreuzungen)
             currentSwitching = crossing.aktuelleSchaltung and crossing.aktuelleSchaltung.name or nil,
             manualSwitching = crossing.manuelleSchaltung and crossing.manuelleSchaltung.name or nil,
             nextSwitching = crossing.nextSchaltung and crossing.nextSchaltung.name or nil,
-            ready = crossing.bereit,
-            timeForGreen = crossing.gruenZeit,
+            ready = crossing.greenPhaseFinished,
+            timeForGreen = crossing.greenPhaseSeconds,
             staticCams = crossing.staticCams
         }
         table.insert(intersections, intersection)
 
         local trafficLights = {}
 
-        for schaltung in pairs(crossing:getSchaltungen()) do
+        for schaltung in pairs(crossing:getSequences()) do
             local sequence = {
                 id = crossing.name .. "-" .. schaltung.name,
                 intersectionId = crossing.name,
@@ -47,7 +47,7 @@ local function collect(alleKreuzungen)
             }
             table.insert(intersectionSwitching, sequence)
 
-            for lane in pairs(schaltung:getAlleRichtungen()) do
+            for lane in pairs(schaltung:getLanesAndPedestrianCrossings()) do
                 alleRichtungen[lane] = intersection.id
                 richtungsSchaltungen[lane] = richtungsSchaltungen[lane] or {}
                 table.insert(richtungsSchaltungen[lane], schaltung.name)

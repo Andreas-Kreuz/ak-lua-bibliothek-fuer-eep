@@ -32,7 +32,7 @@ Crossing.zeigeSchaltungAlsInfo = true
 --------------------------------------------------------------------
 -- Erste Hilfe - normalerweise nicht notwendig                    --
 --------------------------------------------------------------------
--- Crossing.zaehlerZuruecksetzen()
+-- Crossing.resetVehicles()
 
 
 -------------------------------------------------------------------

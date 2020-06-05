@@ -100,7 +100,7 @@ k2_r5:setDirections({ 'LEFT', 'RIGHT' })
 ----------------------------------------------------------------------------------------------------------------------
 -- Definiere alle Schaltungen fuer Kreuzung 2
 ----------------------------------------------------------------------------------------------------------------------
--- Eine Schaltung bestimmt, welche Richtungen gleichzeitig auf grÃ¼n geschaltet werden dÃ¼rfen, alle anderen sind rot
+-- Eine Schaltung bestimmt, welche Richtungen gleichzeitig auf grün geschaltet werden dürfen, alle anderen sind rot
 
 --- Kreuzung 2: Schaltung 1
 local k2_schaltung1 = CrossingSequence:new("Schaltung 1")
@@ -123,10 +123,10 @@ local k2_schaltung4 = CrossingSequence:new("Schaltung 4")
 k2_schaltung4:addLane(k2_r5)
 
 k2 = Crossing:new("Kreuzung 2")
-k2:fuegeSchaltungHinzu(k2_schaltung1)
-k2:fuegeSchaltungHinzu(k2_schaltung2)
-k2:fuegeSchaltungHinzu(k2_schaltung3)
-k2:fuegeSchaltungHinzu(k2_schaltung4)
+k2:addSequence(k2_schaltung1)
+k2:addSequence(k2_schaltung2)
+k2:addSequence(k2_schaltung3)
+k2:addSequence(k2_schaltung4)
 --endregion
 
 -- region K1-Richtungen
@@ -178,7 +178,7 @@ k1_r3_7_fg:setTrafficType('PEDESTRIAN')
 ----------------------------------------------------------------------------------------------------------------------
 -- Definiere alle Schaltungen fuer Kreuzung 1
 ----------------------------------------------------------------------------------------------------------------------
--- Eine Schaltung bestimmt, welche Richtungen gleichzeitig auf grÃ¼n geschaltet werden dÃ¼rfen, alle anderen sind rot
+-- Eine Schaltung bestimmt, welche Richtungen gleichzeitig auf grün geschaltet werden dürfen, alle anderen sind rot
 
 --- Kreuzung 1: Schaltung 1
 local k1_schaltung1 = CrossingSequence:new("Schaltung 1")
@@ -203,10 +203,10 @@ k1_schaltung4:addLane(k1_r4)
 k1_schaltung4:addLane(k1_r8)
 
 k1 = Crossing:new("Kreuzung 1")
-k1:fuegeSchaltungHinzu(k1_schaltung1)
-k1:fuegeSchaltungHinzu(k1_schaltung2)
-k1:fuegeSchaltungHinzu(k1_schaltung3)
-k1:fuegeSchaltungHinzu(k1_schaltung4)
+k1:addSequence(k1_schaltung1)
+k1:addSequence(k1_schaltung2)
+k1:addSequence(k1_schaltung3)
+k1:addSequence(k1_schaltung4)
 --endregion
 
 local ModuleRegistry = require("ak.core.ModuleRegistry")

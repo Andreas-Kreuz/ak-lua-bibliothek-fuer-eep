@@ -18,7 +18,7 @@ Crossing.zeigeSchaltungAlsInfo = false
 --   |        +------------------------------- Name der Richtung
 --   |        |     +------------------------- Speicher ID - um die Anzahl der Fahrzeuge
 --   |        |     |                                        und die Wartezeit zu speichern
---   |        |     |      +------------------ neue Ampel fÃ¼r diese Richtung
+--   |        |     |      +------------------ neue Ampel für diese Richtung
 --   |        |     |      |           +------ Signal-ID dieser Ampel
 --   |        |     |      |           |   +-- Modell kann rot, gelb, gruen und FG schalten
 n1 = Lane:new("N1", 100, { TrafficLight:new(12, TrafficLightModel.JS2_3er_mit_FG) })
@@ -97,7 +97,7 @@ fg_w:setTrafficType('PEDESTRIAN')
 -- Definiere die Schaltungen und die Kreuzung
 --------------------------------------------------------------
 -- Eine Schaltung bestimmt, welche Richtungen gleichzeitig auf
--- grÃ¼n geschaltet werden dÃ¼rfen, alle anderen sind rot
+-- grün geschaltet werden dürfen, alle anderen sind rot
 
 --- Tutorial 1: Schaltung 1
 local sch1 = CrossingSequence:new("Schaltung 1")
@@ -161,14 +161,14 @@ sch4:addPedestrianCrossing(fg_s1)
 
 
 k1 = Crossing:new("Tutorial 1")
-k1:fuegeSchaltungHinzu(sch1)
-k1:fuegeSchaltungHinzu(sch2)
-k1:fuegeSchaltungHinzu(sch3)
-k1:fuegeSchaltungHinzu(sch4)
--- k1:fuegeSchaltungHinzu(sch5)
--- k1:fuegeSchaltungHinzu(sch6)
--- k1:fuegeSchaltungHinzu(sch7)
--- k1:fuegeSchaltungHinzu(sch8)
+k1:addSequence(sch1)
+k1:addSequence(sch2)
+k1:addSequence(sch3)
+k1:addSequence(sch4)
+-- k1:addSequence(sch5)
+-- k1:addSequence(sch6)
+-- k1:addSequence(sch7)
+-- k1:addSequence(sch8)
 
 local ModuleRegistry = require("ak.core.ModuleRegistry")
 ModuleRegistry.registerModules(

@@ -14,10 +14,9 @@ local AkAllKreuzungen = {}
 ---@class Crossing
 ---@field public name string @Intersection Name
 ---@field private aktuelleSchaltung CrossingSequence @Currently used sequence
----@field private schaltungen CrossingSequence[] @All sequences of the intersection
----@field private bereit boolean @If true, the Intersection can be switched
----@field private geschaltet boolean @If true, the intersection is switched
----@field private gruenZeit number @Integer value of how long the intersection will show green light
+---@field private sequences CrossingSequence[] @All sequences of the intersection
+---@field private greenPhaseFinished boolean @If true, the Intersection can be switched
+---@field private greenPhaseSeconds number @Integer value of how long the intersection will show green light
 ---@field private staticCams table @List of static cams
 local Crossing = {}
 Crossing.debug = AkStartMitDebug or false
@@ -60,13 +59,13 @@ function Crossing.getType() return "Crossing" end
 
 function Crossing:getName() return self.name end
 
-function Crossing:getSchaltungen() return self.schaltungen end
+function Crossing:getSequences() return self.sequences end
 
 function Crossing:getAktuelleSchaltung() return self.aktuelleSchaltung end
 
 function Crossing:setzeWarteZeitZurueck(nextSchaltung)
     for _, lane in pairs(self.lanes) do
-        if nextSchaltung:getNormaleRichtungen()[lane] then
+        if nextSchaltung:getLanes()[lane] then
             lane:resetWaitCount()
         else
             lane:incrementWaitCount()
@@ -83,48 +82,48 @@ function Crossing:calculateNextSchaltung()
         self.nextSchaltung = self.manuelleSchaltung
     else
         local sortedTable = {}
-        for schaltung in pairs(self.schaltungen) do table.insert(sortedTable, schaltung) end
-        table.sort(sortedTable, CrossingSequence.hoeherePrioAls)
+        for sequence in pairs(self.sequences) do table.insert(sortedTable, sequence) end
+        table.sort(sortedTable, CrossingSequence.sequencePriorityComparator)
         self.nextSchaltung = sortedTable[1]
     end
     return self.nextSchaltung
 end
 
 function Crossing:setManuelleSchaltung(nameDerSchaltung)
-    for schaltung in pairs(self.schaltungen) do
-        if schaltung.name == nameDerSchaltung then
-            self.manuelleSchaltung = schaltung
+    for sequence in pairs(self.sequences) do
+        if sequence.name == nameDerSchaltung then
+            self.manuelleSchaltung = sequence
             print("Manuell geschaltet auf: " .. nameDerSchaltung .. " (" .. self.name .. "')")
-            self:setBereit(true)
+            self:setGreenPhaseFinished(true)
         end
     end
 end
 
 function Crossing:setAutomatikModus()
     self.manuelleSchaltung = nil
-    self:setBereit(true)
+    self:setGreenPhaseFinished(true)
     print("Automatikmodus aktiviert. (" .. self.name .. "')")
 end
 
-function Crossing:fuegeSchaltungHinzu(schaltung) self.schaltungen[schaltung] = true end
+function Crossing:addSequence(sequence) self.sequences[sequence] = true end
 
-function Crossing:setBereit(bereit) self.bereit = bereit end
+function Crossing:getGreenPhaseSeconds() return self.greenPhaseSeconds end
 
-function Crossing:isBereit() return self.bereit end
+function Crossing:setGreenPhaseFinished(greenPhaseFinished) self.greenPhaseFinished = greenPhaseFinished end
 
-function Crossing:setGeschaltet(geschaltet) self.geschaltet = geschaltet end
+function Crossing:isGreenPhaseFinished() return self.greenPhaseFinished end
 
-function Crossing:isGeschaltet() return self.geschaltet end
+function Crossing:setGreenPhaseReached(greenPhaseReached) self.greenPhaseReached = greenPhaseReached end
 
-function Crossing:getGruenZeitSekunden() return self.gruenZeit end
+function Crossing:isGreenPhaseReached() return self.greenPhaseReached end
 
-function Crossing:fuegeStatischeKameraHinzu(kameraName) table.insert(self.staticCams, kameraName) end
+function Crossing:addStaticCam(kameraName) table.insert(self.staticCams, kameraName) end
 
-function Crossing.zaehlerZuruecksetzen()
-    for _, kreuzung in pairs(AkAllKreuzungen) do
-        print("[Crossing ] SETZE ZURUECK: " .. kreuzung.name)
-        for schaltung in pairs(kreuzung:getSchaltungen()) do
-            for richtung in pairs(schaltung:getNormaleRichtungen()) do richtung:resetVehicles() end
+function Crossing.resetVehicles()
+    for _, crossing in pairs(AkAllKreuzungen) do
+        print("[Crossing ] SETZE ZURUECK: " .. crossing.name)
+        for sequence in pairs(crossing:getSequences()) do
+            for richtung in pairs(sequence:getLanes()) do richtung:resetVehicles() end
         end
     end
 end
@@ -137,12 +136,12 @@ function Crossing:new(name)
     local o = {
         name = name,
         aktuelleSchaltung = nil,
-        schaltungen = {},
+        sequences = {},
         lanes = {},
         pedestrianCrossings = {},
-        bereit = true,
-        geschaltet = true,
-        gruenZeit = 15,
+        greenPhaseReached = true,
+        greenPhaseFinished = true,
+        greenPhaseSeconds = 15,
         staticCams = {}
     }
     self.__index = self
@@ -178,7 +177,7 @@ end
 function Crossing:newSequence(name)
     local sequence = CrossingSequence:new(name)
     sequence.crossing = self
-    self.schaltungen[sequence] = true
+    self.sequences[sequence] = true
     return sequence
 end
 
@@ -202,13 +201,13 @@ end
 local function switch(crossing)
     if Crossing.debug then
         print(string.format("[Crossing ] Schalte Kreuzung %s: %s", crossing:getName(),
-                            crossing:isBereit() and "Ja" or "Nein"))
+                            crossing:isGreenPhaseFinished() and "Ja" or "Nein"))
     end
-    if not crossing:isBereit() or not crossing:isGeschaltet() then do return true end end
+    if not crossing:isGreenPhaseFinished() or not crossing.greenPhaseReached then do return true end end
 
     local TrafficLight = require("ak.road.TrafficLight")
-    crossing:setGeschaltet(false)
-    crossing:setBereit(false)
+    crossing.greenPhaseReached = false
+    crossing:setGreenPhaseFinished(false)
     ---@type CrossingSequence
     local nextCircuit = crossing:calculateNextSchaltung()
     local nextName = crossing.name .. " " .. nextCircuit:getName()
@@ -251,7 +250,7 @@ local function switch(crossing)
         lastTask = turnTrafficLightsRed
     else
         local reason = "Schalte initial auf rot"
-        trafficLightsToTurnRed = allTrafficLights(crossing.schaltungen)
+        trafficLightsToTurnRed = allTrafficLights(crossing.sequences)
         TrafficLight.switchAll(trafficLightsToTurnRed, TrafficLightState.RED, reason)
     end
 
@@ -266,7 +265,7 @@ local function switch(crossing)
     local turnNextTrafficLightsGreen = Task:new(function()
         TrafficLight.switchAll(trafficLightsToTurnGreen, TrafficLightState.GREEN, reasonGreen)
         crossing:setzeWarteZeitZurueck(nextCircuit)
-        crossing:setGeschaltet(true)
+        crossing.greenPhaseReached = true
     end, reasonGreen)
     Scheduler:scheduleTask(1, turnNextTrafficLightsGreen, turnNextTrafficLightsYellow)
 
@@ -274,11 +273,10 @@ local function switch(crossing)
         if Crossing.debug then
             print("[Crossing ] " .. crossing.name .. ": Fahrzeuge sind gefahren, kreuzung ist dann frei.")
         end
-        crossing:setBereit(true)
-    end, crossing.name .. " ist nun bereit (war " .. crossing:getGruenZeitSekunden() .. "s auf gruen geschaltet)")
-    Scheduler:scheduleTask(crossing:getGruenZeitSekunden(), changeToReadyStatus, turnNextTrafficLightsGreen)
+        crossing:setGreenPhaseFinished(true)
+    end, crossing.name .. " ist nun bereit (war " .. crossing:getGreenPhaseSeconds() .. "s auf gruen geschaltet)")
+    Scheduler:scheduleTask(crossing:getGreenPhaseSeconds(), changeToReadyStatus, turnNextTrafficLightsGreen)
 end
-
 
 --- Diese Funktion sucht sich aus den Ampeln die mit der passenden Richtung
 -- raus und setzt deren Texte auf die aktuelle Schaltung
@@ -291,7 +289,7 @@ local function showSwitching(crossing)
 
     -- sort the circuits
     local sortedSequences = {}
-    for k in pairs(crossing:getSchaltungen()) do table.insert(sortedSequences, k) end
+    for k in pairs(crossing:getSequences()) do table.insert(sortedSequences, k) end
     table.sort(sortedSequences, function(s1, s2) return (s1.name < s2.name) end)
 
     for _, sequence in ipairs(sortedSequences) do

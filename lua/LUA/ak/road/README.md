@@ -196,7 +196,7 @@ Wird dazu verwendet, die Kreuzung zu verwalten, enthält mehrere Schaltungen.
 
 - `Crossing:new(name)` - legt eine neue Kreuzung an. Diese wird automatisch anhand ihrer Richtungen geschaltet.
 
-- `function Crossing:fuegeSchaltungHinzu(schaltung)` fügt eine Schaltung zur Kreuzung hinzu.
+- `function Crossing:addSequence(schaltung)` fügt eine Schaltung zur Kreuzung hinzu.
 
 ## Funktion `Crossing:planeSchaltungenEin()`
 
