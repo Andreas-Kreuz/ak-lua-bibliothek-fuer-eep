@@ -216,7 +216,6 @@ local function switch(crossing)
     local currentName = currentCircuit and crossing.name .. " " .. currentCircuit:getName() or crossing.name ..
                             " Rot fuer alle"
 
-    local lanesToTurnRed, lanesToTurnGreen = nextCircuit:lanesToTurnRedAndGreen(currentCircuit)
     local trafficLightsToTurnRed, trafficLightsToTurnGreen =
         nextCircuit:trafficLightsToTurnRedAndGreen(currentCircuit)
     local pedestrianLightsToTurnRed, pedestrianLightsToTurnGreen =
@@ -241,7 +240,6 @@ local function switch(crossing)
         local reasonYellow = "Schalte " .. currentName .. " auf gelb"
         local turnTrafficLightsYellow = Task:new(function()
             TrafficLight.switchAll(trafficLightsToTurnRed, TrafficLightState.YELLOW, reasonYellow)
-            Lane.switchLanes(lanesToTurnRed, TrafficLightState.RED, reasonYellow)
         end, reasonYellow)
         Scheduler:scheduleTask(0, turnTrafficLightsYellow, turnPedestrianRed)
 
@@ -254,13 +252,7 @@ local function switch(crossing)
     else
         local reason = "Schalte initial auf rot"
         trafficLightsToTurnRed = allTrafficLights(crossing.schaltungen)
-        lanesToTurnRed = {}
-        for laneName, lane in pairs(crossing.lanes) do
-            if Crossing.debug then print("[Crossing ] " .. laneName .. " " .. reason) end
-            lanesToTurnRed[lane] = true
-        end
         TrafficLight.switchAll(trafficLightsToTurnRed, TrafficLightState.RED, reason)
-        Lane.switchLanes(lanesToTurnRed, TrafficLightState.RED, reason)
     end
 
     local reasonRedYellow = "Schalte " .. nextName .. " auf rot-gelb"
@@ -273,7 +265,6 @@ local function switch(crossing)
     local reasonGreen = "Schalte " .. nextName .. " auf gruen"
     local turnNextTrafficLightsGreen = Task:new(function()
         TrafficLight.switchAll(trafficLightsToTurnGreen, TrafficLightState.GREEN, reasonGreen)
-        Lane.switchLanes(lanesToTurnGreen, TrafficLightState.GREEN, reasonGreen)
         crossing:setzeWarteZeitZurueck(nextCircuit)
         crossing:setGeschaltet(true)
     end, reasonGreen)

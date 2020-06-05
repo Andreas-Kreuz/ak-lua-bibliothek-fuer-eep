@@ -23,7 +23,7 @@ insulate("Crossing", function()
     --  allowed to turn               |        | LEFT   |STRAIGHT|
     --  right when lane 3             |        |        |        |
     --  is turning left               |        | lane 3 | lane 4 |
-    --  (Route: "RIGHT TURN")         |        |   S    |    S   |
+    --  (Route: RIGHT_TURN_ROUTE)         |        |   S    |    S   |
     --
     require("ak.core.eep.AkEepFunktionen")
     local Lane = require("ak.road.Lane")
@@ -38,6 +38,9 @@ insulate("Crossing", function()
     local K1, K2, K3, K5, K6, K7, K8, K9
     local sequenceA, sequenceB, sequenceC
     local crossing
+
+    local RIGHT_TURN_ROUTE = "TURN RIGHT"
+    EEPSetTrainRoute("#Car2a", RIGHT_TURN_ROUTE)
 
     before_each(function()
         L1 = TrafficLight:new(11, TrafficLightModel.Unsichtbar_2er) -- Signal for Lane 1
@@ -70,7 +73,7 @@ insulate("Crossing", function()
         sequenceA:addPedestrianLight(K6)
 
         sequenceB = crossing:newSequence("Sequence B - South + East Right")
-        sequenceB:addLane(lane2, {Lane.Directions.RIGHT}, {"RIGHT TURN"})
+        sequenceB:addLane(lane2, {Lane.Directions.RIGHT}, {RIGHT_TURN_ROUTE})
         sequenceB:addTrafficLight(K7)
         sequenceB:addLane(lane3)
         sequenceB:addTrafficLight(K8)
@@ -199,7 +202,7 @@ insulate("Check traffic light sequence", function()
     --  allowed to turn               |        | LEFT   |STRAIGHT|
     --  right when lane 3             |        |        |        |
     --  is turning left               |        | lane 3 | lane 4 |
-    --  (Route: "RIGHT TURN")         |        |   S    |    S   |
+    --  (Route: RIGHT_TURN_ROUTE)         |        |   S    |    S   |
     --
     require("ak.core.eep.AkEepFunktionen")
     local Lane = require("ak.road.Lane")
@@ -219,6 +222,9 @@ insulate("Check traffic light sequence", function()
     local sequenceA, sequenceB, sequenceC
     ---@type Crossing
     local crossing
+
+    local RIGHT_TURN_ROUTE = "TURN RIGHT"
+    EEPSetTrainRoute("#Car2a", RIGHT_TURN_ROUTE)
 
     c1Lane1Signal = TrafficLight:new(11, TrafficLightModel.Unsichtbar_2er)
     c1Lane2Signal = TrafficLight:new(12, TrafficLightModel.Unsichtbar_2er)
@@ -241,7 +247,7 @@ insulate("Check traffic light sequence", function()
 
     lane1:driveOn(K1)
     lane2:driveOn(K6)
-    lane2:driveOn(K7, "RIGHT TURN") -- .showRequestOn(K7)
+    lane2:driveOn(K7, RIGHT_TURN_ROUTE) -- .showRequestOn(K7)
     lane3:driveOn(K8)
     lane4:driveOn(K9)
 
@@ -308,15 +314,6 @@ insulate("Check traffic light sequence", function()
     EEPSetSignal(31, RED)
 
     lane1:vehicleEntered("#Car1a")
-
-    do -- describe("Lane sequence A -> B", function()
-        local r, g = sequenceB:lanesToTurnRedAndGreen(sequenceA)
-        it("Red   length", function() assert(1, #r) end)
-        it("Red   lane1 ", function() assert(lane1, r[1]) end)
-        it("Green length", function() assert(2, #g) end)
-        it("Green lane2 ", function() assert(lane2, g[1]) end)
-        it("Green lane3 ", function() assert(lane3, g[2]) end)
-    end
 
     do
         it("Lane1 Traffic Light", function() assert.equals(11, lane1.trafficLight.signalId) end)
@@ -791,7 +788,7 @@ insulate("Check traffic light sequence", function()
         local step13SignalAxisK9 = EEPGetSignal(31) -- store signal    step13
         it("# step13 - Crossing ready    ", function() assert.is_false(step13Ready) end)
         it("# step13 - Signal L1 (11) ", function() assert.equals(U_R, step13SignalAxisL1) end)
-        it("# step13 - Signal L2 (12) ", function() assert.equals(U_G, step13SignalAxisL2) end)
+        it("# step13 - Signal L2 (12) ", function() assert.equals(U_R, step13SignalAxisL2) end)
         it("# step13 - Signal L3 (13) ", function() assert.equals(U_G, step13SignalAxisL3) end)
         it("# step13 - Signal L4 (14) ", function() assert.equals(U_G, step13SignalAxisL4) end)
         it("# step13 - Signal K1 (23) ", function() assert.equals(RED, step13SignalAxisK1) end)
@@ -806,5 +803,22 @@ insulate("Check traffic light sequence", function()
         pending("Look that each lane turns their signal to red")
         pending("Look that each lane turns their signal to green on route only")
         pending("Look that each lane turns their signal to red on route only")
+
+        -- Check the lane signal switching
+        do
+        lane2:vehicleEntered("#Car2a")
+            local afterTurnCarEntered = EEPGetSignal(12) -- store signal    step13
+            it("# step13 - Signal L2 (12) ", function() assert.equals(U_G, afterTurnCarEntered) end)
+        end
+        do
+            lane2:vehicleEntered("#Car3a")
+            local afterOtherCarEntered = EEPGetSignal(12) -- store signal    step13
+            it("# step13 - Signal L2 (12) ", function() assert.equals(U_G, afterOtherCarEntered) end)
+        end
+        do
+            lane2:vehicleLeft("#Car2a")
+            local afterTurnCarLeft = EEPGetSignal(12) -- store signal    step13
+            it("# step13 - Signal L2 (12) ", function() assert.equals(U_R, afterTurnCarLeft) end)
+        end
     end
 end)

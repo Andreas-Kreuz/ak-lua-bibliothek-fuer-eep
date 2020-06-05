@@ -16,6 +16,7 @@ local TrafficLight = {}
 TrafficLight.debug = AkStartMitDebug or false
 local registeredSignals = {}
 
+
 ---
 ---@param signalId number ID der Ampel auf der Anlage (Eine Ampel von diesem Typ sollte auf der Anlage sein
 ---@param trafficLightModel TrafficLightModel Typ der Ampel (TrafficLightModel)
@@ -34,7 +35,7 @@ function TrafficLight:new(signalId, trafficLightModel, redStructure, greenStruct
     local o = {
         signalId = signalId,
         trafficLightModel = trafficLightModel,
-        phase = TrafficLightState.RED,
+        phase = trafficLightModel:phaseOf(EEPGetSignal(signalId)),
         debug = false,
         laneInfo = "",
         circuitInfo = "",
@@ -154,6 +155,7 @@ function TrafficLight:switchTo(phase, grund)
                 lightDbg .. axisDbg .. " - " .. grund)
     end
     self:switchSignal(sigIndex)
+    self:changed()
 end
 
 function TrafficLight:switchStructureLight()
@@ -234,5 +236,9 @@ function TrafficLight:print()
     print(string.format("[TrafficLight    ] Ampel %04d: %s (%s)", self.signalId, self.phase,
                         self.trafficLightModel.name))
 end
+
+function TrafficLight:addLane(lane) self.lanes[lane] = true end
+function TrafficLight:removeLane(lane) self.lanes[lane] = nil end
+function TrafficLight:changed() for lane in pairs(self.lanes) do lane:trafficLightChanged(self) end end
 
 return TrafficLight

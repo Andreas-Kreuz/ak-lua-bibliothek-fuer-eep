@@ -11,7 +11,6 @@ local Lane = {}
 Lane.debug = false
 
 -- Might bring some performance
-local EEPGetSignal = EEPGetSignal
 local EEPGetTrainRoute = EEPGetTrainRoute
 local EEPRegisterRoadTrack = EEPRegisterRoadTrack
 local EEPIsRoadTrackReserved = EEPIsRoadTrackReserved
@@ -127,12 +126,14 @@ local function load(lane)
         lane.phase = data["p"] or TrafficLightState.RED
         lane.queue = queueFromText(data["q"], lane.vehicleCount)
         lane:checkRequests()
-        lane:switchTo(lane.phase, "Neu geladen")
+        lane:switchTrafficLightTo(lane.phase, "Neu geladen")
     else
         lane.vehicleCount = 0
         lane.waitCount = 0
         lane.phase = TrafficLightState.RED
         lane.queue = Queue:new()
+        lane:checkRequests()
+        lane:switchTrafficLightTo(lane.phase, "Neu geladen")
     end
 end
 
@@ -148,15 +149,53 @@ local function refreshRequests(lane)
         end
 
         local requests = {}
-
         for route, trafficLights in pairs(lane.requestTrafficLights) do
-            local haveRequest = queuedRoutes[route] or (route == "!ALL!" and carsInQueue)
+            local wildCardRoute = route == "!ALL!"
+            local haveRequest = queuedRoutes[route] or (wildCardRoute and carsInQueue)
             for _, trafficLight in ipairs(trafficLights) do
                 if not requests[trafficLight] then requests[trafficLight] = haveRequest end
             end
         end
-
         for trafficLight, haveRequest in pairs(requests) do trafficLight:showRequestOnSignal(haveRequest) end
+    end
+end
+
+---Liefert true, wenn das erste Fahrzeug fahren darf (anhand der für die Fahrspur gültigen Ampeln)
+---Is true, if the first vehicle can drive (according to the lane's traffic lights)
+function updateLaneSignal(lane)
+    if lane.trafficLightsToDriveOn then
+        local haveGreen = false
+        local greenTrafficLights = {}
+        for trafficLight in pairs(lane.trafficLightsToDriveOn) do
+            if TrafficLightState.canDrive(trafficLight.phase) then
+                haveGreen = true
+                table.insert(greenTrafficLights, trafficLight)
+            end
+        end
+
+        local canDrive
+        if haveGreen then
+            local driveOnAnyRoute
+            local matchesFirstVehicle
+            for _, trafficLight in ipairs(greenTrafficLights) do
+                local allowedRoutes = lane.trafficLightsToDriveOn[trafficLight]
+                driveOnAnyRoute = true
+                matchesFirstVehicle = false
+                for _, route in ipairs(allowedRoutes) do
+                    driveOnAnyRoute = false
+                    if route == lane.firstVehiclesRoute then
+                        matchesFirstVehicle = true
+                        break
+                    end
+                end
+                if driveOnAnyRoute or matchesFirstVehicle then break end
+            end
+
+            canDrive = driveOnAnyRoute or matchesFirstVehicle
+        else
+            canDrive = false
+        end
+        lane.trafficLight:switchTo(canDrive and TrafficLightState.GREEN or TrafficLightState.RED)
     end
 end
 
@@ -180,79 +219,6 @@ Lane.Directions = {
 }
 ---@class LaneType
 Lane.Type = {CAR = "CAR", TRAM = "TRAM", PEDESTRIAN = "PEDESTRIAN", BICYCLE = "BICYCLE"}
-
----Fügt eine Ampel hinzu nach deren Grün (oder Aus!) gefahren werden darf. Diese Ampel darf nicht die Ampel der
----Fahrspur sein.
----Optional können die Routen mitgegeben werden, für die das Losfahren erlaubt ist.
----
----Sets the traffic light which is used to drive. This traffic light must not be the lanes signal!
----Optionally some Route names can be added, which are allowed to drive on this traffic light
----@param trafficLight TrafficLight
-function Lane:driveOn(trafficLight, ...)
-    assert(trafficLight.type == "TrafficLight")
-    if ... then for _, route in ipairs(...) do assert("string" == type(route)) end end
-    self.trafficLightsTodriveOn = self.trafficLightsTodriveOn or {}
-    self.trafficLightsTodriveOn[trafficLight] = {...}
-end
-
----Liefert true, wenn das erste Fahrzeug fahren darf (anhand der für die Fahrspur gültigen Ampeln)
----Is true, if the first vehicle can drive (according to the lane's traffic lights)
-function Lane:canDrive()
-    local haveGreen = false
-    local greenTrafficLights = {}
-    for trafficLight in pairs(self.trafficLightsTodriveOn) do
-        local signalIndex = EEPGetSignal(trafficLight.signalId)
-        if signalIndex == trafficLight.trafficLightModel.signalIndexGreen or signalIndex ==
-            trafficLight.trafficLightModel.signalIndexOff or signalIndex ==
-            trafficLight.trafficLightModel.signalIndexOffBlinking then
-            haveGreen = true
-            table.insert(greenTrafficLights, trafficLight)
-        end
-    end
-
-    if haveGreen then
-        local driveOnAnyRoute
-        local matchesFirstVehicle
-        for _, trafficLight in ipairs(greenTrafficLights) do
-            local allowedRoutes = self.trafficLightsTodriveOn[trafficLight]
-            driveOnAnyRoute = true
-            matchesFirstVehicle = false
-            for _, route in ipairs(allowedRoutes) do
-                driveOnAnyRoute = false
-                if route == self.firstVehiclesRoute then
-                    matchesFirstVehicle = true
-                    break
-                end
-            end
-            if driveOnAnyRoute or matchesFirstVehicle then break end
-        end
-
-        return driveOnAnyRoute or matchesFirstVehicle
-    else
-        return false
-    end
-end
-
-function Lane.switchTrafficLights(lanes, phase, grund)
-    assert(phase == TrafficLightState.GREEN or phase == TrafficLightState.REDYELLOW or phase ==
-               TrafficLightState.YELLOW or phase == TrafficLightState.RED or phase == TrafficLightState.PEDESTRIAN)
-    for richtung in pairs(lanes) do richtung:switchTo(phase, grund) end
-end
-
-function Lane.switchLanes(lanes, phase, grund)
-    assert(phase == TrafficLightState.GREEN or phase == TrafficLightState.REDYELLOW or phase ==
-               TrafficLightState.YELLOW or phase == TrafficLightState.RED or phase == TrafficLightState.PEDESTRIAN)
-    for lane in pairs(lanes) do
-        assert(lane)
-        assert(type(lane) == "table", "Wrong type: " .. type(lane))
-        assert(lane.getType() == "Lane")
-        if Lane.debug then
-            print(string.format("[Lane] Switching traffic light %d to %s (%s - %s)", lane.trafficLight.signalId,
-                                phase, lane.name, grund))
-        end
-        lane:switchTo(phase, grund)
-    end
-end
 
 function Lane.getType() return "Lane" end
 
@@ -293,9 +259,9 @@ function Lane:getVehicleCount(routes)
 end
 
 function Lane:checkRequests()
-    if self.signalUsedForRequest then
+    if self.signalUsedForRequest == true then
         self:resetQueueFromSignal()
-    elseif self.tracksUsedForRequest then
+    elseif self.tracksUsedForRequest == true then
         self:resetQueueFromRoadTracks()
     end
 
@@ -391,6 +357,7 @@ function Lane:vehicleEntered(trainName)
     self.vehicleCount = self.vehicleCount + 1
     addTrainToQueue(self, trainName)
     refreshRequests(self)
+    updateLaneSignal(self)
     save(self)
 end
 
@@ -401,6 +368,7 @@ function Lane:vehicleLeft(trainName)
     self.vehicleCount = self.vehicleCount > 0 and self.vehicleCount - 1 or 0
     popTrainFromQueue(self, trainName)
     refreshRequests(self)
+    updateLaneSignal(self)
     save(self)
 end
 
@@ -408,6 +376,7 @@ function Lane:resetVehicles()
     while not self.queue:isEmpty() do self.queue:pop() end
     self.vehicleCount = 0
     refreshRequests(self)
+    updateLaneSignal(self)
     save(self)
 end
 
@@ -432,7 +401,7 @@ function Lane:setFahrzeugMultiplikator(fahrzeugMultiplikator)
     return self
 end
 
-function Lane:switchTo(phase, grund)
+function Lane:switchTrafficLightTo(phase, grund)
     self.trafficLight:switchTo(phase, grund)
     self.phase = phase
 end
@@ -489,8 +458,41 @@ function Lane:new(name, eepSaveId, trafficLight, directions, trafficType)
 
     self.__index = self
     setmetatable(o, self)
+    trafficLight:addLane(o)
     load(o)
     return o
+end
+
+---Fügt eine Ampel hinzu nach deren Grün (oder Aus!) gefahren werden darf. Diese Ampel darf nicht die Ampel der
+---Fahrspur sein.
+---Optional können die Routen mitgegeben werden, für die das Losfahren erlaubt ist.
+---
+---Sets the traffic light which is used to drive. This traffic light must not be the lanes signal!
+---Optionally some Route names can be added, which are allowed to drive on this traffic light
+---@param trafficLight TrafficLight
+function Lane:driveOn(trafficLight, ...)
+    assert(trafficLight.type == "TrafficLight")
+    assert(trafficLight.signalId ~= self.trafficLight.signalId,
+           "Cannot use same signal id in lane and for driving: " .. trafficLight.signalId)
+    if ... then for _, route in ipairs(...) do assert("string" == type(route)) end end
+    self.trafficLight:removeLane(self)
+    trafficLight:addLane(self)
+    self.trafficLightsToDriveOn = self.trafficLightsToDriveOn or {}
+    self.trafficLightsToDriveOn[trafficLight] = {...}
+end
+
+---Called by the traffic light, if the traffic light changed
+---This will update the internal signal by the canDrive method
+---Wird von einer Ampel aufgerufen, dass über die driveOn() Methode für diese Fahrspur angemeldet wurde
+---@param trafficLight TrafficLight
+function Lane:trafficLightChanged(trafficLight)
+    if trafficLight ~= self.trafficLight then
+        assert(self.trafficLightsToDriveOn, "There is no traffic light registered on this lane: " ..
+                   trafficLight.signalId .. " / " .. self.trafficLight.signalId)
+        assert(self.trafficLightsToDriveOn[trafficLight],
+               "This lane does not drive on the given traffic light: " .. trafficLight.signalId)
+        updateLaneSignal(self)
+    end
 end
 
 return Lane

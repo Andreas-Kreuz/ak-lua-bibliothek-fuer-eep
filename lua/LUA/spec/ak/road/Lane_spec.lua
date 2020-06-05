@@ -12,34 +12,44 @@ describe("Lane ...", function()
         -- Set the route for train "#Car1"
         EEPSetTrainRoute("#Car1", "Some Route")
         -- Traffic Light which is visible to tell the lanes traffic to drive
-        local laneTrafficLight = TrafficLight:new(signalId, TrafficLightModel.Unsichtbar_2er)
+        local driveTrafficLight = TrafficLight:new(signalId, TrafficLightModel.Unsichtbar_2er)
         -- EEP Signal, which is used to start and stop the lanes traffic (needs to be switched to green too)
         local laneSignal = TrafficLight:new(11, TrafficLightModel.Unsichtbar_2er)
 
         local lane = Lane:new("Lane A", 34, laneSignal)
-        local tlsBeforeDriveOn = lane.trafficLightsTodriveOn
+        local tlsBeforeDriveOn = lane.trafficLightsToDriveOn
         it("Lane has signal", function() assert.is_nil(tlsBeforeDriveOn) end)
 
-        lane:driveOn(laneTrafficLight)
+        lane:driveOn(driveTrafficLight)
 
-        it("Lane has signal", function() assert.is_truthy(lane.trafficLightsTodriveOn) end)
-        it("Lane has signal", function() assert.are.same({}, lane.trafficLightsTodriveOn[laneTrafficLight]) end)
+        it("driveTrafficLight has lane", function() assert.is_true(driveTrafficLight.lanes[lane]) end)
+        it("lane has driveTrafficLight with route !ALL!", function()
+            assert.same({}, lane.trafficLightsToDriveOn[driveTrafficLight])
+        end)
+
+
+        it("Lane has signal", function() assert.is_truthy(lane.trafficLightsToDriveOn) end)
+        it("Lane has signal", function() assert.are.same({}, lane.trafficLightsToDriveOn[driveTrafficLight]) end)
         describe("Can drive at red", function()
-            laneTrafficLight:switchTo(TrafficLightState.RED)
-            local canDriveAtRed = lane:canDrive()
+            driveTrafficLight:switchTo(TrafficLightState.RED)
+            local canDriveAtRed = laneSignal.phase
             it("SignalId is correct", function()
-                assert.equals(TrafficLightModel.Unsichtbar_2er.signalIndexRed, EEPGetSignal(laneTrafficLight.signalId))
+                assert.equals(TrafficLightModel.Unsichtbar_2er.signalIndexRed, EEPGetSignal(driveTrafficLight.signalId))
             end)
-            it("canDrive()", function() assert.is_false(canDriveAtRed) end)
+            it("canDrive()", function() assert.equals(TrafficLightState.RED, canDriveAtRed) end)
         end)
         describe("Can drive at green", function()
-            laneTrafficLight:switchTo(TrafficLightState.GREEN)
-            local canDriveAtGreen = lane:canDrive()
+            driveTrafficLight:switchTo(TrafficLightState.GREEN)
+            local canDriveAtGreen = laneSignal.phase
             it("SignalId is correct", function()
                 assert.equals(TrafficLightModel.Unsichtbar_2er.signalIndexGreen,
-                EEPGetSignal(laneTrafficLight.signalId))
+                EEPGetSignal(driveTrafficLight.signalId))
             end)
-            it("canDrive()", function() assert.is_true(canDriveAtGreen) end)
+            it("SignalId is correct", function()
+                assert.equals(TrafficLightModel.Unsichtbar_2er.signalIndexGreen,
+                EEPGetSignal(laneSignal.signalId))
+            end)
+            it("canDrive()", function() assert.equals(TrafficLightState.GREEN, canDriveAtGreen) end)
         end)
     end)
     insulate("Can drive on route", function ()
@@ -54,50 +64,52 @@ describe("Lane ...", function()
         -- Traffic Light which is visible to tell the lanes traffic to drive
         local K1 = TrafficLight:new(55, TrafficLightModel.JS2_3er_mit_FG)
         local K2 = TrafficLight:new(56, TrafficLightModel.JS2_3er_mit_FG)
+        K1:switchTo(TrafficLightState.RED)
+        K2:switchTo(TrafficLightState.RED)
         -- EEP Signal, which is used to start and stop the lanes traffic (needs to be switched to green too)
         local laneSignal = TrafficLight:new(11, TrafficLightModel.Unsichtbar_2er)
 
         ---@type Lane
         local lane = Lane:new("Lane A", 34, laneSignal)
-        local tlsBeforeDriveOn = lane.trafficLightsTodriveOn
+        local tlsBeforeDriveOn = lane.trafficLightsToDriveOn
         it("Lane has signal", function() assert.is_nil(tlsBeforeDriveOn) end)
 
         lane:driveOn(K1)
         lane:driveOn(K2, "Some other route", "Matching Route", "Another")
 
-        it("Lane has signal", function() assert.is_truthy(lane.trafficLightsTodriveOn) end)
-        it("Lane has signal", function() assert.are.same({}, lane.trafficLightsTodriveOn[K1]) end)
+        it("Lane has signal", function() assert.is_truthy(lane.trafficLightsToDriveOn) end)
+        it("Lane has signal", function() assert.are.same({}, lane.trafficLightsToDriveOn[K1]) end)
         it("Lane has signal", function()
-            assert.are.same({"Some other route", "Matching Route", "Another" }, lane.trafficLightsTodriveOn[K2])
+            assert.are.same({"Some other route", "Matching Route", "Another" }, lane.trafficLightsToDriveOn[K2])
         end)
         describe("K1 can drive at red", function()
             K1:switchTo(TrafficLightState.RED)
-            local canDriveAtRed = lane:canDrive()
+            local canDriveAtRed = laneSignal.phase
             local signalIndexK1 = EEPGetSignal(K1.signalId)
             it("SignalId is correct", function()
-                assert.equals(TrafficLightModel.JS2_3er_mit_FG.signalIndexRed,signalIndexK1)
+                assert.equals(TrafficLightModel.JS2_3er_mit_FG.signalIndexRed, signalIndexK1)
             end)
-                it("canDrive()", function() assert.is_false(canDriveAtRed) end)
+                it("canDrive()", function() assert.equals(TrafficLightState.RED, canDriveAtRed) end)
                 K1:switchTo(TrafficLightState.RED)
             end)
         describe("K1 can drive at green", function()
             K1:switchTo(TrafficLightState.GREEN)
-            local canDriveAtGreen = lane:canDrive()
+            local canDriveAtGreen = laneSignal.phase
             local signalIndexK1 = EEPGetSignal(K1.signalId)
             it("SignalId is correct", function()
                 assert.equals(TrafficLightModel.JS2_3er_mit_FG.signalIndexGreen, signalIndexK1)
             end)
-            it("canDrive()", function() assert.is_true(canDriveAtGreen) end)
+            it("canDrive()", function() assert.equals(TrafficLightState.GREEN, canDriveAtGreen) end)
             K1:switchTo(TrafficLightState.RED)
         end)
         describe("K2 can drive at green", function()
             K2:switchTo(TrafficLightState.RED)
-            local canDriveAtRed = lane:canDrive()
+            local canDriveAtRed = laneSignal.phase
             local signalIndexK2 = EEPGetSignal(K2.signalId)
             it("SignalId is correct", function()
                 assert.equals(TrafficLightModel.JS2_3er_mit_FG.signalIndexRed, signalIndexK2)
                 end)
-            it("canDrive()", function() assert.is_false(canDriveAtRed) end)
+            it("canDrive()", function() assert.equals(TrafficLightState.RED, canDriveAtRed) end)
             K2:switchTo(TrafficLightState.RED)
         end)
         describe("K2 can drive at green", function()
@@ -107,21 +119,21 @@ describe("Lane ...", function()
                 assert.equals(TrafficLightModel.JS2_3er_mit_FG.signalIndexGreen, signalIndexK2)
                 end)
 
-            local canDriveNoVehicle = lane:canDrive()
-            it("canDrive() noVehicle", function() assert.is_false(canDriveNoVehicle) end)
+            local canDriveNoVehicle = laneSignal.phase
+            it("canDrive() noVehicle", function() assert.equals(TrafficLightState.RED, canDriveNoVehicle) end)
 
             lane:vehicleEntered("#Car1")
             local firstVehiclesRoute1 = lane.firstVehiclesRoute
-            local canDriveAtGreen2 = lane:canDrive()
+            local canDriveAtGreen2 = laneSignal.phase
             it("canDrive() vehicleWithRoute", function() assert.equals("Matching Route", firstVehiclesRoute1) end)
-            it("canDrive() vehicleWithRoute", function() assert.is_true(canDriveAtGreen2) end)
+            it("canDrive() vehicleWithRoute", function() assert.equals(TrafficLightState.GREEN, canDriveAtGreen2) end)
             lane:vehicleLeft("#Car1")
 
             lane:vehicleEntered( "#Car2")
             local firstVehiclesRoute2 = lane.firstVehiclesRoute
-            local canDriveAtGreen3 = lane:canDrive()
+            local canDriveAtGreen3 = laneSignal.phase
             it("canDrive() vehicleWithRoute", function() assert.equals("Alle", firstVehiclesRoute2) end)
-            it("canDrive() vehicleWithRoute", function( ) assert.is_false(canDriveAtGreen3) end)
+            it("canDrive() vehicleWithRoute", function( ) assert.equals(TrafficLightState.RED, canDriveAtGreen3) end)
             lane:vehicleLeft("#Car2")
 
             K2:switchTo(TrafficLightState.RED)
@@ -144,31 +156,31 @@ describe("Lane ...", function()
         local L1 = TrafficLight:new(11, TrafficLightModel.Unsichtbar_2er)
 
         local lane = Lane:new("Lane A", 34, L1)
-        local tlsBeforeDriveOn = lane.trafficLightsTodriveOn
+        local tlsBeforeDriveOn = lane.trafficLightsToDriveOn
         it("Lane has signal", function() assert.is_nil(tlsBeforeDriveOn) end)
 
         lane:driveOn(K1)
 
-        it("Lane has signal", function() assert.is_truthy(lane.trafficLightsTodriveOn) end)
-        it("Lane has signal", function() assert.are.same({}, lane.trafficLightsTodriveOn[K1]) end)
+        it("Lane has signal", function() assert.is_truthy(lane.trafficLightsToDriveOn) end)
+        it("Lane has signal", function() assert.are.same({}, lane.trafficLightsToDriveOn[K1]) end)
         describe("Can drive at red", function()
             K1:switchTo(TrafficLightState.RED)
-            local canDriveAtRed = lane:canDrive()
+            local canDriveAtRed = L1.phase
             local k1SignalIndex = EEPGetSignal(K1.signalId)
             it("SignalId is correct", function()
                 assert.equals(TrafficLightModel.JS2_3er_ohne_FG.signalIndexRed, k1SignalIndex)
             end)
-            it("canDrive()", function() assert.is_false(canDriveAtRed) end)
+            it("canDrive()", function() assert.equals(TrafficLightState.RED, canDriveAtRed) end)
         end)
         describe("Can drive at green", function()
             K1:switchTo(TrafficLightState.GREEN)
-            local canDriveAtGreen = lane:canDrive()
+            local canDriveAtGreen = L1.phase
             local k1SignalIndex = EEPGetSignal(K1.signalId)
             it("SignalId is correct", function()
                 assert.equals(TrafficLightModel.JS2_3er_ohne_FG.signalIndexGreen,
                 k1SignalIndex)
             end)
-            it("canDrive()", function() assert.is_true(canDriveAtGreen) end)
+            it("canDrive()", function() assert.equals(TrafficLightState.GREEN, canDriveAtGreen) end)
         end)
     end)
 

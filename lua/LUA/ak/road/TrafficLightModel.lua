@@ -18,15 +18,8 @@ TrafficLightModel.allModels = {}
 -- @param signalIndexPedestrian Index der Signalstellung in der die Fussgaenger gruen haben und die Autos rot
 -- @param signalIndexSwitchOff Index der Signalstellung in der die Ampel komplett aus ist
 -- @param signalIndexBlinkYellow Index der Signalstellung in der die Ampel gelb blinkt ohne den Verkehr zu beeinflussen
-function TrafficLightModel:new(
-    name,
-    signalIndexRed,
-    signalIndexGreen,
-    signalIndexYellow,
-    signalIndexRedYellow,
-    signalIndexPedestrian,
-    signalIndexSwitchOff,
-    signalIndexBlinkYellow)
+function TrafficLightModel:new(name, signalIndexRed, signalIndexGreen, signalIndexYellow, signalIndexRedYellow,
+                               signalIndexPedestrian, signalIndexSwitchOff, signalIndexBlinkYellow)
     assert(name)
     assert(signalIndexRed)
     assert(signalIndexGreen)
@@ -46,9 +39,7 @@ function TrafficLightModel:new(
     return x
 end
 
-function TrafficLightModel:print()
-    print(self.name)
-end
+function TrafficLightModel:print() print(self.name) end
 
 function TrafficLightModel:signalIndexOf(phase)
     assert(phase)
@@ -62,6 +53,33 @@ function TrafficLightModel:signalIndexOf(phase)
         return self.signalIndexGreen
     elseif phase == TrafficLightState.PEDESTRIAN then
         return self.signalIndexPedestrian
+    elseif phase == TrafficLightState.OFF then
+        return self.signalIndexPedestrian
+    elseif phase == TrafficLightState.OFF_BLINKING then
+        return self.signalIndexPedestrian
+    else
+        assert(false, "Unknown phase " .. phase)
+    end
+end
+
+function TrafficLightModel:phaseOf(signalIndex)
+    assert(signalIndex, "No signal id: " .. signalIndex)
+    if signalIndex == self.signalIndexRed then
+        return TrafficLightState.RED
+    elseif signalIndex == self.signalIndexRedYellow then
+        return TrafficLightState.REDYELLOW
+    elseif signalIndex == self.signalIndexYellow then
+        return TrafficLightState.YELLOW
+    elseif signalIndex == self.signalIndexBlinkYellow then
+        return TrafficLightState.OFF_BLINKING
+    elseif signalIndex == self.signalIndexSwitchOff then
+        return TrafficLightState.OFF
+    elseif signalIndex == self.signalIndexPedestrian then
+        return TrafficLightState.PEDESTRIAN
+    elseif signalIndex == self.signalIndexGreen then
+        return TrafficLightState.GREEN
+    else
+        assert(false, "No signal index" .. signalIndex .. " in model " .. self.name)
     end
 end
 

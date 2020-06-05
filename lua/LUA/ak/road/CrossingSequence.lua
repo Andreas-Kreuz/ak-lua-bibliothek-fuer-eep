@@ -2,7 +2,6 @@ if AkDebugLoad then print("Loading ak.road.CrossingSequence ...") end
 
 local Lane = require("ak.road.Lane")
 local LaneSettings = require("ak.road.LaneSettings")
-local TableUtils = require("ak.util.TableUtils")
 
 ------------------------------------------------------
 -- Klasse Richtungsschaltung (schaltet mehrere Ampeln)
@@ -32,82 +31,47 @@ function CrossingSequence:new(name)
     return o
 end
 
----This will calculate all lanes
----@return Lane[], Lane[]
-function CrossingSequence:lanesToTurnRedAndGreen(currentCircuit)
-    if CrossingSequence.debug then
-        print(string.format("[CrossingSequence] lanes from %s to %s", currentCircuit and currentCircuit.name or "NONE",
-                            self.name))
-    end
-
-    local lanesToTurnRed = {}
-    local lanesToTurnGreen = {}
-
-    -- Calculate lanes to turn red and green
-    if currentCircuit then
-        for lane, currentLaneSettings in pairs(currentCircuit.lanes) do
-            if not self.lanes[lane] or
-                not TableUtils.sameArrayEntries(self.lanes[lane].directions, currentLaneSettings.directions) then
-                if CrossingSequence.debug then
-                    print(string.format("[CrossingSequence] turn red: %s", lane.name))
-                end
-                lanesToTurnRed[lane] = true
-            end
-        end
-    end
-    for lane, newLaneSettings in pairs(self.lanes) do
-        if not currentCircuit or not currentCircuit.lanes[lane] or
-            not TableUtils.sameArrayEntries(currentCircuit.lanes[lane].directions, newLaneSettings.directions) then
-            if CrossingSequence.debug then
-                print(string.format("[CrossingSequence] turn green: %s", lane.name))
-            end
-            lanesToTurnGreen[lane] = true
-        end
-    end
-    return lanesToTurnRed, lanesToTurnGreen
-end
-
 ---This will calculate all trafficLights to turn red and green
 ---@return TrafficLight[], TrafficLight[]
 function CrossingSequence:trafficLightsToTurnRedAndGreen(currentCircuit)
-    local trafficLightsToTurnRed = {}
-    local trafficLightsToTurnGreen = {}
+    local turnRed = {}
+    local turnGreen = {}
 
     -- Calculate trafficLights to turn red and green
     if currentCircuit then
         for id, currentTrafficLight in pairs(currentCircuit.trafficLights) do
             if not self.trafficLights[id] or self.trafficLights[id].model ~= currentTrafficLight.model then
-                trafficLightsToTurnRed[currentTrafficLight] = true
+                turnRed[currentTrafficLight] = true
             end
         end
     end
     for id, newTrafficLight in pairs(self.trafficLights) do
         if not currentCircuit or not currentCircuit.trafficLights[id] or currentCircuit.trafficLights[id].model ~=
-            newTrafficLight.model then trafficLightsToTurnGreen[newTrafficLight] = true end
+            newTrafficLight.model then turnGreen[newTrafficLight] = true end
     end
 
-    return trafficLightsToTurnRed, trafficLightsToTurnGreen
+    return turnRed, turnGreen
 end
 
 ---This will calculate all pedestrianLights to turn red and green
 ---@return TrafficLight[], TrafficLight[]
 function CrossingSequence:pedestrianLightsToTurnRedAndGreen(currentCircuit)
-    local pedestrianLightsToTurnRed = {}
-    local pedestrianLightsToTurnGreen = {}
+    local turnRed = {}
+    local turnGreen = {}
 
     -- Calculate trafficLights to turn red and green
     if currentCircuit then
         for id, currentTrafficLight in pairs(currentCircuit.pedestrianLights) do
-            if not self.pedestrianLights[id] then pedestrianLightsToTurnRed[currentTrafficLight] = true end
+            if not self.pedestrianLights[id] then turnRed[currentTrafficLight] = true end
         end
     end
     for id, newTrafficLight in pairs(self.pedestrianLights) do
         if not currentCircuit or not currentCircuit.trafficLights[id] then
-            pedestrianLightsToTurnGreen[newTrafficLight] = true
+            turnGreen[newTrafficLight] = true
         end
     end
 
-    return pedestrianLightsToTurnRed, pedestrianLightsToTurnGreen
+    return turnRed, turnGreen
 end
 
 function CrossingSequence:getAlleRichtungen()
