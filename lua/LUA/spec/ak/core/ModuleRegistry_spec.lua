@@ -1,5 +1,5 @@
 insulate("Check traffic light sequence", function()
-    require("ak.core.eep.AkEepFunktionen")
+    require("ak.core.eep.EepSimulator")
     local ModuleRegistry = require("ak.core.ModuleRegistry")
     ModuleRegistry.registerModules(require("ak.road.CrossingLuaModul"), require("ak.scheduler.SchedulerLuaModule"))
 

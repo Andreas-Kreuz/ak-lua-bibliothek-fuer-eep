@@ -1,5 +1,5 @@
 if AkDebugLoad then print("Loading AkEepFunctions ...") end
-local EepSimulator = require("ak.core.eep.AkEepFunktionen")
+local EepSimulator = require("ak.core.eep.EepSimulator")
 
 local Scheduler = require("ak.scheduler.Scheduler")
 local TrafficLight = require("ak.road.TrafficLight")

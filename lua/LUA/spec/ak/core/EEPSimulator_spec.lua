@@ -1,5 +1,5 @@
 describe("EEPStructureSetLight", function()
-    require("ak.core.eep.AkEepFunktionen")
+    require("ak.core.eep.EepSimulator")
     it("", function() assert.equals("#1234", string.gsub("#1234", "(#%d*).*", "%1")) end)
     it("", function() assert.equals("#1234", string.gsub("#1234_SomeImmoModel", "(#%d*).*", "%1")) end)
     it("", function() assert.equals("#123", string.gsub("#123_", "(#%d*).*", "%1")) end)

@@ -11,12 +11,12 @@ img: "/docs/assets/headers/SourceCode.png"
 
 * Bietet die Funktionen von EEP 14 für Deine Tests.
 
-Das Skript `AkEepFunktionen` stellt alle dokumentierten Funktionen von EEP zur Verfügung und ist für die Verwendung in Test-Klassen vorgesehen.
+Das Skript `EepSimulator` stellt alle dokumentierten Funktionen von EEP zur Verfügung und ist für die Verwendung in Test-Klassen vorgesehen.
 
 ## Verwendung
 
 * Ein Testskript lädt zuerst die Funktionen von EEP:<br>
-  `require 'ak.core.eep.AkEepFunktionen'`
+  `require 'ak.core.eep.EepSimulator'`
 
 * Danach wird das eigentliche Skript geladen:<br>
   `require 'anlagen-script'`
@@ -28,7 +28,7 @@ Ein ausführlicheres Tutorial zu dem Thema findest Du hier: **[Demo-Anlage-Teste
 Prüfe, ob ein Signal gesetzt wurde:
 
 ```lua
-require("ak.core.eep.AkEepFunktionen")
+require("ak.core.eep.EepSimulator")
 
 EEPSetSignal(32, 2)
 assert (2 == EEPGetSignal(32))

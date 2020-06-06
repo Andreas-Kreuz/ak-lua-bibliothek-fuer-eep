@@ -72,7 +72,7 @@
 
 Der Code wurde wie folgt geändert:
 
-- `ak.core.eep.AkEepFunktionen` ersetzt die alte Datei ~~`ak.eep.AkEepFunktionen`~~
+- `ak.core.eep.EepSimulator` ersetzt die alte Datei ~~`ak.eep.EepSimulator`~~
 - `ak.core.eep.AkTippTextFormat` ersetzt die alte Datei ~~`ak.text.AkFormat`~~
 - 👎 **Bisheriger Code** (funktioniert so nicht mehr!)
 

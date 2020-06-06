@@ -1,6 +1,6 @@
 Zugname = "#PLATZHALTER"
 
-require("ak.core.eep.AkEepFunktionen")
+require("ak.core.eep.EepSimulator")
 
 local ModuleRegistry = require("ak.core.ModuleRegistry")
 local Scheduler = require("ak.scheduler.Scheduler")

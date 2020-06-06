@@ -25,7 +25,7 @@ insulate("Crossing", function()
     --  is turning left               |        | lane 3 | lane 4 |
     --  (Route: "RIGHT TURN")         |        |   S    |    S   |
     --
-    require("ak.core.eep.AkEepFunktionen")
+    require("ak.core.eep.EepSimulator")
     local Lane = require("ak.road.Lane")
     local Crossing = require("ak.road.Crossing")
     -- local CrossingSequence = require("ak.road.CrossingSequence")
