@@ -26,8 +26,9 @@
 /lua/LUA/ak/ext
 /lua/LUA/comm_*
 /lua/LUA/ak/io/exchange/ak*
-/lua/LUA/SlotNames_BH2.lua
 /lua/LUA/ModellInstallationPrivat.lua
+/lua/LUA/SlotNames_BH2.lua
+/lua/LUA/StorageUtilityValues.txt
 /lua/modell-pakete
 
 # EEP Files to ignore
