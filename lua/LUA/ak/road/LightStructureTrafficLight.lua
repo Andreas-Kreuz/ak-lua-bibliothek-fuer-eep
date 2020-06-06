@@ -12,17 +12,17 @@ local LightStructureTrafficLight = {}
 function LightStructureTrafficLight:new(redStructure, greenStructure, yellowStructure, requestStructure)
     assert(redStructure)
     assert(type(redStructure) == "string")
-    assert(EEPStructureGetLight(greenStructure))
+    assert(EEPStructureGetLight(redStructure), "EEPStructureSetLight(\"" .. redStructure .. "\", false)")
     assert(greenStructure)
     assert(type(greenStructure) == "string")
-    assert(EEPStructureGetLight(greenStructure))
+    assert(EEPStructureGetLight(greenStructure), "EEPStructureSetLight(\"" .. greenStructure .. "\", false)")
     if yellowStructure then
         assert(type(yellowStructure) == "string")
-        assert(EEPStructureGetLight(yellowStructure))
+        assert(EEPStructureGetLight(yellowStructure), "EEPStructureSetLight(\"" .. yellowStructure .. "\", false)")
     end
     if requestStructure then
         assert(type(requestStructure) == "string")
-        assert(EEPStructureGetLight(requestStructure))
+        assert(EEPStructureGetLight(requestStructure), "EEPStructureSetLight(\"" .. requestStructure .. "\", false)")
     end
     local o = {
         redStructure = redStructure,

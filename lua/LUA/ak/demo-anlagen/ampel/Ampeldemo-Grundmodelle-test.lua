@@ -2,7 +2,9 @@ Zugname = "#PLATZHALTER"
 
 require("ak.core.eep.AkEepFunktionen")
 
+local ModuleRegistry = require("ak.core.ModuleRegistry")
 local Scheduler = require("ak.scheduler.Scheduler")
+local ServerController = require("ak.io.ServerController")
 local TrafficLight = require("ak.road.TrafficLight")
 local Crossing = require("ak.road.Crossing")
 local StorageUtility = require("ak.storage.StorageUtility")
@@ -30,15 +32,13 @@ Crossing.showSequenceOnSignal = true
 Crossing.showSignalIdOnSignal = false
 Scheduler.debug = false
 StorageUtility.debug = false
+ModuleRegistry.debug = false
+ServerController.debug = false
 
 --------------------------------------------------------------------
 -- Erste Hilfe - normalerweise nicht notwendig                    --
 --------------------------------------------------------------------
 -- Crossing.resetVehicles()
-
-
-
-
 
 -------------------------------------------------------------------
 Crossing.debug = true
@@ -61,6 +61,6 @@ for _ = 1, 10 do
     run()
     run()
     print("Verlasse Block")
-    leaveLane(c1Lane8,true)
+    leaveLane(c1Lane8, true)
     run()
 end

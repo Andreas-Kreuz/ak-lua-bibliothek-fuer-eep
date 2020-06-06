@@ -197,6 +197,19 @@ describe("Lane ...", function()
         EEPSetTrainRoute("#Car2", "Route B")
         EEPSetTrainRoute("#Car3", "Route C")
 
+        EEPStructureSetLight("#11_RED", false)
+        EEPStructureSetLight("#21_RED", false)
+        EEPStructureSetLight("#31_RED", false)
+        EEPStructureSetLight("#12_GREEN", false)
+        EEPStructureSetLight("#22_GREEN", false)
+        EEPStructureSetLight("#32_GREEN", false)
+        EEPStructureSetLight("#13_YELLOW", false)
+        EEPStructureSetLight("#23_YELLOW", false)
+        EEPStructureSetLight("#33_YELLOW", false)
+        EEPStructureSetLight("#14_REQUEST", false)
+        EEPStructureSetLight("#24_REQUEST", false)
+        EEPStructureSetLight("#34_REQUEST", false)
+
         -- Traffic Light which is visible to tell the lanes traffic to drive
         local K1 = TrafficLight:new(signalId, TrafficLightModel.JS2_3er_ohne_FG,
         "#11_RED", "#12_GREEN", "#13_YELLOW", "#14_REQUEST")

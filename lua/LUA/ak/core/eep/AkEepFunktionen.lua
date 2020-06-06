@@ -201,17 +201,20 @@ function EEPStructureGetSmoke(immoName) end
 -- @param immoName Name der Immobilie als String.
 -- @param onoff true oder false
 function EEPStructureSetLight(name, onoff)
-    name = stripImmoName(name)
-    structures[name] = structures[name] or {}
-    structures[name].light = onoff
+    local strippedName = stripImmoName(name)
+    structures[strippedName] = structures[strippedName] or {}
+    structures[strippedName].light = onoff
 end
 
 --- Licht abfragen
 -- @param immoName Name der Immobilie als String.
 function EEPStructureGetLight(name)
-    name = stripImmoName(name)
-    structures[name] = structures[name] or {}
-    return structures[name], structures[name].light or false
+    local strippedName = stripImmoName(name)
+    if structures[strippedName] then
+        return true, structures[strippedName].light or false
+    else
+        return false, false
+    end
 end
 
 --- Feuer einschalten
