@@ -152,9 +152,10 @@ end
 
 --- Erzeugt eine neue Kreuzung und registriert diese automatisch fuer das automatische Schalten.
 -- Fuegen sie Schaltungen zu dieser Kreuzung hinzu.
--- @param name
+-- @param name string name of the crossing
+-- @param greenPhaseSeconds nubmer number of seconds for a default green phase
 ---@return Crossing
-function Crossing:new(name)
+function Crossing:new(name, greenPhaseSeconds)
     local o = {
         name = name,
         currentSequence = nil,
@@ -163,7 +164,7 @@ function Crossing:new(name)
         pedestrianCrossings = {},
         greenPhaseReached = true,
         greenPhaseFinished = true,
-        greenPhaseSeconds = 15,
+        greenPhaseSeconds = greenPhaseSeconds or 15,
         staticCams = {}
     }
     self.__index = self
@@ -196,8 +197,8 @@ end
 
 --- Erzeugt eine Fahrspur, welche durch eine Ampel gesteuert wird.
 ---@param name string @Name of the Pedestrian Crossing einer Kreuzung
-function Crossing:newSequence(name)
-    local sequence = CrossingSequence:new(name)
+function Crossing:newSequence(name, greenPhaseSeconds)
+    local sequence = CrossingSequence:new(name, greenPhaseSeconds or self.greenPhaseSeconds)
     sequence.crossing = self
     self.sequences[sequence] = true
     return sequence
@@ -206,12 +207,9 @@ end
 function Crossing:addSequence(sequence)
     sequence.crossing = self
     self.sequences[sequence] = true
-    for lane in pairs(sequence.lanes) do
-        self.lanes[lane.name] = lane
-    end
+    for lane in pairs(sequence.lanes) do self.lanes[lane.name] = lane end
     return sequence
 end
-
 
 local aufbauHilfeErzeugt = Crossing.showSignalIdOnSignal
 
@@ -246,6 +244,7 @@ local function switch(crossing)
     local currentCircuit = crossing:getAktuelleSchaltung()
     local currentName = currentCircuit and crossing.name .. " " .. currentCircuit:getName() or crossing.name ..
                             " Rot fuer alle"
+    local greenPhaseSeconds = nextSequence.greenPhaseSeconds
 
     local trafficLightsToTurnRed, trafficLightsToTurnGreen =
         nextSequence:trafficLightsToTurnRedAndGreen(currentCircuit)
@@ -308,8 +307,8 @@ local function switch(crossing)
             print("[Crossing ] " .. crossing.name .. ": Fahrzeuge sind gefahren, kreuzung ist dann frei.")
         end
         crossing:setGreenPhaseFinished(true)
-    end, crossing.name .. " ist nun bereit (war " .. crossing:getGreenPhaseSeconds() .. "s auf gruen geschaltet)")
-    Scheduler:scheduleTask(crossing:getGreenPhaseSeconds(), changeToReadyStatus, turnNextTrafficLightsGreen)
+    end, crossing.name .. " ist nun bereit (war " .. greenPhaseSeconds .. "s auf gruen geschaltet)")
+    Scheduler:scheduleTask(greenPhaseSeconds, changeToReadyStatus, turnNextTrafficLightsGreen)
 end
 
 --- Diese Funktion sucht sich aus den Ampeln die mit der passenden Fahrspur

@@ -14,7 +14,7 @@ function CrossingSequence.getType() return "CrossingSequence" end
 
 function CrossingSequence:getName() return self.name end
 
-function CrossingSequence:new(name)
+function CrossingSequence:new(name, greenPhaseSeconds)
     local o = {}
     setmetatable(o, self)
     self.__index = self
@@ -28,6 +28,8 @@ function CrossingSequence:new(name)
     ---@type table<Lane,LaneSettings>
     o.lanes = {}
     o.pedestrianCrossings = {}
+    ---@type number Default length of a green phase in seconds
+    o.greenPhaseSeconds = greenPhaseSeconds or 15
     return o
 end
 
