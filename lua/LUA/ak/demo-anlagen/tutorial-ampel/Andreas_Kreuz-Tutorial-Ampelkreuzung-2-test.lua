@@ -12,6 +12,16 @@ clearlog()
 --------------------------------------------------------------------
 AkStartMitDebug = false
 
+-- Ampeln für die Straßenbahn nutzen die Lichtfunktion der einzelnen Immobilien
+EEPStructureSetLight("#29_Straba Signal Halt", false) --      rot
+EEPStructureSetLight("#28_Straba Signal geradeaus", false) -- gruen
+EEPStructureSetLight("#27_Straba Signal anhalten", false) --  gelb
+EEPStructureSetLight("#26_Straba Signal A", false) --         Anforderung
+EEPStructureSetLight("#32_Straba Signal Halt", false) --      rot
+EEPStructureSetLight("#30_Straba Signal geradeaus", false) -- gruen
+EEPStructureSetLight("#31_Straba Signal anhalten", false) --  gelb
+EEPStructureSetLight("#33_Straba Signal A", false) --         Anforderung
+
 --------------------------------------------------------------------
 -- Zeigt erweiterte Informationen waehrend der erste Schitte an   --
 --------------------------------------------------------------------
@@ -34,9 +44,8 @@ Crossing.showSequenceOnSignal = true
 --------------------------------------------------------------------
 -- Crossing.resetVehicles()
 
-
 -------------------------------------------------------------------
---Crossing.debug = true
+-- Crossing.debug = true
 -------------------------------------------------------------------
 local function run()
     EEPTime = EEPTime + 20

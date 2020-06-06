@@ -1,14 +1,10 @@
-Zugname = "#PLATZHALTER"
-
+if AkDebugLoad then print("Loading AkEepFunctions ...") end
 require("ak.core.eep.EepSimulator")
 
-local ModuleRegistry = require("ak.core.ModuleRegistry")
 local Scheduler = require("ak.scheduler.Scheduler")
-local ServerController = require("ak.io.ServerController")
 local TrafficLight = require("ak.road.TrafficLight")
 local Crossing = require("ak.road.Crossing")
 local StorageUtility = require("ak.storage.StorageUtility")
--- endregion
 
 clearlog()
 --------------------------------------------------------------------
@@ -16,52 +12,58 @@ clearlog()
 --------------------------------------------------------------------
 AkStartMitDebug = false
 
+-- Ampeln für die Straßenbahn nutzen die Lichtfunktion der einzelnen Immobilien
+EEPStructureSetLight("#29_Straba Signal Halt", false) --      rot
+EEPStructureSetLight("#28_Straba Signal geradeaus", false) -- gruen
+EEPStructureSetLight("#27_Straba Signal anhalten", false) --  gelb
+EEPStructureSetLight("#26_Straba Signal A", false) --         Anforderung
+EEPStructureSetLight("#32_Straba Signal Halt", false) --      rot
+EEPStructureSetLight("#30_Straba Signal geradeaus", false) -- gruen
+EEPStructureSetLight("#31_Straba Signal anhalten", false) --  gelb
+EEPStructureSetLight("#33_Straba Signal A", false) --         Anforderung
+
 --------------------------------------------------------------------
 -- Zeigt erweiterte Informationen waehrend der erste Schitte an   --
 --------------------------------------------------------------------
-if AkDebugLoad then print("Loading Ampeldemo-Grundmodelle-main ...") end
-require("ak.demo-anlagen.ampel.Ampeldemo-Grundmodelle-main")
+if AkDebugLoad then print("Loading ak.demo-anlagen.tutorial-ampel.meine-ampel-main ...") end
+require("ak.demo-anlagen.tutorial-ampel.meine-ampel-main")
 
 --------------------------------------------------------------------
 -- Zeige erweiterte Informationen an                              --
 --------------------------------------------------------------------
+Scheduler.debug = true
+StorageUtility.debug = true
 TrafficLight.debug = false
 Crossing.debug = false
+Crossing.showSignalIdOnSignal = false
 Crossing.showRequestsOnSignal = true
 Crossing.showSequenceOnSignal = true
-Crossing.showSignalIdOnSignal = false
-Scheduler.debug = false
-StorageUtility.debug = false
-ModuleRegistry.debug = false
-ServerController.debug = false
 
 --------------------------------------------------------------------
 -- Erste Hilfe - normalerweise nicht notwendig                    --
 --------------------------------------------------------------------
 -- Crossing.resetVehicles()
--------------------------------------------------------------------
 
-Crossing.initSequences()
-Crossing.debug = true
-enterLane(c1Lane8)
-enterLane(c1Lane8)
-assert(c1Lane8.vehicleCount == 2, c1Lane8.anzahlFahrzeuge)
-Crossing.resetVehicles()
-assert(c1Lane8.vehicleCount == 0)
+-------------------------------------------------------------------
+-- Crossing.debug = true
 -------------------------------------------------------------------
 local function run()
     EEPTime = EEPTime + 20
     EEPMain()
 end
 
-for _ = 1, 10 do
-    print("Betritt Block")
-    enterLane(c1Lane8)
+-- EepSimulator.queueTrainOnSignal(14, "#Zug1")
+-- EEPSetTrainRoute("#Zug1", "Meine Route 1")
+
+-- assert(true == os.signalUsedForRequest)
+-- os:resetQueueFromSignal()
+-- assert(1 == os.queue:size())
+
+for i = 1, 10 do
+    print(i)
     run()
     run()
     run()
     run()
-    print("Verlasse Block")
-    leaveLane(c1Lane8, true)
     run()
 end

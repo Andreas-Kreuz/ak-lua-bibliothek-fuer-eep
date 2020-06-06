@@ -20,7 +20,7 @@ describe("Lane ...", function()
         local tlsBeforeDriveOn = lane.trafficLightsToDriveOn
         it("Lane has signal", function() assert.is_nil(tlsBeforeDriveOn) end)
 
-        lane:driveOn(driveTrafficLight)
+        driveTrafficLight:applyToLane(lane)
 
         it("driveTrafficLight has lane", function() assert.is_true(driveTrafficLight.lanes[lane]) end)
         it("lane has driveTrafficLight with route !ALL!", function()
@@ -74,8 +74,8 @@ describe("Lane ...", function()
         local tlsBeforeDriveOn = lane.trafficLightsToDriveOn
         it("Lane has signal", function() assert.is_nil(tlsBeforeDriveOn) end)
 
-        lane:driveOn(K1)
-        lane:driveOn(K2, "Some other route", "Matching Route", "Another")
+        K1:applyToLane(lane)
+        K2:applyToLane(lane, "Some other route", "Matching Route", "Another")
 
         it("Lane has signal", function() assert.is_truthy(lane.trafficLightsToDriveOn) end)
         it("Lane has signal", function() assert.are.same({}, lane.trafficLightsToDriveOn[K1]) end)
@@ -159,7 +159,7 @@ describe("Lane ...", function()
         local tlsBeforeDriveOn = lane.trafficLightsToDriveOn
         it("Lane has signal", function() assert.is_nil(tlsBeforeDriveOn) end)
 
-        lane:driveOn(K1)
+        K1:applyToLane(lane)
 
         it("Lane has signal", function() assert.is_truthy(lane.trafficLightsToDriveOn) end)
         it("Lane has signal", function() assert.are.same({}, lane.trafficLightsToDriveOn[K1]) end)

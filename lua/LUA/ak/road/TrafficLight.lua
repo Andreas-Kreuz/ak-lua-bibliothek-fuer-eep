@@ -39,7 +39,7 @@ function TrafficLight:new(signalId, trafficLightModel, redStructure, greenStruct
         phase = signalId > 0 and trafficLightModel:phaseOf(EEPGetSignal(signalId)) or TrafficLightState.RED,
         debug = false,
         laneInfo = "",
-        sequenceInfo = "",
+        sequenceInfo = nil,
         buildInfo = "" .. tostring(signalId),
         lanes = {},
         ---@type table<LightStructureTrafficLight,boolean>
@@ -93,7 +93,7 @@ end
 --- Aktualisiert den Text für die aktuellen Schaltung dieser Ampel
 -- @param sequenceInfo TippText für die Schaltung
 --
-function TrafficLight:setCircuitInfo(sequenceInfo) self.sequenceInfo = sequenceInfo end
+function TrafficLight:setSequenceInfo(sequenceInfo) self.sequenceInfo = sequenceInfo end
 
 --- Aktualsisiert den Text für die Fahrspuren dieser Ampel
 -- @param laneInfo TippText für die Fahrspur
@@ -110,23 +110,25 @@ function TrafficLight:refreshInfo()
 
     EEPShowInfoSignal(self.signalId, showInfo)
     if showInfo then
-        local divider = "<br>___________________________<br>"
 
         local infoText = fmt.appendUpTo1023("", "<j><b>Ampel ID: " .. fmt.bgGray(self.signalId) .. "</b></j>")
         infoText = fmt.appendUpTo1023(infoText, "<br>" .. self.trafficLightModel.name)
 
-        if showSwitching then
-            if infoText:len() > 0 then infoText = fmt.appendUpTo1023(infoText, "<br><br>") end
+        if showSwitching and self.sequenceInfo then
+            local title = "<br><br><j><b>" .. fmt.bgGray("Schaltung: ") .. "</b>"
+            if infoText:len() > 0 then infoText = fmt.appendUpTo1023(infoText, title) end
             infoText = fmt.appendUpTo1023(infoText, self.sequenceInfo)
         end
 
         if showSwitching and self.phase and self.reason then
-            if infoText:len() > 0 then infoText = fmt.appendUpTo1023(infoText, "<br><br>") end
+            local title = "<br><br>"
+            if infoText:len() > 0 then infoText = fmt.appendUpTo1023(infoText, title) end
             infoText = fmt.appendUpTo1023(infoText, string.format(" %s (%s) ", self.phase, self.reason))
         end
 
         if showRequests then
-            if infoText:len() > 0 then infoText = fmt.appendUpTo1023(infoText, divider) end
+            local title = "<br><br><j><b>" .. fmt.bgGray("Fahrspur/Wartezeit: ") .. "</b>"
+            if infoText:len() > 0 then infoText = fmt.appendUpTo1023(infoText, title) end
             infoText = fmt.appendUpTo1023(infoText, self.laneInfo)
         end
 
@@ -233,8 +235,13 @@ function TrafficLight:print()
                         self.trafficLightModel.name))
 end
 
-function TrafficLight:addLane(lane) self.lanes[lane] = true end
-function TrafficLight:removeLane(lane) self.lanes[lane] = nil end
 function TrafficLight:changed() for lane in pairs(self.lanes) do lane:trafficLightChanged(self) end end
+
+---@param lane Lane The lane apply this traffic light for
+function TrafficLight:applyToLane(lane, ...)
+    lane:driveOn(self, ...)
+    if self ~= lane.trafficLight then lane.trafficLight.lanes[lane] = nil end
+    self.lanes[lane] = true
+end
 
 return TrafficLight

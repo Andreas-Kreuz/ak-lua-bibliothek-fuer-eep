@@ -458,7 +458,7 @@ function Lane:new(name, eepSaveId, trafficLight, directions, trafficType)
 
     self.__index = self
     setmetatable(o, self)
-    trafficLight:addLane(o)
+    trafficLight:applyToLane(o)
     load(o)
     return o
 end
@@ -472,13 +472,11 @@ end
 ---@param trafficLight TrafficLight
 function Lane:driveOn(trafficLight, ...)
     assert(trafficLight.type == "TrafficLight")
-    assert(trafficLight.signalId ~= self.trafficLight.signalId,
-           "Cannot use same signal id in lane and for driving: " .. trafficLight.signalId)
-    if ... then for _, route in ipairs(...) do assert("string" == type(route)) end end
-    self.trafficLight:removeLane(self)
-    trafficLight:addLane(self)
-    self.trafficLightsToDriveOn = self.trafficLightsToDriveOn or {}
-    self.trafficLightsToDriveOn[trafficLight] = {...}
+    if trafficLight.signalId ~= self.trafficLight.signalId then
+        if ... then for _, route in ipairs(...) do assert("string" == type(route)) end end
+        self.trafficLightsToDriveOn = self.trafficLightsToDriveOn or {}
+        self.trafficLightsToDriveOn[trafficLight] = {...}
+    end
     return self
 end
 

@@ -176,11 +176,9 @@ Wird dazu verwendet, mehrere Fahrspuren gleichzeitig zu schalten. Es muss sicher
 
 - `function CrossingSequence:new(name)` - legt eine neue Schaltung an
 
-- `function CrossingSequence:addLane(lane)` fügt eine Fahrspur hinzu, für die Berechnung der Priorität herangezogen wird.
+- `function CrossingSequence:addTrafficLights(trafficLight1)` fügt eine Ampel hinzu, für die mit den Zyklen Rot, Rot-Gelb, Gruen und Gelb geschaltet wird.
 
-- `function CrossingSequence:addTrafficLight(trafficLight1)` fügt eine Ampel hinzu, für die mit den Zyklen Rot, Rot-Gelb, Gruen und Gelb geschaltet wird.
-
-- `function CrossingSequence:addPedestrianLight(pedestrianLight1)` fügt eine Fahrspur hinzu, für die mit den Zyklen Rot, Gruen_Fussgaenger geschaltet wird.
+- `function CrossingSequence:addPedestrianLights(pedestrianLight1)` fügt eine Fahrspur hinzu, für die mit den Zyklen Rot, Gruen_Fussgaenger geschaltet wird.
 
 ## Klasse `Crossing`
 
@@ -190,7 +188,7 @@ Wird dazu verwendet, die Kreuzung zu verwalten, enthält mehrere Schaltungen.
 
 - `function Crossing:addSequence(sequenceA)` fügt eine Schaltung zur Kreuzung hinzu.
 
-## Funktion `Crossing:planeSchaltungenEin()`
+## Funktion `Crossing:switchSequences()`
 
 Muss in `EEPMain()` aufgerufen werden - plant die Umschaltung von Kreuzungsschaltungen.
 

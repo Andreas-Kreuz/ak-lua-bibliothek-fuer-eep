@@ -1,7 +1,7 @@
 if AkDebugLoad then print("Loading ak.road.CrossingSequence ...") end
 
-local Lane = require("ak.road.Lane")
-local LaneSettings = require("ak.road.LaneSettings")
+-- local Lane = require("ak.road.Lane")
+-- local LaneSettings = require("ak.road.LaneSettings")
 
 ------------------------------------------------------
 -- Klasse CrossingSequence (schaltet mehrere Ampeln)
@@ -25,12 +25,24 @@ function CrossingSequence:new(name, greenPhaseSeconds)
     o.trafficLights = {}
     ---@type table<number,TrafficLight>
     o.pedestrianLights = {}
-    ---@type table<Lane,LaneSettings>
-    o.lanes = {}
-    o.pedestrianCrossings = {}
     ---@type number Default length of a green phase in seconds
     o.greenPhaseSeconds = greenPhaseSeconds or 15
     return o
+end
+
+function CrossingSequence:initSequence()
+    ---@type table<Lane,LaneSettings>
+    self.lanes = {}
+    for _, trafficLight in pairs(self.trafficLights) do
+        for lane in pairs(trafficLight.lanes) do self.lanes[lane] = true end
+    end
+    self.pedestrianCrossings = {}
+    -- FIXME LATER
+    -- for _, trafficLight in pairs(self.trafficLights) do
+    --     for lane in pairs(trafficLight.pedestrianCrossings) do
+    --         self.pedestrianCrossings[lane] = true
+    --     end
+    -- end
 end
 
 ---This will calculate all trafficLights to turn red and green
@@ -90,43 +102,27 @@ function CrossingSequence:lanesNamesText()
     return s
 end
 
---- Erzeugt eine Fahrspur, welche durch eine Ampel gesteuert wird.
----@param lane Lane @Sichtbare Ampeln
----@param directions LaneDirection[], @EEPSaveSlot-Id fuer das Speichern der Fahrspur
----@param routes string[] @matching routes
----@param requestType LaneRequestType @typ der Anforderung (nur bei Anforderung schalten ignoriert die
----                                      Anzahl der Rotphasen beim Umschalten)
-function CrossingSequence:addLane(lane, directions, routes, requestType)
-    assert(lane, "Bitte ein gueltige Fahrspur angeben")
-    self.lanes[lane] = LaneSettings:new(lane, directions, routes, requestType)
-    if self.crossing then self.crossing.lanes[lane.name] = lane end
-    return self
-end
-
-function CrossingSequence:addTrafficLight(trafficLight)
-    self.trafficLights[trafficLight.signalId] = trafficLight
-    -- if self.crossing then
-    --     self.crossing.trafficLights[trafficLight] = true
-    -- end
-    return self
-end
-
-function CrossingSequence:addPedestrianLight(trafficLight, secondTrafficLight)
-    assert(trafficLight and trafficLight.signalId)
-    self.pedestrianLights[trafficLight.signalId] = trafficLight
-    if secondTrafficLight and secondTrafficLight.signalId then
-        self.pedestrianLights[secondTrafficLight.signalId] = secondTrafficLight
+function CrossingSequence:addTrafficLights(...)
+    for _, trafficLight in pairs({...}) do
+        assert(trafficLight and trafficLight.signalId)
+        self.trafficLights[trafficLight.signalId] = trafficLight
     end
-    -- if self.crossing then
-    --     self.crossing.pedestrianLights[trafficLight] = true
-    -- end
     return self
 end
 
-function CrossingSequence:addPedestrianCrossing(pedestrianCrossing)
-    assert(pedestrianCrossing, "Bitte ein gueltige Fahrspur angeben")
-    pedestrianCrossing:setLaneType(Lane.RequestType.FUSSGAENGER)
-    self.pedestrianCrossings[pedestrianCrossing] = true
+function CrossingSequence:addPedestrianLights(...)
+    for _, trafficLight in pairs({...}) do
+        assert(trafficLight and trafficLight.signalId)
+        self.pedestrianLights[trafficLight.signalId] = trafficLight
+    end
+    return self
+end
+
+function CrossingSequence.addPedestrianCrossing()
+    -- function CrossingSequence:addPedestrianCrossing(pedestrianCrossing)
+    -- assert(pedestrianCrossing, "Bitte ein gueltige Fahrspur angeben")
+    -- pedestrianCrossing:setLaneType(Lane.RequestType.FUSSGAENGER)
+    -- self.pedestrianCrossings[pedestrianCrossing] = true
 end
 
 --- Gibt alle Fahrspuren nach Prioritaet zurueck, sowie deren Anzahl und deren Durchschnittspriorität

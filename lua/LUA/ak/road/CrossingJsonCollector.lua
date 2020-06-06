@@ -9,8 +9,8 @@ local Crossing = require("ak.road.Crossing")
 local Lane = require("ak.road.Lane")
 local TrafficLightState = require("ak.road.TrafficLightState")
 
----@param alleKreuzungen table<string,Crossing>
-local function collect(alleKreuzungen)
+---@param allCrossings table<string,Crossing>
+local function collect(allCrossings)
     local intersections = {}
     local intersectionLanes = {}
     local intersectionSwitching = {}
@@ -20,9 +20,12 @@ local function collect(alleKreuzungen)
     local laneSequences = {}
 
     local intersectionIdCounter = 0
-    -- FIXME table.sort(alleKreuzungen, function(a, b) return a.name < b.name end)
+    local sortedNames = {}
+    for name in pairs(allCrossings) do table.insert(sortedNames, name) end
+    table.sort(sortedNames, function(a, b) return a < b end)
 
-    for _, crossing in pairs(alleKreuzungen) do
+    for _, name in ipairs(sortedNames) do
+        local crossing = allCrossings[name]
         intersectionIdCounter = intersectionIdCounter + 1
         local intersection = {
             id = intersectionIdCounter,
@@ -37,7 +40,6 @@ local function collect(alleKreuzungen)
         table.insert(intersections, intersection)
 
         local trafficLights = {}
-
         for schaltung in pairs(crossing:getSequences()) do
             local sequence = {
                 id = crossing.name .. "-" .. schaltung.name,
@@ -47,7 +49,12 @@ local function collect(alleKreuzungen)
             }
             table.insert(intersectionSwitching, sequence)
 
-            for lane in pairs(schaltung:getLanesAndPedestrianCrossings()) do
+            for lane in pairs(schaltung.lanes) do
+                allLanes[lane] = intersection.id
+                laneSequences[lane] = laneSequences[lane] or {}
+                table.insert(laneSequences[lane], schaltung.name)
+            end
+            for lane in pairs(schaltung.pedestrianCrossings) do
                 allLanes[lane] = intersection.id
                 laneSequences[lane] = laneSequences[lane] or {}
                 table.insert(laneSequences[lane], schaltung.name)
@@ -158,6 +165,12 @@ local function collect(alleKreuzungen)
         return tostring(a):gsub("%.?%d+", padnum) .. ("%3d"):format(#b) < tostring(b):gsub("%.?%d+", padnum) ..
                    ("%3d"):format(#a)
     end)
+
+    local json = require("ak.io.json")
+    json.encode(intersections)
+    json.encode(intersectionLanes)
+    json.encode(intersectionSwitching)
+    json.encode(intersectionTrafficLights)
 
     return {
         ["intersections"] = intersections,

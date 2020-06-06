@@ -1,4 +1,10 @@
 clearlog()
+
+for signalId = 1, 1000 do
+            EEPShowInfoSignal(signalId, true)
+            EEPChangeInfoSignal(signalId, "<j>Signal: " .. signalId)
+        end
+
 -----------------------------------------------------------------------
 -- Um mit dem Tutorial zu starten, schreibe Deine eigene LUA-Befehle
 -----------------------------------------------------------------------

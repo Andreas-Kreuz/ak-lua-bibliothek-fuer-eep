@@ -19,6 +19,8 @@ function CrossingLuaModul.init()
     CrossingWebConnector.registerJsonCollectors()
     CrossingWebConnector.registerFunctions()
 
+    Crossing.initSequences()
+
     initialized = true
 end
 
@@ -28,7 +30,7 @@ function CrossingLuaModul.run()
     if not CrossingLuaModul.enabled then return end
 
     -- Hier folgen die wiederkehrenden Funktionen jedes Moduls (müssen dann nicht in EEPMain aufgerufen werden)
-    Crossing:planeSchaltungenEin()
+    Crossing.switchSequences()
 end
 
 do

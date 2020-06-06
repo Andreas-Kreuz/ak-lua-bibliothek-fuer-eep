@@ -87,17 +87,11 @@ do
     --        |              |            +------------------------- Speicher ID - um die Anzahl der Fahrzeuge
     --        |              |            |                                        und die Wartezeit zu speichern
     --        |              |            |    +-------------------- Ampel (Variablenname von oben)
-    c2Lane1 = Lane:new("Fahrspur 1 - K2", 121, K1)
-    c2Lane2 = Lane:new("Fahrspur 2 - K2", 122, K2)
-    c2Lane3 = Lane:new("Fahrspur 3 - K2", 123, K3)
-    c2Lane4 = Lane:new("Fahrspur 4 - K2", 124, K4)
-    c2Lane5 = Lane:new("Fahrspur 5 - K2", 125, K5)
-
-    c2Lane1:setDirections({'RIGHT'})
-    c2Lane2:setDirections({'STRAIGHT'})
-    c2Lane3:setDirections({'STRAIGHT'})
-    c2Lane4:setDirections({'LEFT'})
-    c2Lane5:setDirections({'LEFT', 'RIGHT'})
+    c2Lane1 = Lane:new("Fahrspur 1 - K2", 121, K1, {'RIGHT'})
+    c2Lane2 = Lane:new("Fahrspur 2 - K2", 122, K2, {'STRAIGHT'})
+    c2Lane3 = Lane:new("Fahrspur 3 - K2", 123, K3, {'STRAIGHT'})
+    c2Lane4 = Lane:new("Fahrspur 4 - K2", 124, K4, {'LEFT'})
+    c2Lane5 = Lane:new("Fahrspur 5 - K2", 125, K5, {'LEFT', 'RIGHT'})
 
     -- region K1-Schaltungen
     -------------------------------------------------------------------------------------------------------------------
@@ -109,31 +103,23 @@ do
 
     --- Kreuzung 2: Schaltung 1
     local c2Sequence1 = c2:newSequence("Schaltung 1")
-    c2Sequence1:addLane(c2Lane1)
-    c2Sequence1:addTrafficLight(K1)
-    c2Sequence1:addLane(c2Lane2)
-    c2Sequence1:addTrafficLight(K2)
-    c2Sequence1:addLane(c2Lane3)
-    c2Sequence1:addTrafficLight(K3)
+    c2Sequence1:addTrafficLights(K1)
+    c2Sequence1:addTrafficLights(K2)
+    c2Sequence1:addTrafficLights(K3)
 
     --- Kreuzung 2: Schaltung 2
     local c2Sequence2 = c2:newSequence("Schaltung 2")
-    c2Sequence2:addLane(c2Lane1)
-    c2Sequence2:addTrafficLight(K1)
-    c2Sequence2:addLane(c2Lane2)
-    c2Sequence2:addTrafficLight(K2)
+    c2Sequence2:addTrafficLights(K1)
+    c2Sequence2:addTrafficLights(K2)
 
     --- Kreuzung 2: Schaltung 3
     local c2Sequence3 = c2:newSequence("Schaltung 3")
-    c2Sequence3:addLane(c2Lane3)
-    c2Sequence3:addTrafficLight(K3)
-    c2Sequence3:addLane(c2Lane4)
-    c2Sequence3:addTrafficLight(K4)
+    c2Sequence3:addTrafficLights(K3)
+    c2Sequence3:addTrafficLights(K4)
 
     --- Kreuzung 2: Schaltung 4
     local c2Sequence4 = c2:newSequence("Schaltung 4")
-    c2Sequence4:addLane(c2Lane5)
-    c2Sequence4:addTrafficLight(K5)
+    c2Sequence4:addTrafficLights(K5)
 end
 -- endregion
 
@@ -160,23 +146,14 @@ do
     --        |        |                  +------------------------- Speicher ID - um die Anzahl der Fahrzeuge
     --        |        |                  |                                        und die Wartezeit zu speichern
     --        |        |                  |    +-------------------- Ampel (Variablenname von oben)
-    c1Lane1 = Lane:new("Fahrspur 1 - K1", 101, K1)
-    c1Lane2 = Lane:new("Fahrspur 2 - K1", 102, K2)
-    c1Lane3 = Lane:new("Fahrspur 3 - K1", 103, K3)
-    c1Lane4 = Lane:new("Fahrspur 4 - K1", 104, K4)
-    c1Lane5 = Lane:new("Fahrspur 5 - K1", 105, K5)
-    c1Lane6 = Lane:new("Fahrspur 6 - K1", 106, K6)
-    c1Lane7 = Lane:new("Fahrspur 7 - K1", 107, K7)
-    c1Lane8 = Lane:new("Fahrspur 8 - K1", 108, K8)
-
-    c1Lane1:setDirections({'STRAIGHT', 'RIGHT'})
-    c1Lane2:setDirections({'LEFT'})
-    c1Lane3:setDirections({'STRAIGHT', 'RIGHT'})
-    c1Lane4:setDirections({'LEFT'})
-    c1Lane5:setDirections({'STRAIGHT', 'RIGHT'})
-    c1Lane6:setDirections({'LEFT'})
-    c1Lane7:setDirections({'STRAIGHT', 'RIGHT'})
-    c1Lane8:setDirections({'LEFT'})
+    c1Lane1 = Lane:new("Fahrspur 1 - K1", 101, K1, {'STRAIGHT', 'RIGHT'})
+    c1Lane2 = Lane:new("Fahrspur 2 - K1", 102, K2, {'LEFT'})
+    c1Lane3 = Lane:new("Fahrspur 3 - K1", 103, K3, {'STRAIGHT', 'RIGHT'})
+    c1Lane4 = Lane:new("Fahrspur 4 - K1", 104, K4, {'LEFT'})
+    c1Lane5 = Lane:new("Fahrspur 5 - K1", 105, K5, {'STRAIGHT', 'RIGHT'})
+    c1Lane6 = Lane:new("Fahrspur 6 - K1", 106, K6, {'LEFT'})
+    c1Lane7 = Lane:new("Fahrspur 7 - K1", 107, K7, {'STRAIGHT', 'RIGHT'})
+    c1Lane8 = Lane:new("Fahrspur 8 - K1", 108, K8, {'LEFT'})
 
     local F1 = TrafficLight:new(40, Grundmodell_Ampel_3_FG)
     local F2 = TrafficLight:new(41, Grundmodell_Ampel_3_FG)
@@ -198,35 +175,27 @@ do
 
     --- Kreuzung 1: Schaltung 1
     local c1Sequence1 = c1:newSequence("Schaltung 1")
-    c1Sequence1:addLane(c1Lane1)
-    c1Sequence1:addTrafficLight(K1)
-    c1Sequence1:addLane(c1Lane5)
-    c1Sequence1:addTrafficLight(K5)
-    c1Sequence1:addPedestrianLight(F1, F2)
-    c1Sequence1:addPedestrianLight(F3, F4)
+    c1Sequence1:addTrafficLights(K1)
+    c1Sequence1:addTrafficLights(K5)
+    c1Sequence1:addPedestrianLights(F1, F2)
+    c1Sequence1:addPedestrianLights(F3, F4)
 
     --- Kreuzung 1: Schaltung 2
     local c1Sequence2 = c1:newSequence("Schaltung 2")
-    c1Sequence2:addLane(c1Lane2)
-    c1Sequence2:addTrafficLight(K2)
-    c1Sequence2:addLane(c1Lane6)
-    c1Sequence2:addTrafficLight(K6)
+    c1Sequence2:addTrafficLights(K2)
+    c1Sequence2:addTrafficLights(K6)
 
     --- Kreuzung 1: Schaltung 3
     local c1Sequence3 = c1:newSequence("Schaltung 3")
-    c1Sequence3:addLane(c1Lane3)
-    c1Sequence3:addTrafficLight(K3)
-    c1Sequence3:addLane(c1Lane7)
-    c1Sequence3:addTrafficLight(K7)
-    c1Sequence1:addPedestrianLight(F5, F6)
-    c1Sequence1:addPedestrianLight(F7, F8)
+    c1Sequence3:addTrafficLights(K3)
+    c1Sequence3:addTrafficLights(K7)
+    c1Sequence1:addPedestrianLights(F5, F6)
+    c1Sequence1:addPedestrianLights(F7, F8)
 
     --- Kreuzung 1: Schaltung 4
     local c1Sequence4 = c1:newSequence("Schaltung 4")
-    c1Sequence4:addLane(c1Lane4)
-    c1Sequence4:addTrafficLight(K4)
-    c1Sequence4:addLane(c1Lane8)
-    c1Sequence4:addTrafficLight(K8)
+    c1Sequence4:addTrafficLights(K4)
+    c1Sequence4:addTrafficLights(K8)
 end
 -- endregion
 

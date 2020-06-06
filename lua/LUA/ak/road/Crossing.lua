@@ -4,7 +4,6 @@ local Task = require("ak.scheduler.Task")
 local Scheduler = require("ak.scheduler.Scheduler")
 local StorageUtility = require("ak.storage.StorageUtility")
 local CrossingSequence = require("ak.road.CrossingSequence")
-local Lane = require("ak.road.Lane")
 local TrafficLightState = require("ak.road.TrafficLightState")
 local fmt = require("ak.core.eep.TippTextFormatter")
 
@@ -142,9 +141,7 @@ function Crossing:addStaticCam(kameraName) table.insert(self.staticCams, kameraN
 function Crossing.resetVehicles()
     for _, crossing in pairs(allCrossings) do
         print("[Crossing ] SETZE ZURUECK: " .. crossing.name)
-        for sequence in pairs(crossing:getSequences()) do
-            for lane in pairs(sequence:getLanes()) do lane:resetVehicles() end
-        end
+        if crossing.lanes then for _, lane in pairs(crossing.lanes) do lane:resetVehicles() end end
     end
 end
 
@@ -160,6 +157,8 @@ function Crossing:new(name, greenPhaseSeconds)
         sequences = {},
         lanes = {},
         pedestrianCrossings = {},
+        trafficLights = {},
+        pedestrianLights = {},
         greenPhaseReached = true,
         greenPhaseFinished = true,
         greenPhaseSeconds = greenPhaseSeconds or 15,
@@ -174,31 +173,6 @@ function Crossing:new(name, greenPhaseSeconds)
 end
 
 --- Erzeugt eine Fahrspur, welche durch eine Ampel gesteuert wird.
----@param name string @Name der Fahrspur einer Kreuzung
----@param eepSaveId number, @EEPSaveSlot-Id fuer das Speichern der Fahrspur
----@param trafficLight TrafficLight @eine oder mehrere Ampeln
----@param directions string[] eine oder mehrere Ampeln
----@param trafficType string eine oder mehrere Ampeln
-function Crossing:newLane(name, eepSaveId, trafficLight, directions, trafficType)
-    local lane = Lane:new(name, eepSaveId, trafficLight, directions, trafficType)
-    self:addLane(lane)
-    return lane
-end
-
-function Crossing:addLane(lane)
-    self.lanes[lane.name] = lane
-    return lane
-end
-
---- Erzeugt eine Fahrspur, welche durch eine Ampel gesteuert wird.
----@param name string @Name of the Pedestrian Crossing einer Kreuzung
-function Crossing:newPedestrianCrossing(name)
-    local lane = Lane:new(name, -1, {}, {}, Lane.TrafficType.PEDESTRIAN)
-    self.pedestrianCrossings[lane.name] = lane
-    return lane
-end
-
---- Erzeugt eine Fahrspur, welche durch eine Ampel gesteuert wird.
 ---@param name string @Name of the Pedestrian Crossing einer Kreuzung
 function Crossing:newSequence(name, greenPhaseSeconds)
     local sequence = CrossingSequence:new(name, greenPhaseSeconds or self.greenPhaseSeconds)
@@ -209,7 +183,6 @@ end
 function Crossing:addSequence(sequence)
     sequence.crossing = self
     self.sequences[sequence] = true
-    for lane in pairs(sequence.lanes) do self:addLane(lane) end
     return sequence
 end
 
@@ -338,16 +311,18 @@ local function recalculateSignalInfo(crossing)
         end
     end
 
+    local trafficLightsToRefresh = {}
     for _, lane in pairs(crossing.lanes) do
         local trafficLight = lane.trafficLight
-        local text = "<j><b>Fahrspur / Wartezeit</b></j>"
-        text = text .. "<br>" .. lane:getRequestInfo() .. " / " .. lane.waitCount
+        trafficLightsToRefresh[trafficLight.signalId] = trafficLight
+        local text = "<br></j>" .. lane:getRequestInfo() .. " / " .. lane.waitCount
         trafficLight:setLaneInfo(text)
     end
 
     for trafficLight in pairs(trafficLights) do
+        trafficLightsToRefresh[trafficLight.signalId] = trafficLight
         do
-            local text = "<j><b>Schaltung:</b></j>"
+            local text = ""
             for _, sequence in ipairs(sortedSequences) do
                 local farbig = sequence == crossing:getAktuelleSchaltung()
                 if sequences[trafficLight.signalId][sequence] then
@@ -368,32 +343,53 @@ local function recalculateSignalInfo(crossing)
                                    (sequence.name .. " " .. fmt.bgRed("(Rot)")))
                 end
             end
-            trafficLight:setCircuitInfo(text)
+            trafficLight:setSequenceInfo(text)
         end
-
-        trafficLight:refreshInfo()
     end
+
+    for _, trafficLight in pairs(trafficLightsToRefresh) do trafficLight:refreshInfo() end
 end
 
 local aufbauHilfeErzeugt = Crossing.showSignalIdOnSignal
 
-function Crossing.planeSchaltungenEin()
-    --- Diese Funktion sucht sich aus den Ampeln die mit der passenden Fahrspur
-    -- raus und setzt deren Texte auf die aktuelle Schaltung
-    -- @param kreuzung
+--- Init all crossing lanes and traffic lights according to their sequences' traffic lights
+--- ----
+--- Speichert die Fahrspuren und Ampeln in den einzelnen Kreuzungen --> Weniger Suche danach
+function Crossing.initSequences()
+    for _, crossing in pairs(allCrossings) do
+        for sequence in pairs(crossing.sequences) do
+            sequence:initSequence()
+            local laneFound = false
+            for v in pairs(sequence.lanes) do
+                crossing.lanes[v.name] = v
+                laneFound = true
+            end
+            assert(laneFound, "No LANE found in sequence " .. sequence.name .. " (" .. crossing.name .. ")")
+            for v in pairs(sequence.pedestrianCrossings) do crossing.pedestrianCrossings[v.name] = v end
+            for _, v in pairs(sequence.trafficLights) do crossing.trafficLights[v.signalId] = v end
+            for _, v in pairs(sequence.pedestrianLights) do crossing.pedestrianLights[v.signalId] = v end
 
+            if Crossing.debug then
+                local text = "[Crossing ] %s - %s: %s"
+                print(string.format(text, crossing.name, sequence.name, sequence:lanesNamesText()))
+            end
+        end
+    end
+end
+
+--- Switch all sequences according to the current crossing settings
+function Crossing.switchSequences()
     if aufbauHilfeErzeugt ~= Crossing.showSignalIdOnSignal then
         aufbauHilfeErzeugt = Crossing.showSignalIdOnSignal
         for signalId = 1, 1000 do
             EEPShowInfoSignal(signalId, Crossing.showSignalIdOnSignal)
             if Crossing.showSignalIdOnSignal then EEPChangeInfoSignal(signalId, "<j>Signal: " .. signalId) end
         end
-        -- for _, kreuzung in pairs(allCrossings) do showSwitching(kreuzung) end
     end
 
-    for _, kreuzung in pairs(allCrossings) do
-        switch(kreuzung)
-        recalculateSignalInfo(kreuzung)
+    for _, crossing in pairs(allCrossings) do
+        switch(crossing)
+        recalculateSignalInfo(crossing)
     end
 end
 
