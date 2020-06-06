@@ -1,6 +1,6 @@
-if AkDebugLoad then print("Loading ak.core.eep.AkTippTextFormat ...") end
+if AkDebugLoad then print("Loading ak.core.eep.TippTextFormatter ...") end
 
-local AkTippTextFormat = {
+local TippTextFormatter = {
     -- <br> neue Zeile
     -- <b> & </b> Fettschrift an/aus
     -- <i> & </i> Kursivschrift an/aus
@@ -52,4 +52,4 @@ local AkTippTextFormat = {
     end
 }
 
-return AkTippTextFormat
+return TippTextFormatter

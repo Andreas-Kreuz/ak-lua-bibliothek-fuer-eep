@@ -6,7 +6,7 @@ local StorageUtility = require("ak.storage.StorageUtility")
 local CrossingSequence = require("ak.road.CrossingSequence")
 local Lane = require("ak.road.Lane")
 local TrafficLightState = require("ak.road.TrafficLightState")
-local fmt = require("ak.core.eep.AkTippTextFormat")
+local fmt = require("ak.core.eep.TippTextFormatter")
 
 --------------------
 -- Klasse Kreuzung

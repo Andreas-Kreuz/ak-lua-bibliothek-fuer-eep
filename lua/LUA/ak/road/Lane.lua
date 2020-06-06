@@ -3,7 +3,7 @@ if AkDebugLoad then print("Loading ak.road.Lane ...") end
 local Queue = require("ak.util.Queue")
 local StorageUtility = require("ak.storage.StorageUtility")
 local TrafficLightState = require("ak.road.TrafficLightState")
-local fmt = require("ak.core.eep.AkTippTextFormat")
+local fmt = require("ak.core.eep.TippTextFormatter")
 
 -- Lane starts here
 ---@class Lane

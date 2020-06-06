@@ -7,7 +7,7 @@ local Lane = require("ak.road.Lane")
 -- local TableUtils = require("ak.util.TableUtils")
 -- local Task = require("ak.scheduler.Task")
 -- local TrafficLightState = require("ak.road.TrafficLightState")
--- local fmt = require("ak.core.eep.AkTippTextFormat")
+-- local fmt = require("ak.core.eep.TippTextFormatter")
 
 ---This will remember the lane and its settings within this request. Each lane can have one settings only.
 ---@class LaneSettings

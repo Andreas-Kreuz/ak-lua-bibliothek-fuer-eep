@@ -4,7 +4,7 @@ local Crossing = require("ak.road.Crossing")
 local AxisStructureTrafficLight = require("ak.road.AxisStructureTrafficLight")
 local LightStructureTrafficLight = require("ak.road.LightStructureTrafficLight")
 local TrafficLightState = require("ak.road.TrafficLightState")
-local fmt = require("ak.core.eep.AkTippTextFormat")
+local fmt = require("ak.core.eep.TippTextFormatter")
 
 ------------------------------------------------------------------------------------------
 -- Klasse TrafficLight

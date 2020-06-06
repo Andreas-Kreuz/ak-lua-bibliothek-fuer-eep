@@ -1,6 +1,6 @@
 if AkDebugLoad then print("Loading ak.rail.Rail ...") end
 local StorageUtility = require("ak.storage.StorageUtility")
-local fmt = require("ak.core.eep.AkTippTextFormat")
+local fmt = require("ak.core.eep.TippTextFormatter")
 
 dbg = {
     anforderung = true,
