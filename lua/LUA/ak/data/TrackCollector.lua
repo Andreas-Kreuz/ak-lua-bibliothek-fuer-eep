@@ -351,7 +351,7 @@ function TrackCollector:updateData()
 end
 
 function TrackCollector:new(trackType)
-    assert(trackType, 'Bitte geben Sie den Namen "trackType" fuer diese Richtung an.')
+    assert(trackType, 'Bitte geben Sie den Namen "trackType" an.')
     assert(registerFunction[trackType], "trackType must be one of 'auxiliary', 'control', 'road', 'rail', 'tram'")
 
     local o = {

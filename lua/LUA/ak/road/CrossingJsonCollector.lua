@@ -16,8 +16,8 @@ local function collect(alleKreuzungen)
     local intersectionSwitching = {}
     local intersectionTrafficLights = {}
     -- @type table<Lane,string>
-    local alleRichtungen = {}
-    local richtungsSchaltungen = {}
+    local allLanes = {}
+    local laneSequences = {}
 
     local intersectionIdCounter = 0
     -- FIXME table.sort(alleKreuzungen, function(a, b) return a.name < b.name end)
@@ -27,8 +27,8 @@ local function collect(alleKreuzungen)
         local intersection = {
             id = intersectionIdCounter,
             name = crossing.name,
-            currentSwitching = crossing.aktuelleSchaltung and crossing.aktuelleSchaltung.name or nil,
-            manualSwitching = crossing.manuelleSchaltung and crossing.manuelleSchaltung.name or nil,
+            currentSwitching = crossing.currentSequence and crossing.currentSequence.name or nil,
+            manualSwitching = crossing.manualSequence and crossing.manualSequence.name or nil,
             nextSwitching = crossing.nextSchaltung and crossing.nextSchaltung.name or nil,
             ready = crossing.greenPhaseFinished,
             timeForGreen = crossing.greenPhaseSeconds,
@@ -48,9 +48,9 @@ local function collect(alleKreuzungen)
             table.insert(intersectionSwitching, sequence)
 
             for lane in pairs(schaltung:getLanesAndPedestrianCrossings()) do
-                alleRichtungen[lane] = intersection.id
-                richtungsSchaltungen[lane] = richtungsSchaltungen[lane] or {}
-                table.insert(richtungsSchaltungen[lane], schaltung.name)
+                allLanes[lane] = intersection.id
+                laneSequences[lane] = laneSequences[lane] or {}
+                table.insert(laneSequences[lane], schaltung.name)
             end
 
             for id, trafficLight in pairs(schaltung.trafficLights) do trafficLights[id] = trafficLight end
@@ -98,7 +98,7 @@ local function collect(alleKreuzungen)
         end
     end
 
-    for lane, intersectionId in pairs(alleRichtungen) do
+    for lane, intersectionId in pairs(allLanes) do
         local type
         if (lane.requestType == Lane.RequestType.FUSSGAENGER) then
             type = "PEDESTRIAN"
@@ -140,7 +140,7 @@ local function collect(alleKreuzungen)
             waitingTrains = {},
             waitingForGreenCyclesCount = lane.waitCount,
             directions = lane.directions,
-            switchings = richtungsSchaltungen[lane] or {}
+            switchings = laneSequences[lane] or {}
         }
         for i, f in pairs(lane.queue:elements()) do o.waitingTrains[i] = f end
         table.insert(intersectionLanes, o)
@@ -173,21 +173,21 @@ local function collectModuleSettings()
             ["name"] = "Anforderungen als TippText",
             ["description"] = "Zeigt für alle Ampeln einen TippText mit den Anforderungen",
             ["type"] = "boolean",
-            ["value"] = Crossing.zeigeAnforderungenAlsInfo,
+            ["value"] = Crossing.showRequestsOnSignal,
             ["eepFunction"] = "Crossing.setZeigeAnforderungenAlsInfo"
         }, {
             ["category"] = "Kreuzung",
             ["name"] = "Schaltungen als TippText",
             ["description"] = "Zeigt für alle Ampeln einen TippText mit den Schaltungen",
             ["type"] = "boolean",
-            ["value"] = Crossing.zeigeSchaltungAlsInfo,
+            ["value"] = Crossing.showSequenceOnSignal,
             ["eepFunction"] = "Crossing.setZeigeSchaltungAlsInfo"
         }, {
             ["category"] = "Signale",
             ["name"] = "Signal-ID als TippText",
             ["description"] = "Zeigt an jedem Signal dessen Nummer als TippText",
             ["type"] = "boolean",
-            ["value"] = Crossing.zeigeSignalIdsAllerSignale,
+            ["value"] = Crossing.showSignalIdOnSignal,
             ["eepFunction"] = "Crossing.setZeigeSignalIdsAllerSignale"
         }
     }

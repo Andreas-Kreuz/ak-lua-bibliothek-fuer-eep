@@ -13,7 +13,7 @@ date: 2017-09-02
 <p class="lead"> Diese Anleitung zeigt Dir, wie Du Immobilien mit Lichtfunktion als Ampeln verwenden kannst.</p>
 
 **Voraussetzungen:**
-* [Anleitung "Ampelkreuzung automatisch steuern"](ampelkreuzung) - fange hier an, um zu erfahren, was Kreuzung, Schaltung und Richtung bedeuten.
+* [Anleitung "Ampelkreuzung automatisch steuern"](ampelkreuzung) - fange hier an, um zu erfahren, was Kreuzung, Schaltung und Fahrspur bedeuten.
 
 * Du benötigst folgende Modelle:
 
@@ -80,7 +80,7 @@ Die Werte von `immoRot`, `immoGruen`, `immoGelb` und `immoAnforderung` kannst Du
 
 So sieht das fertige Beispiel für eine Vierer-Ampel mit Anforderung aus:
   ```lua
-  -- Richtungen fuer Strassenbahnen:
+  -- Fahrspuren fuer Strassenbahnen:
   os = Lane:new("OS", 107, {
       TrafficLight:new(14, TrafficLightModel.Unsichtbar_2er,
           "#29_Straba Signal Halt", --       rot   schaltet das Licht dieser Immobilie ein
@@ -90,14 +90,14 @@ So sieht das fertige Beispiel für eine Vierer-Ampel mit Anforderung aus:
   })
   ```
 
-⭐ **Beachte bitte**: Die Anforderung wird nur aktiv, wenn Du Anforderungen an dieser Richtung erkennst. Wie das geht, steht in [Tutorial 3 - Priorisierung]({{ site.baseurl }}/anleitungen-fortgeschrittene/tutorial3-priorisierung).
+⭐ **Beachte bitte**: Die Anforderung wird nur aktiv, wenn Du Anforderungen an dieser Fahrspur erkennst. Wie das geht, steht in [Tutorial 3 - Priorisierung]({{ site.baseurl }}/anleitungen-fortgeschrittene/tutorial3-priorisierung).
 
 ## Beispiel Dreier-Ampel
 
 Für eine Dreier-Ampel ohne Anforderung kannst Du einfach die letze Immobilie `immoAnforderung` entfernen:
 
   ```lua
-  -- Richtungen fuer Strassenbahnen:
+  -- Fahrspuren fuer Strassenbahnen:
   os = Lane:new("OS", 107, {
       TrafficLight:new(14, TrafficLightModel.Unsichtbar_2er,
           "#29_Straba Signal Halt", --       rot   schaltet das Licht dieser Immobilie ein

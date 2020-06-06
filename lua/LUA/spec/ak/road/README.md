@@ -17,13 +17,15 @@ Ampeln regeln welche Fahrzeuge fahren und welche Fußgänger gehen dürfen.
 
   _In einer Fahrspur stellen sich hintereinander mehrere Fahrzeuge in einer Schlange an der Ampelkreuzung an._
 
+  _Jede Fahrspur hat eine Fahrspur-Ampel, an der sich die Fahrzeuge anstellen. Dies ist die einzige Ampel, die den Verkehr der Fahrspur steuert._
+
   _Jede Fahrspur hat mindestens eine **Richtung**, in der sie in einer gegenüberliegenden oder abbiegenden Straße mündet, z.B. Geradeaus, Rechts, Links._
 
   _Im einfachen Fall gilt eine Ampel für alle Richtungen einer Fahrspur. Eine Fahrspur kann durch unterschiedliche **Ampeln** für mehrere **Richtungen** gesteuert werden, die dann nur für solche Fahrzeuge gelten, die in bestimmte Richtungen wollen. Das erste Fahrzeug in einer Fahrsprur kann fahren, wenn die für das Fahrzeug passende Ampel grün geschaltet wurde._
 
 - **Fußgängerampel** / **Pedestrian Light**:
 
-  _Eine Fußgängerampel regelt, ob ein Fußgänger die Straße überqueren darf und kann rot oder grün sein. Eine Kreuzungsschaltung legt fest, welche Fußgängerampeln gleichzeitig mit anderen Ampeln grün sein dürfen_
+  _Eine Fußgängerampel regelt, ob ein Fußgänger die Straße überqueren darf und kann rot oder grün sein. Eine Kreuzungsschaltung legt fest, welche Fußgängerampeln gleichzeitig mit anderen Ampeln grün sein dürfen._
 
 - **Fußgängerfurt** / **Pedestrian Crossing**:
 
@@ -60,7 +62,7 @@ Der Verkehr einer Fahrspur kann durch mehrere Ampeln gesteuert werden:
 - Auf einer Fahrspur für Straßenbahnen gibt es eine Ampel für linksabbiegende und eine Ampel für
   geradeausfahrende Straßenbahnen
 
-Gelten mehrere Ampeln unterschiedlicher Richtungen für eine Fahrspur, dann muss die Fahrspur durch ein unsichtbares Signal gesteuert werden.
+Gelten mehrere Ampeln unterschiedlicher Richtungen für eine Fahrspur, dann muss die Fahrspur-Ampel ein unsichtbares Signal sein.
 
 In dem Fall darf das erste Fahrzeug immer dann Fahren, wenn eine für das Fahrzeug geltende Ampel grün anzeigt. Die Steuerung muss deshalb wissen, welche Ampel für das erste Fahrzeug gilt. Für die Erkennung welche der Ampeln für ein Fahrzeug gilt, kann die **Route** des Fahrzeugs genutzt werden. (_Geplant ist auch eine Erkennung anhand der Tags des ersten Fahrzeugs eines Zuges._)
 

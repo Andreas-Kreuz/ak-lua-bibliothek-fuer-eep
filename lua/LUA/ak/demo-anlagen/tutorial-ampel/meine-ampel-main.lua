@@ -6,32 +6,32 @@ local Crossing = require("ak.road.Crossing")
 local CrossingSequence = require("ak.road.CrossingSequence")
 
 -- Hier kommt der Code
-Crossing.zeigeSignalIdsAllerSignale = false
-Crossing.zeigeSchaltungAlsInfo = false
+Crossing.showSignalIdOnSignal = false
+Crossing.showSequenceOnSignal = false
 
 
 -------------------------------------------------------------------------------
--- Definiere die Richtungen fuer die Kreuzung
+-- Definiere die Fahrspuren fuer die Kreuzung
 -------------------------------------------------------------------------------
 
---   +---------------------------------------------- Neue Richtung
---   |        +------------------------------- Name der Richtung
+--   +---------------------------------------------- Neue Fahrspur
+--   |        +------------------------------- Name der Fahrspur
 --   |        |     +------------------------- Speicher ID - um die Anzahl der Fahrzeuge
 --   |        |     |                                        und die Wartezeit zu speichern
---   |        |     |      +------------------ neue Ampel für diese Richtung
+--   |        |     |      +------------------ neue Ampel für diese Fahrspur
 --   |        |     |      |           +------ Signal-ID dieser Ampel
 --   |        |     |      |           |   +-- Modell kann rot, gelb, gruen und FG schalten
 n1 = Lane:new("N1", 100, { TrafficLight:new(12, TrafficLightModel.JS2_3er_mit_FG) })
 n1:setDirections({ 'STRAIGHT', 'RIGHT' })
 
--- Die Richtung N2 hat zwei Ampeln fuer's Linksabbiegen, 9 mit Fussgaengerampel und 17 ohne
+-- Die Fahrspur N2 hat zwei Ampeln fuer's Linksabbiegen, 9 mit Fussgaengerampel und 17 ohne
 n2 = Lane:new("N2", 101, {
     TrafficLight:new(9, TrafficLightModel.JS2_3er_mit_FG),
     TrafficLight:new(17, TrafficLightModel.JS2_3er_ohne_FG)
 })
 n2:setDirections({ 'LEFT' })
 
--- Die Richtungen fÃ¼r Fussgaenger haben auch je zwei Ampeln
+-- Die Fahrspuren fÃ¼r Fussgaenger haben auch je zwei Ampeln
 fg_n1 = Lane:new("FG_N1", 102, {
     TrafficLight:new(9, TrafficLightModel.JS2_3er_mit_FG), -- Wird geteilt mit N2
     TrafficLight:new(12, TrafficLightModel.JS2_3er_mit_FG) -- Wird geteilt mit N1
@@ -43,7 +43,7 @@ fg_n2 = Lane:new("FG_N2", 103, {
 fg_n1:setTrafficType('PEDESTRIAN')
 fg_n2:setTrafficType('PEDESTRIAN')
 
--- Richtungen im Osten
+-- Fahrspuren im Osten
 o1 = Lane:new("O1", 104, { TrafficLight:new(14, TrafficLightModel.JS2_3er_mit_FG) })
 o2 = Lane:new("O2", 105, {
     TrafficLight:new(16, TrafficLightModel.JS2_3er_mit_FG),
@@ -57,7 +57,7 @@ fg_o = Lane:new("FG_O", 106, {
 })
 fg_o:setTrafficType('PEDESTRIAN')
 
--- Richtungen im Sueden
+-- Fahrspuren im Sueden
 s1 = Lane:new("S1", 107, { TrafficLight:new(11, TrafficLightModel.JS2_3er_mit_FG) })
 s2 = Lane:new("S2", 108, {
     TrafficLight:new(10, TrafficLightModel.JS2_3er_mit_FG),
@@ -78,7 +78,7 @@ fg_s1:setTrafficType('PEDESTRIAN')
 fg_s2:setTrafficType('PEDESTRIAN')
 
 
--- Richtungen im Westen
+-- Fahrspuren im Westen
 w1 = Lane:new("W1", 111, { TrafficLight:new(13, TrafficLightModel.JS2_3er_mit_FG) })
 w2 = Lane:new("W2", 112, {
     TrafficLight:new(15, TrafficLightModel.JS2_3er_mit_FG),
@@ -96,7 +96,7 @@ fg_w:setTrafficType('PEDESTRIAN')
 --------------------------------------------------------------
 -- Definiere die Schaltungen und die Kreuzung
 --------------------------------------------------------------
--- Eine Schaltung bestimmt, welche Richtungen gleichzeitig auf
+-- Eine Schaltung bestimmt, welche Fahrspuren gleichzeitig auf
 -- grün geschaltet werden dürfen, alle anderen sind rot
 
 --- Tutorial 1: Schaltung 1

@@ -57,7 +57,7 @@ _Rückgabewert:_
 
 ## Klasse `TrafficLight`
 
-Diese Klasse wird dazu verwendet eine Signal auf der Anlage (signalId) mit einem Modell zu verknüpfen. Eine so verknüpfte Ampel kann dann einer Richtung zugewiesen werden.
+Diese Klasse wird dazu verwendet eine Signal auf der Anlage (signalId) mit einem Modell zu verknüpfen. Eine so verknüpfte Ampel kann dann einer Fahrspur zugewiesen werden. Die Ampel gilt für eine bestimmte Richtung und damit gegebenenfall für eine oder mehrere Fahrspuren.
 
 ### Neue Ampel erzeugen
 
@@ -65,9 +65,8 @@ Diese Klasse wird dazu verwendet eine Signal auf der Anlage (signalId) mit einem
 
 _Beschreibung:_
 
-- Legt eine neue Ampel an, welche einer Richtung hinzugefügt werden kann.
-- Normalerweise wird jede in der Anlage eingesetzte Ampel mit ihrer `signalId` nur einmal verwendet, da es für jede Ampel normalerweise nur eine Richtung gibt. Folgende Ausnahmen beschreiben, wann man eine Ampel für mehrere Richtungen benötigt:
-  - Soll eine unsichtbare Ampel für mehrere Richtungen an unterschiedliche Immobilien gekoppelt werden, dann ist es notwendig diese Ampel für jede Richtung einzeln anzulegen, da sonst die Umschaltung der Ampel die falschen Immobilien schalten würde.
+- Legt eine neue Ampel an, welche als Fahrspur-Ampel oder Teil einer Kreuzungsschaltung genutzt werden kann.
+- Normalerweise wird jede in der Anlage eingesetzte Ampel mit ihrer `signalId` nur einmal verwendet, da es für jede Ampel normalerweise nur eine Richtung gibt.
 
 _Parameter:_
 
@@ -125,17 +124,17 @@ _Rückgabewert:_
 
 Wird dazu verwendet mehrere Ampeln gleichzeitig zu schalten. Die kann für eine oder mehrere Fahrspuren geschehen.
 
-### Neue Richtung anlegen
+### Neue Fahrspur anlegen
 
 `function Lane:new(name, eepSaveId, ...)`
 
 _Beschreibung:_
 
-- Legt eine neue Richtung mit den dazu passenden Ampeln an
+- Legt eine neue Fahrspur mit den dazu passenden Ampeln an
 
 _Parameter:_
 
-- `name` Name der Richtung (z.B. "Richtung 1")
+- `name` Name der Fahrspur (z.B. "Fahrspur 1")
 - `eepSaveId` Freie EEP-Speicher-ID (1 - 1000)
 - `...` List von Ampeln (Typ `TrafficLight`), mindestens eine
 
@@ -147,56 +146,49 @@ _Rückgabewert:_
 
 Es gibt drei Möglichkeiten Fahrzeuge zu erkennen:
 
-1. **Fahrzeuge am roten Signal zählen**
+1. **Fahrzeuge mit Kontaktpunkten zählen (Empfohlen)**
 
-   Über diese Funktion wird erkannt, wie viele Fahrzeuge zwischen einem bestimmten Vor- und Hauptsignal auf dem Straßenstück warten.
-
-   - Um die Richtung zu priorisieren, wenn sich **ein beliebiges Fahrzeug** auf der Straße vor der Ampel befindet, muss die signalID der Ampel einmalig hinterlegt werden: `lane:useSignalForQueue()`
-
-   - Um die Richtung nur dann zu Priorisieren, wenn ein bestimmtes Fahrzeug an der Ampel wartet, kann stattdessen die Funktion mit Route verwendet werden: `lane:zaehleAnAmpelBeiRoute(route)`<br>
-     Diese Funktion prüft, ob das erste Fahrzeug an der Ampel die passende Route hat.
-
-2. **Fahrzeuge auf der Straße vor dem Signal erkennen**
-
-   Über diese Funktion wird erkannt, ob sich _ein_ Fahrzeuge auf dem Straßenstück befindet.
-
-   - Um die Richtung zu priorisieren, wenn sich **ein beliebiges Fahrzeug** auf der Straße vor der Ampel befindet, muss die ID des Straßenstücks einmalig hinterlegt werden: `lane:useTracklForQueue(strassenId)``
-
-   - Um die Richtung nur dann zu Priorisieren, wenn sich ein bestimmtes Fahrzeug auf der Straße vor der Ampel befindet, kann stattdessen die Funktion mit Route verwendet werden: `lane:zaehleAnStrasseBeiRoute(strassenId, route)`
-
-3. **Fahrzeuge mit Kontaktpunkten zählen**
-
-   Das Zählen mit Kontaktpunkten hinterlegt die Anzahl der Fahrzeuge in der Richtung und führt dazu, dass Richtungen mit mehr Fahrzeugen bevorzugt werden.
+   Das Zählen mit Kontaktpunkten hinterlegt die Anzahl der Fahrzeuge in der Fahrspur und führt dazu, dass Fahrspuren mit mehr Fahrzeugen bevorzugt werden.
 
    Es werden zwei Kontaktpunkte benötigt:
 
-   1. _Richtung betreten_<br> Rufe im Kontaktpunkt die Funktion `lane:vehicleEntered(Zugname)` auf, wenn ein Fahrzeug den Bereich betritt.
+   1. _Fahrspur betreten_<br> Rufe im Kontaktpunkt die Funktion `lane:vehicleEntered(Zugname)` auf, wenn ein Fahrzeug den Bereich betritt.
 
-   2. _Richtung verlassen_<br> Rufe im Kontaktpunkt die Funktion `lane:vehicleLeft(Zugname)` auf, wenn ein Fahrzeug den Bereich verlässt.
+   2. _Fahrspur verlassen_<br> Rufe im Kontaktpunkt die Funktion `lane:vehicleLeft(Zugname)` auf, wenn ein Fahrzeug den Bereich verlässt.
 
-      Wenn das Fahrzeug die Richtung verläßt, dann kann es die Ampel auf rot setzen, wenn gewünscht.
+      Wenn das Fahrzeug die Fahrspur verläßt, dann kann es die Ampel auf rot setzen, wenn gewünscht.
+
+2. **Fahrzeuge am roten Signal zählen (NICHT EMPFOHLEN)**
+
+   Über diese Funktion wird erkannt, wie viele Fahrzeuge zwischen einem bestimmten Vor- und Hauptsignal auf dem Straßenstück warten.
+
+   - Um die Fahrspur zu priorisieren, wenn sich **ein beliebiges Fahrzeug** auf der Straße vor der Ampel befindet, muss die signalID der Ampel einmalig hinterlegt werden: `lane:useSignalForQueue()`
+
+3. **Fahrzeuge auf der Straße vor dem Signal erkennen (NICHT EMPFOHLEN)**
+
+   Über diese Funktion wird erkannt, ob sich _ein_ Fahrzeuge auf dem Straßenstück befindet.
+
+   - Um die Fahrspur zu priorisieren, wenn sich **ein beliebiges Fahrzeug** auf der Straße vor der Ampel befindet, muss die ID des Straßenstücks einmalig hinterlegt werden: `lane:useTracklForQueue(strassenId)`
 
 ## Klasse `CrossingSequence`
 
-Wird dazu verwendet, mehrere Richtungen gleichzeitig zu schalten. Es muss sichergestellt werden, dass sich die Fahrwege der Richtungen einer Schaltung nicht überlappen.
+Wird dazu verwendet, mehrere Fahrspuren gleichzeitig zu schalten. Es muss sichergestellt werden, dass sich die Fahrwege der Fahrspuren einer Schaltung nicht überlappen.
 
 - `function CrossingSequence:new(name)` - legt eine neue Schaltung an
 
-- `function CrossingSequence:addLane(richtung)` fügt eine Richtung hinzu, für die mit den Zyklen Rot, Rot-Gelb, Gruen und Gelb geschaltet wird.
+- `function CrossingSequence:addLane(lane)` fügt eine Fahrspur hinzu, für die Berechnung der Priorität herangezogen wird.
 
-- `function CrossingSequence:addPedestrianCrossing(richtung)` fügt eine Richtung hinzu, für die mit den Zyklen Rot, Gruen_Fussgaenger geschaltet wird.
+- `function CrossingSequence:addTrafficLight(trafficLight1)` fügt eine Ampel hinzu, für die mit den Zyklen Rot, Rot-Gelb, Gruen und Gelb geschaltet wird.
 
-- `function CrossingSequence:fuegeRichtungMitAnforderungHinzu(richtung)` fügt eine Richtung hinzu, für die mit den Zyklen Rot, Rot-Gelb, Gruen und Gelb geschaltet wird.
-
-**Beachte:** Eine solche Richtung wird nur dann auf Grün geschaltet, wenn eine Anforderung vorliegt. Sie schaltet sofort wieder auf Rot, wenn keine weitere Anforderung vorliegt.
+- `function CrossingSequence:addPedestrianLight(pedestrianLight1)` fügt eine Fahrspur hinzu, für die mit den Zyklen Rot, Gruen_Fussgaenger geschaltet wird.
 
 ## Klasse `Crossing`
 
 Wird dazu verwendet, die Kreuzung zu verwalten, enthält mehrere Schaltungen.
 
-- `Crossing:new(name)` - legt eine neue Kreuzung an. Diese wird automatisch anhand ihrer Richtungen geschaltet.
+- `Crossing:new(name)` - legt eine neue Kreuzung an. Diese nutzt automatisch die vorhanden Schaltungen und nutzt diese je nach Prioriät und Wartezeit der Fahrspuren.
 
-- `function Crossing:addSequence(schaltung)` fügt eine Schaltung zur Kreuzung hinzu.
+- `function Crossing:addSequence(sequenceA)` fügt eine Schaltung zur Kreuzung hinzu.
 
 ## Funktion `Crossing:planeSchaltungenEin()`
 
@@ -214,16 +206,41 @@ Muss in `EEPMain()` aufgerufen werden - plant die Umschaltung von Kreuzungsschal
   )
 
   function EEPMain()
-      ModuleRegistry.runTasks()               -- Führt alle anstehenden Aktionen der registrierten Module aus
+      ModuleRegistry.runTasks() -- Führt alle anstehenden Aktionen der registrierten Module aus
       return 1
   end```
 
   ````
 
-- **Richtungen mit Anforderungen benötigen zwingend Zählfunktionen** für die Fahrzeuge dieser Richtung. Für andere Richtungen ist dies optional.
+- **Fahrspuren mit Anforderungen und Fahrspuren die durch unterschiedliche Ampeln gesteuert werden benötigen zwingend Zählfunktionen** für die Fahrzeuge dieser Fahrspur. Für andere Fahrspuren ist dies optional.
 
-  - `richtung:vehicleEntered(Zugname)` - im Kontaktpunkt aufrufen, wenn eine Richtung betreten wird (z.B. 50m vor der Ampel; aber nur auf dieser Richtungsfahrbahn)
+  - `lane:vehicleEntered(Zugname)` - im Kontaktpunkt aufrufen, wenn eine Fahrspur betreten wird (z.B. 50m vor der Ampel; aber nur auf dieser Fahrspursfahrbahn)
 
-  - `richtung:vehicleLeft(Zugname)` - im Kontaktpunkt aufrufen, wenn eine Richtung verlassen wird (hinter der Ampel)
+  - `lane:vehicleLeft(Zugname)` - im Kontaktpunkt aufrufen, wenn eine Fahrspur verlassen wird (hinter der Ampel)
 
-    **Beachte:** Die Zählfunktionen müssen beim Betreten und Verlassen einer Richtung verwendet werden.
+  In der Zählfunktion MUSS der Zugname benutzt werden, da die Anforderungen und unterschiedlichen Ampeln durch die Routen der Fahrzeuge berechnet werden. Dazu dient folgender Quellcode:
+
+  ```lua
+  ------------------------------------------------
+  -- Damit kommt wird die Variable "Zugname" automatisch durch EEP belegt
+  -- http://emaps-eep.de/lua/code-schnipsel
+  ------------------------------------------------
+  setmetatable(_ENV, {
+      __index = function(_, k)
+          local p = load(k)
+          if p then
+              local f = function(z)
+                  local s = Zugname
+                  Zugname = z
+                  p()
+                  Zugname = s
+              end
+              _ENV[k] = f
+              return f
+          end
+          return nil
+      end
+  })
+  ```
+
+  **Beachte:** Die Zählfunktionen müssen beim Betreten und Verlassen einer Fahrspur verwendet werden.

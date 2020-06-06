@@ -25,9 +25,9 @@ Scheduler.debug = true
 StorageUtility.debug = true
 TrafficLight.debug = false
 Crossing.debug = false
-Crossing.zeigeSignalIdsAllerSignale = false
-Crossing.zeigeAnforderungenAlsInfo = true
-Crossing.zeigeSchaltungAlsInfo = true
+Crossing.showSignalIdOnSignal = false
+Crossing.showRequestsOnSignal = true
+Crossing.showSequenceOnSignal = true
 
 --------------------------------------------------------------------
 -- Erste Hilfe - normalerweise nicht notwendig                    --

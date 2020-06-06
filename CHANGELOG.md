@@ -1,5 +1,10 @@
 # Änderungen an der Software
 
+## 1.0.0
+
+- ⭐ Neu: Lua-Code in Englisch
+- ⭐ Neu: Statt Richtungen werden nun Fahrspuren verwendet
+
 ## 0.9.0
 
 - ⭐ Neu: Umschalten der Debug-Einstellungen für Kreuzungen in der Web-App

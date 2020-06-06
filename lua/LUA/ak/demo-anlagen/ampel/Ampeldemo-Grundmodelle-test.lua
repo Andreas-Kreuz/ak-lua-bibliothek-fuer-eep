@@ -25,9 +25,9 @@ require("ak.demo-anlagen.ampel.Ampeldemo-Grundmodelle-main")
 --------------------------------------------------------------------
 TrafficLight.debug = false
 Crossing.debug = false
-Crossing.zeigeAnforderungenAlsInfo = true
-Crossing.zeigeSchaltungAlsInfo = true
-Crossing.zeigeSignalIdsAllerSignale = false
+Crossing.showRequestsOnSignal = true
+Crossing.showSequenceOnSignal = true
+Crossing.showSignalIdOnSignal = false
 Scheduler.debug = false
 StorageUtility.debug = false
 
@@ -42,8 +42,8 @@ StorageUtility.debug = false
 
 -------------------------------------------------------------------
 Crossing.debug = true
-KpBetritt(k1_r8)
-KpBetritt(k1_r8)
+enterLane(k1_r8)
+enterLane(k1_r8)
 assert(k1_r8.vehicleCount == 2, k1_r8.anzahlFahrzeuge)
 Crossing.resetVehicles()
 assert(k1_r8.vehicleCount == 0)
@@ -55,12 +55,12 @@ end
 
 for _ = 1, 10 do
     print("Betritt Block")
-    KpBetritt(k1_r8)
+    enterLane(k1_r8)
     run()
     run()
     run()
     run()
     print("Verlasse Block")
-    KpVerlasse(k1_r8,true)
+    leaveLane(k1_r8,true)
     run()
 end

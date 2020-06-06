@@ -637,7 +637,7 @@ definitions:
   AkIntersectionLane:
     type: object
     description: |-
-      Steuerung einer Fahrspur für eine oder mehrere Richtungen.
+      Steuerung einer Fahrspur für eine oder mehrere Fahrspuren.
       Die Fahrspur kann mehrere Signale haben, an denen Fahrzeuge warten.
       Für unsichtbare Ampeln können noch weitere Dinge genutzt werden:
       * Eine Immobilie, die die Signalstellung mit Achsen regelt
@@ -656,7 +656,7 @@ definitions:
       laneDirections:
         type: array
         description: |-
-          Richtungen sind "left, right, straight"
+          Fahrspuren sind "left, right, straight"
         items:
           $ref: '#/definitions/AkDirection'
           minItems: 1
@@ -895,7 +895,7 @@ definitions:
       trackDirection:
         type: integer
         format: int64
-        description: In welche Richtung steht das Fahrzeug (ab EEP 15, vorher -1)
+        description: In welche Fahrspur steht das Fahrzeug (ab EEP 15, vorher -1)
       trackSystem:
         type: integer
         format: int64

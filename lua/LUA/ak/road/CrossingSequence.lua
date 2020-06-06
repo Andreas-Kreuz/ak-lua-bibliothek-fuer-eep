@@ -4,7 +4,7 @@ local Lane = require("ak.road.Lane")
 local LaneSettings = require("ak.road.LaneSettings")
 
 ------------------------------------------------------
--- Klasse Richtungsschaltung (schaltet mehrere Ampeln)
+-- Klasse CrossingSequence (schaltet mehrere Ampeln)
 ------------------------------------------------------
 ---@class CrossingSequence
 local CrossingSequence = {}
@@ -75,27 +75,27 @@ end
 function CrossingSequence:getLanesAndPedestrianCrossings()
     local alle = {}
     for lane in pairs(self.lanes) do alle[lane] = "NORMAL" end
-    for richtung in pairs(self.pedestrianCrossings) do alle[richtung] = "PEDESTRIANTS" end
+    for lane in pairs(self.pedestrianCrossings) do alle[lane] = "PEDESTRIANTS" end
     return alle
 end
 
 function CrossingSequence:getLanes() return self.lanes end
 
-function CrossingSequence:richtungenAlsTextZeile()
+function CrossingSequence:lanesNamesText()
     local s = ""
-    for richtung in pairs(self.lanes) do s = s .. ", " .. richtung.name end
+    for lane in pairs(self.lanes) do s = s .. ", " .. lane.name end
     s = s:sub(3)
     return s
 end
 
---- Erzeugt eine Richtung, welche durch eine Ampel gesteuert wird.
+--- Erzeugt eine Fahrspur, welche durch eine Ampel gesteuert wird.
 ---@param lane Lane @Sichtbare Ampeln
----@param directions LaneDirection[], @EEPSaveSlot-Id fuer das Speichern der Richtung
+---@param directions LaneDirection[], @EEPSaveSlot-Id fuer das Speichern der Fahrspur
 ---@param routes string[] @matching routes
 ---@param requestType LaneRequestType @typ der Anforderung (nur bei Anforderung schalten ignoriert die
 ---                                      Anzahl der Rotphasen beim Umschalten)
 function CrossingSequence:addLane(lane, directions, routes, requestType)
-    assert(lane, "Bitte ein gueltige Richtung angeben")
+    assert(lane, "Bitte ein gueltige Fahrspur angeben")
     self.lanes[lane] = LaneSettings:new(lane, directions, routes, requestType)
     if self.crossing then self.crossing.lanes[lane.name] = lane end
     return self
@@ -122,21 +122,21 @@ function CrossingSequence:addPedestrianLight(trafficLight, secondTrafficLight)
 end
 
 function CrossingSequence:addPedestrianCrossing(pedestrianCrossing)
-    assert(pedestrianCrossing, "Bitte ein gueltige Richtung angeben")
+    assert(pedestrianCrossing, "Bitte ein gueltige Fahrspur angeben")
     pedestrianCrossing:setLaneType(Lane.RequestType.FUSSGAENGER)
     self.pedestrianCrossings[pedestrianCrossing] = true
 end
 
---- Gibt alle Richtungen nach Prioritaet zurueck, sowie deren Anzahl und deren Durchschnittspriorität
--- @return sortierteRichtungen, anzahlDerRichtungen, durchschnittsPrio
+--- Gibt alle Fahrspuren nach Prioritaet zurueck, sowie deren Anzahl und deren Durchschnittspriorität
+-- @return sortierteFahrspuren, anzahlDerFahrspuren, durchschnittsPrio
 function CrossingSequence:lanesSortedByPriority()
     local sortedLanes = {}
     local laneCount = 0
     local prioritySum = 0
-    for richtung in pairs(self.lanes) do
-        table.insert(sortedLanes, richtung)
+    for lane in pairs(self.lanes) do
+        table.insert(sortedLanes, lane)
         laneCount = laneCount + 1
-        prioritySum = prioritySum + richtung:calculatePriority()
+        prioritySum = prioritySum + lane:calculatePriority()
     end
     for lane in pairs(self.pedestrianCrossings) do
         table.insert(sortedLanes, lane)
@@ -157,15 +157,15 @@ function CrossingSequence:lanesSortedByPriority()
     return sortedLanes, laneCount, averagePrio
 end
 
------- Gibt alle Richtungen nach Name sortiert zurueck
--- @return sortierteRichtungen
+------ Gibt alle Fahrspuren nach Name sortiert zurueck
+-- @return sortierteFahrspuren
 function CrossingSequence:lanesSortedByName()
-    local sortierteRichtungen = {}
-    for richtung in pairs(self.lanes) do table.insert(sortierteRichtungen, richtung) end
-    for richtung in pairs(self.pedestrianCrossings) do table.insert(sortierteRichtungen, richtung) end
-    local sortierFunktion = function(richtung1, richtung2) return (richtung1.name < richtung2.name) end
-    table.sort(sortierteRichtungen, sortierFunktion)
-    return sortierteRichtungen
+    local sortedLanes = {}
+    for lane in pairs(self.lanes) do table.insert(sortedLanes, lane) end
+    for lane in pairs(self.pedestrianCrossings) do table.insert(sortedLanes, lane) end
+    local sortierFunktion = function(lane1, lane2) return (lane1.name < lane2.name) end
+    table.sort(sortedLanes, sortierFunktion)
+    return sortedLanes
 end
 
 --- Gibt zurueck ob schaltung1 eine hoehere Prioritaet hat, als Schaltung 2
@@ -198,6 +198,6 @@ function CrossingSequence:calculatePriority()
     return prio
 end
 
-function CrossingSequence:resetWaitCount() for richtung in pairs(self.lanes) do richtung:resetWaitCount() end end
+function CrossingSequence:resetWaitCount() for lane in pairs(self.lanes) do lane:resetWaitCount() end end
 
 return CrossingSequence

@@ -95,17 +95,17 @@ end
 --
 function TrafficLight:setCircuitInfo(sequenceInfo) self.sequenceInfo = sequenceInfo end
 
---- Aktualsisiert den Text für die Richtungen dieser Ampel
--- @param laneInfo TippText für die Richtung
+--- Aktualsisiert den Text für die Fahrspuren dieser Ampel
+-- @param laneInfo TippText für die Fahrspur
 --
 function TrafficLight:setLaneInfo(laneInfo) self.laneInfo = laneInfo end
 
 --- Stellt die vorher gesetzten Tipp-Texte dar.
 --
 function TrafficLight:refreshInfo()
-    local showSwitching = Crossing.zeigeSchaltungAlsInfo
-    local showAllSignals = Crossing.zeigeSignalIdsAllerSignale
-    local showRequests = Crossing.zeigeAnforderungenAlsInfo and self.laneInfo:len() > 0
+    local showSwitching = Crossing.showSequenceOnSignal
+    local showAllSignals = Crossing.showSignalIdOnSignal
+    local showRequests = Crossing.showRequestsOnSignal and self.laneInfo:len() > 0
     local showInfo = showSwitching or showAllSignals or showRequests
 
     EEPShowInfoSignal(self.signalId, showInfo)

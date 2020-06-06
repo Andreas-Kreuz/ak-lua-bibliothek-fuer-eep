@@ -15,9 +15,9 @@ local LaneSettings = {}
 ---@param routes string[] @matching routes
 function LaneSettings:setRoutes(routes) self.routes = routes end
 
---- Erzeugt eine Richtung, welche durch eine Ampel gesteuert wird.
+--- Erzeugt eine Fahrspur, welche durch eine Ampel gesteuert wird.
 ---@param lane Lane @Sichtbare Ampeln
----@param directions LaneDirection[], @EEPSaveSlot-Id fuer das Speichern der Richtung
+---@param directions LaneDirection[], @EEPSaveSlot-Id fuer das Speichern der Fahrspur
 ---@param routes string[] @matching routes
 ---@param requestType LaneRequestType @typ der Anforderung (nur bei Anforderung schalten ignoriert die
 ---                                      Anzahl der Rotphasen beim Umschalten)

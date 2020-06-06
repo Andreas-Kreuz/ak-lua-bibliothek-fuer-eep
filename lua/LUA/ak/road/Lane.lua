@@ -200,7 +200,7 @@ function updateLaneSignal(lane, reason)
 end
 
 --------------------
--- Klasse Richtung
+-- Klasse Fahrspur
 --------------------
 ---@class LaneRequestType
 Lane.RequestType = {
@@ -229,7 +229,7 @@ function Lane:getLaneType() return self.requestType end
 function Lane:setLaneType(requestType)
     assert(requestType)
     assert(self.requestType == Lane.RequestType.NICHT_VERWENDET or self.requestType == requestType,
-           "Diese Richtung hatte schon den Schaltungstyp: '" .. self.requestType .. "' und kann daher nicht auf '" ..
+           "Diese Fahrspur hatte schon den Schaltungstyp: '" .. self.requestType .. "' und kann daher nicht auf '" ..
                requestType .. "' gesetzt werden.")
     self.requestType = requestType
 end
@@ -408,7 +408,7 @@ end
 
 function Lane:setDirections(...)
     for _, direction in pairs(...) do
-        if not Lane.Type[direction] then print("No such direction: " .. direction) end
+        if not Lane.Directions[direction] then print("No such direction: " .. direction) end
     end
 
     self.directions = ... or {"LEFT", "STRAIGHT", "RIGHT"}
@@ -422,22 +422,22 @@ function Lane:setTrafficType(trafficType)
     end
 end
 
---- Erzeugt eine Richtung, welche durch eine Ampel gesteuert wird.
----@param name string @Name der Richtung einer Kreuzung
----@param eepSaveId number, @EEPSaveSlot-Id fuer das Speichern der Richtung
+--- Erzeugt eine Fahrspur, welche durch eine Ampel gesteuert wird.
+---@param name string @Name der Fahrspur einer Kreuzung
+---@param eepSaveId number, @EEPSaveSlot-Id fuer das Speichern der Fahrspur
 ---@param trafficLight TrafficLight @genau eine Ampeln
 ---@param directions string[] eine oder mehrere Ampeln
 ---@param trafficType string eine oder mehrere Ampeln
 ---@return Lane
 function Lane:new(name, eepSaveId, trafficLight, directions, trafficType)
-    assert(name, 'Bitte geben Sie den Namen "name" fuer diese Richtung an.')
+    assert(name, 'Bitte geben Sie den Namen "name" fuer diese Fahrspur an.')
     assert(type(name) == "string", "Name ist kein String")
-    assert(eepSaveId, 'Bitte geben Sie den Wert "eepSaveId" fuer diese Richtung an.')
+    assert(eepSaveId, 'Bitte geben Sie den Wert "eepSaveId" fuer diese Fahrspur an.')
     assert(type(eepSaveId) == "number")
     assert(trafficLight, 'Specify a single "trafficLight" for this lane (the one, where the traffic is queued).')
     assert(trafficLight.type == "TrafficLight",
            'Specify a single "trafficLight" for this lane (the one, where the traffic is queued).')
-    -- assert(signalId, "Bitte geben Sie den Wert \"signalId\" fuer diese Richtung an.")
+    -- assert(signalId, "Bitte geben Sie den Wert \"signalId\" fuer diese Fahrspur an.")
     if eepSaveId ~= -1 then StorageUtility.registerId(eepSaveId, "Lane " .. name) end
     local o = {
         name = name,
