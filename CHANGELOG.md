@@ -1,9 +1,61 @@
 # Änderungen an der Software
 
-## 1.0.0
+## 0.10.0
 
-- ⭐ Neu: Lua-Code in Englisch
-- ⭐ Neu: Statt Richtungen werden nun Fahrspuren verwendet
+- ⭐ Neu: Die Angabe von Ampeln und Schaltungen wurde von Grund auf neu gestaltet um die Anwendung zu vereinfachen.
+
+  - Jede Fahrspur `Lane` hat nur noch genau eine Fahrspur-Ampel. Dieses Ampel steuert den Verkehr.
+
+  - Jede Schaltung `CrossingSequence` schaltet Ampeln, keine Fahrspuren mehr.
+
+  - Einfache Schaltung: Es kann direkt die Fahrspur-Ampel angegeben werden: `switchingA:addTrafficLight(tl1)`
+
+    ```lua
+      local c1 = Crossing:new("Bahnhofstr. - Hauptstr.")
+      local K1 = TrafficLight:new(34, TrafficLightModel.JS2_3er_mit_FG, { "STRAIGHT", "RIGHT" })
+
+      -- Einfache Steuerung direkt über die Fahrspur-Ampel K1 - diese ist sichtbar und wird direkt verwendet
+      c1Lane1 = c1:newLane("Fahrspur 1 - K1", 101, K1)
+      sequenceA = c1:newSequence("Schaltung A")
+      sequenceA:addTrafficLight(K1)
+    ```
+
+  - Komplexe Schaltung: Die Fahrspur darf bei mehreren Ampeln fahren `lane:driveOn(trafficLight, [route])`.
+    Optional kann dabei eine Route angegeben werden:
+
+    ```lua
+    local c1 = Crossing:new("Bahnhofstr. - Hauptstr.")
+    local LANE_SIGNAL1 = TrafficLight:new(34, TrafficLightModel.Unsichtbar_2er)
+    local K1 = TrafficLight:new(35, TrafficLightModel.JS2_3er_mit_FG)           -- Ampel für grade/rechts
+    local K2 = TrafficLight:new(36, TrafficLightModel.JS2_2er_OFF_YELLOW_GREEN) -- Ampel nur Rechtsabbieger
+
+    -- Erweiterte Steuerung indirekt die Signale K1 und K2 - die Fahrspur-Ampel ist unsichtbar
+    c1Lane1 = c1:newLane("Fahrspur 1 - K1", 101, K1)
+    c1Lane8:driveOn(K1)
+    c1Lane8:driveOn(K2, "Route Rechtsabbieger") -- K2 wird mit Route Rechtsabbieger verknüpft
+
+    sequenceA = c1:newSequence("Schaltung A") -- alle in Fahrspur c1Lane1 fahren
+    sequenceA:addTrafficLight(K1)
+
+    sequenceB = c1:newSequence("Schaltung B") -- nur Rechtsabbieger in Fahrspur c1Lane1 fahren
+    sequenceB:addTrafficLight(K2)
+    ```
+
+  - Anforderungen der Fahrspuren können an Signalen gezeigt werden, die dies unterstützen
+    `lane:showRequestsOn(trafficLight)`:
+
+    ```lua
+    local S4 = TrafficLight:new(95, TrafficLightModel.Unsichtbar_2er, "#5525_Straba Signal Halt",
+                                "#5436_Straba Signal rechts", "#5526_Straba Signal anhalten", "#5524_Straba Signal A")
+    c1Lane11 = Lane:new("K1 - Fahrspur 11", 11, S4, {Lane.Directions.RIGHT}, Lane.Type.TRAM)
+    c1Lane11:showRequestsOn(S4)
+    ```
+
+  - Fahrspuren für Fußgänger werden nicht mehr unterstützt
+    (stattdessen werden die Fußgängerampeln in der Schaltung hinterlegt).
+
+  - Die Web-App Einstellungen für die Anzeige der Signale können in der Anlage hinterlegt werden.
+    Der folgende Befehl lädt die Daten beim Start aus EEP Speicherslot 22: `Crossing.loadSettingsFromSlot(22)`.
 
 ## 0.9.0
 
@@ -86,30 +138,30 @@ Der Code wurde wie folgt geändert:
 
 - ℹ️ Info: `AkStrasse` sollte nicht mehr importiert werden.
 
-    Requires von Lua sollten immer einer lokalen Variable zugewiesen werden.
-    Darum wird ab dieser Version die Funktion `require("ak.scheduler.AkStrasse")`
-    nicht mehr empfohlen.
+  Requires von Lua sollten immer einer lokalen Variable zugewiesen werden.
+  Darum wird ab dieser Version die Funktion `require("ak.scheduler.AkStrasse")`
+  nicht mehr empfohlen.
 
-    **Import vor Version 0.6.0:**
+  **Import vor Version 0.6.0:**
 
-    👎 **schlecht!**
+  👎 **schlecht!**
 
-    ```lua
-    require("ak.scheduler.AkStrasse")
-    ```
+  ```lua
+  require("ak.scheduler.AkStrasse")
+  ```
 
-    **Import ab Version 0.6.0:**
+  **Import ab Version 0.6.0:**
 
-    👍 **Besser!**
+  👍 **Besser!**
 
-    ```lua
-    local Scheduler = require("ak.scheduler.Scheduler")
-    local AkAmpelModell = require("ak.strasse.AkAmpelModell")
-    local AkAmpel = require("ak.strasse.AkAmpel")
-    local AkRichtung = require("ak.strasse.AkRichtung")
-    local AkKreuzung = require("ak.strasse.AkKreuzung")
-    local AkKreuzungsSchaltung = require("ak.strasse.AkKreuzungsSchaltung")
-    ```
+  ```lua
+  local Scheduler = require("ak.scheduler.Scheduler")
+  local AkAmpelModell = require("ak.strasse.AkAmpelModell")
+  local AkAmpel = require("ak.strasse.AkAmpel")
+  local AkRichtung = require("ak.strasse.AkRichtung")
+  local AkKreuzung = require("ak.strasse.AkKreuzung")
+  local AkKreuzungsSchaltung = require("ak.strasse.AkKreuzungsSchaltung")
+  ```
 
 - ⭐ Neu: Komplette Überarbeitung der Kommunikation (jetzt über Websockets ohne Polling)
 
@@ -150,27 +202,27 @@ Der Code wurde wie folgt geändert:
     w2:setRichtungen({ 'LEFT' })
     ```
 
-    *Tipp: Hast Du mehrere Richtungen, dann verwende die Reihenfolge `{ 'LEFT', 'STRAIGHT', 'RIGHT' }` für EEP-Web.*
+    _Tipp: Hast Du mehrere Richtungen, dann verwende die Reihenfolge `{ 'LEFT', 'STRAIGHT', 'RIGHT' }` für EEP-Web._
 
     - Gib an, welcher Verkehrstyp die Fahrspur benutzt. So kannst Du in EEP-Web besser unterscheiden, welche Richtung grade geschaltet wird:
 
     - Verwende `PEDESTRIAN` für Fussgänger 🚶:
 
-        ```lua
-        richtung1:setTrafficType('PEDESTRIAN')
-        ```
+      ```lua
+      richtung1:setTrafficType('PEDESTRIAN')
+      ```
 
     - Verwende `TRAM` für Straßenbahnen 🚋:
 
-        ```lua
-        richtung2:setTrafficType('TRAM')
-        ```
+      ```lua
+      richtung2:setTrafficType('TRAM')
+      ```
 
     - Verwende `NORMAL` für normalen Verkehr 🚗:
 
-        ```lua
-        richtung3:setTrafficType('NORMAL')
-        ```
+      ```lua
+      richtung3:setTrafficType('NORMAL')
+      ```
 
 ## v0.4.1
 
