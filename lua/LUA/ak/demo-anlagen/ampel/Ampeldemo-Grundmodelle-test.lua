@@ -42,11 +42,11 @@ StorageUtility.debug = false
 
 -------------------------------------------------------------------
 Crossing.debug = true
-enterLane(k1_r8)
-enterLane(k1_r8)
-assert(k1_r8.vehicleCount == 2, k1_r8.anzahlFahrzeuge)
+enterLane(c1Lane8)
+enterLane(c1Lane8)
+assert(c1Lane8.vehicleCount == 2, c1Lane8.anzahlFahrzeuge)
 Crossing.resetVehicles()
-assert(k1_r8.vehicleCount == 0)
+assert(c1Lane8.vehicleCount == 0)
 -------------------------------------------------------------------
 local function run()
     EEPTime = EEPTime + 20
@@ -55,12 +55,12 @@ end
 
 for _ = 1, 10 do
     print("Betritt Block")
-    enterLane(k1_r8)
+    enterLane(c1Lane8)
     run()
     run()
     run()
     run()
     print("Verlasse Block")
-    leaveLane(k1_r8,true)
+    leaveLane(c1Lane8,true)
     run()
 end
