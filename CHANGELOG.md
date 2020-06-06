@@ -4,58 +4,84 @@
 
 - ⭐ Neu: Die Angabe von Ampeln und Schaltungen wurde von Grund auf neu gestaltet um die Anwendung zu vereinfachen.
 
-  - Jede Fahrspur `Lane` hat nur noch genau eine Fahrspur-Ampel. Dieses Ampel steuert den Verkehr.
+- Jede Fahrspur `Lane` hat nur noch genau eine Fahrspur-Ampel. Dieses Ampel steuert den Verkehr.
 
-  - Jede Schaltung `CrossingSequence` schaltet Ampeln, keine Fahrspuren mehr.
+- Jede Schaltung `CrossingSequence` schaltet Ampeln, keine Fahrspuren mehr.
 
-  - Einfache Schaltung: Es kann direkt die Fahrspur-Ampel angegeben werden: `switchingA:addTrafficLight(tl1)`
+- Einfache Schaltung: Es kann direkt die Fahrspur-Ampel angegeben werden: `switchingA:addTrafficLight(tl1)`
 
-    ```lua
-      local c1 = Crossing:new("Bahnhofstr. - Hauptstr.")
-      local K1 = TrafficLight:new(34, TrafficLightModel.JS2_3er_mit_FG, { "STRAIGHT", "RIGHT" })
-
-      -- Einfache Steuerung direkt über die Fahrspur-Ampel K1 - diese ist sichtbar und wird direkt verwendet
-      c1Lane1 = c1:newLane("Fahrspur 1 - K1", 101, K1)
-      sequenceA = c1:newSequence("Schaltung A")
-      sequenceA:addTrafficLight(K1)
-    ```
-
-  - Komplexe Schaltung: Die Fahrspur darf bei mehreren Ampeln fahren `lane:driveOn(trafficLight, [route])`.
-    Optional kann dabei eine Route angegeben werden:
-
-    ```lua
+  ```lua
     local c1 = Crossing:new("Bahnhofstr. - Hauptstr.")
-    local LANE_SIGNAL1 = TrafficLight:new(34, TrafficLightModel.Unsichtbar_2er)
-    local K1 = TrafficLight:new(35, TrafficLightModel.JS2_3er_mit_FG)           -- Ampel für grade/rechts
-    local K2 = TrafficLight:new(36, TrafficLightModel.JS2_2er_OFF_YELLOW_GREEN) -- Ampel nur Rechtsabbieger
+    local K1 = TrafficLight:new(34, TrafficLightModel.JS2_3er_mit_FG, { "STRAIGHT", "RIGHT" })
 
-    -- Erweiterte Steuerung indirekt die Signale K1 und K2 - die Fahrspur-Ampel ist unsichtbar
+    -- Einfache Steuerung direkt über die Fahrspur-Ampel K1 - diese ist sichtbar und wird direkt verwendet
     c1Lane1 = c1:newLane("Fahrspur 1 - K1", 101, K1)
-    c1Lane8:driveOn(K1)
-    c1Lane8:driveOn(K2, "Route Rechtsabbieger") -- K2 wird mit Route Rechtsabbieger verknüpft
-
-    sequenceA = c1:newSequence("Schaltung A") -- alle in Fahrspur c1Lane1 fahren
+    sequenceA = c1:newSequence("Schaltung A")
     sequenceA:addTrafficLight(K1)
+  ```
 
-    sequenceB = c1:newSequence("Schaltung B") -- nur Rechtsabbieger in Fahrspur c1Lane1 fahren
-    sequenceB:addTrafficLight(K2)
-    ```
+- Komplexe Schaltung: Die Fahrspur darf bei mehreren Ampeln fahren `lane:driveOn(trafficLight, [route])`.
+  Optional kann dabei eine Route angegeben werden:
 
-  - Anforderungen der Fahrspuren können an Signalen gezeigt werden, die dies unterstützen
-    `lane:showRequestsOn(trafficLight)`:
+  ```lua
+  local c1 = Crossing:new("Bahnhofstr. - Hauptstr.")
+  local LANE_SIGNAL1 = TrafficLight:new(34, TrafficLightModel.Unsichtbar_2er)
+  local K1 = TrafficLight:new(35, TrafficLightModel.JS2_3er_mit_FG)           -- Ampel für grade/rechts
+  local K2 = TrafficLight:new(36, TrafficLightModel.JS2_2er_OFF_YELLOW_GREEN) -- Ampel nur Rechtsabbieger
 
-    ```lua
-    local S4 = TrafficLight:new(95, TrafficLightModel.Unsichtbar_2er, "#5525_Straba Signal Halt",
-                                "#5436_Straba Signal rechts", "#5526_Straba Signal anhalten", "#5524_Straba Signal A")
-    c1Lane11 = Lane:new("K1 - Fahrspur 11", 11, S4, {Lane.Directions.RIGHT}, Lane.Type.TRAM)
-    c1Lane11:showRequestsOn(S4)
-    ```
+  -- Erweiterte Steuerung indirekt die Signale K1 und K2 - die Fahrspur-Ampel ist unsichtbar
+  c1Lane1 = c1:newLane("Fahrspur 1 - K1", 101, K1)
+  c1Lane8:driveOn(K1)
+  c1Lane8:driveOn(K2, "Route Rechtsabbieger") -- K2 wird mit Route Rechtsabbieger verknüpft
 
-  - Fahrspuren für Fußgänger werden nicht mehr unterstützt
-    (stattdessen werden die Fußgängerampeln in der Schaltung hinterlegt).
+  sequenceA = c1:newSequence("Schaltung A") -- alle in Fahrspur c1Lane1 fahren
+  sequenceA:addTrafficLight(K1)
 
-  - Die Web-App Einstellungen für die Anzeige der Signale können in der Anlage hinterlegt werden.
-    Der folgende Befehl lädt die Daten beim Start aus EEP Speicherslot 22: `Crossing.loadSettingsFromSlot(22)`.
+  sequenceB = c1:newSequence("Schaltung B") -- nur Rechtsabbieger in Fahrspur c1Lane1 fahren
+  sequenceB:addTrafficLight(K2)
+  ```
+
+- Anforderungen der Fahrspuren können an Signalen gezeigt werden, die dies unterstützen
+  `lane:showRequestsOn(trafficLight)`:
+
+  ```lua
+  local S4 = TrafficLight:new(95, TrafficLightModel.Unsichtbar_2er, "#5525_Straba Signal Halt",
+                              "#5436_Straba Signal rechts", "#5526_Straba Signal anhalten", "#5524_Straba Signal A")
+  c1Lane11 = Lane:new("K1 - Fahrspur 11", 11, S4, {Lane.Directions.RIGHT}, Lane.Type.TRAM)
+  c1Lane11:showRequestsOn(S4)
+  ```
+
+- Fahrspuren für Fußgänger werden nicht mehr unterstützt
+  (stattdessen werden die Fußgängerampeln in der Schaltung hinterlegt).
+
+- Die Web-App Einstellungen für die Anzeige der Signale können in der Anlage hinterlegt werden.
+  Der folgende Befehl lädt die Daten beim Start aus EEP Speicherslot 22: `Crossing.loadSettingsFromSlot(22)`.
+
+- ⭐ Neu: Umbenennung verschiedener Lua-Dateien und Namen
+  - ~~`ak.core.eep.AkEepFunktionen`~~ => `ak.core.eep.EepSimulator`
+  - ~~`ak.core.eep.AkTippTextFormat`~~ => `ak.core.eep.TippTextFormatter`
+  - ~~`ak.planer.AkAktion`~~ => `ak.scheduler.Task`
+  - ~~`ak.planer.AkPlaner`~~ => `ak.scheduler.Scheduler`
+  - ~~`ak.planer.PlanerLuaModul`~~ => `ak.scheduler.SchedulerLuaModule`
+  - ~~`ak.schiene.AkSchiene`~~ => `ak.rail.Rail`
+  - ~~`ak.speicher.AkSpeicher.lua`~~ => `ak.storage.StorageUtility.lua`
+  - ~~`ak.speicher.AkSpeicherTest.lua`~~ => `ak.storage.StorageUtilityTest.lua`
+  - ~~`ak.strasse.AkAchsenImmoAmpel`~~ => `ak.road.AxisStructureTrafficLight`
+  - ~~`ak.strasse.AkAmpelModell`~~ => `ak.road.TrafficLightModel`
+  - ~~`ak.strasse.AkAmpel`~~ => `ak.road.TrafficLight`
+  - ~~`ak.strasse.AkBus`~~ => `road.Bus`
+  - ~~`ak.strasse.AkKreuzung`~~ => `ak.road.Crossing`
+  - ~~`ak.strasse.AkKreuzungsSchaltung`~~ => `ak.road.CrossingSequence`
+  - ~~`ak.strasse.AkLichtImmoAmpel`~~ => `ak.road.LightStructureTrafficLight`
+  - ~~`ak.strasse.AkPhase`~~ => `ak.road.TrafficLightState`
+  - ~~`ak.strasse.AkRichtung`~~ => `ak.road.Lane` ℹ Das Konzept Richtung wurde komplett überarbeitet!
+  - ~~`ak.strasse.AkStrabWeiche`~~ => `ak.road.TramSwitch`
+  - ~~`ak.strasse.AkStrasse`~~ wurde entfernt
+  - ~~`ak.strasse.AmpelModellJsonCollector`~~ => `ak.road.TrafficLightModelJsonCollector`
+  - ~~`ak.strasse.KreuzungJsonCollector`~~ => `ak.road.CrossingJsonCollector`
+  - ~~`ak.strasse.KreuzungLuaModul`~~ => `ak.road.CrossingLuaModul`
+  - ~~`ak.strasse.KreuzungWebConnector`~~ => `ak.road.CrossingWebConnector`
+
 
 ## 0.9.0
 
