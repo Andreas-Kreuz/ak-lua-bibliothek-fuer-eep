@@ -12,25 +12,25 @@ end
 
 function CrossingWebConnector.registerFunctions()
     ServerController.addAcceptedRemoteFunction(
-        "Crossing.setZeigeAnforderungenAlsInfo",
+        "Crossing.setShowRequestsOnSignal",
         function(param)
-            Crossing.setZeigeAnforderungenAlsInfo(param == "true")
+            Crossing.setShowRequestsOnSignal(param == "true")
         end
     )
     ServerController.addAcceptedRemoteFunction(
-        "Crossing.setZeigeSchaltungAlsInfo",
+        "Crossing.setShowSequenceOnSignal",
         function(param)
-            Crossing.setZeigeSchaltungAlsInfo(param == "true")
+            Crossing.setShowSequenceOnSignal(param == "true")
         end
     )
     ServerController.addAcceptedRemoteFunction(
-        "Crossing.setZeigeSignalIdsAllerSignale",
+        "Crossing.setShowSignalIdOnSignal",
         function(param)
-            Crossing.setZeigeSignalIdsAllerSignale(param == "true")
+            Crossing.setShowSignalIdOnSignal(param == "true")
         end
     )
-    ServerController.addAcceptedRemoteFunction("AkKreuzungSchalteAutomatisch", Crossing.schalteAutomatisch)
-    ServerController.addAcceptedRemoteFunction("AkKreuzungSchalteManuell", Crossing.schalteManuell)
+    ServerController.addAcceptedRemoteFunction("AkKreuzungSchalteAutomatisch", Crossing.switchAutomatically)
+    ServerController.addAcceptedRemoteFunction("AkKreuzungSchalteManuell", Crossing.switchManuallyTo)
 end
 
 return CrossingWebConnector

@@ -174,21 +174,21 @@ local function collectModuleSettings()
             ["description"] = "Zeigt für alle Ampeln einen TippText mit den Anforderungen",
             ["type"] = "boolean",
             ["value"] = Crossing.showRequestsOnSignal,
-            ["eepFunction"] = "Crossing.setZeigeAnforderungenAlsInfo"
+            ["eepFunction"] = "Crossing.setShowRequestsOnSignal"
         }, {
             ["category"] = "Kreuzung",
             ["name"] = "Schaltungen als TippText",
             ["description"] = "Zeigt für alle Ampeln einen TippText mit den Schaltungen",
             ["type"] = "boolean",
             ["value"] = Crossing.showSequenceOnSignal,
-            ["eepFunction"] = "Crossing.setZeigeSchaltungAlsInfo"
+            ["eepFunction"] = "Crossing.setShowSequenceOnSignal"
         }, {
             ["category"] = "Signale",
             ["name"] = "Signal-ID als TippText",
             ["description"] = "Zeigt an jedem Signal dessen Nummer als TippText",
             ["type"] = "boolean",
             ["value"] = Crossing.showSignalIdOnSignal,
-            ["eepFunction"] = "Crossing.setZeigeSignalIdsAllerSignale"
+            ["eepFunction"] = "Crossing.setShowSignalIdOnSignal"
         }
     }
 end
@@ -204,7 +204,7 @@ function CrossingJsonCollector.collectData()
 
     if not initialized then CrossingJsonCollector.initialize() end
 
-    local data = collect(Crossing.alleKreuzungen)
+    local data = collect(Crossing.allCrossings)
     data["intersection-module-settings"] = collectModuleSettings()
     return data
 end

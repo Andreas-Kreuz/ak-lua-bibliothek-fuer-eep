@@ -11,7 +11,7 @@ local fmt = require("ak.core.eep.AkTippTextFormat")
 --------------------
 -- Klasse Kreuzung
 --------------------
-local AkAllKreuzungen = {}
+local allCrossings = {}
 ---@class Crossing
 ---@field public name string @Intersection Name
 ---@field private currentSequence CrossingSequence @Currently used sequence
@@ -22,7 +22,7 @@ local AkAllKreuzungen = {}
 local Crossing = {}
 Crossing.debug = AkStartMitDebug or false
 ---@type table<string,Crossing>
-Crossing.alleKreuzungen = {}
+Crossing.allCrossings = {}
 Crossing.showRequestsOnSignal = AkStartMitDebug or false
 Crossing.showSequenceOnSignal = AkStartMitDebug or false
 Crossing.showSignalIdOnSignal = false
@@ -47,36 +47,36 @@ function Crossing.saveSettings()
     end
 end
 
-function Crossing.setZeigeAnforderungenAlsInfo(value)
+function Crossing.setShowRequestsOnSignal(value)
     assert(value == true or value == false)
     Crossing.showRequestsOnSignal = value
     Crossing.saveSettings()
 end
 
-function Crossing.setZeigeSchaltungAlsInfo(value)
+function Crossing.setShowSequenceOnSignal(value)
     assert(value == true or value == false)
     Crossing.showSequenceOnSignal = value
     Crossing.saveSettings()
 end
 
-function Crossing.setZeigeSignalIdsAllerSignale(value)
+function Crossing.setShowSignalIdOnSignal(value)
     assert(value == true or value == false)
     Crossing.showSignalIdOnSignal = value
     Crossing.saveSettings()
 end
 
-function Crossing.schalteManuell(crossingName, sequenceName)
-    print("schalteManuell:" .. crossingName .. "/" .. sequenceName)
+function Crossing.switchManuallyTo(crossingName, sequenceName)
+    print("switchManuallyTo:" .. crossingName .. "/" .. sequenceName)
     ---@type Crossing
-    local k = Crossing.alleKreuzungen[crossingName]
+    local k = Crossing.allCrossings[crossingName]
     if k then k:setManualSequence(sequenceName) end
 end
 
-function Crossing.schalteAutomatisch(crossingName)
-    print("schalteAutomatisch:" .. crossingName)
+function Crossing.switchAutomatically(crossingName)
+    print("switchAutomatically:" .. crossingName)
     ---@type Crossing
-    local k = Crossing.alleKreuzungen[crossingName]
-    if k then k:setAutomatikModus() end
+    local k = Crossing.allCrossings[crossingName]
+    if k then k:setAutomaticSequence() end
 end
 
 function Crossing.getType() return "Crossing" end
@@ -97,8 +97,6 @@ function Crossing:onSwitchedToSequence(nextSchaltung)
     end
     self.currentSequence = nextSchaltung
 end
-
-function Crossing:getNextSchaltung() return self.nextSchaltung end
 
 ---@return CrossingSequence
 function Crossing:calculateNextSequence()
@@ -123,7 +121,7 @@ function Crossing:setManualSequence(sequenceName)
     end
 end
 
-function Crossing:setAutomatikModus()
+function Crossing:setAutomaticSequence()
     self.manualSequence = nil
     self:setGreenPhaseFinished(true)
     print("Automatikmodus aktiviert. (" .. self.name .. "')")
@@ -142,7 +140,7 @@ function Crossing:isGreenPhaseReached() return self.greenPhaseReached end
 function Crossing:addStaticCam(kameraName) table.insert(self.staticCams, kameraName) end
 
 function Crossing.resetVehicles()
-    for _, crossing in pairs(AkAllKreuzungen) do
+    for _, crossing in pairs(allCrossings) do
         print("[Crossing ] SETZE ZURUECK: " .. crossing.name)
         for sequence in pairs(crossing:getSequences()) do
             for lane in pairs(sequence:getLanes()) do lane:resetVehicles() end
@@ -169,13 +167,13 @@ function Crossing:new(name, greenPhaseSeconds)
     }
     self.__index = self
     setmetatable(o, self)
-    Crossing.alleKreuzungen[name] = o
-    AkAllKreuzungen[name] = o
-    table.sort(AkAllKreuzungen, function(name1, name2) return name1 < name2 end)
+    Crossing.allCrossings[name] = o
+    allCrossings[name] = o
+    table.sort(allCrossings, function(name1, name2) return name1 < name2 end)
     return o
 end
 
---- Erzeugt eine , welche durch eine Ampel gesteuert wird.
+--- Erzeugt eine Fahrspur, welche durch eine Ampel gesteuert wird.
 ---@param name string @Name der Fahrspur einer Kreuzung
 ---@param eepSaveId number, @EEPSaveSlot-Id fuer das Speichern der Fahrspur
 ---@param trafficLight TrafficLight @eine oder mehrere Ampeln
@@ -183,6 +181,11 @@ end
 ---@param trafficType string eine oder mehrere Ampeln
 function Crossing:newLane(name, eepSaveId, trafficLight, directions, trafficType)
     local lane = Lane:new(name, eepSaveId, trafficLight, directions, trafficType)
+    self:addLane(lane)
+    return lane
+end
+
+function Crossing:addLane(lane)
     self.lanes[lane.name] = lane
     return lane
 end
@@ -199,19 +202,16 @@ end
 ---@param name string @Name of the Pedestrian Crossing einer Kreuzung
 function Crossing:newSequence(name, greenPhaseSeconds)
     local sequence = CrossingSequence:new(name, greenPhaseSeconds or self.greenPhaseSeconds)
-    sequence.crossing = self
-    self.sequences[sequence] = true
+    self:addSequence(sequence)
     return sequence
 end
 
 function Crossing:addSequence(sequence)
     sequence.crossing = self
     self.sequences[sequence] = true
-    for lane in pairs(sequence.lanes) do self.lanes[lane.name] = lane end
+    for lane in pairs(sequence.lanes) do self:addLane(lane) end
     return sequence
 end
-
-local aufbauHilfeErzeugt = Crossing.showSignalIdOnSignal
 
 local function allTrafficLights(circuits)
     local list = {}
@@ -375,6 +375,8 @@ local function recalculateSignalInfo(crossing)
     end
 end
 
+local aufbauHilfeErzeugt = Crossing.showSignalIdOnSignal
+
 function Crossing.planeSchaltungenEin()
     --- Diese Funktion sucht sich aus den Ampeln die mit der passenden Fahrspur
     -- raus und setzt deren Texte auf die aktuelle Schaltung
@@ -386,10 +388,10 @@ function Crossing.planeSchaltungenEin()
             EEPShowInfoSignal(signalId, Crossing.showSignalIdOnSignal)
             if Crossing.showSignalIdOnSignal then EEPChangeInfoSignal(signalId, "<j>Signal: " .. signalId) end
         end
-        -- for _, kreuzung in pairs(AkAllKreuzungen) do showSwitching(kreuzung) end
+        -- for _, kreuzung in pairs(allCrossings) do showSwitching(kreuzung) end
     end
 
-    for _, kreuzung in pairs(AkAllKreuzungen) do
+    for _, kreuzung in pairs(allCrossings) do
         switch(kreuzung)
         recalculateSignalInfo(kreuzung)
     end
