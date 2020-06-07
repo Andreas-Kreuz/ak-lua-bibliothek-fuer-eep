@@ -358,20 +358,20 @@ local function recalculateSignalInfo(crossing)
         local text = ""
         for _, sequence in ipairs(sortedSequences) do
             local farbig = sequence == crossing:getCurrentSequence()
-            local type = sequence[trafficLight]
+            local type = sequence.trafficLights[trafficLight]
             if not type then
                 text = text .. "<br><j>" ..
                            (farbig and fmt.bgRed(sequence.name .. " (Rot)") or
                                (sequence.name .. " " .. fmt.bgRed("(Rot)")))
-            elseif type == TrafficLightState.GREEN then
+            elseif type == CrossingSequence.Type.CAR then
                 text = text .. "<br><j>" ..
                            (farbig and fmt.bgGreen(sequence.name .. " (Gruen)") or
                                (sequence.name .. " " .. fmt.bgGreen("(Gruen)")))
-            elseif type == TrafficLightState.PEDESTRIAN then
+            elseif type == CrossingSequence.Type.PEDESTRIAN then
                 text = text .. "<br><j>" ..
                            (farbig and fmt.bgYellow(sequence.name .. " (FG)") or
                                (sequence.name .. " " .. fmt.bgYellow("(FG)")))
-            elseif type == TrafficLightState.TRAM then
+            elseif type == CrossingSequence.Type.TRAM then
                 text = text .. "<br><j>" ..
                            (farbig and fmt.bgBlue(sequence.name .. " (Tram)") or
                                (sequence.name .. " " .. fmt.bgBlue("(Tram)")))
