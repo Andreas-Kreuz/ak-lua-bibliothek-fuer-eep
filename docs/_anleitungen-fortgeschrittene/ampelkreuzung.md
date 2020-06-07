@@ -317,6 +317,7 @@ sch4:addPedestrianLights(F7, F8)
 -- sch8:addPedestrianLights(F9, F10)
 
 k1 = Crossing:new("Tutorial 1")
+-- k1:setSwitchInStrictOrder(true)
 k1:addSequence(sch1)
 k1:addSequence(sch2)
 k1:addSequence(sch3)
@@ -364,6 +365,13 @@ Du hast diese Anleitung abgeschlossen 🍀
 **So kannst Du weitermachen**:
 
 - Füge noch fehlende Fahrspuren zu Schaltungen hinzu. Können noch weitere Fußgänger-Ampeln geschaltet werden?
+
+- Reihenfolge der Schaltungen ändern:
+
+  Nachdem Du die Kreuzung mit `k1 = Crossing:new("Tutorial 1")` angegeben hast, kannst Du entscheiden, ob die Schaltungen in Reihenfolge ablaufen sollen oder nicht:
+
+  - `k1:setSwitchInStrictOrder(true)` sorgt dafür, dass die Schaltungen in der Reihenfolge durchgeschaltet werden, in der sie mit `addSequence()` eingeführt wurden.
+  - `k1:setSwitchInStrictOrder(false)` sorgt dafür, dass die Priorisierung der Schaltungen anhand der Wartezeit der einzelnen Fahrspuren und des anliegenden Verkehrs erfolgt.
 
 **Tipps**:
 

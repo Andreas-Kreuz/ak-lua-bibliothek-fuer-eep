@@ -32,7 +32,7 @@ local function collect(allCrossings)
             name = crossing.name,
             currentSwitching = crossing.currentSequence and crossing.currentSequence.name or nil,
             manualSwitching = crossing.manualSequence and crossing.manualSequence.name or nil,
-            nextSwitching = crossing.nextSchaltung and crossing.nextSchaltung.name or nil,
+            nextSwitching = crossing.nextSequence and crossing.nextSequence.name or nil,
             ready = crossing.greenPhaseFinished,
             timeForGreen = crossing.greenPhaseSeconds,
             staticCams = crossing.staticCams

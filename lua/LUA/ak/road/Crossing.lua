@@ -86,28 +86,36 @@ function Crossing:getSequences() return self.sequences end
 
 function Crossing:getCurrentSequence() return self.currentSequence end
 
-function Crossing:onSwitchedToSequence(nextSchaltung)
+function Crossing:onSwitchedToSequence(currentSequence)
     for _, lane in pairs(self.lanes) do
-        if nextSchaltung:getLanes()[lane] then
+        if currentSequence:getLanes()[lane] then
             lane:resetWaitCount()
         else
             lane:incrementWaitCount()
         end
     end
-    self.currentSequence = nextSchaltung
+    self.currentSequence = currentSequence
 end
 
 ---@return CrossingSequence
 function Crossing:calculateNextSequence()
+    local nextSequence
     if self.manualSequence then
-        self.nextSchaltung = self.manualSequence
+        nextSequence = self.manualSequence
+    elseif self.switchInStrictOrder == true then
+        local nextIndex = 1
+        for i, sequence in ipairs(self.sequences) do
+            if self.currentSequence == sequence then nextIndex = i == #self.sequences and 1 or i + 1 end
+        end
+        nextSequence = self.sequences[nextIndex]
     else
         local sortedTable = {}
         for _, sequence in ipairs(self.sequences) do table.insert(sortedTable, sequence) end
         table.sort(sortedTable, CrossingSequence.sequencePriorityComparator)
-        self.nextSchaltung = sortedTable[1]
+        nextSequence = sortedTable[1]
+
     end
-    return self.nextSchaltung
+    return nextSequence
 end
 
 function Crossing:setManualSequence(sequenceName)
@@ -124,6 +132,11 @@ function Crossing:setAutomaticSequence()
     self.manualSequence = nil
     self:setGreenPhaseFinished(true)
     print("Automatikmodus aktiviert. (" .. self.name .. "')")
+end
+
+function Crossing:setSwitchInStrictOrder(value)
+    assert(value == true or value == false, "Use Crossing:setSwitchInStrictOrder(true|false)")
+    self.switchInStrictOrder = value
 end
 
 function Crossing:getGreenPhaseSeconds() return self.greenPhaseSeconds end
@@ -162,6 +175,7 @@ function Crossing:new(name, greenPhaseSeconds)
         greenPhaseReached = true,
         greenPhaseFinished = true,
         greenPhaseSeconds = greenPhaseSeconds or 15,
+        switchInStrictOrder = false,
         staticCams = {}
     }
     self.__index = self
@@ -218,6 +232,7 @@ local function switch(crossing)
     ---@type CrossingSequence
     local nextSequence = crossing:calculateNextSequence()
     local currentSequence = crossing:getCurrentSequence()
+    crossing.nextSequence = nextSequence
 
     local nextName = crossing.name .. " " .. nextSequence:getName()
     local currentName = crossing.name .. " " .. (currentSequence and currentSequence:getName() or " Rot fuer alle")
