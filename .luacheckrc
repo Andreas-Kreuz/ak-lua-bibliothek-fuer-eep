@@ -1,15 +1,25 @@
 read_globals = {
     "AkDebugLoad",
     "EEPChangeInfoStructure",
+    "EEPGetCameraPosition",
+    "EEPGetCameraRotation",
+    "EEPGetCloudIntensity ",
+    "EEPGetFogIntensity",
+    "EEPGetHailIntensity",
+    "EEPGetRainIntensity",
     "EEPGetRollingstockItemName",
     "EEPGetRollingstockItemsCount",
     "EEPGetSignal",
     "EEPGetSignalTrainName",
     "EEPGetSignalTrainsCount",
+    "EEPGetSnowIntensity",
     "EEPGetSwitch",
+    "EEPGetTrainActive",
     "EEPGetTrainLength",
     "EEPGetTrainRoute",
     "EEPGetTrainSpeed",
+    "EEPGetWindIntensity",
+    "EEPGoodsGetRotation",
     "EEPIsAuxiliaryTrackReserved",
     "EEPIsControlTrackReserved",
     "EEPIsRailTrackReserved",
@@ -25,12 +35,17 @@ read_globals = {
     "EEPRegisterRailTrack",
     "EEPRegisterRoadTrack",
     "EEPRegisterTramTrack",
+    "EEPRollingstockGetActive",
     "EEPRollingstockGetCouplingFront",
     "EEPRollingstockGetCouplingRear",
+    "EEPRollingstockGetHook",
+    "EEPRollingstockGetHookGlue",
     "EEPRollingstockGetLength",
     "EEPRollingstockGetModelType",
     "EEPRollingstockGetMotor",
+    "EEPRollingstockGetOrientation",
     "EEPRollingstockGetPosition",
+    "EEPRollingstockGetSmoke",
     "EEPRollingstockGetTagText",
     "EEPRollingstockGetTrack",
     "EEPSaveData",
@@ -64,7 +79,7 @@ files["lua/LUA/ak/core/eep"].ignore = { "212" , "131" }
 files["lua/LUA/ak/demo-anlagen"].ignore = { "131" }
 files["lua/LUA/ak/data/AkSlotNamesParser.lua"].ignore = { "212" }
 files["lua/LUA/ak/strasse/Road.lua"].ignore = { "131" }
-files["lua/LUA/ak/data/TrackCollector.lua"].ignore = { "121" }
+files["lua/LUA/ak/data/TrackCollector.lua"].ignore = { "121", "211" }
 
 exclude_files = {
     "lua/LUA/ak/io/crc32lua.lua",

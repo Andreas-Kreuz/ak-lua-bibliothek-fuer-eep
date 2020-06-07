@@ -26,8 +26,8 @@ local EEPRollingstockModelTypeText = {
     [5] = "Diesellok",
     [6] = "Triebwagen",
     [7] = "U- oder S-Bahn",
-    [8] = "Strassenbahn", -- avoid German Umlaute
-    [9] = "Gueterwaggon", -- avoid German Umlaute
+    [8] = "Straßenbahn", -- German Umlaute are ok if stored as UTF-8
+    [9] = "Güterwaggon", -- German Umlaute are ok if stored as UTF-8
     [10] = "Personenwaggon",
     [11] = "Luftfahrzeug",
     [12] = "Maschine",
@@ -91,28 +91,135 @@ local function EEPGetRollingstockItemsCount(...)
     return executeAndStoreRunTime(_EEPGetRollingstockItemsCount, "EEPGetRollingstockItemsCount", ...)
 end
 
+-- Ermittelt die Gesamtlänge des angegebenen Zuges.
 local EEPGetTrainLength = EEPGetTrainLength or function()
         return
     end -- EEP 15.1 Plug-In 1
 
-local EEPRollingstockGetPosition = EEPRollingstockGetPosition or function()
+-- Ermittelt, welches Fahrzeug derzeit im Steuerdialog ausgewählt ist.
+local EEPRollingstockGetActive = EEPRollingstockGetActive or function() -- (not used yet)
         return
-    end -- EEP 16.1
+    end -- EEP 15.1 Plug-In 1
+
+-- Ermittelt, welcher Zug derzeit im Steuerdialog ausgewählt ist.
+local EEPGetTrainActive = EEPGetTrainActive or function() -- (not used yet)
+        return
+    end -- EEP 15.1 Plug-In 1
+
+-- Ermittelt, welche relative Ausrichtung das angegebene Fahrzeug im Zugverband hat.
+local EEPRollingstockGetOrientation = EEPRollingstockGetOrientation or function() -- (not used yet)
+        return
+    end -- EEP 15.1 Plug-In 1
+
 local EEPRollingstockGetLength = EEPRollingstockGetLength or function()
         return
     end -- EEP 14.2
+
 local EEPRollingstockGetMotor = EEPRollingstockGetMotor or function()
         return
     end -- EEP 14.2
+
 local EEPRollingstockGetTrack = EEPRollingstockGetTrack or function()
         return
     end -- EEP 14.2
+
 local EEPRollingstockGetModelType = EEPRollingstockGetModelType or function()
         return
     end -- EEP 14.2
-EEPRollingstockGetTagText = EEPRollingstockGetTagText or function()
+
+local EEPRollingstockGetTagText = EEPRollingstockGetTagText or function()
         return
     end -- EEP 14.2
+
+
+--- Ermittelt die Position des Rollmaterials im EEP-Koordinatensystem in Meter (m).
+--  OK, PosX, PosY, PosZ = EEPRollingstockGetPosition("#Fahrzeug")
+local EEPRollingstockGetPosition = EEPRollingstockGetPosition or function()
+        return
+    end -- EEP 16.1
+
+--- Ermittelt, ob der Haken eines bestimmten Rollmaterials an oder ausgeschaltet ist.
+-- OK, Status = EEPRollingstockGetHook("#Kranwagen")
+-- Haken aus = 0, an = 1, in Betrieb = 3
+local EEPRollingstockGetHook = EEPRollingstockGetHook or function() -- (not used yet)
+        return
+    end -- EEP 16.1
+
+--- Ermittelt das Verhalten von Gütern am Kranhaken eines Rollmaterials
+--  OK, Status = EEPRollingstockGetHookGlue("#Kranwagen")
+-- Güterhaken aus = 0, an = 1, in Benutzung = 3
+local EEPRollingstockGetHookGlue = EEPRollingstockGetHookGlue or function() -- (not used yet)
+        return
+    end -- EEP 16.1
+
+--- Ermittelt die zurückgelegte Strecke des Rollmaterials in Meter (m)
+--  OK, Mileage = EEPRollingstockGetMileage("#Fahrzeug")
+local EEPRollingstockGetMileage = EEPRollingstockGetMileage or function()
+        return
+    end -- EEP 16.1
+
+--- Ermittelt, ob der Rauch des benannten Rollmaterials, an- oder ausgeschaltet ist.
+-- OK, Status = EEPRollingstockGetSmoke("#Fahrzeug")
+-- aus = 0, angeschaltet = 1
+local EEPRollingstockGetSmoke = EEPRollingstockGetSmoke or function() -- (not used yet)
+        return
+    end -- EEP 16.1
+
+--- Ermittelt die Ausrichtung des Ladegutes in Grad (Â°)
+-- OK, RotX, RotY, RotZ = EEPGoodsGetRotation("#Container")
+local EEPGoodsGetRotation = EEPGoodsGetRotation or function() -- (not used yet)
+        return
+    end -- EEP 16.1
+
+-- To be used in another modules:
+
+--- Ermittelt die aktuelle Position der Kamera
+-- OK, PosX, PosY, PosZ = EEPGetCameraPosition()
+local EEPGetCameraPosition = EEPGetCameraPosition or function() -- (not used yet)
+        return
+    end -- EEP 16.1
+
+--- Ermittelt die aktuelle Ausrichtung einer Kamera.
+-- OK, RotX, RotY, RotZ = EEPGetCameraRotation()
+local EEPGetCameraRotation = EEPGetCameraRotation or function() -- (not used yet)
+        return
+    end -- EEP 16.1
+
+--- Ermittelt die Windstärke in Prozent (%)
+--  OK, WindIntensity = EEPGetWindIntensity()
+local EEPGetWindIntensity = EEPGetWindIntensity or function() -- (not used yet)
+        return
+    end -- EEP 16.1
+
+--- Ermittelt die Niederschlagintensität in Prozent (%)
+--  OK, RainIntensity = EEPGetRainIntensity()
+local EEPGetRainIntensity = EEPGetRainIntensity or function() -- (not used yet)
+        return
+    end -- EEP 16.1
+
+--- Ermittelt die Schneeintensitä in Prozent (%)
+--  OK, SnowIntensity = EEPGetSnowIntensity()
+local EEPGetSnowIntensity = EEPGetSnowIntensity or function() -- (not used yet)
+        return
+    end -- EEP 16.1
+
+--- Ermittelt die Hagelintensität in Prozent (%)
+-- OK, HailIntensity = EEPGetHailIntensity()
+local EEPGetHailIntensity = EEPGetHailIntensity or function() -- (not used yet)
+        return
+    end -- EEP 16.1
+
+--- Ermittelt die Nebelintensität in Prozent (%)
+-- OK, FogIntensity = EEPGetFogIntensity()
+local EEPGetFogIntensity = EEPGetFogIntensity or function() -- (not used yet)
+        return
+    end -- EEP 16.1
+
+--- Ermittelt der Wolkenanteil in Prozent (%)
+-- OK, CloudIntensity = EEPGetCloudIntensity()
+local EEPGetCloudIntensity = EEPGetCloudIntensity or function() -- (not used yet)
+        return
+    end -- EEP 16.1
 
 -- Redefine functions from EEP 11.0 to collect run time data
 local _EEPGetTrainSpeed = EEPGetTrainSpeed
@@ -212,7 +319,7 @@ function TrackCollector:updateTrain(trainName)
         id = trainName,
         route = haveRoute and route or "",
         rollingStockCount = rollingStockCount or 0,
-        length = trainLength or 0
+        length = tonumber(string.format("%.2f", trainLength or 0)),
     }
     self.trains[trainName] = currentTrain
 
@@ -262,7 +369,7 @@ function TrackCollector:updateRollingStock(rollingStockName, currentTrain, posit
         propelled = propelled or true,
         modelType = modelType or -1,
         modelTypeText = EEPRollingstockModelTypeText[modelType] or "",
-        tag = tag or ""
+        tag = tag or "",
     }
 
     -- Save
@@ -274,6 +381,7 @@ function TrackCollector:updateRollingStockInfo(rollingStockName)
     local _, trackId, trackDistance, trackDirection, trackSystem = EEPRollingstockGetTrack(rollingStockName)
     -- EEP 14.2
     local hasPos, PosX, PosY, PosZ = EEPRollingstockGetPosition(rollingStockName) -- EEP 16.1
+    local hasMileage, mileage = EEPRollingstockGetMileage(rollingStockName) -- EEP 16.1
 
     local rollingStockInfo = {
         name = rollingStockName,
@@ -283,7 +391,8 @@ function TrackCollector:updateRollingStockInfo(rollingStockName)
         trackSystem = trackSystem or -1,
         posX = hasPos and tonumber(PosX) or -1,
         posY = hasPos and tonumber(PosY) or -1,
-        posZ = hasPos and tonumber(PosZ) or -1
+        posZ = hasPos and tonumber(PosZ) or -1,
+        mileage = hasMileage and tonumber(mileage) or -1,
     }
     self.rollingStockInfo[rollingStockName] = rollingStockInfo
 end
@@ -308,7 +417,7 @@ end
 
 function TrackCollector:reactOnTrainChanges()
     -- React to train changes from EEP
-    local _EEPOnTrainCoupling = EEPOnTrainCoupling or function()
+    local _EEPOnTrainCoupling = EEPOnTrainCoupling or function() -- EEP 14 Plug-In 1
         end
     EEPOnTrainCoupling = function(trainA, trainB, trainNew)
         -- Mark these trains as dirty, i.e. refresh their data
@@ -319,7 +428,7 @@ function TrackCollector:reactOnTrainChanges()
         return _EEPOnTrainCoupling(trainA, trainB, trainNew)
     end
 
-    local _EEPOnTrainLooseCoupling = EEPOnTrainLooseCoupling or function()
+    local _EEPOnTrainLooseCoupling = EEPOnTrainLooseCoupling or function() -- EEP 14 Plug-In 1
         end
     EEPOnTrainLooseCoupling = function(trainA, trainB, trainNew)
         -- Mark these trains as dirty, i.e. refresh their data
@@ -330,7 +439,7 @@ function TrackCollector:reactOnTrainChanges()
         return _EEPOnTrainLooseCoupling(trainA, trainB, trainNew)
     end
 
-    local _EEPOnTrainExitTrainyard = EEPOnTrainExitTrainyard or function()
+    local _EEPOnTrainExitTrainyard = EEPOnTrainExitTrainyard or function() -- EEP 14 Plug-In 1
         end
     EEPOnTrainExitTrainyard = function(depotId, trainName)
         self.dirtyTrainNames[trainName] = true
