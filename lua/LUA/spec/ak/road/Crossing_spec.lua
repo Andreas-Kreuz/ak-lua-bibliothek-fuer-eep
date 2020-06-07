@@ -139,9 +139,12 @@ insulate("Crossing", function()
             assert.is_same(lane4, crossing.lanes[lane4.name])
         end)
         it("Switchings are there", function()
-            assert.is_same(true, crossing.sequences[sequenceA])
-            assert.is_same(true, crossing.sequences[sequenceB])
-            assert.is_same(true, crossing.sequences[sequenceC])
+            local sequenceMap = {}
+            for _, sequence in ipairs(crossing:getSequences()) do sequenceMap[sequence] = true end
+
+            assert.is_same(true, sequenceMap[sequenceA])
+            assert.is_same(true, sequenceMap[sequenceB])
+            assert.is_same(true, sequenceMap[sequenceC])
         end)
         it("Lanes are there", function()
             assert.is_truthy(sequenceA.lanes[lane1])

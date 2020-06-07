@@ -103,7 +103,7 @@ function Crossing:calculateNextSequence()
         self.nextSchaltung = self.manualSequence
     else
         local sortedTable = {}
-        for sequence in pairs(self.sequences) do table.insert(sortedTable, sequence) end
+        for _, sequence in ipairs(self.sequences) do table.insert(sortedTable, sequence) end
         table.sort(sortedTable, CrossingSequence.sequencePriorityComparator)
         self.nextSchaltung = sortedTable[1]
     end
@@ -111,7 +111,7 @@ function Crossing:calculateNextSequence()
 end
 
 function Crossing:setManualSequence(sequenceName)
-    for sequence in pairs(self.sequences) do
+    for _, sequence in ipairs(self.sequences) do
         if sequence.name == sequenceName then
             self.manualSequence = sequence
             print("Manuell geschaltet auf: " .. sequence .. " (" .. self.name .. "')")
@@ -182,14 +182,14 @@ end
 
 function Crossing:addSequence(sequence)
     sequence.crossing = self
-    self.sequences[sequence] = true
+    table.insert(self.sequences, sequence)
     return sequence
 end
 
-local function allTrafficLights(circuits)
+local function allTrafficLights(sequences)
     local list = {}
 
-    for sequence in pairs(circuits) do
+    for _, sequence in ipairs(sequences) do
         assert(sequence.getType() == "CrossingSequence", type(sequence))
         for _, trafficLight in pairs(sequence.trafficLights) do list[trafficLight] = true end
         for _, trafficLight in pairs(sequence.pedestrianLights) do list[trafficLight] = true end
@@ -301,22 +301,22 @@ local function recalculateSignalInfo(crossing)
     for _, lane in pairs(crossing.lanes) do lane:checkRequests() end
 
     local trafficLights = {}
-    local sequences = {}
+    local tlSequences = {}
 
     -- sort the circuits
     local sortedSequences = {}
-    for k in pairs(crossing:getSequences()) do table.insert(sortedSequences, k) end
+    for _, v in ipairs(crossing:getSequences()) do table.insert(sortedSequences, v) end
     table.sort(sortedSequences, function(s1, s2) return (s1.name < s2.name) end)
 
     for _, sequence in ipairs(sortedSequences) do
         for _, tl in pairs(sequence.trafficLights) do
-            sequences[tl.signalId] = sequences[tl.signalId] or {}
-            sequences[tl.signalId][sequence] = TrafficLightState.GREEN
+            tlSequences[tl.signalId] = tlSequences[tl.signalId] or {}
+            tlSequences[tl.signalId][sequence] = TrafficLightState.GREEN
             trafficLights[tl] = true
         end
         for _, tl in pairs(sequence.pedestrianLights) do
-            sequences[tl.signalId] = sequences[tl.signalId] or {}
-            sequences[tl.signalId][sequence] = TrafficLightState.PEDESTRIAN
+            tlSequences[tl.signalId] = tlSequences[tl.signalId] or {}
+            tlSequences[tl.signalId][sequence] = TrafficLightState.PEDESTRIAN
             trafficLights[tl] = true
         end
     end
@@ -335,12 +335,12 @@ local function recalculateSignalInfo(crossing)
             local text = ""
             for _, sequence in ipairs(sortedSequences) do
                 local farbig = sequence == crossing:getCurrentSequence()
-                if sequences[trafficLight.signalId][sequence] then
-                    if sequences[trafficLight.signalId][sequence] == TrafficLightState.GREEN then
+                if tlSequences[trafficLight.signalId][sequence] then
+                    if tlSequences[trafficLight.signalId][sequence] == TrafficLightState.GREEN then
                         text = text .. "<br><j>" ..
                                    (farbig and fmt.bgGreen(sequence.name .. " (Gruen)") or
                                        (sequence.name .. " " .. fmt.bgGreen("(Gruen)")))
-                    elseif sequences[trafficLight.signalId][sequence] == TrafficLightState.PEDESTRIAN then
+                    elseif tlSequences[trafficLight.signalId][sequence] == TrafficLightState.PEDESTRIAN then
                         text = text .. "<br><j>" ..
                                    (farbig and fmt.bgYellow(sequence.name .. " (FG)") or
                                        (sequence.name .. " " .. fmt.bgYellow("(FG)")))
@@ -367,7 +367,7 @@ local aufbauHilfeErzeugt = Crossing.showSignalIdOnSignal
 --- Speichert die Fahrspuren und Ampeln in den einzelnen Kreuzungen --> Weniger Suche danach
 function Crossing.initSequences()
     for _, crossing in pairs(allCrossings) do
-        for sequence in pairs(crossing.sequences) do
+        for _, sequence in ipairs(crossing.sequences) do
             sequence:initSequence()
             local laneFound = false
             for v in pairs(sequence.lanes) do

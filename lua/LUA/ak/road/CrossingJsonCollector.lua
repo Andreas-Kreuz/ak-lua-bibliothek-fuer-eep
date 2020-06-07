@@ -40,7 +40,7 @@ local function collect(allCrossings)
         table.insert(intersections, intersection)
 
         local trafficLights = {}
-        for schaltung in pairs(crossing:getSequences()) do
+        for _, schaltung in ipairs(crossing:getSequences()) do
             local sequence = {
                 id = crossing.name .. "-" .. schaltung.name,
                 intersectionId = crossing.name,

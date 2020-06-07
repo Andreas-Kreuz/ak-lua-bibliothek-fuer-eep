@@ -449,7 +449,6 @@ function Lane:new(name, eepSaveId, trafficLight, directions, trafficType)
         tracksUsedForRequest = false,
         tracksForRequests = {},
         directions = directions or {"LEFT", "STRAIGHT", "RIGHT"},
-        sequences = {},
         trafficType = trafficType or "NORMAL",
         vehicleCount = 0,
         fahrzeugMultiplikator = 1,
