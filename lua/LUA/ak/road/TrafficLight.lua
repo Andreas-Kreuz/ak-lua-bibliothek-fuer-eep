@@ -107,8 +107,10 @@ function TrafficLight:showInfoText(showInfo)
         EEPShowInfoSignal(self.signalId, showInfo)
     else
         for l in pairs(self.lightStructures) do
-            if l.redStructure then EEPShowInfoStructure(l.redStructure, showInfo) end
-            break
+            if l.redStructure then
+                EEPShowInfoStructure(l.redStructure, showInfo)
+                break
+            end
         end
     end
 end
@@ -117,8 +119,10 @@ function TrafficLight:changeInfoText(infoText)
         EEPChangeInfoSignal(self.signalId, infoText)
     else
         for l in pairs(self.lightStructures) do
-            if l.redStructure then EEPChangeInfoStructure(l.redStructure, infoText) end
-            break
+            if l.redStructure then
+                EEPChangeInfoStructure(l.redStructure, infoText)
+                break
+            end
         end
     end
 end
