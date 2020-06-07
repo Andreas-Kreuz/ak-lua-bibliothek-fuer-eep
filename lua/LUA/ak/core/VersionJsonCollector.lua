@@ -1,4 +1,4 @@
-print "Lade ak.core.VersionJsonCollector ..."
+if AkDebugLoad then print("Loading ak.core.VersionJsonCollector ...") end
 VersionJsonCollector = {}
 local ServerController = require("ak.io.ServerController")
 local enabled = true

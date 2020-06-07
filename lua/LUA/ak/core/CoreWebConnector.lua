@@ -1,14 +1,14 @@
-print("Lade ak.core.CoreWebConnector ...")
+if AkDebugLoad then print("Loading ak.core.CoreWebConnector ...") end
 local CoreWebConnector = {}
 local ServerController = require("ak.io.ServerController")
-local knownModules = nil
-function CoreWebConnector.setRegisteredLuaModules(registeredLuaModules)
-    knownModules = registeredLuaModules
+local registeredLuaModules = nil
+function CoreWebConnector.setRegisteredLuaModules(modules)
+    registeredLuaModules = modules
 end
 
 function CoreWebConnector.registerJsonCollectors()
     local ModulesJsonCollector = require("ak.core.ModulesJsonCollector")
-    ModulesJsonCollector.setRegisteredLuaModules(knownModules)
+    ModulesJsonCollector.setRegisteredLuaModules(registeredLuaModules)
     ServerController.addJsonCollector(ModulesJsonCollector)
     ServerController.addJsonCollector(require("ak.core.VersionJsonCollector"))
 end

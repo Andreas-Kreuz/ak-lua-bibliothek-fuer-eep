@@ -1,10 +1,10 @@
-print("Lade ak.data.DataSlotsJsonCollector ...")
+if AkDebugLoad then print("Loading ak.data.DataSlotsJsonCollector ...") end
 
 local DataSlotsJsonCollector = {}
 local enabled = true
 local initialized = false
 local AkSlotNamesParser = require("ak.data.AkSlotNamesParser")
-local AkSpeicherHilfe = require("ak.speicher.AkSpeicher")
+local StorageUtility = require("ak.storage.StorageUtility")
 DataSlotsJsonCollector.name = "ak.data.DataSlotsJsonCollector"
 
 
@@ -25,7 +25,7 @@ function DataSlotsJsonCollector.collectData()
         if hResult then
             local slotV1 = {
                 id = i,
-                name = AkSlotNamesParser.getSlotName(i) or AkSpeicherHilfe.getName(i) or '?',
+                name = AkSlotNamesParser.getSlotName(i) or StorageUtility.getName(i) or '?',
                 data = saved,
             }
             table.insert(filledSlots, slotV1)

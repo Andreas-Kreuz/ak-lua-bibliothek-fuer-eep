@@ -1,4 +1,4 @@
-print("Lade ak.io.AkCommandExecutor ...")
+if AkDebugLoad then print("Loading ak.io.AkCommandExecutor ...") end
 
 -- split a string
 local function split(text, delimiter)
@@ -21,7 +21,7 @@ local acceptedRemoteFunctions = {}
 
 --- Adding an accepted function
 ---NOTE: acceptedFunctions are typically added via the Modules WebConnector
----@param fName string using the name of the function as called from EEP-Web
+---@param fName string @using the name of the function as called from EEP-Web
 ---@param f function
 function AkCommandExecutor.addAcceptedRemoteFunction(fName, f)
     assert(fName and type(fName) == "string", "Es muss ein Funktionsname angegeben werden.")
@@ -35,7 +35,7 @@ AkCommandExecutor.addAcceptedRemoteFunction("EEPPause", EEPPause)
 -- Accept all EEP*Set functions
 for name, value in pairs(_G) do
     if string.find(name, "^EEP.*Set") and type(value) == "function" then
-        --print(string.format("Adding %s to acceptedRemoteFunctions", name))
+        -- print(string.format("Adding %s to acceptedRemoteFunctions", name))
         AkCommandExecutor.addAcceptedRemoteFunction(name, value)
     end
 end
@@ -54,9 +54,7 @@ function AkCommandExecutor.callSavely(functionAndArgs)
 
     if f then
         local status, error = pcall(f, table.unpack(args))
-        if not status then
-            print(error)
-        end
+        if not status then print(error) end
     else
         print("Aufruf von " .. fName .. " nicht erlaubt")
     end

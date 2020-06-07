@@ -1,14 +1,14 @@
-print "Lade ak.core.ModulesJsonCollector ..."
----- @class LuaModule
+if AkDebugLoad then print("Loading ak.core.ModulesJsonCollector ...") end
+---@class JsonCollector
 ModulesJsonCollector = {}
 local enabled = true
 local initialized = false
 ModulesJsonCollector.name = "ak.core.ModulesJsonCollector"
----@type<string,LuaModule>
-local knownModules = nil
+---@type table<string,LuaModule>
+local registeredLuaModules = nil
 
-function ModulesJsonCollector.setRegisteredLuaModules(registeredLuaModules)
-    knownModules = registeredLuaModules
+function ModulesJsonCollector.setRegisteredLuaModules(modules)
+    registeredLuaModules = modules
 end
 
 function ModulesJsonCollector.initialize()
@@ -22,7 +22,7 @@ end
 function ModulesJsonCollector.collectData()
     local moduleInfo = {}
     moduleInfo.modules = {}
-    for moduleName, module in pairs(knownModules) do
+    for moduleName, module in pairs(registeredLuaModules) do
         table.insert(
             moduleInfo.modules,
             {

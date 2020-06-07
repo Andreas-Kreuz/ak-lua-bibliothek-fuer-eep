@@ -1,18 +1,20 @@
-print "Lade ak.core.CoreLuaModule ..."
+if AkDebugLoad then print("Loading ak.core.CoreLuaModule ...") end
+
+---@class LuaModule
 CoreLuaModule = {}
 CoreLuaModule.id = "8aeef2ab-8672-4f9a-a929-d62845f5f1fc"
 CoreLuaModule.enabled = true
 local initialized = false
 -- Jedes Modul hat einen eindeutigen Namen
 CoreLuaModule.name = "ak.core.CoreLuaModule"
-local knownModules = nil
+local registeredLuaModules = nil
 
-function CoreLuaModule.setRegisteredLuaModules(registeredLuaModules)
-    knownModules = registeredLuaModules
+function CoreLuaModule.setRegisteredLuaModules(modules)
+    registeredLuaModules = modules
 end
 
 --- Diese Funktion wird einmalig durch ModuleRegistry.initTasks() aufgerufen
--- Ist ein Modul fÃ¼r EEPWeb vorhanden, dann solltes in dieser Funktion aufgerufen werden
+-- Ist ein Modul für EEPWeb vorhanden, dann solltes in dieser Funktion aufgerufen werden
 -- @author Andreas Kreuz
 function CoreLuaModule.init()
     if not CoreLuaModule.enabled or initialized then
@@ -21,24 +23,24 @@ function CoreLuaModule.init()
 
     -- Hier wird der CoreWebConnector registriert, so dass die Kommunikation mit der WebApp funktioniert
     local CoreWebConnector = require("ak.core.CoreWebConnector")
-    CoreWebConnector.setRegisteredLuaModules(knownModules)
+    CoreWebConnector.setRegisteredLuaModules(registeredLuaModules)
     CoreWebConnector.registerJsonCollectors();
 
     initialized = true
 end
 
---- Diese Funktion wird regelmÃ¤ÃŸig durch ModuleRegistry.runTasks() aufgerufen
+--- Diese Funktion wird regelmäßig durch ModuleRegistry.runTasks() aufgerufen
 -- @author Andreas Kreuz
 function CoreLuaModule.run()
     if not CoreLuaModule.enabled then
         return
     end
 
-    -- Hier folgen die wiederkehrenden Funktionen jedes Moduls (mÃ¼ssen dann nicht in EEPMain aufgerufen werden)
+    -- Hier folgen die wiederkehrenden Funktionen jedes Moduls (müssen dann nicht in EEPMain aufgerufen werden)
     -- Das CoreModul hat keine wiederkehrenden Funktionen
 end
 
---- Ãœber diese Funktion kann das EEP Skript die Optionen des Moduls setzen
+--- Über diese Funktion kann das EEP Skript die Optionen des Moduls setzen
 -- @author Frank Buchholz
 -- @options List of options { waitForServer = true/false, activeEntries = array of entry names, }
 local ServerController = require("ak.io.ServerController")

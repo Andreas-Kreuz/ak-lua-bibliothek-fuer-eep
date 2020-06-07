@@ -1,4 +1,4 @@
-print "Lade ak.data.SwitchJsonCollector ..."
+if AkDebugLoad then print("Loading ak.data.SwitchJsonCollector ...") end
 SwitchJsonCollector = {}
 local enabled = true
 local initialized = false

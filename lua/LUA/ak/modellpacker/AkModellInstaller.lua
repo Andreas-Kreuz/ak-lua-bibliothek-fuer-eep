@@ -2,7 +2,7 @@ local AkModellPacker = require("ak.modellpacker.AkModellPacker")
 
 local AkModellInstaller = {}
 
-function AkModellInstaller:neu(verzeichnisname)
+function AkModellInstaller:new(verzeichnisname)
     assert(verzeichnisname)
     local o = {}
     setmetatable(o, self)

@@ -2,7 +2,7 @@
 --    describe("getSlotNamesFunction", function()
 --        describe(".getSlotNames()", function()
 --            insulate("Slot 1", function()
---                require("ak.core.eep.AkEepFunktionen")
+--                require("ak.core.eep.EepSimulator")
 --                local _, SlotMapping, SlotFuncs = require('SlotNames_BH2')()
 --                SlotMapping.Slot1 = 34
 --                --SlotMapping.Liste = { 36, 37, 38 }

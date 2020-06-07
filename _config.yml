@@ -111,13 +111,9 @@ exclude:
         "LICENSE",
         "screenshot.png",
         "server",
-        "web-app/dist/",
-        "web-app/node_modules/",
-        "web-server/build/",
-        "web-server/dist/",
-        "web-server/node_modules/",
-        "web-shared/build/",
-        "web-shared/node_modules/",
+        "web-app",
+        "web-server",
+        "web-shared"
     ]
 
 defaults:

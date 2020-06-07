@@ -1,0 +1,11 @@
+insulate("Check traffic light sequence", function()
+    require("ak.core.eep.EepSimulator")
+    local ModuleRegistry = require("ak.core.ModuleRegistry")
+    ModuleRegistry.registerModules(require("ak.road.CrossingLuaModul"), require("ak.scheduler.SchedulerLuaModule"))
+
+    local modNames = ModuleRegistry.getModuleNames()
+    it("modNames size   ", function() assert.equals(3, #modNames) end)
+    it("Scheduler first!", function() assert.equals("ak.scheduler.SchedulerLuaModule", modNames[1]) end)
+    it("Core second!    ", function() assert.equals("ak.core.CoreLuaModule", modNames[2]) end)
+    it("Crossing second!", function() assert.equals("ak.road.CrossingLuaModul", modNames[3]) end)
+end)

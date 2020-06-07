@@ -1,180 +1,143 @@
 clearlog()
-local AkAmpelModell = require("ak.strasse.AkAmpelModell")
-local AkAmpel = require("ak.strasse.AkAmpel")
-local AkRichtung = require("ak.strasse.AkRichtung")
-local AkKreuzung = require("ak.strasse.AkKreuzung")
-local AkKreuzungsSchaltung = require("ak.strasse.AkKreuzungsSchaltung")
+local TrafficLightModel = require("ak.road.TrafficLightModel")
+local TrafficLight = require("ak.road.TrafficLight")
+local Lane = require("ak.road.Lane")
+local Crossing = require("ak.road.Crossing")
+local CrossingSequence = require("ak.road.CrossingSequence")
 
 -- Hier kommt der Code
-AkKreuzung.zeigeSignalIdsAllerSignale = false
-AkKreuzung.zeigeSchaltungAlsInfo = false
+Crossing.showSignalIdOnSignal = false
+Crossing.showSequenceOnSignal = false
 
+local K1 = TrafficLight:new("K1", 12, TrafficLightModel.JS2_3er_mit_FG)
+local K2 = TrafficLight:new("K2", 17, TrafficLightModel.JS2_3er_ohne_FG)
+local K3 = TrafficLight:new("K3", 9, TrafficLightModel.JS2_3er_mit_FG)
+local K4 = TrafficLight:new("K4", 14, TrafficLightModel.JS2_3er_mit_FG)
+local K5 = TrafficLight:new("K5", 16, TrafficLightModel.JS2_3er_mit_FG)
+local K6 = TrafficLight:new("K6", 18, TrafficLightModel.JS2_3er_ohne_FG)
+local K7 = TrafficLight:new("K7", 11, TrafficLightModel.JS2_3er_mit_FG)
+local K8 = TrafficLight:new("K8", 10, TrafficLightModel.JS2_3er_mit_FG)
+local K9 = TrafficLight:new("K9", 19, TrafficLightModel.JS2_3er_ohne_FG)
+local K10 = TrafficLight:new("K10", 13, TrafficLightModel.JS2_3er_mit_FG)
+local K11 = TrafficLight:new("K11", 15, TrafficLightModel.JS2_3er_mit_FG)
+local K12 = TrafficLight:new("K12", 24, TrafficLightModel.JS2_3er_ohne_FG)
 
+local F1 = K1 -- K1 wird später auch als Fussgaenger-Ampel F1 verwendet
+local F2 = K3 -- K3 wird später auch als Fussgaenger-Ampel F2 verwendet
+local F3 = TrafficLight:new("F3", 20, TrafficLightModel.JS2_2er_nur_FG)
+local F4 = TrafficLight:new("F4", 21, TrafficLightModel.JS2_2er_nur_FG)
+local F5 = K4
+local F6 = K5
+local F7 = K7
+local F8 = K8
+local F9 = TrafficLight:new("F9", 22, TrafficLightModel.JS2_2er_nur_FG)
+local F10 = TrafficLight:new("F10", 23, TrafficLightModel.JS2_2er_nur_FG)
+local F11 = K10
+local F12 = K11
 -------------------------------------------------------------------------------
--- Definiere die Richtungen fuer die Kreuzung
+-- Definiere die Fahrspuren fuer die Kreuzung
 -------------------------------------------------------------------------------
 
---   +---------------------------------------------- Neue Richtung
---   |              +------------------------------- Name der Richtung
---   |              |     +------------------------- Speicher ID - um die Anzahl der Fahrzeuge
---   |              |     |                                        und die Wartezeit zu speichern
---   |              |     |      +------------------ neue Ampel fÃ¼r diese Richtung
---   |              |     |      |           +------ Signal-ID dieser Ampel
---   |              |     |      |           |   +-- Modell kann rot, gelb, gruen und FG schalten
-n1 = AkRichtung:neu("N1", 100, { AkAmpel:neu(12, AkAmpelModell.JS2_3er_mit_FG) })
-n1:setRichtungen({ 'STRAIGHT', 'RIGHT' })
+--   +---------------------------------------------- Neue Fahrspur
+--   |        +------------------------------- Name der Fahrspur
+--   |        |     +------------------------- Speicher ID - um die Anzahl der Fahrzeuge
+--   |        |     |                                        und die Wartezeit zu speichern
+--   |        |     |      +------------------ Fahrspur-Ampel - da wartet der Verkehr
+--   |        |     |      |           +------ Signal-ID dieser Ampel
+--   |        |     |      |           |   +-- Modell kann rot, gelb, gruen und FG schalten
+n1 = Lane:new("N1", 100, K1, {'STRAIGHT', 'RIGHT'})
+n2 = Lane:new("N2", 101, K3, {'LEFT'}) -- zusätzlich in der Schaltung K2
 
--- Die Richtung N2 hat zwei Ampeln fuer's Linksabbiegen, 9 mit Fussgaengerampel und 17 ohne
-n2 = AkRichtung:neu("N2", 101, {
-    AkAmpel:neu(9, AkAmpelModell.JS2_3er_mit_FG),
-    AkAmpel:neu(17, AkAmpelModell.JS2_3er_ohne_FG)
-})
-n2:setRichtungen({ 'LEFT' })
+-- Fahrspuren im Osten
+o1 = Lane:new("O1", 104, K4, {'STRAIGHT', 'RIGHT'})
+o2 = Lane:new("O2", 105, K6, {'LEFT'}) -- zusätlich in der Schaltung K5
 
--- Die Richtungen fÃ¼r Fussgaenger haben auch je zwei Ampeln
-fg_n1 = AkRichtung:neu("FG_N1", 102, {
-    AkAmpel:neu(9, AkAmpelModell.JS2_3er_mit_FG), -- Wird geteilt mit N2
-    AkAmpel:neu(12, AkAmpelModell.JS2_3er_mit_FG) -- Wird geteilt mit N1
-})
-fg_n2 = AkRichtung:neu("FG_N2", 103, {
-    AkAmpel:neu(20, AkAmpelModell.JS2_2er_nur_FG),
-    AkAmpel:neu(21, AkAmpelModell.JS2_2er_nur_FG),
-})
-fg_n1:setTrafficType('PEDESTRIAN')
-fg_n2:setTrafficType('PEDESTRIAN')
+-- Fahrspuren im Sueden
+s1 = Lane:new("S1", 107, K7, {'STRAIGHT', 'RIGHT'})
+s2 = Lane:new("S2", 108, K8, {"LEFT"}) -- zusätlich in der Schaltung K9
 
--- Richtungen im Osten
-o1 = AkRichtung:neu("O1", 104, { AkAmpel:neu(14, AkAmpelModell.JS2_3er_mit_FG) })
-o2 = AkRichtung:neu("O2", 105, {
-    AkAmpel:neu(16, AkAmpelModell.JS2_3er_mit_FG),
-    AkAmpel:neu(18, AkAmpelModell.JS2_3er_ohne_FG)
-})
-o1:setRichtungen({ 'STRAIGHT', 'RIGHT' })
-o2:setRichtungen({ 'LEFT' })
-fg_o = AkRichtung:neu("FG_O", 106, {
-    AkAmpel:neu(14, AkAmpelModell.JS2_3er_mit_FG), -- Wird geteilt mit O1
-    AkAmpel:neu(16, AkAmpelModell.JS2_3er_mit_FG) -- Wird geteilt mit O2
-})
-fg_o:setTrafficType('PEDESTRIAN')
-
--- Richtungen im Sueden
-s1 = AkRichtung:neu("S1", 107, { AkAmpel:neu(11, AkAmpelModell.JS2_3er_mit_FG) })
-s2 = AkRichtung:neu("S2", 108, {
-    AkAmpel:neu(10, AkAmpelModell.JS2_3er_mit_FG),
-    AkAmpel:neu(19, AkAmpelModell.JS2_3er_ohne_FG)
-})
-s1:setRichtungen({ 'STRAIGHT', 'RIGHT' })
-s2:setRichtungen({ 'LEFT' })
-
-fg_s1 = AkRichtung:neu("FG_S1", 109, {
-    AkAmpel:neu(10, AkAmpelModell.JS2_3er_mit_FG), -- Wird geteilt mit S2
-    AkAmpel:neu(11, AkAmpelModell.JS2_3er_mit_FG) -- Wird geteilt mit S1
-})
-fg_s2 = AkRichtung:neu("FG_S2", 110, {
-    AkAmpel:neu(22, AkAmpelModell.JS2_2er_nur_FG),
-    AkAmpel:neu(23, AkAmpelModell.JS2_2er_nur_FG),
-})
-fg_s1:setTrafficType('PEDESTRIAN')
-fg_s2:setTrafficType('PEDESTRIAN')
-
-
--- Richtungen im Westen
-w1 = AkRichtung:neu("W1", 111, { AkAmpel:neu(13, AkAmpelModell.JS2_3er_mit_FG) })
-w2 = AkRichtung:neu("W2", 112, {
-    AkAmpel:neu(15, AkAmpelModell.JS2_3er_mit_FG),
-    AkAmpel:neu(24, AkAmpelModell.JS2_3er_ohne_FG)
-})
-w1:setRichtungen({ 'STRAIGHT', 'RIGHT' })
-w2:setRichtungen({ 'LEFT' })
-fg_w = AkRichtung:neu("FG_W", 113, {
-    AkAmpel:neu(13, AkAmpelModell.JS2_3er_mit_FG), -- Wird geteilt mit O1
-    AkAmpel:neu(15, AkAmpelModell.JS2_3er_mit_FG) -- Wird geteilt mit O2
-})
-fg_w:setTrafficType('PEDESTRIAN')
-
+-- Fahrspuren im Westen
+w1 = Lane:new("W1", 111, K10, {'STRAIGHT', 'RIGHT'})
+w2 = Lane:new("W2", 112, K12, {'LEFT'}) -- Zusätzlich in der Schaltung K11
 
 --------------------------------------------------------------
 -- Definiere die Schaltungen und die Kreuzung
 --------------------------------------------------------------
--- Eine Schaltung bestimmt, welche Richtungen gleichzeitig auf
--- grÃ¼n geschaltet werden dÃ¼rfen, alle anderen sind rot
+-- Eine Schaltung bestimmt, welche Fahrspuren gleichzeitig auf
+-- grün geschaltet werden dürfen, alle anderen sind rot
 
 --- Tutorial 1: Schaltung 1
-local sch1 = AkKreuzungsSchaltung:neu("Schaltung 1")
-sch1:fuegeRichtungHinzu(n1)
-sch1:fuegeRichtungHinzu(s1)
-sch1:fuegeRichtungFuerFussgaengerHinzu(fg_o)
-sch1:fuegeRichtungFuerFussgaengerHinzu(fg_w)
+local sch1 = CrossingSequence:new("Schaltung 1")
+sch1:addTrafficLights(K1)
+sch1:addTrafficLights(K7)
+sch1:addPedestrianLights(F5, F6)
+sch1:addPedestrianLights(F11, F12)
 
 --- Tutorial 1: Schaltung 2
-local sch2 = AkKreuzungsSchaltung:neu("Schaltung 2")
-sch2:fuegeRichtungHinzu(n2)
-sch2:fuegeRichtungHinzu(s2)
-sch2:fuegeRichtungFuerFussgaengerHinzu(fg_n2)
-sch2:fuegeRichtungFuerFussgaengerHinzu(fg_o)
-sch2:fuegeRichtungFuerFussgaengerHinzu(fg_w)
-sch2:fuegeRichtungFuerFussgaengerHinzu(fg_s2)
+local sch2 = CrossingSequence:new("Schaltung 2")
+sch2:addTrafficLights(K2, K3)
+sch2:addTrafficLights(K8, K9)
+sch2:addPedestrianLights(F3, F4)
+sch2:addPedestrianLights(F5, F6)
+sch2:addPedestrianLights(F11, F12)
+sch2:addPedestrianLights(F9, F10)
 
 --- Tutorial 1: Schaltung 3
-local sch3 = AkKreuzungsSchaltung:neu("Schaltung 3")
-sch3:fuegeRichtungHinzu(o1)
-sch3:fuegeRichtungHinzu(w1)
-sch3:fuegeRichtungFuerFussgaengerHinzu(fg_n1)
-sch3:fuegeRichtungFuerFussgaengerHinzu(fg_n2)
-sch3:fuegeRichtungFuerFussgaengerHinzu(fg_s1)
-sch3:fuegeRichtungFuerFussgaengerHinzu(fg_s2)
+local sch3 = CrossingSequence:new("Schaltung 3")
+sch3:addTrafficLights(K4)
+sch3:addTrafficLights(K10)
+sch3:addPedestrianLights(F1, F2)
+sch3:addPedestrianLights(F3, F4)
+sch3:addPedestrianLights(F7, F8)
+sch3:addPedestrianLights(F9, F10)
 
 --- Tutorial 1: Schaltung 4
-local sch4 = AkKreuzungsSchaltung:neu("Schaltung 4")
-sch4:fuegeRichtungHinzu(o2)
-sch4:fuegeRichtungHinzu(w2)
-sch4:fuegeRichtungFuerFussgaengerHinzu(fg_n1)
-sch4:fuegeRichtungFuerFussgaengerHinzu(fg_s1)
+local sch4 = CrossingSequence:new("Schaltung 4")
+sch4:addTrafficLights(K5, K6)
+sch4:addTrafficLights(K11, K12)
+sch4:addPedestrianLights(F1, F2)
+sch4:addPedestrianLights(F7, F8)
 
 -- --- Tutorial 1: Schaltung 5
--- local sch5 = AkKreuzungsSchaltung:neu("Schaltung 5")
--- sch5:fuegeRichtungHinzu(n1)
--- sch5:fuegeRichtungHinzu(n2)
--- sch5:fuegeRichtungFuerFussgaengerHinzu(fg_w)
+-- local sch5 = CrossingSequence:new("Schaltung 5")
+-- sch5:addTrafficLights(K1)
+-- sch5:addTrafficLights(K2, K3)
+-- sch5:addPedestrianLights(F11, F12)
 --
 -- --- Tutorial 1: Schaltung 6
--- local sch6 = AkKreuzungsSchaltung:neu("Schaltung 6")
--- sch6:fuegeRichtungHinzu(o1)
--- sch6:fuegeRichtungHinzu(o2)
--- sch6:fuegeRichtungFuerFussgaengerHinzu(fg_n1)
--- sch6:fuegeRichtungFuerFussgaengerHinzu(fg_n2)
--- sch6:fuegeRichtungFuerFussgaengerHinzu(fg_s1)
+-- local sch6 = CrossingSequence:new("Schaltung 6")
+-- sch6:addTrafficLights(K4)
+-- sch6:addTrafficLights(K5, K6)
+-- sch6:addPedestrianLights(F1, F2)
+-- sch6:addPedestrianLights(F3, F4)
+-- sch6:addPedestrianLights(F7, F8)
 --
 -- --- Tutorial 1: Schaltung 7
--- local sch7 = AkKreuzungsSchaltung:neu("Schaltung 7")
--- sch7:fuegeRichtungHinzu(s1)
--- sch7:fuegeRichtungHinzu(s2)
--- sch7:fuegeRichtungFuerFussgaengerHinzu(fg_o)
+-- local sch7 = CrossingSequence:new("Schaltung 7")
+-- sch7:addTrafficLights(K7)
+-- sch7:addTrafficLights(K8, K9)
+-- sch7:addPedestrianLights(F5, F6)
 --
 -- --- Tutorial 1: Schaltung 6
--- local sch8 = AkKreuzungsSchaltung:neu("Schaltung 8")
--- sch8:fuegeRichtungHinzu(o1)
--- sch8:fuegeRichtungHinzu(o2)
--- sch8:fuegeRichtungFuerFussgaengerHinzu(fg_n1)
--- sch8:fuegeRichtungFuerFussgaengerHinzu(fg_s1)
--- sch8:fuegeRichtungFuerFussgaengerHinzu(fg_s2)
+-- local sch8 = CrossingSequence:new("Schaltung 8")
+-- sch8:addTrafficLights(K4)
+-- sch8:addTrafficLights(K5, K6)
+-- sch8:addPedestrianLights(F1, F2)
+-- sch8:addPedestrianLights(F7, F8)
+-- sch8:addPedestrianLights(F9, F10)
 
-
-k1 = AkKreuzung:neu("Tutorial 1")
-k1:fuegeSchaltungHinzu(sch1)
-k1:fuegeSchaltungHinzu(sch2)
-k1:fuegeSchaltungHinzu(sch3)
-k1:fuegeSchaltungHinzu(sch4)
--- k1:fuegeSchaltungHinzu(sch5)
--- k1:fuegeSchaltungHinzu(sch6)
--- k1:fuegeSchaltungHinzu(sch7)
--- k1:fuegeSchaltungHinzu(sch8)
+k1 = Crossing:new("Tutorial 1")
+k1:addSequence(sch1)
+k1:addSequence(sch2)
+k1:addSequence(sch3)
+k1:addSequence(sch4)
+-- k1:addSequence(sch5)
+-- k1:addSequence(sch6)
+-- k1:addSequence(sch7)
+-- k1:addSequence(sch8)
 
 local ModuleRegistry = require("ak.core.ModuleRegistry")
-ModuleRegistry.registerModules(
-    require("ak.core.CoreLuaModule"),
-    require("ak.strasse.KreuzungLuaModul")
-)
+ModuleRegistry.registerModules(require("ak.core.CoreLuaModule"), require("ak.road.CrossingLuaModul"))
 
 function EEPMain()
     ModuleRegistry.runTasks()

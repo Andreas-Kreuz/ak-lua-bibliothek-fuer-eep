@@ -9,12 +9,17 @@
     "editorconfig.editorconfig", // Support indentations by .editorconfig file
     "github.vscode-pull-request-github", // Easy GitHub Pull Requests
     "johnpapa.angular2", // Angular 9 Snippets
-    "liwangqian.luacoderassist", // Lua Code Completion and Checking
+    "koihik.vscode-lua-format", // Nice formatter
     "ms-vscode.vscode-typescript-tslint-plugin", // Web App Typescript support
     "msjsdiag.debugger-for-chrome",
     "esbenp.prettier-vscode",
+    "sumneko.lua", // Finds Lua symbols, but cannot reformat file
     "tyriar.sort-lines" // Sort lines
   ],
   // List of extensions recommended by VS Code that should not be recommended for users of this workspace.
-  "unwantedRecommendations": ["sumneko.lua", "knisterpeter.vscode-github"]
+  "unwantedRecommendations": [
+    "gccfeli.vscode-lua", // Bad formatting
+    "knisterpeter.vscode-github", // Deprecated
+    "liwangqian.luacoderassist" // Lua Code Completion and Checking - NOT WORKING
+  ]
 }

@@ -2,24 +2,24 @@
 -- Lade Funktionen fuer Ampeln
 --------------------------------
 -- Planer
-local AkAmpelModell = require("ak.strasse.AkAmpelModell")
-local AkAmpel = require("ak.strasse.AkAmpel")
-local AkRichtung = require("ak.strasse.AkRichtung")
-local AkKreuzung = require("ak.strasse.AkKreuzung")
-local AkKreuzungsSchaltung = require("ak.strasse.AkKreuzungsSchaltung")
-AkAmpel.zeigeAnforderungen = true
+local TrafficLightModel = require("ak.road.TrafficLightModel")
+local TrafficLight = require("ak.road.TrafficLight")
+local Lane = require("ak.road.Lane")
+local Crossing = require("ak.road.Crossing")
+TrafficLight.zeigeAnforderungen = true
 
 ------------------------------------------------
 -- Damit kommt wird die Variable "Zugname" automatisch durch EEP belegt
 -- http://emaps-eep.de/lua/code-schnipsel
 ------------------------------------------------
 setmetatable(_ENV, {
-    __index =
-    function(_, k)
+    __index = function(_, k)
         local p = load(k);
         if p then
-            local f = function(z) local s = Zugname
-                Zugname = z; p()
+            local f = function(z)
+                local s = Zugname
+                Zugname = z;
+                p()
                 Zugname = s
             end
             _ENV[k] = f
@@ -32,16 +32,16 @@ setmetatable(_ENV, {
 --------------------------------------------
 -- Definiere Funktionen fuer Kontaktpunkte
 --------------------------------------------
-function KpBetritt(richtung)
-    assert(richtung, "richtung darf nicht nil sein. Richtige Lua-Funktion im Kontaktpunkt?")
-    --print(richtung.name .. " betreten durch: " .. Zugname)
-    richtung:betritt()
+function enterLane(lane)
+    assert(lane, "lane darf nicht nil sein. Richtige Lua-Funktion im Kontaktpunkt?")
+    -- print(lane.name .. " betreten durch: " .. Zugname)
+    lane:vehicleEntered(Zugname)
 end
 
-function KpVerlasse(richtung, signalaufrot)
-    assert(richtung, "richtung darf nicht nil sein. Richtige Lua-Funktion im Kontaktpunkt?")
-    --print(richtung.name .. " verlassen von: " .. Zugname)
-    richtung:verlasse(signalaufrot, Zugname)
+function leaveLane(lane)
+    assert(lane, "lane darf nicht nil sein. Richtige Lua-Funktion im Kontaktpunkt?")
+    -- print(lane.name .. " verlassen von: " .. Zugname)
+    lane:vehicleLeft(Zugname)
 end
 
 ----------------------------------------------------------------------------------------------------------------------
@@ -49,175 +49,162 @@ end
 -- Fuer die Signalstellung siehe Auswahlbox unter "Auswahl des Signalbegriffs"
 -- bei Rechtsklick auf das Signal im 2D Editor
 ----------------------------------------------------------------------------------------------------------------------
-Grundmodell_Ampel_3 = AkAmpelModell:neu("Grundmodell Ampel 3", -- Name des Modells
-    2, -- Signalstellung fuer rot   (2. Stellung)
-    1, -- Signalstellung fuer gruen (1. Stellung)
-    3) -- Signalstellung fuer gelb  (3. Stellung)
+Grundmodell_Ampel_3 = TrafficLightModel:new("Grundmodell Ampel 3", -- Name des Modells
+2, -- Signalstellung fuer rot   (2. Stellung)
+1, -- Signalstellung fuer gruen (1. Stellung)
+3) -- Signalstellung fuer gelb  (3. Stellung)
 
-Grundmodell_Ampel_3_FG = AkAmpelModell:neu("Grundmodell Ampel 3 FG", -- Name des Modells
-    2, -- Signalstellung fuer rot   (2. Stellung)
-    2, -- Signalstellung fuer rot   (2. Stellung)
-    2, -- Signalstellung fuer rot   (2. Stellung)
-    2, -- Signalstellung fuer rot   (2. Stellung)
-    1) -- Signalstellung fuer gruen (1. Stellung)
-
+Grundmodell_Ampel_3_FG = TrafficLightModel:new("Grundmodell Ampel 3 FG", -- Name des Modells
+2, -- Signalstellung fuer rot   (2. Stellung)
+2, -- Signalstellung fuer rot   (2. Stellung)
+2, -- Signalstellung fuer rot   (2. Stellung)
+2, -- Signalstellung fuer rot   (2. Stellung)
+1) -- Signalstellung fuer gruen (1. Stellung)
 
 -- Zeige die Signal-IDs aller Ampeln an
---for i = 1, 1000 do
+-- for i = 1, 1000 do
 --    EEPShowInfoSignal(i, true)
 --    EEPChangeInfoSignal(i, "Signal " .. i)
---end
+-- end
 
+-- region K2-Fahrspuren
+do
+    --    +---------------------------- Variablenname der Ampel
+    --    |    +----------------------- Legt eine neue Ampel an
+    --    |    |                +------ Signal-ID dieser Ampel
+    --    |    |                |   +-- Modell dieser Ampel - weiss wo rot, gelb und gruen ist
+    local K1 = TrafficLight:new("K1", 32, Grundmodell_Ampel_3)
+    local K2 = TrafficLight:new("K2", 31, Grundmodell_Ampel_3)
+    local K3 = TrafficLight:new("K3", 34, Grundmodell_Ampel_3)
+    local K4 = TrafficLight:new("K4", 33, Grundmodell_Ampel_3)
+    local K5 = TrafficLight:new("K5", 30, Grundmodell_Ampel_3)
+    -------------------------------------------------------------------------------------------------------------------
+    -- Definiere alle Fahrspuren fuer Kreuzung 1
+    -------------------------------------------------------------------------------------------------------------------
 
+    --        +------------------------------------------------------ Neue Fahrspur
+    --        |              +--------------------------------------- Name der Fahrspur
+    --        |              |            +------------------------- Speicher ID - um die Anzahl der Fahrzeuge
+    --        |              |            |                                        und die Wartezeit zu speichern
+    --        |              |            |    +-------------------- Ampel (Variablenname von oben)
+    c2Lane1 = Lane:new("Fahrspur 1 - K2", 121, K1, {'RIGHT'})
+    c2Lane2 = Lane:new("Fahrspur 2 - K2", 122, K2, {'STRAIGHT'})
+    c2Lane3 = Lane:new("Fahrspur 3 - K2", 123, K3, {'STRAIGHT'})
+    c2Lane4 = Lane:new("Fahrspur 4 - K2", 124, K4, {'LEFT'})
+    c2Lane5 = Lane:new("Fahrspur 5 - K2", 125, K5, {'LEFT', 'RIGHT'})
 
+    -- region K1-Schaltungen
+    -------------------------------------------------------------------------------------------------------------------
+    -- Definiere alle Schaltungen fuer Kreuzung 2
+    -------------------------------------------------------------------------------------------------------------------
+    -- Eine Schaltung bestimmt, welche Fahrspuren gleichzeitig auf grün geschaltet werden dürfen, alle anderen sind rot
 
--- region K2-Richtungen
-----------------------------------------------------------------------------------------------------------------------
--- Definiere alle Richtungen fuer Kreuzung 1
-----------------------------------------------------------------------------------------------------------------------
+    c2 = Crossing:new("Kreuzung 2")
 
---      +------------------------------------------------------ Neue Richtung
---      |              +--------------------------------------- Name der Richtung
---      |              |             +------------------------- Speicher ID - um die Anzahl der Fahrzeuge
---      |              |             |                                        und die Wartezeit zu speichern
---      |              |             |      +------------------ neue Ampel fÃ¼r diese Richtung (
---      |              |             |      |           +------ Signal-ID dieser Ampel
---      |              |             |      |           |   +-- Modell dieser Ampel - weiss wo rot, gelb und gruen ist
-k2_r1 = AkRichtung:neu("Richtung 1", 121, { AkAmpel:neu(32, Grundmodell_Ampel_3) })
-k2_r2 = AkRichtung:neu("Richtung 2", 122, { AkAmpel:neu(31, Grundmodell_Ampel_3) })
-k2_r3 = AkRichtung:neu("Richtung 3", 123, { AkAmpel:neu(34, Grundmodell_Ampel_3) })
-k2_r4 = AkRichtung:neu("Richtung 4", 124, { AkAmpel:neu(33, Grundmodell_Ampel_3) })
-k2_r5 = AkRichtung:neu("Richtung 5", 125, { AkAmpel:neu(30, Grundmodell_Ampel_3) })
+    --- Kreuzung 2: Schaltung 1
+    local c2Sequence1 = c2:newSequence("Schaltung 1")
+    c2Sequence1:addTrafficLights(K1)
+    c2Sequence1:addTrafficLights(K2)
+    c2Sequence1:addTrafficLights(K3)
 
-k2_r1:setRichtungen({ 'RIGHT' })
-k2_r2:setRichtungen({ 'STRAIGHT' })
-k2_r3:setRichtungen({ 'STRAIGHT' })
-k2_r4:setRichtungen({ 'LEFT' })
-k2_r5:setRichtungen({ 'LEFT', 'RIGHT' })
+    --- Kreuzung 2: Schaltung 2
+    local c2Sequence2 = c2:newSequence("Schaltung 2")
+    c2Sequence2:addTrafficLights(K1)
+    c2Sequence2:addTrafficLights(K2)
 
+    --- Kreuzung 2: Schaltung 3
+    local c2Sequence3 = c2:newSequence("Schaltung 3")
+    c2Sequence3:addTrafficLights(K3)
+    c2Sequence3:addTrafficLights(K4)
 
---region K1-Schaltungen
-----------------------------------------------------------------------------------------------------------------------
--- Definiere alle Schaltungen fuer Kreuzung 2
-----------------------------------------------------------------------------------------------------------------------
--- Eine Schaltung bestimmt, welche Richtungen gleichzeitig auf grÃ¼n geschaltet werden dÃ¼rfen, alle anderen sind rot
+    --- Kreuzung 2: Schaltung 4
+    local c2Sequence4 = c2:newSequence("Schaltung 4")
+    c2Sequence4:addTrafficLights(K5)
+end
+-- endregion
 
---- Kreuzung 2: Schaltung 1
-local k2_schaltung1 = AkKreuzungsSchaltung:neu("Schaltung 1")
-k2_schaltung1:fuegeRichtungHinzu(k2_r1)
-k2_schaltung1:fuegeRichtungHinzu(k2_r2)
-k2_schaltung1:fuegeRichtungHinzu(k2_r3)
+-- region K1-Fahrspuren
+do
+    --    +---------------------------- Variablenname der Ampel
+    --    |    +----------------------- Legt eine neue Ampel an
+    --    |    |                +------ Signal-ID dieser Ampel
+    --    |    |                |   +-- Modell dieser Ampel - weiss wo rot, gelb und gruen ist
+    local K1 = TrafficLight:new("K1", 17, Grundmodell_Ampel_3)
+    local K2 = TrafficLight:new("K2", 13, Grundmodell_Ampel_3)
+    local K3 = TrafficLight:new("K3", 12, Grundmodell_Ampel_3)
+    local K4 = TrafficLight:new("K4", 11, Grundmodell_Ampel_3)
+    local K5 = TrafficLight:new("K5", 10, Grundmodell_Ampel_3)
+    local K6 = TrafficLight:new("K6", 09, Grundmodell_Ampel_3)
+    local K7 = TrafficLight:new("K7", 16, Grundmodell_Ampel_3)
+    local K8 = TrafficLight:new("K8", 15, Grundmodell_Ampel_3)
+    -------------------------------------------------------------------------------------------------------------------
+    -- Definiere alle Fahrspuren fuer Kreuzung 1
+    -------------------------------------------------------------------------------------------------------------------
 
---- Kreuzung 2: Schaltung 2
-local k2_schaltung2 = AkKreuzungsSchaltung:neu("Schaltung 2")
-k2_schaltung2:fuegeRichtungHinzu(k2_r1)
-k2_schaltung2:fuegeRichtungHinzu(k2_r2)
+    --        +----------------------------------------------------- Neue Fahrspur
+    --        |        +-------------------------------------------- Name der Fahrspur
+    --        |        |                  +------------------------- Speicher ID - um die Anzahl der Fahrzeuge
+    --        |        |                  |                                        und die Wartezeit zu speichern
+    --        |        |                  |    +-------------------- Ampel (Variablenname von oben)
+    c1Lane1 = Lane:new("Fahrspur 1 - K1", 101, K1, {'STRAIGHT', 'RIGHT'})
+    c1Lane2 = Lane:new("Fahrspur 2 - K1", 102, K2, {'LEFT'})
+    c1Lane3 = Lane:new("Fahrspur 3 - K1", 103, K3, {'STRAIGHT', 'RIGHT'})
+    c1Lane4 = Lane:new("Fahrspur 4 - K1", 104, K4, {'LEFT'})
+    c1Lane5 = Lane:new("Fahrspur 5 - K1", 105, K5, {'STRAIGHT', 'RIGHT'})
+    c1Lane6 = Lane:new("Fahrspur 6 - K1", 106, K6, {'LEFT'})
+    c1Lane7 = Lane:new("Fahrspur 7 - K1", 107, K7, {'STRAIGHT', 'RIGHT'})
+    c1Lane8 = Lane:new("Fahrspur 8 - K1", 108, K8, {'LEFT'})
 
---- Kreuzung 2: Schaltung 3
-local k2_schaltung3 = AkKreuzungsSchaltung:neu("Schaltung 3")
-k2_schaltung3:fuegeRichtungHinzu(k2_r3)
-k2_schaltung3:fuegeRichtungHinzu(k2_r4)
+    local F1 = TrafficLight:new("F1", 40, Grundmodell_Ampel_3_FG)
+    local F2 = TrafficLight:new("F2", 41, Grundmodell_Ampel_3_FG)
+    local F3 = TrafficLight:new("F3", 36, Grundmodell_Ampel_3_FG)
+    local F4 = TrafficLight:new("F4", 37, Grundmodell_Ampel_3_FG)
+    local F5 = TrafficLight:new("F5", 38, Grundmodell_Ampel_3_FG)
+    local F6 = TrafficLight:new("F6", 39, Grundmodell_Ampel_3_FG)
+    local F7 = TrafficLight:new("F7", 42, Grundmodell_Ampel_3_FG)
+    local F8 = TrafficLight:new("F8", 43, Grundmodell_Ampel_3_FG)
 
---- Kreuzung 2: Schaltung 4
-local k2_schaltung4 = AkKreuzungsSchaltung:neu("Schaltung 4")
-k2_schaltung4:fuegeRichtungHinzu(k2_r5)
+    -- endregion
+    -- region K1-Schaltungen
+    -------------------------------------------------------------------------------------------------------------------
+    -- Definiere alle Schaltungen fuer Kreuzung 1
+    -------------------------------------------------------------------------------------------------------------------
+    -- Eine Schaltung bestimmt, welche Fahrspuren gleichzeitig auf grün geschaltet werden dürfen, alle anderen sind rot
 
-k2 = AkKreuzung:neu("Kreuzung 2")
-k2:fuegeSchaltungHinzu(k2_schaltung1)
-k2:fuegeSchaltungHinzu(k2_schaltung2)
-k2:fuegeSchaltungHinzu(k2_schaltung3)
-k2:fuegeSchaltungHinzu(k2_schaltung4)
---endregion
+    c1 = Crossing:new("Kreuzung 1")
 
--- region K1-Richtungen
-----------------------------------------------------------------------------------------------------------------------
--- Definiere alle Richtungen fuer Kreuzung 1
-----------------------------------------------------------------------------------------------------------------------
+    --- Kreuzung 1: Schaltung 1
+    local c1Sequence1 = c1:newSequence("Schaltung 1")
+    c1Sequence1:addTrafficLights(K1)
+    c1Sequence1:addTrafficLights(K5)
+    c1Sequence1:addPedestrianLights(F1, F2)
+    c1Sequence1:addPedestrianLights(F3, F4)
 
---      +------------------------------------------------------ Neue Richtung
---      |              +--------------------------------------- Name der Richtung
---      |              |             +------------------------- Speicher ID - um die Anzahl der Fahrzeuge
---      |              |             |                                        und die Wartezeit zu speichern
---      |              |             |      +------------------ neue Ampel fÃ¼r diese Richtung (
---      |              |             |      |           +------ Signal-ID dieser Ampel
---      |              |             |      |           |   +-- Modell dieser Ampel - weiss wo rot, gelb und gruen ist
-k1_r1 = AkRichtung:neu("Richtung 1", 101, { AkAmpel:neu(17, Grundmodell_Ampel_3) })
-k1_r2 = AkRichtung:neu("Richtung 2", 102, { AkAmpel:neu(13, Grundmodell_Ampel_3) })
-k1_r3 = AkRichtung:neu("Richtung 3", 103, { AkAmpel:neu(12, Grundmodell_Ampel_3) })
-k1_r4 = AkRichtung:neu("Richtung 4", 104, { AkAmpel:neu(11, Grundmodell_Ampel_3) })
-k1_r5 = AkRichtung:neu("Richtung 5", 105, { AkAmpel:neu(10, Grundmodell_Ampel_3) })
-k1_r6 = AkRichtung:neu("Richtung 6", 106, { AkAmpel:neu(09, Grundmodell_Ampel_3) })
-k1_r7 = AkRichtung:neu("Richtung 7", 107, { AkAmpel:neu(16, Grundmodell_Ampel_3) })
-k1_r8 = AkRichtung:neu("Richtung 8", 108, { AkAmpel:neu(15, Grundmodell_Ampel_3) })
+    --- Kreuzung 1: Schaltung 2
+    local c1Sequence2 = c1:newSequence("Schaltung 2")
+    c1Sequence2:addTrafficLights(K2)
+    c1Sequence2:addTrafficLights(K6)
 
-k1_r1:setRichtungen({ 'STRAIGHT', 'RIGHT' })
-k1_r2:setRichtungen({ 'LEFT' })
-k1_r3:setRichtungen({ 'STRAIGHT', 'RIGHT' })
-k1_r4:setRichtungen({ 'LEFT' })
-k1_r5:setRichtungen({ 'STRAIGHT', 'RIGHT' })
-k1_r6:setRichtungen({ 'LEFT' })
-k1_r7:setRichtungen({ 'STRAIGHT', 'RIGHT' })
-k1_r8:setRichtungen({ 'LEFT' })
+    --- Kreuzung 1: Schaltung 3
+    local c1Sequence3 = c1:newSequence("Schaltung 3")
+    c1Sequence3:addTrafficLights(K3)
+    c1Sequence3:addTrafficLights(K7)
+    c1Sequence1:addPedestrianLights(F5, F6)
+    c1Sequence1:addPedestrianLights(F7, F8)
 
-local k1_r1_5_fg = AkRichtung:neu("Richtung 1+5 FG", -1, {
-    -- keine Speicher-ID fuer Fussgaenger notwendig (-1)
-    AkAmpel:neu(40, Grundmodell_Ampel_3_FG), AkAmpel:neu(41, Grundmodell_Ampel_3_FG),
-    AkAmpel:neu(36, Grundmodell_Ampel_3_FG), AkAmpel:neu(37, Grundmodell_Ampel_3_FG)
-})
-local k1_r3_7_fg = AkRichtung:neu("Richtung 3+7 FG", -1, {
-    -- keine Speicher-ID fuer Fussgaenger notwendig (-1)
-    AkAmpel:neu(38, Grundmodell_Ampel_3_FG), AkAmpel:neu(39, Grundmodell_Ampel_3_FG),
-    AkAmpel:neu(42, Grundmodell_Ampel_3_FG), AkAmpel:neu(43, Grundmodell_Ampel_3_FG)
-})
-
-k1_r1_5_fg:setTrafficType('PEDESTRIAN')
-k1_r3_7_fg:setTrafficType('PEDESTRIAN')
-
---endregion
---region K1-Schaltungen
-----------------------------------------------------------------------------------------------------------------------
--- Definiere alle Schaltungen fuer Kreuzung 1
-----------------------------------------------------------------------------------------------------------------------
--- Eine Schaltung bestimmt, welche Richtungen gleichzeitig auf grÃ¼n geschaltet werden dÃ¼rfen, alle anderen sind rot
-
---- Kreuzung 1: Schaltung 1
-local k1_schaltung1 = AkKreuzungsSchaltung:neu("Schaltung 1")
-k1_schaltung1:fuegeRichtungHinzu(k1_r1)
-k1_schaltung1:fuegeRichtungHinzu(k1_r5)
-k1_schaltung1:fuegeRichtungFuerFussgaengerHinzu(k1_r1_5_fg)
-
---- Kreuzung 1: Schaltung 2
-local k1_schaltung2 = AkKreuzungsSchaltung:neu("Schaltung 2")
-k1_schaltung2:fuegeRichtungHinzu(k1_r2)
-k1_schaltung2:fuegeRichtungHinzu(k1_r6)
-
---- Kreuzung 1: Schaltung 3
-local k1_schaltung3 = AkKreuzungsSchaltung:neu("Schaltung 3")
-k1_schaltung3:fuegeRichtungHinzu(k1_r3)
-k1_schaltung3:fuegeRichtungHinzu(k1_r7)
-k1_schaltung3:fuegeRichtungFuerFussgaengerHinzu(k1_r3_7_fg)
-
---- Kreuzung 1: Schaltung 4
-local k1_schaltung4 = AkKreuzungsSchaltung:neu("Schaltung 4")
-k1_schaltung4:fuegeRichtungHinzu(k1_r4)
-k1_schaltung4:fuegeRichtungHinzu(k1_r8)
-
-k1 = AkKreuzung:neu("Kreuzung 1")
-k1:fuegeSchaltungHinzu(k1_schaltung1)
-k1:fuegeSchaltungHinzu(k1_schaltung2)
-k1:fuegeSchaltungHinzu(k1_schaltung3)
-k1:fuegeSchaltungHinzu(k1_schaltung4)
---endregion
+    --- Kreuzung 1: Schaltung 4
+    local c1Sequence4 = c1:newSequence("Schaltung 4")
+    c1Sequence4:addTrafficLights(K4)
+    c1Sequence4:addTrafficLights(K8)
+end
+-- endregion
 
 local ModuleRegistry = require("ak.core.ModuleRegistry")
-ModuleRegistry.registerModules(
-    require("ak.core.CoreLuaModule"),
-    require("ak.data.DataLuaModule"),
-    require("ak.strasse.KreuzungLuaModul")
-)
+ModuleRegistry.registerModules(require("ak.core.CoreLuaModule"), require("ak.data.DataLuaModule"),
+                               require("ak.road.CrossingLuaModul"))
 
 function EEPMain()
-    --print("Speicher: " .. collectgarbage("count"))
+    -- print("Speicher: " .. collectgarbage("count"))
     ModuleRegistry.runTasks(1)
     return 1
 end

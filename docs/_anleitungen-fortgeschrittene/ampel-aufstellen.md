@@ -6,7 +6,7 @@ subtitle: Verwende maximal eine Ampel zum Steuern jeder Fahrspur. Verwende "alte
 img: "/assets/thumbnails/ampel-aufstellen.jpg"
 date: 2017-09-30
 permalink: anleitungen-fortgeschrittene/ampel-aufstellen
-tags: [AkStrasse, Verwendung, Anleitung]
+tags: [Verwendung, Anleitung]
 ---
 
 # "Alte Ampeln" im 1-spurigen System benutzen
@@ -19,11 +19,11 @@ Klicke im Einfügemodus von EEP rechts auf die Ampel und wähle "Objekteigenscha
 
 Die Ampeln haben normalerweise einen _Signalabstand_ von 3 Metern. Ändere diesen Abstand von `1.75` Meter und schaue Dir das Ergebnis an.
 
-# Nur eine Ampel auf der Fahrbahn
+# Nur eine Ampel auf der Fahrspur
 
-Um Probleme durch hintereinander aufgestellte Ampeln zu vermeiden:
+Um Probleme durch hintereinander aufgestellte Ampeln zu vermeiden, muss jede Fahrspur genau eine Fahrspur-Ampel haben:
 
-* **Stelle nur eine Ampel** auf die Fahrbahn, auf der die Fahrzeuge anhalten sollen.
+* **Stelle nur eine Ampel** auf die Fahrspur, auf der die Fahrzeuge anhalten sollen.
 * **Stelle alle anderen Ampeln auf die Gegenfahrbahn** und ändere ihren Seitenabstand, so dass sie passend zu Deiner Spur stehen.
 
 Die Ampel in der Mitte oben beeinflusst den Verkehr auf der "richtigen" Fahrspur.

@@ -1,9 +1,11 @@
 clearlog()
-local AkAmpelModell = require("ak.strasse.AkAmpelModell")
-local AkAmpel = require("ak.strasse.AkAmpel")
-local AkRichtung = require("ak.strasse.AkRichtung")
-local AkKreuzung = require("ak.strasse.AkKreuzung")
-local AkKreuzungsSchaltung = require("ak.strasse.AkKreuzungsSchaltung")
+local TrafficLightModel = require("ak.road.TrafficLightModel")
+local TrafficLight = require("ak.road.TrafficLight")
+local Lane = require("ak.road.Lane")
+local Crossing = require("ak.road.Crossing")
+local CrossingSequence = require("ak.road.CrossingSequence")
+
+Crossing.debug = true
 
 ------------------------------------------------
 -- Damit kommt wird die Variable "Zugname" automatisch durch EEP belegt
@@ -17,9 +19,11 @@ setmetatable(_ENV, {
                 local s = Zugname
                 Zugname = z
                 p()
-                Zugname = s end
+                Zugname = s
+            end
             _ENV[k] = f
-            return f end
+            return f
+        end
         return nil
     end
 })
@@ -27,115 +31,114 @@ setmetatable(_ENV, {
 --------------------------------------------
 -- Definiere Funktionen fuer Kontaktpunkte
 --------------------------------------------
-function KpBetritt(richtung)
-    assert(richtung, "richtung darf nicht nil sein. Richtige Lua-Funktion im Kontaktpunkt?")
-    richtung:betritt()
+function enterLane(lane)
+    assert(lane, "lane darf nicht nil sein. Richtige Lua-Funktion im Kontaktpunkt?")
+    lane:vehicleEntered(Zugname)
 end
 
-function KpVerlasse(richtung, signalaufrot)
-    assert(richtung, "richtung darf nicht nil sein. Richtige Lua-Funktion im Kontaktpunkt?")
-    richtung:verlasse(signalaufrot, Zugname)
+function leaveLane(lane)
+    assert(lane, "lane darf nicht nil sein. Richtige Lua-Funktion im Kontaktpunkt?")
+    lane:vehicleLeft(Zugname)
 end
 
 -------------------------------------------------------------------------------
--- Definiere die Richtungen fuer die Kreuzung
+-- Definiere die Fahrspuren fuer die Kreuzung
 -------------------------------------------------------------------------------
 
---   +---------------------------------------------- Neue Richtung
---   |              +------------------------------- Name der Richtung
---   |              |     +------------------------- Speicher ID - um die Anzahl der Fahrzeuge
---   |              |     |                                        und die Wartezeit zu speichern
---   |              |     |      +------------------ neue Ampel für diese Richtung
---   |              |     |      |           +------ Signal-ID dieser Ampel
---   |              |     |      |           |   +-- Modell kann rot, gelb, gruen und FG schalten
-n = AkRichtung:neu("N", 100, {
-    AkAmpel:neu(07, AkAmpelModell.JS2_3er_mit_FG),
-    AkAmpel:neu(08, AkAmpelModell.JS2_3er_mit_FG)
-})
+--    +---------------------------- Variablenname der Ampel
+--    |    +----------------------- Legt eine neue Ampel an
+--    |    |                +------ Signal-ID dieser Ampel
+--    |    |                |   +-- Modell dieser Ampel - weiss wo rot, gelb und gruen / Fussgaenger ist
+local K1 = TrafficLight:new("K1", 07, TrafficLightModel.JS2_3er_mit_FG) -- Ampel K1 ist gleichzeitig eine Fußgängerampel
+local K2 = TrafficLight:new("K2", 08, TrafficLightModel.JS2_3er_mit_FG)
+local K3 = TrafficLight:new("K3", 09, TrafficLightModel.JS2_3er_mit_FG)
+local K4 = TrafficLight:new("K4", 10, TrafficLightModel.JS2_3er_mit_FG)
+local K5 = TrafficLight:new("K5", 12, TrafficLightModel.JS2_3er_mit_FG)
+local K6 = TrafficLight:new("K6", 13, TrafficLightModel.JS2_3er_ohne_FG) -- dies ist keine Fußgängerampel
+local K7 = TrafficLight:new("K7", 11, TrafficLightModel.JS2_3er_mit_FG)
 
-fg_n = AkRichtung:neu("FG_n", 101, {
-    AkAmpel:neu(07, AkAmpelModell.JS2_3er_mit_FG), -- Wird geteilt mit N
-    AkAmpel:neu(08, AkAmpelModell.JS2_3er_mit_FG) -- Wird geteilt mit N
-})
+-- Ampeln für die Straßenbahn nutzen die Lichtfunktion der einzelnen Immobilien
+local S1 = TrafficLight:new("S1", 14, TrafficLightModel.Unsichtbar_2er, "#29_Straba Signal Halt", -- rot
+"#28_Straba Signal geradeaus", --  gruen
+"#27_Straba Signal anhalten", --   gelb
+"#26_Straba Signal A") --    Anforderung
+local S2 = TrafficLight:new("S2", 15, TrafficLightModel.Unsichtbar_2er, "#32_Straba Signal Halt", --       rot
+"#30_Straba Signal geradeaus", --  gruen
+"#31_Straba Signal anhalten", --   gelb
+"#33_Straba Signal A") --    Anforderung
 
--- Die Richtung O1 hat zwei Ampeln fuer geradeaus: 9 und 10 jeweils mit Fussgaengern
-o1 = AkRichtung:neu("O1", 102, {
-    AkAmpel:neu(09, AkAmpelModell.JS2_3er_mit_FG),
-    AkAmpel:neu(10, AkAmpelModell.JS2_3er_mit_FG)
-})
+local F1 = K1 -- Die Fussgängerampel F1 ist die selbe, wie Ampel K1, zeigt aber später "Fußgänger grün"
+local F2 = K2
+local F3 = K3
+local F4 = K4
+local F5 = K5
+local F6 = K7
 
-fg_o = AkRichtung:neu("FG_O", 103, {
-    AkAmpel:neu(09, AkAmpelModell.JS2_3er_mit_FG), -- Wird geteilt mit O1
-    AkAmpel:neu(10, AkAmpelModell.JS2_3er_mit_FG) -- Wird geteilt mit O1
-})
+--   +-----------------------------------------Neue Fahrspur
+--   |        +------------------------------- Name der Fahrspur
+--   |        |   +------------------------- Speicher ID - um die Anzahl der Fahrzeuge
+--   |        |   |                                        und die Wartezeit zu speichern
+--   |        |   |    +------------------ neue Ampel für diese Fahrspur
+--   |        |   |    |           +------ Signal-ID dieser Ampel
+--   |        |   |    |           |   +-- Modell kann rot, gelb, gruen und FG schalten
+-- Die Fahrspur N wird durch die Fahrspur-Ampel K1 (Signal ID 07) gesteuert
+-- K2 muss später gleichzeitig leuchten (Signal ID 08)
+n = Lane:new("N", 100, K1)
 
+-- Die Fahrspur O1 wird durch die Fahrspur-Ampel K2 (Signal 09) gesteuert
+-- K4 muss später gleichzeitig leuchten (Signal ID 10)
+o1 = Lane:new("O1", 102, K3)
 
--- Richtungen im Westen
-w1 = AkRichtung:neu("W1", 104, { AkAmpel:neu(12, AkAmpelModell.JS2_3er_mit_FG) })
-w2 = AkRichtung:neu("W2", 105, {
-    AkAmpel:neu(11, AkAmpelModell.JS2_3er_mit_FG),
-    AkAmpel:neu(13, AkAmpelModell.JS2_3er_ohne_FG)
-})
-fg_w = AkRichtung:neu("FG_W", 106, {
-    AkAmpel:neu(11, AkAmpelModell.JS2_3er_mit_FG), -- Wird geteilt mit W1
-    AkAmpel:neu(12, AkAmpelModell.JS2_3er_mit_FG) -- Wird geteilt mit W2
-})
+-- Fahrspuren im Westen
+-- Die Fahrspur W1 wird durch die Fahrspur-Ampel K5 (Signal 12) gesteuert
+w1 = Lane:new("W1", 104, K5)
 
--- Richtungen fuer Strassenbahnen:
-os = AkRichtung:neu("OS", 107, {
-    AkAmpel:neu(14, AkAmpelModell.Unsichtbar_2er,
-        "#29_Straba Signal Halt", --       rot   schaltet das Licht dieser Immobilie ein
-        "#28_Straba Signal geradeaus", --  gruen schaltet das Licht dieser Immobilie ein
-        "#27_Straba Signal anhalten", --   gelb  schaltet das Licht dieser Immobilie ein
-        "#26_Straba Signal A") --    Anforderung schaltet das Licht dieser Immobilie ein
-})
-os:zaehleAnAmpelAlle(14) -- Erfasst Anforderungen, wenn ein Fahrzeug an Signal 14 steht
+-- Die Fahrspur W2 wird durch die Fahrspur-Ampel K6 (Signal 13) gesteuert
+-- K7 muss später gleichzeitig leuchten (Signal ID 11)
+w2 = Lane:new("W2", 105, K6)
 
-ws = AkRichtung:neu("WS", 108, {
-    AkAmpel:neu(15, AkAmpelModell.Unsichtbar_2er,
-        "#32_Straba Signal Halt", --       rot   schaltet das Licht dieser Immobilie ein
-        "#30_Straba Signal geradeaus", --  gruen schaltet das Licht dieser Immobilie ein
-        "#31_Straba Signal anhalten", --   gelb  schaltet das Licht dieser Immobilie ein
-        "#33_Straba Signal A") --    Anforderung schaltet das Licht dieser Immobilie ein
-})
-ws:zaehleAnStrasseAlle(2) -- Erfasst Anforderungen, wenn ein Fahrzeug auf Strasse 2 steht
+-- Fahrspuren fuer Strassenbahnen:
+os = Lane:new("OS", 107, S1)
+os:useSignalForQueue() -- Erfasst Anforderungen, wenn ein Fahrzeug an Signal 14 steht
 
+ws = Lane:new("WS", 108, S2)
+ws:useTracklForQueue(2) -- Erfasst Anforderungen, wenn ein Fahrzeug auf Strasse 2 steht
 
 --------------------------------------------------------------
 -- Definiere die Schaltungen und die Kreuzung
 --------------------------------------------------------------
--- Eine Schaltung bestimmt, welche Richtungen gleichzeitig auf
+-- Eine Schaltung bestimmt, welche Fahrspuren gleichzeitig auf
 -- grün geschaltet werden dürfen, alle anderen sind rot
 
 --- Tutorial 2: Schaltung 1
-local sch1 = AkKreuzungsSchaltung:neu("Schaltung 1")
-sch1:fuegeRichtungHinzu(o1)
-sch1:fuegeRichtungHinzu(os)
-sch1:fuegeRichtungHinzu(w1)
-sch1:fuegeRichtungHinzu(ws)
-sch1:fuegeRichtungFuerFussgaengerHinzu(fg_n)
+local sch1 = CrossingSequence:new("Schaltung 1")
+sch1:addTrafficLights(K3)
+sch1:addTrafficLights(K4)
+sch1:addTrafficLights(S1)
+sch1:addTrafficLights(K5)
+sch1:addTrafficLights(S2)
+sch1:addPedestrianLights(F1, F2)
 
 --- Tutorial 2: Schaltung 2
-local sch2 = AkKreuzungsSchaltung:neu("Schaltung 2")
-sch2:fuegeRichtungHinzu(w2)
-sch2:fuegeRichtungFuerFussgaengerHinzu(fg_o)
+local sch2 = CrossingSequence:new("Schaltung 2")
+sch2:addTrafficLights(K6)
+sch2:addTrafficLights(K7)
+sch2:addPedestrianLights(F3, F4)
 
 --- Tutorial 2: Schaltung 3
-local sch3 = AkKreuzungsSchaltung:neu("Schaltung 3")
-sch3:fuegeRichtungHinzu(n)
-sch3:fuegeRichtungFuerFussgaengerHinzu(fg_o)
-sch3:fuegeRichtungFuerFussgaengerHinzu(fg_w)
+local sch3 = CrossingSequence:new("Schaltung 3")
+sch3:addTrafficLights(K1)
+sch3:addTrafficLights(K2)
+sch3:addPedestrianLights(F3, F4)
+sch3:addPedestrianLights(F5, F6)
 
-k1 = AkKreuzung:neu("Tutorial 2")
-k1:fuegeSchaltungHinzu(sch1)
-k1:fuegeSchaltungHinzu(sch2)
-k1:fuegeSchaltungHinzu(sch3)
+k1 = Crossing:new("Tutorial 2")
+k1:addSequence(sch1)
+k1:addSequence(sch2)
+k1:addSequence(sch3)
 
 local ModuleRegistry = require("ak.core.ModuleRegistry")
-ModuleRegistry.registerModules(
-    require("ak.core.CoreLuaModule"),
-    require("ak.strasse.KreuzungLuaModul")
-)
+ModuleRegistry.registerModules(require("ak.core.CoreLuaModule"), require("ak.road.CrossingLuaModul"))
 
 function EEPMain()
     ModuleRegistry.runTasks()
