@@ -202,82 +202,92 @@ end
 -- Funktion switchTrafficLights
 ---------------------------
 local function switch(crossing)
+    local TrafficLight = require("ak.road.TrafficLight")
+
     if Crossing.debug then
-        print(string.format("[Crossing ] Schalte Kreuzung %s: %s", crossing:getName(),
-                            crossing:isGreenPhaseFinished() and "Ja" or "Nein"))
+        local msg = "[Crossing ] Schalte Kreuzung %s: %s"
+        print(string.format(msg, crossing:getName(), crossing:isGreenPhaseFinished() and "Ja" or "Nein"))
     end
+
     if not crossing:isGreenPhaseFinished() or not crossing.greenPhaseReached then do return true end end
 
-    local TrafficLight = require("ak.road.TrafficLight")
+    -- Start switching
     crossing.greenPhaseReached = false
     crossing:setGreenPhaseFinished(false)
+
     ---@type CrossingSequence
     local nextSequence = crossing:calculateNextSequence()
     local currentSequence = crossing:getCurrentSequence()
+
     local nextName = crossing.name .. " " .. nextSequence:getName()
-    local currentName = currentSequence and crossing.name .. " " .. currentSequence:getName() or crossing.name ..
-                            " Rot fuer alle"
-    local greenPhaseSeconds = nextSequence.greenPhaseSeconds
+    local currentName = crossing.name .. " " .. (currentSequence and currentSequence:getName() or " Rot fuer alle")
 
-    local trafficLightsToTurnRed, trafficLightsToTurnGreen =
-        nextSequence:trafficLightsToTurnRedAndGreen(currentSequence)
-    local pedestrianLightsToTurnRed, pedestrianLightsToTurnGreen =
-        nextSequence:pedestrianLightsToTurnRedAndGreen(currentSequence)
+    local turnRedTraffic, turnGreenTraffic = nextSequence:trafficLightsToTurnRedAndGreen(currentSequence)
+    local turnRedPed, turnGreenPed = nextSequence:pedestrianLightsToTurnRedAndGreen(currentSequence)
 
-    -- If there is no current sequence, we need to reset all old signals
     local lastTask
     if currentSequence then
+        -- Turn all stuff of the current sequence to red
         if Crossing.debug then
-            print("[Crossing ] Schalte " .. crossing:getName() .. " zu " .. nextSequence:getName() .. " (" ..
-                      nextSequence:lanesNamesText() .. ")")
+            local msg = "[Crossing ] Schalte %s zu %s (%s)"
+            print(string.format(msg, crossing:getName(), nextSequence:getName(), nextSequence:lanesNamesText()))
         end
 
+        -- Schedule the task where the old pedestrian lights get yellow
         local reasonPed = "Schalte " .. currentName .. " auf Fussgaenger Rot"
         local turnPedestrianRed = Task:new(function()
-            TrafficLight.switchAll(pedestrianLightsToTurnRed, TrafficLightState.RED, reasonPed)
+            TrafficLight.switchAll(turnRedPed, TrafficLightState.RED, reasonPed)
         end, "Schalte " .. currentName .. " auf Fussgaenger Rot")
         Scheduler:scheduleTask(3, turnPedestrianRed)
 
         -- * Hier könnte noch die DDR-Schaltung rein (2 Sekunden grün-gelb)
 
+        -- Schedule the task where the old traffic lights get yellow
         local reasonYellow = "Schalte " .. currentName .. " auf gelb"
         local turnTrafficLightsYellow = Task:new(function()
-            TrafficLight.switchAll(trafficLightsToTurnRed, TrafficLightState.YELLOW, reasonYellow)
+            TrafficLight.switchAll(turnRedTraffic, TrafficLightState.YELLOW, reasonYellow)
         end, reasonYellow)
         Scheduler:scheduleTask(0, turnTrafficLightsYellow, turnPedestrianRed)
 
+        -- Schedule the task where the old traffic lights get red
         local reasonRed = "Schalte " .. currentName .. " auf rot"
         local turnTrafficLightsRed = Task:new(function()
-            TrafficLight.switchAll(trafficLightsToTurnRed, TrafficLightState.RED, reasonRed)
+            TrafficLight.switchAll(turnRedTraffic, TrafficLightState.RED, reasonRed)
         end, reasonRed)
         Scheduler:scheduleTask(2, turnTrafficLightsRed, turnTrafficLightsYellow)
         lastTask = turnTrafficLightsRed
     else
+        -- Schedule the task where all traffic lights get red
         local reason = "Schalte initial auf rot"
-        trafficLightsToTurnRed = allTrafficLights(crossing.sequences)
-        TrafficLight.switchAll(trafficLightsToTurnRed, TrafficLightState.RED, reason)
+        turnRedTraffic = allTrafficLights(crossing.sequences)
+        TrafficLight.switchAll(turnRedTraffic, TrafficLightState.RED, reason)
         lastTask = Task:new(function() end, "clear crossing")
         Scheduler:scheduleTask(3, lastTask)
     end
 
+    -- Schedule the task where the new traffic lights are red-yellow
     local reasonRedYellow = "Schalte " .. nextName .. " auf rot-gelb"
     local turnNextTrafficLightsYellow = Task:new(function()
-        TrafficLight.switchAll(trafficLightsToTurnGreen, TrafficLightState.REDYELLOW, reasonRedYellow)
-        TrafficLight.switchAll(pedestrianLightsToTurnGreen, TrafficLightState.PEDESTRIAN, reasonRedYellow)
+        TrafficLight.switchAll(turnGreenTraffic, TrafficLightState.REDYELLOW, reasonRedYellow)
+        TrafficLight.switchAll(turnGreenPed, TrafficLightState.PEDESTRIAN, reasonRedYellow)
     end, reasonRedYellow)
     Scheduler:scheduleTask(3, turnNextTrafficLightsYellow, lastTask)
 
+    -- Schedule the task where the new traffic lights are green
     local reasonGreen = "Schalte " .. nextName .. " auf gruen"
     local turnNextTrafficLightsGreen = Task:new(function()
-        TrafficLight.switchAll(trafficLightsToTurnGreen, TrafficLightState.GREEN, reasonGreen)
+        TrafficLight.switchAll(turnGreenTraffic, TrafficLightState.GREEN, reasonGreen)
         crossing:onSwitchedToSequence(nextSequence)
         crossing.greenPhaseReached = true
     end, reasonGreen)
     Scheduler:scheduleTask(1, turnNextTrafficLightsGreen, turnNextTrafficLightsYellow)
 
+    -- Schedule the finishing task
+    local greenPhaseSeconds = nextSequence.greenPhaseSeconds
     local changeToReadyStatus = Task:new(function()
         if Crossing.debug then
-            print("[Crossing ] " .. crossing.name .. ": Fahrzeuge sind gefahren, kreuzung ist dann frei.")
+            local msg = "[Crossing ] %s: Fahrzeuge sind gefahren, kreuzung ist dann frei."
+            print(string.format(msg, crossing.name))
         end
         crossing:setGreenPhaseFinished(true)
     end, crossing.name .. " ist nun bereit (war " .. greenPhaseSeconds .. "s auf gruen geschaltet)")
