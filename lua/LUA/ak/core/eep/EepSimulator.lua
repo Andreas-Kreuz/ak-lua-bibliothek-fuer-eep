@@ -964,4 +964,6 @@ end
 -- @param path Speicherpfad der Anlage einschlieﬂlich Dateiname
 function EEPOnSaveAnl(path) return end
 
+function EEPPause(value) end
+
 return EepSimulator

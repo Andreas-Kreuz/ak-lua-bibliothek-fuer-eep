@@ -26,8 +26,8 @@ local EEPRollingstockModelTypeText = {
     [5] = "Diesellok",
     [6] = "Triebwagen",
     [7] = "U- oder S-Bahn",
-    [8] = "Stra√üenbahn", -- German Umlaute are ok if stored as UTF-8
-    [9] = "G√ºterwaggon", -- German Umlaute are ok if stored as UTF-8
+    [8] = "Straﬂenbahn", -- German Umlaute are ok if stored as UTF-8
+    [9] = "G¸terwaggon", -- German Umlaute are ok if stored as UTF-8
     [10] = "Personenwaggon",
     [11] = "Luftfahrzeug",
     [12] = "Maschine",
@@ -91,17 +91,17 @@ local function EEPGetRollingstockItemsCount(...)
     return executeAndStoreRunTime(_EEPGetRollingstockItemsCount, "EEPGetRollingstockItemsCount", ...)
 end
 
--- Ermittelt die Gesamtl√§nge des angegebenen Zuges.
+-- Ermittelt die Gesamtl‰nge des angegebenen Zuges.
 local EEPGetTrainLength = EEPGetTrainLength or function()
         return
     end -- EEP 15.1 Plug-In 1
 
--- Ermittelt, welches Fahrzeug derzeit im Steuerdialog ausgew√§hlt ist.
+-- Ermittelt, welches Fahrzeug derzeit im Steuerdialog ausgew‰hlt ist.
 local EEPRollingstockGetActive = EEPRollingstockGetActive or function() -- (not used yet)
         return
     end -- EEP 15.1 Plug-In 1
 
--- Ermittelt, welcher Zug derzeit im Steuerdialog ausgew√§hlt ist.
+-- Ermittelt, welcher Zug derzeit im Steuerdialog ausgew‰hlt ist.
 local EEPGetTrainActive = EEPGetTrainActive or function() -- (not used yet)
         return
     end -- EEP 15.1 Plug-In 1
@@ -145,14 +145,14 @@ local EEPRollingstockGetHook = EEPRollingstockGetHook or function() -- (not used
         return
     end -- EEP 16.1
 
---- Ermittelt das Verhalten von G√ºtern am Kranhaken eines Rollmaterials
+--- Ermittelt das Verhalten von G¸tern am Kranhaken eines Rollmaterials
 --  OK, Status = EEPRollingstockGetHookGlue("#Kranwagen")
--- G√ºterhaken aus = 0, an = 1, in Benutzung = 3
+-- G¸terhaken aus = 0, an = 1, in Benutzung = 3
 local EEPRollingstockGetHookGlue = EEPRollingstockGetHookGlue or function() -- (not used yet)
         return
     end -- EEP 16.1
 
---- Ermittelt die zur√ºckgelegte Strecke des Rollmaterials in Meter (m)
+--- Ermittelt die zur¸ckgelegte Strecke des Rollmaterials in Meter (m)
 --  OK, Mileage = EEPRollingstockGetMileage("#Fahrzeug")
 local EEPRollingstockGetMileage = EEPRollingstockGetMileage or function()
         return
@@ -185,31 +185,31 @@ local EEPGetCameraRotation = EEPGetCameraRotation or function() -- (not used yet
         return
     end -- EEP 16.1
 
---- Ermittelt die Windst√§rke in Prozent (%)
+--- Ermittelt die Windst‰rke in Prozent (%)
 --  OK, WindIntensity = EEPGetWindIntensity()
 local EEPGetWindIntensity = EEPGetWindIntensity or function() -- (not used yet)
         return
     end -- EEP 16.1
 
---- Ermittelt die Niederschlagintensit√§t in Prozent (%)
+--- Ermittelt die Niederschlagintensit‰t in Prozent (%)
 --  OK, RainIntensity = EEPGetRainIntensity()
 local EEPGetRainIntensity = EEPGetRainIntensity or function() -- (not used yet)
         return
     end -- EEP 16.1
 
---- Ermittelt die Schneeintensit√§ in Prozent (%)
+--- Ermittelt die Schneeintensit‰ in Prozent (%)
 --  OK, SnowIntensity = EEPGetSnowIntensity()
 local EEPGetSnowIntensity = EEPGetSnowIntensity or function() -- (not used yet)
         return
     end -- EEP 16.1
 
---- Ermittelt die Hagelintensit√§t in Prozent (%)
+--- Ermittelt die Hagelintensit‰t in Prozent (%)
 -- OK, HailIntensity = EEPGetHailIntensity()
 local EEPGetHailIntensity = EEPGetHailIntensity or function() -- (not used yet)
         return
     end -- EEP 16.1
 
---- Ermittelt die Nebelintensit√§t in Prozent (%)
+--- Ermittelt die Nebelintensit‰t in Prozent (%)
 -- OK, FogIntensity = EEPGetFogIntensity()
 local EEPGetFogIntensity = EEPGetFogIntensity or function() -- (not used yet)
         return
@@ -350,7 +350,7 @@ function TrackCollector:updateTrainInfo(trainName, trackId)
 end
 
 function TrackCollector:updateRollingStock(rollingStockName, currentTrain, positionInTrain)
-    -- 1 Kupplung scharf, 2 Absto√üen, 3 Gekuppelt
+    -- 1 Kupplung scharf, 2 Abstoﬂen, 3 Gekuppelt
     local _, couplingFront = EEPRollingstockGetCouplingFront(rollingStockName) -- EEP 11.0
     local _, couplingRear = EEPRollingstockGetCouplingRear(rollingStockName) -- EEP 11.0
 
