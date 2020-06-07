@@ -592,10 +592,12 @@ insulate("Check traffic light sequence", function()
     end
 
     _G.EEPTime = _G.EEPTime + 200
+    ModuleRegistry.runTasks() -- First Set new to green
+    _G.EEPTime = _G.EEPTime + 200
     ModuleRegistry.runTasks() -- First Set ready -- Scheduler.debug = true
 
     do
-        local step7Ready = crossing:isGreenPhaseFinished() --                     step7
+        local step7Ready = crossing:isGreenPhaseFinished() --         step7
         local step7SignalAxisL1 = EEPGetSignal(11) -- store signal    step7
         local step7SignalAxisL2 = EEPGetSignal(12) -- store signal    step7
         local step7SignalAxisL3 = EEPGetSignal(13) -- store signal    step7

@@ -1,5 +1,6 @@
 if AkDebugLoad then print("Loading ak.road.CrossingSequence ...") end
 
+local Task = require("ak.scheduler.Task")
 -- local Lane = require("ak.road.Lane")
 -- local LaneSettings = require("ak.road.LaneSettings")
 
@@ -69,11 +70,73 @@ function CrossingSequence:trafficLightsToTurnRedAndGreen(oldSequence)
     return turnRed, turnGreen
 end
 
--- function CrossingSequence:tasksForSwitchingFrom(currentCircuit)
---     local taskList = {}
---     table.insert(taskList, {offset = 0, after = nil, task = nil})
---     return taskList
--- end
+local function switchTask(tlList, tlFilter, tlState, reason)
+    local TrafficLight = require("ak.road.TrafficLight")
+    local toTurn = {}
+    for t, type in pairs(tlList) do if type == tlFilter then toTurn[t] = true end end
+    return Task:new(function() TrafficLight.switchAll(toTurn, tlState, reason) end, reason)
+end
+
+function CrossingSequence:tasksForSwitchingFrom(oldSequence)
+    local TrafficLightState = require("ak.road.TrafficLightState")
+    local taskList = {}
+
+    local toRed, toGreen = self:trafficLightsToTurnRedAndGreen(oldSequence)
+
+    local oldRedCars
+    if oldSequence then
+        -- Schedule the task where the old pedestrian lights get yellow
+        local reasonPed = "Schalte " .. oldSequence.name .. " auf Fussgaenger Rot"
+        local oldRedPedestrian = switchTask(toRed, CrossingSequence.Type.PEDESTRIAN, TrafficLightState.RED, reasonPed)
+        table.insert(taskList, {offset = 0, task = oldRedPedestrian, precedingTask = nil})
+
+        -- * Hier könnte noch die DDR-Schaltung rein (2 Sekunden grün-gelb)
+
+        -- Schedule the task where the old traffic lights get yellow
+        local reasonYelTram = "Schalte " .. oldSequence.name .. " auf gelb (Tram)"
+        local oldYellowTram = switchTask(toRed, CrossingSequence.Type.TRAM, TrafficLightState.YELLOW, reasonYelTram)
+        table.insert(taskList, {offset = 0, task = oldYellowTram, precedingTask = oldRedPedestrian})
+
+        local reasonYelCar = "Schalte " .. oldSequence.name .. " auf gelb (Auto)"
+        local oldYellowCars = switchTask(toRed, CrossingSequence.Type.CAR, TrafficLightState.YELLOW, reasonYelCar)
+        table.insert(taskList, {offset = 0, task = oldYellowCars, precedingTask = oldRedPedestrian})
+
+        -- Schedule the task where the old traffic lights get red (CAR)
+        local reasonRedCars = "Schalte " .. oldSequence.name .. " auf rot (Auto)"
+        oldRedCars = switchTask(toRed, CrossingSequence.Type.CAR, TrafficLightState.RED, reasonRedCars)
+        table.insert(taskList, {offset = 2, task = oldRedCars, precedingTask = oldYellowCars})
+
+        -- Schedule the task where the old traffic lights get red (TRAM)
+        local reasonRedTram = "Schalte " .. oldSequence.name .. " auf rot (Tram)"
+        local oldRedTram = switchTask(toRed, CrossingSequence.Type.TRAM, TrafficLightState.RED, reasonRedTram)
+        table.insert(taskList, {offset = 2, task = oldRedTram, precedingTask = oldYellowCars})
+    else
+        -- Schedule the task where all traffic lights get red
+        oldRedCars = Task:new(function() end, "clear crossing")
+        table.insert(taskList, {offset = 4, task = oldRedCars, precedingTask = nil})
+    end
+
+    -- Schedule the task where the new traffic lights are red-yellow
+    local reasonYel = "Schalte " .. self.name .. " auf rot-gelb"
+    local nextYel = switchTask(toGreen, CrossingSequence.Type.CAR, TrafficLightState.REDYELLOW, reasonYel)
+    table.insert(taskList, {offset = 3, task = nextYel, precedingTask = oldRedCars})
+
+    -- Schedule the task where the new traffic lights are green (TRAM)
+    local reasonGreenTram = "Schalte " .. self.name .. " auf gruen (Tram)"
+    local nextGreenTram = switchTask(toGreen, CrossingSequence.Type.TRAM, TrafficLightState.GREEN, reasonGreenTram)
+    table.insert(taskList, {offset = 1, task = nextGreenTram, precedingTask = nextYel})
+
+    -- Schedule the task where the new pedestrian lights are green (PEDESTRIAN)
+    local nextPed = switchTask(toGreen, CrossingSequence.Type.PEDESTRIAN, TrafficLightState.PEDESTRIAN, reasonYel)
+    table.insert(taskList, {offset = 3, task = nextPed, precedingTask = oldRedCars})
+
+    -- Schedule the task where the new traffic lights are green (CAR)
+    local reasonGreenCar = "Schalte " .. self.name .. " auf gruen (Auto)"
+    local nextGreenCar = switchTask(toGreen, CrossingSequence.Type.CAR, TrafficLightState.GREEN, reasonGreenCar)
+    table.insert(taskList, {offset = 1, task = nextGreenCar, precedingTask = nextYel})
+
+    return taskList
+end
 
 function CrossingSequence:getLanes() return self.lanes end
 
