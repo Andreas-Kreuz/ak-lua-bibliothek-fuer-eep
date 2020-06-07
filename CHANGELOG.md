@@ -12,7 +12,7 @@
 
   ```lua
     local c1 = Crossing:new("Bahnhofstr. - Hauptstr.")
-    local K1 = TrafficLight:new(34, TrafficLightModel.JS2_3er_mit_FG, { "STRAIGHT", "RIGHT" })
+    local K1 = TrafficLight:new("K1", 34, TrafficLightModel.JS2_3er_mit_FG, { "STRAIGHT", "RIGHT" })
 
     -- Einfache Steuerung direkt über die Fahrspur-Ampel K1 - diese ist sichtbar und wird direkt verwendet
     c1Lane1 = c1:newLane("Fahrspur 1 - K1", 101, K1)
@@ -25,9 +25,9 @@
 
   ```lua
   local c1 = Crossing:new("Bahnhofstr. - Hauptstr.")
-  local LANE_SIGNAL1 = TrafficLight:new(34, TrafficLightModel.Unsichtbar_2er)
-  local K1 = TrafficLight:new(35, TrafficLightModel.JS2_3er_mit_FG)           -- Ampel für grade/rechts
-  local K2 = TrafficLight:new(36, TrafficLightModel.JS2_2er_OFF_YELLOW_GREEN) -- Ampel nur Rechtsabbieger
+  local LANE_SIGNAL1 = TrafficLight:new("SIGNAL1", 34, TrafficLightModel.Unsichtbar_2er)
+  local K1 = TrafficLight:new("K1", 35, TrafficLightModel.JS2_3er_mit_FG)           -- Ampel für grade/rechts
+  local K2 = TrafficLight:new("K2", 36, TrafficLightModel.JS2_2er_OFF_YELLOW_GREEN) -- Ampel nur Rechtsabbieger
 
   -- Erweiterte Steuerung indirekt die Signale K1 und K2 - die Fahrspur-Ampel ist unsichtbar
   c1Lane1 = c1:newLane("Fahrspur 1 - K1", 101, K1)
@@ -45,7 +45,7 @@
   `lane:showRequestsOn(trafficLight)`:
 
   ```lua
-  local S4 = TrafficLight:new(95, TrafficLightModel.Unsichtbar_2er, "#5525_Straba Signal Halt",
+  local S4 = TrafficLight:new("S4", 95, TrafficLightModel.Unsichtbar_2er, "#5525_Straba Signal Halt",
                               "#5436_Straba Signal rechts", "#5526_Straba Signal anhalten", "#5524_Straba Signal A")
   c1Lane11 = Lane:new("K1 - Fahrspur 11", 11, S4, {Lane.Directions.RIGHT}, Lane.Type.TRAM)
   c1Lane11:showRequestsOn(S4)

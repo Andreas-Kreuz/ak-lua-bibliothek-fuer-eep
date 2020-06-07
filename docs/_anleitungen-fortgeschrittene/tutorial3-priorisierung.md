@@ -33,7 +33,6 @@ Es gibt 4 Arten von Priorisierungen für Fahrspuren. Nur eine davon kann gleichz
     <div class="media-body">
       <h5 class="mt-0">Priorisierung nach Wartezeit</h5>
       Werden die Fahrzeuge nicht anhand von unten stehenden Mechanismen erkannt, so erfolgt die Priorisierung dieser Fahrspur anhand der Wartezeit. Die Wartezeit wird immer um eins hochgezählt, wenn diese Fahrspur beim Ändern der Ampelschaltung rot bekommt. Sie wird auf 0 zurükgesetzt, wenn die Ampel grün bekommt.<br><br>
-
       Wenn Du <strong>keine</strong> Priorisierung einrichtest, dann werden die Fahrspuren anhand ihrer Wartezeit geschaltet.
     </div>
 
@@ -42,8 +41,7 @@ Es gibt 4 Arten von Priorisierungen für Fahrspuren. Nur eine davon kann gleichz
     <img class="img-thumbnail mr-3" src="{{ site.baseurl }}/assets/tutorial/tutorial3/erkennung-kontaktpunkt.png" width="128" height="128" alt="Zählen von Fahrzeugen">
     <div class="media-body">
       <h5 class="mt-0">Zählen von Fahrzeugen</h5>
-      Wenn Du die Anzahl der Fahrzeuge einer Fahrspur mit Kontaktpunkten zählst, bekommst Du die bestmögliche Erkennung für mehrere Fahrzeuge.
-
+      Wenn Du die Anzahl der Fahrzeuge einer Fahrspur mit Kontaktpunkten zählst, bekommst Du die bestmögliche Erkennung für mehrere Fahrzeuge.<br><br>
       Setze für jeder Fahrspur zwei Kontaktpunkte: Den ersten vor der Ampel, der der Fahrspur sagt, dass sich ein weiteres Fahrzeug vor der Ampel befindet. Den zweiten nach der Ampel, der der Fahrspur sagt, dass sich ein Fahrzeug weniger an der Ampel befindet.
     </div>
 
@@ -82,6 +80,7 @@ Durch das Einbeziehen der Wartezeit wird sichergestellt, dass jede Fahrspur ber�
 ⭐ Am besten verwendest Du die Priorisierung für alle Fahrspuren einer Kreuzung - oder für gar keine.
 
 # Erkennung mit Strassen (nicht empfohlen)
+
 ![]({{ site.baseurl }}/assets/tutorial/tutorial3/reservierung-strasse.jpg)
 
 <div class="media mb-5">
@@ -91,12 +90,11 @@ Durch das Einbeziehen der Wartezeit wird sichergestellt, dass jede Fahrspur ber�
   </div>
 </div>
 
-- Verwende dazu folgenden Code (`ws` ist eine Fahrspur):
+- Verwende dazu folgenden Code (`lane` ist eine Fahrspur):
 
   ```lua
-  lane = Lane:new("WS", 108, {
-      TrafficLight:new(15, TrafficLightModel.Unsichtbar_2er)
-  })
+  local laneSignal1 = TrafficLight:new("LANE WS", 15, TrafficLightModel.Unsichtbar_2er)
+  lane = Lane:new("WS", 108, laneSignal1)
   lane:useTracklForQueue(2) -- Erfasst Anforderungen, wenn ein Fahrzeug auf Strasse 2 steht
   ```
 
@@ -124,9 +122,9 @@ Durch das Einbeziehen der Wartezeit wird sichergestellt, dass jede Fahrspur ber�
 
 Die Erkennung erfolgt ähnlich wie bei der Straße (Details siehe oben).
 
-  ```lua
-  lane:useSignalForQueue()
-  ```
+```lua
+lane:useSignalForQueue()
+```
 
 ⭐ Die Erkennung funktioniert nur, wenn die Ampel rot ist.
 
@@ -159,24 +157,25 @@ Setze für jeder Fahrspur zwei Kontaktpunkte:
 
 Es ist notwendig, dass der Zugname in den Funktionen genutzt wird
 
-  ```lua
-  ------------------------------------------------
-  -- Damit kommt wird die Variable "Zugname" automatisch durch EEP belegt
-  -- http://emaps-eep.de/lua/code-schnipsel
-  ------------------------------------------------
-  setmetatable(_ENV, {
-      __index = function(_, k)
-          local p = load(k)
-          if p then
-              local f = function(z)
-                  local s = Zugname
-                  Zugname = z
-                  p()
-                  Zugname = s
-              end
-              _ENV[k] = f
-              return f
-          end
-          return nil
-      end
-  })
+```lua
+------------------------------------------------
+-- Damit kommt wird die Variable "Zugname" automatisch durch EEP belegt
+-- http://emaps-eep.de/lua/code-schnipsel
+------------------------------------------------
+setmetatable(_ENV, {
+    __index = function(_, k)
+        local p = load(k)
+        if p then
+            local f = function(z)
+                local s = Zugname
+                Zugname = z
+                p()
+                Zugname = s
+            end
+            _ENV[k] = f
+            return f
+        end
+        return nil
+    end
+})
+```

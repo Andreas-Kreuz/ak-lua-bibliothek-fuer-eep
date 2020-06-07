@@ -61,7 +61,7 @@ Diese Klasse wird dazu verwendet eine Signal auf der Anlage (signalId) mit einem
 
 ### Neue Ampel erzeugen
 
-`function TrafficLight:new(signalId, ampelModell)`
+`function TrafficLight:new(name, signalId, ampelModell)`
 
 _Beschreibung:_
 
@@ -70,6 +70,12 @@ _Beschreibung:_
 
 _Parameter:_
 
+- `name` ist ein selbst vergebener Name; Vorschlag:
+  - K1, K2, K3, ... für Kfz
+  - F1, F2, F3, ... für Fußgänger
+  - S1, S2, S3, ... für Tram
+  - B1, B2, B3, ... für Bus
+  - L1, L2, L3, ... für unsichtbare Fahrspursignale
 - `signalId` ist die Signal-ID der zu steuernden Ampel in EEP
 - `ampelModell` muss vom Typ `TrafficLightModel` sein
 

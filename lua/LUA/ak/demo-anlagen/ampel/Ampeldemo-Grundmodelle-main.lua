@@ -73,11 +73,11 @@ do
     --    |    +----------------------- Legt eine neue Ampel an
     --    |    |                +------ Signal-ID dieser Ampel
     --    |    |                |   +-- Modell dieser Ampel - weiss wo rot, gelb und gruen ist
-    local K1 = TrafficLight:new(32, Grundmodell_Ampel_3)
-    local K2 = TrafficLight:new(31, Grundmodell_Ampel_3)
-    local K3 = TrafficLight:new(34, Grundmodell_Ampel_3)
-    local K4 = TrafficLight:new(33, Grundmodell_Ampel_3)
-    local K5 = TrafficLight:new(30, Grundmodell_Ampel_3)
+    local K1 = TrafficLight:new("K1", 32, Grundmodell_Ampel_3)
+    local K2 = TrafficLight:new("K2", 31, Grundmodell_Ampel_3)
+    local K3 = TrafficLight:new("K3", 34, Grundmodell_Ampel_3)
+    local K4 = TrafficLight:new("K4", 33, Grundmodell_Ampel_3)
+    local K5 = TrafficLight:new("K5", 30, Grundmodell_Ampel_3)
     -------------------------------------------------------------------------------------------------------------------
     -- Definiere alle Fahrspuren fuer Kreuzung 1
     -------------------------------------------------------------------------------------------------------------------
@@ -129,14 +129,14 @@ do
     --    |    +----------------------- Legt eine neue Ampel an
     --    |    |                +------ Signal-ID dieser Ampel
     --    |    |                |   +-- Modell dieser Ampel - weiss wo rot, gelb und gruen ist
-    local K1 = TrafficLight:new(17, Grundmodell_Ampel_3)
-    local K2 = TrafficLight:new(13, Grundmodell_Ampel_3)
-    local K3 = TrafficLight:new(12, Grundmodell_Ampel_3)
-    local K4 = TrafficLight:new(11, Grundmodell_Ampel_3)
-    local K5 = TrafficLight:new(10, Grundmodell_Ampel_3)
-    local K6 = TrafficLight:new(09, Grundmodell_Ampel_3)
-    local K7 = TrafficLight:new(16, Grundmodell_Ampel_3)
-    local K8 = TrafficLight:new(15, Grundmodell_Ampel_3)
+    local K1 = TrafficLight:new("K1", 17, Grundmodell_Ampel_3)
+    local K2 = TrafficLight:new("K2", 13, Grundmodell_Ampel_3)
+    local K3 = TrafficLight:new("K3", 12, Grundmodell_Ampel_3)
+    local K4 = TrafficLight:new("K4", 11, Grundmodell_Ampel_3)
+    local K5 = TrafficLight:new("K5", 10, Grundmodell_Ampel_3)
+    local K6 = TrafficLight:new("K6", 09, Grundmodell_Ampel_3)
+    local K7 = TrafficLight:new("K7", 16, Grundmodell_Ampel_3)
+    local K8 = TrafficLight:new("K8", 15, Grundmodell_Ampel_3)
     -------------------------------------------------------------------------------------------------------------------
     -- Definiere alle Fahrspuren fuer Kreuzung 1
     -------------------------------------------------------------------------------------------------------------------
@@ -155,14 +155,14 @@ do
     c1Lane7 = Lane:new("Fahrspur 7 - K1", 107, K7, {'STRAIGHT', 'RIGHT'})
     c1Lane8 = Lane:new("Fahrspur 8 - K1", 108, K8, {'LEFT'})
 
-    local F1 = TrafficLight:new(40, Grundmodell_Ampel_3_FG)
-    local F2 = TrafficLight:new(41, Grundmodell_Ampel_3_FG)
-    local F3 = TrafficLight:new(36, Grundmodell_Ampel_3_FG)
-    local F4 = TrafficLight:new(37, Grundmodell_Ampel_3_FG)
-    local F5 = TrafficLight:new(38, Grundmodell_Ampel_3_FG)
-    local F6 = TrafficLight:new(39, Grundmodell_Ampel_3_FG)
-    local F7 = TrafficLight:new(42, Grundmodell_Ampel_3_FG)
-    local F8 = TrafficLight:new(43, Grundmodell_Ampel_3_FG)
+    local F1 = TrafficLight:new("F1", 40, Grundmodell_Ampel_3_FG)
+    local F2 = TrafficLight:new("F2", 41, Grundmodell_Ampel_3_FG)
+    local F3 = TrafficLight:new("F3", 36, Grundmodell_Ampel_3_FG)
+    local F4 = TrafficLight:new("F4", 37, Grundmodell_Ampel_3_FG)
+    local F5 = TrafficLight:new("F5", 38, Grundmodell_Ampel_3_FG)
+    local F6 = TrafficLight:new("F6", 39, Grundmodell_Ampel_3_FG)
+    local F7 = TrafficLight:new("F7", 42, Grundmodell_Ampel_3_FG)
+    local F8 = TrafficLight:new("F8", 43, Grundmodell_Ampel_3_FG)
 
     -- endregion
     -- region K1-Schaltungen

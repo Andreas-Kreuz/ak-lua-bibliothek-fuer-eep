@@ -130,7 +130,7 @@ end
 --     _assert(v, message)
 -- end
 local _clearlog = clearlog
---- LÃ¶sche Inhalt der log-Datei.
+--- Lösche Inhalt der log-Datei.
 function clearlog()
     -- call the original clearlog function
     _clearlog()

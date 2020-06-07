@@ -39,18 +39,18 @@ insulate("Crossing", function()
     local sequenceA, sequenceB, sequenceC
     local crossing
 
-    L1 = TrafficLight:new(11, TrafficLightModel.Unsichtbar_2er) -- Signal for Lane 1
-    L2 = TrafficLight:new(12, TrafficLightModel.Unsichtbar_2er) -- Signal for Lane 2
-    L3 = TrafficLight:new(13, TrafficLightModel.Unsichtbar_2er) -- Signal for Lane 3
-    L4 = TrafficLight:new(14, TrafficLightModel.Unsichtbar_2er) -- Signal for Lane 4
-    K1 = TrafficLight:new(23, TrafficLightModel.JS2_3er_mit_FG) -- NORTH STRAIGHT 1 (right)
-    K2 = TrafficLight:new(24, TrafficLightModel.JS2_3er_mit_FG) -- NORTH STRAIGHT 2 (left)
-    K3 = TrafficLight:new(25, TrafficLightModel.JS2_3er_mit_FG) -- EAST STRAIGHT (left)
-    K5 = TrafficLight:new(27, TrafficLightModel.JS2_3er_ohne_FG) -- EAST STRAIGHT (above lane)
-    K6 = TrafficLight:new(28, TrafficLightModel.JS2_3er_mit_FG) -- EAST STRAIGHT (right)
-    K7 = TrafficLight:new(29, TrafficLightModel.JS2_2er_OFF_YELLOW_GREEN) -- EAST RIGHT ADDITIONAL (right)
-    K8 = TrafficLight:new(30, TrafficLightModel.JS2_3er_mit_FG) -- SOUTH LEFT (left)
-    K9 = TrafficLight:new(31, TrafficLightModel.JS2_3er_mit_FG) -- SOUTH STRAIGHT (right)
+    L1 = TrafficLight:new("L1", 11, TrafficLightModel.Unsichtbar_2er) -- Signal for Lane 1
+    L2 = TrafficLight:new("L2", 12, TrafficLightModel.Unsichtbar_2er) -- Signal for Lane 2
+    L3 = TrafficLight:new("L3", 13, TrafficLightModel.Unsichtbar_2er) -- Signal for Lane 3
+    L4 = TrafficLight:new("L4", 14, TrafficLightModel.Unsichtbar_2er) -- Signal for Lane 4
+    K1 = TrafficLight:new("K1", 23, TrafficLightModel.JS2_3er_mit_FG) -- NORTH STRAIGHT 1 (right)
+    K2 = TrafficLight:new("K2", 24, TrafficLightModel.JS2_3er_mit_FG) -- NORTH STRAIGHT 2 (left)
+    K3 = TrafficLight:new("K3", 25, TrafficLightModel.JS2_3er_mit_FG) -- EAST STRAIGHT (left)
+    K5 = TrafficLight:new("K5", 27, TrafficLightModel.JS2_3er_ohne_FG) -- EAST STRAIGHT (above lane)
+    K6 = TrafficLight:new("K6", 28, TrafficLightModel.JS2_3er_mit_FG) -- EAST STRAIGHT (right)
+    K7 = TrafficLight:new("K7", 29, TrafficLightModel.JS2_2er_OFF_YELLOW_GREEN) -- EAST RIGHT ADDITIONAL (right)
+    K8 = TrafficLight:new("K8", 30, TrafficLightModel.JS2_3er_mit_FG) -- SOUTH LEFT (left)
+    K9 = TrafficLight:new("K9", 31, TrafficLightModel.JS2_3er_mit_FG) -- SOUTH STRAIGHT (right)
 
     crossing = Crossing:new("My Crossing")
     lane1 = Lane:new("Lane 1 N", 1, L1, Lane.Directions.STRAIGHT, Lane.Directions.RIGHT)

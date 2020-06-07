@@ -25,7 +25,8 @@ local counter = -1
 ---@param yellowStructure string Immobilie fuer Signalbild gelb (Licht an / aus)
 ---@param requestStructure string Immobilie fuer Signalbild "A" (Licht an / aus)
 --
-function TrafficLight:new(signalId, trafficLightModel, redStructure, greenStructure, yellowStructure, requestStructure)
+function TrafficLight:new(name, signalId, trafficLightModel, redStructure, greenStructure, yellowStructure,
+                          requestStructure)
     assert(signalId, "Specify a signalId")
     assert(trafficLightModel, "Specify a trafficLightModel")
     local error = string.format("Signal ID already used: %s - %s", signalId, trafficLightModel.name)
@@ -34,6 +35,7 @@ function TrafficLight:new(signalId, trafficLightModel, redStructure, greenStruct
     EEPShowInfoSignal(signalId, false)
     if signalId < 0 then counter = counter - 1 end
     local o = {
+        name = name,
         signalId = signalId > 0 and signalId or counter,
         trafficLightModel = trafficLightModel,
         phase = signalId > 0 and trafficLightModel:phaseOf(EEPGetSignal(signalId)) or TrafficLightState.RED,
@@ -111,11 +113,12 @@ function TrafficLight:refreshInfo()
     EEPShowInfoSignal(self.signalId, showInfo)
     if showInfo then
 
-        local infoText = fmt.appendUpTo1023("", "<j><b>Ampel ID: " .. fmt.bgGray(self.signalId) .. "</b></j>")
+        local infoText = fmt.appendUpTo1023("", "<j><b>" .. self.name .. "</b> (Signal " .. self.signalId ..
+                                                ")</j>")
         infoText = fmt.appendUpTo1023(infoText, "<br>" .. self.trafficLightModel.name)
 
         if showSwitching and self.sequenceInfo then
-            local title = "<br><br><j><b>" .. fmt.bgGray("Schaltung: ") .. "</b>"
+            local title = "<br><br><b>" .. "Schaltung: " .. "</b>"
             if infoText:len() > 0 then infoText = fmt.appendUpTo1023(infoText, title) end
             infoText = fmt.appendUpTo1023(infoText, self.sequenceInfo)
         end
@@ -127,7 +130,7 @@ function TrafficLight:refreshInfo()
         end
 
         if showRequests then
-            local title = "<br><br><j><b>" .. fmt.bgGray("Fahrspur/Wartezeit: ") .. "</b>"
+            local title = "<br><br><b>" .. "Fahrspur/Wartezeit: " .. "</b>"
             if infoText:len() > 0 then infoText = fmt.appendUpTo1023(infoText, title) end
             infoText = fmt.appendUpTo1023(infoText, self.laneInfo)
         end
