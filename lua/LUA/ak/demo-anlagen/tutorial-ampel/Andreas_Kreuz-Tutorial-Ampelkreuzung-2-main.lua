@@ -112,23 +112,23 @@ ws:useTracklForQueue(2) -- Erfasst Anforderungen, wenn ein Fahrzeug auf Strasse 
 
 --- Tutorial 2: Schaltung 1
 local sch1 = CrossingSequence:new("Schaltung 1")
-sch1:addTrafficLights(K3)
-sch1:addTrafficLights(K4)
-sch1:addTrafficLights(S1)
-sch1:addTrafficLights(K5)
-sch1:addTrafficLights(S2)
+sch1:addCarLights(K3)
+sch1:addCarLights(K4)
+sch1:addTramLights(S1)
+sch1:addCarLights(K5)
+sch1:addTramLights(S2)
 sch1:addPedestrianLights(F1, F2)
 
 --- Tutorial 2: Schaltung 2
 local sch2 = CrossingSequence:new("Schaltung 2")
-sch2:addTrafficLights(K6)
-sch2:addTrafficLights(K7)
+sch2:addCarLights(K6)
+sch2:addCarLights(K7)
 sch2:addPedestrianLights(F3, F4)
 
 --- Tutorial 2: Schaltung 3
 local sch3 = CrossingSequence:new("Schaltung 3")
-sch3:addTrafficLights(K1)
-sch3:addTrafficLights(K2)
+sch3:addCarLights(K1)
+sch3:addCarLights(K2)
 sch3:addPedestrianLights(F3, F4)
 sch3:addPedestrianLights(F5, F6)
 

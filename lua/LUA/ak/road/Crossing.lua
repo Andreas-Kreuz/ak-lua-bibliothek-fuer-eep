@@ -169,9 +169,7 @@ function Crossing:new(name, greenPhaseSeconds)
         currentSequence = nil,
         sequences = {},
         lanes = {},
-        pedestrianCrossings = {},
         trafficLights = {},
-        pedestrianLights = {},
         greenPhaseReached = true,
         greenPhaseFinished = true,
         greenPhaseSeconds = greenPhaseSeconds or 15,
@@ -205,8 +203,7 @@ local function allTrafficLights(sequences)
 
     for _, sequence in ipairs(sequences) do
         assert(sequence.getType() == "CrossingSequence", type(sequence))
-        for _, trafficLight in pairs(sequence.trafficLights) do list[trafficLight] = true end
-        for _, trafficLight in pairs(sequence.pedestrianLights) do list[trafficLight] = true end
+        for trafficLight, type in pairs(sequence.trafficLights) do list[trafficLight] = type end
     end
 
     return list
@@ -237,8 +234,25 @@ local function switch(crossing)
     local nextName = crossing.name .. " " .. nextSequence:getName()
     local currentName = crossing.name .. " " .. (currentSequence and currentSequence:getName() or " Rot fuer alle")
 
-    local turnRedTraffic, turnGreenTraffic = nextSequence:trafficLightsToTurnRedAndGreen(currentSequence)
-    local turnRedPed, turnGreenPed = nextSequence:pedestrianLightsToTurnRedAndGreen(currentSequence)
+    local toRed, toGreen = nextSequence:trafficLightsToTurnRedAndGreen(currentSequence)
+
+    local turnRedTraffic, turnGreenTraffic = {}, {}
+    local turnRedPed, turnGreenPed = {}, {}
+
+    for tl, type in pairs(toRed) do
+        if type == CrossingSequence.Type.PEDESTRIAN then
+            turnRedPed[tl] = type
+        else
+            turnRedTraffic[tl] = type
+        end
+    end
+    for tl, type in pairs(toGreen) do
+        if type == CrossingSequence.Type.PEDESTRIAN then
+            turnGreenPed[tl] = type
+        else
+            turnGreenTraffic[tl] = type
+        end
+    end
 
     local lastTask
     if currentSequence then
@@ -324,15 +338,10 @@ local function recalculateSignalInfo(crossing)
     table.sort(sortedSequences, function(s1, s2) return (s1.name < s2.name) end)
 
     for _, sequence in ipairs(sortedSequences) do
-        for _, tl in pairs(sequence.trafficLights) do
+        for tl, type in pairs(sequence.trafficLights) do
             tlSequences[tl.signalId] = tlSequences[tl.signalId] or {}
-            tlSequences[tl.signalId][sequence] = TrafficLightState.GREEN
-            trafficLights[tl] = true
-        end
-        for _, tl in pairs(sequence.pedestrianLights) do
-            tlSequences[tl.signalId] = tlSequences[tl.signalId] or {}
-            tlSequences[tl.signalId][sequence] = TrafficLightState.PEDESTRIAN
-            trafficLights[tl] = true
+            tlSequences[tl.signalId][sequence] = type
+            trafficLights[tl] = type
         end
     end
 
@@ -346,30 +355,31 @@ local function recalculateSignalInfo(crossing)
 
     for trafficLight in pairs(trafficLights) do
         trafficLightsToRefresh[trafficLight.signalId] = trafficLight
-        do
-            local text = ""
-            for _, sequence in ipairs(sortedSequences) do
-                local farbig = sequence == crossing:getCurrentSequence()
-                if tlSequences[trafficLight.signalId][sequence] then
-                    if tlSequences[trafficLight.signalId][sequence] == TrafficLightState.GREEN then
-                        text = text .. "<br><j>" ..
-                                   (farbig and fmt.bgGreen(sequence.name .. " (Gruen)") or
-                                       (sequence.name .. " " .. fmt.bgGreen("(Gruen)")))
-                    elseif tlSequences[trafficLight.signalId][sequence] == TrafficLightState.PEDESTRIAN then
-                        text = text .. "<br><j>" ..
-                                   (farbig and fmt.bgYellow(sequence.name .. " (FG)") or
-                                       (sequence.name .. " " .. fmt.bgYellow("(FG)")))
-                    else
-                        assert(false)
-                    end
-                else
-                    text = text .. "<br><j>" ..
-                               (farbig and fmt.bgRed(sequence.name .. " (Rot)") or
-                                   (sequence.name .. " " .. fmt.bgRed("(Rot)")))
-                end
+        local text = ""
+        for _, sequence in ipairs(sortedSequences) do
+            local farbig = sequence == crossing:getCurrentSequence()
+            local type = sequence[trafficLight]
+            if not type then
+                text = text .. "<br><j>" ..
+                           (farbig and fmt.bgRed(sequence.name .. " (Rot)") or
+                               (sequence.name .. " " .. fmt.bgRed("(Rot)")))
+            elseif type == TrafficLightState.GREEN then
+                text = text .. "<br><j>" ..
+                           (farbig and fmt.bgGreen(sequence.name .. " (Gruen)") or
+                               (sequence.name .. " " .. fmt.bgGreen("(Gruen)")))
+            elseif type == TrafficLightState.PEDESTRIAN then
+                text = text .. "<br><j>" ..
+                           (farbig and fmt.bgYellow(sequence.name .. " (FG)") or
+                               (sequence.name .. " " .. fmt.bgYellow("(FG)")))
+            elseif type == TrafficLightState.TRAM then
+                text = text .. "<br><j>" ..
+                           (farbig and fmt.bgBlue(sequence.name .. " (Tram)") or
+                               (sequence.name .. " " .. fmt.bgBlue("(Tram)")))
+            else
+                assert(false, "No such type: " .. type)
             end
-            trafficLight:setSequenceInfo(text)
         end
+        trafficLight:setSequenceInfo(text)
     end
 
     for _, trafficLight in pairs(trafficLightsToRefresh) do trafficLight:refreshInfo() end
@@ -390,9 +400,7 @@ function Crossing.initSequences()
                 laneFound = true
             end
             assert(laneFound, "No LANE found in sequence " .. sequence.name .. " (" .. crossing.name .. ")")
-            for v in pairs(sequence.pedestrianCrossings) do crossing.pedestrianCrossings[v.name] = v end
-            for _, v in pairs(sequence.trafficLights) do crossing.trafficLights[v.signalId] = v end
-            for _, v in pairs(sequence.pedestrianLights) do crossing.pedestrianLights[v.signalId] = v end
+            for v in pairs(sequence.trafficLights) do crossing.trafficLights[v.signalId] = v end
 
             if Crossing.debug then
                 local text = "[Crossing ] %s - %s: %s"

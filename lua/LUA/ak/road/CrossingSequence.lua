@@ -9,6 +9,8 @@ if AkDebugLoad then print("Loading ak.road.CrossingSequence ...") end
 ---@class CrossingSequence
 local CrossingSequence = {}
 CrossingSequence.debug = AkDebugLoad
+---@class TrafficLightType
+CrossingSequence.Type = {BUS = "BUS", CAR = "CAR", TRAM = "TRAM", PEDESTRIAN = "PEDESTRIAN", BICYCLE = "BICYCLE"}
 
 function CrossingSequence.getType() return "CrossingSequence" end
 
@@ -21,10 +23,8 @@ function CrossingSequence:new(name, greenPhaseSeconds)
     o.name = name
     o.crossing = nil
     o.prio = 0
-    ---@type table<number,TrafficLight>
+    ---@type table<TrafficLight,TrafficLightType>
     o.trafficLights = {}
-    ---@type table<number,TrafficLight>
-    o.pedestrianLights = {}
     ---@type number Default length of a green phase in seconds
     o.greenPhaseSeconds = greenPhaseSeconds or 15
     return o
@@ -33,65 +33,47 @@ end
 function CrossingSequence:initSequence()
     ---@type table<Lane,LaneSettings>
     self.lanes = {}
-    for _, trafficLight in pairs(self.trafficLights) do
-        for lane in pairs(trafficLight.lanes) do self.lanes[lane] = true end
+    for trafficLight, type in pairs(self.trafficLights) do
+        if type ~= CrossingSequence.Type.PEDESTRIAN then
+            for lane in pairs(trafficLight.lanes) do self.lanes[lane] = true end
+        end
     end
-    self.pedestrianCrossings = {}
-    -- FIXME LATER
-    -- for _, trafficLight in pairs(self.trafficLights) do
-    --     for lane in pairs(trafficLight.pedestrianCrossings) do
-    --         self.pedestrianCrossings[lane] = true
-    --     end
-    -- end
 end
 
 ---This will calculate all trafficLights to turn red and green
----@return TrafficLight[], TrafficLight[]
-function CrossingSequence:trafficLightsToTurnRedAndGreen(currentCircuit)
+---@return table<TrafficLight,TrafficLightType> table<TrafficLight,TrafficLightType>
+function CrossingSequence:trafficLightsToTurnRedAndGreen(oldSequence)
     local turnRed = {}
     local turnGreen = {}
 
     -- Calculate trafficLights to turn red and green
-    if currentCircuit then
-        for id, currentTrafficLight in pairs(currentCircuit.trafficLights) do
-            if not self.trafficLights[id] or self.trafficLights[id].model ~= currentTrafficLight.model then
-                turnRed[currentTrafficLight] = true
+    if oldSequence then
+        for light, oldType in pairs(oldSequence.trafficLights) do
+            local newType = self.trafficLights[light]
+            if not newType or newType ~= oldType or self.trafficLights[light].model ~= light.model then
+                assert(light.type == "TrafficLight")
+                assert(oldType)
+                turnRed[light] = oldType
             end
         end
     end
-    for id, newTrafficLight in pairs(self.trafficLights) do
-        if not currentCircuit or not currentCircuit.trafficLights[id] or currentCircuit.trafficLights[id].model ~=
-            newTrafficLight.model then turnGreen[newTrafficLight] = true end
-    end
-
-    return turnRed, turnGreen
-end
-
----This will calculate all pedestrianLights to turn red and green
----@return TrafficLight[], TrafficLight[]
-function CrossingSequence:pedestrianLightsToTurnRedAndGreen(currentCircuit)
-    local turnRed = {}
-    local turnGreen = {}
-
-    -- Calculate trafficLights to turn red and green
-    if currentCircuit then
-        for id, currentTrafficLight in pairs(currentCircuit.pedestrianLights) do
-            if not self.pedestrianLights[id] then turnRed[currentTrafficLight] = true end
+    for light, newType in pairs(self.trafficLights) do
+        local oldType = oldSequence and oldSequence.trafficLights[light] or nil
+        if not oldType or newType ~= oldType or oldSequence.trafficLights[light].model ~= light.model then
+            assert(light.type == "TrafficLight")
+            assert(newType)
+            turnGreen[light] = newType
         end
     end
-    for id, newTrafficLight in pairs(self.pedestrianLights) do
-        if not currentCircuit or not currentCircuit.trafficLights[id] then turnGreen[newTrafficLight] = true end
-    end
 
     return turnRed, turnGreen
 end
 
-function CrossingSequence:getLanesAndPedestrianCrossings()
-    local alle = {}
-    for lane in pairs(self.lanes) do alle[lane] = "NORMAL" end
-    for lane in pairs(self.pedestrianCrossings) do alle[lane] = "PEDESTRIANTS" end
-    return alle
-end
+-- function CrossingSequence:tasksForSwitchingFrom(currentCircuit)
+--     local taskList = {}
+--     table.insert(taskList, {offset = 0, after = nil, task = nil})
+--     return taskList
+-- end
 
 function CrossingSequence:getLanes() return self.lanes end
 
@@ -102,10 +84,10 @@ function CrossingSequence:lanesNamesText()
     return s
 end
 
-function CrossingSequence:addTrafficLights(...)
+function CrossingSequence:addCarLights(...)
     for _, trafficLight in pairs({...}) do
         assert(trafficLight and trafficLight.signalId)
-        self.trafficLights[trafficLight.signalId] = trafficLight
+        self.trafficLights[trafficLight] = CrossingSequence.Type.CAR
     end
     return self
 end
@@ -113,16 +95,17 @@ end
 function CrossingSequence:addPedestrianLights(...)
     for _, trafficLight in pairs({...}) do
         assert(trafficLight and trafficLight.signalId)
-        self.pedestrianLights[trafficLight.signalId] = trafficLight
+        self.trafficLights[trafficLight] = CrossingSequence.Type.PEDESTRIAN
     end
     return self
 end
 
-function CrossingSequence.addPedestrianCrossing()
-    -- function CrossingSequence:addPedestrianCrossing(pedestrianCrossing)
-    -- assert(pedestrianCrossing, "Bitte ein gueltige Fahrspur angeben")
-    -- pedestrianCrossing:setLaneType(Lane.RequestType.FUSSGAENGER)
-    -- self.pedestrianCrossings[pedestrianCrossing] = true
+function CrossingSequence:addTramLights(...)
+    for _, trafficLight in pairs({...}) do
+        assert(trafficLight and trafficLight.signalId)
+        self.trafficLights[trafficLight] = CrossingSequence.Type.TRAM
+    end
+    return self
 end
 
 --- Gibt alle Fahrspuren nach Prioritaet zurueck, sowie deren Anzahl und deren Durchschnittspriorität
@@ -132,11 +115,6 @@ function CrossingSequence:lanesSortedByPriority()
     local laneCount = 0
     local prioritySum = 0
     for lane in pairs(self.lanes) do
-        table.insert(sortedLanes, lane)
-        laneCount = laneCount + 1
-        prioritySum = prioritySum + lane:calculatePriority()
-    end
-    for lane in pairs(self.pedestrianCrossings) do
         table.insert(sortedLanes, lane)
         laneCount = laneCount + 1
         prioritySum = prioritySum + lane:calculatePriority()
@@ -160,7 +138,6 @@ end
 function CrossingSequence:lanesSortedByName()
     local sortedLanes = {}
     for lane in pairs(self.lanes) do table.insert(sortedLanes, lane) end
-    for lane in pairs(self.pedestrianCrossings) do table.insert(sortedLanes, lane) end
     local sortierFunktion = function(lane1, lane2) return (lane1.name < lane2.name) end
     table.sort(sortedLanes, sortierFunktion)
     return sortedLanes

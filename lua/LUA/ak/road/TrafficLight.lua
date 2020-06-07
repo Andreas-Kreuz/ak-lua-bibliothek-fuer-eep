@@ -113,8 +113,7 @@ function TrafficLight:refreshInfo()
     EEPShowInfoSignal(self.signalId, showInfo)
     if showInfo then
 
-        local infoText = fmt.appendUpTo1023("", "<j><b>" .. self.name .. "</b> (Signal " .. self.signalId ..
-                                                ")</j>")
+        local infoText = fmt.appendUpTo1023("", "<j><b>" .. self.name .. "</b> (Signal " .. self.signalId .. ")</j>")
         infoText = fmt.appendUpTo1023(infoText, "<br>" .. self.trafficLightModel.name)
 
         if showSwitching and self.sequenceInfo then

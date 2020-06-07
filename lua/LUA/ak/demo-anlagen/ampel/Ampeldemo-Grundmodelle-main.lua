@@ -103,23 +103,23 @@ do
 
     --- Kreuzung 2: Schaltung 1
     local c2Sequence1 = c2:newSequence("Schaltung 1")
-    c2Sequence1:addTrafficLights(K1)
-    c2Sequence1:addTrafficLights(K2)
-    c2Sequence1:addTrafficLights(K3)
+    c2Sequence1:addCarLights(K1)
+    c2Sequence1:addCarLights(K2)
+    c2Sequence1:addCarLights(K3)
 
     --- Kreuzung 2: Schaltung 2
     local c2Sequence2 = c2:newSequence("Schaltung 2")
-    c2Sequence2:addTrafficLights(K1)
-    c2Sequence2:addTrafficLights(K2)
+    c2Sequence2:addCarLights(K1)
+    c2Sequence2:addCarLights(K2)
 
     --- Kreuzung 2: Schaltung 3
     local c2Sequence3 = c2:newSequence("Schaltung 3")
-    c2Sequence3:addTrafficLights(K3)
-    c2Sequence3:addTrafficLights(K4)
+    c2Sequence3:addCarLights(K3)
+    c2Sequence3:addCarLights(K4)
 
     --- Kreuzung 2: Schaltung 4
     local c2Sequence4 = c2:newSequence("Schaltung 4")
-    c2Sequence4:addTrafficLights(K5)
+    c2Sequence4:addCarLights(K5)
 end
 -- endregion
 
@@ -175,27 +175,27 @@ do
 
     --- Kreuzung 1: Schaltung 1
     local c1Sequence1 = c1:newSequence("Schaltung 1")
-    c1Sequence1:addTrafficLights(K1)
-    c1Sequence1:addTrafficLights(K5)
+    c1Sequence1:addCarLights(K1)
+    c1Sequence1:addCarLights(K5)
     c1Sequence1:addPedestrianLights(F1, F2)
     c1Sequence1:addPedestrianLights(F3, F4)
 
     --- Kreuzung 1: Schaltung 2
     local c1Sequence2 = c1:newSequence("Schaltung 2")
-    c1Sequence2:addTrafficLights(K2)
-    c1Sequence2:addTrafficLights(K6)
+    c1Sequence2:addCarLights(K2)
+    c1Sequence2:addCarLights(K6)
 
     --- Kreuzung 1: Schaltung 3
     local c1Sequence3 = c1:newSequence("Schaltung 3")
-    c1Sequence3:addTrafficLights(K3)
-    c1Sequence3:addTrafficLights(K7)
+    c1Sequence3:addCarLights(K3)
+    c1Sequence3:addCarLights(K7)
     c1Sequence1:addPedestrianLights(F5, F6)
     c1Sequence1:addPedestrianLights(F7, F8)
 
     --- Kreuzung 1: Schaltung 4
     local c1Sequence4 = c1:newSequence("Schaltung 4")
-    c1Sequence4:addTrafficLights(K4)
-    c1Sequence4:addTrafficLights(K8)
+    c1Sequence4:addCarLights(K4)
+    c1Sequence4:addCarLights(K8)
 end
 -- endregion
 
