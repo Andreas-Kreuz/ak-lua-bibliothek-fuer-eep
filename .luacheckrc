@@ -53,6 +53,7 @@ read_globals = {
     "EEPStructureGetAxis",
     "EEPStructureGetFire",
     "EEPStructureGetLight",
+    "EEPStructureGetRotation",
     "EEPStructureGetSmoke",
     "EEPStructureSetAxis",
     "EEPTime",
@@ -82,10 +83,17 @@ files["lua/LUA/ak/strasse/Road.lua"].ignore = { "131" }
 files["lua/LUA/ak/data/TrackCollector.lua"].ignore = { "121", "211" }
 
 exclude_files = {
+    ".vscode",
+    "lua/LUA/SlotNames_BH2.lua",
+    "lua/LUA/ak/anlagen/**",
     "lua/LUA/ak/io/crc32lua.lua",
     "lua/LUA/ak/io/dkjson.lua",
     "lua/LUA/ak/io/json.lua",
-    "lua/LUA/ak/anlagen/**",
-    "lua/LUA/SlotNames_BH2.lua",
-    "lua/Resourcen/**/*.lua",
+    "lua/Resourcen/Anlagen/Andreas_Kreuz-Demo-Ampel/Andreas_Kreuz-Demoanlage-Ampel-Grundmodelle.lua",
+    "lua/Resourcen/Anlagen/Andreas_Kreuz-Demo-Testen/Andreas_Kreuz-Lua-Testbeispiel.lua",
+    "lua/Resourcen/Anlagen/Andreas_Kreuz-Tutorial-Ampelkreuzung/Andreas_Kreuz-Tutorial-Ampelkreuzung.lua",
+    "lua/Resourcen/Anlagen/Andreas_Kreuz-Tutorial-Ampelkreuzung/Andreas_Kreuz-Tutorial-Ampelkreuzung-2.lua",
+    "lua/modell-pakete",
+    "web-app",
+    "web-server"
 }
