@@ -84,7 +84,7 @@ function Crossing:getName() return self.name end
 
 function Crossing:getSequences() return self.sequences end
 
-function Crossing:getAktuelleSchaltung() return self.currentSequence end
+function Crossing:getCurrentSequence() return self.currentSequence end
 
 function Crossing:onSwitchedToSequence(nextSchaltung)
     for _, lane in pairs(self.lanes) do
@@ -213,20 +213,20 @@ local function switch(crossing)
     crossing:setGreenPhaseFinished(false)
     ---@type CrossingSequence
     local nextSequence = crossing:calculateNextSequence()
+    local currentSequence = crossing:getCurrentSequence()
     local nextName = crossing.name .. " " .. nextSequence:getName()
-    local currentCircuit = crossing:getAktuelleSchaltung()
-    local currentName = currentCircuit and crossing.name .. " " .. currentCircuit:getName() or crossing.name ..
+    local currentName = currentSequence and crossing.name .. " " .. currentSequence:getName() or crossing.name ..
                             " Rot fuer alle"
     local greenPhaseSeconds = nextSequence.greenPhaseSeconds
 
     local trafficLightsToTurnRed, trafficLightsToTurnGreen =
-        nextSequence:trafficLightsToTurnRedAndGreen(currentCircuit)
+        nextSequence:trafficLightsToTurnRedAndGreen(currentSequence)
     local pedestrianLightsToTurnRed, pedestrianLightsToTurnGreen =
-        nextSequence:pedestrianLightsToTurnRedAndGreen(currentCircuit)
+        nextSequence:pedestrianLightsToTurnRedAndGreen(currentSequence)
 
     -- If there is no current sequence, we need to reset all old signals
     local lastTask
-    if currentCircuit then
+    if currentSequence then
         if Crossing.debug then
             print("[Crossing ] Schalte " .. crossing:getName() .. " zu " .. nextSequence:getName() .. " (" ..
                       nextSequence:lanesNamesText() .. ")")
@@ -324,7 +324,7 @@ local function recalculateSignalInfo(crossing)
         do
             local text = ""
             for _, sequence in ipairs(sortedSequences) do
-                local farbig = sequence == crossing:getAktuelleSchaltung()
+                local farbig = sequence == crossing:getCurrentSequence()
                 if sequences[trafficLight.signalId][sequence] then
                     if sequences[trafficLight.signalId][sequence] == TrafficLightState.GREEN then
                         text = text .. "<br><j>" ..
