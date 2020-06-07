@@ -1,7 +1,7 @@
 @REM NOTE:
 @REM -----
-@REM The "java" command must be in the PATH variable
-@REM Requires a Java Runtime Environment to be installed (https://jdk.java.net/)
+@REM The "npm" command must be in the PATH variable
+@REM Requires node.js to be installed (https://nodejs.org/en/).
 
 setlocal
 SET oldDir=%CD%
