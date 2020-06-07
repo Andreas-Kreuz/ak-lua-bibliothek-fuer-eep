@@ -169,9 +169,7 @@ function Crossing:new(name, greenPhaseSeconds)
         currentSequence = nil,
         sequences = {},
         lanes = {},
-        pedestrianCrossings = {},
         trafficLights = {},
-        pedestrianLights = {},
         greenPhaseReached = true,
         greenPhaseFinished = true,
         greenPhaseSeconds = greenPhaseSeconds or 15,
@@ -205,8 +203,7 @@ local function allTrafficLights(sequences)
 
     for _, sequence in ipairs(sequences) do
         assert(sequence.getType() == "CrossingSequence", type(sequence))
-        for _, trafficLight in pairs(sequence.trafficLights) do list[trafficLight] = true end
-        for _, trafficLight in pairs(sequence.pedestrianLights) do list[trafficLight] = true end
+        for trafficLight, type in pairs(sequence.trafficLights) do list[trafficLight] = type end
     end
 
     return list
@@ -235,78 +232,47 @@ local function switch(crossing)
     crossing.nextSequence = nextSequence
 
     local nextName = crossing.name .. " " .. nextSequence:getName()
-    local currentName = crossing.name .. " " .. (currentSequence and currentSequence:getName() or " Rot fuer alle")
 
-    local turnRedTraffic, turnGreenTraffic = nextSequence:trafficLightsToTurnRedAndGreen(currentSequence)
-    local turnRedPed, turnGreenPed = nextSequence:pedestrianLightsToTurnRedAndGreen(currentSequence)
-
-    local lastTask
-    if currentSequence then
-        -- Turn all stuff of the current sequence to red
-        if Crossing.debug then
-            local msg = "[Crossing ] Schalte %s zu %s (%s)"
-            print(string.format(msg, crossing:getName(), nextSequence:getName(), nextSequence:lanesNamesText()))
-        end
-
-        -- Schedule the task where the old pedestrian lights get yellow
-        local reasonPed = "Schalte " .. currentName .. " auf Fussgaenger Rot"
-        local turnPedestrianRed = Task:new(function()
-            TrafficLight.switchAll(turnRedPed, TrafficLightState.RED, reasonPed)
-        end, "Schalte " .. currentName .. " auf Fussgaenger Rot")
-        Scheduler:scheduleTask(3, turnPedestrianRed)
-
-        -- * Hier könnte noch die DDR-Schaltung rein (2 Sekunden grün-gelb)
-
-        -- Schedule the task where the old traffic lights get yellow
-        local reasonYellow = "Schalte " .. currentName .. " auf gelb"
-        local turnTrafficLightsYellow = Task:new(function()
-            TrafficLight.switchAll(turnRedTraffic, TrafficLightState.YELLOW, reasonYellow)
-        end, reasonYellow)
-        Scheduler:scheduleTask(0, turnTrafficLightsYellow, turnPedestrianRed)
-
-        -- Schedule the task where the old traffic lights get red
-        local reasonRed = "Schalte " .. currentName .. " auf rot"
-        local turnTrafficLightsRed = Task:new(function()
-            TrafficLight.switchAll(turnRedTraffic, TrafficLightState.RED, reasonRed)
-        end, reasonRed)
-        Scheduler:scheduleTask(2, turnTrafficLightsRed, turnTrafficLightsYellow)
-        lastTask = turnTrafficLightsRed
-    else
-        -- Schedule the task where all traffic lights get red
+    if Crossing.debug then
+        local msg = "[Crossing ] Schalte %s zu %s (%s)"
+        print(string.format(msg, crossing:getName(), nextName, nextSequence:lanesNamesText()))
+    end
+    if not currentSequence then
         local reason = "Schalte initial auf rot"
-        turnRedTraffic = allTrafficLights(crossing.sequences)
+        local turnRedTraffic = allTrafficLights(crossing.sequences)
         TrafficLight.switchAll(turnRedTraffic, TrafficLightState.RED, reason)
-        lastTask = Task:new(function() end, "clear crossing")
-        Scheduler:scheduleTask(3, lastTask)
     end
 
-    -- Schedule the task where the new traffic lights are red-yellow
-    local reasonRedYellow = "Schalte " .. nextName .. " auf rot-gelb"
-    local turnNextTrafficLightsYellow = Task:new(function()
-        TrafficLight.switchAll(turnGreenTraffic, TrafficLightState.REDYELLOW, reasonRedYellow)
-        TrafficLight.switchAll(turnGreenPed, TrafficLightState.PEDESTRIAN, reasonRedYellow)
-    end, reasonRedYellow)
-    Scheduler:scheduleTask(3, turnNextTrafficLightsYellow, lastTask)
+    -- Calculate all tasks for switching in the sequence
+    local lastTask
+    local tasks = nextSequence:tasksForSwitchingFrom(currentSequence)
 
-    -- Schedule the task where the new traffic lights are green
-    local reasonGreen = "Schalte " .. nextName .. " auf gruen"
-    local turnNextTrafficLightsGreen = Task:new(function()
-        TrafficLight.switchAll(turnGreenTraffic, TrafficLightState.GREEN, reasonGreen)
+    for _, t in ipairs(tasks) do
+        Scheduler:scheduleTask(t.offset, t.task, t.precedingTask)
+        lastTask = t.task
+    end
+
+    -- After the sequence is ready, the current sequence is active
+    local greenPhaseReachedTask = Task:new(function()
+        if Crossing.debug then
+            local msg = "[Crossing ] %s: Kreuzung ist auf grün geschaltet."
+            print(string.format(msg, crossing.name))
+        end
         crossing:onSwitchedToSequence(nextSequence)
         crossing.greenPhaseReached = true
-    end, reasonGreen)
-    Scheduler:scheduleTask(1, turnNextTrafficLightsGreen, turnNextTrafficLightsYellow)
+    end, crossing.name .. " ist nun auf grün geschaltet)")
+    Scheduler:scheduleTask(0, greenPhaseReachedTask, lastTask)
 
     -- Schedule the finishing task
     local greenPhaseSeconds = nextSequence.greenPhaseSeconds
-    local changeToReadyStatus = Task:new(function()
+    local crossingFinishedTask = Task:new(function()
         if Crossing.debug then
             local msg = "[Crossing ] %s: Fahrzeuge sind gefahren, kreuzung ist dann frei."
             print(string.format(msg, crossing.name))
         end
         crossing:setGreenPhaseFinished(true)
-    end, crossing.name .. " ist nun bereit (war " .. greenPhaseSeconds .. "s auf gruen geschaltet)")
-    Scheduler:scheduleTask(greenPhaseSeconds, changeToReadyStatus, turnNextTrafficLightsGreen)
+    end, crossing.name .. " ist nun bereit zum Umschalten (war " .. greenPhaseSeconds .. "s auf grün geschaltet)")
+    Scheduler:scheduleTask(greenPhaseSeconds, crossingFinishedTask, greenPhaseReachedTask)
 end
 
 --- Diese Funktion sucht sich aus den Ampeln die mit der passenden Fahrspur
@@ -324,15 +290,10 @@ local function recalculateSignalInfo(crossing)
     table.sort(sortedSequences, function(s1, s2) return (s1.name < s2.name) end)
 
     for _, sequence in ipairs(sortedSequences) do
-        for _, tl in pairs(sequence.trafficLights) do
+        for tl, type in pairs(sequence.trafficLights) do
             tlSequences[tl.signalId] = tlSequences[tl.signalId] or {}
-            tlSequences[tl.signalId][sequence] = TrafficLightState.GREEN
-            trafficLights[tl] = true
-        end
-        for _, tl in pairs(sequence.pedestrianLights) do
-            tlSequences[tl.signalId] = tlSequences[tl.signalId] or {}
-            tlSequences[tl.signalId][sequence] = TrafficLightState.PEDESTRIAN
-            trafficLights[tl] = true
+            tlSequences[tl.signalId][sequence] = type
+            trafficLights[tl] = type
         end
     end
 
@@ -346,30 +307,31 @@ local function recalculateSignalInfo(crossing)
 
     for trafficLight in pairs(trafficLights) do
         trafficLightsToRefresh[trafficLight.signalId] = trafficLight
-        do
-            local text = ""
-            for _, sequence in ipairs(sortedSequences) do
-                local farbig = sequence == crossing:getCurrentSequence()
-                if tlSequences[trafficLight.signalId][sequence] then
-                    if tlSequences[trafficLight.signalId][sequence] == TrafficLightState.GREEN then
-                        text = text .. "<br><j>" ..
-                                   (farbig and fmt.bgGreen(sequence.name .. " (Gruen)") or
-                                       (sequence.name .. " " .. fmt.bgGreen("(Gruen)")))
-                    elseif tlSequences[trafficLight.signalId][sequence] == TrafficLightState.PEDESTRIAN then
-                        text = text .. "<br><j>" ..
-                                   (farbig and fmt.bgYellow(sequence.name .. " (FG)") or
-                                       (sequence.name .. " " .. fmt.bgYellow("(FG)")))
-                    else
-                        assert(false)
-                    end
-                else
-                    text = text .. "<br><j>" ..
-                               (farbig and fmt.bgRed(sequence.name .. " (Rot)") or
-                                   (sequence.name .. " " .. fmt.bgRed("(Rot)")))
-                end
+        local text = ""
+        for _, sequence in ipairs(sortedSequences) do
+            local farbig = sequence == crossing:getCurrentSequence()
+            local type = sequence.trafficLights[trafficLight]
+            if not type then
+                text = text .. "<br><j>" ..
+                           (farbig and fmt.bgRed(sequence.name .. " (Rot)") or
+                               (sequence.name .. " " .. fmt.bgRed("(Rot)")))
+            elseif type == CrossingSequence.Type.CAR then
+                text = text .. "<br><j>" ..
+                           (farbig and fmt.bgGreen(sequence.name .. " (Gruen)") or
+                               (sequence.name .. " " .. fmt.bgGreen("(Gruen)")))
+            elseif type == CrossingSequence.Type.PEDESTRIAN then
+                text = text .. "<br><j>" ..
+                           (farbig and fmt.bgYellow(sequence.name .. " (FG)") or
+                               (sequence.name .. " " .. fmt.bgYellow("(FG)")))
+            elseif type == CrossingSequence.Type.TRAM then
+                text = text .. "<br><j>" ..
+                           (farbig and fmt.bgBlue(sequence.name .. " (Tram)") or
+                               (sequence.name .. " " .. fmt.bgBlue("(Tram)")))
+            else
+                assert(false, "No such type: " .. type)
             end
-            trafficLight:setSequenceInfo(text)
         end
+        trafficLight:setSequenceInfo(text)
     end
 
     for _, trafficLight in pairs(trafficLightsToRefresh) do trafficLight:refreshInfo() end
@@ -390,9 +352,7 @@ function Crossing.initSequences()
                 laneFound = true
             end
             assert(laneFound, "No LANE found in sequence " .. sequence.name .. " (" .. crossing.name .. ")")
-            for v in pairs(sequence.pedestrianCrossings) do crossing.pedestrianCrossings[v.name] = v end
-            for _, v in pairs(sequence.trafficLights) do crossing.trafficLights[v.signalId] = v end
-            for _, v in pairs(sequence.pedestrianLights) do crossing.pedestrianLights[v.signalId] = v end
+            for v in pairs(sequence.trafficLights) do crossing.trafficLights[v.signalId] = v end
 
             if Crossing.debug then
                 local text = "[Crossing ] %s - %s: %s"

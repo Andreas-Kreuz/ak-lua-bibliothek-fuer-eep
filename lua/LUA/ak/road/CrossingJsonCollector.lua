@@ -54,17 +54,11 @@ local function collect(allCrossings)
                 laneSequences[lane] = laneSequences[lane] or {}
                 table.insert(laneSequences[lane], schaltung.name)
             end
-            for lane in pairs(schaltung.pedestrianCrossings) do
-                allLanes[lane] = intersection.id
-                laneSequences[lane] = laneSequences[lane] or {}
-                table.insert(laneSequences[lane], schaltung.name)
-            end
 
-            for id, trafficLight in pairs(schaltung.trafficLights) do trafficLights[id] = trafficLight end
-            for id, trafficLight in pairs(schaltung.pedestrianLights) do trafficLights[id] = trafficLight end
+            for trafficLight in pairs(schaltung.trafficLights) do trafficLights[trafficLight] = true end
         end
 
-        for _, tl in pairs(trafficLights) do
+        for tl in pairs(trafficLights) do
             local trafficLight = {
                 id = tl.signalId,
                 signalId = tl.signalId,

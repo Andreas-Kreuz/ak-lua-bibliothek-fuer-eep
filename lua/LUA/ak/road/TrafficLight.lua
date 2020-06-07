@@ -102,6 +102,31 @@ function TrafficLight:setSequenceInfo(sequenceInfo) self.sequenceInfo = sequence
 --
 function TrafficLight:setLaneInfo(laneInfo) self.laneInfo = laneInfo end
 
+function TrafficLight:showInfoText(showInfo)
+    if self.signalId > 0 then
+        EEPShowInfoSignal(self.signalId, showInfo)
+    else
+        for l in pairs(self.lightStructures) do
+            if l.redStructure then
+                EEPShowInfoStructure(l.redStructure, showInfo)
+                break
+            end
+        end
+    end
+end
+function TrafficLight:changeInfoText(infoText)
+    if self.signalId > 0 then
+        EEPChangeInfoSignal(self.signalId, infoText)
+    else
+        for l in pairs(self.lightStructures) do
+            if l.redStructure then
+                EEPChangeInfoStructure(l.redStructure, infoText)
+                break
+            end
+        end
+    end
+end
+
 --- Stellt die vorher gesetzten Tipp-Texte dar.
 --
 function TrafficLight:refreshInfo()
@@ -110,11 +135,10 @@ function TrafficLight:refreshInfo()
     local showRequests = Crossing.showRequestsOnSignal and self.laneInfo:len() > 0
     local showInfo = showSwitching or showAllSignals or showRequests
 
-    EEPShowInfoSignal(self.signalId, showInfo)
+    self:showInfoText(showInfo)
     if showInfo then
 
-        local infoText = fmt.appendUpTo1023("", "<j><b>" .. self.name .. "</b> (Signal " .. self.signalId ..
-                                                ")</j>")
+        local infoText = fmt.appendUpTo1023("", "<j><b>" .. self.name .. "</b> (Signal " .. self.signalId .. ")</j>")
         infoText = fmt.appendUpTo1023(infoText, "<br>" .. self.trafficLightModel.name)
 
         if showSwitching and self.sequenceInfo then
@@ -135,7 +159,7 @@ function TrafficLight:refreshInfo()
             infoText = fmt.appendUpTo1023(infoText, self.laneInfo)
         end
 
-        EEPChangeInfoSignal(self.signalId, infoText)
+        self:changeInfoText(infoText)
     end
 end
 

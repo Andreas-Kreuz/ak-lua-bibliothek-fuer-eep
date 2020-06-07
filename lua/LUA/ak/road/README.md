@@ -182,9 +182,11 @@ Wird dazu verwendet, mehrere Fahrspuren gleichzeitig zu schalten. Es muss sicher
 
 - `function CrossingSequence:new(name)` - legt eine neue Schaltung an
 
-- `function CrossingSequence:addTrafficLights(trafficLight1)` fügt eine Ampel hinzu, für die mit den Zyklen Rot, Rot-Gelb, Gruen und Gelb geschaltet wird.
+- `function CrossingSequence:addCarLights(K1)` fügt eine Ampel hinzu, für die mit den Zyklen Rot, Rot-Gelb, Gruen und Gelb geschaltet wird.
 
-- `function CrossingSequence:addPedestrianLights(pedestrianLight1)` fügt eine Fahrspur hinzu, für die mit den Zyklen Rot, Gruen_Fussgaenger geschaltet wird.
+- `function CrossingSequence:addTramLights(S1)` fügt eine Ampel hinzu, für die mit den Zyklen Rot, Gruen und Gelb geschaltet wird.
+
+- `function CrossingSequence:addPedestrianLights(F1)` fügt eine Fahrspur hinzu, für die mit den Zyklen Rot, Gruen_Fussgaenger geschaltet wird.
 
 ## Klasse `Crossing`
 

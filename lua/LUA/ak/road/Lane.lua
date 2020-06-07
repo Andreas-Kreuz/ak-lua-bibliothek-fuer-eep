@@ -10,6 +10,24 @@ local fmt = require("ak.core.eep.TippTextFormatter")
 local Lane = {}
 Lane.debug = false
 
+---@class LaneRequestType
+Lane.RequestType = {
+    NICHT_VERWENDET = "NICHT VERWENDET",
+    ANFORDERUNG = "ANFORDERUNG",
+    NORMAL = "NORMAL",
+    FUSSGAENGER = "FUSSGAENGER"
+}
+---@class LaneDirection
+Lane.Directions = {
+    LEFT = "LEFT",
+    HALF_LEFT = "HALF-LEFT",
+    STRAIGHT = "STRAIGHT",
+    HALF_RIGHT = "HALF-RIGHT",
+    RIGHT = "RIGHT"
+}
+---@class LaneType
+Lane.Type = {BUS = "BUS", CAR = "CAR", TRAM = "TRAM", PEDESTRIAN = "PEDESTRIAN", BICYCLE = "BICYCLE"}
+
 -- Might bring some performance
 local EEPGetTrainRoute = EEPGetTrainRoute
 local EEPRegisterRoadTrack = EEPRegisterRoadTrack
@@ -202,23 +220,7 @@ end
 --------------------
 -- Klasse Fahrspur
 --------------------
----@class LaneRequestType
-Lane.RequestType = {
-    NICHT_VERWENDET = "NICHT VERWENDET",
-    ANFORDERUNG = "ANFORDERUNG",
-    NORMAL = "NORMAL",
-    FUSSGAENGER = "FUSSGAENGER"
-}
----@class LaneDirection
-Lane.Directions = {
-    LEFT = "LEFT",
-    HALF_LEFT = "HALF-LEFT",
-    STRAIGHT = "STRAIGHT",
-    HALF_RIGHT = "HALF-RIGHT",
-    RIGHT = "RIGHT"
-}
----@class LaneType
-Lane.Type = {CAR = "CAR", TRAM = "TRAM", PEDESTRIAN = "PEDESTRIAN", BICYCLE = "BICYCLE"}
+
 
 function Lane.getType() return "Lane" end
 

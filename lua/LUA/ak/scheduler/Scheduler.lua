@@ -84,9 +84,10 @@ end
 ---@param precedingTask Task optional - wenn angegeben, wird die neue Aktion eingeplant, wenn die zeitspanneInSekunden
 -- nach Ausfuehren der vorgaengerAktion vergangen ist
 function Scheduler:scheduleTask(offsetInSeconds, newTask, precedingTask)
-    assert(offsetInSeconds)
-    assert(newTask)
+    assert(offsetInSeconds, "Specify offsetInSeconds")
+    assert(newTask, "Specify newTask")
     assert(offsetInSeconds < secondsPerDay)
+    assert(offsetInSeconds >= 0)
 
     local previousTaskFound = false
     if precedingTask then

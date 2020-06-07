@@ -35,7 +35,7 @@ insulate("Crossing", function()
     local StorageUtility = require("ak.storage.StorageUtility")
     local L1, L2, L3, L4
     local lane1, lane2, lane3, lane4
-    local K1, K2, K3, K5, K6, K7, K8, K9
+    local K1, K2, K3, K5, K6, K7, K8, K9, S1, S2
     local sequenceA, sequenceB, sequenceC
     local crossing
 
@@ -82,10 +82,10 @@ insulate("Crossing", function()
         K9 = TrafficLight:new("K9", 31, TrafficLightModel.JS2_3er_mit_FG) -- SOUTH STRAIGHT (right)
 
 
-        local S1 = TrafficLight:new("S1", -1, TrafficLightModel.NONE, "#5528_Straba Signal Halt",
+        S1 = TrafficLight:new("S1", -1, TrafficLightModel.NONE, "#5528_Straba Signal Halt",
         "#5531_Straba Signal geradeaus", "#5529_Straba Signal anhalten",
         "#5530_Straba Signal A")
-        local S2 = TrafficLight:new("S2", -1, TrafficLightModel.NONE, "#5435_Straba Signal Halt",
+        S2 = TrafficLight:new("S2", -1, TrafficLightModel.NONE, "#5435_Straba Signal Halt",
         "#5521_Straba Signal geradeaus", "#5520_Straba Signal anhalten",
         "#5518_Straba Signal A")
 
@@ -103,23 +103,23 @@ insulate("Crossing", function()
 
         ---@type CrossingSequence
         sequenceA = crossing:newSequence("Sequence A - North South")
-        sequenceA:addTrafficLights(K1)
-        sequenceA:addTrafficLights(K2)
-        sequenceA:addTrafficLights(S1)
-        sequenceA:addTrafficLights(K9)
-        sequenceA:addTrafficLights(S2)
+        sequenceA:addCarLights(K1)
+        sequenceA:addCarLights(K2)
+        sequenceA:addTramLights(S1)
+        sequenceA:addCarLights(K9)
+        sequenceA:addTramLights(S2)
         sequenceA:addPedestrianLights(K3)
         sequenceA:addPedestrianLights(K6)
 
         sequenceB = crossing:newSequence("Sequence B - South + East Right")
-        sequenceB:addTrafficLights(K7)
-        sequenceB:addTrafficLights(K8)
-        sequenceB:addTrafficLights(K9)
+        sequenceB:addCarLights(K7)
+        sequenceB:addCarLights(K8)
+        sequenceB:addCarLights(K9)
 
         sequenceC = crossing:newSequence("Sequence C - East only")
-        sequenceC:addTrafficLights(K3)
-        sequenceC:addTrafficLights(K5)
-        sequenceC:addTrafficLights(K6)
+        sequenceC:addCarLights(K3)
+        sequenceC:addCarLights(K5)
+        sequenceC:addCarLights(K6)
         sequenceC:addPedestrianLights(K1)
         sequenceC:addPedestrianLights(K2)
         sequenceC:addPedestrianLights(K8)
@@ -153,13 +153,17 @@ insulate("Crossing", function()
             assert.is_truthy(sequenceA.lanes[lane4])
         end)
         it("TrafficLights are there", function()
-            assert.is_same(K1, sequenceA.trafficLights[23])
-            assert.is_same(K2, sequenceA.trafficLights[24])
-            assert.is_same(K9, sequenceA.trafficLights[31])
+            assert.is_same(Lane.Type.CAR, sequenceA.trafficLights[K1])
+            assert.is_same(Lane.Type.CAR, sequenceA.trafficLights[K2])
+            assert.is_same(Lane.Type.CAR, sequenceA.trafficLights[K9])
         end)
         it("Pedestrian TrafficLights are there", function()
-            assert.is_same(K3, sequenceA.pedestrianLights[25])
-            assert.is_same(K6, sequenceA.pedestrianLights[28])
+            assert.is_same(Lane.Type.PEDESTRIAN, sequenceA.trafficLights[K3])
+            assert.is_same(Lane.Type.PEDESTRIAN, sequenceA.trafficLights[K6])
+        end)
+        it("Tra, TrafficLights are there", function()
+            assert.is_same(Lane.Type.TRAM, sequenceA.trafficLights[S1])
+            assert.is_same(Lane.Type.TRAM, sequenceA.trafficLights[S2])
         end)
     end)
 
@@ -294,23 +298,23 @@ insulate("Check traffic light sequence", function()
 
     ---@type CrossingSequence
     sequenceA = crossing:newSequence("Sequence A - North South")
-    sequenceA:addTrafficLights(K1)
-    sequenceA:addTrafficLights(K2)
-    sequenceA:addTrafficLights(K9)
+    sequenceA:addCarLights(K1)
+    sequenceA:addCarLights(K2)
+    sequenceA:addCarLights(K9)
     sequenceA:addPedestrianLights(K3)
     sequenceA:addPedestrianLights(K6)
 
     ---@type CrossingSequence
     sequenceB = crossing:newSequence("Sequence B - South + East Right")
-    sequenceB:addTrafficLights(K7)
-    sequenceB:addTrafficLights(K8)
-    sequenceB:addTrafficLights(K9)
+    sequenceB:addCarLights(K7)
+    sequenceB:addCarLights(K8)
+    sequenceB:addCarLights(K9)
 
     ---@type CrossingSequence
     sequenceC = crossing:newSequence("Sequence C - East only")
-    sequenceC:addTrafficLights(K3)
-    sequenceC:addTrafficLights(K5)
-    sequenceC:addTrafficLights(K6)
+    sequenceC:addCarLights(K3)
+    sequenceC:addCarLights(K5)
+    sequenceC:addCarLights(K6)
     sequenceC:addPedestrianLights(K1)
     sequenceC:addPedestrianLights(K2)
     sequenceC:addPedestrianLights(K8)
@@ -588,10 +592,12 @@ insulate("Check traffic light sequence", function()
     end
 
     _G.EEPTime = _G.EEPTime + 200
+    ModuleRegistry.runTasks() -- First Set new to green
+    _G.EEPTime = _G.EEPTime + 200
     ModuleRegistry.runTasks() -- First Set ready -- Scheduler.debug = true
 
     do
-        local step7Ready = crossing:isGreenPhaseFinished() --                     step7
+        local step7Ready = crossing:isGreenPhaseFinished() --         step7
         local step7SignalAxisL1 = EEPGetSignal(11) -- store signal    step7
         local step7SignalAxisL2 = EEPGetSignal(12) -- store signal    step7
         local step7SignalAxisL3 = EEPGetSignal(13) -- store signal    step7
