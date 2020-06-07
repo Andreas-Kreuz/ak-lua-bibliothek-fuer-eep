@@ -11,13 +11,13 @@
 - Einfache Schaltung: Es kann direkt die Fahrspur-Ampel angegeben werden: `switchingA:addTrafficLight(tl1)`
 
   ```lua
-    local c1 = Crossing:new("Bahnhofstr. - Hauptstr.")
-    local K1 = TrafficLight:new("K1", 34, TrafficLightModel.JS2_3er_mit_FG, { "STRAIGHT", "RIGHT" })
+  local c1 = Crossing:new("Bahnhofstr. - Hauptstr.")
+  local K1 = TrafficLight:new("K1", 34, TrafficLightModel.JS2_3er_mit_FG, { "STRAIGHT", "RIGHT" })
 
-    -- Einfache Steuerung direkt über die Fahrspur-Ampel K1 - diese ist sichtbar und wird direkt verwendet
-    c1Lane1 = c1:newLane("Fahrspur 1 - K1", 101, K1)
-    sequenceA = c1:newSequence("Schaltung A")
-    sequenceA:addTrafficLight(K1)
+  -- Einfache Steuerung direkt über die Fahrspur-Ampel K1 - diese ist sichtbar und wird direkt verwendet
+  c1Lane1 = c1:newLane("Fahrspur 1 - K1", 101, K1)
+  sequenceA = c1:newSequence("Schaltung A")
+  sequenceA:addTrafficLight(K1)
   ```
 
 - Komplexe Schaltung: Die Fahrspur darf bei mehreren Ampeln fahren `lane:driveOn(trafficLight, [route])`.
@@ -81,7 +81,6 @@
   - ~~`ak.strasse.KreuzungJsonCollector`~~ => `ak.road.CrossingJsonCollector`
   - ~~`ak.strasse.KreuzungLuaModul`~~ => `ak.road.CrossingLuaModul`
   - ~~`ak.strasse.KreuzungWebConnector`~~ => `ak.road.CrossingWebConnector`
-
 
 ## 0.9.0
 
