@@ -83,25 +83,25 @@ local F6 = K7
 --   |        |   |    |           |   +-- Modell kann rot, gelb, gruen und FG schalten
 -- Die Fahrspur N wird durch die Fahrspur-Ampel K1 (Signal ID 07) gesteuert
 -- K2 muss später gleichzeitig leuchten (Signal ID 08)
-n = Lane:new("N", 100, K1)
+n = Lane:new("N", 100, K1, {Lane.Directions.LEFT, Lane.Directions.RIGHT})
 
 -- Die Fahrspur O1 wird durch die Fahrspur-Ampel K2 (Signal 09) gesteuert
 -- K4 muss später gleichzeitig leuchten (Signal ID 10)
-o1 = Lane:new("O1", 102, K3)
+o1 = Lane:new("O1", 102, K3, {Lane.Directions.STRAIGHT, Lane.Directions.RIGHT})
 
 -- Fahrspuren im Westen
 -- Die Fahrspur W1 wird durch die Fahrspur-Ampel K5 (Signal 12) gesteuert
-w1 = Lane:new("W1", 104, K5)
+w1 = Lane:new("W1", 104, K5, {Lane.Directions.STRAIGHT})
 
 -- Die Fahrspur W2 wird durch die Fahrspur-Ampel K6 (Signal 13) gesteuert
 -- K7 muss später gleichzeitig leuchten (Signal ID 11)
-w2 = Lane:new("W2", 105, K6)
+w2 = Lane:new("W2", 105, K6, {Lane.Directions.LEFT})
 
 -- Fahrspuren fuer Strassenbahnen:
-os = Lane:new("OS", 107, S1)
+os = Lane:new("OS", 107, S1, {Lane.Directions.STRAIGHT}, Lane.Type.TRAM)
 os:useSignalForQueue() -- Erfasst Anforderungen, wenn ein Fahrzeug an Signal 14 steht
 
-ws = Lane:new("WS", 108, S2)
+ws = Lane:new("WS", 108, S2, {Lane.Directions.STRAIGHT}, Lane.Type.TRAM)
 ws:useTracklForQueue(2) -- Erfasst Anforderungen, wenn ein Fahrzeug auf Strasse 2 steht
 
 --------------------------------------------------------------
@@ -109,6 +109,9 @@ ws:useTracklForQueue(2) -- Erfasst Anforderungen, wenn ein Fahrzeug auf Strasse 
 --------------------------------------------------------------
 -- Eine Schaltung bestimmt, welche Fahrspuren gleichzeitig auf
 -- grün geschaltet werden dürfen, alle anderen sind rot
+os:showRequestsOn(S1)
+ws:showRequestsOn(S2)
+
 
 --- Tutorial 2: Schaltung 1
 local sch1 = CrossingSequence:new("Schaltung 1")
