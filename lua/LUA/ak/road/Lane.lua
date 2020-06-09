@@ -221,7 +221,6 @@ end
 -- Klasse Fahrspur
 --------------------
 
-
 function Lane.getType() return "Lane" end
 
 function Lane:getName() return self.name end
@@ -325,6 +324,9 @@ function Lane:resetQueueFromRoadTracks()
 end
 
 function Lane:showRequestsOn(trafficLight, ...)
+    assert(self and self.getType and "function" == type(self.getType) and self.getType() == "Lane",
+           "Did you use colons instead of a dot myLane:showRequestsOn(...)")
+
     local routes = ... and {...} or {"!ALL!"}
     self.requestTrafficLights = self.requestTrafficLights or {}
     for _, route in ipairs(routes) do
