@@ -2,7 +2,7 @@
 layout: page_with_toc
 title: Der Kern der App
 subtitle: Dieser Teil enthält das Standardmodul
-permalink: LUA/ak/core/
+permalink: lua/ak/core/
 feature-img: "/docs/assets/headers/SourceCode.png"
 img: "/docs/assets/headers/SourceCode.png"
 ---

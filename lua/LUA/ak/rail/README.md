@@ -2,7 +2,7 @@
 layout: page_with_toc
 title: In Arbeit
 subtitle: Zugsteuerung ist noch in Arbeit - hier ist noch viel Geduld erforderlich.
-permalink: LUA/ak/rail/
+permalink: lua/ak/rail/
 feature-img: "/docs/assets/headers/SourceCode.png"
 img: "/docs/assets/headers/SourceCode.png"
 ---

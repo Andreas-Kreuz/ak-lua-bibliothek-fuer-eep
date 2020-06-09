@@ -2,7 +2,7 @@
 layout: page_with_toc
 title: Simuliere den Simulator!
 subtitle: Mit diesem Skript kannst Du Deine Skripte ohne EEP testen.<br>Binde diese Skripte in ein Testskript ein und prüfe Deine Schaltungen.
-permalink: LUA/ak/core/eep/
+permalink: lua/ak/core/eep/
 feature-img: "/docs/assets/headers/SourceCode.png"
 img: "/docs/assets/headers/SourceCode.png"
 ---

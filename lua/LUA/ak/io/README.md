@@ -2,7 +2,7 @@
 layout: page_with_toc
 title: Kommunikation mit dem Server
 subtitle: Die Dateien in diesem Paket dienen dazu mit EEP-Web zu kommunizieren.
-permalink: LUA/ak/io/
+permalink: lua/ak/io/
 feature-img: "/docs/assets/headers/SourceCode.png"
 img: "/docs/assets/headers/SourceCode.png"
 ---
