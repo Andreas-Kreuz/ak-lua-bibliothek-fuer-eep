@@ -207,8 +207,7 @@ Schreibe danach die Fahrspuren in das Skript:
 --   |        |     +------------------------- Speicher ID - um die Anzahl der Fahrzeuge
 --   |        |     |                                        und die Wartezeit zu speichern
 --   |        |     |      +------------------ Fahrspur-Ampel - da wartet der Verkehr
---   |        |     |      |           +------ Signal-ID dieser Ampel
---   |        |     |      |           |   +-- Modell kann rot, gelb, gruen und FG schalten
+--   |        |     |      |  +--------------- Richtungen dieser Fahrspur
 n1 = Lane:new("N1", 100, K1, {'STRAIGHT', 'RIGHT'})
 n2 = Lane:new("N2", 101, K3, {'LEFT'}) -- zusätzlich in der Schaltung K2
 
