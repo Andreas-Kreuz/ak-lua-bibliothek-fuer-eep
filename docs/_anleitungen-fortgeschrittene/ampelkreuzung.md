@@ -209,19 +209,19 @@ Schreibe danach die Fahrspuren in das Skript:
 --   |        |     |      +------------------ Fahrspur-Ampel - da wartet der Verkehr
 --   |        |     |      |  +--------------- Richtungen dieser Fahrspur
 n1 = Lane:new("N1", 100, K1, {'STRAIGHT', 'RIGHT'})
-n2 = Lane:new("N2", 101, K3, {'LEFT'}) -- zusätzlich in der Schaltung K2
+n2 = Lane:new("N2", 101, K3, {'LEFT'}) -- zusätzlich in der Schaltung: K2
 
 -- Fahrspuren im Osten
 o1 = Lane:new("O1", 104, K4, {'STRAIGHT', 'RIGHT'})
-o2 = Lane:new("O2", 105, K6, {'LEFT'}) -- zusätlich in der Schaltung K5
+o2 = Lane:new("O2", 105, K6, {'LEFT'}) -- zusätzlich in der Schaltung: K5
 
 -- Fahrspuren im Sueden
 s1 = Lane:new("S1", 107, K7, {'STRAIGHT', 'RIGHT'})
-s2 = Lane:new("S2", 108, K8, {"LEFT"}) -- zusätlich in der Schaltung K9
+s2 = Lane:new("S2", 108, K8, {"LEFT"}) -- zusätzlich in der Schaltung: K9
 
 -- Fahrspuren im Westen
 w1 = Lane:new("W1", 111, K10, {'STRAIGHT', 'RIGHT'})
-w2 = Lane:new("W2", 112, K12, {'LEFT'}) -- Zusätzlich in der Schaltung K11
+w2 = Lane:new("W2", 112, K12, {'LEFT'}) -- zusätzlich in der Schaltung: K11
 ```
 
 - Klicke in EEP auf _"Skript neu laden"_ und wechsle in den 3D-Modus. <br> 😀 **Wenn Du alles richtig gemacht hast**, siehst Du weiterhin an allen Signalen Tipp-Texte mit den IDs dieser Signale und keine Fehlermeldung im Log.
