@@ -43,4 +43,4 @@ Jetzt kannst Du:
 
 - [EEP-Web einrichten](../anleitungen-anfaenger/einrichten-von-eep-web)
 - die [Anleitung für eine automatische Ampelkreuzung](../anleitungen-fortgeschrittene/ampelkreuzung) starten
-- die [Dokumentation der Bibliothek](../LUA/ak/) lesen.
+- die [Dokumentation der Bibliothek](../lua/ak/) lesen.
