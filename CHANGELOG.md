@@ -192,12 +192,12 @@ Der Code wurde wie folgt geändert:
 
 ## v0.5.0
 
-- ⭐ Neu: Enthält EEP-Web (Tutorial **[EEP-Web installieren](https://andreas-kreuz.github.io/ak-lua-bibliothek-fuer-eep/anleitungen-fortgeschrittene/einrichten-von-eep-web)**)
+- ⭐ Neu: Enthält EEP-Web (Tutorial **[EEP-Web installieren](https://andreas-kreuz.github.io/ak-lua-bibliothek-fuer-eep/anleitungen-anfaenger/einrichten-von-eep-web)**)
 - ⭐ Neu: Demo-Anlagen enthalten nun den Code für EEP-Web
 
   - **EEP-Web nutzen**
 
-    Verwende eine der mitgelieferten Demo-Anlagen um EEP-Web zu nutzen (**[Installation](https://andreas-kreuz.github.io/ak-lua-bibliothek-fuer-eep/anleitungen-fortgeschrittene/einrichten-von-eep-web)**).
+    Verwende eine der mitgelieferten Demo-Anlagen um EEP-Web zu nutzen (**[Installation](https://andreas-kreuz.github.io/ak-lua-bibliothek-fuer-eep/anleitungen-anfaenger/einrichten-von-eep-web)**).
 
     In Deinem eigenden Code brauchst Du zwei Zeilen:
 

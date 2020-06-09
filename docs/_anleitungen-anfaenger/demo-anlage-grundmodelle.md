@@ -27,7 +27,3 @@ Diese Anlage wurde mit EEP 14 erstellt und besteht aus zwei Kreuzungen:
 - Hier handelt es sich um eine Einmündung mit einzelnen Spuren.
 
 - Für keine der Fahrspuren werden die Fahrzeuge gezählt, so dass die Fahrspuren, die am längsten Rot waren, bei der Schaltung auf grün bevorzugt werden.
-
-## Herunterladen
-
-_[Alle Dateien zum Herunterladen](https://github.com/Andreas-Kreuz/ak-lua-bibliothek-fuer-eep/releases)_

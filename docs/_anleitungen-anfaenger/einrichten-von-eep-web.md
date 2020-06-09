@@ -58,7 +58,7 @@ date: 2018-11-19
 
    ![Verzeichnis wählen](../assets/tutorial/eep-web-installation/02-server-verzeichnis-ok.png)
 
-   🍀 Du hast es bis hierhin geschafft, nun wünsche ich viel Spaß beim Benutzen von <http://localhost:3000.>
+   🍀 Du hast es bis hierhin geschafft, nun wünsche ich viel Spaß beim Benutzen von `http://localhost:3000`.
 
-   ⭐ Wenn Du den Server von einem anderen PC erreichen möchtest, benutze statt `localhost` Deine IP-Address
+   ⭐ Wenn Du den Server von einem anderen PC erreichen möchtest, benutze statt `localhost` Deine IP-Addresse
 z.B. `http://192.168.0.99:3000` oder Deinen Rechnernmamen, z.B. `http://deinrechnername:3000`.

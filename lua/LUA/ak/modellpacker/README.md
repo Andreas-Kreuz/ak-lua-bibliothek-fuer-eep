@@ -38,4 +38,4 @@ Das Skript liegt in `ak.modellpacker.AkModellPacker`.
 Alle Anlagen und die Lua-Bibliothek dieser Webseite werden automatisch verpackt - Siehe [Modellinstallation.lua](https://github.com/Andreas-Kreuz/ak-lua-bibliothek-fuer-eep/blob/master/LUA/ModellInstallation.lua)
 
 Du benötigst ein in Windows installiertes Lua - siehe:
-[Demo-Anlage-Testen](../../../_anleitungen-fortgeschrittene/demo-anlage-testen.md)
+[Demo-Anlage-Testen](../../../anleitungen-fortgeschrittene/demo-anlage-testen)

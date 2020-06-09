@@ -102,7 +102,7 @@ _Rückgabewert:_
 
 - Die Ampel (Typ `TrafficLight`)
 
-Passende Modelle für die Steuerung der Immobilien mit Licht findest Du im Modellset V10MA1F011. Download unter <http://eep.euma.de/download/> - Im Modell befindet sich eine ausführliche Doku.
+Passende Modelle für die Steuerung der Immobilien mit Licht findest Du im Modellset V10MA1F011. Download unter <https://eep.euma.de/downloads.php> - Im Modell befindet sich eine ausführliche Doku.
 
 ### Achssteuerung einer Immobilie
 

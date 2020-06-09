@@ -21,7 +21,7 @@ Das Skript `EepSimulator` stellt alle dokumentierten Funktionen von EEP zur Verf
 * Danach wird das eigentliche Skript geladen:<br>
   `require 'anlagen-script'`
 
-Ein ausführlicheres Tutorial zu dem Thema findest Du hier: **[Demo-Anlage-Testen](../../../_anleitungen-fortgeschrittene/demo-anlage-testen.md)**
+Ein ausführlicheres Tutorial zu dem Thema findest Du hier: **[Demo-Anlage-Testen](../../../../anleitungen-fortgeschrittene/demo-anlage-testen)**
 
 ## Beispiel
 

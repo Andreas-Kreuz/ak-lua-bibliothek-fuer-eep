@@ -19,13 +19,13 @@ Dafür benötigst Du folgendes:
 
 - **EEP 14** und einen **Editor für Lua-Skripte** Deiner Wahl, z.B. Notepad++
 - **Zettel und Stift** - z.B.: [_Kreuzungsaufbau.pdf_](../assets/Kreuzungsaufbau.pdf)
-- Die **Anlage Andreas_Kreuz-Tutorial-Ampelkreuzung.anl3** ([_Download_](https://github.com/Andreas-Kreuz/ak-lua-bibliothek-fuer-eep/releases))
+- Die **Anlage Andreas_Kreuz-Tutorial-Ampelkreuzung.anl3** (Download auf der STartseite)
   <br>Für den Betrieb dieser Anlage brauchst Du folgende **Modelle**:
 
   | 1Spur-Großstadtstraßen-System-Grundset (V10NAS30002) | _[Download](https://eepshopping.de/1spur-gro%C3%83%C6%92%C3%82%C5%B8stadtstra%C3%83%C6%92%C3%82%C5%B8en-system-grundset%7C7656.html)_ |
   | 1Spur-Ergänzungsset | _[Download](https://www.eepforum.de/filebase/file/215-freeset-zu-meinem-1spur-strassensystem/)_ |
   | Ampel-Baukasten für mehrspurige Straßenkreuzungen (V80NJS20039) | _[Download](https://eepshopping.de/ampel-baukasten-f%C3%83%C6%92%C3%82%C2%BCr-mehrspurige-stra%C3%83%C6%92%C3%82%C5%B8enkreuzungen%7C6624.html)_ |
-  | Straßenbahnsignale als Immobilien (V80MA1F010 und V10MA1F011) | _[Download](http://www.eep.euma.de/download/)_ |
+  | Straßenbahnsignale als Immobilien (V80MA1F010 und V10MA1F011) | _[Download](http://www.eep.euma.de/download.php)_ |
 
 ⭐ **_Tipp_**: Die Lua-Bibliothek ist in der Installation der Anlage enthalten. Möchtest Du Deine eigene Anlage verwenden, so kannst Du die Bibliothek wie folgt installieren: [_Installation der Lua-Bibliothek von Andreas Kreuz_](../anleitungen-anfaenger/installation)
 
@@ -163,7 +163,7 @@ Erst im nächsten Schritt werden mehrere Ampeln der _Fahrspuren_ in Schaltungen 
 
 ## Schreibe die Ampeln und Fahrspuren in das Haupt-Skript
 
-⭐ _**Tipp:** In EEP sind viele Signalmodelle "Ampel" unterschiedlich gesteuert, was die Rot-, Grün- und Gelb-Schaltung angeht. Damit jede Ampel Deiner Kreuzung verwendet werden kann und automatisch funktioniert, gibt es_ `TrafficLightModel` _. In diesem Lua-Skript sind die Signalstellungen der Ampeln hinterlegt. Weitere Informationen findest Du unter: [Unterstütze weitere Ampeln in TrafficLightModel](../LUA/ak/strasse/)_
+⭐ _**Tipp:** In EEP sind viele Signalmodelle "Ampel" unterschiedlich gesteuert, was die Rot-, Grün- und Gelb-Schaltung angeht. Damit jede Ampel Deiner Kreuzung verwendet werden kann und automatisch funktioniert, gibt es_ `TrafficLightModel` _. In diesem Lua-Skript sind die Signalstellungen der Ampeln hinterlegt. Weitere Informationen findest Du unter: [Unterstütze weitere Ampeln in TrafficLightModel](../LUA/ak/road/)_
 
 Schreibe nun die Ampeln in das Haupt-Skript.
 
@@ -356,7 +356,7 @@ Erinnerst Du Dich den Code, der die Tipp-Texte zu den Signalen hinzugefügt hat?
 
 ![BILD](../assets/tutorial/kreuzung/eep-web.png)
 
-Funktioniert nicht? [EEP-Web einrichten](../anleitungen-fortgeschrittene/einrichten-von-eep-web)
+Funktioniert nicht? [EEP-Web einrichten](../anleitungen-anfaenger/einrichten-von-eep-web)
 
 # Geschafft
 

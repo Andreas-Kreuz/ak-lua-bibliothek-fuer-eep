@@ -41,6 +41,6 @@ Die Bibliothek wurde in das Unterverzeichnis `LUA\ak` Deiner EEP-Installation in
 
 Jetzt kannst Du:
 
-- [EEP-Web einrichten](../anleitungen-fortgeschrittene/einrichten-von-eep-web)
+- [EEP-Web einrichten](../anleitungen-anfaenger/einrichten-von-eep-web)
 - die [Anleitung für eine automatische Ampelkreuzung](../anleitungen-fortgeschrittene/ampelkreuzung) starten
 - die [Dokumentation der Bibliothek](../LUA/ak/) lesen.
