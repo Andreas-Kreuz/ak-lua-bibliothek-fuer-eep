@@ -90,7 +90,7 @@ Um Deine Achsenampel zu verwenden, kannst Du sie einem der folgenden Signale zuw
    Dummy1:addAxisStructure("#0141_Immo", "Achsenname", 0, 20 ,40, 80, 90, 100)
    ```
 
-## Ampel mit Lichtsteuerung von Immobilien nutzen
+## Ampel mit Lichtsteuerung nutzen
 
 ![Immobilien mit Licht als Signale](../../assets/tutorial/tutorial2/immo-ampel.jpg)
 
@@ -152,11 +152,11 @@ Um Deine Achsenampel zu verwenden, kannst Du sie einem der folgenden Signale zuw
 
 Siehe auch _[Tutorial Immobilien-Ampel](tutorial2-immobilien-ampel)_
 
-## Mehrere Ampeln in einer Fahrspur nutzen
+## Mehrere Ampeln in einer Fahrspur
 
 Es muss immer genau eine Fahrspur-Ampel geben, an der die Autos warten.
 
-### ... alle Ampeln für die Fahrspur werden gleich geschaltet
+### ... synchron schalten
 
 Du möchtest mehrere Ampeln für eine Fahrspur nutzen und diese immer gleichzeitig schalten?
 
@@ -178,7 +178,7 @@ c1Sequence1 = c1:newSequence("S1")           -- Schaltung anlegen
 c1Sequence1:addCarLights(K1, K2, K3)         -- Alle 3 Ampeln zur Schaltung hinzufügen
 ```
 
-### ... es gibt unterschiedlich geschaltete Ampeln für die Fahrspur
+### ... für unterschiedliche Fahrzeuge
 
 Im folgenden Beispiel gibt es zwei "normale" Ampel (K4, K5) und einen Rechtsabbieger-Pfeil (K6).
 
@@ -229,7 +229,7 @@ c1Sequence3 = c1:newSequence("S3")           -- Schaltung 3 anlegen
 c1Sequence3:addCarLights(K4, K5)             -- Ampel K4 und K5 als Auto-Ampel hinzufügen
 ```
 
-### Tram, Bus, Fußgänger und Kfz unterscheiden
+## Tram, Bus, Fußgänger und Kfz unterscheiden
 
 Tram-Ampeln verhalten sich anders, als Ampeln für den Kfz-Verkehr:
 
@@ -260,9 +260,9 @@ c1Sequence1:addTramLights(S1)
 c1Sequence1:addPedestrianLights(F1)
 ```
 
-## Tram und Bus
+# Tram und Bus
 
-### Anforderungen an Bus- und Tram-Ampeln anzeigen
+## Anforderungen an Bus- und Tram-Ampeln anzeigen
 
 1. Konfiguriere die Straßenbahn-Ampeln (im Beispiel als Immobilien-Signal)
 
