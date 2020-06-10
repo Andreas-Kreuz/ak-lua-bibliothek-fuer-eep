@@ -28,7 +28,7 @@ img: "/docs/assets/headers/SourceCode.png"
       <td>Erzeuge installierbare Dateien für EEP</td>
     </tr>
     <tr>
-      <td>⚡&nbsp;<a class="text-muted" href="rail/">ak/rail</a></td>
+      <td><a class="text-muted" href="rail/">⚡&nbsp;ak/rail</a></td>
       <td>In Arbeit<span class="text-muted"> - Steuerung für die Eisenbahn</span></td>
     </tr>
     <tr>
