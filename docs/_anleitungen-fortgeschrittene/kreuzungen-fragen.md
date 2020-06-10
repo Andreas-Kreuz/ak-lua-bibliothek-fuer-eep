@@ -245,7 +245,7 @@ Aus diesem Grund muss beim Hinzufügen zu Schaltungen unterschieden werden:
 
 ```lua
 local K1 = TrafficLight:new("K1", 92, TrafficLightModel.JS2_3er_mit_FG)
-local F1 = K7
+local F1 = K1 -- ist die selbe Ampel, wird aber anders geschaltet
 local S1 = TrafficLight:new("S1", 96, TrafficLightModel.Unsichtbar_2er,
                             "#5528_Straba Signal Halt",     -- Immobilie Halt
                           "#5531_Straba Signal geradeaus", -- Immobilie Fahrt
