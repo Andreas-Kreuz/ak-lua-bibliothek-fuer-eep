@@ -5,7 +5,7 @@ type: Tipps & Tricks
 subtitle: Verwende maximal eine Ampel zum Steuern jeder Fahrspur. Verwende "alte" Ampeln mit dem richtigen Abstand im 1-Spur-System.
 img: "/assets/thumbnails/ampel-aufstellen.jpg"
 date: 2017-09-30
-permalink: anleitungen-fortgeschrittene/ampel-aufstellen
+permalink: docs/anleitungen-fortgeschrittene/ampel-aufstellen
 tags: [Verwendung, Anleitung]
 ---
 
@@ -15,7 +15,7 @@ Ampeln, die für das alte System entworfen wurden, kannst Du auch im neuen Syste
 
 Klicke im Einfügemodus von EEP rechts auf die Ampel und wähle "Objekteigenschaften".
 
-![BILD](../assets/tutorial/ampeln/signalabstand3.jpg)
+![BILD](../../assets/tutorial/ampeln/signalabstand3.jpg)
 
 Die Ampeln haben normalerweise einen _Signalabstand_ von 3 Metern. Ändere diesen Abstand von `1.75` Meter und schaue Dir das Ergebnis an.
 
@@ -28,11 +28,11 @@ Um Probleme durch hintereinander aufgestellte Ampeln zu vermeiden, muss jede Fah
 
 Die Ampel in der Mitte oben beeinflusst den Verkehr auf der "richtigen" Fahrspur.
 
-![BILD](../assets/tutorial/ampeln/signalabstand2.jpg)
+![BILD](../../assets/tutorial/ampeln/signalabstand2.jpg)
 
 Die Ampel links zeigt zwar das selbe Signalbild, wie die in der Mitte auf der "richtigen" Fahrspur, steht aber auf der Gegenfahrbahn. Das hat den Vorteil, dass sie den Verkehr der "richtigen" Fahrspur nicht beeinflusst. Sie beeinflusst auch nicht den Verkehr der Gegenfahrbahn, da dieser in die andere Richtung unterwegs ist.
 
-![BILD](../assets/tutorial/ampeln/signalabstand1.jpg)
+![BILD](../../assets/tutorial/ampeln/signalabstand1.jpg)
 
 ## Wenn Fußgängerampeln Autos anhalten
 

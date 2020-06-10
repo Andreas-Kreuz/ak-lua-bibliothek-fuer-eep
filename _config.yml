@@ -52,19 +52,19 @@ collections:
     anleitungen-anfaenger:
         output: true
         title: Erster Eindruck
-        permalink: /:collection/:name
+        permalink: /docs/:collection/:name
     anleitungen-fortgeschrittene:
         output: true
         title: Schritt-für-Schritt-Anleitungen
-        permalink: /:collection/:name
+        permalink: /docs/:collection/:name
     anleitungen-entwickler:
         output: true
         title: Für Entwickler
-        permalink: /:collection/:name
+        permalink: /docs/:collection/:name
     seiten:
         output: true
         title: Seiten
-        permalink: /:name
+        permalink: /docs/:name
 
 # BUILD SETTINGS
 markdown: kramdown

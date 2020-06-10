@@ -5,7 +5,7 @@ type: Tipps & Tricks
 subtitle: ... in meiner Kreuzung dies oder jenes erreichen.
 img: "/assets/thumbnails/ampel-aufstellen.jpg"
 date: 2017-09-04
-permalink: anleitungen-fortgeschrittene/tipps-kreuzungen
+permalink: docs/anleitungen-fortgeschrittene/tipps-kreuzungen
 tags: [Verwendung, Anleitung]
 ---
 
@@ -92,7 +92,7 @@ Um Deine Achsenampel zu verwenden, kannst Du sie einem der folgenden Signale zuw
 
 ## Ampel mit Lichtsteuerung von Immobilien nutzen
 
-![Immobilien mit Licht als Signale]({{ site.baseurl }}/assets/tutorial/tutorial2/immo-ampel.jpg)
+![Immobilien mit Licht als Signale](../../assets/tutorial/tutorial2/immo-ampel.jpg)
 
 Du willst einzelne Lichter einer Immobilie als Ampel verwenden?
 
@@ -182,7 +182,7 @@ c1Sequence1:addCarLights(K1, K2, K3)         -- Alle 3 Ampeln zur Schaltung hinz
 
 Im folgenden Beispiel gibt es zwei "normale" Ampel (K4, K5) und einen Rechtsabbieger-Pfeil (K6).
 
-![Ampel mit Rechtsabbieger-Pfeil]({{ site.baseurl }}/assets/web/rechtsabbieger.jpg)
+![Ampel mit Rechtsabbieger-Pfeil](../../assets/web/rechtsabbieger.jpg)
 
 Für das Einrichten dieser Fahrspur müssen folgende Dinge beachtet werden:
 

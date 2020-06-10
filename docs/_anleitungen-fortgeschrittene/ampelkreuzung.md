@@ -5,7 +5,7 @@ type: Tutorial mit Anlage
 subtitle: Hier erfährst Du, wie Du die Ampeln einer Kreuzung mit 4 Fahrspuren in Lua verwendest - danach funktioniert alles automatisch.
 img: "/assets/thumbnails/tutorial1-ampel.jpg"
 date: 2017-09-01
-permalink: anleitungen-fortgeschrittene/ampelkreuzung
+permalink: docs/anleitungen-fortgeschrittene/ampelkreuzung
 tags: [Verwendung, Anleitung]
 ---
 
@@ -18,7 +18,7 @@ tags: [Verwendung, Anleitung]
 Dafür benötigst Du folgendes:
 
 - **EEP 14** und einen **Editor für Lua-Skripte** Deiner Wahl, z.B. Notepad++
-- **Zettel und Stift** - z.B.: [_Kreuzungsaufbau.pdf_](../assets/Kreuzungsaufbau.pdf)
+- **Zettel und Stift** - z.B.: [_Kreuzungsaufbau.pdf_](../../assets/Kreuzungsaufbau.pdf)
 - Die **Anlage Andreas_Kreuz-Tutorial-Ampelkreuzung.anl3** (Download auf der STartseite)
   <br>Für den Betrieb dieser Anlage brauchst Du folgende **Modelle**:
 
@@ -53,7 +53,7 @@ Dafür benötigst Du folgendes:
 
 - Klicke in EEP auf _"Skript neu laden"_ und wechsle in den 3D-Modus. <br>😀 **Wenn Du alles richtig gemacht hast**, erscheint im Log eine Fehlermeldung, dass `meine-ampel-main.lua` nicht gefunden werden kann.
 
-  ![BILD](../assets/tutorial/kreuzung/skript-nicht-gefunden.jpg)
+  ![BILD](../../assets/tutorial/kreuzung/skript-nicht-gefunden.jpg)
 
 <br>
 
@@ -63,7 +63,7 @@ Dafür benötigst Du folgendes:
 
 - Klicke in EEP auf _"Skript neu laden"_ und wechsle in den 3D-Modus. <br>😀 **Wenn Du alles richtig gemacht hast**, erscheint eine Fehlermeldung, dass `meine-ampel-main.lua` nicht gefunden werden kann.
 
-  ![BILD](../assets/tutorial/kreuzung/eepmain-nicht-gefunden.jpg)
+  ![BILD](../../assets/tutorial/kreuzung/eepmain-nicht-gefunden.jpg)
 
 ## Notwendige Befehle in das Lua-Skript aufnehmen
 
@@ -93,7 +93,7 @@ Dafür benötigst Du folgendes:
 
 - Klicke in EEP auf _"Skript neu laden"_ und wechsle in den 3D-Modus. <br>😀 **Wenn Du alles richtig gemacht hast**, verschwindet die Fehlermeldung
 
-  ![BILD](../assets/tutorial/kreuzung/eepmain-angelegt.jpg)
+  ![BILD](../../assets/tutorial/kreuzung/eepmain-angelegt.jpg)
 
 **Was ist grade passiert?**
 
@@ -120,7 +120,7 @@ In diesem Schritt läßt Du Dir von `Crossing` alle Signal-IDs in 3D anzeigen.
 
 - Klicke in EEP auf _"Skript neu laden"_ und wechsle in den 3D-Modus. <br>😀 **Wenn Du alles richtig gemacht hast**, siehst Du an allen Signalen Tipp-Texte mit den IDs dieser Signale.
 
-  ![BILD](../assets/tutorial/kreuzung/signal-ids2.jpg)
+  ![BILD](../../assets/tutorial/kreuzung/signal-ids2.jpg)
 
 **Was ist grade passiert?**
 
@@ -128,7 +128,7 @@ In diesem Schritt läßt Du Dir von `Crossing` alle Signal-IDs in 3D anzeigen.
 
 ## Die Fahrspuren und Signal-IDs der Kreuzung notieren
 
-_**Tipp:** Das [PDF-Dokument Kreuzungsaufbau.pdf](../assets/Kreuzungsaufbau.pdf) hilft Dir deine Kreuzung zu notieren._
+_**Tipp:** Das [PDF-Dokument Kreuzungsaufbau.pdf](../../assets/Kreuzungsaufbau.pdf) hilft Dir deine Kreuzung zu notieren._
 
 Notiere Dir, welche _Fahrspuren_ es gibt und wie die IDs der zu schaltenden Ampeln heißen - merke Dir dabei, welche unterschiedlichen Ampelmodelle eingesetzt werden.
 
@@ -140,7 +140,7 @@ In der Beispielanlage sind es:
 - Reine Fußgängerampeln _(die sind in der Skizze bei "FG" unterstrichen)_
 - Strassenverkehrsampeln _(die sind in der Skizze bei "Fahrspur" unterstrichen)_
 
-![BILD](../assets/tutorial/kreuzung/kreuzungsaufbau-tutorial-richtungen.png)
+![BILD](../../assets/tutorial/kreuzung/kreuzungsaufbau-tutorial-richtungen.png)
 
 **Was ist eine _Fahrspur_**: In diesem Abschnitt wird viel von _Fahrspuren_ geredet. Eine _Fahrspur_ besteht aus Straßen-Splines, auf denen mehrere Fahrzeuge hintereinander an einer Ampel anstehen.
 
@@ -240,7 +240,7 @@ Das macht die Automatik dann für Dich: Bevor eine neue Schaltung ihre die Ampel
 
 Notiere Dir nun, welche der _Ampeln_ zu _Schaltungen_ zusammengefasst werden sollen.
 
-![BILD](../assets/tutorial/kreuzung/kreuzungsaufbau-tutorial-schaltungen.png)
+![BILD](../../assets/tutorial/kreuzung/kreuzungsaufbau-tutorial-schaltungen.png)
 
 ⭐ _**Tipp**: Wichtig ist, das jeder Fahrspur in mindestens einer Schaltung berücksichtigt wird.
 Im Beispiel siehst Du, dass Fahrspuren in mehreren Schaltungen enthalten sein können.
@@ -329,7 +329,7 @@ k1:addSequence(sch4)
 
 - Klicke in EEP auf _"Skript neu laden"_ und wechsle in den 3D-Modus. <br>😀 **Wenn Du alles richtig gemacht hast**, siehst Du plötzlich, dass die Schaltungen zum Leben erwachen.
 
-  ![BILD](../assets/tutorial/kreuzung/zum-leben-erweckt.jpg)
+  ![BILD](../../assets/tutorial/kreuzung/zum-leben-erweckt.jpg)
 
 **Was ist grade passiert?**
 
@@ -353,7 +353,7 @@ Erinnerst Du Dich den Code, der die Tipp-Texte zu den Signalen hinzugefügt hat?
 
 ## Vergleiche Deine Schaltungen in EEP-Web
 
-![BILD](../assets/tutorial/kreuzung/eep-web.png)
+![BILD](../../assets/tutorial/kreuzung/eep-web.png)
 
 Funktioniert nicht? [EEP-Web einrichten](../anleitungen-anfaenger/einrichten-von-eep-web)
 
