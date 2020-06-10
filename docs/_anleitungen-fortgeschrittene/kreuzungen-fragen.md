@@ -13,20 +13,26 @@ tags: [Verwendung, Anleitung]
 
 ## Ich bekomme Fehler
 
-Lies den Fehler genau. Meist hast Du Dich vertippt.
+Die Fehlerausgabe ist wertvoll. Nutze sie und lies den Fehler genau. Häufige Fehler können sein:
 
-Häufige Fehler können sein:
+- **Vertippt.** Korrigiere den Funktions- oder Variablennamen.
 
-- Schau genau hin, ob die Funktion einen Doppelpunkt (`:`) statt eines Punktes (`.`) verwendet.
-  Dann muss auch der Funktionsaufruf mit dem Doppelpunkt erfolgen, z.B. `TrafficLight:new(...)` statt `TrafficLight.new()`
+- **Doppelpunkt (`:`) statt eines Punktes (`.`) verwendet.**
+  Prüfe, ob die Funktion einen Doppelpunkt verwendet.
+  Dann muss auch der Funktionsaufruf mit dem Doppelpunkt erfolgen, z.B. `TrafficLight:new(...)` statt `TrafficLight.new(...)`
 
-- Du hast Dich bei den Parameter zwischen Klammern einer Funktion verzählt.
+- **Bei den Parametern vertan (zwischen Klammern einer Funktion) vertan.** Korrigiere die Anzahl / Reihenfolge der Parameter zwischen den Klammern des Funktionsaufrufs.
 
 # Ampeln
 
 ## Ampel mit Achssteuerung nutzen
 
-Du willst eine Immobilie mit Achsen als Ampel verwenden?
+**Der Grund** eine Achssteuerung an eine Ampel zu binden kann sein:
+
+1. Du nutzt ein Ampelmodell, welches die Ampelphasen in Achsen darstellt
+2. Du willst eine Achse an eine bestehende Ampel koppelt (z.B. ein Blinklicht, was mit einer Achse gesteuert wird, wenn eine Ampel grün ist.)
+
+**Wie es funktioniert:**
 
 Weise diese Immobilien aus EEP mit der Funktion `:addAxisStructure(...)` einer bestehenden Ampel (`TrafficLight`) zu. (Es müssen mindesten rot und grün angegeben werden, ist ein Wert für gelb, rot-gelb oder Fußgänger nicht angegeben, dann wird die Standard-Position der Achse verwendet.)
 
@@ -168,28 +174,33 @@ c1Lane1 = Lane:new("K1 - Fahrspur 1", 110, K1, {Lane.Directions.STRAIGHT})
 
 -- In der Schaltung werden K1, K2 und K3 gleichzeitig angegeben
 c1 = Crossing:new("Bahnhofstr. - Hauptstr.")  -- Kreuzung anlegen
-c1Switching1 = c1:newSequence("S1")           -- Schaltung anlegen
-c1Switching1:addCarLights(K1, K2, K3)         -- Alle 3 Ampeln zur Schaltung hinzufügen
+c1Sequence1 = c1:newSequence("S1")           -- Schaltung anlegen
+c1Sequence1:addCarLights(K1, K2, K3)         -- Alle 3 Ampeln zur Schaltung hinzufügen
 ```
 
 ### ... es gibt unterschiedlich geschaltete Ampeln für die Fahrspur
 
-Im folgenden Beispiel gibt es eine "normale" Ampel (K4) und einen Rechtsabbieger-Pfeil (K5).
+Im folgenden Beispiel gibt es zwei "normale" Ampel (K4, K5) und einen Rechtsabbieger-Pfeil (K6).
 
 ![]({{ site.baseurl }}/assets/web/rechtsabbieger.jpg)
 
 Für das Einrichten dieser Fahrspur müssen folgende Dinge beachtet werden:
 
-1. Die Fahrzeuge müssen über Kontaktpunkte gezählt werden (siehe [Priorisierung von Fahrzeugen](tutorial3-priorisierung)).
-   Dadurch wird sichergestellt, dass die einzelnen Fahrzeuge an der Fahrspur-Ampel bekannt sind.
-2. Das Fahrspur-Signal muss unsichtbar sein, so dass die Schaltvorgänge für das erste Fahrzeug nicht sichtbar sind.
-3. Die beiden Ampeln K4 und K5 müssen einzeln angelegt werden.
-4. Die Fahrzeuge müssen unterschiedliche Routen verwenden. Im Beispiel gilt Folgendes:
-   - Die Ampel K4 gilt für alle Routen: `K4:applyToLane(lane4)`
-   - Die Ampel K5 gilt nur für bestimmte Routen: `K5:applyToLane(lane4, "Rechtsabbieger")`
-5. Die Ampeln K4 und K5 können in unterschiedlichen Schaltungen verwendet werden
-   - Ist K4 grün, dann fahren alle Fahrzeuge
-   - Ist K5 grün, dann fährt das erste Fahrzeug in der Fahrspur nur dann, wenn es die Route "Rechtsabbieger" hat.
+1. **Die Fahrzeuge müssen über Kontaktpunkte gezählt werden** (siehe [Priorisierung von Fahrzeugen](tutorial3-priorisierung)).
+   Nur so wird sichergestellt, dass die einzelnen Fahrzeuge innerhalb der Fahrspur bekannt sind.
+2. **Das Fahrspur-Signal muss unsichtbar sein.** So kann versteckt werden, dass die Fahrspur unabhängig von K4 und K5 gesteuert wird. Die Schaltvorgänge der Fahrspur sind dadurch nicht sichtbar.
+3. **Die Ampeln K4, K5 und K6 dürfen nicht als Fahrspur-Ampeln genutzt werden.**
+   Fahrspuren, die durch Ampeln mit unterschiedlichen Rot- und Grün-Phasen gesteuert werden sollen, dürfen keine dieser Ampeln als Fahrspursignal haben.
+4. **Die Fahrzeuge müssen unterschiedliche Routen verwenden**
+   Im Beispiel wird die Route "_Rechtsabbieger_" für die Abbiegerichtung verwendet. 
+5. **Die Ampeln müssen die Routen unterschiedlich auswerten**
+   - Die Ampel K4 gilt für alle Routen, `K4:applyToLane(lane4)` (K5 wird in den selben Schaltungen verwendet. Die Fahrspur wird jedoch durch K4 gesteuert)
+   - Die Ampel K6 gilt nur für die Route "_Rechtsabbieger_". `K6:applyToLane(lane4, "Rechtsabbieger")`
+
+Die Steuerung der Fahrspuren erfolgt in den Schaltungen anhand der Ampeln K4 und K6
+
+- Ist K4 grün dann fahren alle Fahrzeuge
+- Ist K6 grün, dann fährt das erste Fahrzeug in der Fahrspur nur dann, wenn es die Route "Rechtsabbieger" hat.
 
 ```lua
 -- Es gibt eine unsichtbare Fahrspur-Ampel für Fahrspur 4
@@ -197,28 +208,61 @@ local lane4Sig = TrafficLight:new("lane4Sig", 89, TrafficLightModel.Unsichtbar_2
 
 -- Anlegen von Ampel K4 (Normal mit Fußgängern) gerade und rechts
 local K4 = TrafficLight:new("K4", 142, TrafficLightModel.JS2_3er_mit_FG)
--- Anlegen von Ampel K5 (Rechtsabbiegerpfeil) nur rechts
-local K5 = TrafficLight:new("K5", 140, TrafficLightModel.JS2_2er_OFF_YELLOW_GREEN)
+-- Anlegen von Ampel K5 (Normal mit Fußgängern) gerade und rechts
+local K5 = TrafficLight:new("K5", 142, TrafficLightModel.JS2_3er_mit_FG)
+-- Anlegen von Ampel K6 (Rechtsabbiegerpfeil) nur rechts
+local K6 = TrafficLight:new("K6", 140, TrafficLightModel.JS2_2er_OFF_YELLOW_GREEN)
 
 -- Fahrspur 4 führt geradeaus und rechts entlang.
 lane4 = Lane:new("K1 - Fahrspur 4", 4, lane4Sig, {Lane.Directions.STRAIGHT, Lane.Directions.RIGHT})
 
--- Die Ampeln K4 gilt für geradeaus und rechts, die Ampel K5 gilt nur für "Rechtsabbieger"
-K4:applyToLane(lane4)                         -- K4 gilt für Fahrspur 4 (alle)
-K5:applyToLane(lane4, "Rechtsabbieger")       -- K4 gilt für Fahrspur 4 (nur Route "Rechtsabbieger")
+-- Hier wird eingestellt, dass das Signal der Fahrspur "lane4" durch K4 und K6 gesteuert wird
+K5:applyToLane(lane4)                         -- K4 gilt für Fahrspur 4 (alle)
+K6:applyToLane(lane4, "Rechtsabbieger")       -- K6 gilt für Fahrspur 4 (nur Route "Rechtsabbieger")
 
--- Kreuzung mit zwei Schaltungen anlegen und die Ampeln K4 und K5 verwenden
+-- Kreuzung mit zwei Schaltungen anlegen und die Ampeln K4 und K6 verwenden
 c1 = Crossing:new("Bahnhofstr. - Hauptstr.")  -- Kreuzung anlegen
 -- ...                                        -- Weitere Ampeln
-c1Switching2 = c1:newSequence("S2")           -- Schaltung 2 anlegen
-c1Switching2:addCarLights(K5)                 -- Ampel K5 als Auto-Ampel hinzufügen
-c1Switching3 = c1:newSequence("S3")           -- Schaltung 3 anlegen
-c1Switching3:addCarLights(K4)                 -- Ampel K4 als Auto-Ampel hinzufügen
+c1Sequence2 = c1:newSequence("S2")           -- Schaltung 2 anlegen
+c1Sequence2:addCarLights(K6)                 -- Ampel K6 als Auto-Ampel hinzufügen
+c1Sequence3 = c1:newSequence("S3")           -- Schaltung 3 anlegen
+c1Sequence3:addCarLights(K4, K5)             -- Ampel K4 und K5 als Auto-Ampel hinzufügen
+```
+
+### Tram, Bus, Fußgänger und Kfz unterscheiden
+
+Tram-Ampeln verhalten sich anders, als Ampeln für den Kfz-Verkehr:
+
+- Schaltreihenfolge Tram: Halt (F0) --> Fahrt (F1 / F2 / F3 / F5) --> Halt erwarten (F4) --> Rot (F0)
+- Schaltreihenfolge Kfz: Rot --> Rot-Gelb --> Grün --> Gelb --> Rot
+- Schaltreihenfolge Fußgänger: Rot --> Grün --> Rot
+
+Aus diesem Grund muss beim Hinzufügen zu Schaltungen unterschieden werden:
+
+- Kfz-Ampeln hinzufügen mit: `sequence:addCarLights(ampel1, ampel2, ...)`
+- Tram-Ampeln hinzufügen mit: `sequence:addTramLights(ampel1, ampel2, ...)`
+- Fußgänger-Ampeln hinzufügen mit: `sequence:addPedestrianLights(ampel1, ampel2, ...)`
+
+```lua
+local K1 = TrafficLight:new("K1", 92, TrafficLightModel.JS2_3er_mit_FG)
+local F1 = K7
+local S1 = TrafficLight:new("S1", 96, TrafficLightModel.Unsichtbar_2er,
+                            "#5528_Straba Signal Halt",     -- Immobilie Halt
+                          "#5531_Straba Signal geradeaus", -- Immobilie Fahrt
+                            "#5529_Straba Signal anhalten", -- Immobilie Gelb
+                            "#5530_Straba Signal A")        -- Immobilie Anforderung
+
+-- Kreuzung mit zwei Schaltungen anlegen und die Ampeln K4 und K6 verwenden
+c1 = Crossing:new("Bahnhofstr. - Hauptstr.")  -- Kreuzung anlegen
+local c1Sequence1 = c1:newSequence("S1")
+c1Sequence1:addCarLights(K1)
+c1Sequence1:addTramLights(S1)
+c1Sequence1:addPedestrianLights(F1)
 ```
 
 ## Tram und Bus
 
-### Tram-Ampeln verwenden
+### Anforderungen an Bus- und Tram-Ampeln anzeigen
 
 1. Konfiguriere die Straßenbahn-Ampeln (im Beispiel als Immobilien-Signal)
 
