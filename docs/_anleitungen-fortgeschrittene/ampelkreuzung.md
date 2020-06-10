@@ -19,7 +19,7 @@ Dafür benötigst Du folgendes:
 
 - **EEP 14** und einen **Editor für Lua-Skripte** Deiner Wahl, z.B. Notepad++
 - **Zettel und Stift** - z.B.: [_Kreuzungsaufbau.pdf_](../assets/Kreuzungsaufbau.pdf)
-- Die **Anlage Andreas_Kreuz-Tutorial-Ampelkreuzung.anl3** (Download auf der STartseite)
+- Die **Anlage Andreas_Kreuz-Tutorial-Ampelkreuzung.anl3** (Download auf der Startseite)
   <br>Für den Betrieb dieser Anlage brauchst Du folgende **Modelle**:
 
   | 1Spur-Großstadtstraßen-System-Grundset (V10NAS30002) | _[Download](https://eepshopping.de/1spur-gro%C3%83%C6%92%C3%82%C5%B8stadtstra%C3%83%C6%92%C3%82%C5%B8en-system-grundset%7C7656.html)_ |
