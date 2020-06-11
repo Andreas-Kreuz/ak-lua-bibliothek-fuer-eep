@@ -6,7 +6,7 @@ subtitle: Hier erfährst Du, wie Du Lua mit IntelliJ verwenden kannst. Dazu wird
 img: "/assets/thumbnails/intellij.png"
 feature-img: "/assets/headers/intellij.png"
 date: 2017-09-07
-permalink: anleitungen-entwickler/intellij-verwenden
+permalink: docs/anleitungen-entwickler/intellij-verwenden
 tags: [Fortgeschrittene, Entwickler]
 ---
 # IntelliJ verwenden

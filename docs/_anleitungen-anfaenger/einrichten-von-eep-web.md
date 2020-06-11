@@ -4,7 +4,7 @@ title: Web-App einrichten
 type: Tutorial
 subtitle: Erfahre wie Du die Web-App einrichtest und benutzt.
 img: "/assets/thumbnails/eep-web-startseite.png"
-permalink: anleitungen-anfaenger/einrichten-von-eep-web
+permalink: docs/anleitungen-anfaenger/einrichten-von-eep-web
 hide: false
 date: 2018-11-19
 ---
@@ -48,15 +48,15 @@ date: 2018-11-19
 
 1. Starte die exe aus `C:\Trend\EEP16\LUA\ak\lua-server-for-eep.exe`.
 
-   ![Programm starten](../assets/tutorial/eep-web-installation/01-lua-server-for-eep-starten.png)
+   ![Programm starten](../../assets/tutorial/eep-web-installation/01-lua-server-for-eep-starten.png)
 
 2. Falls der Lua-Server das Programm nicht findet, wähle das Verzeichnis Deiner EEP-Installation:
 
-   ![Verzeichnis wählen](../assets/tutorial/eep-web-installation/02-server-verzeichnis-falsch.png)
+   ![Verzeichnis wählen](../../assets/tutorial/eep-web-installation/02-server-verzeichnis-falsch.png)
 
 3. So sollte es aussehen, wenn der Server das Verzeichnis findet:
 
-   ![Verzeichnis wählen](../assets/tutorial/eep-web-installation/02-server-verzeichnis-ok.png)
+   ![Verzeichnis wählen](../../assets/tutorial/eep-web-installation/02-server-verzeichnis-ok.png)
 
    🍀 Du hast es bis hierhin geschafft, nun wünsche ich viel Spaß beim Benutzen von `http://localhost:3000`.
 

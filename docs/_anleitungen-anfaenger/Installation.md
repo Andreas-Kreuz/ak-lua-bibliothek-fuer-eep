@@ -5,7 +5,7 @@ subtitle: Hier erfährst Du, wie Du die Lua-Bibliothek von Andreas Kreuz herunte
 type: Anleitung
 img: "/assets/thumbnails/ModellPacker.png"
 date: 2017-09-01
-permalink: anleitungen-anfaenger/installation
+permalink: docs/anleitungen-anfaenger/installation
 tags: [Installation]
 ---
 
@@ -21,15 +21,15 @@ tags: [Installation]
 
 - Klicke auf Modell-Installer
 
-  ![BILD](../assets/tutorial/installation/Installation-Modell-Installer.png)
+  ![BILD](../../assets/tutorial/installation/Installation-Modell-Installer.png)
 
 - Wähle die heruntergeladene Datei aus
 
-  ![BILD](../assets/tutorial/installation/Installation-Datei-waehlen.png)
+  ![BILD](../../assets/tutorial/installation/Installation-Datei-waehlen.png)
 
 - Starte die Installation
 
-  ![BILD](../assets/tutorial/installation/Installation-Modell-installieren.png)
+  ![BILD](../../assets/tutorial/installation/Installation-Modell-installieren.png)
 
 **Tipp:** Das Scannen nach neuen Modellen ist nicht notwendig, da die Bibliothek keine 3D-Modelle enthält.
 

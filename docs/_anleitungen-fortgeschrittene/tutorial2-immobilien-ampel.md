@@ -4,7 +4,7 @@ title: Ampelsteuerung 2
 type: Tutorial mit Anlage
 subtitle: Erfahre wie Du Immobilien-Ampeln verwenden kannst - wenn diese auf Licht ein- und ausschalten basieren.
 img: "/assets/thumbnails/tutorial2-immo-ampel.jpg"
-permalink: anleitungen-fortgeschrittene/tutorial2-immobilien-ampel
+permalink: docs/anleitungen-fortgeschrittene/tutorial2-immobilien-ampel
 hide: false
 date: 2017-09-02
 ---
@@ -30,7 +30,7 @@ date: 2017-09-02
 - Öffne die Beispielanlage "_Andreas_Kreuz_Tutorial_Ampelkreuzung-2.anl3_" in EEP
 - Öffne die Datei `Andreas_Kreuz-Tutorial-Ampelkreuzung-2-main.lua` in einem Editor - Du findest sie unter `C:\Trend\EEP\LUA\ak\demo-anlagen\tutorial-ampel\`.
 - So sieht die Kreuzung dieser Anlagen aus: <br>
-  ![Aufbau der Kreuzung]({{ site.baseurl }}/assets/tutorial/tutorial2/kreuzungsaufbau-tutorial2.png)
+  ![Aufbau der Kreuzung](../../assets/tutorial/tutorial2/kreuzungsaufbau-tutorial2.png)
 
 # Immobilien-Ampel
 
@@ -51,7 +51,7 @@ Rechts daneben befindet sich ein leeres Gehäuse, in dass diese 4 Signalbilder n
 
 ⭐ **_Tipp_**: Die Anleitung des Modellsets zeigt Dir, wie Du die Signale am besten aufstellst.
 
-![]({{ site.baseurl }}/assets/tutorial/tutorial2/immo-ampel.jpg)
+![](../../assets/tutorial/tutorial2/immo-ampel.jpg)
 
 ## Verwenden der Modelle
 

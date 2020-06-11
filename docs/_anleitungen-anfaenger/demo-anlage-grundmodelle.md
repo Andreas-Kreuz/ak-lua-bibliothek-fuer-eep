@@ -5,7 +5,7 @@ subtitle: Schau Dir an, wie die vollautomatische Steuerung funktioniert. Diese A
 type: Anlage
 img: "/assets/thumbnails/AmpelDemo.jpg"
 date: 2017-09-07
-permalink: anleitungen-anfaenger/demo-anlage-grundmodelle
+permalink: docs/anleitungen-anfaenger/demo-anlage-grundmodelle
 ---
 
 # Beschreibung
