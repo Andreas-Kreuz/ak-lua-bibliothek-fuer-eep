@@ -180,7 +180,10 @@ c1Sequence1:addCarLights(K1, K2, K3)         -- Alle 3 Ampeln zur Schaltung hinz
 
 ### ... für unterschiedliche Fahrzeuge
 
+Du möchstest die Fahrzeuge in einer Fahrspur durch mehrere Ampeln unterschiedlich steuern.
+
 Im folgenden Beispiel gibt es zwei "normale" Ampel (K4, K5) und einen Rechtsabbieger-Pfeil (K6).
+Im Bild sind K5 und K6 sichtbar:
 
 ![Ampel mit Rechtsabbieger-Pfeil](../../assets/web/rechtsabbieger.jpg)
 
@@ -192,14 +195,14 @@ Für das Einrichten dieser Fahrspur müssen folgende Dinge beachtet werden:
 3. **Die Ampeln K4, K5 und K6 dürfen nicht als Fahrspur-Ampeln genutzt werden.**
    Fahrspuren, die durch Ampeln mit unterschiedlichen Rot- und Grün-Phasen gesteuert werden sollen, dürfen keine dieser Ampeln als Fahrspursignal haben.
 4. **Die Fahrzeuge müssen unterschiedliche Routen verwenden**
-   Im Beispiel wird die Route "_Rechtsabbieger_" für die Abbiegerichtung verwendet. 
+   Im Beispiel wird die Route "_Rechtsabbieger_" für die Abbiegerichtung verwendet.
 5. **Die Ampeln müssen die Routen unterschiedlich auswerten**
-   - Die Ampel K4 gilt für alle Routen, `K4:applyToLane(lane4)` (K5 wird in den selben Schaltungen verwendet. Die Fahrspur wird jedoch durch K4 gesteuert)
+   - Die Ampel K5 gilt für alle Routen, `K4:applyToLane(lane4)` (K4 wird in den selben Schaltungen verwendet. Die Fahrspur wird jedoch durch K4 gesteuert)
    - Die Ampel K6 gilt nur für die Route "_Rechtsabbieger_". `K6:applyToLane(lane4, "Rechtsabbieger")`
 
-Die Steuerung der Fahrspuren erfolgt in den Schaltungen anhand der Ampeln K4 und K6
+Die Steuerung der Fahrspuren erfolgt in den Schaltungen anhand der Ampeln K5 und K6
 
-- Ist K4 grün dann fahren alle Fahrzeuge
+- Ist K5 grün dann fahren alle Fahrzeuge (K4 soll immer mit K5 geschaltet werden)
 - Ist K6 grün, dann fährt das erste Fahrzeug in der Fahrspur nur dann, wenn es die Route "Rechtsabbieger" hat.
 
 ```lua
@@ -222,9 +225,10 @@ K6:applyToLane(lane4, "Rechtsabbieger")       -- K6 gilt für Fahrspur 4 (nur Ro
 
 -- Kreuzung mit zwei Schaltungen anlegen und die Ampeln K4 und K6 verwenden
 c1 = Crossing:new("Bahnhofstr. - Hauptstr.")  -- Kreuzung anlegen
--- ...                                        -- Weitere Ampeln
+
 c1Sequence2 = c1:newSequence("S2")           -- Schaltung 2 anlegen
 c1Sequence2:addCarLights(K6)                 -- Ampel K6 als Auto-Ampel hinzufügen
+
 c1Sequence3 = c1:newSequence("S3")           -- Schaltung 3 anlegen
 c1Sequence3:addCarLights(K4, K5)             -- Ampel K4 und K5 als Auto-Ampel hinzufügen
 ```
@@ -287,8 +291,8 @@ c1Sequence1:addPedestrianLights(F1)
 
    a. Sag der Fahrspur, an welchem Signal die Anforderungen angezeigt werden sollen `lane:showRequestsOn(trafficLight)`.
 
-   b. Wenn mehrere Tram-Ampeln je nach Route einer Fahrspur die Ampeln schalten sollen, 
-      dann gib dahinter die Route an `lane:showRequestsOn(trafficLight, "Name der Route")`
+   b. Wenn mehrere Tram-Ampeln je nach Route einer Fahrspur die Ampeln schalten sollen,
+   dann gib dahinter die Route an `lane:showRequestsOn(trafficLight, "Name der Route")`
 
    ```lua
    -- Zeige Anforderung an Ampel S1 bei jedem Fahrzeug in Fahrspur 1
