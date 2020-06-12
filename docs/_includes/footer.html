@@ -1,6 +1,8 @@
 {% if site.theme_settings.footer_text %}
 <footer class="site-footer">
-    <p class="text">{{ site.theme_settings.footer_text }}</p>
-    <p class="text"><i class="fa fa-github fa-lg" aria-hidden="true"></i> <a href="https://github.com/Andreas-Kreuz/ak-lua-bibliothek-fuer-eep">Quellcode auf Github</a></p>
+  <p class="text">{{ site.theme_settings.footer_text }}</p>
+  <p class="text">Aktuelle Version: <a href="https://github.com/Andreas-Kreuz/ak-lua-bibliothek-fuer-eep/releases">
+      {{ site.github.latest_release.tag_name }}</a> <i class="fa fa-github fa-lg" aria-hidden="true"></i> <a
+       href="https://github.com/Andreas-Kreuz/ak-lua-bibliothek-fuer-eep">Quellcode auf Github</a></p>
 </footer>
 {% endif %}
