@@ -5,7 +5,7 @@ type: Tutorial mit Anlage
 subtitle: Hier erfährst Du, wie Du die Ampeln einer Kreuzung mit 4 Fahrspuren in Lua verwendest - danach funktioniert alles automatisch.
 img: "/assets/thumbnails/tutorial1-ampel.jpg"
 date: 2017-09-01
-permalink: docs/anleitungen-fortgeschrittene/ampelkreuzung
+permalink: docs/anleitungen-ampelkreuzung/ampelkreuzung
 tags: [Verwendung, Anleitung]
 ---
 
@@ -27,7 +27,7 @@ Dafür benötigst Du folgendes:
   | Ampel-Baukasten für mehrspurige Straßenkreuzungen (V80NJS20039) | _[Download](https://eepshopping.de/ampel-baukasten-f%C3%83%C6%92%C3%82%C2%BCr-mehrspurige-stra%C3%83%C6%92%C3%82%C5%B8enkreuzungen%7C6624.html)_ |
   | Straßenbahnsignale als Immobilien (V80MA1F010 und V10MA1F011) | _[Download](http://www.eep.euma.de/download.php)_ |
 
-⭐ **_Tipp_**: Die Lua-Bibliothek ist in der Installation der Anlage enthalten. Möchtest Du Deine eigene Anlage verwenden, so kannst Du die Bibliothek wie folgt installieren: [_Installation der Lua-Bibliothek von Andreas Kreuz_](../anleitungen-anfaenger/installation)
+⭐ **_Tipp_**: Die Lua-Bibliothek ist in der Installation der Anlage enthalten. Möchtest Du Deine eigene Anlage verwenden, so kannst Du die Bibliothek wie folgt installieren: [_Installation der Lua-Bibliothek von Andreas Kreuz_](../anleitungen-installation/installation)
 
 # Los geht's
 
@@ -355,7 +355,7 @@ Erinnerst Du Dich den Code, der die Tipp-Texte zu den Signalen hinzugefügt hat?
 
 ![BILD](../../assets/tutorial/kreuzung/eep-web.png)
 
-Funktioniert nicht? [EEP-Web einrichten](../anleitungen-anfaenger/einrichten-von-eep-web)
+Funktioniert nicht? [EEP-Web einrichten](../anleitungen-installation/einrichten-von-eep-web)
 
 # Geschafft
 

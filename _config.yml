@@ -49,11 +49,11 @@ paginate_path: "blog/page:num"
 
 # PORTFOLIO
 collections:
-    anleitungen-anfaenger:
+    anleitungen-installation:
         output: true
         title: Erster Eindruck
         permalink: /docs/:collection/:name
-    anleitungen-fortgeschrittene:
+    anleitungen-ampelkreuzung:
         output: true
         title: Schritt-für-Schritt-Anleitungen
         permalink: /docs/:collection/:name

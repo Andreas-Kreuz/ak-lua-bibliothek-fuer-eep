@@ -5,7 +5,7 @@ type: Tipps & Tricks
 subtitle: ... in meiner Kreuzung dies oder jenes erreichen.
 img: "/assets/thumbnails/ampel-aufstellen.jpg"
 date: 2017-09-04
-permalink: docs/anleitungen-fortgeschrittene/tipps-kreuzungen
+permalink: docs/anleitungen-ampelkreuzung/tipps-kreuzungen
 tags: [Verwendung, Anleitung]
 ---
 

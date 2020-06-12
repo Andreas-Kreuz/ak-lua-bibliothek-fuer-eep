@@ -4,9 +4,9 @@ title: Web-App einrichten
 type: Tutorial
 subtitle: Erfahre wie Du die Web-App einrichtest und benutzt.
 img: "/assets/thumbnails/eep-web-startseite.png"
-permalink: docs/anleitungen-anfaenger/einrichten-von-eep-web
+permalink: docs/anleitungen-installation/einrichten-von-eep-web
 hide: false
-date: 2018-11-19
+date: 2017-09-08
 ---
 
 # Grundprinzip
@@ -18,7 +18,7 @@ date: 2018-11-19
 
 1. **Du brauchst für Lua**
 
-   Eine aktuelle Version der Lua-Bibliothek von Andreas Kreuz - mindestens Version 0.9.0 ([siehe Installation](../anleitungen-anfaenger/installation))
+   Eine aktuelle Version der Lua-Bibliothek von Andreas Kreuz - mindestens Version 0.9.0 ([siehe Installation](../anleitungen-installation/installation))
 
 2. **Lua einrichten**
 

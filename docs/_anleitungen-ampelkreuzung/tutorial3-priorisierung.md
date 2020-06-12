@@ -4,7 +4,7 @@ title: Ampelsteuerung 3
 type: Tutorial mit Anlage
 subtitle: Erfahre wie Du anliegenden Verkehr erkennen kannst und wie dieser die Schaltungen beeinflusst.
 img: "/assets/thumbnails/tutorial3-verkehr-erkennen.jpg"
-permalink: docs/anleitungen-fortgeschrittene/tutorial3-priorisierung
+permalink: docs/anleitungen-ampelkreuzung/tutorial3-priorisierung
 hide: false
 date: 2017-09-03
 ---

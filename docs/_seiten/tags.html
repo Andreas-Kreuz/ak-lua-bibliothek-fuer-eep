@@ -17,14 +17,14 @@ hide: true
 {% endfor %}
 
 <!-- cycles through portfolio collection to get tags -->
-{% assign anleitungen =  site.anleitungen-anfaenger | map: 'tags' | join: ','  | split: ',' | uniq %}
+{% assign anleitungen =  site.anleitungen-installation | map: 'tags' | join: ','  | split: ',' | uniq %}
 {% for tag in anleitungen %}
 {% assign ttags = tag | join:'|' | append:'|' %}
 {% assign rawtags = rawtags | append:ttags %}
 {% endfor %}
 
 <!-- cycles through portfolio collection to get tags -->
-{% assign anleitungen =  site.anleitungen-fortgeschrittene | map: 'tags' | join: ','  | split: ',' | uniq %}
+{% assign anleitungen =  site.anleitungen-ampelkreuzung | map: 'tags' | join: ','  | split: ',' | uniq %}
 {% for tag in anleitungen %}
 {% assign ttags = tag | join:'|' | append:'|' %}
 {% assign rawtags = rawtags | append:ttags %}
@@ -77,7 +77,7 @@ hide: true
             {% endfor %}
 
             <!-- Portfolio -->
-            {% for note in site.anleitungen-anfaenger %}
+            {% for note in site.anleitungen-installation %}
                 {% if note.tags contains tag %}
                 <h5 class="tag-title">
                     <a href="{{ site.baseurl }}{{ note.url }}">
@@ -93,7 +93,7 @@ hide: true
             {% endfor %}
 
             <!-- Portfolio -->
-            {% for note in site.anleitungen-fortgeschrittene %}
+            {% for note in site.anleitungen-ampelkreuzung %}
                 {% if note.tags contains tag %}
                 <h5 class="tag-title">
                     <a href="{{ site.baseurl }}{{ note.url }}">

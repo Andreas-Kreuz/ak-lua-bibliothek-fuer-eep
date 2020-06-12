@@ -203,4 +203,4 @@ Das liegt daran, das die Lua-Laufzeitumgebung noch nicht konfiguriert ist. <br>
 <br>
 🍀 Herzlichen Glückwunsch, Du hast es bis hierhin geschafft!
 <br><br>
-<p class="lead">Nun kannst Du Deine Anlagen ohne EEP in IntelliJ testen. Bei Erfolg, kannst Du sie in EEP übernehmen. Eine Beschreibung findest Du in der Anleitung <a href="../anleitungen-fortgeschrittene/demo-anlage-testen">Testen vor EEP</a></p>
+<p class="lead">Nun kannst Du Deine Anlagen ohne EEP in IntelliJ testen. Bei Erfolg, kannst Du sie in EEP übernehmen. Eine Beschreibung findest Du in der Anleitung <a href="../anleitungen-ampelkreuzung/demo-anlage-testen">Testen vor EEP</a></p>

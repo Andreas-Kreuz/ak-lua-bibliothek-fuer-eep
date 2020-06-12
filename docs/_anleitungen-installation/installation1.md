@@ -1,11 +1,11 @@
 ---
 layout: page_with_toc
-title: Bibliothek installieren
+title: Lua-Bibliothek installieren
 subtitle: Hier erfährst Du, wie Du die Lua-Bibliothek von Andreas Kreuz herunterladen und direkt in EEP installieren kannst.
 type: Anleitung
 img: "/assets/thumbnails/ModellPacker.png"
 date: 2017-09-01
-permalink: docs/anleitungen-anfaenger/installation
+permalink: docs/anleitungen-installation/installation
 tags: [Installation]
 ---
 
@@ -41,6 +41,6 @@ Die Bibliothek wurde in das Unterverzeichnis `LUA\ak` Deiner EEP-Installation in
 
 Jetzt kannst Du:
 
-- [EEP-Web einrichten](../anleitungen-anfaenger/einrichten-von-eep-web)
-- die [Anleitung für eine automatische Ampelkreuzung](../anleitungen-fortgeschrittene/ampelkreuzung) starten
+- [EEP-Web einrichten](../anleitungen-installation/einrichten-von-eep-web)
+- die [Anleitung für eine automatische Ampelkreuzung](../anleitungen-ampelkreuzung/ampelkreuzung) starten
 - die [Dokumentation der Bibliothek](../lua/ak/) lesen.

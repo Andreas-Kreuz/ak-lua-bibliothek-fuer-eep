@@ -4,7 +4,7 @@ title: Ampelsteuerung 2
 type: Tutorial mit Anlage
 subtitle: Erfahre wie Du Immobilien-Ampeln verwenden kannst - wenn diese auf Licht ein- und ausschalten basieren.
 img: "/assets/thumbnails/tutorial2-immo-ampel.jpg"
-permalink: docs/anleitungen-fortgeschrittene/tutorial2-immobilien-ampel
+permalink: docs/anleitungen-ampelkreuzung/tutorial2-immobilien-ampel
 hide: false
 date: 2017-09-02
 ---
@@ -73,7 +73,7 @@ Eine neue Ampel kannst Du wie folgt anlegen:
   `TrafficLight:new("K1", id, modell, immoRot, immoGruen, immoGelb, immoAnforderung)`<br>Für Dreier-Ampeln mit Lichtschaltung der Immobilien "rot" "gelb" und "grün".
 
 - **"rot" "gelb", "grün" und "Anforderung"**:<br>
-  `TrafficLight:new("K1", id, modell, immoRot, immoGruen, immoGelb, immoAnforderung)`<br>Für Vierer-Ampeln mit Lichtschaltung der Immobilien "rot" "gelb", "grün" und "Anforderung". Für die Anforderung musst Du die Fahrzeuge erkennen oder zählen - wie das geht, erfährst Du in [Tutorial 3 - Priorisierung]({{ site.baseurl }}/anleitungen-fortgeschrittene/tutorial3-priorisierung).
+  `TrafficLight:new("K1", id, modell, immoRot, immoGruen, immoGelb, immoAnforderung)`<br>Für Vierer-Ampeln mit Lichtschaltung der Immobilien "rot" "gelb", "grün" und "Anforderung". Für die Anforderung musst Du die Fahrzeuge erkennen oder zählen - wie das geht, erfährst Du in [Tutorial 3 - Priorisierung]({{ site.baseurl }}/anleitungen-ampelkreuzung/tutorial3-priorisierung).
 
 Die Werte von `immoRot`, `immoGruen`, `immoGelb` und `immoAnforderung` kannst Du ganz einfach über den Eigenschaften-Dialog der Immobilie herausfinden. Dort findest Du den kompletten Namen der Immobilie heraus, den Du in den Code übernimmst.
 
@@ -93,7 +93,7 @@ local S1 = TrafficLight:new("S1", 14, TrafficLightModel.Unsichtbar_2er,
 os = Lane:new("OS", 107, S1)
 ```
 
-⭐ **Beachte bitte**: Die Anforderung wird nur aktiv, wenn Du Anforderungen an dieser Fahrspur erkennst. Wie das geht, steht in [Tutorial 3 - Priorisierung]({{ site.baseurl }}/anleitungen-fortgeschrittene/tutorial3-priorisierung).
+⭐ **Beachte bitte**: Die Anforderung wird nur aktiv, wenn Du Anforderungen an dieser Fahrspur erkennst. Wie das geht, steht in [Tutorial 3 - Priorisierung]({{ site.baseurl }}/anleitungen-ampelkreuzung/tutorial3-priorisierung).
 
 ## Beispiel Dreier-Ampel
 
