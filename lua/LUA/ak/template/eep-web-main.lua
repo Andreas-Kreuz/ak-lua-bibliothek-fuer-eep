@@ -1,5 +1,5 @@
 -- Wenn Du bisher kein Lua in Deinen Anlagen verwendest, dann binde dieses Skript in EEP ein:
--- require("ak.eep-web-main")
+-- require("ak.template.eep-web-main")
 
 -- Diese Zeile lädt die Modulverwaltung der Lua-Bibliothek
 local ModuleRegistry = require("ak.core.ModuleRegistry")

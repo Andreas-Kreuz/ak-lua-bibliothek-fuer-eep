@@ -2,7 +2,7 @@
 
 ## 0.10.1
 
-- ⭐ Neu: Nutze `require("ak.eep-web-main")` in einer Anlage ohne eigenen Lua-Code um EEP-Web zu verwenden
+- ⭐ Neu: Nutze `require("ak.template.eep-web-main")` in einer Anlage ohne eigenen Lua-Code um EEP-Web zu verwenden
 
 ## 0.10.0
 
