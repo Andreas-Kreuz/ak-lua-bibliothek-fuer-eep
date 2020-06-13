@@ -95,7 +95,7 @@ Durch das Einbeziehen der Wartezeit wird sichergestellt, dass jede Fahrspur ber�
   ```lua
   local laneSignal1 = TrafficLight:new("LANE WS", 15, TrafficLightModel.Unsichtbar_2er)
   lane = Lane:new("WS", 108, laneSignal1)
-  lane:useTracklForQueue(2) -- Erfasst Anforderungen, wenn ein Fahrzeug auf Strasse 2 steht
+  lane:useTrackForQueue(2) -- Erfasst Anforderungen, wenn ein Fahrzeug auf Strasse 2 steht
   ```
 
 - Die Code-Zeile `ws:zaehleAnStrasseAlle(xx)` sorgt dafür, dass die Fahrspur priorisiert wird, wenn das Straßenstück mit der ID `xx` belegt ist. Dies erfolgt jedoch immer nur für ein Fahrzeug pro Straßenstück.
@@ -103,8 +103,8 @@ Durch das Einbeziehen der Wartezeit wird sichergestellt, dass jede Fahrspur ber�
 - Es können auch mehrere Straßenstücke gleichzeitig beobachtet werden, z.B. für mehrspurige Straßen.
 
   ```lua
-  ws:useTracklForQueue(2)
-  ws:useTracklForQueue(3)
+  ws:useTrackForQueue(2)
+  ws:useTrackForQueue(3)
   ```
 
 - Insgesamt werden alle belegten Straßenstück der Fahrspur als ein Fahrzeug gezählt.

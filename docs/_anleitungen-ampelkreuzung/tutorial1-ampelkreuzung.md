@@ -132,7 +132,7 @@ _**Tipp:** Das [PDF-Dokument Kreuzungsaufbau.pdf](../../assets/Kreuzungsaufbau.p
 
 Notiere Dir, welche _Fahrspuren_ es gibt und wie die IDs der zu schaltenden Ampeln heißen - merke Dir dabei, welche unterschiedlichen Ampelmodelle eingesetzt werden.
 
-**Wichtige Unterscheidung dabei:** Welche Ampeln steuern den Verkehr direkt (das sind die Fahrspurampeln) und welche Ampeln müssen neben den Fahrspurampeln noch in der Schaltung berücksichtigt werden.
+**Wichtige Unterscheidung dabei:** Welche Ampeln steuern den Verkehr direkt (das sind die Fahrspur-Ampeln) und welche Ampeln müssen neben den Fahrspur-Ampeln noch in der Schaltung berücksichtigt werden.
 
 In der Beispielanlage sind es:
 
@@ -145,15 +145,15 @@ In der Beispielanlage sind es:
 **Was ist eine _Fahrspur_**: In diesem Abschnitt wird viel von _Fahrspuren_ geredet. Eine _Fahrspur_ besteht aus Straßen-Splines, auf denen mehrere Fahrzeuge hintereinander an einer Ampel anstehen.
 
 - **Jede Fahrspur hat genaue eine Fahrspur-Ampel.** Dies ist die einzige Ampel, die auf der Straße der Fahrspur stehen darf.
-  Die Fahrspurampel läßt Fahrzeuge der Fahrspur anhalten oder fahren.
+  Die Fahrspur-Ampel läßt Fahrzeuge der Fahrspur anhalten oder fahren.
 
-- **Nur die Fahrspurampel steuert Fahrzeuge.** Nur die Ampel auf der Fahrspur darf die Fahrzeuge durch das Ampelbild steuern.
-  Du kannst aber weitere Ampeln für Fahrzeuge aufstellen, z.B. eine zweite Ampel auf der linken Straßenseite oder ein dritte über dem Verkehr. Nur die Fahrspurampel darf den Verkehr auf der Straße steuern - alle anderen Ampeln müssen so aufgestellt werden, dass sie den Verkehr nicht beeinflussen.
+- **Nur die Fahrspur-Ampel steuert Fahrzeuge.** Nur die Ampel auf der Fahrspur darf die Fahrzeuge durch das Ampelbild steuern.
+  Du kannst aber weitere Ampeln für Fahrzeuge aufstellen, z.B. eine zweite Ampel auf der linken Straßenseite oder ein dritte über dem Verkehr. Nur die Fahrspur-Ampel darf den Verkehr auf der Straße steuern - alle anderen Ampeln müssen so aufgestellt werden, dass sie den Verkehr nicht beeinflussen.
 
-- **Fahrspuren werden nicht geschaltet, sondern Ampeln.** Jede Schaltung der Kreuzung schaltet bestimmte Ampeln auf grün. Dabei wird auch die Fahrspurampel gesteuert.
+- **Fahrspuren werden nicht geschaltet, sondern Ampeln.** Jede Schaltung der Kreuzung schaltet bestimmte Ampeln auf grün. Dabei wird auch die Fahrspur-Ampel gesteuert.
 
-  - Im einfachen Fall wird die Fahrspurampel direkt in der Schaltung gesteuert
-  - Später werden wir Szenarien haben, in denen die Fahrspurampel unsichtbar ist, da mehrere andere Ampeln für die Fahrspur gelten. Der Verkehr wird dann abhängig von den anderen Ampeln gesteuert.
+  - Im einfachen Fall wird die Fahrspur-Ampel direkt in der Schaltung gesteuert
+  - Später werden wir Szenarien haben, in denen die Fahrspur-Ampel unsichtbar ist, da mehrere andere Ampeln für die Fahrspur gelten. Der Verkehr wird dann abhängig von den anderen Ampeln gesteuert.
 
 - **Empfehlung: Erstelle immer eigene Fahrspuren für Linksabbieger, wenn diese den Gegenverkehr kreuzen**.
   Wenn Du dich nicht selbst darum kümmern willst, dass Fahrzeuge den Gegenverkehr beachten, dann solltest Du immer eigene Linksabbieger-Fahrspuren anlegen. Schalte Linksabbieger-Fahrspuren nur dann auf grün, wenn der Gegenverkehr den Fahrweg der Linksabbieger nicht kreuzen kann.

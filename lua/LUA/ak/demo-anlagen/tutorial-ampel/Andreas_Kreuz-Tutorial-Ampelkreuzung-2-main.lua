@@ -102,7 +102,7 @@ os = Lane:new("OS", 107, S1)
 os:useSignalForQueue() -- Erfasst Anforderungen, wenn ein Fahrzeug an Signal 14 steht
 
 ws = Lane:new("WS", 108, S2)
-ws:useTracklForQueue(2) -- Erfasst Anforderungen, wenn ein Fahrzeug auf Strasse 2 steht
+ws:useTrackForQueue(2) -- Erfasst Anforderungen, wenn ein Fahrzeug auf Strasse 2 steht
 
 --------------------------------------------------------------
 -- Definiere die Schaltungen und die Kreuzung
