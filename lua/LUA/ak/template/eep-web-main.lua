@@ -14,12 +14,12 @@ ModuleRegistry.registerModules(
     require("ak.road.CrossingLuaModul")
 )
 
--- Nutze einen Speicherslot in EEP um die Einstellungen für Kreuzungen zu laden und zu speichern
--- Crossing.loadSettingsFromSlot(1)
-
 -- Die EEPMain Methode wird von EEP genutzt. Sie muss immer 1 zurückgeben.
 function EEPMain()
     -- Die Modulverwaltung startet die Aufgaben in allen Modulen bei jedem fünften EEPMain-Aufruf
     ModuleRegistry.runTasks(5)
     return 1
 end
+
+-- Nutze einen Speicherslot in EEP um die Einstellungen für Kreuzungen zu laden und zu speichern
+-- Crossing.loadSettingsFromSlot(1)
