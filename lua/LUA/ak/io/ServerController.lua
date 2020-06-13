@@ -13,7 +13,7 @@ local AkCommandExecutor = require("ak.io.AkCommandExecutor")
 local os = require("os")
 
 local ServerController = {}
-ServerController.debug = AkDebugLoad or false
+ServerController.debug = AkStartWithDebug or false
 ServerController.programVersion = "0.10.1"
 local json
 

@@ -8,7 +8,7 @@ local fmt = require("ak.core.eep.TippTextFormatter")
 -- Lane starts here
 ---@class Lane
 local Lane = {}
-Lane.debug = false
+Lane.debug = AkStartWithDebug or false
 
 ---@class LaneRequestType
 Lane.RequestType = {

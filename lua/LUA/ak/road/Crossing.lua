@@ -22,8 +22,8 @@ local Crossing = {}
 Crossing.debug = AkStartWithDebug or false
 ---@type table<string,Crossing>
 Crossing.allCrossings = {}
-Crossing.showRequestsOnSignal = AkStartWithDebug or false
-Crossing.showSequenceOnSignal = AkStartWithDebug or false
+Crossing.showRequestsOnSignal = false
+Crossing.showSequenceOnSignal = false
 Crossing.showSignalIdOnSignal = false
 
 function Crossing.loadSettingsFromSlot(eepSaveId)
