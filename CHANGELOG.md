@@ -1,5 +1,9 @@
 # Änderungen an der Software
 
+## 0.10.1
+
+- ⭐ Neu: Nutze `require("ak.eep-web-main")` in einer Anlage ohne eigenen Lua-Code um EEP-Web zu verwenden
+
 ## 0.10.0
 
 - ⭐ Neu: Die Angabe von Ampeln und Schaltungen wurde von Grund auf neu gestaltet um die Anwendung zu vereinfachen.
