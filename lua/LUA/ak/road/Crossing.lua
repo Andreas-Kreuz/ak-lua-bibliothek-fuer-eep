@@ -19,11 +19,11 @@ local allCrossings = {}
 ---@field private greenPhaseSeconds number @Integer value of how long the intersection will show green light
 ---@field private staticCams table @List of static cams
 local Crossing = {}
-Crossing.debug = AkStartMitDebug or false
+Crossing.debug = AkStartWithDebug or false
 ---@type table<string,Crossing>
 Crossing.allCrossings = {}
-Crossing.showRequestsOnSignal = AkStartMitDebug or false
-Crossing.showSequenceOnSignal = AkStartMitDebug or false
+Crossing.showRequestsOnSignal = false
+Crossing.showSequenceOnSignal = false
 Crossing.showSignalIdOnSignal = false
 
 function Crossing.loadSettingsFromSlot(eepSaveId)

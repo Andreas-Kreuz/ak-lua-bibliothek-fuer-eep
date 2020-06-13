@@ -3,7 +3,7 @@ local AkCommandExecutor = require("ak.io.AkCommandExecutor")
 local os = require("os")
 
 local AkWebServerIo = {}
-AkWebServerIo.debug = AkDebugLoad
+AkWebServerIo.debug = AkStartWithDebug or false
 
 --- Prüfe ob das Verzeichnis existiert und Dateien geschrieben werden können.
 -- Call this function via pcall to catch any exceptions

@@ -9,7 +9,7 @@ local Task = require("ak.scheduler.Task")
 ------------------------------------------------------
 ---@class CrossingSequence
 local CrossingSequence = {}
-CrossingSequence.debug = AkDebugLoad
+CrossingSequence.debug = AkStartWithDebug or false
 ---@class TrafficLightType
 CrossingSequence.Type = {BUS = "BUS", CAR = "CAR", TRAM = "TRAM", PEDESTRIAN = "PEDESTRIAN", BICYCLE = "BICYCLE"}
 

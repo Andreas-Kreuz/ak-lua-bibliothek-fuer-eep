@@ -8,7 +8,7 @@ local fmt = require("ak.core.eep.TippTextFormatter")
 -- Lane starts here
 ---@class Lane
 local Lane = {}
-Lane.debug = false
+Lane.debug = AkStartWithDebug or false
 
 ---@class LaneRequestType
 Lane.RequestType = {
@@ -301,7 +301,7 @@ end
 function Lane:getRequestInfo() return self.requestInfoText or "KEINE ANFORDERUNG" end
 
 ---@param roadId number Road Track ID
-function Lane:useTracklForQueue(roadId)
+function Lane:useTrackForQueue(roadId)
     assert(not self.signalUsedForRequest, "CANNOT COUNT ON SIGNALS AND TRACKS")
     self.tracksUsedForRequest = true
     EEPRegisterRoadTrack(roadId)

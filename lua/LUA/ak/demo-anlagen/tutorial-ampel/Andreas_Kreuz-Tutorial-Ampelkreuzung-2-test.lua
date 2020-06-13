@@ -10,7 +10,7 @@ clearlog()
 --------------------------------------------------------------------
 -- Zeigt erweiterte Informationen waehrend der Initialisierung an --
 --------------------------------------------------------------------
-AkStartMitDebug = false
+AkStartWithDebug = false
 
 -- Ampeln für die Straßenbahn nutzen die Lichtfunktion der einzelnen Immobilien
 EEPStructureSetLight("#29_Straba Signal Halt", false) --      rot
