@@ -4,7 +4,7 @@ local saveSlots = {}
 local savedValues = {}
 local StorageUtility = {}
 StorageUtility.debugDatei = "StorageUtilityValues.txt"
-StorageUtility.debug = AkStartMitDebug or false
+StorageUtility.debug = AkStartWithDebug or false
 
 --- Prueft einen EEP-Speicherslot zwischen 1 und 1000 und markiert ihn als benutzt.
 --- Es wird ein Fehler ausgegeben, wenn der gleiche Slot noch mal registriert wird.

@@ -13,7 +13,7 @@ local fmt = require("ak.core.eep.TippTextFormatter")
 ------------------------------------------------------------------------------------------
 ---@class TrafficLight
 local TrafficLight = {}
-TrafficLight.debug = AkStartMitDebug or false
+TrafficLight.debug = AkStartWithDebug or false
 local registeredSignals = {}
 local counter = -1
 
