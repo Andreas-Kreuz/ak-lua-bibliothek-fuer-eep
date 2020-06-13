@@ -204,7 +204,7 @@ Muss in `EEPMain()` aufgerufen werden - plant die Umschaltung von Kreuzungsschal
 
 - **Damit das Ganze funktioniert**, muss `EEPMain()` mindestens folgende Befehle verwenden:
 
-  ````lua
+  ```lua
   local ModuleRegistry = require("ak.core.ModuleRegistry")
   ModuleRegistry.registerModules(
       require("ak.core.CoreLuaModule"),
@@ -214,9 +214,8 @@ Muss in `EEPMain()` aufgerufen werden - plant die Umschaltung von Kreuzungsschal
   function EEPMain()
       ModuleRegistry.runTasks() -- Führt alle anstehenden Aktionen der registrierten Module aus
       return 1
-  end```
-
-  ````
+  end
+  ```
 
 - **Fahrspuren mit Anforderungen und Fahrspuren die durch unterschiedliche Ampeln gesteuert werden benötigen zwingend Zählfunktionen** für die Fahrzeuge dieser Fahrspur. Für andere Fahrspuren ist dies optional.
 
