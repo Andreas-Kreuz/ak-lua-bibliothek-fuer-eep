@@ -1,5 +1,10 @@
 # Änderungen an der Software
 
+## 0.10.1
+
+- ⭐ Neu: Nutze `require("ak.template.eep-web-main")` in einer Anlage ohne eigenen Lua-Code um EEP-Web zu verwenden
+- ⭐ Neu: Nutze `AkStartWithDebug=true` wenn Du ausführliche Informationen im Log sehen möchtest
+
 ## 0.10.0
 
 - ⭐ Neu: Die Angabe von Ampeln und Schaltungen wurde von Grund auf neu gestaltet um die Anwendung zu vereinfachen.

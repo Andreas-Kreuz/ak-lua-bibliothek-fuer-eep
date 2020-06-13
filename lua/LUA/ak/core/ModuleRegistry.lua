@@ -4,7 +4,7 @@ local os = require("os")
 local ServerController = require("ak.io.ServerController")
 
 local ModuleRegistry = {}
-ModuleRegistry.debug = AkDebugLoad or false
+ModuleRegistry.debug = AkStartWithDebug or false
 local enableServer = true
 local initialized = false
 ---@type table<string,LuaModule>

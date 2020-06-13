@@ -22,11 +22,29 @@ article h2 {
 article h3 {
   margin-top: 2.5rem;
 }
-article h1+h2,
-article h2+h3,
-article h3+h4 {
+article h1 + h2,
+article h2 + h3,
+article h3 + h4 {
   margin-top: 1rem;
 }
 article h1:first-of-type {
   margin-top: inherit;
+}
+
+article table {
+  border: 1px solid #cccccc;
+}
+
+article table td,
+article table th {
+  padding: 0.4em;
+  border: 1px solid #cccccc;
+}
+
+article table tbody tr:nth-child(2n) {
+  background-color: #f9f9f9;
+}
+
+table ~ table, table ~ p {
+  margin-top: 1em;
 }

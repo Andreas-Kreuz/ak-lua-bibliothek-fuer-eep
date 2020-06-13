@@ -2,7 +2,7 @@ clearlog()
 --------------------------------------------------------------------
 -- Zeigt erweiterte Informationen waehrend der Initialisierung an --
 --------------------------------------------------------------------
-AkStartMitDebug = false
+AkStartWithDebug = false
 
 --------------------------------------------------------------------
 -- Lädt das eigentliche Skript                                    --

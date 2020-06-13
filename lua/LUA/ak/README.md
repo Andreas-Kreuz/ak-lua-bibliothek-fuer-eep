@@ -43,5 +43,9 @@ img: "/docs/assets/headers/SourceCode.png"
       <td><a href="storage/">📦&nbsp;ak/storage</a></td>
       <td>Speichern und Laden von String-Tabellen</td>
     </tr>
+    <tr>
+      <td><a href="template/">📦&nbsp;ak/template</a></td>
+      <td>Skripte zum Kopieren und Wiederverwenden</td>
+    </tr>
   </tbody>
 </table>

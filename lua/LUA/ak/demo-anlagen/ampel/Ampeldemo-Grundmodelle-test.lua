@@ -14,7 +14,7 @@ clearlog()
 --------------------------------------------------------------------
 -- Zeigt erweiterte Informationen waehrend der Initialisierung an --
 --------------------------------------------------------------------
-AkStartMitDebug = false
+AkStartWithDebug = false
 
 --------------------------------------------------------------------
 -- Zeigt erweiterte Informationen waehrend der erste Schitte an   --

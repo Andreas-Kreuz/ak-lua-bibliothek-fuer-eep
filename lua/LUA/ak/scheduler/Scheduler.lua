@@ -28,7 +28,7 @@ end
 -- Class Scheduler
 ------------------
 local Scheduler = {ready = true}
-Scheduler.debug = AkStartMitDebug or false
+Scheduler.debug = AkStartWithDebug or false
 Scheduler.scheduledTasks = {}
 Scheduler.futureTasks = {} -- Wird zu self.eingeplanteAktionen hinzugefuegt
 Scheduler.lastRuntime = 0
