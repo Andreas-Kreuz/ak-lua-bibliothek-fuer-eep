@@ -1,6 +1,6 @@
 # Änderungen an der Software
 
-## 0.10.2g
+## 0.10.2
 
 - ⭐ Neu: Skript für das Tutorial `ak/demo-anlagen/tutorial-ampel/code-video-tutorial-1.lua`
 
