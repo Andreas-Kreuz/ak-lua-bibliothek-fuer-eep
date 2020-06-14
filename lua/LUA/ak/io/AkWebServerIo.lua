@@ -5,7 +5,7 @@ local os = require("os")
 local AkWebServerIo = {}
 AkWebServerIo.debug = AkStartWithDebug or false
 
---- PrÃ¼fe ob das Verzeichnis existiert und Dateien geschrieben werden kÃ¶nnen.
+--- Prüfe ob das Verzeichnis existiert und Dateien geschrieben werden können.
 -- Call this function via pcall to catch any exceptions
 local function dirExists(dir)
     local file = io.open(dir .. "/" .. "ak-eep-version.txt", "w")
@@ -25,7 +25,7 @@ local function existingDirOf(...)
     return nil
 end
 
---- PrÃ¼fe ob Datei existiert.
+--- Prüfe ob Datei existiert.
 local function fileExists(name)
     local f = io.open(name, "r")
     if f ~= nil then
@@ -97,7 +97,7 @@ AkWebServerIo.setOutputDirectory(
 )
 local _assert = assert
 local _print = print
---- Schreibe log zusÃ¤tzlich in Datei.
+--- Schreibe log zusätzlich in Datei.
 function print(...)
     -- print the output to the log file (Why do we open/close the file within every call? What about flush?)
     local file = _assert(io.open(outFileNameLog, "a"))
@@ -117,7 +117,7 @@ function print(...)
     _print(...)
 end
 
---- Schreibe log zusÃ¤tzlich in Datei.
+--- Schreibe log zusätzlich in Datei.
 -- function assert(v, message)
 --     -- print the output to the file
 --     if not v then
@@ -145,7 +145,7 @@ AkCommandExecutor.addAcceptedRemoteFunction("print", print)
 
 local serverWasReadyLastTime = true
 local serverWasListeningLastTime = true
---- PrÃ¼fe Status des Web Servers.
+--- Prüfe Status des Web Servers.
 function AkWebServerIo.checkWebServer()
     if fileExists(watchFileNameServer) then -- file: ak-server.iswatching
         if fileExists(watchFileNameLua) then -- file: ak-eep-out-json.isfinished
@@ -188,7 +188,7 @@ function AkWebServerIo.updateJsonFile(jsonData)
     end
 end
 
---- Lese Kommandos aus Datei und fÃ¼hre sie aus.
+--- Lese Kommandos aus Datei und führe sie aus.
 function AkWebServerIo.processNewCommands()
     local commands = inFileCommands:read("*all")-- file: ak-eep-in.commands
     if commands and commands ~= "" then
