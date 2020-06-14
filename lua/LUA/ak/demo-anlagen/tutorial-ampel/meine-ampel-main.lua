@@ -1,4 +1,5 @@
 clearlog()
+print("ak.demo-anlagen.tutorial-ampel.meine-ampel-main")
 local TrafficLightModel = require("ak.road.TrafficLightModel")
 local TrafficLight = require("ak.road.TrafficLight")
 local Lane = require("ak.road.Lane")
