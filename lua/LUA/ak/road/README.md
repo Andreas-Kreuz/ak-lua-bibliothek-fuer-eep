@@ -258,9 +258,9 @@ Wird dazu verwendet, mehrere Fahrspuren gleichzeitig zu schalten. Es muss sicher
 
 ### `CrossingSequence:addCarLights()` - Ampeln für Kfz hinzufügen
 
-| Aufruf                       |
-| ---------------------------- |
-| `Crossing:addCarLights(...)` |
+| Aufruf                               |
+| ------------------------------------ |
+| `CrossingSequence:addCarLights(...)` |
 
 Fügt eine oder mehrere Ampeln vom Typ `TrafficLight` als Kfz-Ampeln zur Kreuzung hinzu. Diese Schalten nacheinander "Rot", "Rot-Gelb", "Grün", "Gelb", "Rot"
 
@@ -277,9 +277,9 @@ also mit einem Doppelpunkt und nicht mit einem Punkt.
 
 ### `CrossingSequence:addPedestrianLights()` - Ampeln für Fußgänger hinzufügen
 
-| Aufruf                              |
-| ----------------------------------- |
-| `Crossing:addPedestrianLights(...)` |
+| Aufruf                                      |
+| ------------------------------------------- |
+| `CrossingSequence:addPedestrianLights(...)` |
 
 Fügt eine oder mehrere Ampeln vom Typ `TrafficLight` als Kfz-Ampeln zur Kreuzung hinzu. Diese Schalten nacheinander "Rot", "Grün Fußgänger", "Rot"
 
@@ -296,9 +296,9 @@ also mit einem Doppelpunkt und nicht mit einem Punkt.
 
 ### `CrossingSequence:addTramLights()` - Ampeln für Trams hinzufügen
 
-| Aufruf                        |
-| ----------------------------- |
-| `Crossing:addTramLights(...)` |
+| Aufruf                                |
+| ------------------------------------- |
+| `CrossingSequence:addTramLights(...)` |
 
 Fügt eine oder mehrere Ampeln vom Typ `TrafficLight` als Tram-Ampeln zur Kreuzung hinzu. Diese Schalten nacheinander "Rot", "Grün", "Gelb", "Rot"
 
@@ -335,11 +335,11 @@ Legt eine neue Kreuzung an und registriert diese im Modul Kreuzungen. Nachdem Sc
 **Beachte**: Die Funktion musst mit `:new()` statt `.new()` aufgerufen werden -
 also mit einem Doppelpunkt und nicht mit einem Punkt.
 
-### `Crossing:addSequence()` - Eine Schaltung in einer Kreuzung erstellen
+### `Crossing:newSequence()` - Eine Schaltung in einer Kreuzung erstellen
 
 | Aufruf                       |
 | ---------------------------- |
-| `Crossing:addSequence(name)` |
+| `Crossing:newSequence(name)` |
 
 Fügt eine oder mehrere Ampeln vom Typ `TrafficLight` als Tram-Ampeln zur Kreuzung hinzu. Diese Schalten nacheinander "Rot", "Grün", "Gelb", "Rot"
 
