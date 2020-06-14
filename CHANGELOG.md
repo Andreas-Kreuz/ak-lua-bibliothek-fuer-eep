@@ -1,5 +1,12 @@
 # Änderungen an der Software
 
+## 0.10.2g
+
+- ⭐ Neu: Skript für das Tutorial `ak/demo-anlagen/tutorial-ampel/code-video-tutorial-1.lua`
+
+- 🐞 Bugfix: Unnötiger horizontaler Scroll-Balken im EEP-Web entfernt
+- 🐞 Bugfix: Funktionsnamen in der Dokumentation korrigiert
+
 ## 0.10.1
 
 - ⭐ Neu: Nutze `require("ak.template.eep-web-main")` in einer Anlage ohne eigenen Lua-Code um EEP-Web zu verwenden

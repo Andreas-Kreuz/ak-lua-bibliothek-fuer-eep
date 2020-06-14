@@ -6,7 +6,7 @@
 -- Use this class in XxxWebConnector to register JsonCollectors and commands
 local ServerController = require("ak.io.ServerController")
 --]] -- @author Andreas Kreuz
--- @release 0.10.1
+-- @release 0.10.2
 if AkDebugLoad then print("Loading ak.io.ServerController ...") end
 local AkWebServerIo = require("ak.io.AkWebServerIo")
 local AkCommandExecutor = require("ak.io.AkCommandExecutor")
@@ -14,7 +14,7 @@ local os = require("os")
 
 local ServerController = {}
 ServerController.debug = AkStartWithDebug or false
-ServerController.programVersion = "0.10.1"
+ServerController.programVersion = "0.10.2"
 local json
 
 -- ACHTUNG: DIE VERWENDUNG ERFOLGT AUF EIGENE GEFAHR. ES IST GUT MÖGLICH,
