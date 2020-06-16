@@ -21,6 +21,8 @@ Das bekommst Du:
 
 ## Klasse `TrafficLightModel`
 
+Laden mit: `local TrafficLightModel = require("ak.road.TrafficLightModel")`
+
 Beschreibt das Modell einer Ampel mit den Schaltungen für rot, grün, gelb und rot-gelb, sowie dem Fußgängersignal (falls vorhanden - dann hat die Ampel für den Straßenverkehr rot)
 
 ### `TrafficLightModel:new()` - Ampelmodell anlegen
@@ -77,6 +79,8 @@ TrafficLightModel.JS2_2er_OFF_YELLOW_GREEN = TrafficLightModel:new("Ampel_2er_Au
 ```
 
 ## Klasse `TrafficLight`
+
+Laden mit: `local TrafficLight = require("ak.road.TrafficLight")`
 
 Diese Klasse wird dazu verwendet eine Signal auf der Anlage (signalId) mit einem Modell zu verknüpfen. Eine so verknüpfte Ampel kann dann einer Fahrspur zugewiesen werden. Die Ampel gilt für eine bestimmte Richtung und damit gegebenenfall für eine oder mehrere Fahrspuren.
 
@@ -188,6 +192,8 @@ also mit einem Doppelpunkt und nicht mit einem Punkt.
 
 ## Klasse `Lane`
 
+Laden mit: `local Lane = require("ak.road.Lane")`
+
 Eine Fahrspur definiert sich dadurch, dass darin Autos in einer Schlange an einer Fahrspur-Ampel anstehen.
 Die Fahrspur-Ampel ist zwingend notwendig und kann direkt oder indirekt in Schaltungen verwendet werden.
 
@@ -242,6 +248,8 @@ Dies zählt die Fahrzeig an der Fahrzeugampel. Da die Funktion aber nur zwischen
 Um die Fahrspur zu priorisieren, wenn sich **ein beliebiges Fahrzeug** auf der Straße vor der Ampel befindet, muss die ID des Straßenstücks einmalig hinterlegt werden: `lane:useTrackForQueue(strassenId)`. Da die Funtion aber weder die Reihenfolge der Fahrzeuge erkennt noch mehrere Fahrzeuge pro Track, wird sie nicht empfohlen! [Mehr Informationen zur Fahrzeugerkennung in der Dokumentation](../../../docs/anleitungen-ampelkreuzung/tutorial3-priorisierung).
 
 ## Klasse `CrossingSequence`
+
+Laden mit: `local CrossingSequence = require("ak.road.CrossingSequence")`
 
 Die Schaltung `CrossingSequence` ist verantwortlich für den Wechsel zwischen den roten und grünen Ampelphasen. Jede Schaltung bekommt dafür mindestens eine Ampel.
 Es sollten mindestens zwei Schaltungen `CrossingSequence` in einer Kreuzung angelegt werden. Für das Anlegen neuer Schaltungen wird die Funktion `Crossing:newSequence(name)` empfohlen
@@ -315,6 +323,8 @@ also mit einem Doppelpunkt und nicht mit einem Punkt.
 
 ## Klasse `Crossing`
 
+Laden mit: `local Crossing = require("ak.road.Crossing")`
+
 ### `Crossing:new()` - neue Kreuzung anlegen
 
 | Aufruf                                  |
@@ -375,7 +385,7 @@ also mit einem Doppelpunkt und nicht mit einem Punkt.
 
 # Wichtige Hinweise
 
-- **Damit das Ganze funktioniert**, muss `EEPMain()` mindestens folgende Befehle verwenden:
+- **Damit das Ganze funktioniert**, muss `EEPMain()` mindestens den Befehl `ModuleRegistry.runTasks()` verwenden:
 
   ```lua
   local ModuleRegistry = require("ak.core.ModuleRegistry")
