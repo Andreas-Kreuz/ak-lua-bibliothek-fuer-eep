@@ -49,13 +49,13 @@ end
 --    |    +----------------------- Legt eine neue Ampel an
 --    |    |                +------ Signal-ID dieser Ampel
 --    |    |                |   +-- Modell dieser Ampel - weiss wo rot, gelb und gruen / Fussgaenger ist
-local K1 = TrafficLight:new("K1", 07, TrafficLightModel.JS2_3er_mit_FG) -- Ampel K1 ist gleichzeitig eine Fußgängerampel
-local K2 = TrafficLight:new("K2", 08, TrafficLightModel.JS2_3er_mit_FG)
-local K3 = TrafficLight:new("K3", 09, TrafficLightModel.JS2_3er_mit_FG)
-local K4 = TrafficLight:new("K4", 10, TrafficLightModel.JS2_3er_mit_FG)
-local K5 = TrafficLight:new("K5", 12, TrafficLightModel.JS2_3er_mit_FG)
+local K1 = TrafficLight:new("K1/F1", 07, TrafficLightModel.JS2_3er_mit_FG) -- Ampel K1 ist gleichzeitig eine Fußgängerampel
+local K2 = TrafficLight:new("K2/F2", 08, TrafficLightModel.JS2_3er_mit_FG)
+local K3 = TrafficLight:new("K3/F3", 09, TrafficLightModel.JS2_3er_mit_FG)
+local K4 = TrafficLight:new("K4/F4", 10, TrafficLightModel.JS2_3er_mit_FG)
+local K5 = TrafficLight:new("K5/F5", 12, TrafficLightModel.JS2_3er_mit_FG)
 local K6 = TrafficLight:new("K6", 13, TrafficLightModel.JS2_3er_ohne_FG) -- dies ist keine Fußgängerampel
-local K7 = TrafficLight:new("K7", 11, TrafficLightModel.JS2_3er_mit_FG)
+local K7 = TrafficLight:new("K7/F6", 11, TrafficLightModel.JS2_3er_mit_FG)
 
 -- Ampeln für die Straßenbahn nutzen die Lichtfunktion der einzelnen Immobilien
 local S1 = TrafficLight:new("S1", 14, TrafficLightModel.Unsichtbar_2er, "#29_Straba Signal Halt", -- rot
@@ -99,9 +99,11 @@ w2 = Lane:new("W2", 105, K6)
 
 -- Fahrspuren fuer Strassenbahnen:
 os = Lane:new("OS", 107, S1)
+os:showRequestsOn(S1)
 os:useSignalForQueue() -- Erfasst Anforderungen, wenn ein Fahrzeug an Signal 14 steht
 
 ws = Lane:new("WS", 108, S2)
+ws:showRequestsOn(S2)
 ws:useTrackForQueue(2) -- Erfasst Anforderungen, wenn ein Fahrzeug auf Strasse 2 steht
 
 --------------------------------------------------------------
@@ -110,8 +112,10 @@ ws:useTrackForQueue(2) -- Erfasst Anforderungen, wenn ein Fahrzeug auf Strasse 2
 -- Eine Schaltung bestimmt, welche Fahrspuren gleichzeitig auf
 -- grün geschaltet werden dürfen, alle anderen sind rot
 
+k1 = Crossing:new("Tutorial 2")
+
 --- Tutorial 2: Schaltung 1
-local sch1 = CrossingSequence:new("Schaltung 1")
+local sch1 = k1:newSequence("Schaltung 1")
 sch1:addCarLights(K3)
 sch1:addCarLights(K4)
 sch1:addTramLights(S1)
@@ -120,25 +124,26 @@ sch1:addTramLights(S2)
 sch1:addPedestrianLights(F1, F2)
 
 --- Tutorial 2: Schaltung 2
-local sch2 = CrossingSequence:new("Schaltung 2")
+local sch2 = k1:newSequence("Schaltung 2")
 sch2:addCarLights(K6)
 sch2:addCarLights(K7)
 sch2:addPedestrianLights(F3, F4)
 
 --- Tutorial 2: Schaltung 3
-local sch3 = CrossingSequence:new("Schaltung 3")
+local sch3 = k1:newSequence("Schaltung 3")
 sch3:addCarLights(K1)
 sch3:addCarLights(K2)
 sch3:addPedestrianLights(F3, F4)
 sch3:addPedestrianLights(F5, F6)
 
-k1 = Crossing:new("Tutorial 2")
-k1:addSequence(sch1)
-k1:addSequence(sch2)
-k1:addSequence(sch3)
+-- Die Kreuzung soll die Schaltungen einfach nur in Ihrer Reihenfolge schalten
+k1:setSwitchInStrictOrder(true)
 
 local ModuleRegistry = require("ak.core.ModuleRegistry")
-ModuleRegistry.registerModules(require("ak.core.CoreLuaModule"), require("ak.road.CrossingLuaModul"))
+ModuleRegistry.registerModules(
+    require("ak.core.CoreLuaModule"),
+    require("ak.road.CrossingLuaModul")
+)
 
 function EEPMain()
     ModuleRegistry.runTasks()
