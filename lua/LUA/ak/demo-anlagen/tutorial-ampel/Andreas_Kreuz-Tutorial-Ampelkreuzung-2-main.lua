@@ -58,14 +58,16 @@ local K6 = TrafficLight:new("K6", 13, TrafficLightModel.JS2_3er_ohne_FG) -- dies
 local K7 = TrafficLight:new("K7/F6", 11, TrafficLightModel.JS2_3er_mit_FG)
 
 -- Ampeln für die Straßenbahn nutzen die Lichtfunktion der einzelnen Immobilien
-local S1 = TrafficLight:new("S1", 14, TrafficLightModel.Unsichtbar_2er, "#29_Straba Signal Halt", -- rot
-"#28_Straba Signal geradeaus", --  gruen
-"#27_Straba Signal anhalten", --   gelb
-"#26_Straba Signal A") --    Anforderung
-local S2 = TrafficLight:new("S2", 15, TrafficLightModel.Unsichtbar_2er, "#32_Straba Signal Halt", --       rot
-"#30_Straba Signal geradeaus", --  gruen
-"#31_Straba Signal anhalten", --   gelb
-"#33_Straba Signal A") --    Anforderung
+local S1 = TrafficLight:new("S1", 14, TrafficLightModel.Unsichtbar_2er,
+                            "#29_Straba Signal Halt", -- rot
+                            "#28_Straba Signal geradeaus", --  gruen
+                            "#27_Straba Signal anhalten", --   gelb
+                            "#26_Straba Signal A") --    Anforderung
+local S2 = TrafficLight:new("S2", 15, TrafficLightModel.Unsichtbar_2er,
+                            "#32_Straba Signal Halt", --       rot
+                            "#30_Straba Signal geradeaus", --  gruen
+                            "#31_Straba Signal anhalten", --   gelb
+                            "#33_Straba Signal A") --    Anforderung
 
 local F1 = K1 -- Die Fussgängerampel F1 ist die selbe, wie Ampel K1, zeigt aber später "Fußgänger grün"
 local F2 = K2
