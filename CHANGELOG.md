@@ -1,5 +1,9 @@
 # Änderungen an der Software
 
+## 0.10.3
+
+- ⭐ Neu: Skript für das Tutorial `ak/demo-anlagen/tutorial-ampel/code-video-tutorial-2.lua`
+
 ## 0.10.2
 
 - ⭐ Neu: Skript für das Tutorial `ak/demo-anlagen/tutorial-ampel/code-video-tutorial-1.lua`
