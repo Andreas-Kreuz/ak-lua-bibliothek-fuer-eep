@@ -14,7 +14,7 @@ local os = require("os")
 
 local ServerController = {}
 ServerController.debug = AkStartWithDebug or false
-ServerController.programVersion = "0.10.3"
+ServerController.programVersion = "0.10.4"
 local json
 
 -- ACHTUNG: DIE VERWENDUNG ERFOLGT AUF EIGENE GEFAHR. ES IST GUT MÖGLICH,

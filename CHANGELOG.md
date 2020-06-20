@@ -1,5 +1,10 @@
 # Änderungen an der Software
 
+## 0.10.4
+
+- ⭐ Neu: Skript für das Tutorial `ak/demo-anlagen/tutorial-ampel/code-video-tutorial-3.lua`
+- ⭐ Neu: Anlage für das Tutorial `Andreas_Kreuz-Tutorial-Ampelkreuzung-3-rechtsabbieger`
+
 ## 0.10.3
 
 - ⭐ Neu: Skript für das Tutorial `ak/demo-anlagen/tutorial-ampel/code-video-tutorial-2.lua`
