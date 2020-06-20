@@ -1,5 +1,9 @@
 # Änderungen an der Software
 
+## 0.10.5
+
+- 🐞 Bugfix: Lua-Skript für die Grundmodelle-Demo wird korrekt geladen
+
 ## 0.10.4
 
 - ⭐ Neu: Skript für das Tutorial `ak/demo-anlagen/tutorial-ampel/code-video-tutorial-3.lua`
