@@ -3,7 +3,7 @@ local TrafficLightModel = require("ak.road.TrafficLightModel")
 local TrafficLight = require("ak.road.TrafficLight")
 local Lane = require("ak.road.Lane")
 local Crossing = require("ak.road.Crossing")
-local CrossingSequence = require("ak.road.CrossingSequence")
+-- local CrossingSequence = require("ak.road.CrossingSequence")
 
 Crossing.debug = true
 
@@ -49,7 +49,8 @@ end
 --    |    +----------------------- Legt eine neue Ampel an
 --    |    |                +------ Signal-ID dieser Ampel
 --    |    |                |   +-- Modell dieser Ampel - weiss wo rot, gelb und gruen / Fussgaenger ist
-local K1 = TrafficLight:new("K1/F1", 07, TrafficLightModel.JS2_3er_mit_FG) -- Ampel K1 ist gleichzeitig eine Fuﬂg‰ngerampel
+local K1 = TrafficLight:new("K1/F1", 07, TrafficLightModel.JS2_3er_mit_FG)
+-- Ampel K1 ist gleichzeitig eine Fuﬂg‰ngerampel
 local K2 = TrafficLight:new("K2/F2", 08, TrafficLightModel.JS2_3er_mit_FG)
 local K3 = TrafficLight:new("K3/F3", 09, TrafficLightModel.JS2_3er_mit_FG)
 local K4 = TrafficLight:new("K4/F4", 10, TrafficLightModel.JS2_3er_mit_FG)
