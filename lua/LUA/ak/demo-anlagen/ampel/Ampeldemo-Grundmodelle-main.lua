@@ -121,6 +121,8 @@ do
     --- Kreuzung 2: Schaltung 4
     local c2Sequence4 = c2:newSequence("Schaltung 4")
     c2Sequence4:addCarLights(K5)
+
+    c2:addStaticCam("Kreuzung 2")
 end
 -- endregion
 
@@ -197,6 +199,8 @@ do
     local c1Sequence4 = c1:newSequence("Schaltung 4")
     c1Sequence4:addCarLights(K4)
     c1Sequence4:addCarLights(K8)
+
+    c1:addStaticCam("Kreuzung 1")
 end
 -- endregion
 
