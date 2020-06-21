@@ -1,5 +1,9 @@
 # Änderungen an der Software
 
+## 0.10.6
+
+- 🐞 Bugfix: Fix displaying traffic light states in Web App
+
 ## 0.10.5
 
 - 🐞 Bugfix: Lua-Skript für die Grundmodelle-Demo wird korrekt geladen
