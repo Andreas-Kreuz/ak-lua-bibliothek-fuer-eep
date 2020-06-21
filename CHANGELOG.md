@@ -1,8 +1,13 @@
 # Änderungen an der Software
 
+## 0.10.7
+
+- ⭐ Neu: Skript für das Tutorial `Andreas_Kreuz-Tutorial-Ampelkreuzung-3-rechtsabbieger`
+- 🐞 Bugfix: "Zugname" wird nun korrekt in den Kontaktpunkten verwendet
+
 ## 0.10.6
 
-- 🐞 Bugfix: Fix displaying traffic light states in Web App
+- 🐞 Bugfix: Ampeln der Fahrspuren werden korrekt in EEP-Web angezeigt
 
 ## 0.10.5
 
