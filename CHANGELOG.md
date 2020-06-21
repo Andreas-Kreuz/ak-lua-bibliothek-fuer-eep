@@ -2,7 +2,8 @@
 
 ## 0.10.7
 
-- ⭐ Neu: Skript für das Tutorial `Andreas_Kreuz-Tutorial-Ampelkreuzung-3-rechtsabbieger`
+- ⭐ Neu: Anlage für `Andreas_Kreuz-Tutorial-Ampelkreuzung-3-rechtsabbieger` wurde so angepasst, dass
+  die Rechtsabbieger und Linksabbieger wechselweise in die Kreuzung einfahren.
 - 🐞 Bugfix: "Zugname" wird nun korrekt in den Kontaktpunkten verwendet
 
 ## 0.10.6
