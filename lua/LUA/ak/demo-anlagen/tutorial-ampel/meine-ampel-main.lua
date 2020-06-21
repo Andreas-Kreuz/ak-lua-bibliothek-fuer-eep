@@ -137,6 +137,11 @@ k1:addSequence(sch4)
 -- k1:addSequence(sch7)
 -- k1:addSequence(sch8)
 
+
+k1:addStaticCam("Richtung Norden")
+k1:addStaticCam("Richtung Ost")
+k1:addStaticCam("Übersicht")
+
 local ModuleRegistry = require("ak.core.ModuleRegistry")
 ModuleRegistry.registerModules(require("ak.core.CoreLuaModule"), require("ak.road.CrossingLuaModul"))
 
