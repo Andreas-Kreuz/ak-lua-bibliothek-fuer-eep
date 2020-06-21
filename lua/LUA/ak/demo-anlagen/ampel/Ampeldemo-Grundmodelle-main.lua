@@ -33,13 +33,13 @@ setmetatable(_ENV, {
 --------------------------------------------
 -- Definiere Funktionen fuer Kontaktpunkte
 --------------------------------------------
-function enterLane(lane)
+function enterLane(Zugname, lane)
     assert(lane, "lane darf nicht nil sein. Richtige Lua-Funktion im Kontaktpunkt?")
     -- print(lane.name .. " betreten durch: " .. Zugname)
     lane:vehicleEntered(Zugname)
 end
 
-function leaveLane(lane)
+function leaveLane(Zugname, lane)
     assert(lane, "lane darf nicht nil sein. Richtige Lua-Funktion im Kontaktpunkt?")
     -- print(lane.name .. " verlassen von: " .. Zugname)
     lane:vehicleLeft(Zugname)

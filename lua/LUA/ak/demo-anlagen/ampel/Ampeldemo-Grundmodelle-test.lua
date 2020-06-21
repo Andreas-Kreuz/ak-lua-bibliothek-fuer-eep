@@ -43,8 +43,8 @@ ServerController.debug = false
 
 Crossing.initSequences()
 Crossing.debug = true
-enterLane(c1Lane8)
-enterLane(c1Lane8)
+enterLane(Zugname, c1Lane8)
+enterLane(Zugname, c1Lane8)
 assert(c1Lane8.vehicleCount == 2, c1Lane8.anzahlFahrzeuge)
 Crossing.resetVehicles()
 assert(c1Lane8.vehicleCount == 0)
@@ -56,12 +56,12 @@ end
 
 for _ = 1, 10 do
     print("Betritt Block")
-    enterLane(c1Lane8)
+    enterLane(Zugname, c1Lane8)
     run()
     run()
     run()
     run()
     print("Verlasse Block")
-    leaveLane(c1Lane8, true)
+    leaveLane(Zugname, c1Lane8, true)
     run()
 end

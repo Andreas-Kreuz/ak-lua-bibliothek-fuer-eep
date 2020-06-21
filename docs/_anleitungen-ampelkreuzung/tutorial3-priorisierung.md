@@ -143,14 +143,14 @@ Setze für jeder Fahrspur zwei Kontaktpunkte:
 
 1. Vor dem Signal der Fahrspur
 
-   Dieser Kontaktpunkt muss die Funktion `lane:vehicleEntered(vehicleName)` aufrufen - in der Demo-Anlage wird in den Kontaktpunkten `enterLane(lane)` verwendet.
+   Dieser Kontaktpunkt muss die Funktion `lane:vehicleEntered(vehicleName)` aufrufen - in der Demo-Anlage wird in den Kontaktpunkten `enterLane(Zugname, lane)` verwendet.
 
    ⭐ Achte darauf, dass nur Fahrzeuge den Kontaktpunkt aufrufen, die diese Fahrspur betreten.<br>
    ⭐ Achte darauf, dass der Kontaktpunkt nicht vor einer Verzweigungen liegt, die die Fahrzeuge auf andere Fahrspuren verteilt.
 
 2. Hinter dem Signal der Fahrspur
 
-   Dieser Kontaktpunkt muss die Funktion `lane:vehicleLeft(vehicleName)` aufrufen - in der Demo-Anlage wird in den Kontaktpunkten `leaveLane(lane)` verwendet.
+   Dieser Kontaktpunkt muss die Funktion `lane:vehicleLeft(vehicleName)` aufrufen - in der Demo-Anlage wird in den Kontaktpunkten `leaveLane(Zugname, lane)` verwendet.
 
    ⭐ Achte darauf, dass nur Fahrzeuge den Kontaktpunkt aufrufen, die die korrekte Fahrspur verlassen.<br>
    ⭐ Achte darauf, dass der Kontaktpunkt hinter der Haltelinie liegt.
