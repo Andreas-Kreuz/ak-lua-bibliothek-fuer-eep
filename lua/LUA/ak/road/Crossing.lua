@@ -243,9 +243,14 @@ local function switch(crossing)
         TrafficLight.switchAll(turnRedTraffic, TrafficLightState.RED, reason)
     end
 
+    -- After the sequence is ready, the current sequence is active
+    local switchedSequenceTask = Task:new(function()
+        crossing:onSwitchedToSequence(nextSequence)
+    end, crossing.name .. " verwendet nun Schaltung " .. nextSequence.name)
+
     -- Calculate all tasks for switching in the sequence
     local lastTask
-    local tasks = nextSequence:tasksForSwitchingFrom(currentSequence)
+    local tasks = nextSequence:tasksForSwitchingFrom(currentSequence, switchedSequenceTask)
 
     for _, t in ipairs(tasks) do
         Scheduler:scheduleTask(t.offset, t.task, t.precedingTask)
@@ -258,7 +263,6 @@ local function switch(crossing)
             local msg = "[Crossing ] %s: Kreuzung ist auf grün geschaltet."
             print(string.format(msg, crossing.name))
         end
-        crossing:onSwitchedToSequence(nextSequence)
         crossing.greenPhaseReached = true
     end, crossing.name .. " ist nun auf grün geschaltet)")
     Scheduler:scheduleTask(0, greenPhaseReachedTask, lastTask)
