@@ -40,22 +40,22 @@ local function collect(allCrossings)
         table.insert(intersections, intersection)
 
         local trafficLights = {}
-        for _, schaltung in ipairs(crossing:getSequences()) do
+        for _, seq in ipairs(crossing:getSequences()) do
             local sequence = {
-                id = crossing.name .. "-" .. schaltung.name,
+                id = crossing.name .. "-" .. seq.name,
                 intersectionId = crossing.name,
-                name = schaltung.name,
-                prio = schaltung.prio
+                name = seq.name,
+                prio = seq.prio
             }
             table.insert(intersectionSwitching, sequence)
 
-            for lane in pairs(schaltung.lanes) do
+            for lane in pairs(seq.lanes) do
                 allLanes[lane] = intersection.id
                 laneSequences[lane] = laneSequences[lane] or {}
-                table.insert(laneSequences[lane], schaltung.name)
+                table.insert(laneSequences[lane], seq.name)
             end
 
-            for trafficLight in pairs(schaltung.trafficLights) do trafficLights[trafficLight] = true end
+            for trafficLight in pairs(seq.trafficLights) do trafficLights[trafficLight] = true end
         end
 
         for tl in pairs(trafficLights) do
