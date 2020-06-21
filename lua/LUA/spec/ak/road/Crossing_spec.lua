@@ -176,9 +176,31 @@ insulate("Crossing", function()
             end)
         end)
         describe("Same priorities on same vehicles", function()
+            local lane2QueueSize = lane2.queue:size()
+            it("Lane 2 queue size", function() assert.equals(0, lane2QueueSize) end)
+
             lane1:vehicleEntered("#Car1a")
             lane2:vehicleEntered("#Car2a")
             lane3:vehicleEntered("#Car3a")
+
+            local lane2FirstRoute = lane2.firstVehiclesRoute
+            local lane2CanDriveOnK7 = Lane.laneCanDrive(lane2, {K7})
+
+            it("#Car2a route", function()
+                local _, route = EEPGetTrainRoute("#Car2a")
+                assert.equals(RIGHT_TURN_ROUTE, route)
+            end)
+            it("Lane 2 queue size", function() assert.equals(1, lane2.queue:size()) end)
+            it("Lane 2 first vehicle", function() assert.equals("#Car2a", lane2.queue:elements()[1]) end)
+            it("Lane 2 vehicleRoute", function() assert.equals(RIGHT_TURN_ROUTE, lane2FirstRoute) end)
+            it("Lane 2 routes", function() assert.equals(RIGHT_TURN_ROUTE, lane2.trafficLightsToDriveOn[K7][1]) end)
+            it("Lane 2 routes", function() assert.equals(0, #lane2.trafficLightsToDriveOn[K6]) end)
+
+            it("Lane 1 canDrive", function() assert.equals(true, Lane.laneCanDrive(lane1, {K1})) end)
+            it("Lane 2 canDrive", function() assert.equals(true, Lane.laneCanDrive(lane2, {K6})) end)
+            it("Lane 2 canDrive", function() assert.equals(true, lane2CanDriveOnK7) end)
+            it("Lane 2 canDrive", function() assert.equals(true, Lane.laneCanDrive(lane2, {K6, K7})) end)
+            it("Lane 2 canDrive", function() assert.equals(true, Lane.laneCanDrive(lane2, {K7, K6})) end)
 
             it("Car priorities for 1 car per lane", function()
                 assert.equals(1.5, sequenceA:calculatePriority())
@@ -367,10 +389,10 @@ insulate("Check traffic light sequence", function()
         local step0Line2WaitCount = lane2:getWaitCount() --           step0
         local step0Line3WaitCount = lane3:getWaitCount() --           step0
         local step0Line4WaitCount = lane4:getWaitCount() --           step0
-        local step0Lane1Prio = lane1:calculatePriority() --           step0
-        local step0Lane2Prio = lane2:calculatePriority() --           step0
-        local step0Lane3Prio = lane3:calculatePriority() --           step0
-        local step0Lane4Prio = lane4:calculatePriority() --           step0
+        local step0Lane1Prio = lane1:calculatePriority({}) --           step0
+        local step0Lane2Prio = lane2:calculatePriority({}) --         step0
+        local step0Lane3Prio = lane3:calculatePriority({}) --         step0
+        local step0Lane4Prio = lane4:calculatePriority({}) --         step0
         local step0SwitchingAPrio = sequenceA:calculatePriority() -- step0
         local step0SwitchingBPrio = sequenceB:calculatePriority() -- step0
         local step0SwitchingCPrio = sequenceC:calculatePriority() -- step0
@@ -378,7 +400,7 @@ insulate("Check traffic light sequence", function()
         it("# step0 - lane2 WaitCount", function() assert.equals(000, step0Line2WaitCount) end)
         it("# step0 - lane3 WaitCount", function() assert.equals(000, step0Line3WaitCount) end)
         it("# step0 - lane4 WaitCount", function() assert.equals(000, step0Line4WaitCount) end)
-        it("# step0 - lane1 prio     ", function() assert.equals(003, step0Lane1Prio) end)
+        it("# step0 - lane1 prio     ", function() assert.equals(000, step0Lane1Prio) end)
         it("# step0 - lane2 prio     ", function() assert.equals(000, step0Lane2Prio) end)
         it("# step0 - lane3 prio     ", function() assert.equals(000, step0Lane3Prio) end)
         it("# step0 - lane4 prio     ", function() assert.equals(000, step0Lane4Prio) end)
@@ -413,10 +435,10 @@ insulate("Check traffic light sequence", function()
         local step1Line2WaitCount = lane2:getWaitCount() --           step1
         local step1Line3WaitCount = lane3:getWaitCount() --           step1
         local step1Line4WaitCount = lane4:getWaitCount() --           step1
-        local step1Lane1Prio = lane1:calculatePriority() --           step1
-        local step1Lane2Prio = lane2:calculatePriority() --           step1
-        local step1Lane3Prio = lane3:calculatePriority() --           step1
-        local step1Lane4Prio = lane4:calculatePriority() --           step1
+        local step1Lane1Prio = lane1:calculatePriority({}) --         step1
+        local step1Lane2Prio = lane2:calculatePriority({}) --         step1
+        local step1Lane3Prio = lane3:calculatePriority({}) --         step1
+        local step1Lane4Prio = lane4:calculatePriority({}) --         step1
         local step1SwitchingAPrio = sequenceA:calculatePriority() -- step1
         local step1SwitchingBPrio = sequenceB:calculatePriority() -- step1
         local step1SwitchingCPrio = sequenceC:calculatePriority() -- step1
@@ -424,7 +446,7 @@ insulate("Check traffic light sequence", function()
         it("# step1 - lane2 WaitCount", function() assert.equals(000, step1Line2WaitCount) end)
         it("# step1 - lane3 WaitCount", function() assert.equals(000, step1Line3WaitCount) end)
         it("# step1 - lane4 WaitCount", function() assert.equals(000, step1Line4WaitCount) end)
-        it("# step1 - lane1 prio     ", function() assert.equals(003, step1Lane1Prio) end)
+        it("# step1 - lane1 prio     ", function() assert.equals(000, step1Lane1Prio) end)
         it("# step1 - lane2 prio     ", function() assert.equals(000, step1Lane2Prio) end)
         it("# step1 - lane3 prio     ", function() assert.equals(000, step1Lane3Prio) end)
         it("# step1 - lane4 prio     ", function() assert.equals(000, step1Lane4Prio) end)
@@ -571,10 +593,10 @@ insulate("Check traffic light sequence", function()
         local step6Line2WaitCount = lane2:getWaitCount() --           step6
         local step6Line3WaitCount = lane3:getWaitCount() --           step6
         local step6Line4WaitCount = lane4:getWaitCount() --           step6
-        local step6Lane1Prio = lane1:calculatePriority() --           step6
-        local step6Lane2Prio = lane2:calculatePriority() --           step6
-        local step6Lane3Prio = lane3:calculatePriority() --           step6
-        local step6Lane4Prio = lane4:calculatePriority() --           step6
+        local step6Lane1Prio = lane1:calculatePriority({}) --         step6
+        local step6Lane2Prio = lane2:calculatePriority({}) --         step6
+        local step6Lane3Prio = lane3:calculatePriority({}) --         step6
+        local step6Lane4Prio = lane4:calculatePriority({}) --         step6
         local step6SwitchingAPrio = sequenceA:calculatePriority() -- step6
         local step6SwitchingBPrio = sequenceB:calculatePriority() -- step6
         local step6SwitchingCPrio = sequenceC:calculatePriority() -- step6
@@ -583,7 +605,7 @@ insulate("Check traffic light sequence", function()
         it("# step6 - lane3 WaitCount", function() assert.equals(001, step6Line3WaitCount) end)
         it("# step6 - lane4 WaitCount", function() assert.equals(000, step6Line4WaitCount) end)
         it("# step6 - lane1 prio     ", function() assert.equals(000, step6Lane1Prio) end)
-        it("# step6 - lane2 prio     ", function() assert.equals(003, step6Lane2Prio) end)
+        it("# step6 - lane2 prio     ", function() assert.equals(001, step6Lane2Prio) end)
         it("# step6 - lane3 prio     ", function() assert.equals(001, step6Lane3Prio) end)
         it("# step6 - lane4 prio     ", function() assert.equals(000, step6Lane4Prio) end)
         it("# step6 - sequenceA prio ", function() assert.equals(000, step6SwitchingAPrio) end)
@@ -633,10 +655,10 @@ insulate("Check traffic light sequence", function()
         local step7Line2WaitCount = lane2:getWaitCount() --           step7
         local step7Line3WaitCount = lane3:getWaitCount() --           step7
         local step7Line4WaitCount = lane4:getWaitCount() --           step7
-        local step7Lane1Prio = lane1:calculatePriority() --           step7
-        local step7Lane2Prio = lane2:calculatePriority() --           step7
-        local step7Lane3Prio = lane3:calculatePriority() --           step7
-        local step7Lane4Prio = lane4:calculatePriority() --           step7
+        local step7Lane1Prio = lane1:calculatePriority({}) --         step7
+        local step7Lane2Prio = lane2:calculatePriority({}) --         step7
+        local step7Lane3Prio = lane3:calculatePriority({}) --         step7
+        local step7Lane4Prio = lane4:calculatePriority({}) --         step7
         local step7SwitchingAPrio = sequenceA:calculatePriority() -- step7
         local step7SwitchingBPrio = sequenceB:calculatePriority() -- step7
         local step7SwitchingCPrio = sequenceC:calculatePriority() -- step7
@@ -647,7 +669,7 @@ insulate("Check traffic light sequence", function()
         it("# step7 - lane1 prio     ", function() assert.equals(000, step7Lane1Prio) end)
         it("# step7 - lane2 prio     ", function() assert.equals(001, step7Lane2Prio) end)
         it("# step7 - lane3 prio     ", function() assert.equals(001, step7Lane3Prio) end)
-        it("# step7 - lane4 prio     ", function() assert.equals(003, step7Lane4Prio) end)
+        it("# step7 - lane4 prio     ", function() assert.equals(000, step7Lane4Prio) end)
         it("# step7 - sequenceA prio ", function() assert.equals(1.5, step7SwitchingAPrio) end)
         it("# step7 - sequenceB prio ", function() assert.equals(5/3, step7SwitchingBPrio) end)
         it("# step7 - sequenceC prio ", function() assert.equals(001, step7SwitchingCPrio) end)

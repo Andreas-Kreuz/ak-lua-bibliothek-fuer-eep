@@ -177,19 +177,26 @@ end
 --- Gibt alle Fahrspuren nach Prioritaet zurueck, sowie deren Anzahl und deren Durchschnittspriorität
 -- @return sortierteFahrspuren, anzahlDerFahrspuren, durchschnittsPrio
 function CrossingSequence:lanesSortedByPriority()
+    local trafficLightArray = {}
+    for trafficLight, type in pairs(self.trafficLights) do
+        if type ~= CrossingSequence.Type.PEDESTRIAN then
+            table.insert(trafficLightArray, trafficLight)
+        end
+    end
+
     local sortedLanes = {}
     local laneCount = 0
     local prioritySum = 0
     for lane in pairs(self.lanes) do
         table.insert(sortedLanes, lane)
         laneCount = laneCount + 1
-        prioritySum = prioritySum + lane:calculatePriority()
+        prioritySum = prioritySum + lane:calculatePriority(trafficLightArray)
     end
     local averagePrio = prioritySum / laneCount
     local sortierFunktion = function(lane1, lane2)
-        if lane1:calculatePriority() > lane2:calculatePriority() then
+        if lane1:calculatePriority(trafficLightArray) > lane2:calculatePriority(trafficLightArray) then
             return true
-        elseif lane1:calculatePriority() < lane2:calculatePriority() then
+        elseif lane1:calculatePriority(trafficLightArray) < lane2:calculatePriority(trafficLightArray) then
             return false
         end
         return (lane1.name < lane2.name)

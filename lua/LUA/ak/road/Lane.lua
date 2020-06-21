@@ -178,6 +178,35 @@ local function refreshRequests(lane)
     end
 end
 
+function Lane.laneCanDrive(lane, trafficLights)
+    if lane.trafficLightsToDriveOn then
+        -- In case, we have routes, we need to see if the first vehicle is allowed to drive
+        local driveOnAnyRoute = false
+        local matchesFirstVehicle = false
+        for _, trafficLight in ipairs(trafficLights) do
+            local allowedRoutes = lane.trafficLightsToDriveOn[trafficLight]
+            driveOnAnyRoute = true
+            matchesFirstVehicle = false
+            if allowedRoutes then
+                for _, route in ipairs(allowedRoutes) do
+                    driveOnAnyRoute = false
+                    if route == lane.firstVehiclesRoute then
+                        matchesFirstVehicle = true
+                        break
+                    end
+                end
+            end
+            if driveOnAnyRoute or matchesFirstVehicle then break end
+        end
+
+        return driveOnAnyRoute or matchesFirstVehicle
+    else
+        -- In case, there is no couting, we need to return true
+        return true
+    end
+
+end
+
 ---Liefert true, wenn das erste Fahrzeug fahren darf (anhand der für die Fahrspur gültigen Ampeln)
 ---Is true, if the first vehicle can drive (according to the lane's traffic lights)
 function updateLaneSignal(lane, reason)
@@ -193,23 +222,7 @@ function updateLaneSignal(lane, reason)
 
         local canDrive
         if haveGreen then
-            local driveOnAnyRoute
-            local matchesFirstVehicle
-            for _, trafficLight in ipairs(greenTrafficLights) do
-                local allowedRoutes = lane.trafficLightsToDriveOn[trafficLight]
-                driveOnAnyRoute = true
-                matchesFirstVehicle = false
-                for _, route in ipairs(allowedRoutes) do
-                    driveOnAnyRoute = false
-                    if route == lane.firstVehiclesRoute then
-                        matchesFirstVehicle = true
-                        break
-                    end
-                end
-                if driveOnAnyRoute or matchesFirstVehicle then break end
-            end
-
-            canDrive = driveOnAnyRoute or matchesFirstVehicle
+            canDrive = Lane.laneCanDrive(lane, greenTrafficLights)
         else
             canDrive = false
         end
@@ -292,10 +305,14 @@ function Lane:checkRequests()
     refreshRequests(self)
 end
 
-function Lane:calculatePriority()
-    local vehicleCount = self.queue:size()
-    local prio = vehicleCount * 3 * self.fahrzeugMultiplikator
-    return self.waitCount > prio and self.waitCount or prio
+function Lane:calculatePriority(trafficLights)
+    if Lane.laneCanDrive(self, trafficLights) then
+        local vehicleCount = self.queue:size()
+        local prio = vehicleCount * 3 * self.fahrzeugMultiplikator
+        return self.waitCount > prio and self.waitCount or prio
+    else
+        return self.waitCount
+    end
 end
 
 function Lane:getRequestInfo() return self.requestInfoText or "KEINE ANFORDERUNG" end
