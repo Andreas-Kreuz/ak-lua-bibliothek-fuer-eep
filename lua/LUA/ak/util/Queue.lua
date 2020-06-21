@@ -1,4 +1,4 @@
-if AkDebugLoad then print("Loading ak.road.TrafficLight ...") end
+if AkDebugLoad then print("Loading ak.road.Queue ...") end
 
 ---@class Queue<T>
 local Queue = {}

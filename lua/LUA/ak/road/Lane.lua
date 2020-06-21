@@ -51,7 +51,7 @@ local function addTrainToQueue(lane, trainName)
         -- Fix queue length
         if lane.vehicleCount ~= lane.queue:size() then
             print(string.format("AUTOCORRECT %s: New vehicle count from queue length: %d; Current count: %d",
-                                lane.name, lane.queue:size(), lane.vehicleCount))
+                lane.name, lane.queue:size(), lane.vehicleCount))
             lane.vehicleCount = lane.queue:size()
         end
     end
@@ -84,7 +84,7 @@ local function popTrainFromQueue(lane, trainName)
         -- Remove train and fix queue
         if numberOfPops > 1 and Lane.debug then
             print(string.format("AUTOCORRECT %s: Have to remove %d trains to get to %s", lane.name, numberOfPops,
-                                trainName))
+                trainName))
         end
         for _ = 1, numberOfPops, 1 do
             local trainFromQueue = lane.queue:pop()
@@ -97,7 +97,7 @@ local function popTrainFromQueue(lane, trainName)
         if lane.vehicleCount ~= lane.queue:size() then
             if Lane.debug and numberOfPops == 1 then
                 print(string.format("AUTOCORRECT %s: New vehicle count from queue length: %d; Current count: %d",
-                                    lane.name, lane.queue:size(), lane.vehicleCount))
+                    lane.name, lane.queue:size(), lane.vehicleCount))
             end
             lane.vehicleCount = lane.queue:size()
         end
@@ -207,7 +207,7 @@ function Lane.laneCanDrive(lane, trafficLights)
 
 end
 
----Liefert true, wenn das erste Fahrzeug fahren darf (anhand der f¸r die Fahrspur g¸ltigen Ampeln)
+---Liefert true, wenn das erste Fahrzeug fahren darf (anhand der fùr die Fahrspur gùltigen Ampeln)
 ---Is true, if the first vehicle can drive (according to the lane's traffic lights)
 function updateLaneSignal(lane, reason)
     if lane.trafficLightsToDriveOn then
@@ -233,7 +233,6 @@ end
 --------------------
 -- Klasse Fahrspur
 --------------------
-
 function Lane.getType() return "Lane" end
 
 function Lane:getName() return self.name end
@@ -243,8 +242,8 @@ function Lane:getLaneType() return self.requestType end
 function Lane:setLaneType(requestType)
     assert(requestType)
     assert(self.requestType == Lane.RequestType.NICHT_VERWENDET or self.requestType == requestType,
-           "Diese Fahrspur hatte schon den Schaltungstyp: '" .. self.requestType .. "' und kann daher nicht auf '" ..
-               requestType .. "' gesetzt werden.")
+        "Diese Fahrspur hatte schon den Schaltungstyp: '" .. self.requestType .. "' und kann daher nicht auf '" ..
+        requestType .. "' gesetzt werden.")
     self.requestType = requestType
 end
 
@@ -342,7 +341,7 @@ end
 
 function Lane:showRequestsOn(trafficLight, ...)
     assert(self and self.getType and "function" == type(self.getType) and self.getType() == "Lane",
-           "Did you use colons instead of a dot myLane:showRequestsOn(...)")
+        "Did you use colons instead of a dot myLane:showRequestsOn(...)")
 
     local routes = ... and {...} or {"!ALL!"}
     self.requestTrafficLights = self.requestTrafficLights or {}
@@ -352,7 +351,7 @@ function Lane:showRequestsOn(trafficLight, ...)
     end
 end
 
----Z‰hle alle Fahrzeuge am Signal
+---Zùhle alle Fahrzeuge am Signal
 ---Count on the lane's traffic signal
 function Lane:useSignalForQueue()
     assert(not self.tracksUsedForRequest, "CANNOT COUNT ON SIGNALS AND TRACKS")
@@ -457,7 +456,7 @@ function Lane:new(name, eepSaveId, trafficLight, directions, trafficType)
     assert(type(eepSaveId) == "number")
     assert(trafficLight, 'Specify a single "trafficLight" for this lane (the one, where the traffic is queued).')
     assert(trafficLight.type == "TrafficLight",
-           'Specify a single "trafficLight" for this lane (the one, where the traffic is queued).')
+        'Specify a single "trafficLight" for this lane (the one, where the traffic is queued).')
     -- assert(signalId, "Bitte geben Sie den Wert \"signalId\" fuer diese Fahrspur an.")
     if eepSaveId ~= -1 then StorageUtility.registerId(eepSaveId, "Lane " .. name) end
     local o = {
@@ -483,9 +482,9 @@ function Lane:new(name, eepSaveId, trafficLight, directions, trafficType)
     return o
 end
 
----F¸gt eine Ampel hinzu nach deren Gr¸n (oder Aus!) gefahren werden darf. Diese Ampel darf nicht die Ampel der
+---Fùgt eine Ampel hinzu nach deren Grùn (oder Aus!) gefahren werden darf. Diese Ampel darf nicht die Ampel der
 ---Fahrspur sein.
----Optional kˆnnen die Routen mitgegeben werden, f¸r die das Losfahren erlaubt ist.
+---Optional kùnnen die Routen mitgegeben werden, fùr die das Losfahren erlaubt ist.
 ---
 ---Sets the traffic light which is used to drive. This traffic light must not be the lanes signal!
 ---Optionally some Route names can be added, which are allowed to drive on this traffic light
@@ -502,14 +501,14 @@ end
 
 ---Called by the traffic light, if the traffic light changed
 ---This will update the internal signal by the canDrive method
----Wird von einer Ampel aufgerufen, dass ¸ber die driveOn() Methode f¸r diese Fahrspur angemeldet wurde
+---Wird von einer Ampel aufgerufen, dass ùber die driveOn() Methode fùr diese Fahrspur angemeldet wurde
 ---@param trafficLight TrafficLight
 function Lane:trafficLightChanged(trafficLight)
     if trafficLight ~= self.trafficLight then
         assert(self.trafficLightsToDriveOn, "There is no traffic light registered on this lane: " ..
-                   trafficLight.signalId .. " / " .. self.trafficLight.signalId)
+            trafficLight.signalId .. " / " .. self.trafficLight.signalId)
         assert(self.trafficLightsToDriveOn[trafficLight],
-               "This lane does not drive on the given traffic light: " .. trafficLight.signalId)
+            "This lane does not drive on the given traffic light: " .. trafficLight.signalId)
         updateLaneSignal(self, "Traffic Light update: ", trafficLight.signalId)
     end
     self.phase = trafficLight.phase
