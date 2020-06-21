@@ -495,6 +495,7 @@ function Lane:trafficLightChanged(trafficLight)
                "This lane does not drive on the given traffic light: " .. trafficLight.signalId)
         updateLaneSignal(self, "Traffic Light update: ", trafficLight.signalId)
     end
+    self.phase = trafficLight.phase
 end
 
 return Lane

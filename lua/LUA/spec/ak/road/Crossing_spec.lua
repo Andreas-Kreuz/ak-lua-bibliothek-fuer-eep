@@ -579,16 +579,16 @@ insulate("Check traffic light sequence", function()
         local step6SwitchingBPrio = sequenceB:calculatePriority() -- step6
         local step6SwitchingCPrio = sequenceC:calculatePriority() -- step6
         it("# step6 - lane1 WaitCount", function() assert.equals(000, step6Line1WaitCount) end)
-        it("# step6 - lane2 WaitCount", function() assert.equals(000, step6Line2WaitCount) end)
-        it("# step6 - lane3 WaitCount", function() assert.equals(000, step6Line3WaitCount) end)
+        it("# step6 - lane2 WaitCount", function() assert.equals(001, step6Line2WaitCount) end)
+        it("# step6 - lane3 WaitCount", function() assert.equals(001, step6Line3WaitCount) end)
         it("# step6 - lane4 WaitCount", function() assert.equals(000, step6Line4WaitCount) end)
         it("# step6 - lane1 prio     ", function() assert.equals(000, step6Lane1Prio) end)
         it("# step6 - lane2 prio     ", function() assert.equals(003, step6Lane2Prio) end)
-        it("# step6 - lane3 prio     ", function() assert.equals(000, step6Lane3Prio) end)
+        it("# step6 - lane3 prio     ", function() assert.equals(001, step6Lane3Prio) end)
         it("# step6 - lane4 prio     ", function() assert.equals(000, step6Lane4Prio) end)
-        it("# step6 - sequenceA prio", function() assert.equals(000, step6SwitchingAPrio) end)
-        it("# step6 - sequenceB prio", function() assert.equals(001, step6SwitchingBPrio) end)
-        it("# step6 - sequenceC prio", function() assert.equals(003, step6SwitchingCPrio) end)
+        it("# step6 - sequenceA prio ", function() assert.equals(000, step6SwitchingAPrio) end)
+        it("# step6 - sequenceB prio ", function() assert.equals(4/3, step6SwitchingBPrio) end)
+        it("# step6 - sequenceC prio ", function() assert.equals(003, step6SwitchingCPrio) end)
     end
 
     _G.EEPTime = _G.EEPTime + 200
@@ -648,9 +648,9 @@ insulate("Check traffic light sequence", function()
         it("# step7 - lane2 prio     ", function() assert.equals(001, step7Lane2Prio) end)
         it("# step7 - lane3 prio     ", function() assert.equals(001, step7Lane3Prio) end)
         it("# step7 - lane4 prio     ", function() assert.equals(003, step7Lane4Prio) end)
-        it("# step7 - sequenceA prio", function() assert.equals(1.5, step7SwitchingAPrio) end)
-        it("# step7 - sequenceB prio", function() assert.equals(5 / 3, step7SwitchingBPrio) end)
-        it("# step7 - sequenceC prio", function() assert.equals(001, step7SwitchingCPrio) end)
+        it("# step7 - sequenceA prio ", function() assert.equals(1.5, step7SwitchingAPrio) end)
+        it("# step7 - sequenceB prio ", function() assert.equals(5/3, step7SwitchingBPrio) end)
+        it("# step7 - sequenceC prio ", function() assert.equals(001, step7SwitchingCPrio) end)
     end
 
     _G.EEPTime = _G.EEPTime + 200

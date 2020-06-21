@@ -77,7 +77,7 @@ local function switchTask(tlList, tlFilter, tlState, reason)
     return Task:new(function() TrafficLight.switchAll(toTurn, tlState, reason) end, reason)
 end
 
-function CrossingSequence:tasksForSwitchingFrom(oldSequence)
+function CrossingSequence:tasksForSwitchingFrom(oldSequence, afterRedTask)
     local TrafficLightState = require("ak.road.TrafficLightState")
     local taskList = {}
 
@@ -115,6 +115,9 @@ function CrossingSequence:tasksForSwitchingFrom(oldSequence)
         oldRedCars = Task:new(function() end, "clear crossing")
         table.insert(taskList, {offset = 4, task = oldRedCars, precedingTask = nil})
     end
+
+    -- After switching old cards to red, we execute the given task
+    table.insert(taskList, {offset = 0, task = afterRedTask, precedingTask = oldRedCars})
 
     -- Schedule the task where the new traffic lights are red-yellow
     local reasonYel = "Schalte " .. self.name .. " auf rot-gelb"
