@@ -207,7 +207,7 @@ function Lane.laneCanDrive(lane, trafficLights)
 
 end
 
----Liefert true, wenn das erste Fahrzeug fahren darf (anhand der fùr die Fahrspur gùltigen Ampeln)
+---Liefert true, wenn das erste Fahrzeug fahren darf (anhand der f¸r die Fahrspur g¸ltigen Ampeln)
 ---Is true, if the first vehicle can drive (according to the lane's traffic lights)
 function updateLaneSignal(lane, reason)
     if lane.trafficLightsToDriveOn then
@@ -351,7 +351,7 @@ function Lane:showRequestsOn(trafficLight, ...)
     end
 end
 
----Zùhle alle Fahrzeuge am Signal
+---Z?hle alle Fahrzeuge am Signal
 ---Count on the lane's traffic signal
 function Lane:useSignalForQueue()
     assert(not self.tracksUsedForRequest, "CANNOT COUNT ON SIGNALS AND TRACKS")
@@ -482,9 +482,9 @@ function Lane:new(name, eepSaveId, trafficLight, directions, trafficType)
     return o
 end
 
----Fùgt eine Ampel hinzu nach deren Grùn (oder Aus!) gefahren werden darf. Diese Ampel darf nicht die Ampel der
+---F¸gt eine Ampel hinzu nach deren Gr¸n (oder Aus!) gefahren werden darf. Diese Ampel darf nicht die Ampel der
 ---Fahrspur sein.
----Optional kùnnen die Routen mitgegeben werden, fùr die das Losfahren erlaubt ist.
+---Optional kˆnnen die Routen mitgegeben werden, f¸r die das Losfahren erlaubt ist.
 ---
 ---Sets the traffic light which is used to drive. This traffic light must not be the lanes signal!
 ---Optionally some Route names can be added, which are allowed to drive on this traffic light
@@ -501,11 +501,11 @@ end
 
 ---Called by the traffic light, if the traffic light changed
 ---This will update the internal signal by the canDrive method
----Wird von einer Ampel aufgerufen, dass ùber die driveOn() Methode fùr diese Fahrspur angemeldet wurde
+---Wird von einer Ampel aufgerufen, dass ¸ber die driveOn() Methode f¸r diese Fahrspur angemeldet wurde
 ---@param trafficLight TrafficLight
 function Lane:trafficLightChanged(trafficLight)
     if trafficLight ~= self.trafficLight then
-        assert(self.trafficLightsToDriveOn, "There is no traffic light registered on this lane: " ..
+        assert(self.trafficLightsToDriveOn, "There is no traffic light registered on this lane: "  ..
             trafficLight.signalId .. " / " .. self.trafficLight.signalId)
         assert(self.trafficLightsToDriveOn[trafficLight],
             "This lane does not drive on the given traffic light: " .. trafficLight.signalId)
