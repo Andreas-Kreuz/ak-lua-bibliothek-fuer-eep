@@ -144,14 +144,19 @@ local function load(lane)
         lane.phase = data["p"] or TrafficLightState.RED
         lane.queue = queueFromText(data["q"], lane.vehicleCount)
         lane:checkRequests()
-        lane:switchTrafficLightTo(lane.phase, "Neu geladen")
+        updateLaneSignal(lane, "Neu geladen")
     else
         lane.vehicleCount = 0
         lane.waitCount = 0
         lane.phase = TrafficLightState.RED
         lane.queue = Queue:new()
         lane:checkRequests()
-        lane:switchTrafficLightTo(lane.phase, "Neu geladen")
+        updateLaneSignal(lane, "Neu geladen")
+    end
+
+    if not lane.queue:isEmpty() then
+        local _, route = EEPGetTrainRoute(lane.queue:firstElement())
+        lane.firstVehiclesRoute = route
     end
 end
 
@@ -211,9 +216,15 @@ end
 ---Is true, if the first vehicle can drive (according to the lane's traffic lights)
 function updateLaneSignal(lane, reason)
     if lane.trafficLightsToDriveOn then
+        if not lane.queue:isEmpty() then assert(lane.firstVehiclesRoute) end
+
         local haveGreen = false
         local greenTrafficLights = {}
         for trafficLight in pairs(lane.trafficLightsToDriveOn) do
+            if Lane.debug then
+                print(string.format("[Lane] %s can drive on: %s (%s): %s", lane.name, trafficLight.name,
+                trafficLight.phase, tostring(TrafficLightState.canDrive(trafficLight.phase))))
+            end
             if TrafficLightState.canDrive(trafficLight.phase) then
                 haveGreen = true
                 table.insert(greenTrafficLights, trafficLight)
@@ -509,9 +520,9 @@ function Lane:trafficLightChanged(trafficLight)
             trafficLight.signalId .. " / " .. self.trafficLight.signalId)
         assert(self.trafficLightsToDriveOn[trafficLight],
             "This lane does not drive on the given traffic light: " .. trafficLight.signalId)
-        updateLaneSignal(self, "Traffic Light update: ", trafficLight.signalId)
     end
     self.phase = trafficLight.phase
+    updateLaneSignal(self, "Traffic Light update: ", trafficLight.signalId)
 end
 
 return Lane
