@@ -122,7 +122,7 @@ function Crossing:setManualSequence(sequenceName)
     for _, sequence in ipairs(self.sequences) do
         if sequence.name == sequenceName then
             self.manualSequence = sequence
-            print("Manuell geschaltet auf: " .. sequence .. " (" .. self.name .. "')")
+            print("Manuell geschaltet auf: " .. sequence.name .. " (" .. self.name .. "')")
             self:setGreenPhaseFinished(true)
         end
     end

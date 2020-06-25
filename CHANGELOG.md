@@ -1,5 +1,9 @@
 # Änderungen an der Software
 
+## 0.10.8
+
+- 🐞 Bugfix: Beim Umschalten auf manuelle Steuerung gab es einen Programmfehler durch die Textausgabe
+
 ## 0.10.7
 
 - ⭐ Neu: Anlage für `Andreas_Kreuz-Tutorial-Ampelkreuzung-3-rechtsabbieger` wurde so angepasst, dass
