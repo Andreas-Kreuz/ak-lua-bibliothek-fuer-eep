@@ -203,13 +203,17 @@
   "Lua.diagnostics.disable": ["lowercase-global"],
   "Lua.workspace.ignoreDir": [
     ".vscode",
+    "assets",
+    "docs",
     "lua/Resourcen",
     "lua/Resourcen/Anlagen/Andreas_Kreuz-Demo-Ampel",
     "lua/Resourcen/Anlagen/Andreas_Kreuz-Demo-Testen",
     "lua/Resourcen/Anlagen/Andreas_Kreuz-Tutorial-Ampelkreuzung",
     "lua/modell-pakete",
+    "scripts",
     "web-app",
-    "web-server"
+    "web-server",
+    "web-shared"
   ],
   "Lua.workspace.useGitIgnore": false,
   "lua.preferLuaCheckErrors": true,
