@@ -17,8 +17,19 @@ function StationQueue:push(trainName, timeInMinutes, platform)
     assert(trainName)
     assert(timeInMinutes)
     platform = platform and tostring(platform) or "1"
+
+    -- Remove train from arrival list
+    local newEntriesByArrival = {}
+    for _, value in ipairs(self.entriesByArrival) do
+        if value ~= trainName then
+            table.insert(newEntriesByArrival, value)
+        end
+    end
+    self.entriesByArrival = newEntriesByArrival
+
     self.entries[trainName] = StationQueueEntry:new(trainName, timeInMinutes, platform)
 
+    -- Add train to arrival list
     local insertIndex = 1
     for i, train in ipairs(self.entriesByArrival) do
         insertIndex = i + 1

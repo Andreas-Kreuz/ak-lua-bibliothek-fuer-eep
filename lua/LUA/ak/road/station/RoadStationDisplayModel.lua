@@ -53,16 +53,18 @@ DisplayModel.Tram_Schild_DL1 =
             local entry = stationQueueEntries[i]
             EEPStructureSetTextureText(displayStructure, offset + 1, entry and entry.line or "")
             EEPStructureSetTextureText(displayStructure, offset + 2, entry and entry.destination or "")
-            EEPStructureSetTextureText(displayStructure, offset + 3, entry and tostring(entry.timeInMinutes) or "")
-            EEPStructureSetTextureText(displayStructure, offset + 4, entry and "min" or "")
+            EEPStructureSetTextureText(displayStructure, offset + 3,
+            (entry and entry.timeInMinutes > 0) and tostring(entry.timeInMinutes) or "")
+            EEPStructureSetTextureText(displayStructure, offset + 4,
+            (entry and entry.timeInMinutes > 0) and "min" or "")
 
             table.insert(text, entry and entry.line or "")
             table.insert(text, " / ")
             table.insert(text, entry and entry.destination or "")
             table.insert(text, " / ")
-            table.insert(text, entry and tostring(entry.timeInMinutes) or "")
+            table.insert(text, (entry and entry.timeInMinutes > 0) and tostring(entry.timeInMinutes) or "")
             table.insert(text, " ")
-            table.insert(text, entry and "min" or "")
+            table.insert(text, (entry and entry.timeInMinutes > 0) and "min" or "")
             table.insert(text, "<br>")
         end
 

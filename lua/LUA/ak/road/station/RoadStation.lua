@@ -2,12 +2,13 @@ if AkDebugLoad then
     print("Loading ak.road.station.RoadStation ...")
 end
 
+local EepTrain = require("ak.train.EepTrain")
 local StationQueue = require("ak.road.station.StationQueue")
 local StorageUtility = require("ak.storage.StorageUtility")
 
 ---@class RoadStation
 local RoadStation = {}
-RoadStation.debug = true
+RoadStation.debug = false
 
 local function queueToText(queue)
     if (queue) then
@@ -47,8 +48,22 @@ local function load(station)
     end
 end
 
-function RoadStation:stationArrivalPlanned(trainName, timeInMinutes, platform)
-    platform = platform and tostring(platform) or "1"
+function RoadStation:stationArrivalPlanned(trainName, timeInMinutes)
+    local train = EepTrain:new(trainName)
+    local destination = train:getDestination()
+    local line = train:getLine()
+    local platform
+    if self.lines
+        and self.lines[line]
+        and self.lines[line].destinations
+        and self.lines[line].destinations[destination]
+        and self.lines[line].destinations[destination].platform then
+        platform = self.lines[line].destinations[destination].platform
+    else
+        print("[RoadStation] NO PLATFORM FOR TRAIN: " .. trainName)
+        platform = "1"
+    end
+
     if RoadStation.debug then
         print(
             string.format(
@@ -59,6 +74,7 @@ function RoadStation:stationArrivalPlanned(trainName, timeInMinutes, platform)
             )
         )
     end
+
     self.queue:push(trainName, timeInMinutes, platform)
     self:updateDisplays()
 end
@@ -68,12 +84,31 @@ function RoadStation:stationLeft(trainName)
     self:updateDisplays()
 end
 
+function RoadStation:setPlatform(line, destination, platform)
+    assert(line)
+    assert(destination)
+    assert(platform)
+    line = tostring(line)
+    platform = tostring(platform)
+
+    self.lines = self.lines or {}
+    self.lines[line] = self.lines[line] or {}
+
+    self.lines[line].destinations = self.lines[line].destinations or {}
+    self.lines[line].destinations[destination] = self.lines[line].destinations[destination] or {}
+
+    self.lines[line].destinations[destination].platform = platform
+end
+
 function RoadStation:updateDisplays()
     for platform, displays in pairs(self.displays) do
-        print("UPDATE PLATFORM " .. platform)
+        if RoadStation.debug then print("[RoadStation] update display for platform " .. platform) end
         local entries = self.queue:getTrainEntries(platform ~= "ALL" and platform or nil)
         for _, display in ipairs(displays) do
-            print("UPDATE DISPLAY " .. display.structure .. " with " .. #entries .. " entries")
+            if RoadStation.debug then
+                print("[RoadStation] update display for platform " .. display.structure
+                    .. " with " .. #entries .. " entries")
+            end
             display.model.displayEntries(display.structure, entries)
         end
     end

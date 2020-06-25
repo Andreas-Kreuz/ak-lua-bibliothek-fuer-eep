@@ -1,11 +1,12 @@
 if AkDebugLoad then print("Loading ak.road.station.StationQueueEntry ...") end
+local EepTrain = require("ak.train.EepTrain")
 
 ---@class StationQueueEntry<T>
 local StationQueueEntry = {}
 function StationQueueEntry:new(trainName, timeInMinutes, platform)
-    local _, line = EEPGetTrainRoute(trainName)
-    line = string.sub(line, -2)
-    local _, destination = EEPGetTrainRoute(trainName)
+    local train = EepTrain:new(trainName)
+    local destination = train:getDestination()
+    local line = train:getLine()
     local o = {
         trainName = trainName,
         line = line,
