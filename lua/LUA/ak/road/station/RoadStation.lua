@@ -60,8 +60,13 @@ function RoadStation:stationArrivalPlanned(trainName, timeInMinutes)
         and self.lines[line].destinations[destination].platform then
         platform = self.lines[line].destinations[destination].platform
     else
-        print("[RoadStation] NO PLATFORM FOR TRAIN: " .. trainName)
-        platform = "1"
+        if RoadStation.debug then
+            print("[RoadStation] " .. self.name
+            .. " NO PLATFORM FOR TRAIN: " .. trainName
+            .. (line and " (" .. line .. ")" or "")
+            .. (destination and " (" .. destination .. ")" or ""))
+            platform = "1"
+        end
     end
 
     if RoadStation.debug then
@@ -121,6 +126,7 @@ function RoadStation:addDisplay(structure, model, platform)
     platform = platform and tostring(platform) or nil
     self.displays[platform or "ALL"] = self.displays[platform or "ALL"] or {}
     table.insert(self.displays[platform or "ALL"], {structure = structure, model = model})
+    model.initStation(structure, self.name, platform)
 end
 
 --- Creates a new Bus or Tram Station
