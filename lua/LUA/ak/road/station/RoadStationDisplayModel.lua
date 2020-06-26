@@ -48,8 +48,8 @@ DisplayModel.Tram_Schild_DL1 =
         assert(stationName)
         assert(platform)
     end,
-    function(displayStructure, stationQueueEntries)
-        local text = {}
+    function(displayStructure, stationQueueEntries, stationName, platform)
+        local text = { stationName, " (Steig ", platform , ")<br>"}
 
         table.insert(text, "Linie / Ziel / Minuten<br>")
 
@@ -96,8 +96,8 @@ DisplayModel.BusHSdfi_RG3 =
         EEPStructureSetTextureText(displayStructure, 7, "")
         EEPStructureSetTextureText(displayStructure, 8, "")
     end,
-    function(displayStructure, stationQueueEntries)
-        local text = {}
+    function(displayStructure, stationQueueEntries, stationName, platform)
+        local text = { stationName, " (Steig ", platform , ")<br>"}
 
         table.insert(text, "Linie / Ziel / Minuten<br>")
 

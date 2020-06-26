@@ -114,7 +114,7 @@ function RoadStation:updateDisplays()
                 print("[RoadStation] update display for platform " .. display.structure
                     .. " with " .. #entries .. " entries")
             end
-            display.model.displayEntries(display.structure, entries)
+            display.model.displayEntries(display.structure, entries, self.name, platform)
         end
     end
 end

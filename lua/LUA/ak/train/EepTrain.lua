@@ -88,5 +88,4 @@ end
 
 function EepTrain:getLine() return self.values[EepTrain.Key.line] end
 
-
 return EepTrain
