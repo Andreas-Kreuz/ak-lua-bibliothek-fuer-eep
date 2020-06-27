@@ -2,7 +2,7 @@ if AkDebugLoad then
     print("Loading ak.road.station.RoadStation ...")
 end
 
-local EepTrain = require("ak.train.EepTrain")
+local Train = require("ak.train.Train")
 local StationQueue = require("ak.road.station.StationQueue")
 local StorageUtility = require("ak.storage.StorageUtility")
 
@@ -49,7 +49,7 @@ local function load(station)
 end
 
 function RoadStation:stationArrivalPlanned(trainName, timeInMinutes)
-    local train = EepTrain:new(trainName)
+    local train = Train.forName(trainName)
     local destination = train:getDestination()
     local line = train:getLine()
     local platform

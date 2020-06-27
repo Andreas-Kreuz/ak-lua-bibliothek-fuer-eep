@@ -2,7 +2,7 @@ if AkDebugLoad then
     print("Loading ak.road.station.Destinations ...")
 end
 
-local EepTrain = require("ak.train.EepTrain")
+local Train = require("ak.train.Train")
 
 ---@class Destinations<T>
 local Destinations = {}
@@ -21,7 +21,7 @@ function Destinations.changeOn(station, trainRoute, newDestination, newLine, axi
 end
 
 function Destinations.changeFor(trainName, station)
-    local train = EepTrain:new(trainName)
+    local train = Train.forName(trainName)
     if Destinations.debug then
         print("Change destination for " .. trainName .. " at " .. station .. " (" .. train:getRoute() .. ")")
     end
