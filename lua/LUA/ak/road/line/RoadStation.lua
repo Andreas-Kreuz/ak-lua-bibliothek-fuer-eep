@@ -1,5 +1,5 @@
 if AkDebugLoad then
-    print("Loading ak.road.station.RoadStation ...")
+    print("Loading ak.road.line.RoadStation ...")
 end
 
 local Train = require("ak.train.Train")
@@ -9,6 +9,7 @@ local StorageUtility = require("ak.storage.StorageUtility")
 ---@class RoadStation
 local RoadStation = {}
 RoadStation.debug = false
+local allStations = {}
 
 local function queueToText(queue)
     if (queue) then
@@ -48,7 +49,7 @@ local function load(station)
     end
 end
 
-function RoadStation:stationArrivalPlanned(trainName, timeInMinutes)
+function RoadStation:trainArrivesIn(trainName, timeInMinutes)
     local train = Train.forName(trainName)
     local destination = train:getDestination()
     local line = train:getLine()
@@ -62,9 +63,9 @@ function RoadStation:stationArrivalPlanned(trainName, timeInMinutes)
     else
         if RoadStation.debug then
             print("[RoadStation] " .. self.name
-            .. " NO PLATFORM FOR TRAIN: " .. trainName
-            .. (line and " (" .. line .. ")" or "")
-            .. (destination and " (" .. destination .. ")" or ""))
+                .. " NO PLATFORM FOR TRAIN: " .. trainName
+                .. (line and " (" .. line .. ")" or "")
+                .. (destination and " (" .. destination .. ")" or ""))
             platform = "1"
         end
     end
@@ -76,15 +77,15 @@ function RoadStation:stationArrivalPlanned(trainName, timeInMinutes)
                 trainName,
                 timeInMinutes,
                 platform
-            )
-        )
+    )
+    )
     end
 
     self.queue:push(trainName, timeInMinutes, platform)
     self:updateDisplays()
 end
 
-function RoadStation:stationLeft(trainName)
+function RoadStation:trainLeft(trainName)
     self.queue:pop(trainName)
     self:updateDisplays()
 end
@@ -142,6 +143,7 @@ function RoadStation:new(name, eepSaveId)
         StorageUtility.registerId(eepSaveId, "Lane " .. name)
     end
     local o = {
+        type = "RoadStation",
         name = name,
         eepSaveId = eepSaveId,
         queue = StationQueue:new(),
@@ -152,7 +154,12 @@ function RoadStation:new(name, eepSaveId)
     setmetatable(o, self)
     load(o)
     save(o)
+    allStations[name] = o
     return o
+end
+
+function RoadStation.stationByName(stationName)
+    return allStations[stationName]
 end
 
 return RoadStation

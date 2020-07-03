@@ -31,6 +31,7 @@ function Train:new(o)
     assert(haveTrain, "Train " .. o.trainName .. " does not exist")
     self.__index = self
     setmetatable(o, self)
+    o.type = "Train"
     o.values = o:load()
     o:setRoute(trainRoute)
     return o
@@ -61,6 +62,8 @@ function Train:changeDestination(destination, line)
     self:save()
 end
 
+--- Changes the trains route
+---@param route string Route like set in EEP
 function Train:setRoute(route)
     assert(route)
     assert("string" == type(route))
@@ -69,6 +72,8 @@ function Train:setRoute(route)
     EEPSetTrainRoute(self.trainName, self.trainRoute)
 end
 
+--- Gets the trains route like used in EEP
+---@return string route name like in EEP
 function Train:getRoute() return self.trainRoute end
 
 function Train:setDirection(direction)
