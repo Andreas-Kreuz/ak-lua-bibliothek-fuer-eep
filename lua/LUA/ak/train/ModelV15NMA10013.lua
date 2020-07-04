@@ -6,18 +6,24 @@ local ModelV15NMA10013 = {}
 GT_A = RollingStockModel:new({})
 
 function GT_A:setLine(rollingStockName, line)
-    assert(self)
+    assert(type(self) == "table", "Provide 'self' as 'table' was ".. type(self))
+    assert(type(rollingStockName) == "string", "Provide 'rollingStockName' as 'string' was ".. type(rollingStockName))
+    assert(type(line) == "string", "Provide 'line' as 'string' was ".. type(line))
     EEPRollingstockSetTextureText(rollingStockName, 1, line)
     EEPRollingstockSetTextureText(rollingStockName, 4, line .. " - 01")
 end
 
 function GT_A:setDestination(rollingStockName, destination)
-    assert(self)
+    assert(type(self) == "table", "Provide 'self' as 'table' was ".. type(self))
+    assert(type(rollingStockName) == "string", "Provide 'rollingStockName' as 'string' was ".. type(rollingStockName))
+    assert(type(destination) == "string", "Provide 'destination' as 'string' was ".. type(destination))
     EEPRollingstockSetTextureText(rollingStockName, 2, destination)
 end
 
 function GT_A:setStations(rollingStockName, stations)
-    assert(self)
+    assert(type(self) == "table", "Provide 'self' as 'table' was ".. type(self))
+    assert(type(rollingStockName) == "string", "Provide 'rollingStockName' as 'string' was ".. type(rollingStockName))
+    assert(type(stations) == "string", "Provide 'stations' as 'string' was ".. type(stations))
     EEPRollingstockSetTextureText(rollingStockName, 3, stations)
 end
 

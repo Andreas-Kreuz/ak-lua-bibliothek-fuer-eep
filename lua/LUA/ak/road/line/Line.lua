@@ -21,6 +21,7 @@ function Line.addRouteChange(station, oldRoute, newRoute, newLine)
     assert(type(newLine) == "table", "Provide 'newLine' as 'table' was ".. type(newLine))
     assert(newLine.type == "Line", "Provide 'newLine' as 'Line'")
     assert(newLine.routes[newRoute.routeName], "'newRoute' is not part of 'newLine'")
+    assert(type(newLine.nr) == "string", "Provide 'newLine.nr' as 'number' was ".. type(newLine.nr))
 
     lineChanges[station] = lineChanges[station] or {}
     lineChanges[station][oldRoute.routeName] = lineChanges[station][oldRoute.routeName] or {}
@@ -48,6 +49,8 @@ function Line.changeRoute(trainName, station, departureTime)
         local entry = lineChanges[station][oldRoute]
         assert(type(entry.newRoute) == "table", "Provide 'entry.newRoute' as 'table' was ".. type(entry.newRoute))
         assert(entry.newRoute.type == "Route", "Provide 'entry.newRoute' as 'Route'")
+        assert(entry.newLine.type == "Line", "Provide 'entry.newLine' as 'Line'")
+        assert(type(entry.newLine.nr) == "string", "Provide 'newLine.nr' as 'number' was ".. type(entry.newLine.nr))
 
         train:setRoute(entry.newRoute.routeName)
         train:changeDestination(entry.newRoute:getLastStation().name, entry.newLine.nr)

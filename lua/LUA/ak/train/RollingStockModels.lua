@@ -15,6 +15,7 @@ function RollingStockModels.assingModel(rollingStockName, model) assignedModels[
 
 ---Returns the model for the given rollingstock by looking in assignedModels first and then in namedModels
 ---@param rollingStockName string name of the rollingstock
+---@return RollingStockModel
 function RollingStockModels.modelFor(rollingStockName)
     if assignedModels[rollingStockName] then
         return assignedModels[rollingStockName]
@@ -35,7 +36,7 @@ function findModelByName(modelName)
     if nameModels[modelName] then
         return nameModels[modelName]
     else
-        local RollingStockModel = require("Loading ak.train.RollingStockModel ...")
+        local RollingStockModel = require("ak.train.RollingStockModel")
         return RollingStockModel:new({})
     end
 end

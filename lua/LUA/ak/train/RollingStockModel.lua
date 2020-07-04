@@ -11,35 +11,35 @@ function RollingStockModel:new(o)
 end
 
 function RollingStockModel:setLine(rollingStockName, line)
-    assert(self)
-    assert(line)
-    assert(rollingStockName)
+    assert(type(self) == "table", "Provide 'self' as 'table' was ".. type(self))
+    assert(type(rollingStockName) == "string", "Provide 'rollingStockName' as 'string' was ".. type(rollingStockName))
+    assert(type(line) == "string", "Provide 'line' as 'string' was ".. type(line))
     -- Overwrite me
 end
 
 function RollingStockModel:setDestination(rollingStockName, destination)
-    assert(self)
-    assert(destination)
-    assert(rollingStockName)
+    assert(type(self) == "table", "Provide 'self' as 'table' was ".. type(self))
+    assert(type(rollingStockName) == "string", "Provide 'rollingStockName' as 'string' was ".. type(rollingStockName))
+    assert(type(destination) == "string", "Provide 'destination' as 'string' was ".. type(destination))
     -- Overwrite me
 end
 
 function RollingStockModel:setStations(rollingStockName, stations)
-    assert(self)
-    assert(stations)
-    assert(rollingStockName)
+    assert(type(self) == "table", "Provide 'self' as 'table' was ".. type(self))
+    assert(type(rollingStockName) == "string", "Provide 'rollingStockName' as 'string' was ".. type(rollingStockName))
+    assert(type(stations) == "string", "Provide 'stations' as 'string' was ".. type(stations))
     -- Overwrite me
 end
 
 function RollingStockModel:openDoors(rollingStockName)
-    assert(self)
-    assert(rollingStockName)
+    assert(type(self) == "table", "Provide 'self' as 'table' was ".. type(self))
+    assert(type(rollingStockName) == "string", "Provide 'rollingStockName' as 'string' was ".. type(rollingStockName))
     -- Overwrite me
 end
 
 function RollingStockModel:closeDoors(rollingStockName)
-    assert(self)
-    assert(rollingStockName)
+    assert(type(self) == "table", "Provide 'self' as 'table' was ".. type(self))
+    assert(type(rollingStockName) == "string", "Provide 'rollingStockName' as 'string' was ".. type(rollingStockName))
     -- Overwrite me
 end
 

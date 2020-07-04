@@ -1,5 +1,6 @@
 if AkDebugLoad then print("Loading ak.train.Train ...") end
 
+local RollingStockModels = require("ak.train.RollingStockModels")
 local StorageUtility = require("ak.storage.StorageUtility")
 
 ---@class Train
@@ -63,9 +64,21 @@ function Train:save(clearCurrentInfo)
 end
 
 function Train:changeDestination(destination, line)
+    assert(type(self) == "table", "Provide 'self' as 'table' was ".. type(self))
+    assert(type(destination) == "string", "Provide 'destination' as 'string' was ".. type(destination))
+    assert(type(line) == "string", "Provide 'line' as 'string' was ".. type(line))
+
     self:setLine(line)
     self:setDestination(destination)
     self:save()
+
+    local carCount = EEPGetRollingstockItemsCount(self.trainName)
+    for i = 0, carCount - 1 do
+        local rollingStockName = EEPGetRollingstockItemName(self.trainName, i)
+        local model = RollingStockModels.modelFor(rollingStockName)
+        model:setLine(rollingStockName, line)
+        model:setDestination(rollingStockName, destination)
+    end
 end
 
 --- Changes the trains route
