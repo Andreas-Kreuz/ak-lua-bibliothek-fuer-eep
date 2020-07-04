@@ -141,7 +141,7 @@ function Line.trainDeparted(trainName, station)
         if line then
             local route = line.routes[routeName]
             if route then
-                route:prepareDepartureAt(train, station)
+                route:trainDeparted(train, station)
             else
                 print("[Line] Could not find trains route: " .. routeName)
             end

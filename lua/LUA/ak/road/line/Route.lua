@@ -67,15 +67,40 @@ function Route:prepareDepartureAt(train, station, timeInMinutes)
 
     timeInMinutes = timeInMinutes or 0
     local haveStation = false
-    for i = #self.stations, 1, -1 do
+    for i = 1, #self.stations do
         local s = self.stations[i].station
         if s == station then
             haveStation = true
         end
         if haveStation then
+            local timeToStation = s == station and 0 or self.stations[i].timeToStation
+            timeInMinutes = timeToStation and (timeInMinutes + timeToStation) or timeInMinutes
+            s:trainArrivesIn(train.trainName, timeInMinutes)
+        end
+    end
+end
+
+---Will inform the given stations about the train arrival in minutes and all sequential stations with the offset
+---@param train Train the train which will arrive
+---@param station RoadStation the first station in the route, where the train will arrive
+function Route:trainDeparted(train, station)
+    assert(type(train) == "table", "Provide 'train' as 'table' was ".. type(train))
+    assert(train.type == "Train", "Provide 'train' as 'Train'")
+    assert(type(station) == "table", "Provide 'station' as 'table' was ".. type(station))
+    assert(station.type == "RoadStation", "Provide 'station' as 'RoadStation'")
+
+    local timeInMinutes = 0
+    local haveStation = false
+    for i = 1, #self.stations do
+        local s = self.stations[i].station
+        if haveStation then
             local timeToStation = self.stations[i].timeToStation
             timeInMinutes = timeToStation and (timeInMinutes + timeToStation) or timeInMinutes
             s:trainArrivesIn(train.trainName, timeInMinutes)
+        end
+        if s == station then
+            station:trainLeft(train.trainName)
+            haveStation = true
         end
     end
 end
