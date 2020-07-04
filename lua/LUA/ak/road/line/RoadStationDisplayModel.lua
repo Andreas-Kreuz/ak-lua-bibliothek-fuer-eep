@@ -1,5 +1,5 @@
 if AkDebugLoad then
-    print("Loading ak.road.station.RoadStationDisplayModel ...")
+    print("Loading ak.road.line.RoadStationDisplayModel ...")
 end
 
 ------------------------------------------------------------------------------------------

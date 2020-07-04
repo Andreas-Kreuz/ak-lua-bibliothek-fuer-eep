@@ -11,13 +11,18 @@ Train.Key = {
     route = "r",
     trainNumber = "n",
 }
+local allTrains = {}
 
 ---Creates a train object for the given train name, the train must exist
 ---@param trainName string name of the train in EEP, e.g. "#Train 1"
 function Train.forName(trainName)
     assert(trainName, "Provide a name for the train")
     assert("string" == type(trainName), "Provide the trainName as string")
-    return Train:new({ trainName = trainName })
+    if allTrains[trainName] then
+        return allTrains[trainName]
+    else
+        return Train:new({ trainName = trainName })
+    end
 end
 
 ---Create a new train with the given object
@@ -34,6 +39,7 @@ function Train:new(o)
     o.type = "Train"
     o.values = o:load()
     o:setRoute(trainRoute)
+    allTrains[o.trainName] = o
     return o
 end
 
@@ -65,8 +71,7 @@ end
 --- Changes the trains route
 ---@param route string Route like set in EEP
 function Train:setRoute(route)
-    assert(route)
-    assert("string" == type(route))
+    assert(type(route) == "string", "Provide 'route' as 'string' was ".. type(string))
     self.values[Train.Key.route] = route
     self.trainRoute = route
     EEPSetTrainRoute(self.trainName, self.trainRoute)
@@ -77,24 +82,21 @@ end
 function Train:getRoute() return self.trainRoute end
 
 function Train:setDirection(direction)
-    assert(direction)
-    assert("string" == type(direction))
+    assert(type(direction) == "string", "Provide 'direction' as 'string' was ".. type(string))
     self.values[Train.Key.direction] = direction
 end
 
 function Train:getDirection() return self.values[Train.Key.direction] end
 
 function Train:setDestination(destination)
-    assert(destination)
-    assert("string" == type(destination))
+    assert(type(destination) == "string", "Provide 'destination' as 'string' was ".. type(string))
     self.values[Train.Key.destination] = destination
 end
 
 function Train:getDestination() return self.values[Train.Key.destination] end
 
 function Train:setLine(line)
-    assert(line)
-    assert("string" == type(line) or "number" == type(line))
+    assert("string" == type(line) or "number" == type(line), "Provide 'line' as 'string' or 'number'")
     line = tostring(line)
     self.values[Train.Key.line] = line
 end

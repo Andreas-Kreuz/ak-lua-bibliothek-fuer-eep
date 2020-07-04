@@ -7,11 +7,11 @@ Route.debug = AkDebugLoad or false
 --- Creates a new Bus or Tram Station
 ---@param routeName table table with entry "nr" of type string
 ---@return Route
-function Route:new(routeName)
-    assert(routeName, 'Provide routeName as string')
-    assert(type(routeName) == "string", 'Provide routeName as string')
+function Route:new(routeName, lineNr)
+    assert(type(routeName) == "string", "Provide 'routeName' as 'string' was ".. type(routeName))
     local o = {}
     o.type = "Route"
+    o.lineNr = lineNr
     o.routeName = routeName
     o.stations = {}
     self.__index = self
@@ -20,11 +20,18 @@ function Route:new(routeName)
 end
 
 ---@param roadStation RoadStation a roadStation
+---@param platform number Platform of the station where this route will depart
 ---@param timeToStation number optional time in minutes to this station
-function Route:addStation(roadStation, timeToStation)
-    assert(roadStation, "Provide a station of type RoadStation")
-    assert(type(roadStation) == "table", "Provide a station of type RoadStation: " .. type(roadStation))
-    assert(roadStation.type == "RoadStation", "Provide a station of type RoadStation")
+function Route:addStation(roadStation, platform, timeToStation)
+    assert(type(roadStation) == "table", "Provide 'station' as 'RoadStation: '" .. type(roadStation))
+    assert(roadStation.type == "RoadStation", "Provide 'station' as 'RoadStation'")
+    assert(type(platform) == "number", "Provide 'platform' as 'number: '" .. type(roadStation))
+    if timeToStation then
+        assert(type(timeToStation) == "number", "Provide 'timeToStation' as 'number: '" .. type(timeToStation))
+    end
+
+    roadStation:setPlatform(self, platform)
+
     self.stations[#self.stations + 1] = {
         station = roadStation,
         timeToStation = timeToStation,
@@ -45,30 +52,18 @@ function Route:getFirstStation()
     end
 end
 
----Creates a new route with all stations in reverse order
----@param routeName string name of the reverse route
----@return Route the reverse route of the current route
-function Route:newReverseRoute(routeName)
-    local route = Route:new(routeName)
-    for i = #self.stations, 1, -1 do
-        local s = self.stations[i]
-        local timeToStation = i > 1 and self.stations[i - 1].timeToStation or nil
-        route:addStation(s.station, timeToStation)
-    end
-    return route
-end
-
 ---Will inform the given stations about the train arrival in minutes and all sequential stations with the offset
 ---@param train Train the train which will arrive
 ---@param station RoadStation the first station in the route, where the train will arrive
 ---@param timeInMinutes number departure time of the train in minutes
 function Route:prepareDepartureAt(train, station, timeInMinutes)
-    assert(train, "Provide a train of type Train")
-    assert(type(train) == "table", "Provide a train of type Train")
-    assert(train.type == "Train", "Provide a train of type Train")
-    assert(station, "Provide a station of type RoadStation")
-    assert(type(station) == "table", "Provide a station of type RoadStation")
-    assert(station.type == "RoadStation", "Provide a station of type RoadStation")
+    assert(type(train) == "table", "Provide 'train' as 'table' was ".. type(train))
+    assert(train.type == "Train", "Provide 'train' as 'Train'")
+    assert(type(station) == "table", "Provide 'station' as 'table' was ".. type(station))
+    assert(station.type == "RoadStation", "Provide 'station' as 'RoadStation'")
+    if timeInMinutes then
+        assert(type(timeInMinutes) == "number", "Provide 'timeToStation' as 'number: '" .. type(timeInMinutes))
+    end
 
     timeInMinutes = timeInMinutes or 0
     local haveStation = false

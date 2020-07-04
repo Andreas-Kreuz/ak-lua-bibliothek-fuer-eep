@@ -3,7 +3,7 @@ if AkDebugLoad then
 end
 
 local Train = require("ak.train.Train")
-local StationQueue = require("ak.road.station.StationQueue")
+local StationQueue = require("ak.road.line.StationQueue")
 local StorageUtility = require("ak.storage.StorageUtility")
 
 ---@class RoadStation
@@ -50,34 +50,35 @@ local function load(station)
 end
 
 function RoadStation:trainArrivesIn(trainName, timeInMinutes)
+    assert(type(trainName) == "string", "Provide 'trainName' as 'string' was " .. type(trainName))
+    assert(type(timeInMinutes) == "number", "Provide 'timeInMinutes' as 'number' was ".. type(timeInMinutes))
+
     local train = Train.forName(trainName)
-    local destination = train:getDestination()
-    local line = train:getLine()
+    local routeName = train:getRoute()
+    assert(type(routeName) == "string", "routeName must be of type 'string' was " .. type(routeName))
+
     local platform
-    if self.lines
-        and self.lines[line]
-        and self.lines[line].destinations
-        and self.lines[line].destinations[destination]
-        and self.lines[line].destinations[destination].platform then
-        platform = self.lines[line].destinations[destination].platform
+    if self.routes
+        and self.routes[routeName]
+        and self.routes[routeName].platform then
+        platform = self.routes[routeName].platform
     else
-        if RoadStation.debug then
+        -- if RoadStation.debug then
             print("[RoadStation] " .. self.name
                 .. " NO PLATFORM FOR TRAIN: " .. trainName
-                .. (line and " (" .. line .. ")" or "")
-                .. (destination and " (" .. destination .. ")" or ""))
+                .. (routeName and " (" .. routeName .. ")" or ""))
             platform = "1"
-        end
+        -- end
     end
 
     if RoadStation.debug then
         print(
             string.format(
-                "[RoadStation] Planning Arrival of %s in %d min on platform %s",
+                "[RoadStation] %s: Planning Arrival of %s in %d min on platform %s",
+                self.name,
                 trainName,
                 timeInMinutes,
-                platform
-    )
+                platform)
     )
     end
 
@@ -90,20 +91,17 @@ function RoadStation:trainLeft(trainName)
     self:updateDisplays()
 end
 
-function RoadStation:setPlatform(line, destination, platform)
-    assert(line)
-    assert(destination)
-    assert(platform)
-    line = tostring(line)
+function RoadStation:setPlatform(route, platform)
+    assert(type(route) == "table", "Provide 'route' as 'table' was ".. type(route))
+    assert(route.type == "Route", "Provide 'route' as 'Route'")
+    assert(type(platform) == "number", "Provide 'platform' as 'number' was ".. type(platform))
+
+    local routeName = route.routeName
     platform = tostring(platform)
 
-    self.lines = self.lines or {}
-    self.lines[line] = self.lines[line] or {}
-
-    self.lines[line].destinations = self.lines[line].destinations or {}
-    self.lines[line].destinations[destination] = self.lines[line].destinations[destination] or {}
-
-    self.lines[line].destinations[destination].platform = platform
+    self.routes = self.routes or {}
+    self.routes[routeName] = self.routes[routeName] or {}
+    self.routes[routeName].platform = platform
 end
 
 function RoadStation:updateDisplays()

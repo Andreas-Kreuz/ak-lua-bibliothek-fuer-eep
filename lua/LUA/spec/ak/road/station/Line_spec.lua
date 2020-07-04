@@ -4,6 +4,7 @@ insulate("Line Management", function()
     local Line = require("ak.road.line.Line")
     local RoadStation = require("ak.road.line.RoadStation")
     assert(RoadStation)
+    assert(Train)
 
     -- Station definition
     local sMesseDresden = RoadStation:new("Messe Dresden", -1)
@@ -13,55 +14,101 @@ insulate("Line Management", function()
 
 
     -- Route definition
-    local line1 = Line:new({nr = "1a"})
-    line1.route1 = line1:newRoute("10 Striesen")
-    line1.route1:addStation(sMesseDresden)
-    line1.route1:addStation(sFeuerwehrGasse, 2)
-    line1.route1:addStation(sHauptbahnhof, 2)
-    line1.route1:addStation(sStriesen, 3)
+    local line10 = Line:new({nr = "1a"})
+    local l10Striesen = line10:newRoute("10 Striesen")
+    l10Striesen:addStation(sMesseDresden, 1)
+    l10Striesen:addStation(sFeuerwehrGasse, 1, 2)
+    l10Striesen:addStation(sHauptbahnhof, 1, 2)
+    l10Striesen:addStation(sStriesen, 1, 3)
 
-    it("Station 1", function() assert.equals("Messe Dresden", line1.route1:getFirstStation().name) end)
-    it("Station 4", function() assert.equals("Striesen", line1.route1:getLastStation().name) end)
 
-    line1.route2 = line1.route1:newReverseRoute("10 Messe Dresden")
+    local l10MesseDresden = line10:newRoute("10 Messe Dresden")
+    l10MesseDresden:addStation(sStriesen, 2, 0)
+    l10MesseDresden:addStation(sHauptbahnhof, 2, 3)
+    l10MesseDresden:addStation(sFeuerwehrGasse, 2, 2)
+    l10MesseDresden:addStation(sMesseDresden, 2)
 
-    it("Station 1", function() assert.equals("Striesen", line1.route2:getFirstStation().name) end)
-    it("Station 4", function() assert.equals("Messe Dresden", line1.route2:getLastStation().name) end)
+    -- Check route
+    it("Station 1", function() assert.equals("Messe Dresden", l10Striesen:getFirstStation().name) end)
+    it("Station 4", function() assert.equals("Striesen", l10Striesen:getLastStation().name) end)
+
+    it("", function() assert.equals("2", sHauptbahnhof.routes[l10MesseDresden.routeName].platform) end)
+    it("", function() assert.equals("1", sHauptbahnhof.routes[l10Striesen.routeName].platform) end)
+    it("", function() assert.equals("2", sFeuerwehrGasse.routes[l10MesseDresden.routeName].platform) end)
+    it("", function() assert.equals("1", sFeuerwehrGasse.routes[l10Striesen.routeName].platform) end)
+
+    -- Check reverse route
+    it("Station 1", function() assert.equals("Striesen", l10MesseDresden:getFirstStation().name) end)
+    it("Station 4", function() assert.equals("Messe Dresden", l10MesseDresden:getLastStation().name) end)
+
+    -- add contact-point functions
+    local function stationArrivalPlanned(trainName, station, timeInMinutes)
+        assert(type(trainName) == "string", "Provide 'trainName' as 'string' was ".. type(trainName))
+        assert(type(station) == "table", "Provide 'station' as 'table' was ".. type(station))
+        assert(station.type == "RoadStation", "Provide 'station' as 'RoadStation'")
+        assert(type(timeInMinutes) == "number", "Provide 'timeInMinutes' as 'number' was ".. type(timeInMinutes))
+
+        Line.scheduleDeparture(trainName, station, timeInMinutes)
+    end
+
+    local function stationLeft(trainName, station)
+        assert(type(trainName) == "string", "Provide 'trainName' as 'string' was ".. type(trainName))
+        assert(type(station) == "table", "Provide 'station' as 'table' was ".. type(station))
+        assert(station.type == "RoadStation", "Provide 'station' as 'RoadStation'")
+
+        Line.trainDeparted(trainName, station)
+    end
+
+    local function changeDestination(trainName, station, departureTime)
+        assert(type(trainName) == "string", "Provide 'trainName' as 'string' was ".. type(trainName))
+        assert(type(station) == "table", "Provide 'station' as 'table' was ".. type(station))
+        assert(station.type == "RoadStation", "Provide 'station' as 'RoadStation'")
+        if departureTime then
+            assert(type(departureTime) == "number", "Provide 'departureTime' as 'number' was ".. type(departureTime))
+        end
+
+        Line.changeRoute(trainName, station, departureTime)
+    end
+
+    Line.addRouteChange(sStriesen, l10Striesen, l10MesseDresden, line10)
+    Line.addRouteChange(sMesseDresden, l10MesseDresden, l10Striesen, line10)
 
     -- Create a new train
-    local train1 = Train.forName("#Train 1")
-    assert(train1.trainName)
+    local trainName = "#Train 1"
+    Train.forName("#Train 1"):setRoute(l10MesseDresden.routeName)
 
     -- Prepare to use route 1
-    line1:prepareDepartureAt(train1.trainName, line1.route1, 10)-- The following stations are informed
+    --line10:prepareDepartureAt(trainName, l10MesseDresden, 10)-- The following stations are informed
+    changeDestination(trainName, sMesseDresden)
 
     -- Drive through route 1 by contacts
-    sMesseDresden:trainLeft(train1.trainName)
-    sFeuerwehrGasse:trainArrivesIn(train1.trainName, 3)
-    sFeuerwehrGasse:trainArrivesIn(train1.trainName, 2)
-    sFeuerwehrGasse:trainArrivesIn(train1.trainName, 1)
-    sFeuerwehrGasse:trainArrivesIn(train1.trainName, 0)
-    sFeuerwehrGasse:trainLeft(train1.trainName)
-    sHauptbahnhof:trainArrivesIn(train1.trainName, 0)
-    sHauptbahnhof:trainLeft(train1.trainName)
-    sStriesen:trainArrivesIn(train1.trainName, 0)
-    sStriesen:trainLeft(train1.trainName)
+    stationLeft(trainName, sMesseDresden)
+    stationArrivalPlanned(trainName, sFeuerwehrGasse, 3)
+    stationArrivalPlanned(trainName, sFeuerwehrGasse, 2)
+    stationArrivalPlanned(trainName, sFeuerwehrGasse, 1)
+    stationArrivalPlanned(trainName, sFeuerwehrGasse, 0)
+    stationLeft(trainName, sFeuerwehrGasse)
+    stationArrivalPlanned(trainName, sHauptbahnhof, 0)
+    stationLeft(trainName, sHauptbahnhof)
+    stationArrivalPlanned(trainName, sStriesen, 0)
+    stationLeft(trainName, sStriesen)
 
     -- Prepare to use route 2
-    line1:prepareDepartureAt(train1.trainName, line1.route1, 10)-- The following stations are informed
+    --line10:prepareDepartureAt(trainName, l10Striesen, 10)-- The following stations are informed
+    changeDestination(trainName, sStriesen)
 
     -- Drive through route 2 by contacts
 
-    sStriesen:trainArrivesIn(train1.trainName, 0)
-    sStriesen:trainLeft(train1.trainName)
-    sHauptbahnhof:trainArrivesIn(train1.trainName, 0)
-    sHauptbahnhof:trainLeft(train1.trainName)
-    sFeuerwehrGasse:trainArrivesIn(train1.trainName, 3)
-    sFeuerwehrGasse:trainArrivesIn(train1.trainName, 2)
-    sFeuerwehrGasse:trainArrivesIn(train1.trainName, 1)
-    sFeuerwehrGasse:trainArrivesIn(train1.trainName, 0)
-    sFeuerwehrGasse:trainLeft(train1.trainName)
-    sMesseDresden:trainArrivesIn(train1.trainName, 0)
-    sMesseDresden:trainLeft(train1.trainName)
+    stationArrivalPlanned(trainName, sStriesen, 0)
+    stationLeft(trainName, sStriesen)
+    stationArrivalPlanned(trainName, sHauptbahnhof, 0)
+    stationLeft(trainName, sHauptbahnhof)
+    stationArrivalPlanned(trainName, sFeuerwehrGasse, 3)
+    stationArrivalPlanned(trainName, sFeuerwehrGasse, 2)
+    stationArrivalPlanned(trainName, sFeuerwehrGasse, 1)
+    stationArrivalPlanned(trainName, sFeuerwehrGasse, 0)
+    stationLeft(trainName, sFeuerwehrGasse)
+    stationArrivalPlanned(trainName, sMesseDresden, 0)
+    stationLeft(trainName, sMesseDresden)
 
 end)

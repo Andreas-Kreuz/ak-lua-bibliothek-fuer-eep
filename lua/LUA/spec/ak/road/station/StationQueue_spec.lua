@@ -1,7 +1,7 @@
-describe("ak.road.station.StationQueue", function()
+describe("ak.road.line.StationQueue", function()
     require("ak.core.eep.EepSimulator")
     insulate("new Queue is empty", function()
-        local Queue = require("ak.road.station.StationQueue")
+        local Queue = require("ak.road.line.StationQueue")
 
         local myQueue = Queue:new();
         it("First is nil", function() assert.same({}, myQueue.entries) end)
@@ -9,7 +9,7 @@ describe("ak.road.station.StationQueue", function()
     end)
 
     insulate("Queue with elements is not empty", function()
-        local Queue = require("ak.road.station.StationQueue")
+        local Queue = require("ak.road.line.StationQueue")
 
         local myQueue = Queue:new()
         myQueue:push("train1", 5)
@@ -20,7 +20,7 @@ describe("ak.road.station.StationQueue", function()
     end)
 
     insulate("Queue with elements is not empty", function()
-        local Queue = require("ak.road.station.StationQueue")
+        local Queue = require("ak.road.line.StationQueue")
 
         local myQueue = Queue:new()
         myQueue:push("train1", 2, 1)
@@ -31,7 +31,7 @@ describe("ak.road.station.StationQueue", function()
     end)
 
     insulate("Queue with elements is not empty", function()
-        local Queue = require("ak.road.station.StationQueue")
+        local Queue = require("ak.road.line.StationQueue")
 
         local myQueue = Queue:new()
         myQueue:push("train1", 5, 1)
