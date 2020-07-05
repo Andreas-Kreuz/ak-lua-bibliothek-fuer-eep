@@ -115,10 +115,10 @@ end
 function EEPGetSwitch(switchId) return switches[switchId] and switches[switchId] or 2 end
 
 --- Das Signal x wird intern registriert
-function EEPRegisterSignal(signalId) assert(signalId) end
+function EEPRegisterSignal(signalId) assert(type(signalId) == 'number', "Provide 'signalId' as 'number'") end
 
 --- Die Weiche x wird intern registriert
-function EEPRegisterSwitch(switchId) assert(switchId) end
+function EEPRegisterSwitch(switchId) assert(type(switchId) == 'number', "Provide 'switchId' as 'number'") end
 
 EEPTime = 0
 EEPTimeH = 0
@@ -455,12 +455,12 @@ function EEPChangeInfoStructure(immoName, text) end
 --- Zeigen / Verstecken des Tipp-Textes einer Immobilie
 -- @param switchId Name der Immobilie als String.
 -- @param onOff true: einschalten
-function EEPShowInfoSignal(signalId, onOff) assert(signalId) end
+function EEPShowInfoSignal(signalId, onOff) assert(type(signalId) == 'number', "Provide 'signalId' as 'number'") end
 
 --- Setzen des Tipp-Textes einer Immobilie
 -- @param switchId Name der Immobilie als String.
 -- @param text Text fuer die Anzeige
-function EEPChangeInfoSignal(signalId, text) assert(signalId) end
+function EEPChangeInfoSignal(signalId, text) assert(type(signalId) == 'number', "Provide 'signalId' as 'number'") end
 
 --- Zeigen / Verstecken des Tipp-Textes einer Weiche
 -- @param switchId Name der Weiche als String.
