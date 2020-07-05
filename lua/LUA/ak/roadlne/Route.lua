@@ -1,4 +1,4 @@
-if AkDebugLoad then print("Loading ak.road.line.Route ...") end
+if AkDebugLoad then print("Loading ak.roadline.Route ...") end
 
 ---@class Route<T>
 local Route = {}

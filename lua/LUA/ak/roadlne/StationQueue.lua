@@ -1,8 +1,6 @@
-if AkDebugLoad then
-    print("Loading ak.road.line.StationQueue ...")
-end
+if AkDebugLoad then print("Loading ak.roadline.StationQueue ...") end
 
-local StationQueueEntry = require("ak.road.line.StationQueueEntry")
+local StationQueueEntry = require("ak.roadline.StationQueueEntry")
 
 ---@class StationQueue<T>
 local StationQueue = {}

@@ -1,9 +1,7 @@
-if AkDebugLoad then
-    print("Loading ak.road.line.RoadStation ...")
-end
+if AkDebugLoad then print("Loading ak.roadline.RoadStation ...") end
 
 local Train = require("ak.train.Train")
-local StationQueue = require("ak.road.line.StationQueue")
+local StationQueue = require("ak.roadline.StationQueue")
 local StorageUtility = require("ak.storage.StorageUtility")
 
 ---@class RoadStation

@@ -1,6 +1,4 @@
-if AkDebugLoad then
-    print("Loading ak.road.line.RoadStationDisplayModel ...")
-end
+if AkDebugLoad then print("Loading ak.roadline.RoadStationDisplayModel ...") end
 
 ------------------------------------------------------------------------------------------
 -- Klasse DisplayModel

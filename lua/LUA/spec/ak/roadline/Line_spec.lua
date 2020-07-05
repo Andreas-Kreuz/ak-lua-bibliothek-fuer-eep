@@ -1,8 +1,8 @@
 insulate("Line Management", function()
     require("ak.core.eep.EepSimulator")
     local Train = require("ak.train.Train")
-    local Line = require("ak.road.line.Line")
-    local RoadStation = require("ak.road.line.RoadStation")
+    local Line = require("ak.roadline.Line")
+    local RoadStation = require("ak.roadline.RoadStation")
     assert(RoadStation)
     assert(Train)
 

@@ -1,9 +1,9 @@
 if AkDebugLoad then
-    print("Loading ak.road.line.Line ...")
+    print("Loading ak.roadline.Line ...")
 end
 
 local Train = require("ak.train.Train")
-local Route = require("ak.road.line.Route")
+local Route = require("ak.roadline.Route")
 
 ---@class Line<T>
 local Line = {}
