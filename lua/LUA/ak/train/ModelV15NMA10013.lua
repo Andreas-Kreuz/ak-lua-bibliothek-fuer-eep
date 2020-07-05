@@ -28,7 +28,7 @@ function GT_A:setStations(rollingStockName, stations)
 end
 
 function GT_A:setWagonNr(rollingStockName, nr)
-    assert(self)
+    assert(type(self) == "table", "Need 'self' as table not as " .. type(self))
     EEPRollingstockSetTextureText(rollingStockName, 5, nr)
     EEPRollingstockSetTextureText(rollingStockName, 6, nr)
     EEPRollingstockSetTextureText(rollingStockName, 7, nr)
@@ -36,13 +36,13 @@ function GT_A:setWagonNr(rollingStockName, nr)
 end
 
 function GT_A:openDoors(rollingStockName)
-    assert(self)
+    assert(type(self) == "table", "Need 'self' as table not as " .. type(self))
     EEPRollingstockSetAxis(rollingStockName, "Türen Mitte", 100)
     EEPRollingstockSetAxis(rollingStockName, "Türen vorn", 100)
 end
 
 function GT_A:openDoors(rollingStockName)
-    assert(self)
+    assert(type(self) == "table", "Need 'self' as table not as " .. type(self))
     EEPRollingstockSetAxis(rollingStockName, "Türen Mitte", 0)
     EEPRollingstockSetAxis(rollingStockName, "Türen vorn", 0)
 end
@@ -53,34 +53,34 @@ ModelV15NMA10013["GT4 Serie 2 (2) Wagen A"] = GT_A
 local GT_B = RollingStockModel:new({})
 
 function GT_B:setLine(rollingStockName, line)
-    assert(self)
+    assert(type(self) == "table", "Need 'self' as table not as " .. type(self))
     EEPRollingstockSetTextureText(rollingStockName, 1, line)
 end
 
 function GT_B:setDestination(rollingStockName, destination)
-    assert(self)
-    assert(rollingStockName)
-    assert(destination)
+    assert(type(self) == "table", "Need 'self' as table not as " .. type(self))
+    assert(type(rollingStockName) == "string", "Need 'rollingStockName' as string not as " .. type(rollingStockName))
+    assert(type(destination) == "string", "Need 'destination' as string not as " .. type(destination))
  end
 
 function GT_B:setStations(rollingStockName, stations)
-    assert(self)
+    assert(type(self) == "table", "Need 'self' as table not as " .. type(self))
     EEPRollingstockSetTextureText(rollingStockName, 2, stations)
 end
 
 function GT_B:setWagonNr(rollingStockName, nr)
-    assert(self)
+    assert(type(self) == "table", "Need 'self' as table not as " .. type(self))
     EEPRollingstockSetTextureText(rollingStockName, 3, nr)
     EEPRollingstockSetTextureText(rollingStockName, 4, nr)
 end
 
 function GT_B:openDoors(rollingStockName)
-    assert(self)
+    assert(type(self) == "table", "Need 'self' as table not as " .. type(self))
     EEPRollingstockSetAxis(rollingStockName, "Türen hinten", 100)
 end
 
 function GT_B:closeDoors(rollingStockName)
-    assert(self)
+    assert(type(self) == "table", "Need 'self' as table not as " .. type(self))
     EEPRollingstockSetAxis(rollingStockName, "Türen hinten", 0)
 end
 

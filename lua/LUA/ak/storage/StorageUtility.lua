@@ -132,7 +132,7 @@ function StorageUtility.saveTable(eepSaveId, table, name)
     local text = ""
     for k, v in pairsByKeys(table) do
         assert(type(k) == "string", "Key ist kein string: " .. tostring(v))
-        assert(type(v) == "string", "Wert ist kein string: " .. tostring(v) .. " (" .. tostring(k) .. ")")
+        assert(type(v) == "string", "Need 'v' as string not as " .. type(v))
         assert(not string.find(k, ","))
         assert(not string.find(v, ","))
         text = text .. k .. "=" .. v .. ","
@@ -155,7 +155,7 @@ function StorageUtility.saveTableRollingStock(rollingStockName, table)
     local text = ""
     for k, v in pairsByKeys(table) do
         assert(type(k) == "string", "key is no string: " .. tostring(v))
-        assert(type(v) == "string", "value is no string: " .. tostring(v) .. " (" .. tostring(k) .. ")")
+        assert(type(v) == "string", "Need 'v' as string not as " .. type(v))
         assert(not string.find(k, ","))
         assert(not string.find(v, ","))
         text = text .. k .. "=" .. v .. ","

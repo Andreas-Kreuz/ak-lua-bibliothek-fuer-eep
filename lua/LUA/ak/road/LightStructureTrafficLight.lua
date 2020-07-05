@@ -10,18 +10,17 @@ local LightStructureTrafficLight = {}
 ---@param requestStructure string Immo deren Licht eingeschaltet wird, wenn die Ampel eine Anforderung erkennt
 --
 function LightStructureTrafficLight:new(redStructure, greenStructure, yellowStructure, requestStructure)
-    assert(redStructure)
-    assert(type(redStructure) == "string")
+    assert(type(redStructure) == "string", "Need 'redStructure' as string not as " .. type(redStructure))
     assert(EEPStructureGetLight(redStructure), "EEPStructureSetLight(\"" .. redStructure .. "\", false)")
-    assert(greenStructure)
-    assert(type(greenStructure) == "string")
+    assert(type(greenStructure) == "string", "Need 'greenStructure' as string not as " .. type(greenStructure))
     assert(EEPStructureGetLight(greenStructure), "EEPStructureSetLight(\"" .. greenStructure .. "\", false)")
     if yellowStructure then
-        assert(type(yellowStructure) == "string")
+        assert(type(yellowStructure) == "string", "Need 'yellowStructure' as string not as " .. type(yellowStructure))
         assert(EEPStructureGetLight(yellowStructure), "EEPStructureSetLight(\"" .. yellowStructure .. "\", false)")
     end
     if requestStructure then
-        assert(type(requestStructure) == "string")
+        assert(type(requestStructure) == "string",
+               "Need 'requestStructure' as string not as " .. type(requestStructure))
         assert(EEPStructureGetLight(requestStructure), "EEPStructureSetLight(\"" .. requestStructure .. "\", false)")
     end
     local o = {

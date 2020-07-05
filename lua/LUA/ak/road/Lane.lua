@@ -462,7 +462,7 @@ end
 ---@return Lane
 function Lane:new(name, eepSaveId, trafficLight, directions, trafficType)
     assert(name, 'Bitte geben Sie den Namen "name" fuer diese Fahrspur an.')
-    assert(type(name) == "string", "Name ist kein String")
+    assert(type(name) == "string", "Need 'name' as string not as " .. type(name))
     assert(eepSaveId, 'Bitte geben Sie den Wert "eepSaveId" fuer diese Fahrspur an.')
     assert(type(eepSaveId) == "number")
     assert(trafficLight, 'Specify a single "trafficLight" for this lane (the one, where the traffic is queued).')
@@ -503,7 +503,11 @@ end
 function Lane:driveOn(trafficLight, ...)
     assert(trafficLight.type == "TrafficLight")
     if trafficLight.signalId ~= self.trafficLight.signalId then
-        if ... then for _, route in ipairs(...) do assert("string" == type(route)) end end
+        if ... then
+            for _, route in ipairs(...) do
+                assert(type(route) == "string", "Need 'route' as string not as " .. type(route))
+            end
+        end
         self.trafficLightsToDriveOn = self.trafficLightsToDriveOn or {}
         self.trafficLightsToDriveOn[trafficLight] = {...}
     end

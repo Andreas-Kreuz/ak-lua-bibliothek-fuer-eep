@@ -48,12 +48,12 @@ local function load(station)
 end
 
 function RoadStation:trainArrivesIn(trainName, timeInMinutes)
-    assert(type(trainName) == "string", "Provide 'trainName' as 'string' was " .. type(trainName))
+    assert(type(trainName) == "string", "Need 'trainName' as string not as " .. type(trainName))
     assert(type(timeInMinutes) == "number", "Provide 'timeInMinutes' as 'number' was ".. type(timeInMinutes))
 
     local train = Train.forName(trainName)
     local routeName = train:getRoute()
-    assert(type(routeName) == "string", "routeName must be of type 'string' was " .. type(routeName))
+    assert(type(routeName) == "string", "Need 'routeName' as string not as " .. type(routeName))
 
     local platform
     if self.routes
@@ -118,8 +118,8 @@ end
 
 function RoadStation:addDisplay(structure, model, platform)
     platform = platform and tostring(platform) or "1"
-    assert(structure)
-    assert(model)
+    assert(type(structure) == "string", "Need 'structure' as string not as " .. type(structure))
+    assert(type(model) == "table", "Need 'model' as table not as " .. type(model))
     platform = platform and tostring(platform) or nil
     self.displays[platform or "ALL"] = self.displays[platform or "ALL"] or {}
     table.insert(self.displays[platform or "ALL"], {structure = structure, model = model})
@@ -132,9 +132,9 @@ end
 ---@return RoadStation
 function RoadStation:new(name, eepSaveId)
     assert(name, 'Bitte geben Sie den Namen "name" fuer diese Fahrspur an.')
-    assert(type(name) == "string", "Name ist kein String")
+    assert(type(name) == "string", "Need 'name' as string not as " .. type(name))
     assert(eepSaveId, 'Bitte geben Sie den Wert "eepSaveId" fuer diese Fahrspur an.')
-    assert(type(eepSaveId) == "number")
+    assert(type(eepSaveId) == "number", "Need 'eepSaveId' as number not as " .. type(eepSaveId))
     if eepSaveId ~= -1 then
         StorageUtility.registerId(eepSaveId, "Lane " .. name)
     end

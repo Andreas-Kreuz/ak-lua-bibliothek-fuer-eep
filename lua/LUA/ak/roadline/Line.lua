@@ -86,7 +86,7 @@ end
 ---Each line can have multiple routes, e.g. each line may have two opposite directions
 
 function Line:newRoute(routeName)
-    assert(type(routeName) == "string", "routeName must be of type 'string' was " .. type(routeName))
+    assert(type(routeName) == "string", "Need 'routeName' as string not as " .. type(routeName))
     local route = Route:new(routeName, self.nr)
     self.routes[routeName] = route
     return route
@@ -105,7 +105,7 @@ function Line.scheduleDeparture(trainName, station, timeInMinutes)
     local train = Train.forName(trainName)
     local lineName = train:getLine()
     local routeName = train:getRoute()
-    assert(type(routeName) == "string", "routeName must be of type 'string' was " .. type(routeName))
+    assert(type(routeName) == "string", "Need 'routeName' as string not as " .. type(routeName))
 
     if lineName then
         local line = lines[lineName]
@@ -135,9 +135,9 @@ function Line.trainDeparted(trainName, station)
     station:trainLeft(trainName)
     local train = Train.forName(trainName)
     local lineName = train:getLine()
-    -- assert(type(lineName) == "string", "lineName must be of type 'string' was " .. type(lineName))
+    -- assert(type(lineName) == "string", "Need 'lineName' as string not as " .. type(lineName))
     local routeName = train:getRoute()
-    assert(type(routeName) == "string", "routeName must be of type 'string' was " .. type(routeName))
+    assert(type(routeName) == "string", "Need 'routeName' as string not as " .. type(routeName))
 
     if lineName then
         local line = lines[lineName]

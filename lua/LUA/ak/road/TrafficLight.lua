@@ -173,7 +173,7 @@ end
 -- @param reason z.B. Name der Schaltung
 --
 function TrafficLight:switchTo(phase, reason)
-    assert(phase)
+    assert(type(phase) == "string", "Need 'phase' as string not as " .. type(phase))
     self.phase = phase
     local lightDbg = self:switchStructureLight()
     local axisDbg = self:switchStructureAxis()

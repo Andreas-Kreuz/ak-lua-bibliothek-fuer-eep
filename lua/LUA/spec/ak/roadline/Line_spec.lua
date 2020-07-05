@@ -3,8 +3,6 @@ insulate("Line Management", function()
     local Train = require("ak.train.Train")
     local Line = require("ak.roadline.Line")
     local RoadStation = require("ak.roadline.RoadStation")
-    assert(RoadStation)
-    assert(Train)
 
     -- Station definition
     local sMesseDresden = RoadStation:new("Messe Dresden", -1)
