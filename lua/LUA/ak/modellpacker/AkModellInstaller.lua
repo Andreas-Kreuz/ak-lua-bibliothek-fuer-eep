@@ -3,7 +3,7 @@ local AkModellPacker = require("ak.modellpacker.AkModellPacker")
 local AkModellInstaller = {}
 
 function AkModellInstaller:new(verzeichnisname)
-    assert(type(verzeichnisname) == "string", "Need 'verzeichnisname' as string not as " .. type(verzeichnisname))
+    assert(type(verzeichnisname) == "string", "Need 'verzeichnisname' as string")
     local o = {}
     setmetatable(o, self)
     self.__index = self

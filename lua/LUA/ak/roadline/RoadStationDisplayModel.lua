@@ -12,9 +12,9 @@ DisplayModel.allModels = {}
 -- @param name Name of the model
 -- @param displayEntries function to display a list of stationQueueEntries
 function DisplayModel:new(name, initStation, displayEntries)
-    assert(type(name) == "string", "Need 'name' as string not as " .. type(name))
-    assert(type(initStation) == "function", "Need 'initStation' as function not as " .. type(initStation))
-    assert(type(displayEntries) == "function", "Need 'displayEntries' as function not as " .. type(displayEntries))
+    assert(type(name) == "string", "Need 'name' as string")
+    assert(type(initStation) == "function", "Need 'initStation' as function")
+    assert(type(displayEntries) == "function", "Need 'displayEntries' as function")
     local o = {
         name = name,
         initStation = initStation,
@@ -45,8 +45,8 @@ DisplayModel.Tram_Schild_DL1 =
     function(displayStructure, stationName, platform)
         assert(type(displayStructure) == "string",
               "Need 'displayStructure' as string not as " .. type(displayStructure))
-        assert(type(stationName) == "string", "Need 'stationName' as string not as " .. type(stationName))
-        assert(type(platform) == "string", "Need 'platform' as string not as " .. type(platform))
+        assert(type(stationName) == "string", "Need 'stationName' as string")
+        assert(type(platform) == "string", "Need 'platform' as string")
 
         EEPStructureSetTextureText(displayStructure, 21, stationName)
         EEPStructureSetTextureText(displayStructure, 24, "Steig " .. platform)
@@ -90,8 +90,8 @@ DisplayModel.BusHSInfo_RG3 =
     function(displayStructure, stationName, platform)
         assert(type(displayStructure) == "string",
                     "Need 'displayStructure' as string not as " .. type(displayStructure))
-        assert(type(stationName) == "string", "Need 'stationName' as string not as " .. type(stationName))
-        assert(type(platform) == "string", "Need 'platform' as string not as " .. type(platform))
+        assert(type(stationName) == "string", "Need 'stationName' as string")
+        assert(type(platform) == "string", "Need 'platform' as string")
         EEPStructureSetTextureText(displayStructure, 1, stationName)
     end,
     function(displayStructure, stationQueueEntries, stationName, platform)
@@ -99,8 +99,8 @@ DisplayModel.BusHSInfo_RG3 =
                "Need 'displayStructure' as string not as " .. type(displayStructure))
         assert(type(stationQueueEntries) == "function",
                     "Need 'stationQueueEntries' as function not as " .. type(stationQueueEntries))
-        assert(type(stationName) == "string", "Need 'stationName' as string not as " .. type(stationName))
-        assert(type(platform) == "string", "Need 'platform' as string not as " .. type(platform))
+        assert(type(stationName) == "string", "Need 'stationName' as string")
+        assert(type(platform) == "string", "Need 'platform' as string")
     end
 )
 
@@ -110,8 +110,8 @@ DisplayModel.BusHSdfi_RG3 =
     function(displayStructure, stationName, platform)
         assert(type(displayStructure) == "string",
                "Need 'displayStructure' as string not as " .. type(displayStructure))
-        assert(type(stationName) == "string", "Need 'stationName' as string not as " .. type(stationName))
-        assert(type(platform) == "string", "Need 'platform' as string not as " .. type(platform))
+        assert(type(stationName) == "string", "Need 'stationName' as string")
+        assert(type(platform) == "string", "Need 'platform' as string")
         EEPStructureSetTextureText(displayStructure, 1, "")
         EEPStructureSetTextureText(displayStructure, 2, "")
         EEPStructureSetTextureText(displayStructure, 3, "")

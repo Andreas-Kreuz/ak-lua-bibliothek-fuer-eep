@@ -2,7 +2,7 @@ local AkModellPacker = {}
 
 function AkModellPacker.schreibeDatei(dateiname, inhalt)
     local file = io.open(dateiname, "w+")
-    assert(file, "Kann Datei nicht öffnen " .. dateiname)
+    assert(file, dateiname)
     io.output(file)
     io.write(inhalt)
     io.close(file)

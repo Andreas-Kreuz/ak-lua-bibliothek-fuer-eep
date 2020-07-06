@@ -91,9 +91,9 @@ AkFsSignal.__index = AkFsSignal
 -- @param defaultPosition Stellung fuer das Signal, wenn die Fahrstrasse aufgeloest werden soll
 --
 function AkFsSignal.new(signalId, positionForRoute, defaultPosition)
-    assert(type(signalId) == "number", "Need 'signalId' as number not as " .. type(signalId))
-    assert(type(positionForRoute) == "number", "Need 'positionForRoute' as number not as " .. type(positionForRoute))
-    assert(type(defaultPosition) == "number", "Need 'defaultPosition' as number not as " .. type(defaultPosition))
+    assert(type(signalId) == "number", "Need 'signalId' as number")
+    assert(type(positionForRoute) == "number", "Need 'positionForRoute' as number")
+    assert(type(defaultPosition) == "number", "Need 'defaultPosition' as number")
     registerSignal(signalId)
 
     local self = setmetatable({}, AkFsSignal)
@@ -134,9 +134,9 @@ AkFsSwitch.__index = AkFsSwitch
 -- @param standardPosition Stellung fuer die Weiche, wenn die Fahrstrasse aufgeloest werden soll
 --
 function AkFsSwitch.new(switchId, routeStand, defaultStand)
-    assert(type(switchId) == "number", "Need 'switchId' as number not as " .. type(switchId))
-    assert(type(routeStand) == "number", "Need 'routeStand' as number not as " .. type(routeStand))
-    assert(type(defaultStand) == "number", "Need 'defaultStand' as number not as " .. type(defaultStand))
+    assert(type(switchId) == "number", "Need 'switchId' as number")
+    assert(type(routeStand) == "number", "Need 'routeStand' as number")
+    assert(type(defaultStand) == "number", "Need 'defaultStand' as number")
     registerSwitch(switchId)
 
     local self = setmetatable({}, AkFsSwitch)
@@ -181,11 +181,11 @@ AkCrossing.__index = AkCrossing
 -- @param requiredClosingTime Zeit, die die Schranken zum Schliessen brauchen
 --
 function AkCrossing.new(signalId1, signalId2, stellungFahrstrasse, stellungStandard, requiredClosingTime)
-    assert(type(signalId1) == "number", "Need 'signalId1' as number not as " .. type(signalId1))
-    assert(type(signalId2) == "number", "Need 'signalId2' as number not as " .. type(signalId2))
+    assert(type(signalId1) == "number", "Need 'signalId1' as number")
+    assert(type(signalId2) == "number", "Need 'signalId2' as number")
     assert(type(stellungFahrstrasse) == "number",
            "Need 'stellungFahrstrasse' as number not as " .. type(stellungFahrstrasse))
-    assert(type(stellungStandard) == "number", "Need 'stellungStandard' as number not as " .. type(stellungStandard))
+    assert(type(stellungStandard) == "number", "Need 'stellungStandard' as number")
     assert(type(requiredClosingTime) == "number",
            "Need 'requiredClosingTime' as number not as " .. type(requiredClosingTime))
     registerSignal(signalId1)
@@ -270,8 +270,8 @@ AkBlock.__index = AkBlock
 -- @param name Name des Blocks
 -- @param eepSaveId Id, unter der die Belegung des Blocks gespeichert wird
 function AkBlock.new(name, eepSaveId)
-    assert(type(name) == "string", "Need 'name' as string not as " .. type(name))
-    assert(type(eepSaveId) == "number", "Need 'eepSaveId' as number not as " .. type(eepSaveId))
+    assert(type(name) == "string", "Need 'name' as string")
+    assert(type(eepSaveId) == "number", "Need 'eepSaveId' as number")
     StorageUtility.registerId(eepSaveId, name)
     local self = setmetatable({}, AkBlock)
     self.name = name
@@ -421,13 +421,13 @@ AkRoute.conflicts = {}
 --- Creates a new route, which is used to transfer a train from one block, to another.
 --
 function AkRoute.new(eepSaveId, direction, block1, block2, signals, switches, crossings)
-    assert(type(eepSaveId) == "number", "Need 'eepSaveId' as number not as " .. type(eepSaveId))
-    assert(type(direction) == "string", "Need 'direction' as string not as " .. type(direction))
-    assert(type(block1) == "table", "Need 'block1' as table not as " .. type(block1))
-    assert(type(block2) == "table", "Need 'block2' as table not as " .. type(block2))
-    assert(type(signals) == "table", "Need 'signals' as table not as " .. type(signals))
-    assert(type(switches) == "table", "Need 'switches' as table not as " .. type(switches))
-    if (crossings) then assert(type(crossings) == "table", "Need 'crossings' as table not as " .. type(crossings)) end
+    assert(type(eepSaveId) == "number", "Need 'eepSaveId' as number")
+    assert(type(direction) == "string", "Need 'direction' as string")
+    assert(type(block1) == "table", "Need 'block1' as table")
+    assert(type(block2) == "table", "Need 'block2' as table")
+    assert(type(signals) == "table", "Need 'signals' as table")
+    assert(type(switches) == "table", "Need 'switches' as table")
+    if (crossings) then assert(type(crossings) == "table", "Need 'crossings' as table") end
     StorageUtility.registerId(eepSaveId, block1.name .. " -> " .. direction .. " -> " .. block2.name)
 
     local self = setmetatable({}, AkRoute)
@@ -451,7 +451,7 @@ end
 
 function AkRoute:addShortTrainStopMarker(akSignal, eepRoutePrefix)
     assert(akSignal)
-    assert(type(eepRoutePrefix) == "string", "Need 'eepRoutePrefix' as string not as " .. type(eepRoutePrefix))
+    assert(type(eepRoutePrefix) == "string", "Need 'eepRoutePrefix' as string")
     self.shortTrainStopMarkers[eepRoutePrefix] = akSignal
     self.block2:addStopMarker(akSignal)
 end
@@ -505,7 +505,7 @@ end
 
 function AkRoute:reserveRoute(trainName)
     assert(trainName)
-    assert(type(trainName) == "string", "Need 'trainName' as string not as " .. type(trainName))
+    assert(type(trainName) == "string", "Need 'trainName' as string")
     pdbg(dbg.fs_schaltung, "Reserviere Fahrstrasse \"" .. self.name .. "\" fuer " .. trainName)
     self.taken = true
     self.trainName = trainName
@@ -639,7 +639,7 @@ AkStation.__index = AkStation
 -- @param name
 --
 function AkStation.new(name)
-    assert(type(name) == "string", "Need 'name' as string not as " .. type(name))
+    assert(type(name) == "string", "Need 'name' as string")
     local self = setmetatable({}, AkStation)
     self.name = name
     self.tracks = {}
@@ -663,7 +663,7 @@ end
 -- @param alwaysVisible if true, the tooltip will always be visible
 --
 function AkStation:addInfoStructure(structure, alwaysVisible)
-    assert(type(structure) == "string", "Need 'structure' as string not as " .. type(structure))
+    assert(type(structure) == "string", "Need 'structure' as string")
     assert(type(self.infoStructures) == "table")
     self.alwaysVisible = alwaysVisible
     self.infoStructures[structure] = alwaysVisible or false
@@ -673,7 +673,7 @@ end
 -- @param structure Name of the structure
 --
 function AkStation:removeInfoStructure(structure)
-    assert(type(structure) == "string", "Need 'structure' as string not as " .. type(structure))
+    assert(type(structure) == "string", "Need 'structure' as string")
     self.infoStructures[structure] = nil
 end
 
@@ -697,7 +697,7 @@ AkSignalTower.__index = AkSignalTower
 -- @param name
 --
 function AkSignalTower.new(name)
-    assert(type(name) == "string", "Need 'name' as string not as " .. type(name))
+    assert(type(name) == "string", "Need 'name' as string")
     local self = setmetatable({}, AkSignalTower)
     self.name = name
     self.tracks = {}
@@ -721,7 +721,7 @@ end
 -- @param alwaysVisible if true, the tooltip will always be visible
 --
 function AkSignalTower:addInfoStructure(structure, alwaysVisible)
-    assert(type(structure) == "string", "Need 'structure' as string not as " .. type(structure))
+    assert(type(structure) == "string", "Need 'structure' as string")
     assert(type(self.infoStructures) == "table")
     self.infoStructures[structure] = alwaysVisible or false
 end
@@ -730,7 +730,7 @@ end
 -- @param structure Name of the structure
 --
 function AkSignalTower:removeInfoStructure(structure)
-    assert(type(structure) == "string", "Need 'structure' as string not as " .. type(structure))
+    assert(type(structure) == "string", "Need 'structure' as string")
     self.infoStructures[structure] = nil
 end
 
@@ -795,8 +795,8 @@ local function timeForRouteCalculation()
 end
 
 local function timeHasCome(currentTime, scheduledTime)
-    assert(type(currentTime) == "number", "Need 'currentTime' as number not as " .. type(currentTime))
-    assert(type(scheduledTime) == "number", "Need 'scheduledTime' as number not as " .. type(scheduledTime))
+    assert(type(currentTime) == "number", "Need 'currentTime' as number")
+    assert(type(scheduledTime) == "number", "Need 'scheduledTime' as number")
     local zeitIstReif = false
     if scheduledTime >= 86400 and currentTime < 43200 and currentTime + 86400 >= scheduledTime then
         zeitIstReif = true

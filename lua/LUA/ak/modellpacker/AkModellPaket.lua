@@ -35,9 +35,9 @@ end
 -- @param excludePattern
 --
 function AkModellPaket:fuegeDateienHinzu(basisOrdner, praefix, unterOrdner, pfadAusschlussMuster)
-    assert(type(basisOrdner) == "string", "Need 'basisOrdner' as string not as " .. type(basisOrdner))
-    assert(type(praefix) == "string", "Need 'praefix' as string not as " .. type(praefix))
-    assert(type(unterOrdner) == "string", "Need 'unterOrdner' as string not as " .. type(unterOrdner))
+    assert(type(basisOrdner) == "string", "Need 'basisOrdner' as string")
+    assert(type(praefix) == "string", "Need 'praefix' as string")
+    assert(type(unterOrdner) == "string", "Need 'unterOrdner' as string")
     local neuePfade = {}
     print(string.format('Durchsuche "%s" in Unterordner "%s"', basisOrdner, unterOrdner))
     local _, dateiGefunden = AkModellPacker.dateienSuchen(neuePfade, basisOrdner, unterOrdner)

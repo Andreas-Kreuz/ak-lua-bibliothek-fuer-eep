@@ -18,7 +18,7 @@ local allTrains = {}
 ---@param trainName string name of the train in EEP, e.g. "#Train 1"
 function Train.forName(trainName)
     assert(trainName, "Provide a name for the train")
-    assert("string" == type(trainName), "Provide the trainName as string")
+    assert(type(trainName) == "string", "Need 'trainName' as string")
     if allTrains[trainName] then
         return allTrains[trainName]
     else
@@ -30,11 +30,11 @@ end
 ---@param o table must contain a string o.trainName
 function Train:new(o)
     assert(o, "Provide a train object")
-    assert("table" == type(o), "Provide the train object as table")
+    assert(type(o) == "table", "Need 'o' as table")
     assert(o.trainName, "Provide a name for the train")
-    assert("string" == type(o.trainName), "Provide the trainName as string")
+    assert(type(o.trainName) == "string", "Need 'o.trainName' as string")
     local haveTrain, trainRoute = EEPGetTrainRoute(o.trainName)
-    assert(haveTrain, "Train " .. o.trainName .. " does not exist")
+    assert(haveTrain, o.trainName)
     self.__index = self
     setmetatable(o, self)
     o.type = "Train"
@@ -64,9 +64,9 @@ function Train:save(clearCurrentInfo)
 end
 
 function Train:changeDestination(destination, line)
-    assert(type(self) == "table", "Provide 'self' as 'table' was ".. type(self))
-    assert(type(destination) == "string", "Provide 'destination' as 'string' was ".. type(destination))
-    assert(type(line) == "string", "Provide 'line' as 'string' was ".. type(line))
+    assert(type(self) == "table", "Need 'self' as table")
+    assert(type(destination) == "string", "Need 'destination' as string")
+    assert(type(line) == "string", "Need 'line' as string")
 
     self:setLine(line)
     self:setDestination(destination)
@@ -84,7 +84,7 @@ end
 --- Changes the trains route
 ---@param route string Route like set in EEP
 function Train:setRoute(route)
-    assert(type(route) == "string", "Provide 'route' as 'string' was ".. type(string))
+    assert(type(route) == "string", "Need 'route' as string")
     self.values[Train.Key.route] = route
     self.trainRoute = route
     EEPSetTrainRoute(self.trainName, self.trainRoute)
@@ -95,14 +95,14 @@ end
 function Train:getRoute() return self.trainRoute end
 
 function Train:setDirection(direction)
-    assert(type(direction) == "string", "Provide 'direction' as 'string' was ".. type(string))
+    assert(type(direction) == "string", "Need 'direction' as string")
     self.values[Train.Key.direction] = direction
 end
 
 function Train:getDirection() return self.values[Train.Key.direction] end
 
 function Train:setDestination(destination)
-    assert(type(destination) == "string", "Provide 'destination' as 'string' was ".. type(string))
+    assert(type(destination) == "string", "Need 'destination' as string")
     self.values[Train.Key.destination] = destination
 end
 

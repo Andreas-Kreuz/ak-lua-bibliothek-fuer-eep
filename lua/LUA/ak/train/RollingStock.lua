@@ -6,13 +6,13 @@ local RollingStock = {}
 
 function RollingStock.forName(rollingStockName)
     assert(rollingStockName, "Provide a rollingStockName")
-    assert("string" == type(rollingStockName), "Provide the rollingStockName as string")
+    assert(type(rollingStockName) == "string", "Need 'rollingStockName' as string")
     return RollingStock:new({ rollingStockName = rollingStockName })
 end
 
 function RollingStock:new(o)
     assert(o.rollingStockName, "Provide a rollingStockName")
-    assert("string" == type(o.rollingStockName), "Provide the rollingStockName as string")
+    assert(type(o.rollingStockName) == "string", "Need 'o.rollingStockName' as string")
     self.__index = self
     setmetatable(o, self)
     o.model = RollingStockModels.modelFor(o.rollingStockName)

@@ -8,7 +8,7 @@ Route.debug = AkDebugLoad or false
 ---@param routeName table table with entry "nr" of type string
 ---@return Route
 function Route:new(routeName, lineNr)
-    assert(type(routeName) == "string", "Provide 'routeName' as 'string' was ".. type(routeName))
+    assert(type(routeName) == "string", "Need 'routeName' as string")
     local o = {}
     o.type = "Route"
     o.lineNr = lineNr
@@ -23,11 +23,11 @@ end
 ---@param platform number Platform of the station where this route will depart
 ---@param timeToStation number optional time in minutes to this station
 function Route:addStation(roadStation, platform, timeToStation)
-    assert(type(roadStation) == "table", "Provide 'station' as 'RoadStation: '" .. type(roadStation))
+    assert(type(roadStation) == "table", "Need 'roadStation' as table")
     assert(roadStation.type == "RoadStation", "Provide 'station' as 'RoadStation'")
-    assert(type(platform) == "number", "Provide 'platform' as 'number: '" .. type(roadStation))
+    assert(type(platform) == "number", "Need 'platform' as number")
     if timeToStation then
-        assert(type(timeToStation) == "number", "Provide 'timeToStation' as 'number: '" .. type(timeToStation))
+        assert(type(timeToStation) == "number", "Need 'timeToStation' as number")
     end
 
     roadStation:setPlatform(self, platform)
@@ -57,12 +57,12 @@ end
 ---@param station RoadStation the first station in the route, where the train will arrive
 ---@param timeInMinutes number departure time of the train in minutes
 function Route:prepareDepartureAt(train, station, timeInMinutes)
-    assert(type(train) == "table", "Provide 'train' as 'table' was ".. type(train))
+    assert(type(train) == "table", "Need 'train' as table")
     assert(train.type == "Train", "Provide 'train' as 'Train'")
-    assert(type(station) == "table", "Provide 'station' as 'table' was ".. type(station))
+    assert(type(station) == "table", "Need 'station' as table")
     assert(station.type == "RoadStation", "Provide 'station' as 'RoadStation'")
     if timeInMinutes then
-        assert(type(timeInMinutes) == "number", "Provide 'timeToStation' as 'number: '" .. type(timeInMinutes))
+        assert(type(timeInMinutes) == "number", "Need 'timeInMinutes' as number")
     end
 
     timeInMinutes = timeInMinutes or 0
@@ -84,9 +84,9 @@ end
 ---@param train Train the train which will arrive
 ---@param station RoadStation the first station in the route, where the train will arrive
 function Route:trainDeparted(train, station)
-    assert(type(train) == "table", "Provide 'train' as 'table' was ".. type(train))
+    assert(type(train) == "table", "Need 'train' as table")
     assert(train.type == "Train", "Provide 'train' as 'Train'")
-    assert(type(station) == "table", "Provide 'station' as 'table' was ".. type(station))
+    assert(type(station) == "table", "Need 'station' as table")
     assert(station.type == "RoadStation", "Provide 'station' as 'RoadStation'")
 
     local timeInMinutes = 0

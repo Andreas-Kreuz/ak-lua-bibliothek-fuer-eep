@@ -12,8 +12,8 @@ function StationQueue:new()
 end
 
 function StationQueue:push(trainName, timeInMinutes, platform)
-    assert(type(trainName) == "string", "Need 'trainName' as string not as " .. type(trainName))
-    assert(type(timeInMinutes) == "number", "Need 'timeInMinutes' as number not as " .. type(timeInMinutes))
+    assert(type(trainName) == "string", "Need 'trainName' as string")
+    assert(type(timeInMinutes) == "number", "Need 'timeInMinutes' as number")
     platform = platform and tostring(platform) or "1"
 
     -- Remove train from arrival list

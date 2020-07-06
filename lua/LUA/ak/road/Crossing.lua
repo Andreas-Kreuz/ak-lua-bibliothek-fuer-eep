@@ -332,7 +332,8 @@ local function recalculateSignalInfo(crossing)
                            (farbig and fmt.bgBlue(sequence.name .. " (Tram)") or
                                (sequence.name .. " " .. fmt.bgBlue("(Tram)")))
             else
-                assert(false, "No such type: " .. type)
+                -- No such type allowed here
+                assert(false, type)
             end
         end
         trafficLight:setSequenceInfo(text)
@@ -355,7 +356,10 @@ function Crossing.initSequences()
                 crossing.lanes[v.name] = v
                 laneFound = true
             end
-            assert(laneFound, "No LANE found in sequence " .. sequence.name .. " (" .. crossing.name .. ")")
+            if not laneFound then
+                print("No LANE found in sequence " .. sequence.name .. " (" .. crossing.name .. ")")
+            end
+            assert(laneFound)
             for v in pairs(sequence.trafficLights) do crossing.trafficLights[v.signalId] = v end
 
             if Crossing.debug then

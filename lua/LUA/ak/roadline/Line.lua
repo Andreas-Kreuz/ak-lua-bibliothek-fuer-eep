@@ -12,16 +12,16 @@ local lines = {}
 local lineChanges = {}
 
 function Line.addRouteChange(station, oldRoute, newRoute, newLine)
-    assert(type(station) == "table", "Provide 'station' as 'table' was ".. type(station))
+    assert(type(station) == "table", "Need 'station' as table")
     assert(station.type == "RoadStation", "Provide 'station' as 'RoadStation'")
-    assert(type(oldRoute) == "table", "Provide 'oldRoute' as 'table' was ".. type(oldRoute))
+    assert(type(oldRoute) == "table", "Need 'oldRoute' as table")
     assert(oldRoute.type == "Route", "Provide 'oldRoute' as 'Route'")
-    assert(type(oldRoute) == "table", "Provide 'oldRoute' as 'table' was ".. type(oldRoute))
+    assert(type(oldRoute) == "table", "Need 'oldRoute' as table")
     assert(oldRoute.type == "Route", "Provide 'newRoute' as 'Route'")
-    assert(type(newLine) == "table", "Provide 'newLine' as 'table' was ".. type(newLine))
+    assert(type(newLine) == "table", "Need 'newLine' as table")
     assert(newLine.type == "Line", "Provide 'newLine' as 'Line'")
     assert(newLine.routes[newRoute.routeName], "'newRoute' is not part of 'newLine'")
-    assert(type(newLine.nr) == "string", "Provide 'newLine.nr' as 'number' was ".. type(newLine.nr))
+    assert(type(newLine.nr) == "string", "Need 'newLine.nr' as string")
 
     lineChanges[station] = lineChanges[station] or {}
     lineChanges[station][oldRoute.routeName] = lineChanges[station][oldRoute.routeName] or {}
@@ -32,11 +32,11 @@ function Line.addRouteChange(station, oldRoute, newRoute, newLine)
 end
 
 function Line.changeRoute(trainName, station, departureTime)
-    assert(type(trainName) == "string", "Provide 'trainName' as 'string' was ".. type(trainName))
-    assert(type(station) == "table", "Provide 'station' as 'table' was ".. type(station))
+    assert(type(trainName) == "string", "Need 'trainName' as string")
+    assert(type(station) == "table", "Need 'station' as table")
     assert(station.type == "RoadStation", "Provide 'station' as 'RoadStation'")
     if departureTime then
-        assert(type(departureTime) == "number", "Provide 'departureTime' as 'number: '" .. type(departureTime))
+        assert(type(departureTime) == "number", "Need 'departureTime' as number")
     end
 
     local train = Train.forName(trainName)
@@ -47,10 +47,10 @@ function Line.changeRoute(trainName, station, departureTime)
 
     if lineChanges[station] and lineChanges[station][oldRoute] then
         local entry = lineChanges[station][oldRoute]
-        assert(type(entry.newRoute) == "table", "Provide 'entry.newRoute' as 'table' was ".. type(entry.newRoute))
+        assert(type(entry.newRoute) == "table", "Need 'entry.newRoute' as table")
         assert(entry.newRoute.type == "Route", "Provide 'entry.newRoute' as 'Route'")
         assert(entry.newLine.type == "Line", "Provide 'entry.newLine' as 'Line'")
-        assert(type(entry.newLine.nr) == "string", "Provide 'newLine.nr' as 'number' was ".. type(entry.newLine.nr))
+        assert(type(entry.newLine.nr) == "string", "Need 'entry.newLine.nr' as string")
 
         train:setRoute(entry.newRoute.routeName)
         train:changeDestination(entry.newRoute:getLastStation().name, entry.newLine.nr)
@@ -72,8 +72,8 @@ end
 ---@param o table table with entry "nr" as string
 ---@return Line
 function Line:new(o)
-    assert(type(o) == "table", "Provide 'o' as 'table' was ".. type(o))
-    assert(type(o.nr) == "string", "Provide 'o.nr' as 'string' was ".. type(o.nr))
+    assert(type(o) == "table", "Need 'o' as table")
+    assert(type(o.nr) == "string", "Need 'o.nr' as string")
     o.type = "Line"
     o.routes = {}
     self.__index = self
@@ -86,7 +86,7 @@ end
 ---Each line can have multiple routes, e.g. each line may have two opposite directions
 
 function Line:newRoute(routeName)
-    assert(type(routeName) == "string", "Need 'routeName' as string not as " .. type(routeName))
+    assert(type(routeName) == "string", "Need 'routeName' as string")
     local route = Route:new(routeName, self.nr)
     self.routes[routeName] = route
     return route
@@ -97,15 +97,15 @@ end
 ---@param station RoadStation
 ---@param timeInMinutes number
 function Line.scheduleDeparture(trainName, station, timeInMinutes)
-    assert(type(trainName) == "string", "Provide 'trainName' as 'string' was ".. type(trainName))
-    assert(type(station) == "table", "Provide 'station' as 'table' was ".. type(station))
+    assert(type(trainName) == "string", "Need 'trainName' as string")
+    assert(type(station) == "table", "Need 'station' as table")
     assert(station.type == "RoadStation", "Provide 'station' as 'RoadStation'")
-    assert(type(timeInMinutes) == "number", "Provide 'timeInMinutes' as 'number' was ".. type(timeInMinutes))
+    assert(type(timeInMinutes) == "number", "Need 'timeInMinutes' as number")
 
     local train = Train.forName(trainName)
     local lineName = train:getLine()
     local routeName = train:getRoute()
-    assert(type(routeName) == "string", "Need 'routeName' as string not as " .. type(routeName))
+    assert(type(routeName) == "string", "Need 'routeName' as string")
 
     if lineName then
         local line = lines[lineName]
@@ -128,16 +128,16 @@ end
 ---@param trainName string
 ---@param station RoadStation
 function Line.trainDeparted(trainName, station)
-    assert(type(trainName) == "string", "Provide 'trainName' as 'string' was ".. type(trainName))
-    assert(type(station) == "table", "Provide 'station' as 'table' was ".. type(station))
+    assert(type(trainName) == "string", "Need 'trainName' as string")
+    assert(type(station) == "table", "Need 'station' as table")
     assert(station.type == "RoadStation", "Provide 'station' as 'RoadStation'")
 
     station:trainLeft(trainName)
     local train = Train.forName(trainName)
     local lineName = train:getLine()
-    -- assert(type(lineName) == "string", "Need 'lineName' as string not as " .. type(lineName))
+    -- assert(type(lineName) == "string", "Need 'lineName' as string")
     local routeName = train:getRoute()
-    assert(type(routeName) == "string", "Need 'routeName' as string not as " .. type(routeName))
+    assert(type(routeName) == "string", "Need 'routeName' as string")
 
     if lineName then
         local line = lines[lineName]

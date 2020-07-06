@@ -48,12 +48,12 @@ local function load(station)
 end
 
 function RoadStation:trainArrivesIn(trainName, timeInMinutes)
-    assert(type(trainName) == "string", "Need 'trainName' as string not as " .. type(trainName))
-    assert(type(timeInMinutes) == "number", "Provide 'timeInMinutes' as 'number' was ".. type(timeInMinutes))
+    assert(type(trainName) == "string", "Need 'trainName' as string")
+    assert(type(timeInMinutes) == "number", "Need 'timeInMinutes' as number")
 
     local train = Train.forName(trainName)
     local routeName = train:getRoute()
-    assert(type(routeName) == "string", "Need 'routeName' as string not as " .. type(routeName))
+    assert(type(routeName) == "string", "Need 'routeName' as string")
 
     local platform
     if self.routes
@@ -90,9 +90,9 @@ function RoadStation:trainLeft(trainName)
 end
 
 function RoadStation:setPlatform(route, platform)
-    assert(type(route) == "table", "Provide 'route' as 'table' was ".. type(route))
+    assert(type(route) == "table", "Need 'route' as table")
     assert(route.type == "Route", "Provide 'route' as 'Route'")
-    assert(type(platform) == "number", "Provide 'platform' as 'number' was ".. type(platform))
+    assert(type(platform) == "number", "Need 'platform' as number")
 
     local routeName = route.routeName
     platform = tostring(platform)
@@ -118,8 +118,8 @@ end
 
 function RoadStation:addDisplay(structure, model, platform)
     platform = platform and tostring(platform) or "1"
-    assert(type(structure) == "string", "Need 'structure' as string not as " .. type(structure))
-    assert(type(model) == "table", "Need 'model' as table not as " .. type(model))
+    assert(type(structure) == "string", "Need 'structure' as string")
+    assert(type(model) == "table", "Need 'model' as table")
     platform = platform and tostring(platform) or nil
     self.displays[platform or "ALL"] = self.displays[platform or "ALL"] or {}
     table.insert(self.displays[platform or "ALL"], {structure = structure, model = model})
@@ -132,9 +132,9 @@ end
 ---@return RoadStation
 function RoadStation:new(name, eepSaveId)
     assert(name, 'Bitte geben Sie den Namen "name" fuer diese Fahrspur an.')
-    assert(type(name) == "string", "Need 'name' as string not as " .. type(name))
+    assert(type(name) == "string", "Need 'name' as string")
     assert(eepSaveId, 'Bitte geben Sie den Wert "eepSaveId" fuer diese Fahrspur an.')
-    assert(type(eepSaveId) == "number", "Need 'eepSaveId' as number not as " .. type(eepSaveId))
+    assert(type(eepSaveId) == "number", "Need 'eepSaveId' as number")
     if eepSaveId ~= -1 then
         StorageUtility.registerId(eepSaveId, "Lane " .. name)
     end

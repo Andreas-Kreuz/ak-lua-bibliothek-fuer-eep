@@ -39,8 +39,8 @@ local EEPGetSignalTrainName = EEPGetSignalTrainName
 ---@param lane Lane the current lane, where the correction will take place
 ---@param trainName string Name of the train
 local function addTrainToQueue(lane, trainName)
-    assert(not trainName:find(","), "ERROR: TRAIN NAMES MUST NOT CONTAIN ',' - Please fix: " .. trainName)
-    assert(not trainName:find("|"), "ERROR: TRAIN NAMES MUST NOT CONTAIN '|' - Please fix: " .. trainName)
+    assert(not trainName:find(","), trainName)
+    assert(not trainName:find("|"), trainName)
 
     if trainName and not lane.signalUsedForRequest then
         lane.queue:push(trainName)
@@ -343,7 +343,8 @@ function Lane:resetQueueFromRoadTracks()
         assert(ok)
 
         if waiting then
-            assert(trainName, "Kein Zug auf Strasse: " .. strassenId)
+            if not trainName then print("Kein Zug auf Strasse: " .. strassenId) end
+            assert(trainName)
             self.queue:push(trainName)
         end
     end
@@ -462,7 +463,7 @@ end
 ---@return Lane
 function Lane:new(name, eepSaveId, trafficLight, directions, trafficType)
     assert(name, 'Bitte geben Sie den Namen "name" fuer diese Fahrspur an.')
-    assert(type(name) == "string", "Need 'name' as string not as " .. type(name))
+    assert(type(name) == "string", "Need 'name' as string")
     assert(eepSaveId, 'Bitte geben Sie den Wert "eepSaveId" fuer diese Fahrspur an.')
     assert(type(eepSaveId) == "number")
     assert(trafficLight, 'Specify a single "trafficLight" for this lane (the one, where the traffic is queued).')
@@ -505,7 +506,7 @@ function Lane:driveOn(trafficLight, ...)
     if trafficLight.signalId ~= self.trafficLight.signalId then
         if ... then
             for _, route in ipairs(...) do
-                assert(type(route) == "string", "Need 'route' as string not as " .. type(route))
+                assert(type(route) == "string", "Need 'route' as string")
             end
         end
         self.trafficLightsToDriveOn = self.trafficLightsToDriveOn or {}

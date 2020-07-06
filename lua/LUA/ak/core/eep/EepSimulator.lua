@@ -38,8 +38,8 @@ end
 ---@param signalId number
 ---@param trainName string
 function EepSimulator.queueTrainOnSignal(signalId, trainName)
-    assert(type(signalId) == "number", "Need 'signalId' as number not as " .. type(signalId))
-    assert(type(trainName) == "string", "Need 'trainName' as string not as " .. type(trainName))
+    assert(type(signalId) == "number", "Need 'signalId' as number")
+    assert(type(trainName) == "string", "Need 'trainName' as string")
 
     signalsTrainNames[signalId] = signalsTrainNames[signalId] or {}
     table.insert(signalsTrainNames[signalId], trainName)
@@ -50,8 +50,8 @@ end
 ---@param signalId number
 ---@param trainName string
 function EepSimulator.removeTrainFromSignal(signalId, trainName)
-    assert(type(signalId) == "number", "Need 'signalId' as number not as " .. type(signalId))
-    assert(type(trainName) == "string", "Need 'trainName' as string not as " .. type(trainName))
+    assert(type(signalId) == "number", "Need 'signalId' as number")
+    assert(type(trainName) == "string", "Need 'trainName' as string")
 
     signalsTrainNames[signalId] = signalsTrainNames[signalId] or {}
     for i, v in ipairs(signalsTrainNames[signalId]) do
@@ -66,7 +66,7 @@ end
 --- This will remove all trains from the signals queue
 ---@param signalId number
 function EepSimulator.removeAllTrainFromSignal(signalId)
-    assert(type(signalId) == "number", "Need 'signalId' as number not as " .. type(signalId))
+    assert(type(signalId) == "number", "Need 'signalId' as number")
 
     signalsTrainNames[signalId] = {}
     updateTrainListSize(signalId)
@@ -116,12 +116,12 @@ function EEPGetSwitch(switchId) return switches[switchId] and switches[switchId]
 
 --- Das Signal x wird intern registriert
 function EEPRegisterSignal(signalId)
-    assert(type(signalId) == "number", "Need 'signalId' as number not as " .. type(signalId))
+    assert(type(signalId) == "number", "Need 'signalId' as number")
 end
 
 --- Die Weiche x wird intern registriert
 function EEPRegisterSwitch(switchId)
-    assert(type(switchId) == "number", "Need 'switchId' as number not as " .. type(switchId))
+    assert(type(switchId) == "number", "Need 'switchId' as number")
 end
 
 EEPTime = 0
@@ -460,14 +460,14 @@ function EEPChangeInfoStructure(immoName, text) end
 -- @param switchId Name der Immobilie als String.
 -- @param onOff true: einschalten
 function EEPShowInfoSignal(signalId, onOff)
-    assert(type(signalId) == "number", "Need 'signalId' as number not as " .. type(signalId))
+    assert(type(signalId) == "number", "Need 'signalId' as number")
 end
 
 --- Setzen des Tipp-Textes einer Immobilie
 -- @param switchId Name der Immobilie als String.
 -- @param text Text fuer die Anzeige
 function EEPChangeInfoSignal(signalId, text)
-    assert(type(signalId) == "number", "Need 'signalId' as number not as " .. type(signalId))
+    assert(type(signalId) == "number", "Need 'signalId' as number")
 end
 
 --- Zeigen / Verstecken des Tipp-Textes einer Weiche

@@ -41,28 +41,28 @@ insulate("Line Management", function()
 
     -- add contact-point functions
     local function stationArrivalPlanned(trainName, station, timeInMinutes)
-        assert(type(trainName) == "string", "Provide 'trainName' as 'string' was ".. type(trainName))
-        assert(type(station) == "table", "Provide 'station' as 'table' was ".. type(station))
+        assert(type(trainName) == "string", "Need 'trainName' as string")
+        assert(type(station) == "table", "Need 'station' as table")
         assert(station.type == "RoadStation", "Provide 'station' as 'RoadStation'")
-        assert(type(timeInMinutes) == "number", "Provide 'timeInMinutes' as 'number' was ".. type(timeInMinutes))
+        assert(type(timeInMinutes) == "number", "Need 'timeInMinutes' as number")
 
         Line.scheduleDeparture(trainName, station, timeInMinutes)
     end
 
     local function stationLeft(trainName, station)
-        assert(type(trainName) == "string", "Provide 'trainName' as 'string' was ".. type(trainName))
-        assert(type(station) == "table", "Provide 'station' as 'table' was ".. type(station))
+        assert(type(trainName) == "string", "Need 'trainName' as string")
+        assert(type(station) == "table", "Need 'station' as table")
         assert(station.type == "RoadStation", "Provide 'station' as 'RoadStation'")
 
         Line.trainDeparted(trainName, station)
     end
 
     local function changeDestination(trainName, station, departureTime)
-        assert(type(trainName) == "string", "Provide 'trainName' as 'string' was ".. type(trainName))
-        assert(type(station) == "table", "Provide 'station' as 'table' was ".. type(station))
+        assert(type(trainName) == "string", "Need 'trainName' as string")
+        assert(type(station) == "table", "Need 'station' as table")
         assert(station.type == "RoadStation", "Provide 'station' as 'RoadStation'")
         if departureTime then
-            assert(type(departureTime) == "number", "Provide 'departureTime' as 'number' was ".. type(departureTime))
+            assert(type(departureTime) == "number", "Need 'departureTime' as number")
         end
 
         Line.changeRoute(trainName, station, departureTime)

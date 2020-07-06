@@ -16,7 +16,7 @@ StorageUtility.debug = AkStartWithDebug or false
 --
 function StorageUtility.registerId(eepSaveId, name)
     name = name and name or "?"
-    assert(type(eepSaveId) == "number" and eepSaveId > 0 and eepSaveId <= 1000, "Falsche eepSaveId " .. eepSaveId)
+    assert(type(eepSaveId) == "number" and eepSaveId > 0 and eepSaveId <= 1000, eepSaveId)
     assert(saveSlots[eepSaveId] == nil,
            "Speicher-ID ist bereits vergeben: " .. eepSaveId .. " (" ..
                (saveSlots[eepSaveId] and saveSlots[eepSaveId] or "nil") .. ")" .. "\n" .. debug.traceback())
@@ -131,13 +131,16 @@ function StorageUtility.saveTable(eepSaveId, table, name)
     name = name and name or "?"
     local text = ""
     for k, v in pairsByKeys(table) do
-        assert(type(k) == "string", "Key ist kein string: " .. tostring(v))
-        assert(type(v) == "string", "Need 'v' as string not as " .. type(v))
+        assert(type(k) == "string", "Need 'k' as string")
+        assert(type(v) == "string", "Need 'v' as string")
         assert(not string.find(k, ","))
         assert(not string.find(v, ","))
         text = text .. k .. "=" .. v .. ","
     end
-    assert(text:len() <= 1024, "Cannot store more than 1024 characters in slot " .. eepSaveId .. " - " .. name)
+    if text:len() > 1024 then
+        print("Cannot store more than 1024 characters in slot " .. eepSaveId .. " - " .. name)
+    end
+    assert(text:len() <= 1024)
     local hresult = EEPSaveData(eepSaveId, text)
     if StorageUtility.debug then
         print(
@@ -154,13 +157,16 @@ end
 function StorageUtility.saveTableRollingStock(rollingStockName, table)
     local text = ""
     for k, v in pairsByKeys(table) do
-        assert(type(k) == "string", "key is no string: " .. tostring(v))
-        assert(type(v) == "string", "Need 'v' as string not as " .. type(v))
+        assert(type(k) == "string", "Need 'k' as string")
+        assert(type(v) == "string", "Need 'v' as string")
         assert(not string.find(k, ","))
         assert(not string.find(v, ","))
         text = text .. k .. "=" .. v .. ","
     end
-    assert(text:len() <= 1024, "Cannot store more than 1024 characters in rollingStock " .. rollingStockName)
+    if text:len() > 1024 then
+        print("Cannot store more than 1024 characters in rollingStock " .. rollingStockName)
+    end
+    assert(text:len() <= 1024)
     local hresult = EEPRollingstockSetTagText(rollingStockName, text)
     if StorageUtility.debug then
         print("[StorageUtility  ] Save [" .. (hresult and "OK" or "!!") .. "] - " .. rollingStockName ..
