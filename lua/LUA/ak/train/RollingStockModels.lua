@@ -11,7 +11,7 @@ function RollingStockModels.addModelByName(modelName, model) nameModels[modelNam
 
 ---Assigns a certain model for the given rollingstock name (complete Name in EEP)
 ---@param rollingStockName string name of the rollingstock including the ";" if used in EEP
-function RollingStockModels.assingModel(rollingStockName, model) assignedModels[rollingStockName] = model end
+function RollingStockModels.assignModel(rollingStockName, model) assignedModels[rollingStockName] = model end
 
 ---Returns the model for the given rollingstock by looking in assignedModels first and then in namedModels
 ---@param rollingStockName string name of the rollingstock

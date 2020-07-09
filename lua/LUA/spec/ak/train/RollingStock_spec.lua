@@ -14,7 +14,7 @@ insulate("parse rollingstockname", function()
     local RollingStockModels = require("ak.train.RollingStockModels")
 
     RollingStockModels.addModelByName("MyModel", RollingStockModel:new({ myMarker = "MODEL A" }))
-    RollingStockModels.assingModel("MyModel;005", RollingStockModel:new({ myMarker = "MODEL B" }))
+    RollingStockModels.assignModel("MyModel;005", RollingStockModel:new({ myMarker = "MODEL B" }))
 
     local stock1 = RollingStock.forName("MyModel;003")
     local stock2 = RollingStock.forName("MyModel;005")
