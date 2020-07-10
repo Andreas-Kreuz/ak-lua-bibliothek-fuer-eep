@@ -75,7 +75,8 @@ local function initializeJsonCollector(jsonCollector)
     local t1 = os.clock()
     local timeDiff = t1 - t0
     if ServerController.debug then
-        print(string.format('ServerController: initialize() %4.0f ms for "%s"', timeDiff * 1000, jsonCollector.name))
+        print(
+        string.format("ServerController: initialize() %4.0f ms for \"%s\"", timeDiff * 1000, jsonCollector.name))
     end
 end
 
@@ -85,7 +86,8 @@ local function collectFrom(jsonCollector, printFirstTime)
     local t1 = os.clock()
     local timeDiff = t1 - t0
     if ServerController.debug and (timeDiff > 0.01 or printFirstTime) then
-        print(string.format('ServerController:collectData() %4.0f ms for "%s"', timeDiff * 1000, jsonCollector.name))
+        print(
+        string.format("ServerController:collectData() %4.0f ms for \"%s\"", timeDiff * 1000, jsonCollector.name))
     end
     return newData
 end
@@ -199,10 +201,10 @@ function ServerController.communicateWithServer(modulus)
     local allowedTimeDiff = modulus * 0.200
     if ServerController.debug and printFirstTime or timeDiff > allowedTimeDiff then
         local format = (printFirstTime and "INITIALIZATION" or "WARNING") ..
-                           ": ServerController.communicateWithServer() time is %3.0f ms --- " ..
-                           "waitForServer: %.0f ms, " .. "initialize: %.0f ms, " .. "commands: %2.0f ms, " ..
-                           "collect: %3.0f ms, " .. " expand: %3.0f ms " .. " encode: %3.0f ms " .. " write: %.0f ms" ..
-                           " (allowed: %.0f ms)"
+                       ": ServerController.communicateWithServer() time is %3.0f ms --- " ..
+                       "waitForServer: %.0f ms, " .. "initialize: %.0f ms, " .. "commands: %2.0f ms, " ..
+                       "collect: %3.0f ms, " .. " expand: %3.0f ms " .. " encode: %3.0f ms " .. " write: %.0f ms" ..
+                       " (allowed: %.0f ms)"
         print(string.format(format, (timeDiff) * 1000, (overallTime1 - overallTime0) * 1000,
                             (overallTime2 - overallTime1) * 1000, (overallTime3 - overallTime2) * 1000,
                             (overallTime4 - overallTime3) * 1000, (overallTime5 - overallTime4) * 1000,

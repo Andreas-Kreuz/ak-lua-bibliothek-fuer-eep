@@ -10,7 +10,6 @@ insulate("Line Management", function()
     local sHauptbahnhof = RoadStation:new("Hauptbahnhof", -1)
     local sStriesen = RoadStation:new("Striesen", -1)
 
-
     -- Route definition
     local line10 = Line:new({nr = "1a"})
     local l10Striesen = line10:newRoute("10 Striesen")
@@ -18,7 +17,6 @@ insulate("Line Management", function()
     l10Striesen:addStation(sFeuerwehrGasse, 1, 2)
     l10Striesen:addStation(sHauptbahnhof, 1, 2)
     l10Striesen:addStation(sStriesen, 1, 3)
-
 
     local l10MesseDresden = line10:newRoute("10 Messe Dresden")
     l10MesseDresden:addStation(sStriesen, 2, 0)
@@ -61,9 +59,7 @@ insulate("Line Management", function()
         assert(type(trainName) == "string", "Need 'trainName' as string")
         assert(type(station) == "table", "Need 'station' as table")
         assert(station.type == "RoadStation", "Provide 'station' as 'RoadStation'")
-        if departureTime then
-            assert(type(departureTime) == "number", "Need 'departureTime' as number")
-        end
+        if departureTime then assert(type(departureTime) == "number", "Need 'departureTime' as number") end
 
         Line.changeRoute(trainName, station, departureTime)
     end
@@ -76,7 +72,7 @@ insulate("Line Management", function()
     Train.forName("#Train 1"):setRoute(l10MesseDresden.routeName)
 
     -- Prepare to use route 1
-    --line10:prepareDepartureAt(trainName, l10MesseDresden, 10)-- The following stations are informed
+    -- line10:prepareDepartureAt(trainName, l10MesseDresden, 10)-- The following stations are informed
     changeDestination(trainName, sMesseDresden)
 
     -- Drive through route 1 by contacts
@@ -92,7 +88,7 @@ insulate("Line Management", function()
     stationLeft(trainName, sStriesen)
 
     -- Prepare to use route 2
-    --line10:prepareDepartureAt(trainName, l10Striesen, 10)-- The following stations are informed
+    -- line10:prepareDepartureAt(trainName, l10Striesen, 10)-- The following stations are informed
     changeDestination(trainName, sStriesen)
 
     -- Drive through route 2 by contacts

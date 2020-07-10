@@ -76,25 +76,25 @@ function ModuleRegistry.useDlls(enableDlls)
 end
 
 local function initTask(module)
-    if ModuleRegistry.debug then print(string.format('[ModuleRegistry] Begin initTask() for "%s"', module.name)) end
+    if ModuleRegistry.debug then print(string.format("[ModuleRegistry] Begin initTask() for \"%s\"", module.name)) end
     local t0 = os.clock()
     module.init()
     local t1 = os.clock()
     local timeDiff = t1 - t0
     if ModuleRegistry.debug then
-        print(string.format('[ModuleRegistry].initTask() %.3f seconds for "%s"', timeDiff, module.name))
+        print(string.format("[ModuleRegistry].initTask() %.3f seconds for \"%s\"", timeDiff, module.name))
     end
 end
 
 local function runTask(module)
-    if ModuleRegistry.debug then print(string.format('[ModuleRegistry] Begin runTask() for "%s"', module.name)) end
+    if ModuleRegistry.debug then print(string.format("[ModuleRegistry] Begin runTask() for \"%s\"", module.name)) end
     local t0 = os.clock()
     module.run()
     local t1 = os.clock()
     local timeDiff = t1 - t0
     -- print(string.format('[ModuleRegistry].runTask() %.3f seconds for "%s"', timeDiff, module.name))
     if ModuleRegistry.debug and timeDiff > 0.01 then
-        print(string.format('[ModuleRegistry] WARNING: runTask() %.3f seconds for "%s"', timeDiff, module.name))
+        print(string.format("[ModuleRegistry] WARNING: runTask() %.3f seconds for \"%s\"", timeDiff, module.name))
     end
 end
 
@@ -128,8 +128,8 @@ function ModuleRegistry.runTasks(cycleCount)
 
     if ModuleRegistry.debug then
         print(string.format("[ModuleRegistry] runTasks(cycleCount) time: %.0f ms " ..
-                                "(%.0f ms init, %.0f ms runTask, %.0f ms serveData)", (t4 - t1) * 1000,
-                            (t2 - t1) * 1000, (t3 - t2) * 1000, (t4 - t3) * 1000))
+                            "(%.0f ms init, %.0f ms runTask, %.0f ms serveData)", (t4 - t1) * 1000, (t2 - t1) * 1000,
+                            (t3 - t2) * 1000, (t4 - t3) * 1000))
     end
 end
 

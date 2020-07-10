@@ -1,6 +1,4 @@
-if AkDebugLoad then
-    print("Loading ak.roadline.Line ...")
-end
+if AkDebugLoad then print("Loading ak.roadline.Line ...") end
 
 local Train = require("ak.train.Train")
 local Route = require("ak.roadline.Route")
@@ -25,19 +23,14 @@ function Line.addRouteChange(station, oldRoute, newRoute, newLine)
 
     lineChanges[station] = lineChanges[station] or {}
     lineChanges[station][oldRoute.routeName] = lineChanges[station][oldRoute.routeName] or {}
-    lineChanges[station][oldRoute.routeName] = {
-        newRoute = newRoute,
-        newLine = newLine,
-    }
+    lineChanges[station][oldRoute.routeName] = {newRoute = newRoute, newLine = newLine}
 end
 
 function Line.changeRoute(trainName, station, departureTime)
     assert(type(trainName) == "string", "Need 'trainName' as string")
     assert(type(station) == "table", "Need 'station' as table")
     assert(station.type == "RoadStation", "Provide 'station' as 'RoadStation'")
-    if departureTime then
-        assert(type(departureTime) == "number", "Need 'departureTime' as number")
-    end
+    if departureTime then assert(type(departureTime) == "number", "Need 'departureTime' as number") end
 
     local train = Train.forName(trainName)
     local oldRoute = train:getRoute()
@@ -55,13 +48,11 @@ function Line.changeRoute(trainName, station, departureTime)
         train:setRoute(entry.newRoute.routeName)
         train:changeDestination(entry.newRoute:getLastStation().name, entry.newLine.nr)
         entry.newRoute:prepareDepartureAt(train, entry.newRoute:getFirstStation(), departureTime)
-        if entry.axis and entry.axisValue then
-            EEPSetTrainAxis(trainName, entry.axis, entry.axisValue)
-        end
+        if entry.axis and entry.axisValue then EEPSetTrainAxis(trainName, entry.axis, entry.axisValue) end
 
         if Line.debug then
-            print("[Line] CHANGED DESTINATION FOR " .. oldRoute .. " AT STATION " .. station.name
-                .. " TO LINE " .. entry.newLine.lineName .. " (" .. entry.newRoute:getLastStation().name .. ")")
+            print("[Line] CHANGED DESTINATION FOR " .. oldRoute .. " AT STATION " .. station.name .. " TO LINE " ..
+                  entry.newLine.lineName .. " (" .. entry.newRoute:getLastStation().name .. ")")
         end
     else
         print("[Line] NO DESTINATION FOUND FOR ROUTE " .. oldRoute .. " AT STATION " .. station.name)

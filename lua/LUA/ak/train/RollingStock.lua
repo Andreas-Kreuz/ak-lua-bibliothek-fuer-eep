@@ -7,7 +7,7 @@ local RollingStock = {}
 function RollingStock.forName(rollingStockName)
     assert(rollingStockName, "Provide a rollingStockName")
     assert(type(rollingStockName) == "string", "Need 'rollingStockName' as string")
-    return RollingStock:new({ rollingStockName = rollingStockName })
+    return RollingStock:new({rollingStockName = rollingStockName})
 end
 
 function RollingStock:new(o)

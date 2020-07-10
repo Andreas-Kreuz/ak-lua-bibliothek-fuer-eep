@@ -12,9 +12,7 @@ local allStations = {}
 local function queueToText(queue)
     if (queue) then
         local trainsNames = {}
-        for _, trainName in ipairs(queue.entriesByArrival) do
-            table.insert(trainsNames, trainName)
-        end
+        for _, trainName in ipairs(queue.entriesByArrival) do table.insert(trainsNames, trainName) end
         return table.concat({}, "|")
     else
         return ""
@@ -56,28 +54,19 @@ function RoadStation:trainArrivesIn(trainName, timeInMinutes)
     assert(type(routeName) == "string", "Need 'routeName' as string")
 
     local platform
-    if self.routes
-        and self.routes[routeName]
-        and self.routes[routeName].platform then
+    if self.routes and self.routes[routeName] and self.routes[routeName].platform then
         platform = self.routes[routeName].platform
     else
         -- if RoadStation.debug then
-            print("[RoadStation] " .. self.name
-                .. " NO PLATFORM FOR TRAIN: " .. trainName
-                .. (routeName and " (" .. routeName .. ")" or ""))
-            platform = "1"
+        print("[RoadStation] " .. self.name .. " NO PLATFORM FOR TRAIN: " .. trainName ..
+              (routeName and " (" .. routeName .. ")" or ""))
+        platform = "1"
         -- end
     end
 
     if RoadStation.debug then
-        print(
-            string.format(
-                "[RoadStation] %s: Planning Arrival of %s in %d min on platform %s",
-                self.name,
-                trainName,
-                timeInMinutes,
-                platform)
-    )
+        print(string.format("[RoadStation] %s: Planning Arrival of %s in %d min on platform %s", self.name,
+                            trainName, timeInMinutes, platform))
     end
 
     self.queue:push(trainName, timeInMinutes, platform)
@@ -108,8 +97,8 @@ function RoadStation:updateDisplays()
         local entries = self.queue:getTrainEntries(platform ~= "ALL" and platform or nil)
         for _, display in ipairs(displays) do
             if RoadStation.debug then
-                print("[RoadStation] update display for platform " .. display.structure
-                    .. " with " .. #entries .. " entries")
+                print("[RoadStation] update display for platform " .. display.structure .. " with " .. #entries ..
+                      " entries")
             end
             display.model.displayEntries(display.structure, entries, self.name, platform)
         end
@@ -131,20 +120,12 @@ end
 ---@param eepSaveId number, @EEPSaveSlot-Id fuer das Speichern der Fahrspur
 ---@return RoadStation
 function RoadStation:new(name, eepSaveId)
-    assert(name, 'Bitte geben Sie den Namen "name" fuer diese Fahrspur an.')
+    assert(name, "Bitte geben Sie den Namen \"name\" fuer diese Fahrspur an.")
     assert(type(name) == "string", "Need 'name' as string")
-    assert(eepSaveId, 'Bitte geben Sie den Wert "eepSaveId" fuer diese Fahrspur an.')
+    assert(eepSaveId, "Bitte geben Sie den Wert \"eepSaveId\" fuer diese Fahrspur an.")
     assert(type(eepSaveId) == "number", "Need 'eepSaveId' as number")
-    if eepSaveId ~= -1 then
-        StorageUtility.registerId(eepSaveId, "Lane " .. name)
-    end
-    local o = {
-        type = "RoadStation",
-        name = name,
-        eepSaveId = eepSaveId,
-        queue = StationQueue:new(),
-        displays = {}
-    }
+    if eepSaveId ~= -1 then StorageUtility.registerId(eepSaveId, "Lane " .. name) end
+    local o = {type = "RoadStation", name = name, eepSaveId = eepSaveId, queue = StationQueue:new(), displays = {}}
 
     self.__index = self
     setmetatable(o, self)
@@ -154,8 +135,6 @@ function RoadStation:new(name, eepSaveId)
     return o
 end
 
-function RoadStation.stationByName(stationName)
-    return allStations[stationName]
-end
+function RoadStation.stationByName(stationName) return allStations[stationName] end
 
 return RoadStation

@@ -8,9 +8,7 @@ local MAX_SWITCHES = 1000
 local switches = {}
 
 function SwitchJsonCollector.initialize()
-    if not enabled or initialized then
-        return
-    end
+    if not enabled or initialized then return end
 
     for id = 1, MAX_SWITCHES do
         local val = EEPGetSwitch(id)
@@ -25,13 +23,9 @@ function SwitchJsonCollector.initialize()
 end
 
 function SwitchJsonCollector.collectData()
-    if not enabled then
-        return
-    end
+    if not enabled then return end
 
-    if not initialized then
-        SwitchJsonCollector.initialize()
-    end
+    if not initialized then SwitchJsonCollector.initialize() end
 
     for i = 1, #switches do
         local switch = switches[i]

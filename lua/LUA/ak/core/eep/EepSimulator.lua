@@ -115,14 +115,10 @@ end
 function EEPGetSwitch(switchId) return switches[switchId] and switches[switchId] or 2 end
 
 --- Das Signal x wird intern registriert
-function EEPRegisterSignal(signalId)
-    assert(type(signalId) == "number", "Need 'signalId' as number")
-end
+function EEPRegisterSignal(signalId) assert(type(signalId) == "number", "Need 'signalId' as number") end
 
 --- Die Weiche x wird intern registriert
-function EEPRegisterSwitch(switchId)
-    assert(type(switchId) == "number", "Need 'switchId' as number")
-end
+function EEPRegisterSwitch(switchId) assert(type(switchId) == "number", "Need 'switchId' as number") end
 
 EEPTime = 0
 EEPTimeH = 0
@@ -459,16 +455,12 @@ function EEPChangeInfoStructure(immoName, text) end
 --- Zeigen / Verstecken des Tipp-Textes einer Immobilie
 -- @param switchId Name der Immobilie als String.
 -- @param onOff true: einschalten
-function EEPShowInfoSignal(signalId, onOff)
-    assert(type(signalId) == "number", "Need 'signalId' as number")
-end
+function EEPShowInfoSignal(signalId, onOff) assert(type(signalId) == "number", "Need 'signalId' as number") end
 
 --- Setzen des Tipp-Textes einer Immobilie
 -- @param switchId Name der Immobilie als String.
 -- @param text Text fuer die Anzeige
-function EEPChangeInfoSignal(signalId, text)
-    assert(type(signalId) == "number", "Need 'signalId' as number")
-end
+function EEPChangeInfoSignal(signalId, text) assert(type(signalId) == "number", "Need 'signalId' as number") end
 
 --- Zeigen / Verstecken des Tipp-Textes einer Weiche
 -- @param switchId Name der Weiche als String.
@@ -493,7 +485,7 @@ function EEPGetRollingstockItemsCount(zugverband) return 2 end
 -- @param zugverband Name des Zugverbandes
 -- @param Nummer
 --
-function EEPGetRollingstockItemName(zugverband, Nummer) return zugverband .. '-Wagen-' .. Nummer end
+function EEPGetRollingstockItemName(zugverband, Nummer) return zugverband .. "-Wagen-" .. Nummer end
 
 --- Anzahl der Zuege, welche vom Signal Signal_ID gehalten werden
 -- @param signalId ID des Signals
@@ -585,7 +577,7 @@ function EEPRollingstockGetModelType(rollingStockName) return true, 1 end
 -- Rueckgabewert 3 ist die Y-Position des Objekts.
 -- Rueckgabewert 4 ist die Z-Position des Objekts.
 function EEPStructureGetPosition(name)
-    local underscoreIndex = string.find(name, '_')
+    local underscoreIndex = string.find(name, "_")
     local i
 
     if underscoreIndex then
@@ -613,7 +605,7 @@ end
 -- 22 = Immobilien
 -- 23 = Landschaftselemente/Fauna
 function EEPStructureGetModelType(name)
-    local underscoreIndex = string.find(name, '_')
+    local underscoreIndex = string.find(name, "_")
     local i
 
     if underscoreIndex then
@@ -744,9 +736,7 @@ function EEPActivateCtrlDesk(GBSname) return true end
 -- @param rollingstockName Name des Rollmaterials
 -- @param status true = an, false = aus
 -- @return ok Rückgabewert ist true wenn die Ausführung erfolgreich war, sonst false
-function EEPRollingstockSetHorn(rollingstockName, status)
-    return true
-end
+function EEPRollingstockSetHorn(rollingstockName, status) return true end
 
 local hook = {}
 

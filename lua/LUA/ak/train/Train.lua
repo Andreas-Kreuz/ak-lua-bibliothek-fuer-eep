@@ -5,13 +5,7 @@ local StorageUtility = require("ak.storage.StorageUtility")
 
 ---@class Train
 local Train = {}
-Train.Key = {
-    destination = "d",
-    direction = "a",
-    line = "l",
-    route = "r",
-    trainNumber = "n",
-}
+Train.Key = {destination = "d", direction = "a", line = "l", route = "r", trainNumber = "n"}
 local allTrains = {}
 
 ---Creates a train object for the given train name, the train must exist
@@ -22,7 +16,7 @@ function Train.forName(trainName)
     if allTrains[trainName] then
         return allTrains[trainName]
     else
-        return Train:new({ trainName = trainName })
+        return Train:new({trainName = trainName})
     end
 end
 
@@ -56,9 +50,7 @@ function Train:save(clearCurrentInfo)
     for i = 0, carCount - 1 do
         local rollingStockName = EEPGetRollingstockItemName(self.trainName, i)
         local t = clearCurrentInfo and {} or self.values
-        for k, v in pairs(t) do
-            t[k] = v
-        end
+        for k, v in pairs(t) do t[k] = v end
         StorageUtility.saveTableRollingStock(rollingStockName, t)
     end
 end

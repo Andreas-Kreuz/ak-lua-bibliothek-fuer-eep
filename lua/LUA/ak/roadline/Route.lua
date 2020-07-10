@@ -26,31 +26,18 @@ function Route:addStation(roadStation, platform, timeToStation)
     assert(type(roadStation) == "table", "Need 'roadStation' as table")
     assert(roadStation.type == "RoadStation", "Provide 'station' as 'RoadStation'")
     assert(type(platform) == "number", "Need 'platform' as number")
-    if timeToStation then
-        assert(type(timeToStation) == "number", "Need 'timeToStation' as number")
-    end
+    if timeToStation then assert(type(timeToStation) == "number", "Need 'timeToStation' as number") end
 
     roadStation:setPlatform(self, platform)
 
-    self.stations[#self.stations + 1] = {
-        station = roadStation,
-        timeToStation = timeToStation,
-    }
+    self.stations[#self.stations + 1] = {station = roadStation, timeToStation = timeToStation}
 end
 
 ---@return RoadStation
-function Route:getLastStation()
-    if #self.stations > 0 then
-        return self.stations[#self.stations].station
-    end
-end
+function Route:getLastStation() if #self.stations > 0 then return self.stations[#self.stations].station end end
 
 ---@return RoadStation
-function Route:getFirstStation()
-    if #self.stations > 0 then
-        return self.stations[1].station
-    end
-end
+function Route:getFirstStation() if #self.stations > 0 then return self.stations[1].station end end
 
 ---Will inform the given stations about the train arrival in minutes and all sequential stations with the offset
 ---@param train Train the train which will arrive
@@ -61,17 +48,13 @@ function Route:prepareDepartureAt(train, station, timeInMinutes)
     assert(train.type == "Train", "Provide 'train' as 'Train'")
     assert(type(station) == "table", "Need 'station' as table")
     assert(station.type == "RoadStation", "Provide 'station' as 'RoadStation'")
-    if timeInMinutes then
-        assert(type(timeInMinutes) == "number", "Need 'timeInMinutes' as number")
-    end
+    if timeInMinutes then assert(type(timeInMinutes) == "number", "Need 'timeInMinutes' as number") end
 
     timeInMinutes = timeInMinutes or 0
     local haveStation = false
     for i = 1, #self.stations do
         local s = self.stations[i].station
-        if s == station then
-            haveStation = true
-        end
+        if s == station then haveStation = true end
         if haveStation then
             local timeToStation = s == station and 0 or self.stations[i].timeToStation
             timeInMinutes = timeToStation and (timeInMinutes + timeToStation) or timeInMinutes

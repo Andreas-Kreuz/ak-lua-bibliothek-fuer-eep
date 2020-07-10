@@ -27,15 +27,9 @@ function AxisStructureTrafficLight:new(structureName, axisName, positionDefault,
     assert(type(axisName) == "string", "Need 'axisName' as string")
     assert(EEPStructureGetAxis(structureName, axisName))
     assert(type(positionDefault) == "number", "Need 'positionDefault' as number")
-    if positionRed then
-        assert(type(positionRed) == "number", "Need 'positionRed' as number")
-    end
-    if positionGreen then
-        assert(type(positionGreen) == "number", "Need 'positionGreen' as number")
-    end
-    if positionYellow then
-        assert(type(positionYellow) == "number", "Need 'positionYellow' as number")
-    end
+    if positionRed then assert(type(positionRed) == "number", "Need 'positionRed' as number") end
+    if positionGreen then assert(type(positionGreen) == "number", "Need 'positionGreen' as number") end
+    if positionYellow then assert(type(positionYellow) == "number", "Need 'positionYellow' as number") end
     if positionRedYellow then
         assert(type(positionRedYellow) == "number",
                "Need 'positionRedYellow' as number not as " .. type(positionRedYellow))

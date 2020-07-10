@@ -19,9 +19,7 @@ function StationQueue:push(trainName, timeInMinutes, platform)
     -- Remove train from arrival list
     local newEntriesByArrival = {}
     for _, value in ipairs(self.entriesByArrival) do
-        if value ~= trainName then
-            table.insert(newEntriesByArrival, value)
-        end
+        if value ~= trainName then table.insert(newEntriesByArrival, value) end
     end
     self.entriesByArrival = newEntriesByArrival
 
@@ -43,9 +41,7 @@ function StationQueue:pop(trainName)
     local entry = self.entries[trainName]
     self.entries[trainName] = nil
     for i, value in ipairs(self.entriesByArrival) do
-        if value == trainName then
-            table.remove(self.entriesByArrival, i)
-        end
+        if value == trainName then table.remove(self.entriesByArrival, i) end
     end
 
     return entry
@@ -64,9 +60,7 @@ end
 function StationQueue:getTrainEntries(platform)
     local filteredTrainList = platform and filterBy(self, platform) or self.entriesByArrival
     local list = {}
-    for _, trainName in ipairs(filteredTrainList) do
-        table.insert(list, self.entries[trainName])
-    end
+    for _, trainName in ipairs(filteredTrainList) do table.insert(list, self.entries[trainName]) end
     return list
 end
 

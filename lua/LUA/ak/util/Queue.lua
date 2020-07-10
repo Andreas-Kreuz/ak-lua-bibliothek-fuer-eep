@@ -46,9 +46,7 @@ end
 ---@return any[]
 function Queue:elements()
     local elems = {}
-    for i = self.first, self.last, 1 do
-        table.insert(elems, self.list[i])
-    end
+    for i = self.first, self.last, 1 do table.insert(elems, self.list[i]) end
     return elems
 end
 

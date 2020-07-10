@@ -61,7 +61,7 @@ function GT_B:setDestination(rollingStockName, destination)
     assert(type(self) == "table", "Need 'self' as table")
     assert(type(rollingStockName) == "string", "Need 'rollingStockName' as string")
     assert(type(destination) == "string", "Need 'destination' as string")
- end
+end
 
 function GT_B:setStations(rollingStockName, stations)
     assert(type(self) == "table", "Need 'self' as table")
