@@ -39,6 +39,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ConfigCardComponent } from './ui/config-card/config-card.component';
 import { RoadStopComponent } from './ui/road-stop/road-stop.component';
 import { RoadLineComponent } from './ui/road-line/road-line.component';
+import { TagEditorComponent } from './ui/tag-editor/tag-editor.component';
 
 @NgModule({
   declarations: [
@@ -54,6 +55,7 @@ import { RoadLineComponent } from './ui/road-line/road-line.component';
     ConfigCardComponent,
     RoadStopComponent,
     RoadLineComponent,
+    TagEditorComponent,
   ],
   exports: [
     CommonModule,

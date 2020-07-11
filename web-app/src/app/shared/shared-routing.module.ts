@@ -7,6 +7,7 @@ import { DashboardSampleComponent } from './ui/dashboard-sample/dashboard-sample
 import { ConfigCardComponent } from './ui/config-card/config-card.component';
 import { RoadLineComponent } from './ui/road-line/road-line.component';
 import { RoadStopComponent } from './ui/road-stop/road-stop.component';
+import { TagEditorComponent } from './ui/tag-editor/tag-editor.component';
 
 const sharedRoutes: Routes = [
   { path: 'text', component: TextSampleComponent },
@@ -15,6 +16,7 @@ const sharedRoutes: Routes = [
   { path: 'card-dashboard', component: TitledCardComponent },
   { path: 'dashboard', component: DashboardSampleComponent },
   { path: 'settings', component: ConfigCardComponent },
+  { path: 'tag', component: TagEditorComponent },
   { path: 'line', component: RoadLineComponent },
   { path: 'stop', component: RoadStopComponent },
 ];
