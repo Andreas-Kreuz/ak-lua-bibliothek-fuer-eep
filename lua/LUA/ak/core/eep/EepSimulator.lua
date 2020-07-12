@@ -30,7 +30,7 @@ local trains = {}
 
 ---Add a train and its rollingStock
 ---@param trainName string Name of the train
----@param ... string Name of the rollingstock
+---param ... string Name of the rollingstock
 function EepSimulator.addTrain(trainName, ...) trains[trainName] = {...} end
 
 local function stripImmoName(name) return name:gsub("(#%d*).*", "%1") end
