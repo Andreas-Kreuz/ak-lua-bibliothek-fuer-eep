@@ -1,8 +1,11 @@
 insulate("Line Management", function()
-    require("ak.core.eep.EepSimulator")
+    local EepSimulator = require("ak.core.eep.EepSimulator")
     local Train = require("ak.train.Train")
     local Line = require("ak.roadline.Line")
     local RoadStation = require("ak.roadline.RoadStation")
+
+    local testTrain = "#Train 1"
+    EepSimulator.addTrain(testTrain, "RollingStock 1", "RollingStock 2")
 
     -- Station definition
     local sMesseDresden = RoadStation:new("Messe Dresden", -1)
@@ -68,41 +71,41 @@ insulate("Line Management", function()
     Line.addRouteChange(sMesseDresden, l10MesseDresden, l10Striesen, line10)
 
     -- Create a new train
-    local trainName = "#Train 1"
-    Train.forName("#Train 1"):setRoute(l10MesseDresden.routeName)
+
+    Train.forName(testTrain):setRoute(l10MesseDresden.routeName)
 
     -- Prepare to use route 1
     -- line10:prepareDepartureAt(trainName, l10MesseDresden, 10)-- The following stations are informed
-    changeDestination(trainName, sMesseDresden)
+    changeDestination(testTrain, sMesseDresden)
 
     -- Drive through route 1 by contacts
-    stationLeft(trainName, sMesseDresden)
-    stationArrivalPlanned(trainName, sFeuerwehrGasse, 3)
-    stationArrivalPlanned(trainName, sFeuerwehrGasse, 2)
-    stationArrivalPlanned(trainName, sFeuerwehrGasse, 1)
-    stationArrivalPlanned(trainName, sFeuerwehrGasse, 0)
-    stationLeft(trainName, sFeuerwehrGasse)
-    stationArrivalPlanned(trainName, sHauptbahnhof, 0)
-    stationLeft(trainName, sHauptbahnhof)
-    stationArrivalPlanned(trainName, sStriesen, 0)
-    stationLeft(trainName, sStriesen)
+    stationLeft(testTrain, sMesseDresden)
+    stationArrivalPlanned(testTrain, sFeuerwehrGasse, 3)
+    stationArrivalPlanned(testTrain, sFeuerwehrGasse, 2)
+    stationArrivalPlanned(testTrain, sFeuerwehrGasse, 1)
+    stationArrivalPlanned(testTrain, sFeuerwehrGasse, 0)
+    stationLeft(testTrain, sFeuerwehrGasse)
+    stationArrivalPlanned(testTrain, sHauptbahnhof, 0)
+    stationLeft(testTrain, sHauptbahnhof)
+    stationArrivalPlanned(testTrain, sStriesen, 0)
+    stationLeft(testTrain, sStriesen)
 
     -- Prepare to use route 2
     -- line10:prepareDepartureAt(trainName, l10Striesen, 10)-- The following stations are informed
-    changeDestination(trainName, sStriesen)
+    changeDestination(testTrain, sStriesen)
 
     -- Drive through route 2 by contacts
 
-    stationArrivalPlanned(trainName, sStriesen, 0)
-    stationLeft(trainName, sStriesen)
-    stationArrivalPlanned(trainName, sHauptbahnhof, 0)
-    stationLeft(trainName, sHauptbahnhof)
-    stationArrivalPlanned(trainName, sFeuerwehrGasse, 3)
-    stationArrivalPlanned(trainName, sFeuerwehrGasse, 2)
-    stationArrivalPlanned(trainName, sFeuerwehrGasse, 1)
-    stationArrivalPlanned(trainName, sFeuerwehrGasse, 0)
-    stationLeft(trainName, sFeuerwehrGasse)
-    stationArrivalPlanned(trainName, sMesseDresden, 0)
-    stationLeft(trainName, sMesseDresden)
+    stationArrivalPlanned(testTrain, sStriesen, 0)
+    stationLeft(testTrain, sStriesen)
+    stationArrivalPlanned(testTrain, sHauptbahnhof, 0)
+    stationLeft(testTrain, sHauptbahnhof)
+    stationArrivalPlanned(testTrain, sFeuerwehrGasse, 3)
+    stationArrivalPlanned(testTrain, sFeuerwehrGasse, 2)
+    stationArrivalPlanned(testTrain, sFeuerwehrGasse, 1)
+    stationArrivalPlanned(testTrain, sFeuerwehrGasse, 0)
+    stationLeft(testTrain, sFeuerwehrGasse)
+    stationArrivalPlanned(testTrain, sMesseDresden, 0)
+    stationLeft(testTrain, sMesseDresden)
 
 end)

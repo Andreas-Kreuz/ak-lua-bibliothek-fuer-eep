@@ -1,5 +1,9 @@
 describe("ak.roadline.StationQueue", function()
-    require("ak.core.eep.EepSimulator")
+    local EepSimulator = require("ak.core.eep.EepSimulator")
+    EepSimulator.addTrain("train1", "RollingStock 1a", "RollingStock 2b")
+    EepSimulator.addTrain("train2", "RollingStock 1a", "RollingStock 2b")
+    EepSimulator.addTrain("train3", "RollingStock 1a", "RollingStock 2b")
+
     insulate("new Queue is empty", function()
         local Queue = require("ak.roadline.StationQueue")
 

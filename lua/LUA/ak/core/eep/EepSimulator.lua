@@ -25,6 +25,13 @@ local registeredRoadTracks = {}
 local registeredRailTracks = {}
 ---@type table<string,table>
 local structures = {}
+---@type table<string,table>
+local trains = {}
+
+---Add a train and its rollingStock
+---@param trainName string Name of the train
+---@param ... string Name of the rollingstock
+function EepSimulator.addTrain(trainName, ...) trains[trainName] = {...} end
 
 local function stripImmoName(name) return name:gsub("(#%d*).*", "%1") end
 
@@ -479,13 +486,16 @@ function EEPChangeInfoSwitch(switchId, text) end
 --- Anzahl der Fahrzeuge im Zugverband Name
 -- @param zugverband Names des Zugverbandes
 --
-function EEPGetRollingstockItemsCount(zugverband) return 2 end
+function EEPGetRollingstockItemsCount(zugverband)
+    return trains[zugverband] and #trains[zugverband] > 0 and #trains[zugverband] or 0
+end
 
 --- Name des Rollis Nummer im Zugverband Name
 -- @param zugverband Name des Zugverbandes
 -- @param Nummer
 --
-function EEPGetRollingstockItemName(zugverband, Nummer) return zugverband .. "-Wagen-" .. Nummer end
+function EEPGetRollingstockItemName(zugverband, Nummer)
+    return trains[zugverband][Nummer + 1] end
 
 --- Anzahl der Zuege, welche vom Signal Signal_ID gehalten werden
 -- @param signalId ID des Signals

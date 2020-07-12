@@ -38,7 +38,7 @@ do
     print(tostring(boolean1) .. " (Typ: " .. type(boolean1) .. ")")
     print(tostring(boolean2) .. " (Typ: " .. type(boolean2) .. ")")
 
-    -- Die Daten werden in eine Tabelle umgewandelt, welche als Schlüssel und Wert nur Text enthält
+    -- Die Daten werden in eine Tabelle umgewandelt, welche als Schl�ssel und Wert nur Text enthält
     -- dies am besten in eine Funktion auslagern
     -- Es empfiehlt sich die Schlüssel kurz zu halten, da der
     -- Speicherplatz in EEP vermutlich begrenzt ist
