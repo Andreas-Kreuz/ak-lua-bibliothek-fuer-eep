@@ -57,7 +57,6 @@ function DataWebConnector.registerJsonCollectors()
 		end
     end
     if all or addTrackCollector then
-print(addTrackCollector)
         ServerController.addJsonCollector(require("ak.data.TrainsAndTracksJsonCollector"))
     end
 end

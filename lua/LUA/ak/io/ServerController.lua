@@ -90,7 +90,7 @@ local function collectFrom(jsonCollector, printFirstTime)
     local t1 = os.clock()
     local timeDiff = t1 - t0
     if ServerController.debug and (timeDiff > 0.01 or printFirstTime) then
-        print(string.format('ServerController: collectData() %4.0f ms for "%s"', timeDiff * 1000, jsonCollector.name))
+        print(string.format('ServerController:collectData() %4.0f ms for "%s"', timeDiff * 1000, jsonCollector.name))
     end
     return newData
 end
@@ -139,8 +139,7 @@ local function expandData()
     local orderedKeys = {}
     local exportData = {}
     for key, value in pairs(collectedData) do
-        if next(ServerController.activeEntries) == nil or ServerController.activeEntries[key] then
-            -- empty list or requested entry type
+        if next(ServerController.activeEntries) == nil or ServerController.activeEntries[key] then -- empty list
             exportData[key] = value
             table.insert(orderedKeys, key)
         end
@@ -160,7 +159,7 @@ local i = -1
 --- Main function of this module.
 -- Call this function in main loop of EEP.
 -- do it frequently
--- @param modulus Repetion frequency (0: always, 1: every 200 ms, 5: every second, ...)
+-- @param modulus Repetion frequency (1: every 200 ms, 5: every second, ...)
 function ServerController.communicateWithServer(modulus)
     -- default value for optional parameter
     if not modulus or type(modulus) ~= "number" then modulus = 5 end
@@ -187,7 +186,7 @@ function ServerController.communicateWithServer(modulus)
     local overallTime5 = overallTime3
     local overallTime6 = overallTime3
 
-    if modulus == 0 or i % modulus == 0 and serverIsReady then
+    if i % modulus == 0 and serverIsReady then
         collectData(printFirstTime, modulus)
         overallTime4 = os.clock()
 
