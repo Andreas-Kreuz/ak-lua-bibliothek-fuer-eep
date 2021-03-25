@@ -5,7 +5,7 @@ local os = require("os")
 local ServerController = require("ak.io.ServerController")
 local debug = ServerController.debug
 
-function table.length(t) local i = 0 for _ in pairs(t) do i = i + 1 end return i end
+function tableLength(t) local i = 0 for _ in pairs(t) do i = i + 1 end return i end
 
 local MAX_TRACKS = 50000
 
@@ -254,7 +254,7 @@ function TrackCollector:updateTrains()
         else
             if debug and self.trains[trainName] then
                 print(string.format("TrackCollector %s - Remove train: %s (%d trains remaining)",
-                    self.trackType, trainName, table.length(self.trains) - 1 ))
+                    self.trackType, trainName, tableLength(self.trains) - 1 ))
             end
             self.trains[trainName] = nil
             self.trainInfo[trainName] = nil
@@ -314,7 +314,7 @@ function TrackCollector:updateTrains()
         if not self.trains[rollingStock.trainName] then
             if debug and self.rollingStock[rollingStockName] then
                 print(string.format("TrackCollector %s - Remove rolling stock: %s (%d rolling stocks in total)",
-                    self.trackType, rollingStockName, table.length(self.rollingStock) - 1 ))
+                    self.trackType, rollingStockName, tableLength(self.rollingStock) - 1 ))
             end
             self.rollingStock[rollingStockName] = nil
             self.rollingStockInfo[rollingStockName] = nil
@@ -325,9 +325,9 @@ function TrackCollector:updateTrains()
         end
     end
 
-    if debug and table.length(self.dirtyTrainNames) > 0 then
+    if debug and tableLength(self.dirtyTrainNames) > 0 then
         print(string.format("TrackCollector %s - Clean %d dirty trains",
-            self.trackType, table.length(self.dirtyTrainNames) ))
+            self.trackType, tableLength(self.dirtyTrainNames) ))
     end
     self.dirtyTrainNames = {}
 
@@ -366,7 +366,7 @@ function TrackCollector:updateTrain(trainName)
     -- Save train
     if debug and not self.trains[trainName] then
         print(string.format("TrackCollector %s - Add train: %s (%d trains in total)",
-            self.trackType, trainName, table.length(self.trains) + 1 ))
+            self.trackType, trainName, tableLength(self.trains) + 1 ))
     end
     self.trains[trainName] = currentTrain
 
@@ -430,7 +430,7 @@ function TrackCollector:updateRollingStock(rollingStockName, currentTrain, posit
     -- Save rolling stock
     if debug and not self.rollingStock[rollingStockName] then
         print(string.format("TrackCollector %s - Add rolling stock: %s (%d rolling stocks in total)",
-            self.trackType, rollingStockName, table.length(self.rollingStock) + 1 ))
+            self.trackType, rollingStockName, tableLength(self.rollingStock) + 1 ))
     end
     self.rollingStock[rollingStockName] = currentRollingStock
 
@@ -483,7 +483,8 @@ function TrackCollector:reactOnTrainChanges()
     As we have 5 trackTypes we end up with a chain of functions originating from 5 trackType instances.
     Therefore, any event gets called 5 times - once for every trackType.
 
-    Caution: EEPMain gets called before EEPOnTrain-functions and testing if a track is occupied only retrieves one of the trains on that track.
+    Caution: EEPMain gets called before EEPOnTrain-functions and testing if a track is occupied only retrieves 
+	one of the trains on that track.
     ->
 
     In case of a coupling event it happens that a train and its rolling stocks get deleted in one
@@ -501,11 +502,11 @@ function TrackCollector:reactOnTrainChanges()
     EEPOnTrainCoupling = function(trainA, trainB, trainNew)
         -- Mark these trains as dirty, i.e. refresh their data in next call of EEPMain
 
-        -- Optional check: On this trackType we should find trainA and trainB (as well as trainNew which is either trainA or trainB)
-        -- If this is not the case than this is not the correct trackType
-        checkA   = self.trains[trainA]   and true or false
-        checkB   = self.trains[trainB]   and true or false
-        checkNew = self.trains[trainNew] and true or false
+        -- Optional check: On this trackType we should find trainA and trainB (as well as trainNew which is either 
+		-- trainA or trainB) If this is not the case than this is not the correct trackType
+        local checkA   = self.trains[trainA]   and true or false
+        local checkB   = self.trains[trainB]   and true or false
+        local checkNew = self.trains[trainNew] and true or false
         if not checkA and not checkB then
             -- Call the original function if none of the trains in known for this trackType
             return _EEPOnTrainCoupling(trainA, trainB, trainNew)
@@ -513,9 +514,12 @@ function TrackCollector:reactOnTrainChanges()
 
         if debug then
             print("EEPOnTrainCoupling ", self.trackType,
-                " trainA ",      trainA,   " ", ( checkA   and "ok" or 'missing' ), " ", self.trainInfo[trainA]   and self.trainInfo[trainA].onTrack   or -1,
-                " trainB ",      trainB,   " ", ( checkB   and "ok" or 'missing' ), " ", self.trainInfo[trainB]   and self.trainInfo[trainB].onTrack   or -2,
-                " -> trainNew ", trainNew, " ", ( checkNew and "ok" or 'new'     ), " ", self.trainInfo[trainNew] and self.trainInfo[trainNew].onTrack or -3
+                " trainA ",      trainA,   " ", ( checkA   and "ok" or 'missing' ), " ", 
+				self.trainInfo[trainA]   and self.trainInfo[trainA].onTrack   or -1,
+                " trainB ",      trainB,   " ", ( checkB   and "ok" or 'missing' ), " ", 
+				self.trainInfo[trainB]   and self.trainInfo[trainB].onTrack   or -2,
+                " -> trainNew ", trainNew, " ", ( checkNew and "ok" or 'new'     ), " ", 
+				self.trainInfo[trainNew] and self.trainInfo[trainNew].onTrack or -3
             )
         end
 
@@ -542,9 +546,9 @@ function TrackCollector:reactOnTrainChanges()
 
         -- Optional check: On this trackType we should find trainOld but not both trainA and trainB
         -- If this is not the case than this is not the correct trackType
-        checkOld = self.trains[trainOld] and true or false
-        checkA   = self.trains[trainA]   and true or false
-        checkB   = self.trains[trainB]   and true or false
+        local checkOld = self.trains[trainOld] and true or false
+        local checkA   = self.trains[trainA]   and true or false
+        local checkB   = self.trains[trainB]   and true or false
         if not checkOld then
             -- Call the original function if the original trains in not known for this trackType
             return _EEPOnTrainLooseCoupling(trainOld, trainA, trainB)
@@ -552,9 +556,12 @@ function TrackCollector:reactOnTrainChanges()
 
         if debug then
             print("EEPOnTrainLooseCoupling ", self.trackType,
-                " trainOld ",   trainOld, " ", ( checkOld and "ok"   or 'missing' ), " ", self.trainInfo[trainOld] and self.trainInfo[trainOld].onTrack or -4,
-                " ->  trainA ", trainA,   " ", ( checkA   and "keep" or 'new'     ), " ", self.trainInfo[trainA]   and self.trainInfo[trainA].onTrack   or -5,
-                " trainB ",     trainB,   " ", ( checkB   and "keep" or 'new'     ), " ", self.trainInfo[trainB]   and self.trainInfo[trainB].onTrack   or -6
+                " trainOld ",   trainOld, " ", ( checkOld and "ok"   or 'missing' ), " ", 
+				self.trainInfo[trainOld] and self.trainInfo[trainOld].onTrack or -4,
+                " ->  trainA ", trainA,   " ", ( checkA   and "keep" or 'new'     ), " ", 
+				self.trainInfo[trainA]   and self.trainInfo[trainA].onTrack   or -5,
+                " trainB ",     trainB,   " ", ( checkB   and "keep" or 'new'     ), " ", 
+				self.trainInfo[trainB]   and self.trainInfo[trainB].onTrack   or -6
             )
         end
 
@@ -581,7 +588,7 @@ function TrackCollector:reactOnTrainChanges()
 
         -- Optional check: On this trackType we should not find trainName
         -- If this is not the case than this is not the correct trackType
-        check    = self.trains[trainName] and true or false
+        local check    = self.trains[trainName] and true or false
         if check then
             -- Assertion failed
             print(string.format("EEPOnTrainExitTrainyard %s - Exit depot %s: Train %s alrady exists",
