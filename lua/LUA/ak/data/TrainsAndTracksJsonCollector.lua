@@ -21,7 +21,7 @@ else
 	-- Selected track types
 	for _, trackType in ipairs(trackTypesAll) do
 		for key, value in pairs(activeEntries) do
-			if value then 
+			if value then
 				if string.find(key, trackType) then
 					table.insert(trackTypes, trackType)
 					break

@@ -43,14 +43,14 @@ function DataWebConnector.registerJsonCollectors()
     if not all then
 		local trackTypes = {"rail", "tram", "road", "auxiliary", "control"}
         for key, value in pairs(activeEntries) do
-			if value then 
+			if value then
 				for _, trackType in ipairs(trackTypes) do
 					if string.find(key, trackType) then
 						addTrackCollector = true
 						break
 					end
 				end
-				if addTrackCollector then 
+				if addTrackCollector then
 					break
 				end
 			end
