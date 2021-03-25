@@ -28,7 +28,8 @@ function ServerController.useDlls(enableDlls)
         -- Important: Empty tables must not be packed as objects {}, but as lists []
         json.encode_empty_table_as_object(false)
     else
-        json = require("ak.io.json")
+        --json = require("ak.io.json")
+        json = require("ak.io.jsonEncode") -- ca 1/3 faster than json.lua in case of large results
     end
 end
 ServerController.useDlls(false)
