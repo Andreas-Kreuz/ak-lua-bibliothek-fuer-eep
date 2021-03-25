@@ -483,7 +483,7 @@ function TrackCollector:reactOnTrainChanges()
     As we have 5 trackTypes we end up with a chain of functions originating from 5 trackType instances.
     Therefore, any event gets called 5 times - once for every trackType.
 
-    Caution: EEPMain gets called before EEPOnTrain-functions and testing if a track is occupied only retrieves 
+    Caution: EEPMain gets called before EEPOnTrain-functions and testing if a track is occupied only retrieves
 	one of the trains on that track.
     ->
 
@@ -502,7 +502,7 @@ function TrackCollector:reactOnTrainChanges()
     EEPOnTrainCoupling = function(trainA, trainB, trainNew)
         -- Mark these trains as dirty, i.e. refresh their data in next call of EEPMain
 
-        -- Optional check: On this trackType we should find trainA and trainB (as well as trainNew which is either 
+        -- Optional check: On this trackType we should find trainA and trainB (as well as trainNew which is either
 		-- trainA or trainB) If this is not the case than this is not the correct trackType
         local checkA   = self.trains[trainA]   and true or false
         local checkB   = self.trains[trainB]   and true or false
@@ -514,11 +514,11 @@ function TrackCollector:reactOnTrainChanges()
 
         if debug then
             print("EEPOnTrainCoupling ", self.trackType,
-                " trainA ",      trainA,   " ", ( checkA   and "ok" or 'missing' ), " ", 
+                " trainA ",      trainA,   " ", ( checkA   and "ok" or 'missing' ), " ",
 				self.trainInfo[trainA]   and self.trainInfo[trainA].onTrack   or -1,
-                " trainB ",      trainB,   " ", ( checkB   and "ok" or 'missing' ), " ", 
+                " trainB ",      trainB,   " ", ( checkB   and "ok" or 'missing' ), " ",
 				self.trainInfo[trainB]   and self.trainInfo[trainB].onTrack   or -2,
-                " -> trainNew ", trainNew, " ", ( checkNew and "ok" or 'new'     ), " ", 
+                " -> trainNew ", trainNew, " ", ( checkNew and "ok" or 'new'     ), " ",
 				self.trainInfo[trainNew] and self.trainInfo[trainNew].onTrack or -3
             )
         end
@@ -556,11 +556,11 @@ function TrackCollector:reactOnTrainChanges()
 
         if debug then
             print("EEPOnTrainLooseCoupling ", self.trackType,
-                " trainOld ",   trainOld, " ", ( checkOld and "ok"   or 'missing' ), " ", 
+                " trainOld ",   trainOld, " ", ( checkOld and "ok"   or 'missing' ), " ",
 				self.trainInfo[trainOld] and self.trainInfo[trainOld].onTrack or -4,
-                " ->  trainA ", trainA,   " ", ( checkA   and "keep" or 'new'     ), " ", 
+                " ->  trainA ", trainA,   " ", ( checkA   and "keep" or 'new'     ), " ",
 				self.trainInfo[trainA]   and self.trainInfo[trainA].onTrack   or -5,
-                " trainB ",     trainB,   " ", ( checkB   and "keep" or 'new'     ), " ", 
+                " trainB ",     trainB,   " ", ( checkB   and "keep" or 'new'     ), " ",
 				self.trainInfo[trainB]   and self.trainInfo[trainB].onTrack   or -6
             )
         end
