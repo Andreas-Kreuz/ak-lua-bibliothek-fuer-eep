@@ -15,20 +15,20 @@ local trackTypesAll = {"auxiliary", "control", "road", "rail", "tram"}
 local trackTypes = {}
 local activeEntries = ServerController.activeEntries
 if not activeEntries or next(activeEntries) == nil then -- empty list
-	-- All track types
-	trackTypes = trackTypesAll
-else	
-	-- Selected track types
-	for _, trackType in ipairs(trackTypesAll) do
-		for key, value in pairs(activeEntries) do
-			if value then
-				if string.find(key, trackType) then
-					table.insert(trackTypes, trackType)
-					break
-				end
-			end
-		end
-	end
+    -- All track types
+    trackTypes = trackTypesAll
+else
+    -- Selected track types
+    for _, trackType in ipairs(trackTypesAll) do
+        for key, value in pairs(activeEntries) do
+            if value then
+                if string.find(key, trackType) then
+                    table.insert(trackTypes, trackType)
+                    break
+                end
+            end
+        end
+    end
 end
 
 local trackCollectors = {}
