@@ -28,7 +28,8 @@ function ServerController.useDlls(enableDlls)
         -- Important: Empty tables must not be packed as objects {}, but as lists []
         json.encode_empty_table_as_object(false)
     else
-        json = require("ak.io.json")
+        --json = require("ak.io.json")
+        json = require("ak.io.jsonEncode") -- ca 1/3 faster than json.lua in case of large results
     end
 end
 ServerController.useDlls(false)
@@ -50,6 +51,11 @@ local initialized = false
 function ServerController.addAcceptedRemoteFunction(fName, f) AkCommandExecutor.addAcceptedRemoteFunction(fName, f) end
 
 local function fillApiEntriesV1(orderedKeys)
+    -- Do we want to get it?
+    if next(ServerController.activeEntries) ~= nil and not ServerController.activeEntries["api-entries"] then
+        return
+    end
+
     collectedData["api-entries"] = {}
     checksum = checksum + 1
     local apiEntries = {}
@@ -135,7 +141,7 @@ local function expandData()
     local exportData = {}
     for key, value in pairs(collectedData) do
         if next(ServerController.activeEntries) == nil or ServerController.activeEntries[key] then
-		    -- empty list or requested entry type
+            -- empty list or requested entry type
             exportData[key] = value
             table.insert(orderedKeys, key)
         end
