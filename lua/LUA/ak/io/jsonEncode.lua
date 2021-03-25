@@ -80,7 +80,7 @@ local function encodeBoolean(bool)
     cat( tostring(bool) )
 end
 
-local function encodeNil(value)
+local function encodeNil(_)
     cat( "null" )
 end
 
