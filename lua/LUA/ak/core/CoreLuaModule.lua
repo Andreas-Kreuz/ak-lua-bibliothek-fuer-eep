@@ -61,16 +61,21 @@ function CoreLuaModule.setOptions(options)
 
     -- Auswahl der zu exportierende Datenpakete (Default: alle)
     if options.activeEntries then
-        local entriesList = {}
-        for key, value in pairs(options.activeEntries) do
-            if value then
-                entriesList[key] = value
-                if ServerController.debug then
-                    print("CoreLuaModule activeEntries: ", value)
+        if next(options.activeEntries) == nil then
+            ServerController.activeEntries = {}
+            if ServerController.debug then
+                print("CoreLuaModule activeEntries: set to default (all)")
+            end
+        else
+            for key, value in pairs(options.activeEntries) do
+                if ServerController.activeEntries[key] or value then
+                    ServerController.activeEntries[key] = value
+                    if ServerController.debug then
+                        print("CoreLuaModule activeEntries: ",key," ",value)
+                    end
                 end
             end
         end
-        ServerController.activeEntries = entriesList
     end
 end
 
