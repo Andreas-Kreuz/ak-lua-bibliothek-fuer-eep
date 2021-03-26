@@ -4,7 +4,7 @@ local ServerController = require("ak.io.ServerController")
 local DataWebConnector = {}
 
 function DataWebConnector.registerJsonCollectors()
-	local activeEntries = ServerController.activeEntries
+    local activeEntries = ServerController.activeEntries
 
     local all = true
     if activeEntries and next(activeEntries) ~= nil then -- not empty list
@@ -41,20 +41,20 @@ function DataWebConnector.registerJsonCollectors()
     -- Tracks
     local addTrackCollector = false
     if not all then
-		local trackTypes = {"rail", "tram", "road", "auxiliary", "control"}
+        local trackTypes = {"rail", "tram", "road", "auxiliary", "control"}
         for key, value in pairs(activeEntries) do
-			if value then
-				for _, trackType in ipairs(trackTypes) do
-					if string.find(key, trackType) then
-						addTrackCollector = true
-						break
-					end
-				end
-				if addTrackCollector then
-					break
-				end
-			end
-		end
+            if value then
+                for _, trackType in ipairs(trackTypes) do
+                    if string.find(key, trackType) then
+                        addTrackCollector = true
+                        break
+                    end
+                end
+                if addTrackCollector then
+                    break
+                end
+            end
+        end
     end
     if all or addTrackCollector then
         ServerController.addJsonCollector(require("ak.data.TrainsAndTracksJsonCollector"))
