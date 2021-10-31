@@ -33,7 +33,7 @@ end
 --- Schaltet den Fahrer und die Fahrgaeste ein
 -- @param fahrzeugverband
 --
-function Bus.inititalisiere(fahrzeugverband)
+function Bus.initialisiere(fahrzeugverband)
     EEPSetTrainAxis(fahrzeugverband, "Fahrer", 100)
     EEPSetTrainAxis(fahrzeugverband, "Fahrgast", 100)
 end
