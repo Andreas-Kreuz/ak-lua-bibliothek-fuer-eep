@@ -22,7 +22,7 @@ function DisplayModel:new(name, initStation, displayEntries)
     return x
 end
 
-function DisplayModel:print() print(self.name) end
+function DisplayModel:printName() print(self.name) end
 
 function DisplayModel:print(displayStructure, stationQueueEntries)
     self.displayEntries(displayStructure, stationQueueEntries)
