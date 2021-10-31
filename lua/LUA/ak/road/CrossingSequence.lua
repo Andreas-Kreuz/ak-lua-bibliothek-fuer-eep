@@ -51,7 +51,7 @@ function CrossingSequence:trafficLightsToTurnRedAndGreen(oldSequence)
     if oldSequence then
         for light, oldType in pairs(oldSequence.trafficLights) do
             local newType = self.trafficLights[light]
-            if not newType or newType ~= oldType or self.trafficLights[light].model ~= light.model then
+            if not newType or newType ~= oldType then
                 assert(light.type == "TrafficLight")
                 assert(oldType)
                 turnRed[light] = oldType
@@ -60,7 +60,7 @@ function CrossingSequence:trafficLightsToTurnRedAndGreen(oldSequence)
     end
     for light, newType in pairs(self.trafficLights) do
         local oldType = oldSequence and oldSequence.trafficLights[light] or nil
-        if not oldType or newType ~= oldType or oldSequence.trafficLights[light].model ~= light.model then
+        if not oldType or newType ~= oldType then
             assert(light.type == "TrafficLight")
             assert(newType)
             turnGreen[light] = newType
@@ -91,7 +91,7 @@ function CrossingSequence:tasksForSwitchingFrom(oldSequence, afterRedTask)
         switchTask(toRed, CrossingSequence.Type.PEDESTRIAN, TrafficLightState.RED, reasonPed)
         table.insert(taskList, {offset = 0, task = oldRedPedestrian, precedingTask = nil})
 
-        -- * Hier k�nnte noch die DDR-Schaltung rein (2 Sekunden gr�n-gelb)
+        -- * Hier kÃ¶nnte noch die DDR-Schaltung rein (2 Sekunden grÃ¼n-gelb)
 
         -- Schedule the task where the old traffic lights get yellow
         local reasonYelTram = "Schalte " .. oldSequence.name .. " auf gelb (Tram)"
@@ -175,7 +175,7 @@ function CrossingSequence:addTramLights(...)
     return self
 end
 
---- Gibt alle Fahrspuren nach Prioritaet zurueck, sowie deren Anzahl und deren Durchschnittspriorit�t
+--- Gibt alle Fahrspuren nach Prioritaet zurueck, sowie deren Anzahl und deren DurchschnittsprioritÃ¤t
 -- @return sortierteFahrspuren, anzahlDerFahrspuren, durchschnittsPrio
 function CrossingSequence:lanesSortedByPriority()
     local trafficLightArray = {}
