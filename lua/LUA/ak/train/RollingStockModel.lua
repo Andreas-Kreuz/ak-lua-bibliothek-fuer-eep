@@ -31,6 +31,13 @@ function RollingStockModel:setStations(rollingStockName, stations)
     -- Overwrite me
 end
 
+function RollingStockModel:setWagonNr(rollingStockName, wagonNumber)
+    assert(type(self) == "table", "Need 'self' as table")
+    assert(type(rollingStockName) == "string", "Need 'rollingStockName' as string")
+    assert(type(wagonNumber) == "string", "Need 'wagonNumber' as string")
+    -- Overwrite me
+end
+
 function RollingStockModel:openDoors(rollingStockName)
     assert(type(self) == "table", "Need 'self' as table")
     assert(type(rollingStockName) == "string", "Need 'rollingStockName' as string")
