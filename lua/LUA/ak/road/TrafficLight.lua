@@ -12,13 +12,21 @@ local fmt = require("ak.core.eep.TippTextFormatter")
 -- Optional kann die Ampel bei Immobilien Licht ein- und ausschalten (Straba - Ampelsatz)
 ------------------------------------------------------------------------------------------
 ---@class TrafficLight
+---@field type string
+---@field name string
+---@field signalId number
+---@field trafficLightModel TrafficLightModel
+---@field lightStructures table
+---@field axisStructures table
+---@field reason string
+---@field lanes table
 local TrafficLight = {}
 TrafficLight.debug = AkStartWithDebug or false
 local registeredSignals = {}
 local counter = -1
 
 ---
----@param signalId number ID der Ampel auf der Anlage (Eine Ampel von diesem Typ sollte auf der Anlage sein
+---@param signalId number ID der Ampel auf der Anlage (Eine Ampel von diesem Typ sollte auf der Anlage sein)
 ---@param trafficLightModel TrafficLightModel Typ der Ampel (TrafficLightModel)
 ---@param redStructure string Immobilie fuer Signalbild gelb (Licht an / aus)
 ---@param greenStructure string Immobilie fuer Signalbild gelb (Licht an / aus)

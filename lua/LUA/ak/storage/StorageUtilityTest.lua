@@ -103,7 +103,7 @@ do
 
     print("-----------------------------------------\n" .. "Speicherplatzinhalt nach dem Speichern:" ..
           "\n-----------------------------------------")
-    local _, speicherplatz_inhalt = EEPLoadData(600, "Meine Daten")
+    local _, speicherplatz_inhalt = EEPLoadData(600)
     print(speicherplatz_inhalt)
 end
 

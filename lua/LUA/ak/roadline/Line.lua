@@ -3,7 +3,10 @@ if AkDebugLoad then print("Loading ak.roadline.Line ...") end
 local Train = require("ak.train.Train")
 local Route = require("ak.roadline.Route")
 
----@class Line<T>
+---@class Line
+---@field type string
+---@field routes table
+---@field nr string
 local Line = {}
 Line.debug = AkDebugLoad or false
 local lines = {}

@@ -4,6 +4,9 @@ local StorageUtility = require("ak.storage.StorageUtility")
 local TagKeys = require("ak.train.TagKeys")
 
 ---@class RollingStock
+---@field values table
+---@field rollingStockName string
+---@field model RollingStockModel
 local RollingStock = {}
 
 function RollingStock.forName(rollingStockName)
@@ -48,23 +51,23 @@ end
 
 function RollingStock:setLine(line)
     self:setValue(TagKeys.Train.line, line)
-    self.model:setLine(self.name, line)
+    self.model:setLine(self.rollingStockName, line)
 end
 
 function RollingStock:setDestination(destination)
     self:setValue(TagKeys.Train.destination, destination)
-    self.model:setDestination(self.name, destination)
+    self.model:setDestination(self.rollingStockName, destination)
 end
 
-function RollingStock:setStations(stations) self.model:setStations(self.name, stations) end
+function RollingStock:setStations(stations) self.model:setStations(self.rollingStockName, stations) end
 
 function RollingStock:setWagonNr(nr)
     self:setValue(TagKeys.RollingStock.wagonNumber, nr)
-    self.model:setWagonNr(self.name, nr)
+    self.model:setWagonNr(self.rollingStockName, nr)
 end
 
-function RollingStock:openDoors() self.model:openDoors(self.name) end
+function RollingStock:openDoors() self.model:openDoors(self.rollingStockName) end
 
-function RollingStock:closeDoors() self.model:closeDoors(self.name) end
+function RollingStock:closeDoors() self.model:closeDoors(self.rollingStockName) end
 
 return RollingStock

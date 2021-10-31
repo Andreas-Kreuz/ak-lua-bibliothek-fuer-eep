@@ -8,6 +8,10 @@ local Task = require("ak.scheduler.Task")
 -- Klasse CrossingSequence (schaltet mehrere Ampeln)
 ------------------------------------------------------
 ---@class CrossingSequence
+---@field type string
+---@field name string
+---@field trafficLights table<TrafficLight,TrafficLightType>
+---@field greenPhaseSeconds number
 local CrossingSequence = {}
 CrossingSequence.debug = AkStartWithDebug or false
 ---@class TrafficLightType
@@ -21,12 +25,11 @@ function CrossingSequence:new(name, greenPhaseSeconds)
     local o = {}
     setmetatable(o, self)
     self.__index = self
+    o.type = "CrossingSequence"
     o.name = name
     o.crossing = nil
     o.prio = 0
-    ---@type table<TrafficLight,TrafficLightType>
     o.trafficLights = {}
-    ---@type number Default length of a green phase in seconds
     o.greenPhaseSeconds = greenPhaseSeconds or 15
     return o
 end
@@ -43,6 +46,8 @@ end
 
 ---This will calculate all trafficLights to turn red and green
 ---@return table<TrafficLight,TrafficLightType> table<TrafficLight,TrafficLightType>
+---@param oldSequence CrossingSequence
+---@return table<TrafficLight,TrafficLightType>, table<TrafficLight,TrafficLightType>
 function CrossingSequence:trafficLightsToTurnRedAndGreen(oldSequence)
     local turnRed = {}
     local turnGreen = {}
@@ -91,7 +96,7 @@ function CrossingSequence:tasksForSwitchingFrom(oldSequence, afterRedTask)
         switchTask(toRed, CrossingSequence.Type.PEDESTRIAN, TrafficLightState.RED, reasonPed)
         table.insert(taskList, {offset = 0, task = oldRedPedestrian, precedingTask = nil})
 
-        -- * Hier kÃ¶nnte noch die DDR-Schaltung rein (2 Sekunden grÃ¼n-gelb)
+        -- * Hier k�nnte noch die DDR-Schaltung rein (2 Sekunden gr�n-gelb)
 
         -- Schedule the task where the old traffic lights get yellow
         local reasonYelTram = "Schalte " .. oldSequence.name .. " auf gelb (Tram)"
@@ -175,7 +180,7 @@ function CrossingSequence:addTramLights(...)
     return self
 end
 
---- Gibt alle Fahrspuren nach Prioritaet zurueck, sowie deren Anzahl und deren DurchschnittsprioritÃ¤t
+--- Gibt alle Fahrspuren nach Prioritaet zurueck, sowie deren Anzahl und deren Durchschnittspriorit�t
 -- @return sortierteFahrspuren, anzahlDerFahrspuren, durchschnittsPrio
 function CrossingSequence:lanesSortedByPriority()
     local trafficLightArray = {}

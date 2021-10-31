@@ -18,6 +18,7 @@ local allCrossings = {}
 ---@field private greenPhaseFinished boolean @If true, the Intersection can be switched
 ---@field private greenPhaseSeconds number @Integer value of how long the intersection will show green light
 ---@field private staticCams table @List of static cams
+---@field private nextSequence CrossingSequence
 local Crossing = {}
 Crossing.debug = AkStartWithDebug or false
 ---@type table<string,Crossing>

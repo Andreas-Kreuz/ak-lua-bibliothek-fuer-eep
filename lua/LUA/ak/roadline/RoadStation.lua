@@ -5,6 +5,10 @@ local StationQueue = require("ak.roadline.StationQueue")
 local StorageUtility = require("ak.storage.StorageUtility")
 
 ---@class RoadStation
+---@field type string
+---@field name string
+---@field displays table table of RoadStationDisplay
+---@field queue StationQueue
 local RoadStation = {}
 RoadStation.debug = false
 local allStations = {}

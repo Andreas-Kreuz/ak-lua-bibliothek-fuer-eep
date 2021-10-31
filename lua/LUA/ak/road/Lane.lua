@@ -7,6 +7,10 @@ local fmt = require("ak.core.eep.TippTextFormatter")
 
 -- Lane starts here
 ---@class Lane
+---@field queue Queue
+---@field name string
+---@field trafficLight TrafficLight
+---@field tracksForRequests table
 local Lane = {}
 Lane.debug = AkStartWithDebug or false
 
@@ -258,7 +262,7 @@ function Lane:setLaneType(requestType)
     self.requestType = requestType
 end
 
-function Lane:getVehicleCount(routes)
+function Lane:getVehicleCountRoutes(routes)
     local count = 0
     if #routes == 0 then
         count = self.vehicleCount
@@ -526,7 +530,7 @@ function Lane:trafficLightChanged(trafficLight)
                "This lane does not drive on the given traffic light: " .. trafficLight.signalId)
     end
     self.phase = trafficLight.phase
-    updateLaneSignal(self, "Traffic Light update: ", trafficLight.signalId)
+    updateLaneSignal(self, "Traffic Light update: " .. trafficLight.signalId)
 end
 
 return Lane

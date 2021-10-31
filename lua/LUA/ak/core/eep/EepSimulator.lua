@@ -17,7 +17,7 @@ local EepSimulator = {}
 local signalsTrainCount = {}
 ---@type string[]
 local signalsTrainNames = {}
----@type table<trainname string,routename string> train name to route name
+---@type table<string,string> train name to route name
 local trainRoutes = {}
 ---@type table<number,string>
 local registeredRoadTracks = {}
@@ -970,7 +970,7 @@ end
 --- EEP ruft selbständig diese Funktion auf, wenn die Anlage gespeichert wird. (EEP 16.1)
 -- Im Skript definiert man die zugehörige Funktion und legt so fest, was beim Speichern der Anlage zu tun ist.
 -- @param path Speicherpfad der Anlage einschließlich Dateiname
-function EEPOnSaveAnl(path) return end
+function EEPOnSaveAnl(path) end
 
 function EEPPause(value) end
 

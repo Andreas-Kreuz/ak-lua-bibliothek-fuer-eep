@@ -25,6 +25,7 @@ local function collect(allCrossings)
     table.sort(sortedNames, function(a, b) return a < b end)
 
     for _, name in ipairs(sortedNames) do
+        ---@type Crossing
         local crossing = allCrossings[name]
         intersectionIdCounter = intersectionIdCounter + 1
         local intersection = {

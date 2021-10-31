@@ -6,6 +6,9 @@ local StorageUtility = require("ak.storage.StorageUtility")
 local TagKeys = require("ak.train.TagKeys")
 
 ---@class Train
+---@field type string
+---@field trainName string
+---@field values table of all entries stored in the train
 local Train = {}
 local allTrains = {}
 

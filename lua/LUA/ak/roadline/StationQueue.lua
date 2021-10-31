@@ -2,10 +2,13 @@ if AkDebugLoad then print("Loading ak.roadline.StationQueue ...") end
 
 local StationQueueEntry = require("ak.roadline.StationQueueEntry")
 
----@class StationQueue<T>
+---@class StationQueue
+---@field type string
+---@field entries table
 local StationQueue = {}
 function StationQueue:new()
     local o = {entries = {}, entriesByArrival = {}}
+    o.type = "StationQueue"
     self.__index = self
     setmetatable(o, self)
     return o

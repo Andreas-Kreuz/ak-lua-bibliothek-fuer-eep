@@ -1,6 +1,10 @@
 if AkDebugLoad then print("Loading ak.roadline.Route ...") end
 
----@class Route<T>
+---@class Route
+---@field type string
+---@field lineNr string
+---@field routeName string
+---@field stations table
 local Route = {}
 Route.debug = AkDebugLoad or false
 

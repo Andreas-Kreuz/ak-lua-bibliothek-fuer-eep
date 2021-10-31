@@ -37,8 +37,8 @@ end
 
 --- Create dummy functions for EEP functions which are not yet available depending of the version of EEP
 -- The minimal required version is EEP 11.3 Plug-In 3 which supports some quite important functions
-EEPGetSignalTrainsCount = EEPGetSignalTrainsCount or function() return end -- EEP 13.2
-EEPGetSignalTrainName = EEPGetSignalTrainName or function() return end -- EEP 13.2
+EEPGetSignalTrainsCount = EEPGetSignalTrainsCount or function() end -- EEP 13.2
+EEPGetSignalTrainName = EEPGetSignalTrainName or function() end -- EEP 13.2
 
 -- Based on this concept we can redefine the functions, e.g. to collect some statistics data
 -- EEPGetRollingstockItemsCount = EEPGetRollingstockItemsCount  or function () return end -- EEP 13.2 Plug-In 2
@@ -47,15 +47,15 @@ local function EEPGetRollingstockItemsCount(...)
     return executeAndStoreRunTime(_EEPGetRollingstockItemsCount, "EEPGetRollingstockItemsCount", ...)
 end
 
-EEPGetRollingstockItemName = EEPGetRollingstockItemName or function() return end -- EEP 13.2 Plug-In 2
-EEPGetTrainLength = EEPGetTrainLength or function() return end -- EEP 15.1 Plug-In 1
+EEPGetRollingstockItemName = EEPGetRollingstockItemName or function() end -- EEP 13.2 Plug-In 2
+EEPGetTrainLength = EEPGetTrainLength or function() end -- EEP 15.1 Plug-In 1
 
-EEPRollingstockGetPosition = EEPRollingstockGetPosition or function() return end -- EEP 16.1
-EEPRollingstockGetLength = EEPRollingstockGetLength or function() return end -- EEP 14.2
-EEPRollingstockGetMotor = EEPRollingstockGetMotor or function() return end -- EEP 14.2
-EEPRollingstockGetTrack = EEPRollingstockGetTrack or function() return end -- EEP 14.2
-EEPRollingstockGetModelType = EEPRollingstockGetModelType or function() return end -- EEP 14.2
-EEPRollingstockGetTagText = EEPRollingstockGetTagText or function() return end -- EEP 14.2
+EEPRollingstockGetPosition = EEPRollingstockGetPosition or function() end -- EEP 16.1
+EEPRollingstockGetLength = EEPRollingstockGetLength or function() end -- EEP 14.2
+EEPRollingstockGetMotor = EEPRollingstockGetMotor or function() end -- EEP 14.2
+EEPRollingstockGetTrack = EEPRollingstockGetTrack or function() end -- EEP 14.2
+EEPRollingstockGetModelType = EEPRollingstockGetModelType or function() end -- EEP 14.2
+EEPRollingstockGetTagText = EEPRollingstockGetTagText or function() end -- EEP 14.2
 
 -- Redefine functions from EEP 11.0 to collect run time data
 local _EEPGetTrainSpeed = EEPGetTrainSpeed

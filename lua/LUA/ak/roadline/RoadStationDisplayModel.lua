@@ -5,6 +5,9 @@ if AkDebugLoad then print("Loading ak.roadline.RoadStationDisplayModel ...") end
 -- Weiss, welche Signalstellung fuer rot, gelb und gruen geschaltet werden muessen.
 ------------------------------------------------------------------------------------------
 ---@class DisplayModel
+---@field name string
+---@field initStation function function to initialize the station
+---@field displayEntries function function to display the station entries
 local DisplayModel = {}
 DisplayModel.allModels = {}
 

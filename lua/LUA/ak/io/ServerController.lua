@@ -184,7 +184,7 @@ function ServerController.communicateWithServer(modulus)
     local overallTime6 = overallTime3
 
     if i % modulus == 0 and serverIsReady then
-        collectData(printFirstTime, modulus)
+        collectData(printFirstTime)
         overallTime4 = os.clock()
 
         local exportData = expandData()
