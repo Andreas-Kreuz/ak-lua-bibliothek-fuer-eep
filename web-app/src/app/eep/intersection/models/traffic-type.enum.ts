@@ -1,5 +1,5 @@
 export enum TrafficType {
-  NORMAL = 'NORMAL',
-  TRAM = 'TRAM',
-  PEDESTRIAN = 'PEDESTRIAN',
+  normal = 'NORMAL',
+  tram = 'TRAM',
+  pedestrian = 'PEDESTRIAN',
 }

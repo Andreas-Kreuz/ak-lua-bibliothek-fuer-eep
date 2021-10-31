@@ -10,31 +10,26 @@ import * as fromGenericData from './generic-data.actions';
 import { DataEvent } from 'web-shared';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class GenericDataService {
   private wsSubscription: Subscription;
 
-  constructor(private socket: SocketService,
-              private store: Store<fromRoot.State>) {
-  }
+  constructor(private socket: SocketService, private store: Store<fromRoot.State>) {}
 
   connect() {
-    this.wsSubscription = this.socket.listen(DataEvent.eventOf('api-entries'))
-      .subscribe(
-        (data) => {
-            const dataTypes: DataType[] = JSON.parse(data);
-            dataTypes.sort((a: DataType, b: DataType) => {
-              return a.name.localeCompare(b.name);
-            });
-            this.store.dispatch(new fromGenericData.SetDataTypes(dataTypes));
-        },
-        error => {
-          console.log(error);
-        },
-        () => console.log('Closed socket: GenericDataService')
-      );
-      this.socket.join(DataEvent.roomOf('api-entries'));
+    this.wsSubscription = this.socket.listen(DataEvent.eventOf('api-entries')).subscribe(
+      (data) => {
+        const dataTypes: DataType[] = JSON.parse(data);
+        dataTypes.sort((a: DataType, b: DataType) => a.name.localeCompare(b.name));
+        this.store.dispatch(new fromGenericData.SetDataTypes(dataTypes));
+      },
+      (error) => {
+        console.log(error);
+      },
+      () => console.log('Closed socket: GenericDataService')
+    );
+    this.socket.join(DataEvent.roomOf('api-entries'));
   }
 
   disconnect() {

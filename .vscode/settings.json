@@ -143,5 +143,6 @@
   "Lua.workspace.useGitIgnore": false,
   "lua.preferLuaCheckErrors": true,
   "lua.targetVersion": "5.3",
-  "vscode-lua-format.configPath": "lua-format.conf"
+  "vscode-lua-format.configPath": "lua-format.conf",
+  "eslint.nodePath": "web-app"
 }

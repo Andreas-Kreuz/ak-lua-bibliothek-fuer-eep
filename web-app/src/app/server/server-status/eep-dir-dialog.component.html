@@ -8,5 +8,5 @@
 </div>
 <div mat-dialog-actions>
   <button mat-button (click)="onNoClick()">Abbrechen</button>
-  <button mat-button [mat-dialog-close]="data.dir" (click)="onYesClick()" [disabled]="data.dir == ''" cdkFocusInitial>Wählen</button>
+  <button mat-button [mat-dialog-close]="data.dir" (click)="onYesClick()" [disabled]="data.dir === ''" cdkFocusInitial>Wählen</button>
 </div>

@@ -3,9 +3,9 @@ export class SignalType {
   modelId: string;
 
   axisStructures: {
-    lights0: {}
+    lights0: Record<string, never>;
   };
   lightStructures: {
-    lights0: {}
+    lights0: Record<string, never>;
   };
 }

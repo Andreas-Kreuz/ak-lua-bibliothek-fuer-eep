@@ -9,12 +9,13 @@ export const SET_DATA = '[Generic Data] Set Data';
 export class FetchData implements Action {
   readonly type = FETCH_DATA;
 
-  constructor(public payload: {
-    name: string,
-    hostName: string,
-    path: string,
-  }) {
-  }
+  constructor(
+    public payload: {
+      name: string;
+      hostName: string;
+      path: string;
+    }
+  ) {}
 }
 
 export class UpdateData implements Action {
@@ -23,15 +24,13 @@ export class UpdateData implements Action {
   /**
    * @param payload Data of a certain type as String
    */
-  constructor(public payload: { type: string, values: {} }) {
-  }
+  constructor(public payload: { type: string; values: Record<string, unknown> }) {}
 }
 
 export class FetchDataTypes implements Action {
   readonly type = FETCH_DATA_TYPES;
 
-  constructor(public payload: string) {
-  }
+  constructor(public payload: string) {}
 }
 
 export class SetDataTypes implements Action {
@@ -40,13 +39,7 @@ export class SetDataTypes implements Action {
   /**
    * @param payload Set all data types from remote
    */
-  constructor(public payload: DataType[]) {
-  }
+  constructor(public payload: DataType[]) {}
 }
 
-
-export type GenericDataActions =
-  FetchDataTypes |
-  SetDataTypes |
-  FetchData |
-  UpdateData;
+export type GenericDataActions = FetchDataTypes | SetDataTypes | FetchData | UpdateData;

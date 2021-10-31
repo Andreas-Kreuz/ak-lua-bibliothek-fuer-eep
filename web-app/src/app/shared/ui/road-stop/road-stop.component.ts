@@ -7,8 +7,8 @@ import { of, Observable } from 'rxjs';
   styleUrls: ['./road-stop.component.css'],
 })
 export class RoadStopComponent implements OnInit {
-  name: Observable<String>;
-  lines: Observable<String>;
+  name: Observable<string>;
+  lines: Observable<string>;
 
   constructor() {
     this.name = of('Feuerwehrgasse');

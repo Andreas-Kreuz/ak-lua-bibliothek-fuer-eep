@@ -13,17 +13,11 @@ import { TrainDetailsComponent } from '../train-details/train-details.component'
 @Component({
   selector: 'app-train-list',
   templateUrl: './train-list.component.html',
-  styleUrls: ['./train-list.component.css']
+  styleUrls: ['./train-list.component.css'],
 })
 export class TrainListComponent implements OnInit, OnDestroy {
   trainType$: Observable<TrainType>;
-  columnsToDisplay: string[] = [
-    'id',
-    'route',
-    'rollingStock',
-    'coupling',
-    'length',
-  ];
+  columnsToDisplay: string[] = ['id', 'route', 'rollingStock', 'coupling', 'length'];
   columnNames = {
     id: 'Name',
     route: 'Route',
@@ -32,31 +26,25 @@ export class TrainListComponent implements OnInit, OnDestroy {
     length: 'Länge',
   };
   columnTextFunctions = {
-    rollingStock: (train: Train) => train && train.rollingStock ? train.rollingStock.length : 0,
+    rollingStock: (train: Train) => (train && train.rollingStock ? train.rollingStock.length : 0),
     coupling: this.getCouplingText,
-    length: (train: Train) =>
-      train && train.length
-        ? train.length.toFixed(1)
-        : 0,
+    length: (train: Train) => (train && train.length ? train.length.toFixed(1) : 0),
   };
   columnAlignment = {
     length: 'right',
   };
   tableData$: Observable<Train[]>;
-  private routeParams$: Subscription;
   trainDetailsComponent = TrainDetailsComponent;
+  private routeParams$: Subscription;
 
-  constructor(private store: Store<fromRoot.State>,
-              private route: ActivatedRoute) {
-  }
+  constructor(private store: Store<fromRoot.State>, private route: ActivatedRoute) {}
 
   ngOnInit() {
-    this.routeParams$ = this.route.params
-      .subscribe((params: Params) => {
-        this.store.dispatch(new TrainAction.SelectType(this.route.snapshot.params['trainType']));
-        this.tableData$ = this.store.pipe(select(fromTrain.selectTrains));
-        this.trainType$ = this.store.pipe(select(fromTrain.selectTrainType));
-      });
+    this.routeParams$ = this.route.params.subscribe((params: Params) => {
+      this.store.dispatch(new TrainAction.SelectType(this.route.snapshot.params['trainType']));
+      this.tableData$ = this.store.pipe(select(fromTrain.selectTrains));
+      this.trainType$ = this.store.pipe(select(fromTrain.selectTrainType));
+    });
   }
 
   typeString(t: TrainType) {
@@ -70,12 +58,11 @@ export class TrainListComponent implements OnInit, OnDestroy {
   private getCouplingText(train: Train): string {
     if (train && train.rollingStock) {
       const frontReady =
-        train.rollingStock[0].couplingFront === Coupling.Ready
-        || train.rollingStock[0].couplingRear === Coupling.Ready;
+        train.rollingStock[0].couplingFront === Coupling.ready || train.rollingStock[0].couplingRear === Coupling.ready;
 
       const rearReady =
-        train.rollingStock[train.rollingStock.length - 1].couplingFront === Coupling.Ready
-        || train.rollingStock[train.rollingStock.length - 1].couplingRear === Coupling.Ready;
+        train.rollingStock[train.rollingStock.length - 1].couplingFront === Coupling.ready ||
+        train.rollingStock[train.rollingStock.length - 1].couplingRear === Coupling.ready;
 
       if (frontReady) {
         return rearReady ? 'Bereit (v+h)' : 'Bereit (v)';

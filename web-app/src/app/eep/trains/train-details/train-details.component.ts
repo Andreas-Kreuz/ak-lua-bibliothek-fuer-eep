@@ -7,16 +7,14 @@ import { Coupling } from '../model/coupling.enum';
 @Component({
   selector: 'app-train-details',
   templateUrl: './train-details.component.html',
-  styleUrls: ['./train-details.component.css']
+  styleUrls: ['./train-details.component.css'],
 })
 export class TrainDetailsComponent implements DetailsComponent<Train>, OnInit {
   @Input() data: Train;
 
-  constructor() {
-  }
+  constructor() {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   couplingFront() {
     const train = this.data;
@@ -37,8 +35,7 @@ export class TrainDetailsComponent implements DetailsComponent<Train>, OnInit {
   }
 
   private couplingOf(rollingStock: RollingStock) {
-    return rollingStock.couplingFront === Coupling.Ready
-    || rollingStock.couplingRear === Coupling.Ready
+    return rollingStock.couplingFront === Coupling.ready || rollingStock.couplingRear === Coupling.ready
       ? 'Bereit'
       : 'Abstoßen';
   }

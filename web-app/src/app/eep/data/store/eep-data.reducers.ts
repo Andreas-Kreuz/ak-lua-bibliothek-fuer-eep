@@ -13,7 +13,7 @@ const initialState: State = {
   eepFreeData: [],
 };
 
-export function reducer(state: State = initialState, action: fromEepData.EepDataAction) {
+export const reducer = (state: State = initialState, action: fromEepData.EepDataAction) => {
   switch (action.type) {
     case fromEepData.SET_SLOTS:
       return {
@@ -28,28 +28,16 @@ export function reducer(state: State = initialState, action: fromEepData.EepData
     default:
       return state;
   }
-}
+};
 
 export const eepDataState$ = createFeatureSelector('eepData');
 
-export const eepData$ = createSelector(
-  eepDataState$,
-  (state: State) => state.eepData
-);
+export const eepData$ = createSelector(eepDataState$, (state: State) => state.eepData);
 
-export const eepDataCount$ = createSelector(
-  eepDataState$,
-  (state: State) => state.eepData.length
-);
+export const eepDataCount$ = createSelector(eepDataState$, (state: State) => state.eepData.length);
 
-export const eepFreeData$ = createSelector(
-  eepDataState$,
-  (state: State) => state.eepFreeData
-);
+export const eepFreeData$ = createSelector(eepDataState$, (state: State) => state.eepFreeData);
 
-export const firstEepFreeData$ = createSelector(
-  eepFreeData$,
-  (data: EepFreeData[]) => {
-    return (data.slice(0, Math.min(data.length, 20)));
-  }
+export const firstEepFreeData$ = createSelector(eepFreeData$, (data: EepFreeData[]) =>
+  data.slice(0, Math.min(data.length, 20))
 );

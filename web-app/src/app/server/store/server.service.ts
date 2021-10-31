@@ -11,10 +11,6 @@ export class ServerService {
   settingsDirErrorReceived$: Observable<any>;
   urlsChanged$: Observable<any>;
 
-  changeDirectory(eepDir: string) {
-    this.socket.emit(SettingsEvent.ChangeDir, eepDir);
-  }
-
   constructor(private socket: SocketService) {
     // Every socket NOTES event has it's own observable, will be used by ngrx effects
     this.settingsDirOkReceived$ = this.socket.listen(SettingsEvent.DirOk);
@@ -23,5 +19,9 @@ export class ServerService {
 
     this.urlsChanged$ = this.socket.listen(ServerStatusEvent.UrlsChanged);
     this.socket.join(ServerStatusEvent.Room);
+  }
+
+  changeDirectory(eepDir: string) {
+    this.socket.emit(SettingsEvent.ChangeDir, eepDir);
   }
 }

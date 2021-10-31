@@ -42,12 +42,12 @@ export class MainComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {}
 
+  navigateUp() {
+    this.router.navigateByUrl(this.parentUrl);
+  }
+
   private updateUrlInfo() {
     this.atHome = this.router.url === '/';
     this.parentUrl = '/' + this.router.url.substr(1, this.router.url.lastIndexOf('/') - 1);
-  }
-
-  navigateUp() {
-    this.router.navigateByUrl(this.parentUrl);
   }
 }

@@ -12,7 +12,7 @@ import { MatDialog } from '@angular/material/dialog';
 @Component({
   selector: 'app-intersection-switching',
   templateUrl: './intersection-switching.component.html',
-  styleUrls: ['./intersection-switching.component.css']
+  styleUrls: ['./intersection-switching.component.css'],
 })
 export class IntersectionSwitchingComponent implements OnInit, OnDestroy {
   @Input() intersectionId: number;
@@ -21,23 +21,22 @@ export class IntersectionSwitchingComponent implements OnInit, OnDestroy {
   private switchingSub: Subscription;
   private switchings: IntersectionSwitching[];
 
-  constructor(private store: Store<fromRoot.State>,
-    public dialog: MatDialog) {
-  }
+  constructor(private store: Store<fromRoot.State>, public dialog: MatDialog) {}
 
   ngOnInit() {
-    this.intersection$ = this.store.pipe(
-      select(fromIntersection.intersectionById$(this.intersectionId)));
+    this.intersection$ = this.store.pipe(select(fromIntersection.intersectionById$(this.intersectionId)));
     // this.lanes$ = this.store.pipe(
     //   select(fromIntersection.laneByIntersectionId$(intersectionId)));
-    this.switchingSub = this.intersection$.subscribe((intersection) =>
-      this.switching$ = this.store.pipe(
-        select(fromIntersection.switchingNamesByIntersection$(intersection)),
-        map((switchings) => {
-          this.switchings = switchings;
-          return switchings;
-        })
-      ));
+    this.switchingSub = this.intersection$.subscribe(
+      (intersection) =>
+        (this.switching$ = this.store.pipe(
+          select(fromIntersection.switchingNamesByIntersection$(intersection)),
+          map((switchings) => {
+            this.switchings = switchings;
+            return switchings;
+          })
+        ))
+    );
   }
 
   ngOnDestroy(): void {
@@ -46,9 +45,11 @@ export class IntersectionSwitchingComponent implements OnInit, OnDestroy {
 
   onChangeManualSwitching(intersection: Intersection, switchingName: string) {
     if (intersection.manualSwitching) {
-      this.store.dispatch(IntersectionAction.switchAutomatically({
-        intersection
-      }));
+      this.store.dispatch(
+        IntersectionAction.switchAutomatically({
+          intersection,
+        })
+      );
     } else if (switchingName) {
       const switching = this.switchingFor(switchingName);
       this.switchTo(intersection, switching);
@@ -56,9 +57,12 @@ export class IntersectionSwitchingComponent implements OnInit, OnDestroy {
   }
 
   switchTo(intersection: Intersection, switching: IntersectionSwitching) {
-    this.store.dispatch(IntersectionAction.switchManually({
-      intersection: intersection, switching: switching
-    }));
+    this.store.dispatch(
+      IntersectionAction.switchManually({
+        intersection,
+        switching,
+      })
+    );
   }
 
   switchingFor(switchingName: string): IntersectionSwitching {

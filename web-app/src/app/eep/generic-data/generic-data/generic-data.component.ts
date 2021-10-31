@@ -10,16 +10,14 @@ import { switchMap, map } from 'rxjs/operators';
 @Component({
   selector: 'app-generic-data',
   templateUrl: './generic-data.component.html',
-  styleUrls: ['./generic-data.component.css']
+  styleUrls: ['./generic-data.component.css'],
 })
 export class GenericDataComponent implements OnInit {
-  data$: Observable<{ dataName: string, valueColumns: string[], values: any[] }>;
+  data$: Observable<{ dataName: string; valueColumns: string[]; values: any[] }>;
   tableData = new Subject<any[]>();
   tableData$ = this.tableData.asObservable();
 
-  constructor(private store: Store<fromRoot.State>,
-              private route: ActivatedRoute) {
-  }
+  constructor(private store: Store<fromRoot.State>, private route: ActivatedRoute) {}
 
   ngOnInit() {
     const snapshot = this.route.snapshot;
@@ -29,14 +27,14 @@ export class GenericDataComponent implements OnInit {
 
     console.log('Dispatch fetch data', snapshot.params);
     this.store.dispatch(
-      new fromGenericActions.FetchData(
-        {
-          name: name,
-          hostName: hostName,
-          path: path,
-        }));
+      new fromGenericActions.FetchData({
+        name,
+        hostName,
+        path,
+      })
+    );
 
     this.data$ = this.store.pipe(select(fromGenericData.selectedDataStructure(name)));
-    this.data$.subscribe(data => this.tableData.next(data.values));
+    this.data$.subscribe((data) => this.tableData.next(data.values));
   }
 }

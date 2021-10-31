@@ -11,24 +11,20 @@ import { State } from '../../../app.reducers';
 @Component({
   selector: 'app-signal-detail-component',
   templateUrl: './signal-detail.component.html',
-  styleUrls: ['./signal-detail.component.css']
+  styleUrls: ['./signal-detail.component.css'],
 })
 export class SignalDetailComponent implements OnInit, OnDestroy {
-  private signalId: number;
   signal$: Observable<Signal>;
+  private signalId: number;
   private routeParams$: Subscription;
 
-  constructor(private store: Store<State>,
-              private route: ActivatedRoute) {
-  }
+  constructor(private store: Store<State>, private route: ActivatedRoute) {}
 
   ngOnInit() {
-    this.routeParams$ = this.route.params
-      .subscribe((params: Params) => {
-        this.signalId = +this.route.snapshot.params['id'];
-        this.signal$ = this.store.pipe(
-          select(fromEep.selectSignalById$(this.signalId)));
-      });
+    this.routeParams$ = this.route.params.subscribe((params: Params) => {
+      this.signalId = +this.route.snapshot.params['id'];
+      this.signal$ = this.store.pipe(select(fromEep.selectSignalById$(this.signalId)));
+    });
   }
 
   ngOnDestroy() {

@@ -7,8 +7,8 @@ import { Observable, of } from 'rxjs';
   styleUrls: ['./road-line.component.css'],
 })
 export class RoadLineComponent implements OnInit {
-  nr: Observable<String>;
-  type: Observable<String>;
+  nr: Observable<string>;
+  type: Observable<string>;
 
   constructor() {
     this.nr = of('10');

@@ -8,9 +8,9 @@ import { SocketService } from '../../socket/socket-service';
   providedIn: 'root',
 })
 export class DataTypesService {
-  private actionObservable: Observable<SocketEvent>;
-
   logLinesCleared$: Observable<any>;
+
+  private actionObservable: Observable<SocketEvent>;
 
   constructor(private socketService: SocketService) {
     this.logLinesCleared$ = this.socketService.listen('NULL');

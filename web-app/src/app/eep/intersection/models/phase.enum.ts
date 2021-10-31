@@ -1,7 +1,7 @@
 export enum Phase {
-  RED = 'RED',
-  RED_YELLOW = 'RED_YELLOW',
-  YELLOW = 'YELLOW',
-  GREEN = 'GREEN',
-  PEDESTRIAN = 'PEDESTRIAN'
+  red = 'RED',
+  redYellow = 'RED_YELLOW',
+  yellow = 'YELLOW',
+  green = 'GREEN',
+  pedestrian = 'PEDESTRIAN',
 }

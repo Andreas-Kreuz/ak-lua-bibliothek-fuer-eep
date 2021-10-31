@@ -13,7 +13,7 @@
            class="left-aligned">
           {{ setting.name }}: &quot;{{ setting.value }}&quot; ist vom Typ {{ setting.type }}
         </p>
-        <mat-slide-toggle *ngIf="setting.type == 'boolean'"
+        <mat-slide-toggle *ngIf="setting.type === 'boolean'"
                           matLine
                           [checked]="setting.value"
                           (change)="onToggle(setting)"

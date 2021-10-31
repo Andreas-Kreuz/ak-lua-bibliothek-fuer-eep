@@ -34,9 +34,7 @@ const logReducer = createReducer(
   })
 );
 
-export function reducer(state: State | undefined, action: Action) {
-  return logReducer(state, action);
-}
+export const reducer = (state: State | undefined, action: Action) => logReducer(state, action);
 
 export const logfileState$ = createFeatureSelector('logViewer');
 

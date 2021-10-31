@@ -18,7 +18,7 @@ const initialState: State = {
   selectedSignalIndex: -1,
 };
 
-export function reducer(state: State = initialState, action: fromSignal.SignalActions) {
+export const reducer = (state: State = initialState, action: fromSignal.SignalActions) => {
   switch (action.type) {
     case fromSignal.SET_SIGNALS:
       return {
@@ -51,31 +51,17 @@ export function reducer(state: State = initialState, action: fromSignal.SignalAc
     default:
       return state;
   }
-}
-
+};
 
 export const signalState$ = createFeatureSelector('signal');
 
-export const signals$ = createSelector(
-  signalState$,
-  (state: State) => state.signals
-);
+export const signals$ = createSelector(signalState$, (state: State) => state.signals);
 
-export const signalTypes$ = createSelector(
-  signalState$,
-  (state: State) => state.signalTypes
-);
+export const signalTypes$ = createSelector(signalState$, (state: State) => state.signalTypes);
 
-export const signalTypeDefinitions$ = createSelector(
-  signalState$,
-  (state: State) => state.signalTypeDefinitions
-);
+export const signalTypeDefinitions$ = createSelector(signalState$, (state: State) => state.signalTypeDefinitions);
 
-
-export const signalCount$ = createSelector(
-  signalState$,
-  (state: State) => state.signals.length
-);
+export const signalCount$ = createSelector(signalState$, (state: State) => state.signals.length);
 
 const sortedSignal = (signalList: Signal[]) => {
   signalList.sort((a, b) => {
@@ -89,35 +75,25 @@ const sortedSignal = (signalList: Signal[]) => {
   return signalList;
 };
 
-export const getSortedSignals$ = createSelector(
-  signals$,
-  sortedSignal
-);
+export const getSortedSignals$ = createSelector(signals$, sortedSignal);
 
-export const selectSignalById$ = (signalId) => createSelector(
-  signalsWithModel$,
-  signals => signals.find(s => s.id === signalId)
-);
+export const selectSignalById$ = (signalId) =>
+  createSelector(signalsWithModel$, (signals) => signals.find((s) => s.id === signalId));
 
-
-const signalIdToModels$ = createSelector(
-  signalTypes$,
-  signalTypeDefinitions$,
-  (signalTypes, signalTypeDefinitions) => {
-    const signalTypeDefMap: Map<string, SignalTypeDefinition> = new Map();
-    for (const signalTypeDefinition of signalTypeDefinitions) {
-      signalTypeDefMap[signalTypeDefinition.id] = signalTypeDefinition;
-    }
-
-    // Fill signal type definition map
-    const signalTypeDefinitionMap = new Map<number, SignalTypeDefinition>();
-    signalTypes.forEach((value, key, map) => {
-      const model = signalTypeDefMap[value];
-      signalTypeDefinitionMap.set(key, model);
-    });
-    return signalTypeDefinitionMap;
+const signalIdToModels$ = createSelector(signalTypes$, signalTypeDefinitions$, (signalTypes, signalTypeDefinitions) => {
+  const signalTypeDefMap: Map<string, SignalTypeDefinition> = new Map();
+  for (const signalTypeDefinition of signalTypeDefinitions) {
+    signalTypeDefMap[signalTypeDefinition.id] = signalTypeDefinition;
   }
-);
+
+  // Fill signal type definition map
+  const signalTypeDefinitionMap = new Map<number, SignalTypeDefinition>();
+  signalTypes.forEach((value, key, map) => {
+    const model = signalTypeDefMap[value];
+    signalTypeDefinitionMap.set(key, model);
+  });
+  return signalTypeDefinitionMap;
+});
 
 export const signalsWithModel$ = createSelector(
   signals$,

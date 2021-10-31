@@ -9,10 +9,10 @@ import { DataEvent } from 'web-shared';
   providedIn: 'root',
 })
 export class SignalsService {
-  constructor(private socket: SocketService) {}
-
   private signals$: Observable<string>;
   private signalTypes$: Observable<string>;
+
+  constructor(private socket: SocketService) {}
 
   getSignalActions(): Observable<string> {
     if (!this.signals$) {

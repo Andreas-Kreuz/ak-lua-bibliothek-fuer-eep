@@ -9,14 +9,14 @@ import { DataEvent } from 'web-shared';
   providedIn: 'root',
 })
 export class TrainService {
-  constructor(private socket: SocketService) {}
-
   private railTrains$: Observable<string>;
   private railRollingStock$: Observable<string>;
   private roadTrains$: Observable<string>;
   private roadRollingStock$: Observable<string>;
   private tramTrains$: Observable<string>;
   private tramRollingStock$: Observable<string>;
+
+  constructor(private socket: SocketService) {}
 
   railTrainsActions$(): Observable<string> {
     if (!this.railTrains$) {

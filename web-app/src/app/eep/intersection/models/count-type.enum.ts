@@ -1,5 +1,5 @@
 export enum CountType {
-  CONTACTS = 'CONTACTS',
-  TRACKS = 'TRACKS',
-  SIGNALS = 'SIGNALS',
+  contacts = 'CONTACTS',
+  tracks = 'TRACKS',
+  signals = 'SIGNALS',
 }
