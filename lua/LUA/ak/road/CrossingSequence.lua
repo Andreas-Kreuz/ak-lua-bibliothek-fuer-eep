@@ -87,7 +87,8 @@ function CrossingSequence:tasksForSwitchingFrom(oldSequence, afterRedTask)
     if oldSequence then
         -- Schedule the task where the old pedestrian lights get yellow
         local reasonPed = "Schalte " .. oldSequence.name .. " auf Fussgaenger Rot"
-        local oldRedPedestrian = switchTask(toRed, CrossingSequence.Type.PEDESTRIAN, TrafficLightState.RED, reasonPed)
+        local oldRedPedestrian =
+        switchTask(toRed, CrossingSequence.Type.PEDESTRIAN, TrafficLightState.RED, reasonPed)
         table.insert(taskList, {offset = 0, task = oldRedPedestrian, precedingTask = nil})
 
         -- * Hier könnte noch die DDR-Schaltung rein (2 Sekunden grün-gelb)
@@ -179,9 +180,7 @@ end
 function CrossingSequence:lanesSortedByPriority()
     local trafficLightArray = {}
     for trafficLight, type in pairs(self.trafficLights) do
-        if type ~= CrossingSequence.Type.PEDESTRIAN then
-            table.insert(trafficLightArray, trafficLight)
-        end
+        if type ~= CrossingSequence.Type.PEDESTRIAN then table.insert(trafficLightArray, trafficLight) end
     end
 
     local sortedLanes = {}

@@ -157,7 +157,7 @@ local function collect(allCrossings)
         local b = o2.name
 
         return tostring(a):gsub("%.?%d+", padnum) .. ("%3d"):format(#b) < tostring(b):gsub("%.?%d+", padnum) ..
-                   ("%3d"):format(#a)
+               ("%3d"):format(#a)
     end)
 
     local json = require("ak.io.json")

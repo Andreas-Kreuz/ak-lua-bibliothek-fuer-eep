@@ -20,9 +20,9 @@ TrafficLightModel.allModels = {}
 -- @param signalIndexBlinkYellow Index der Signalstellung in der die Ampel gelb blinkt ohne den Verkehr zu beeinflussen
 function TrafficLightModel:new(name, signalIndexRed, signalIndexGreen, signalIndexYellow, signalIndexRedYellow,
                                signalIndexPedestrian, signalIndexSwitchOff, signalIndexBlinkYellow)
-    assert(name)
-    assert(signalIndexRed)
-    assert(signalIndexGreen)
+    assert(type(name) == "string", "Need 'name' as string")
+    assert(type(signalIndexRed) == "number", "Need 'signalIndexRed' as number")
+    assert(type(signalIndexGreen) == "number", "Need 'signalIndexGreen' as number")
     local o = {
         name = name,
         signalIndexRed = signalIndexRed,
@@ -42,7 +42,7 @@ end
 function TrafficLightModel:print() print(self.name) end
 
 function TrafficLightModel:signalIndexOf(phase)
-    assert(phase)
+    assert(type(phase) == "string", "Need 'phase' as string")
     if phase == TrafficLightState.YELLOW then
         return self.signalIndexYellow
     elseif phase == TrafficLightState.RED then
@@ -63,7 +63,7 @@ function TrafficLightModel:signalIndexOf(phase)
 end
 
 function TrafficLightModel:phaseOf(signalIndex)
-    assert(signalIndex, "No signal id: " .. signalIndex)
+    assert(type(signalIndex) == "number", "Need 'signalIndex' as number")
     if signalIndex == self.signalIndexRed then
         return TrafficLightState.RED
     elseif signalIndex == self.signalIndexRedYellow then

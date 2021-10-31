@@ -84,6 +84,8 @@ files["lua/LUA/ak/data/TrackCollector.lua"].ignore = { "121", "211" }
 
 exclude_files = {
     ".vscode",
+    "assets",
+    "docs",
     "lua/LUA/SlotNames_BH2.lua",
     "lua/LUA/ak/anlagen/**",
     "lua/LUA/ak/io/crc32lua.lua",
@@ -94,6 +96,8 @@ exclude_files = {
     "lua/Resourcen/Anlagen/Andreas_Kreuz-Tutorial-Ampelkreuzung/Andreas_Kreuz-Tutorial-Ampelkreuzung.lua",
     "lua/Resourcen/Anlagen/Andreas_Kreuz-Tutorial-Ampelkreuzung/Andreas_Kreuz-Tutorial-Ampelkreuzung-2.lua",
     "lua/modell-pakete",
+    "scripts",
     "web-app",
-    "web-server"
+    "web-server",
+    "web-shared"
 }

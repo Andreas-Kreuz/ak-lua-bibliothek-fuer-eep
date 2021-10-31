@@ -17,11 +17,7 @@ end
 
 --- Finde ein schreibbares Verzeichnis.
 local function existingDirOf(...)
-    for _, dir in pairs(...) do
-        if pcall(dirExists, dir) then
-            return dir
-        end
-    end
+    for _, dir in pairs(...) do if pcall(dirExists, dir) then return dir end end
     return nil
 end
 
@@ -39,7 +35,7 @@ end
 --- Schreibe Datei.
 local function writeFile(fileName, inhalt)
     local file = io.open(fileName, "w")
-    assert(file, "Kann Datei nicht schreiben " .. fileName)
+    assert(file, fileName)
     file:write(inhalt)
     file:flush()
     file:close()
@@ -75,7 +71,7 @@ function AkWebServerIo.setOutputDirectory(dirName)
     -- Conclusion: The server is busy while this file exists
     watchFileNameLua = ioDirectoryName .. "/ak-eep-out-json.isfinished"
     -- Delete the file during initialization to trigger the creation of the json file once
-    --assert(os.remove(watchFileNameLua))
+    -- assert(os.remove(watchFileNameLua))
     -- Howe ver, this is not possible because within EEP, the library os contains only the following functions:
     -- setlocale date time difftime clock getenv tmpname
     -- EEP reads commands from this file
@@ -86,15 +82,10 @@ function AkWebServerIo.setOutputDirectory(dirName)
 end
 
 --- Bestimme Dafault-Dateipfade.
-AkWebServerIo.setOutputDirectory(
-    existingDirOf(
-        {
-            -- default value
-            "../LUA/ak/io/exchange",
-            "./LUA/ak/io/exchange"
-        }
-    ) or "."
-)
+AkWebServerIo.setOutputDirectory(existingDirOf({
+    -- default value
+    "../LUA/ak/io/exchange", "./LUA/ak/io/exchange"
+}) or ".")
 local _assert = assert
 local _print = print
 --- Schreibe log zusätzlich in Datei.
@@ -103,13 +94,9 @@ function print(...)
     local file = _assert(io.open(outFileNameLog, "a"))
     local args = {...}
     local time = ""
-    if os.date then
-        time = os.date("%X ")
-    end
+    if os.date then time = os.date("%X ") end
     local text = "" .. time
-    for _, arg in pairs(args) do
-        text = text .. tostring(arg):gsub("\n", "\n       . ")
-    end
+    for _, arg in pairs(args) do text = text .. tostring(arg):gsub("\n", "\n       . ") end
     file:write(text .. "\n")
     file:close()
 
@@ -149,13 +136,11 @@ local serverWasListeningLastTime = true
 function AkWebServerIo.checkWebServer()
     if fileExists(watchFileNameServer) then -- file: ak-server.iswatching
         if fileExists(watchFileNameLua) then -- file: ak-eep-out-json.isfinished
-            if AkWebServerIo.debug and serverWasReadyLastTime then
-                print("SERVER IS NOT READY")
-            end
+            if AkWebServerIo.debug and serverWasReadyLastTime then print("SERVER IS NOT READY") end
             serverWasReadyLastTime = false
             return false
         else
-            if  AkWebServerIo.debug and (not serverWasReadyLastTime or not serverWasListeningLastTime) then
+            if AkWebServerIo.debug and (not serverWasReadyLastTime or not serverWasListeningLastTime) then
                 print("SERVER IS READY AND LISTENING")
             end
             serverWasReadyLastTime = true
@@ -163,9 +148,7 @@ function AkWebServerIo.checkWebServer()
             return true
         end
     else
-        if AkWebServerIo.debug and serverWasListeningLastTime then
-            print("SERVER IS NOT LISTENING")
-        end
+        if AkWebServerIo.debug and serverWasListeningLastTime then print("SERVER IS NOT LISTENING") end
         serverWasListeningLastTime = false
         return false
     end
@@ -184,16 +167,14 @@ function AkWebServerIo.updateJsonFile(jsonData)
     end
 
     if fileExists(watchFileNameServer) then -- file: ak-server.iswatching
-        writeFile(watchFileNameLua, "")-- file: ak-eep-out-json.isfinished
+        writeFile(watchFileNameLua, "") -- file: ak-eep-out-json.isfinished
     end
 end
 
 --- Lese Kommandos aus Datei und führe sie aus.
 function AkWebServerIo.processNewCommands()
-    local commands = inFileCommands:read("*all")-- file: ak-eep-in.commands
-    if commands and commands ~= "" then
-        AkCommandExecutor.execute(commands)
-    end
+    local commands = inFileCommands:read("*all") -- file: ak-eep-in.commands
+    if commands and commands ~= "" then AkCommandExecutor.execute(commands) end
 end
 
 return AkWebServerIo

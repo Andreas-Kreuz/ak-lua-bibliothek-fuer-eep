@@ -35,13 +35,14 @@ end
 -- @param excludePattern
 --
 function AkModellPaket:fuegeDateienHinzu(basisOrdner, praefix, unterOrdner, pfadAusschlussMuster)
-    assert(basisOrdner)
-    assert(praefix)
-    assert(unterOrdner)
+    assert(type(basisOrdner) == "string", "Need 'basisOrdner' as string")
+    assert(type(praefix) == "string", "Need 'praefix' as string")
+    assert(type(unterOrdner) == "string", "Need 'unterOrdner' as string")
     local neuePfade = {}
-    print(string.format('Durchsuche "%s" in Unterordner "%s"', basisOrdner, unterOrdner))
+    print(string.format("Durchsuche \"%s\" in Unterordner \"%s\"", basisOrdner, unterOrdner))
     local _, dateiGefunden = AkModellPacker.dateienSuchen(neuePfade, basisOrdner, unterOrdner)
-    assert(dateiGefunden, string.format('Keine Datei gefunden: "%s" in Unterordner "%s"', basisOrdner, unterOrdner))
+    assert(dateiGefunden,
+           string.format("Keine Datei gefunden: \"%s\" in Unterordner \"%s\"", basisOrdner, unterOrdner))
 
     for pfad, datei in pairs(neuePfade) do
         if pfadAusschlussMuster and AkModellPaket.pfadAusschliessen(pfad, pfadAusschlussMuster) then
@@ -55,15 +56,9 @@ function AkModellPaket:fuegeDateienHinzu(basisOrdner, praefix, unterOrdner, pfad
 end
 
 function AkModellPaket.pfadAusschliessen(pfad, pfadAusschlussMuster)
-    if not pfadAusschlussMuster then
-        return false
-    end
+    if not pfadAusschlussMuster then return false end
 
-    for _, muster in ipairs(pfadAusschlussMuster) do
-        if string.find(pfad, muster, 1, true) then
-            return true
-        end
-    end
+    for _, muster in ipairs(pfadAusschlussMuster) do if string.find(pfad, muster, 1, true) then return true end end
     return false
 end
 

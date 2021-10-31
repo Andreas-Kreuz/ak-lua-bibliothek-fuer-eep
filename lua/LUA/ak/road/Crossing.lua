@@ -244,9 +244,8 @@ local function switch(crossing)
     end
 
     -- After the sequence is ready, the current sequence is active
-    local switchedSequenceTask = Task:new(function()
-        crossing:onSwitchedToSequence(nextSequence)
-    end, crossing.name .. " verwendet nun Schaltung " .. nextSequence.name)
+    local switchedSequenceTask = Task:new(function() crossing:onSwitchedToSequence(nextSequence) end,
+                                          crossing.name .. " verwendet nun Schaltung " .. nextSequence.name)
 
     -- Calculate all tasks for switching in the sequence
     local lastTask
@@ -317,22 +316,23 @@ local function recalculateSignalInfo(crossing)
             local type = sequence.trafficLights[trafficLight]
             if not type then
                 text = text .. "<br><j>" ..
-                           (farbig and fmt.bgRed(sequence.name .. " (Rot)") or
-                               (sequence.name .. " " .. fmt.bgRed("(Rot)")))
+                       (farbig and fmt.bgRed(sequence.name .. " (Rot)") or
+                       (sequence.name .. " " .. fmt.bgRed("(Rot)")))
             elseif type == CrossingSequence.Type.CAR then
                 text = text .. "<br><j>" ..
-                           (farbig and fmt.bgGreen(sequence.name .. " (Gruen)") or
-                               (sequence.name .. " " .. fmt.bgGreen("(Gruen)")))
+                       (farbig and fmt.bgGreen(sequence.name .. " (Gruen)") or
+                       (sequence.name .. " " .. fmt.bgGreen("(Gruen)")))
             elseif type == CrossingSequence.Type.PEDESTRIAN then
                 text = text .. "<br><j>" ..
-                           (farbig and fmt.bgYellow(sequence.name .. " (FG)") or
-                               (sequence.name .. " " .. fmt.bgYellow("(FG)")))
+                       (farbig and fmt.bgYellow(sequence.name .. " (FG)") or
+                       (sequence.name .. " " .. fmt.bgYellow("(FG)")))
             elseif type == CrossingSequence.Type.TRAM then
                 text = text .. "<br><j>" ..
-                           (farbig and fmt.bgBlue(sequence.name .. " (Tram)") or
-                               (sequence.name .. " " .. fmt.bgBlue("(Tram)")))
+                       (farbig and fmt.bgBlue(sequence.name .. " (Tram)") or
+                       (sequence.name .. " " .. fmt.bgBlue("(Tram)")))
             else
-                assert(false, "No such type: " .. type)
+                -- No such type allowed here
+                assert(false, type)
             end
         end
         trafficLight:setSequenceInfo(text)
@@ -355,7 +355,10 @@ function Crossing.initSequences()
                 crossing.lanes[v.name] = v
                 laneFound = true
             end
-            assert(laneFound, "No LANE found in sequence " .. sequence.name .. " (" .. crossing.name .. ")")
+            if not laneFound then
+                print("No LANE found in sequence " .. sequence.name .. " (" .. crossing.name .. ")")
+            end
+            assert(laneFound)
             for v in pairs(sequence.trafficLights) do crossing.trafficLights[v.signalId] = v end
 
             if Crossing.debug then

@@ -53,7 +53,7 @@ function Scheduler:runTasks()
             if secondsSinceMidnight >= plannedAtSeconds then
                 if Scheduler.debug then
                     print("[Scheduler " .. secondsSinceMidnight .. "] Running Task: '" .. currentTask.name ..
-                              "' (NOW)")
+                          "' (NOW)")
                 end
                 currentTask:starteAktion()
                 scheduledTasks[currentTask] = true
@@ -65,8 +65,8 @@ function Scheduler:runTasks()
             for successorAction, offsetSeconds in pairs(currentTask.subsequentTask) do
                 if Scheduler.debug then
                     print("[Scheduler " .. secondsSinceMidnight .. "] Scheduling Task: '" .. successorAction.name ..
-                              "' in " .. offsetSeconds .. " seconds (at " .. currentSecondsSinceMidnight() +
-                              offsetSeconds .. ")")
+                          "' in " .. offsetSeconds .. " seconds (at " .. currentSecondsSinceMidnight() +
+                          offsetSeconds .. ")")
                 end
                 self.scheduledTasks[successorAction] = currentSecondsSinceMidnight() + offsetSeconds
             end
@@ -92,9 +92,10 @@ function Scheduler:scheduleTask(offsetInSeconds, newTask, precedingTask)
     local previousTaskFound = false
     if precedingTask then
         previousTaskFound = scheduleAfter(self.scheduledTasks, newTask, offsetInSeconds, precedingTask) or
-                                scheduleAfter(self.futureTasks, newTask, offsetInSeconds, precedingTask)
+                            scheduleAfter(self.futureTasks, newTask, offsetInSeconds, precedingTask)
         if not previousTaskFound then
-            print("[Scheduler] DID NOT FIND PREDECESSOR TASK FOR! : " .. precedingTask.name .. " --> " .. newTask.name)
+            print("[Scheduler] DID NOT FIND PREDECESSOR TASK FOR! : " .. precedingTask.name .. " --> " ..
+                  newTask.name)
         end
     end
 
@@ -102,7 +103,7 @@ function Scheduler:scheduleTask(offsetInSeconds, newTask, precedingTask)
         self.futureTasks[newTask] = currentSecondsSinceMidnight() + offsetInSeconds
         if Scheduler.debug then
             print("[Scheduler] Task scheduled: '" .. newTask.name .. "' in " .. offsetInSeconds .. " seconds (at " ..
-                      currentSecondsSinceMidnight() + offsetInSeconds .. ")")
+                  currentSecondsSinceMidnight() + offsetInSeconds .. ")")
         end
     end
 end
@@ -115,7 +116,7 @@ function scheduleAfter(scheduledTasks, newTask, offsetInSeconds, previousTask)
             previousTaskFound = true
             if Scheduler.debug then
                 print("[Scheduler] Task scheduled: '" .. newTask.name .. "' (" .. offsetInSeconds ..
-                          " seconds after '" .. previousTask.name .. "')")
+                      " seconds after '" .. previousTask.name .. "')")
             end
         else
             -- schedule the subsequentTask of the newTask

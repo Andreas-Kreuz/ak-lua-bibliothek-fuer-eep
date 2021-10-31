@@ -1,6 +1,5 @@
 -- Wenn Du bisher kein Lua in Deinen Anlagen verwendest, dann binde dieses Skript in EEP ein:
 -- require("ak.template.eep-web-main")
-
 -- Diese Zeile lädt die Modulverwaltung der Lua-Bibliothek
 local ModuleRegistry = require("ak.core.ModuleRegistry")
 
@@ -8,11 +7,8 @@ local ModuleRegistry = require("ak.core.ModuleRegistry")
 -- * Core (immer benötigt)
 -- * Data (Export der Daten für EEP)
 -- * Crossing (für die Ampelsteuerung notwendig)
-ModuleRegistry.registerModules(
-    require("ak.core.CoreLuaModule"),
-    require("ak.data.DataLuaModule"),
-    require("ak.road.CrossingLuaModul")
-)
+ModuleRegistry.registerModules(require("ak.core.CoreLuaModule"), require("ak.data.DataLuaModule"),
+                               require("ak.road.CrossingLuaModul"))
 
 -- Die EEPMain Methode wird von EEP genutzt. Sie muss immer 1 zurückgeben.
 function EEPMain()

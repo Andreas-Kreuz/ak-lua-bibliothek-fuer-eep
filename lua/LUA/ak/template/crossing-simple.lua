@@ -5,8 +5,6 @@
 -- 3) Verwende die folgende Zeile im Lua-Editor von EEP, um Deine Kopie in EEP mit der Anlage zu laden
 --    require("anlage1")
 -----------------------------------------------------------------------------------------------------------------------
-
-
 -- Diese Zeile lädt die Modulverwaltung der Lua-Bibliothek
 local ModuleRegistry = require("ak.core.ModuleRegistry")
 
@@ -14,11 +12,8 @@ local ModuleRegistry = require("ak.core.ModuleRegistry")
 -- * Core (immer benötigt)
 -- * Data (Export der Daten für EEP)
 -- * Crossing (für die Ampelsteuerung notwendig)
-ModuleRegistry.registerModules(
-    require("ak.core.CoreLuaModule"),
-    require("ak.data.DataLuaModule"),
-    require("ak.road.CrossingLuaModul")
-)
+ModuleRegistry.registerModules(require("ak.core.CoreLuaModule"), require("ak.data.DataLuaModule"),
+                               require("ak.road.CrossingLuaModul"))
 
 -- Die EEPMain Methode wird von EEP genutzt. Sie muss immer 1 zurückgeben.
 function EEPMain()

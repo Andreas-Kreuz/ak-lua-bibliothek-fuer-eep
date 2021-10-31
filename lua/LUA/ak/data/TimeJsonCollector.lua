@@ -5,21 +5,15 @@ local initialized = false
 TimeJsonCollector.name = "ak.data.TimeJsonCollector"
 
 function TimeJsonCollector.initialize()
-    if not enabled or initialized then
-        return
-    end
+    if not enabled or initialized then return end
 
     initialized = true
 end
 
 function TimeJsonCollector.collectData()
-    if not enabled then
-        return
-    end
+    if not enabled then return end
 
-    if not initialized then
-        TimeJsonCollector.initialize()
-    end
+    if not initialized then TimeJsonCollector.initialize() end
 
     local value = {
         {

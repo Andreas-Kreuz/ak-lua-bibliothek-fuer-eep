@@ -1,4 +1,4 @@
---describe("AkSlotNamesParser.lua", function()
+-- describe("AkSlotNamesParser.lua", function()
 --    describe("getSlotNamesFunction", function()
 --        describe(".getSlotNames()", function()
 --            insulate("Slot 1", function()
@@ -25,4 +25,4 @@
 --            end)
 --        end)
 --    end)
---end)
+-- end)

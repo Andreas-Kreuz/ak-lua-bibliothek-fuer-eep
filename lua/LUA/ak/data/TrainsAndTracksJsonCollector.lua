@@ -1,6 +1,5 @@
 if AkDebugLoad then print("Loading ak.data.TrainsAndTracksJsonCollector ...") end
 
-
 TrainsAndTracksJsonCollector = {}
 local TrackCollector = require("ak.data.TrackCollector")
 
@@ -12,16 +11,10 @@ local data = {}
 
 local trackTypes = {"auxiliary", "control", "road", "rail", "tram"}
 local trackCollectors = {}
-do
-    for _, trackType in ipairs(trackTypes) do
-        trackCollectors[trackType] = TrackCollector:new(trackType)
-    end
-end
+do for _, trackType in ipairs(trackTypes) do trackCollectors[trackType] = TrackCollector:new(trackType) end end
 
 local function initializeTracks()
-    for _, trackType in ipairs(trackTypes) do
-        trackCollectors[trackType]:initialize()
-    end
+    for _, trackType in ipairs(trackTypes) do trackCollectors[trackType]:initialize() end
 end
 
 local function updateTracks()
@@ -29,18 +22,14 @@ local function updateTracks()
         local trainCollectorData = trackCollectors[trackType]:updateData()
         for key, value in pairs(trainCollectorData) do
             local newList = {}
-            for _, o in pairs(value) do
-                table.insert(newList, o)
-            end
+            for _, o in pairs(value) do table.insert(newList, o) end
             data[key] = newList
         end
     end
 end
 
 function TrainsAndTracksJsonCollector.initialize()
-    if not enabled or initialized then
-        return
-    end
+    if not enabled or initialized then return end
 
     initializeTracks()
 
@@ -48,16 +37,12 @@ function TrainsAndTracksJsonCollector.initialize()
 end
 
 function TrainsAndTracksJsonCollector.collectData()
-    if not enabled then
-        return
-    end
+    if not enabled then return end
 
     -- reset runtime data
     data["runtime"] = {}
 
-    if not initialized then
-        TrainsAndTracksJsonCollector.initialize()
-    end
+    if not initialized then TrainsAndTracksJsonCollector.initialize() end
 
     updateTracks()
 

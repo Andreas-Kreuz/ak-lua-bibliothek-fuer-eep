@@ -1,4 +1,4 @@
-if AkDebugLoad then print("Loading ak.road.TrafficLight ...") end
+if AkDebugLoad then print("Loading ak.util.Queue ...") end
 
 ---@class Queue<T>
 local Queue = {}
@@ -46,9 +46,7 @@ end
 ---@return any[]
 function Queue:elements()
     local elems = {}
-    for i = self.first, self.last, 1 do
-        table.insert(elems, self.list[i])
-    end
+    for i = self.first, self.last, 1 do table.insert(elems, self.list[i]) end
     return elems
 end
 

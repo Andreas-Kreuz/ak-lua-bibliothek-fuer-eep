@@ -3,7 +3,6 @@ local StorageUtility = require("ak.storage.StorageUtility")
 
 StorageUtility.debug = false
 
-
 ------------------------------------------------------------------------------------
 -- Ein Speicherplatz kann nur einmal verwendet werden
 -- Sinnvoll zu nutzen, wenn man jedem Signal oder anderen Dingen eine eindeutige ID
@@ -16,7 +15,6 @@ if pcall(StorageUtility.registerId, 800, "Speicherplatz 800") then
 else
     print("Alles ok: Speicherplatz 800 konnte nicht doppelt verwendet werden.")
 end
-
 
 ------------------------------------------------------------------------------------
 -- Mit StorageUtility.saveTable(id, tabelle, [name]) kann man tables speichern,
@@ -40,7 +38,7 @@ do
     print(tostring(boolean1) .. " (Typ: " .. type(boolean1) .. ")")
     print(tostring(boolean2) .. " (Typ: " .. type(boolean2) .. ")")
 
-    -- Die Daten werden in eine Tabelle umgewandelt, welche als Schlüssel und Wert nur Text enthält
+    -- Die Daten werden in eine Tabelle umgewandelt, welche als Schl�ssel und Wert nur Text enthält
     -- dies am besten in eine Funktion auslagern
     -- Es empfiehlt sich die Schlüssel kurz zu halten, da der
     -- Speicherplatz in EEP vermutlich begrenzt ist
@@ -49,7 +47,7 @@ do
         t1 = "Speichern von text",
         t2 = "true",
         b1 = tostring(boolean1),
-        b2 = tostring(boolean2),
+        b2 = tostring(boolean2)
     }
 
     StorageUtility.saveTable(700, zuSpeicherndeDaten, "Meine Daten")
@@ -60,7 +58,6 @@ do
     local _, speicherplatz_inhalt = EEPLoadData(700)
     print(speicherplatz_inhalt)
 end
-
 
 do
     local geladene_daten = StorageUtility.loadTable(700, "Meine Daten")
@@ -85,17 +82,12 @@ do
     print(tostring(boolean2) .. " (Typ: " .. type(boolean2) .. ")")
 end
 
-
 require("ak.storage.StorageUtility")
 StorageUtility.debug = false
 do
     -- Verschiedene Daten
     local anzahl_fahrzeuge = 88
-    local block = {
-        belegt = true,
-        zugname = "#ICE-nach-Interlaken",
-        prio = 7
-    }
+    local block = {belegt = true, zugname = "#ICE-nach-Interlaken", prio = 7}
 
     -- Zum Speichern muss eine Lua Tabelle erstellt, werden, welche als Schlüssel und Werte nur Text enthält
     -- Es empfiehlt sich die Schlüssel kurz zu halten, da die Länge eines Speicherplatzes in EEP vermutlich begrenzt
@@ -104,14 +96,13 @@ do
         b = tostring(block.belegt),
         z = tostring(block.zugname),
         p = tostring(block.prio),
-        a = tostring(anzahl_fahrzeuge),
+        a = tostring(anzahl_fahrzeuge)
     }
 
     StorageUtility.saveTable(600, daten_zum_speichern, "Meine Daten")
 
-    print("-----------------------------------------\n"
-    .."Speicherplatzinhalt nach dem Speichern:"
-    .."\n-----------------------------------------")
+    print("-----------------------------------------\n" .. "Speicherplatzinhalt nach dem Speichern:" ..
+          "\n-----------------------------------------")
     local _, speicherplatz_inhalt = EEPLoadData(600, "Meine Daten")
     print(speicherplatz_inhalt)
 end
