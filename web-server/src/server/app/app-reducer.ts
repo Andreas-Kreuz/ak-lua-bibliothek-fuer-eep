@@ -1,11 +1,8 @@
 import AppConfig from './app-config';
-import AppEffects from './app-effects';
 
 export default class AppData {
   private appConfig = new AppConfig();
   private eepDirOk = false;
-
-  constructor(effects: AppEffects) {}
 
   public setAppConfig(appConfig: AppConfig): void {
     this.appConfig = appConfig;

@@ -1,7 +1,6 @@
-import { app, BrowserWindow, remote, shell } from 'electron';
+import { app, BrowserWindow, shell } from 'electron';
 import * as path from 'path';
 
-import CommandLineParser from './server/command-line-parser';
 import { ServerMain } from './server/server-main';
 
 let mainWindow: Electron.BrowserWindow;

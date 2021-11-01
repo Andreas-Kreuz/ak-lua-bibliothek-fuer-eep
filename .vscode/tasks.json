@@ -24,6 +24,22 @@
       "label": "Build a release",
       "command": "${workspaceFolder}/scripts/build-release.cmd",
       "problemMatcher": []
+    },
+    {
+      "type": "npm",
+      "script": "lint",
+      "path": "web-server/",
+      "problemMatcher": [ "$eslint-stylish" ],
+      "label": "npm: lint - web-server",
+      "detail": "eslint -c .eslintrc.json --ext .ts src"
+    },
+    {
+      "type": "npm",
+      "script": "lint",
+      "path": "web-app/",
+      "problemMatcher": [ "$eslint-stylish" ],
+      "label": "npm: lint - web-app",
+      "detail": "ng lint"
     }
   ]
 }

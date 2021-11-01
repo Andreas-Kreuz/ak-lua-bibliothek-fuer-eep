@@ -23,12 +23,13 @@ export default class AppEffects {
   private logEffects: LogEffects;
   private intersectionEffects: IntersectionEffects;
   private commandEffects: CommandEffects;
-  private store = new AppReducer(this);
+  private store = new AppReducer();
 
   // Statistic data
   private statistics: ServerStatisticsService;
 
   constructor(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private app: any,
     private router: express.Router,
     private io: Server,

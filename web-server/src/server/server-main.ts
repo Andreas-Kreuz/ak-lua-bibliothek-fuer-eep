@@ -29,6 +29,7 @@ export class ServerMain {
     const appDir = path.join(__dirname, '../public_html');
     app.use('/api/v1', router);
     app.use('/', express.static(appDir));
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     app.get('/*', (req: any, res: any) => {
       res.sendFile(path.join(appDir, '/index.html'));
     });

@@ -1,4 +1,3 @@
-import path from 'path';
 import { Server, Socket } from 'socket.io';
 
 import { CommandEvent, RoomEvent } from 'web-shared';
@@ -6,6 +5,7 @@ import SocketService from '../clientio/socket-service';
 
 export default class CommandEffects {
   constructor(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private app: any,
     private io: Server,
     private socketService: SocketService,
@@ -26,7 +26,7 @@ export default class CommandEffects {
       this.queueCommand(command);
     });
 
-    socket.on(CommandEvent.ChangeSetting, (action: { name: string; func: string; newValue: any }) => {
+    socket.on(CommandEvent.ChangeSetting, (action: { name: string; func: string; newValue: unknown }) => {
       const command = action.func + '|' + action.newValue;
       this.queueCommand(command);
     });

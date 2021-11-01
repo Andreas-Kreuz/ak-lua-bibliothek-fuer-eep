@@ -123,7 +123,8 @@
     "describe",
     "insulate",
     "it",
-    "pending"
+    "pending",
+    "files"
   ],
   "Lua.diagnostics.disable": ["lowercase-global"],
   "Lua.workspace.ignoreDir": [
@@ -144,5 +145,15 @@
   "lua.preferLuaCheckErrors": true,
   "lua.targetVersion": "5.3",
   "vscode-lua-format.configPath": "lua-format.conf",
-  "eslint.nodePath": "web-app"
+  //"eslint.nodePath": "web-app/node_modules/",
+  "eslint.probe": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact",
+    "html",
+    "vue",
+    "markdown",
+    "html"
+  ]
 }

@@ -10,7 +10,7 @@
     "pub-copy": "xcopy /s /q ..\\web-app\\dist\\ak-eep-web\\* build\\public_html\\",
     "build": "npm run build-shared && npm run build-app && npm run pub-del && npm run pub-mkdir && npm run pub-copy && tsc",
     "watch": "tsc -w",
-    "lint": "tslint -c tslint.json -p tsconfig.json",
+    "lint": "eslint -c .eslintrc.json --ext .ts src",
     "start": "tsc && electron ./build/main.js",
     "start-with-app": "npm run build && electron ./build/main.js",
     "package-win": "npm run build && electron-builder build --win --x64",
@@ -58,10 +58,14 @@
   "author": "Andreas-Kreuz",
   "license": "MIT",
   "devDependencies": {
+    "@types/command-line-args": "^5.2.0",
+    "@types/command-line-usage": "^5.0.2",
+    "@typescript-eslint/eslint-plugin": "^5.3.0",
+    "@typescript-eslint/parser": "^5.3.0",
     "electron": "^11.5.0",
     "electron-builder": "^22.6.0",
+    "eslint": "^8.1.0",
     "npm-run-all": "^4.1.5",
-    "tslint": "^5.20.1",
     "typescript": "^3.8.3"
   },
   "dependencies": {

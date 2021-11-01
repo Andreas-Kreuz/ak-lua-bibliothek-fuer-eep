@@ -24,8 +24,6 @@ export default class EepService {
   private logWasCleared: () => void;
   private lastJsonUpdate: number;
 
-  constructor() {}
-
   reInit(dir: string, callback: (err: string, dir: string) => void): void {
     this.dir = path.resolve(dir);
 
@@ -36,7 +34,7 @@ export default class EepService {
       this.jsonFileWatcher.close();
     }
     this.onJsonUpdate = (jsonText: string, lastUpdate: number) => {
-      console.log('Received: ' + jsonText.length + ' bytes of JSON');
+      console.log('Received: ' + jsonText.length + ' bytes of JSON ' + lastUpdate);
     };
     this.logLineAppeared = (line: string) => {
       console.log(line);
