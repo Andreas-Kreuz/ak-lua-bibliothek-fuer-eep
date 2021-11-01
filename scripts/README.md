@@ -22,6 +22,7 @@
 - **_web-shared_** - geteilter Code von web-app und web-server
 
 Weitere Verzeichnisse sind:
+
 - `.vscode` - Projektdateien für VSCode
 - `assets` - Bilder und CSS für die generierte Webseite
 - `docs` - generierte Webseite
@@ -44,7 +45,7 @@ Für das Testen werden die Lua-Werkzeuge `luacheck` und `busted` empfohlen.
 - `luacheck --std max+busted lua/LUA`
 - `busted --verbose --coverage --`
 
-Für das Betrachten der Webseite _vor_ dem Upload wird [Jekyll](https://jekyllrb.com/docs/installation/windows/) empfohlen. 
+Für das Betrachten der Webseite _vor_ dem Upload wird [Jekyll](https://jekyllrb.com/docs/installation/windows/) empfohlen.
 
 ## Entwicklung
 
