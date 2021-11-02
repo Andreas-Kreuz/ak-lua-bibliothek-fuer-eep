@@ -12,7 +12,7 @@ local registeredLuaModules = nil
 function CoreLuaModule.setRegisteredLuaModules(modules) registeredLuaModules = modules end
 
 --- Diese Funktion wird einmalig durch ModuleRegistry.initTasks() aufgerufen
--- Ist ein Modul für EEPWeb vorhanden, dann solltes in dieser Funktion aufgerufen werden
+-- Ist ein Modul für EEPWeb vorhanden, dann sollte es in dieser Funktion aufgerufen werden
 -- @author Andreas Kreuz
 function CoreLuaModule.init()
     if not CoreLuaModule.enabled or initialized then return end

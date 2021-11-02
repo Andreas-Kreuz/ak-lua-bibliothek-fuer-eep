@@ -5,7 +5,7 @@ local os = require("os")
 local AkWebServerIo = {}
 AkWebServerIo.debug = AkStartWithDebug or false
 
---- Prüfe ob das Verzeichnis existiert und Dateien geschrieben werden können.
+--- PrÃ¼fe ob das Verzeichnis existiert und Dateien geschrieben werden kÃ¶nnen.
 -- Call this function via pcall to catch any exceptions
 local function dirExists(dir)
     local file = io.open(dir .. "/" .. "ak-eep-version.txt", "w")
@@ -21,7 +21,7 @@ local function existingDirOf(...)
     return nil
 end
 
---- Prüfe ob Datei existiert.
+--- PrÃ¼fe ob Datei existiert.
 local function fileExists(name)
     local f = io.open(name, "r")
     if f ~= nil then
@@ -71,8 +71,8 @@ function AkWebServerIo.setOutputDirectory(dirName)
     -- Conclusion: The server is busy while this file exists
     watchFileNameLua = ioDirectoryName .. "/ak-eep-out-json.isfinished"
     -- Delete the file during initialization to trigger the creation of the json file once
-    -- assert(os.remove(watchFileNameLua))
-    -- Howe ver, this is not possible because within EEP, the library os contains only the following functions:
+    --assert(os.remove(watchFileNameLua))
+    -- However, this is not possible because within EEP, the library os contains only the following functions:
     -- setlocale date time difftime clock getenv tmpname
     -- EEP reads commands from this file
     local inFileNameCommands = ioDirectoryName .. "/ak-eep-in.commands"
@@ -88,7 +88,7 @@ AkWebServerIo.setOutputDirectory(existingDirOf({
 }) or ".")
 local _assert = assert
 local _print = print
---- Schreibe log zusätzlich in Datei.
+--- Schreibe log zusÃ¤tzlich in Datei.
 function print(...)
     -- print the output to the log file (Why do we open/close the file within every call? What about flush?)
     local file = _assert(io.open(outFileNameLog, "a"))
@@ -104,7 +104,7 @@ function print(...)
     _print(...)
 end
 
---- Schreibe log zusätzlich in Datei.
+--- Schreibe log zusÃ¤tzlich in Datei.
 -- function assert(v, message)
 --     -- print the output to the file
 --     if not v then
@@ -117,7 +117,7 @@ end
 --     _assert(v, message)
 -- end
 local _clearlog = clearlog
---- Lösche Inhalt der log-Datei.
+--- LÃ¶sche Inhalt der log-Datei.
 function clearlog()
     -- call the original clearlog function
     _clearlog()
@@ -132,7 +132,7 @@ AkCommandExecutor.addAcceptedRemoteFunction("print", print)
 
 local serverWasReadyLastTime = true
 local serverWasListeningLastTime = true
---- Prüfe Status des Web Servers.
+--- PrÃ¼fe Status des Web Servers.
 function AkWebServerIo.checkWebServer()
     if fileExists(watchFileNameServer) then -- file: ak-server.iswatching
         if fileExists(watchFileNameLua) then -- file: ak-eep-out-json.isfinished
@@ -171,7 +171,7 @@ function AkWebServerIo.updateJsonFile(jsonData)
     end
 end
 
---- Lese Kommandos aus Datei und führe sie aus.
+--- Lese Kommandos aus Datei und fÃ¼hre sie aus.
 function AkWebServerIo.processNewCommands()
     local commands = inFileCommands:read("*all") -- file: ak-eep-in.commands
     if commands and commands ~= "" then AkCommandExecutor.execute(commands) end

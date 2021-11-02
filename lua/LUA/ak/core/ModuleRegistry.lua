@@ -67,8 +67,8 @@ function ModuleRegistry.unregisterModules(...)
     updateModuleOrder()
 end
 
--- ACHTUNG: DIE VERWENDUNG ERFOLGT AUF EIGENE GEFAHR. ES IST GUT MÖGLICH,
---          DASS EEP ABSTÜRZT, WENN NICHT ALLE ABHÄNGIGKEITEN DER BIBLIOTHEK
+-- ACHTUNG: DIE VERWENDUNG ERFOLGT AUF EIGENE GEFAHR. ES IST GUT MÃ–GLICH,
+--          DASS EEP ABSTÃœRZT, WENN NICHT ALLE ABHÃ„NGIGKEITEN DER BIBLIOTHEK
 --          GEFUNDEN WERDEN.
 function ModuleRegistry.useDlls(enableDlls)
     assert(enableDlls == true or enableDlls == false)
@@ -120,16 +120,21 @@ function ModuleRegistry.runTasks(cycleCount)
 
     local t3 = os.clock()
     if enableServer then
-        -- Sorgt dafür, dass alle JsonDaten der registrieren XxxJsonColletor zum Server kommen
+        -- Sorgt dafÃ¼r, dass alle JsonDaten der registrieren XxxJsonColletor zum Server kommen
         -- und dass die Befehle des Servers ausgewertet werden
         ServerController.communicateWithServer(cycleCount)
     end
     local t4 = os.clock()
 
     if ModuleRegistry.debug then
-        print(string.format("[ModuleRegistry] runTasks(cycleCount) time: %.0f ms " ..
-                            "(%.0f ms init, %.0f ms runTask, %.0f ms serveData)", (t4 - t1) * 1000, (t2 - t1) * 1000,
-                            (t3 - t2) * 1000, (t4 - t3) * 1000))
+        print(string.format("[ModuleRegistry] runTasks(%d) time: %.0f ms " ..
+                            "(%.0f ms initTasks, %.0f ms runTask, %.0f ms serveData)",
+                            cycleCount,
+                            (t4 - t1) * 1000,    -- total time
+                            (t2 - t1) * 1000,    -- initTasks
+                            (t3 - t2) * 1000,    -- runTask
+                            (t4 - t3) * 1000)    -- serveData
+        )
     end
 end
 
