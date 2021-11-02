@@ -11,14 +11,12 @@
 --    require("anlage1")
 -- 4) Rufe "lua anlage1-test.lua" auf der Kommandozeile auf
 -----------------------------------------------------------------------------------------------------------------------
-
 -- Zeigt erweiterte Informationen waehrend der Initialisierung an (oder nicht)
 AkDebugLoad = false
 AkStartWithDebug = false
 
 -- Lädt den EEP Simulator
 local EepSimulator = require("ak.core.eep.EepSimulator")
-
 
 -- Zum Test setzen wir ein paar Züge, Autos und Trams auf Gleise und Straßen
 EepSimulator.setzeZugAufGleis(5, "Tuff Tuff Zug")
@@ -34,9 +32,6 @@ EepSimulator.setzeZugAufStrasse(6, "Tram")
 ------------------------------------------------------------------------------------
 require("ak.template.crossing-simple")
 
-
-
-
 -- Zeige erweiterte Informationen an                              --
 local Scheduler = require("ak.scheduler.Scheduler")
 Scheduler.debug = false
@@ -50,7 +45,6 @@ Crossing.zeigeSchaltungAlsInfo = false
 local StorageUtility = require("ak.storage.StorageUtility")
 StorageUtility.debug = false
 
-
 -- Diese Methode nutzen wir später um vergangene Zeit in EEP zu simulieren und die EEPMain-Methode aufzurufen
 local function run()
     EEPTime = EEPTime + 20
@@ -59,6 +53,4 @@ end
 
 -- Wir rufen 50 Mal hintereinandere die run() Methode auf und simulieren so 50 EEPMain Aufrufe
 -- mit aufeinanderfolgenden Zeiten
-for _ = 1, 50 do
-    run()
-end
+for _ = 1, 50 do run() end

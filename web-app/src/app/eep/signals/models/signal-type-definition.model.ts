@@ -3,15 +3,14 @@ export class SignalTypeDefinition {
   name: string;
   type: string;
   positions: {
-    positionRed?: number,
-    positionGreen?: number,
-    positionYellow?: number,
-    positionRedYellow?: number,
-    positionPedestrians?: number,
-    positionOff?: number,
-    positionOffBlinking?: number,
+    positionRed?: number;
+    positionGreen?: number;
+    positionYellow?: number;
+    positionRedYellow?: number;
+    positionPedestrians?: number;
+    positionOff?: number;
+    positionOffBlinking?: number;
   };
-
 
   static signalPositionName(signalModel: SignalTypeDefinition, signalPosition: number) {
     if (signalModel.positions.positionRed === signalPosition) {

@@ -13,34 +13,32 @@ import * as icons from '../../../shared/unicode-symbol.model';
 @Component({
   selector: 'app-lane-queue',
   templateUrl: './lane-queue.component.html',
-  styleUrls: ['./lane-queue.component.css']
+  styleUrls: ['./lane-queue.component.css'],
 })
 export class LaneQueueComponent implements OnInit, OnDestroy {
   @Input() intersectionId: number;
   intersection$: Observable<Intersection>;
   switching$: Observable<IntersectionSwitching[]>;
-  private switchingSub: Subscription;
-  private switchings: IntersectionSwitching[];
   lanes$: Observable<IntersectionLane[]>;
   carIcon = icons.car;
+  private switchingSub: Subscription;
+  private switchings: IntersectionSwitching[];
 
-  constructor(private store: Store<fromRoot.State>,
-              private intersectionHelper: IntersectionHelper) {
-  }
+  constructor(private store: Store<fromRoot.State>, private intersectionHelper: IntersectionHelper) {}
 
   ngOnInit() {
-    this.intersection$ = this.store.pipe(
-      select(fromIntersection.intersectionById$(this.intersectionId)));
-    this.lanes$ = this.store.pipe(
-      select(fromIntersection.laneByIntersectionId$(this.intersectionId)));
-    this.switchingSub = this.intersection$.subscribe((intersection) =>
-      this.switching$ = this.store.pipe(
-        select(fromIntersection.switchingNamesByIntersection$(intersection)),
-        map((switchings) => {
-          this.switchings = switchings;
-          return switchings;
-        })
-      ));
+    this.intersection$ = this.store.pipe(select(fromIntersection.intersectionById$(this.intersectionId)));
+    this.lanes$ = this.store.pipe(select(fromIntersection.laneByIntersectionId$(this.intersectionId)));
+    this.switchingSub = this.intersection$.subscribe(
+      (intersection) =>
+        (this.switching$ = this.store.pipe(
+          select(fromIntersection.switchingNamesByIntersection$(intersection)),
+          map((switchings) => {
+            this.switchings = switchings;
+            return switchings;
+          })
+        ))
+    );
   }
 
   ngOnDestroy(): void {

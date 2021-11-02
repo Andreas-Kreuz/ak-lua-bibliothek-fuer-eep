@@ -42,16 +42,8 @@ local runtimeData = {}
 -- @author Frank Buchholz
 function storeRunTime(group, time)
     -- collect and sum runtime date, needs rework
-    if not runtimeData then
-        runtimeData = {}
-    end
-    if not runtimeData[group] then
-        runtimeData[group] = {
-            id = group,
-            count = 0,
-            time = 0
-        }
-    end
+    if not runtimeData then runtimeData = {} end
+    if not runtimeData[group] then runtimeData[group] = {id = group, count = 0, time = 0} end
     local runtime = runtimeData[group]
     runtime.count = runtime.count + 1
     runtime.time = runtime.time + time
@@ -60,9 +52,7 @@ end
 --- Indirect call of EEP function (or any other function) including time measurement
 -- @author Frank Buchholz
 function executeAndStoreRunTime(func, group, ...)
-    if not func then
-        return
-    end
+    if not func then return end
 
     local t0 = os.clock()
 
@@ -85,150 +75,114 @@ end
 --     end -- EEP 13.2
 
 -- Based on this concept we can redefine the functions, e.g. to collect some statistics data
---EEPGetRollingstockItemsCount = EEPGetRollingstockItemsCount  or function () return end -- EEP 13.2 Plug-In 2
+-- EEPGetRollingstockItemsCount = EEPGetRollingstockItemsCount  or function () return end -- EEP 13.2 Plug-In 2
 local _EEPGetRollingstockItemsCount = EEPGetRollingstockItemsCount
 local function EEPGetRollingstockItemsCount(...)
     return executeAndStoreRunTime(_EEPGetRollingstockItemsCount, "EEPGetRollingstockItemsCount", ...)
 end
 
 -- Ermittelt die Gesamtlänge des angegebenen Zuges.
-local EEPGetTrainLength = EEPGetTrainLength or function()
-        return
-    end -- EEP 15.1 Plug-In 1
+local EEPGetTrainLength = EEPGetTrainLength or function() end -- EEP 15.1 Plug-In 1
 
 -- Ermittelt, welches Fahrzeug derzeit im Steuerdialog ausgewählt ist.
 local EEPRollingstockGetActive = EEPRollingstockGetActive or function() -- (not used yet)
-        return
-    end -- EEP 15.1 Plug-In 1
+end -- EEP 15.1 Plug-In 1
 
 -- Ermittelt, welcher Zug derzeit im Steuerdialog ausgewählt ist.
 local EEPGetTrainActive = EEPGetTrainActive or function() -- (not used yet)
-        return
-    end -- EEP 15.1 Plug-In 1
+end -- EEP 15.1 Plug-In 1
 
 -- Ermittelt, welche relative Ausrichtung das angegebene Fahrzeug im Zugverband hat.
 local EEPRollingstockGetOrientation = EEPRollingstockGetOrientation or function() -- (not used yet)
-        return
-    end -- EEP 15.1 Plug-In 1
+end -- EEP 15.1 Plug-In 1
 
-local EEPRollingstockGetLength = EEPRollingstockGetLength or function()
-        return
-    end -- EEP 14.2
+local EEPRollingstockGetLength = EEPRollingstockGetLength or function() end -- EEP 14.2
 
-local EEPRollingstockGetMotor = EEPRollingstockGetMotor or function()
-        return
-    end -- EEP 14.2
+local EEPRollingstockGetMotor = EEPRollingstockGetMotor or function() end -- EEP 14.2
 
-local EEPRollingstockGetTrack = EEPRollingstockGetTrack or function()
-        return
-    end -- EEP 14.2
+local EEPRollingstockGetTrack = EEPRollingstockGetTrack or function() end -- EEP 14.2
 
-local EEPRollingstockGetModelType = EEPRollingstockGetModelType or function()
-        return
-    end -- EEP 14.2
+local EEPRollingstockGetModelType = EEPRollingstockGetModelType or function() end -- EEP 14.2
 
-local EEPRollingstockGetTagText = EEPRollingstockGetTagText or function()
-        return
-    end -- EEP 14.2
-
+local EEPRollingstockGetTagText = EEPRollingstockGetTagText or function() end -- EEP 14.2
 
 --- Ermittelt die Position des Rollmaterials im EEP-Koordinatensystem in Meter (m).
 --  OK, PosX, PosY, PosZ = EEPRollingstockGetPosition("#Fahrzeug")
-local EEPRollingstockGetPosition = EEPRollingstockGetPosition or function()
-        return
-    end -- EEP 16.1
+local EEPRollingstockGetPosition = EEPRollingstockGetPosition or function() end -- EEP 16.1
 
 --- Ermittelt, ob der Haken eines bestimmten Rollmaterials an oder ausgeschaltet ist.
 -- OK, Status = EEPRollingstockGetHook("#Kranwagen")
 -- Haken aus = 0, an = 1, in Betrieb = 3
 local EEPRollingstockGetHook = EEPRollingstockGetHook or function() -- (not used yet)
-        return
-    end -- EEP 16.1
+end -- EEP 16.1
 
 --- Ermittelt das Verhalten von Gütern am Kranhaken eines Rollmaterials
 --  OK, Status = EEPRollingstockGetHookGlue("#Kranwagen")
 -- Güterhaken aus = 0, an = 1, in Benutzung = 3
 local EEPRollingstockGetHookGlue = EEPRollingstockGetHookGlue or function() -- (not used yet)
-        return
-    end -- EEP 16.1
+end -- EEP 16.1
 
 --- Ermittelt die zurückgelegte Strecke des Rollmaterials in Meter (m)
 --  OK, Mileage = EEPRollingstockGetMileage("#Fahrzeug")
-local EEPRollingstockGetMileage = EEPRollingstockGetMileage or function()
-        return
-    end -- EEP 16.1
+local EEPRollingstockGetMileage = EEPRollingstockGetMileage or function() end -- EEP 16.1
 
 --- Ermittelt, ob der Rauch des benannten Rollmaterials, an- oder ausgeschaltet ist.
 -- OK, Status = EEPRollingstockGetSmoke("#Fahrzeug")
 -- aus = 0, angeschaltet = 1
 local EEPRollingstockGetSmoke = EEPRollingstockGetSmoke or function() -- (not used yet)
-        return
-    end -- EEP 16.1
+end -- EEP 16.1
 
 --- Ermittelt die Ausrichtung des Ladegutes in Grad (Â°)
 -- OK, RotX, RotY, RotZ = EEPGoodsGetRotation("#Container")
 local EEPGoodsGetRotation = EEPGoodsGetRotation or function() -- (not used yet)
-        return
-    end -- EEP 16.1
+end -- EEP 16.1
 
 -- To be used in another modules:
 
 --- Ermittelt die aktuelle Position der Kamera
 -- OK, PosX, PosY, PosZ = EEPGetCameraPosition()
 local EEPGetCameraPosition = EEPGetCameraPosition or function() -- (not used yet)
-        return
-    end -- EEP 16.1
+end -- EEP 16.1
 
 --- Ermittelt die aktuelle Ausrichtung einer Kamera.
 -- OK, RotX, RotY, RotZ = EEPGetCameraRotation()
 local EEPGetCameraRotation = EEPGetCameraRotation or function() -- (not used yet)
-        return
-    end -- EEP 16.1
+end -- EEP 16.1
 
 --- Ermittelt die Windstärke in Prozent (%)
 --  OK, WindIntensity = EEPGetWindIntensity()
 local EEPGetWindIntensity = EEPGetWindIntensity or function() -- (not used yet)
-        return
-    end -- EEP 16.1
+end -- EEP 16.1
 
 --- Ermittelt die Niederschlagintensität in Prozent (%)
 --  OK, RainIntensity = EEPGetRainIntensity()
 local EEPGetRainIntensity = EEPGetRainIntensity or function() -- (not used yet)
-        return
-    end -- EEP 16.1
+end -- EEP 16.1
 
 --- Ermittelt die Schneeintensitä in Prozent (%)
 --  OK, SnowIntensity = EEPGetSnowIntensity()
 local EEPGetSnowIntensity = EEPGetSnowIntensity or function() -- (not used yet)
-        return
-    end -- EEP 16.1
+end -- EEP 16.1
 
 --- Ermittelt die Hagelintensität in Prozent (%)
 -- OK, HailIntensity = EEPGetHailIntensity()
 local EEPGetHailIntensity = EEPGetHailIntensity or function() -- (not used yet)
-        return
-    end -- EEP 16.1
+end -- EEP 16.1
 
 --- Ermittelt die Nebelintensität in Prozent (%)
 -- OK, FogIntensity = EEPGetFogIntensity()
 local EEPGetFogIntensity = EEPGetFogIntensity or function() -- (not used yet)
-        return
-    end -- EEP 16.1
+end -- EEP 16.1
 
 --- Ermittelt der Wolkenanteil in Prozent (%)
 -- OK, CloudIntensity = EEPGetCloudIntensity()
 local EEPGetCloudIntensity = EEPGetCloudIntensity or function() -- (not used yet)
-        return
-    end -- EEP 16.1
+end -- EEP 16.1
 
 -- Redefine functions from EEP 11.0 to collect run time data
 local _EEPGetTrainSpeed = EEPGetTrainSpeed
-local function EEPGetTrainSpeed(...)
-    return executeAndStoreRunTime(_EEPGetTrainSpeed, "EEPGetTrainSpeed", ...)
-end
-local _EEPGetRollingstockItemName = EEPGetRollingstockItemName or function()
-        return
-    end -- EEP 13.2 Plug-In 2
+local function EEPGetTrainSpeed(...) return executeAndStoreRunTime(_EEPGetTrainSpeed, "EEPGetTrainSpeed", ...) end
+local _EEPGetRollingstockItemName = EEPGetRollingstockItemName or function() end -- EEP 13.2 Plug-In 2
 local function EEPGetRollingstockItemName(...)
     return executeAndStoreRunTime(_EEPGetRollingstockItemName, "EEPGetRollingstockItemName", ...)
 end
@@ -263,9 +217,7 @@ function TrackCollector:updateTrains()
                     self:updateTrain(trainName)
                     movedTrains[trainName] = true
                 else
-                    if self.trains[trainName].onTrack ~= trackId then
-                        movedTrains[trainName] = true
-                    end
+                    if self.trains[trainName].onTrack ~= trackId then movedTrains[trainName] = true end
                 end
 
                 -- Update the trains
@@ -286,9 +238,7 @@ function TrackCollector:updateTrains()
             self.rollingStockInfo[rollingStockName] = nil
         end
 
-        if movedTrains[rollingStock.trainName] then
-            self:updateRollingStockInfo(rollingStockName)
-        end
+        if movedTrains[rollingStock.trainName] then self:updateRollingStockInfo(rollingStockName) end
     end
 
     self.dirtyTrainNames = {}
@@ -319,7 +269,7 @@ function TrackCollector:updateTrain(trainName)
         id = trainName,
         route = haveRoute and route or "",
         rollingStockCount = rollingStockCount or 0,
-        length = tonumber(string.format("%.2f", trainLength or 0)),
+        length = tonumber(string.format("%.2f", trainLength or 0))
     }
     self.trains[trainName] = currentTrain
 
@@ -344,9 +294,7 @@ function TrackCollector:updateTrainInfo(trainName, trackId)
     trainInfo.onTrack = trackId
     trainInfo.occupiedTacks = trainInfo.occupiedTacks or {}
     trainInfo.occupiedTacks[tostring(trackId)] = trackId
-    if not self.trainInfo[trainName] then
-        self.trainInfo[trainName] = trainInfo
-    end
+    if not self.trainInfo[trainName] then self.trainInfo[trainName] = trainInfo end
 end
 
 function TrackCollector:updateRollingStock(rollingStockName, currentTrain, positionInTrain)
@@ -369,7 +317,7 @@ function TrackCollector:updateRollingStock(rollingStockName, currentTrain, posit
         propelled = propelled or true,
         modelType = modelType or -1,
         modelTypeText = EEPRollingstockModelTypeText[modelType] or "",
-        tag = tag or "",
+        tag = tag or ""
     }
 
     -- Save
@@ -392,7 +340,7 @@ function TrackCollector:updateRollingStockInfo(rollingStockName)
         posX = hasPos and tonumber(PosX) or -1,
         posY = hasPos and tonumber(PosY) or -1,
         posZ = hasPos and tonumber(PosZ) or -1,
-        mileage = hasMileage and tonumber(mileage) or -1,
+        mileage = hasMileage and tonumber(mileage) or -1
     }
     self.rollingStockInfo[rollingStockName] = rollingStockInfo
 end
@@ -403,7 +351,7 @@ function TrackCollector:initialize()
         if exists then
             local track = {}
             track.id = id
-            --track.position = val
+            -- track.position = val
             self.tracks[tostring(track.id)] = track
         end
     end
@@ -411,14 +359,12 @@ function TrackCollector:initialize()
     self:updateTrains()
 end
 
-function TrackCollector:update()
-    self:updateTrains()
-end
+function TrackCollector:update() self:updateTrains() end
 
 function TrackCollector:reactOnTrainChanges()
     -- React to train changes from EEP
     local _EEPOnTrainCoupling = EEPOnTrainCoupling or function() -- EEP 14 Plug-In 1
-        end
+    end
     EEPOnTrainCoupling = function(trainA, trainB, trainNew)
         -- Mark these trains as dirty, i.e. refresh their data
         self.dirtyTrainNames[trainA] = true
@@ -429,7 +375,7 @@ function TrackCollector:reactOnTrainChanges()
     end
 
     local _EEPOnTrainLooseCoupling = EEPOnTrainLooseCoupling or function() -- EEP 14 Plug-In 1
-        end
+    end
     EEPOnTrainLooseCoupling = function(trainA, trainB, trainNew)
         -- Mark these trains as dirty, i.e. refresh their data
         self.dirtyTrainNames[trainA] = true
@@ -440,7 +386,7 @@ function TrackCollector:reactOnTrainChanges()
     end
 
     local _EEPOnTrainExitTrainyard = EEPOnTrainExitTrainyard or function() -- EEP 14 Plug-In 1
-        end
+    end
     EEPOnTrainExitTrainyard = function(depotId, trainName)
         self.dirtyTrainNames[trainName] = true
         return _EEPOnTrainExitTrainyard(depotId, trainName)
@@ -460,7 +406,7 @@ function TrackCollector:updateData()
 end
 
 function TrackCollector:new(trackType)
-    assert(trackType, 'Bitte geben Sie den Namen "trackType" an.')
+    assert(trackType, "Bitte geben Sie den Namen \"trackType\" an.")
     assert(registerFunction[trackType], "trackType must be one of 'auxiliary', 'control', 'road', 'rail', 'tram'")
 
     local o = {

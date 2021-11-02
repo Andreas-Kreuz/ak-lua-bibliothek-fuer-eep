@@ -32,8 +32,8 @@ export class FilteredTableComponent<T> implements OnInit, OnDestroy {
 
   @Input()
   set detailsComponent(detailsComponent: DetailsComponent<T>) {
-    this.detailsItem = new DetailsItem<T>(<Type<any>><unknown>detailsComponent, null);
-    this.oldDetailsItem = new DetailsItem<T>(<Type<any>><unknown>detailsComponent, null);
+    this.detailsItem = new DetailsItem<T>(detailsComponent as unknown as Type<any>, null);
+    this.oldDetailsItem = new DetailsItem<T>(detailsComponent as unknown as Type<any>, null);
   }
 
   @Input() set tableData(data$: Observable<T[]>) {
@@ -41,23 +41,24 @@ export class FilteredTableComponent<T> implements OnInit, OnDestroy {
   }
 
   detailsItem: DetailsItem<T>;
-  private oldDetailsItem: DetailsItem<T>;
-  private filter = new Subject<string>();
   dataSource: TableDataSource<T>;
   filteredRows$: Observable<T[]>;
   data$: Observable<T[]>;
   expandedElement: T | null;
   oldExpandedElement: T | null;
+  private oldDetailsItem: DetailsItem<T>;
+  private filter = new Subject<string>();
 
-  constructor(private componentFactoryResolver: ComponentFactoryResolver) {
-  }
+  constructor(private componentFactoryResolver: ComponentFactoryResolver) {}
 
   ngOnInit() {
-    this.dataSource = new TableDataSource(this.data$,
+    this.dataSource = new TableDataSource(
+      this.data$,
       this.filter.asObservable(),
       this.sort,
       this.columnsToDisplay,
-      this.columnTextFunctions);
+      this.columnTextFunctions
+    );
     this.filteredRows$ = this.dataSource.connect();
   }
 
@@ -65,23 +66,21 @@ export class FilteredTableComponent<T> implements OnInit, OnDestroy {
     this.dataSource.disconnect();
   }
 
-
   applyFilter(filterValue: string) {
     this.filter.next(filterValue.trim().toLowerCase());
   }
 
   textFor(element: T, column: string) {
-    const value = this.columnTextFunctions && this.columnTextFunctions[column]
-      ? this.columnTextFunctions[column](element)
-      : element[column];
+    const value =
+      this.columnTextFunctions && this.columnTextFunctions[column]
+        ? this.columnTextFunctions[column](element)
+        : element[column];
 
     return value;
   }
 
   getAlignment(column: string) {
-    return column && this.columnAlignment && this.columnAlignment[column]
-      ? this.columnAlignment[column]
-      : 'left';
+    return column && this.columnAlignment && this.columnAlignment[column] ? this.columnAlignment[column] : 'left';
   }
 
   onExpandedElement(element) {
@@ -95,14 +94,14 @@ export class FilteredTableComponent<T> implements OnInit, OnDestroy {
       const viewContainerRef = this.detailHost.viewContainerRef;
       viewContainerRef.clear();
       const componentRef = viewContainerRef.createComponent(componentFactory);
-      (<DetailsItem<T>>componentRef.instance).data = this.expandedElement;
+      (componentRef.instance as DetailsItem<T>).data = this.expandedElement;
     }
     if (this.oldExpandedElement && this.oldDetailsItem) {
       const componentFactory = this.componentFactoryResolver.resolveComponentFactory(this.oldDetailsItem.component);
       const viewContainerRef = this.oldDetailHost.viewContainerRef;
       viewContainerRef.clear();
       const componentRef = viewContainerRef.createComponent(componentFactory);
-      (<DetailsItem<T>>componentRef.instance).data = this.oldExpandedElement;
+      (componentRef.instance as DetailsItem<T>).data = this.oldExpandedElement;
     }
   }
 

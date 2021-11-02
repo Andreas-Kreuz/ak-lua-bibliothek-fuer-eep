@@ -23,17 +23,21 @@ local AxisStructureTrafficLight = {}
 --
 function AxisStructureTrafficLight:new(structureName, axisName, positionDefault, positionRed, positionGreen,
                                        positionYellow, positionRedYellow, positionPedestrian)
-    assert(structureName)
-    assert(type(structureName) == "string")
-    assert(axisName)
-    assert(type(axisName) == "string")
+    assert(type(structureName) == "string", "Need 'structureName' as string")
+    assert(type(axisName) == "string", "Need 'axisName' as string")
     assert(EEPStructureGetAxis(structureName, axisName))
-    assert(type(positionDefault) == "number")
-    if positionRed then assert(type(positionRed) == "number") end
-    if positionGreen then assert(type(positionGreen) == "number") end
-    if positionYellow then assert(type(positionYellow) == "number") end
-    if positionRedYellow then assert(type(positionRedYellow) == "number") end
-    if positionPedestrian then assert(type(positionPedestrian) == "number") end
+    assert(type(positionDefault) == "number", "Need 'positionDefault' as number")
+    if positionRed then assert(type(positionRed) == "number", "Need 'positionRed' as number") end
+    if positionGreen then assert(type(positionGreen) == "number", "Need 'positionGreen' as number") end
+    if positionYellow then assert(type(positionYellow) == "number", "Need 'positionYellow' as number") end
+    if positionRedYellow then
+        assert(type(positionRedYellow) == "number",
+               "Need 'positionRedYellow' as number not as " .. type(positionRedYellow))
+    end
+    if positionPedestrian then
+        assert(type(positionPedestrian) == "number",
+               "Need 'positionPedestrian' as number not as " .. type(positionPedestrian))
+    end
     local o = {
         structureName = structureName,
         axisName = axisName,

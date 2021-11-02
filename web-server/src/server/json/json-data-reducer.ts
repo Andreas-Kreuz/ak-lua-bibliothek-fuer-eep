@@ -1,13 +1,13 @@
 import JsonDataEffects from './json-data-effects';
 
 export default class JsonDataStore {
-  private currentJsonContent: { [key: string]: any[] } = {};
+  private currentJsonContent: { [key: string]: unknown } = {};
   private urls: string[] = [];
   private dataRooms: string[] = [];
 
   constructor(private effects: JsonDataEffects) {}
 
-  calcChangedKeys(keysToCheck: string[], newJsonContent: { [key: string]: any[] }): string[] {
+  calcChangedKeys(keysToCheck: string[], newJsonContent: { [key: string]: unknown[] }): string[] {
     const changedKeys: string[] = [];
     for (const key of keysToCheck) {
       const currentData = JSON.stringify(this.currentJsonContent[key]);
@@ -21,14 +21,14 @@ export default class JsonDataStore {
   }
 
   hasJsonKey(key: string): boolean {
-    return this.currentJsonContent.hasOwnProperty(key);
+    return Object.prototype.hasOwnProperty.call(this.currentJsonContent, key);
   }
 
-  getJsonData(): any {
+  getJsonData(): Record<string, unknown> {
     return this.currentJsonContent;
   }
 
-  setJsonData(newJsonContent: any): void {
+  setJsonData(newJsonContent: Record<string, unknown>): void {
     this.currentJsonContent = newJsonContent;
   }
 
@@ -61,7 +61,7 @@ export default class JsonDataStore {
     return this.dataRooms;
   }
 
-  private alphabeticalSort(a: any, b: any): number {
+  private alphabeticalSort(a: string, b: string): number {
     if (a < b) {
       return -1;
     }

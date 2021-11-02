@@ -31,7 +31,7 @@
       <!-- Display icon if a second column is to be shown for the selection -->
       <mat-icon *ngIf="first && detailsItem"
                 class="app-mute-light-bg">
-        {{ element == expandedElement ? 'arrow_drop_down' : 'arrow_right' }}
+        {{ element === expandedElement ? 'arrow_drop_down' : 'arrow_right' }}
       </mat-icon>
       {{ textFor(element, column) }}
     </td>

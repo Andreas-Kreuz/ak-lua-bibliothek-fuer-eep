@@ -38,7 +38,7 @@ export class CoreEffects {
         if (data && '' !== data) {
           modules = JSON.parse(data);
         }
-        return of(CoreAction.setModules({ modules: modules }), CoreAction.setModulesAvailable());
+        return of(CoreAction.setModules({ modules }), CoreAction.setModulesAvailable());
       })
     )
   );

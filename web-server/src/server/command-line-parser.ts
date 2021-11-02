@@ -1,8 +1,8 @@
-export default class CommandLineParser {
-  parseOptions(): any {
-    const commandLineArgs = require('command-line-args');
-    const commandLineUsage = require('command-line-usage');
+import commandLineArgs from 'command-line-args';
+import commandLineUsage from 'command-line-usage';
 
+export default class CommandLineParser {
+  parseOptions(): commandLineArgs.CommandLineOptions {
     const optionDefinitions = [
       {
         name: 'exchange-dir',

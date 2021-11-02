@@ -19,7 +19,7 @@ import { MatDialog } from '@angular/material/dialog';
 @Component({
   selector: 'app-crossing',
   templateUrl: './intersection.component.html',
-  styleUrls: ['./intersection.component.css']
+  styleUrls: ['./intersection.component.css'],
 })
 export class IntersectionComponent implements OnInit, OnDestroy {
   intersection$: Observable<Intersection>;
@@ -29,24 +29,23 @@ export class IntersectionComponent implements OnInit, OnDestroy {
   lanes$: Observable<IntersectionLane[]>;
   intersectionId: number;
 
-  constructor(private store: Store<fromRoot.State>,
-              private route: ActivatedRoute,
-              public intersectionHelper: IntersectionHelper,
-              public dialog: MatDialog) {
-  }
+  constructor(
+    private store: Store<fromRoot.State>,
+    private route: ActivatedRoute,
+    public intersectionHelper: IntersectionHelper,
+    public dialog: MatDialog
+  ) {}
 
   ngOnInit() {
-    this.routeParams$ = this.route.params
-      .subscribe((params: Params) => {
-        this.intersectionId = +this.route.snapshot.params['id'];
-        this.intersection$ = this.store.pipe(
-          select(fromIntersection.intersectionById$(this.intersectionId)));
-        this.lanes$ = this.store.pipe(
-          select(fromIntersection.laneByIntersectionId$(this.intersectionId)));
-        this.switchingSub = this.intersection$.subscribe((intersection) =>
-          this.switching$ = this.store.pipe(
-            select(fromIntersection.switchingNamesByIntersection$(intersection))));
-      });
+    this.routeParams$ = this.route.params.subscribe((params: Params) => {
+      this.intersectionId = +this.route.snapshot.params['id'];
+      this.intersection$ = this.store.pipe(select(fromIntersection.intersectionById$(this.intersectionId)));
+      this.lanes$ = this.store.pipe(select(fromIntersection.laneByIntersectionId$(this.intersectionId)));
+      this.switchingSub = this.intersection$.subscribe(
+        (intersection) =>
+          (this.switching$ = this.store.pipe(select(fromIntersection.switchingNamesByIntersection$(intersection))))
+      );
+    });
   }
 
   ngOnDestroy() {
@@ -82,21 +81,21 @@ export class IntersectionComponent implements OnInit, OnDestroy {
   directionIcons(lane: IntersectionLane) {
     const images = [];
     switch (lane.type) {
-      case TrafficType.PEDESTRIAN:
+      case TrafficType.pedestrian:
       case 'PEDESTRIAN':
         images.push('../../../../assets/lane-pedestrian.svg');
         break;
-      case TrafficType.TRAM:
+      case TrafficType.tram:
       case 'TRAM':
         for (const d of lane.directions) {
           switch (d) {
-            case Direction.LEFT:
+            case Direction.left:
               images.push('../../../../assets/strab-f3.svg');
               break;
-            case Direction.STRAIGHT:
+            case Direction.straight:
               images.push('../../../../assets/strab-f1.svg');
               break;
-            case Direction.RIGHT:
+            case Direction.right:
               images.push('../../../../assets/strab-f2.svg');
               break;
           }
@@ -105,13 +104,13 @@ export class IntersectionComponent implements OnInit, OnDestroy {
       default:
         for (const d of lane.directions) {
           switch (d) {
-            case Direction.LEFT:
+            case Direction.left:
               images.push('../../../../assets/sign-left.svg');
               break;
-            case Direction.STRAIGHT:
+            case Direction.straight:
               images.push('../../../../assets/sign-straight.svg');
               break;
-            case Direction.RIGHT:
+            case Direction.right:
               images.push('../../../../assets/sign-right.svg');
               break;
           }
@@ -128,58 +127,51 @@ export class IntersectionComponent implements OnInit, OnDestroy {
     let cars = '';
 
     const icon = this.iconFor(lane);
-    for (let i = 0; i < lane.waitingTrains.length; i++) {
-      cars = cars +
-        '<span placement="top" ngbTooltip="lane.waitingTrains[i]">' + icons.car + '</span>';
+    for (const train of lane.waitingTrains) {
+      cars = cars + '<span placement="top" ngbTooltip="train">' + icons.car + '</span>';
     }
     return cars;
   }
 
-  private iconFor(lane: IntersectionLane) {
-    switch (lane.type) {
-      case TrafficType.PEDESTRIAN:
-        return icons.trainPassenger;
-      case TrafficType.NORMAL:
-        return icons.car;
-      case TrafficType.TRAM:
-        return icons.tram;
-    }
-  }
-
-  phaseColor(lane: IntersectionLane, switching?: IntersectionSwitching, intersection?: Intersection) {
+  phaseColor = (lane: IntersectionLane, switching?: IntersectionSwitching, intersection?: Intersection) => {
     if (switching && switching.name !== intersection.currentSwitching) {
       return '';
     }
 
     switch (lane.phase) {
       case 'PEDESTRIAN':
-      case Phase.PEDESTRIAN:
-      case Phase.GREEN:
+      case Phase.pedestrian:
+      case Phase.green:
         return 'table-success';
-      case Phase.RED:
+      case Phase.red:
         return 'table-danger';
-      case Phase.RED_YELLOW:
-      case Phase.YELLOW:
+      case Phase.redYellow:
+      case Phase.yellow:
         return 'table-warning';
       default:
         return '';
     }
-  }
+  };
 
   laneContained(lane: IntersectionLane, switching: IntersectionSwitching) {
     return lane.switchings.indexOf(switching.name) >= 0;
   }
 
   switchTo(intersection: Intersection, switching: IntersectionSwitching) {
-    this.store.dispatch(IntersectionAction.switchManually({
-      intersection, switching
-    }));
+    this.store.dispatch(
+      IntersectionAction.switchManually({
+        intersection,
+        switching,
+      })
+    );
   }
 
   enableAutomaticMode(intersection: Intersection) {
-    this.store.dispatch(IntersectionAction.switchAutomatically({
-      intersection
-    }));
+    this.store.dispatch(
+      IntersectionAction.switchAutomatically({
+        intersection,
+      })
+    );
   }
 
   btnColorForAutomatic(intersection: Intersection) {
@@ -200,5 +192,16 @@ export class IntersectionComponent implements OnInit, OnDestroy {
       return 'btn-primary';
     }
     return 'btn-secondary';
+  }
+
+  private iconFor(lane: IntersectionLane) {
+    switch (lane.type) {
+      case TrafficType.pedestrian:
+        return icons.trainPassenger;
+      case TrafficType.normal:
+        return icons.car;
+      case TrafficType.tram:
+        return icons.tram;
+    }
   }
 }

@@ -9,30 +9,24 @@ export interface State {
 
 const initialState: State = {
   availableDataTypes: [],
-  intersectionsAvailable: false
+  intersectionsAvailable: false,
 };
 
 const featureReducer = createReducer(
   initialState,
   on(fromDataTypes.setDataTypes, (state: State, { types: availableDataTypes }) => ({
     ...state,
-    availableDataTypes: availableDataTypes,
-    intersectionsAvailable: availableDataTypes.findIndex(dt => dt === 'intersections') !== -1,
-  })),
+    availableDataTypes,
+    intersectionsAvailable: availableDataTypes.findIndex((dt) => dt === 'intersections') !== -1,
+  }))
 );
 
-export function reducer(state: State | undefined, action: Action) {
-  return featureReducer(state, action);
-}
+export const reducer = (state: State | undefined, action: Action) => featureReducer(state, action);
 
 export const dataTypesState$ = createFeatureSelector('dataTypes');
 
-export const selectDataTypes = createSelector(
-  dataTypesState$,
-  (state: State) => state.availableDataTypes
-);
+export const selectDataTypes = createSelector(dataTypesState$, (state: State) => state.availableDataTypes);
 export const selectIntersectionsAvailable = createSelector(
   dataTypesState$,
   (state: State) => state.intersectionsAvailable
 );
-

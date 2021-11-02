@@ -19,24 +19,18 @@ export class GenericDataEffects {
       const url = action.payload.hostName + action.payload.path;
       console.log(url);
       return this.httpClient.get(url).pipe(
-        map((values) => {
-          return {
-            values: values,
-            path: action.payload.path,
-            name: action.payload.name,
-          };
-        }),
-        catchError((error) => {
-          return throwError({ error: error, path: action.payload.path });
-        })
+        map((values) => ({
+          values,
+          path: action.payload.path,
+          name: action.payload.name,
+        })),
+        catchError((error) => throwError({ error, path: action.payload.path }))
       );
     }),
-    switchMap((data: { values; path: string; name: string }) => {
-      return of(new fromGenericData.UpdateData({ type: data.name, values: data.values }));
-    }),
-    catchError((err: { error: any; path: string }) => {
-      return of();
-    })
+    switchMap((data: { values; path: string; name: string }) =>
+      of(new fromGenericData.UpdateData({ type: data.name, values: data.values }))
+    ),
+    catchError((err: { error: any; path: string }) => of())
   );
 
   constructor(private actions$: Actions, private httpClient: HttpClient) {}

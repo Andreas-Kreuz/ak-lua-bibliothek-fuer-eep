@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Switch } from '../switch.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SwitchesService {
   switches: Switch[];
@@ -20,11 +20,7 @@ export class SwitchesService {
   }
 
   public getSwitch(id: number) {
-    const signal = this.switches.find(
-      (s) => {
-        return s.id === id;
-      }
-    );
+    const signal = this.switches.find((s) => s.id === id);
     return signal;
   }
 }

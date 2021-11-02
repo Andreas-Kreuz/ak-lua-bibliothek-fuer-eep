@@ -16,7 +16,7 @@ StorageUtility.debug = AkStartWithDebug or false
 --
 function StorageUtility.registerId(eepSaveId, name)
     name = name and name or "?"
-    assert(type(eepSaveId) == "number" and eepSaveId > 0 and eepSaveId <= 1000, "Falsche eepSaveId " .. eepSaveId)
+    assert(type(eepSaveId) == "number" and eepSaveId > 0 and eepSaveId <= 1000, eepSaveId)
     assert(saveSlots[eepSaveId] == nil,
            "Speicher-ID ist bereits vergeben: " .. eepSaveId .. " (" ..
                (saveSlots[eepSaveId] and saveSlots[eepSaveId] or "nil") .. ")" .. "\n" .. debug.traceback())
@@ -52,8 +52,37 @@ function StorageUtility.loadTable(eepSaveId, name)
         end
     else
         if StorageUtility.debug then
-            print("[StorageUtility  ] Laden: [!!] - " .. eepSaveId .. " - " .. name .. " nicht gefunden!")
+            print("[StorageUtility  ] Laden: [!!] - " .. eepSaveId .. " (DataSlot) - " .. name .. " nicht gefunden!")
         end
+    end
+
+    local t = {}
+    if data then
+        for k, v in string.gmatch(data, "(%w+)=(.-[,])") do
+            v = v:sub(1, -2)
+            if StorageUtility.debug then print(k .. "=" .. v) end
+            t[k] = v
+        end
+    end
+    return t
+end
+
+---Load a table of key = value (string, string) from a rollingstock
+--- Storage should have been done in Table Syntax, e.g.:
+--- traffic = true, count = 15
+--- Then loading can be done with these functions as follows:
+--- local t = StorageUtility.loadTableRollingStock(rollingStockName)
+--- local traffic = t["traffic"]
+--- local count = t["count"]-- @param eepSaveId
+-- @param rollingStockName string Name of the rollingStock in EEP
+function StorageUtility.loadTableRollingStock(rollingStockName)
+    local hResult, data = EEPRollingstockGetTagText(rollingStockName)
+    if hResult then
+        if StorageUtility.debug then
+            print("[StorageUtility  ] Load: [OK] - " .. rollingStockName .. " (RollingStock) found: " .. data)
+        end
+    else
+        print("[StorageUtility  ] Load: [!!] - " .. rollingStockName .. " (RollingStock) not found!")
     end
 
     local t = {}
@@ -102,12 +131,16 @@ function StorageUtility.saveTable(eepSaveId, table, name)
     name = name and name or "?"
     local text = ""
     for k, v in pairsByKeys(table) do
-        assert(type(k) == "string", "Key ist kein string: " .. tostring(v))
-        assert(type(v) == "string", "Wert ist kein string: " .. tostring(v) .. " (" .. tostring(k) .. ")")
+        assert(type(k) == "string", "Need 'k' as string")
+        assert(type(v) == "string", "Need 'v' as string")
         assert(not string.find(k, ","))
         assert(not string.find(v, ","))
         text = text .. k .. "=" .. v .. ","
     end
+    if text:len() > 1024 then
+        print("Cannot store more than 1024 characters in slot " .. eepSaveId .. " - " .. name)
+    end
+    assert(text:len() <= 1024)
     local hresult = EEPSaveData(eepSaveId, text)
     if StorageUtility.debug then
         print(
@@ -115,6 +148,30 @@ function StorageUtility.saveTable(eepSaveId, table, name)
                 " gespeichert: " .. text)
     end
     savedValues[eepSaveId] = text
+    if StorageUtility.debug then StorageUtility.updateDebugFile() end
+end
+
+--- Stores the data of a table into an EEP data slot
+-- @param rollingStockName string Rolling stock name in EEP
+-- @param table table eine Lua Tabelle mit Daten und moeglichst kurzem Key und Value
+function StorageUtility.saveTableRollingStock(rollingStockName, table)
+    local text = ""
+    for k, v in pairsByKeys(table) do
+        assert(type(k) == "string", "Need 'k' as string")
+        assert(type(v) == "string", "Need 'v' as string")
+        assert(not string.find(k, ","))
+        assert(not string.find(v, ","))
+        text = text .. k .. "=" .. v .. ","
+    end
+    if text:len() > 1024 then
+        print("Cannot store more than 1024 characters in rollingStock " .. rollingStockName)
+    end
+    assert(text:len() <= 1024)
+    local hresult = EEPRollingstockSetTagText(rollingStockName, text)
+    if StorageUtility.debug then
+        print("[StorageUtility  ] Save [" .. (hresult and "OK" or "!!") .. "] - " .. rollingStockName ..
+                  " (RollingStock)" .. " saved: " .. text)
+    end
     if StorageUtility.debug then StorageUtility.updateDebugFile() end
 end
 

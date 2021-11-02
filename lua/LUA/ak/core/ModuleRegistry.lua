@@ -67,8 +67,8 @@ function ModuleRegistry.unregisterModules(...)
     updateModuleOrder()
 end
 
--- ACHTUNG: DIE VERWENDUNG ERFOLGT AUF EIGENE GEFAHR. ES IST GUT MÖGLICH,
---          DASS EEP ABSTÜRZT, WENN NICHT ALLE ABHÄNGIGKEITEN DER BIBLIOTHEK
+-- ACHTUNG: DIE VERWENDUNG ERFOLGT AUF EIGENE GEFAHR. ES IST GUT MÃ–GLICH,
+--          DASS EEP ABSTÃœRZT, WENN NICHT ALLE ABHÃ„NGIGKEITEN DER BIBLIOTHEK
 --          GEFUNDEN WERDEN.
 function ModuleRegistry.useDlls(enableDlls)
     assert(enableDlls == true or enableDlls == false)
@@ -76,25 +76,25 @@ function ModuleRegistry.useDlls(enableDlls)
 end
 
 local function initTask(module)
-    if ModuleRegistry.debug then print(string.format('[ModuleRegistry] Begin initTask() for "%s"', module.name)) end
+    if ModuleRegistry.debug then print(string.format("[ModuleRegistry] Begin initTask() for \"%s\"", module.name)) end
     local t0 = os.clock()
     module.init()
     local t1 = os.clock()
     local timeDiff = t1 - t0
     if ModuleRegistry.debug then
-        print(string.format('[ModuleRegistry].initTask() %.3f seconds for "%s"', timeDiff, module.name))
+        print(string.format("[ModuleRegistry].initTask() %.3f seconds for \"%s\"", timeDiff, module.name))
     end
 end
 
 local function runTask(module)
-    if ModuleRegistry.debug then print(string.format('[ModuleRegistry] Begin runTask() for "%s"', module.name)) end
+    if ModuleRegistry.debug then print(string.format("[ModuleRegistry] Begin runTask() for \"%s\"", module.name)) end
     local t0 = os.clock()
     module.run()
     local t1 = os.clock()
     local timeDiff = t1 - t0
     -- print(string.format('[ModuleRegistry].runTask() %.3f seconds for "%s"', timeDiff, module.name))
     if ModuleRegistry.debug and timeDiff > 0.01 then
-        print(string.format('[ModuleRegistry] WARNING: runTask() %.3f seconds for "%s"', timeDiff, module.name))
+        print(string.format("[ModuleRegistry] WARNING: runTask() %.3f seconds for \"%s\"", timeDiff, module.name))
     end
 end
 
@@ -120,7 +120,7 @@ function ModuleRegistry.runTasks(cycleCount)
 
     local t3 = os.clock()
     if enableServer then
-        -- Sorgt dafür, dass alle JsonDaten der registrieren XxxJsonColletor zum Server kommen
+        -- Sorgt dafÃ¼r, dass alle JsonDaten der registrieren XxxJsonColletor zum Server kommen
         -- und dass die Befehle des Servers ausgewertet werden
         ServerController.communicateWithServer(cycleCount)
     end

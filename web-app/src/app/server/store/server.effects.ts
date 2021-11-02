@@ -7,8 +7,6 @@ import { of } from 'rxjs';
 
 @Injectable()
 export class ServerEffects {
-  constructor(private service: ServerService, private actions$: Actions) {}
-
   changeDir$ = createEffect(
     () =>
       this.actions$.pipe(
@@ -22,17 +20,13 @@ export class ServerEffects {
 
   dirOk$ = createEffect(() =>
     this.service.settingsDirOkReceived$.pipe(
-      switchMap((data: string) => {
-        return of(ServerAction.changeEepDirectorySuccess({ eepDir: data }));
-      })
+      switchMap((data: string) => of(ServerAction.changeEepDirectorySuccess({ eepDir: data })))
     )
   );
 
   dirFailed$ = createEffect(() =>
     this.service.settingsDirErrorReceived$.pipe(
-      switchMap((data: string) => {
-        return of(ServerAction.changeEepDirectoryFailure({ eepDir: data }));
-      })
+      switchMap((data: string) => of(ServerAction.changeEepDirectoryFailure({ eepDir: data })))
     )
   );
 
@@ -40,8 +34,10 @@ export class ServerEffects {
     this.service.urlsChanged$.pipe(
       switchMap((data: string) => {
         const urls = JSON.parse(data);
-        return of(ServerAction.urlsChanged({ urls: urls }));
+        return of(ServerAction.urlsChanged({ urls }));
       })
     )
   );
+
+  constructor(private service: ServerService, private actions$: Actions) {}
 }

@@ -1,5 +1,4 @@
 import express = require('express');
-import { performance } from 'perf_hooks';
 import { Server, Socket } from 'socket.io';
 
 import { DataEvent, RoomEvent, ServerStatusEvent } from 'web-shared';
@@ -7,7 +6,7 @@ import SocketService from '../clientio/socket-service';
 import JsonDataStore from './json-data-reducer';
 
 export default class JsonDataEffects {
-  [x: string]: any;
+  [x: string]: unknown;
   private store = new JsonDataStore(this);
 
   constructor(
@@ -46,7 +45,7 @@ export default class JsonDataEffects {
 
   jsonDataUpdated(jsonString: string): void {
     // Parse the data
-    const newJsonContent: { [key: string]: any[] } = JSON.parse(jsonString);
+    const newJsonContent: { [key: string]: unknown[] } = JSON.parse(jsonString);
 
     // Get those new keys from the Json Content
     const currentKeys = Object.keys(this.store.getJsonData());
@@ -96,10 +95,9 @@ export default class JsonDataEffects {
     this.io.to(DataEvent.roomOf(key)).emit(DataEvent.eventOf(key));
   }
 
-  private sendToDataRoom() {}
-
   private registerApiUrls(key: string) {
     console.log('Register: /api/v1/' + key);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     this.router.get('/' + key, (req: any, res: any) => {
       res.json(this.getCurrentApiEntry(key));
     });

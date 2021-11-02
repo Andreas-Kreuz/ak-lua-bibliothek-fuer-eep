@@ -1,4 +1,3 @@
-import path from 'path';
 import { Server, Socket } from 'socket.io';
 
 import { LogEvent, RoomEvent } from 'web-shared';
@@ -6,6 +5,7 @@ import SocketService from '../clientio/socket-service';
 
 export default class LogEffects {
   constructor(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private app: any,
     private io: Server,
     private socketService: SocketService,

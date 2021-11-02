@@ -7,9 +7,7 @@ local initialized = false
 VersionJsonCollector.name = "ak.core.VersionJsonCollector"
 
 function VersionJsonCollector.initialize()
-    if not enabled or initialized then
-        return
-    end
+    if not enabled or initialized then return end
 
     local versions = {
         versionInfo = {
@@ -17,7 +15,7 @@ function VersionJsonCollector.initialize()
             name = "versionInfo", -- EEP-Web requires that data entries have an id or name tag
             eepVersion = string.format("%.1f", EEPVer), -- show string instead of float
             luaVersion = _VERSION,
-            singleVersion = ServerController.programVersion,
+            singleVersion = ServerController.programVersion
         }
     }
 
@@ -25,8 +23,6 @@ function VersionJsonCollector.initialize()
     initialized = true
 end
 
-function VersionJsonCollector.collectData()
-    return data
-end
+function VersionJsonCollector.collectData() return data end
 
 return VersionJsonCollector

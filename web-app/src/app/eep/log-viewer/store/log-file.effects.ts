@@ -12,7 +12,7 @@ export class LogFileEffects {
     this.logFileService.logLinesAdded$.pipe(
       map((data) => {
         const lines: string = data;
-        return LogFileActions.linesAdded({ lines: lines });
+        return LogFileActions.linesAdded({ lines });
       })
     )
   );
@@ -36,11 +36,7 @@ export class LogFileEffects {
   );
 
   logLinesCleared$ = createEffect(() =>
-    this.logFileService.logLinesCleared$.pipe(
-      map(() => {
-        return LogFileActions.linesCleared();
-      })
-    )
+    this.logFileService.logLinesCleared$.pipe(map(() => LogFileActions.linesCleared()))
   );
 
   constructor(private actions$: Actions, private logFileService: LogFileService) {}

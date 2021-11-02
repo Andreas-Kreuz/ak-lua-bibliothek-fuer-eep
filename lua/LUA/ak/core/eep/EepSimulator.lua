@@ -17,7 +17,7 @@ local EepSimulator = {}
 local signalsTrainCount = {}
 ---@type string[]
 local signalsTrainNames = {}
----@type table<trainname string,routename string> train name to route name
+---@type table<string,string> train name to route name
 local trainRoutes = {}
 ---@type table<number,string>
 local registeredRoadTracks = {}
@@ -25,6 +25,13 @@ local registeredRoadTracks = {}
 local registeredRailTracks = {}
 ---@type table<string,table>
 local structures = {}
+---@type table<string,table>
+local trains = {}
+
+---Add a train and its rollingStock
+---@param trainName string Name of the train
+---param ... string Name of the rollingstock
+function EepSimulator.addTrain(trainName, ...) trains[trainName] = {...} end
 
 local function stripImmoName(name) return name:gsub("(#%d*).*", "%1") end
 
@@ -38,8 +45,8 @@ end
 ---@param signalId number
 ---@param trainName string
 function EepSimulator.queueTrainOnSignal(signalId, trainName)
-    assert("number" == type(signalId))
-    assert("string" == type(trainName))
+    assert(type(signalId) == "number", "Need 'signalId' as number")
+    assert(type(trainName) == "string", "Need 'trainName' as string")
 
     signalsTrainNames[signalId] = signalsTrainNames[signalId] or {}
     table.insert(signalsTrainNames[signalId], trainName)
@@ -50,8 +57,8 @@ end
 ---@param signalId number
 ---@param trainName string
 function EepSimulator.removeTrainFromSignal(signalId, trainName)
-    assert("number" == type(signalId))
-    assert("string" == type(trainName))
+    assert(type(signalId) == "number", "Need 'signalId' as number")
+    assert(type(trainName) == "string", "Need 'trainName' as string")
 
     signalsTrainNames[signalId] = signalsTrainNames[signalId] or {}
     for i, v in ipairs(signalsTrainNames[signalId]) do
@@ -66,7 +73,7 @@ end
 --- This will remove all trains from the signals queue
 ---@param signalId number
 function EepSimulator.removeAllTrainFromSignal(signalId)
-    assert("number" == type(signalId))
+    assert(type(signalId) == "number", "Need 'signalId' as number")
 
     signalsTrainNames[signalId] = {}
     updateTrainListSize(signalId)
@@ -115,10 +122,10 @@ end
 function EEPGetSwitch(switchId) return switches[switchId] and switches[switchId] or 2 end
 
 --- Das Signal x wird intern registriert
-function EEPRegisterSignal(signalId) assert(signalId) end
+function EEPRegisterSignal(signalId) assert(type(signalId) == "number", "Need 'signalId' as number") end
 
 --- Die Weiche x wird intern registriert
-function EEPRegisterSwitch(switchId) assert(switchId) end
+function EEPRegisterSwitch(switchId) assert(type(switchId) == "number", "Need 'switchId' as number") end
 
 EEPTime = 0
 EEPTimeH = 0
@@ -455,12 +462,12 @@ function EEPChangeInfoStructure(immoName, text) end
 --- Zeigen / Verstecken des Tipp-Textes einer Immobilie
 -- @param switchId Name der Immobilie als String.
 -- @param onOff true: einschalten
-function EEPShowInfoSignal(signalId, onOff) assert(signalId) end
+function EEPShowInfoSignal(signalId, onOff) assert(type(signalId) == "number", "Need 'signalId' as number") end
 
 --- Setzen des Tipp-Textes einer Immobilie
 -- @param switchId Name der Immobilie als String.
 -- @param text Text fuer die Anzeige
-function EEPChangeInfoSignal(signalId, text) assert(signalId) end
+function EEPChangeInfoSignal(signalId, text) assert(type(signalId) == "number", "Need 'signalId' as number") end
 
 --- Zeigen / Verstecken des Tipp-Textes einer Weiche
 -- @param switchId Name der Weiche als String.
@@ -479,13 +486,16 @@ function EEPChangeInfoSwitch(switchId, text) end
 --- Anzahl der Fahrzeuge im Zugverband Name
 -- @param zugverband Names des Zugverbandes
 --
-function EEPGetRollingstockItemsCount(zugverband) return 2 end
+function EEPGetRollingstockItemsCount(zugverband)
+    return trains[zugverband] and #trains[zugverband] > 0 and #trains[zugverband] or 0
+end
 
 --- Name des Rollis Nummer im Zugverband Name
 -- @param zugverband Name des Zugverbandes
 -- @param Nummer
 --
-function EEPGetRollingstockItemName(zugverband, Nummer) return zugverband .. '-Wagen-' .. Nummer end
+function EEPGetRollingstockItemName(zugverband, Nummer)
+    return trains[zugverband][Nummer + 1] end
 
 --- Anzahl der Zuege, welche vom Signal Signal_ID gehalten werden
 -- @param signalId ID des Signals
@@ -577,7 +587,7 @@ function EEPRollingstockGetModelType(rollingStockName) return true, 1 end
 -- Rueckgabewert 3 ist die Y-Position des Objekts.
 -- Rueckgabewert 4 ist die Z-Position des Objekts.
 function EEPStructureGetPosition(name)
-    local underscoreIndex = string.find(name, '_')
+    local underscoreIndex = string.find(name, "_")
     local i
 
     if underscoreIndex then
@@ -605,7 +615,7 @@ end
 -- 22 = Immobilien
 -- 23 = Landschaftselemente/Fauna
 function EEPStructureGetModelType(name)
-    local underscoreIndex = string.find(name, '_')
+    local underscoreIndex = string.find(name, "_")
     local i
 
     if underscoreIndex then
@@ -736,9 +746,7 @@ function EEPActivateCtrlDesk(GBSname) return true end
 -- @param rollingstockName Name des Rollmaterials
 -- @param status true = an, false = aus
 -- @return ok Rückgabewert ist true wenn die Ausführung erfolgreich war, sonst false
-function EEPRollingstockSetHorn(rollingstockName, status)
-    return true
-end
+function EEPRollingstockSetHorn(rollingstockName, status) return true end
 
 local hook = {}
 
@@ -962,7 +970,7 @@ end
 --- EEP ruft selbständig diese Funktion auf, wenn die Anlage gespeichert wird. (EEP 16.1)
 -- Im Skript definiert man die zugehörige Funktion und legt so fest, was beim Speichern der Anlage zu tun ist.
 -- @param path Speicherpfad der Anlage einschließlich Dateiname
-function EEPOnSaveAnl(path) return end
+function EEPOnSaveAnl(path) end
 
 function EEPPause(value) end
 

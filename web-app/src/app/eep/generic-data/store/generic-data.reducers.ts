@@ -2,9 +2,8 @@ import * as fromGenericData from './generic-data.actions';
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { DataType } from '../model/data-type';
 
-
 export interface State {
-  data: { [key: string]: {} };
+  data: { [key: string]: Record<string, unknown> };
   dataTypes: DataType[];
 }
 
@@ -13,14 +12,14 @@ const initialState: State = {
   dataTypes: [],
 };
 
-export function reducer(state: State = initialState, action: fromGenericData.GenericDataActions) {
+export const reducer = (state: State = initialState, action: fromGenericData.GenericDataActions) => {
   switch (action.type) {
     case fromGenericData.SET_DATA:
       const type = action.payload.type;
       const values = action.payload.values;
       const newData = {
-        ...(state.data),
-        [type]: values
+        ...state.data,
+        [type]: values,
       };
       const newState = {
         ...state,
@@ -31,18 +30,17 @@ export function reducer(state: State = initialState, action: fromGenericData.Gen
     case fromGenericData.SET_DATA_TYPES:
       return {
         ...state,
-        dataTypes: action.payload
+        dataTypes: action.payload,
       };
     default:
       return state;
   }
-}
+};
 
 export const appState = createFeatureSelector('genericData');
 
-export const selectedDataStructure = (dataName: string) => createSelector(
-  appState,
-  (state: State) => {
+export const selectedDataStructure = (dataName: string) =>
+  createSelector(appState, (state: State) => {
     const values = [];
     const columns = [];
 
@@ -53,8 +51,7 @@ export const selectedDataStructure = (dataName: string) => createSelector(
         values.push(datum);
 
         const allPropertyNames = Object.keys(datum);
-        for (let j = 0; j < allPropertyNames.length; j++) {
-          const columnName = allPropertyNames[j];
+        for (const columnName of allPropertyNames) {
           if (columns.indexOf(columnName) < 0) {
             columns.push(columnName);
           }
@@ -79,20 +76,16 @@ export const selectedDataStructure = (dataName: string) => createSelector(
       }
     });
 
-    values.sort((a: {}, b: {}) => {
+    values.sort((a: Record<string, unknown>, b: Record<string, unknown>) => {
       const columnName = columns[0];
       return a[columnName] < b[columnName] ? -1 : 1;
     });
 
     return {
-      dataName: dataName,
+      dataName,
       valueColumns: columns,
-      values: values
+      values,
     };
-  }
-);
+  });
 
-export const selectDataTypes$ = createSelector(
-  appState,
-  (state: State) => state.dataTypes
-);
+export const selectDataTypes$ = createSelector(appState, (state: State) => state.dataTypes);

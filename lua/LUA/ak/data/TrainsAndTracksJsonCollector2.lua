@@ -13,16 +13,8 @@ local tracks = {}
 -- @author Frank Buchholz
 function storeRunTime(group, time)
     -- collect and sum runtime date, needs rework
-    if not data["runtime"] then
-        data["runtime"] = {}
-    end
-    if not data["runtime"][group] then
-        data["runtime"][group] = {
-            id = group,
-            count = 0,
-            time = 0
-        }
-    end
+    if not data["runtime"] then data["runtime"] = {} end
+    if not data["runtime"][group] then data["runtime"][group] = {id = group, count = 0, time = 0} end
     local runtime = data["runtime"][group]
     runtime.count = runtime.count + 1
     runtime.time = runtime.time + time
@@ -31,9 +23,7 @@ end
 --- Indirect call of EEP function (or any other function) including time measurement
 -- @author Frank Buchholz
 function executeAndStoreRunTime(func, group, ...)
-    if not func then
-        return
-    end
+    if not func then return end
 
     local t0 = os.clock()
 
@@ -47,51 +37,29 @@ end
 
 --- Create dummy functions for EEP functions which are not yet available depending of the version of EEP
 -- The minimal required version is EEP 11.3 Plug-In 3 which supports some quite important functions
-EEPGetSignalTrainsCount = EEPGetSignalTrainsCount or function()
-        return
-    end -- EEP 13.2
-EEPGetSignalTrainName = EEPGetSignalTrainName or function()
-        return
-    end -- EEP 13.2
+EEPGetSignalTrainsCount = EEPGetSignalTrainsCount or function() end -- EEP 13.2
+EEPGetSignalTrainName = EEPGetSignalTrainName or function() end -- EEP 13.2
 
 -- Based on this concept we can redefine the functions, e.g. to collect some statistics data
---EEPGetRollingstockItemsCount = EEPGetRollingstockItemsCount  or function () return end -- EEP 13.2 Plug-In 2
+-- EEPGetRollingstockItemsCount = EEPGetRollingstockItemsCount  or function () return end -- EEP 13.2 Plug-In 2
 local _EEPGetRollingstockItemsCount = EEPGetRollingstockItemsCount
 local function EEPGetRollingstockItemsCount(...)
     return executeAndStoreRunTime(_EEPGetRollingstockItemsCount, "EEPGetRollingstockItemsCount", ...)
 end
 
-EEPGetRollingstockItemName = EEPGetRollingstockItemName or function()
-        return
-    end -- EEP 13.2 Plug-In 2
-EEPGetTrainLength = EEPGetTrainLength or function()
-        return
-    end -- EEP 15.1 Plug-In 1
+EEPGetRollingstockItemName = EEPGetRollingstockItemName or function() end -- EEP 13.2 Plug-In 2
+EEPGetTrainLength = EEPGetTrainLength or function() end -- EEP 15.1 Plug-In 1
 
-EEPRollingstockGetPosition = EEPRollingstockGetPosition or function()
-        return
-    end -- EEP 16.1
-EEPRollingstockGetLength = EEPRollingstockGetLength or function()
-        return
-    end -- EEP 14.2
-EEPRollingstockGetMotor = EEPRollingstockGetMotor or function()
-        return
-    end -- EEP 14.2
-EEPRollingstockGetTrack = EEPRollingstockGetTrack or function()
-        return
-    end -- EEP 14.2
-EEPRollingstockGetModelType = EEPRollingstockGetModelType or function()
-        return
-    end -- EEP 14.2
-EEPRollingstockGetTagText = EEPRollingstockGetTagText or function()
-        return
-    end -- EEP 14.2
+EEPRollingstockGetPosition = EEPRollingstockGetPosition or function() end -- EEP 16.1
+EEPRollingstockGetLength = EEPRollingstockGetLength or function() end -- EEP 14.2
+EEPRollingstockGetMotor = EEPRollingstockGetMotor or function() end -- EEP 14.2
+EEPRollingstockGetTrack = EEPRollingstockGetTrack or function() end -- EEP 14.2
+EEPRollingstockGetModelType = EEPRollingstockGetModelType or function() end -- EEP 14.2
+EEPRollingstockGetTagText = EEPRollingstockGetTagText or function() end -- EEP 14.2
 
 -- Redefine functions from EEP 11.0 to collect run time data
 local _EEPGetTrainSpeed = EEPGetTrainSpeed
-local function EEPGetTrainSpeed(...)
-    return executeAndStoreRunTime(_EEPGetTrainSpeed, "EEPGetTrainSpeed", ...)
-end
+local function EEPGetTrainSpeed(...) return executeAndStoreRunTime(_EEPGetTrainSpeed, "EEPGetTrainSpeed", ...) end
 local _EEPGetRollingstockItemName = EEPGetRollingstockItemName
 local function EEPGetRollingstockItemName(...)
     return executeAndStoreRunTime(_EEPGetRollingstockItemName, "EEPGetRollingstockItemName", ...)
@@ -109,7 +77,7 @@ local function initializeTracksBy(registerFunktion, trackType)
         if exists then
             local track = {}
             track.id = id
-            --track.position = val
+            -- track.position = val
             tracks[trackName][tostring(track.id)] = track
         end
     end
@@ -135,8 +103,8 @@ local function updateTracksBy(besetztFunktion, trackType)
     -- Find trains on occupied tracks
     -- Limitation: only the first train on a track is found
     local trains = {}
-    --local belegte = {}
-    --belegte.tracks = {}
+    -- local belegte = {}
+    -- belegte.tracks = {}
     for _, track in pairs(tracks[trackName]) do
         local trackId = track.id
         -- Limitation: only the first train on a track is found
@@ -145,11 +113,11 @@ local function updateTracksBy(besetztFunktion, trackType)
         -- track.occupied = occupied
         -- track.occupiedBy = trainName
         if occupied then
-            --local key = trackName .. "_track_" .. trackId
-            --belegte.tracks[key] = {}
-            --belegte.tracks[key].trackId = trackId
-            --belegte.tracks[key].occupied = occupied
-            --belegte.tracks[key].vehicle = trainName or "?"
+            -- local key = trackName .. "_track_" .. trackId
+            -- belegte.tracks[key] = {}
+            -- belegte.tracks[key].trackId = trackId
+            -- belegte.tracks[key].occupied = occupied
+            -- belegte.tracks[key].vehicle = trainName or "?"
 
             if trainName then
                 trains[trainName] = trains[trainName] or {}
@@ -201,7 +169,7 @@ local function updateTracksBy(besetztFunktion, trackType)
             id = trainName,
             route = haveRoute and route or "",
             rollingStockCount = rollingStockCount or 0,
-            length = trainLength or 0,
+            length = trainLength or 0
         }
 
         table.insert(data[trainList], currentTrain)
@@ -216,9 +184,7 @@ local function updateTracksBy(besetztFunktion, trackType)
         -- data[trainInfos][tostring(trainsInfo.id)] = trainsInfo
 
         -- Store rolling stocks
-        if not rollingStockCount then
-            return
-        end
+        if not rollingStockCount then return end
 
         for i = 0, (rollingStockCount - 1) do
             local rollingStockName = EEPGetRollingstockItemName(trainName, i) -- EEP 13.2 Plug-In 2
@@ -234,7 +200,8 @@ local function updateTracksBy(besetztFunktion, trackType)
                 end
 
                 local _, propelled = EEPRollingstockGetMotor(rollingStockName) -- EEP 14.2
-                local _, trackId, trackDistance, trackDirection, trackSystem = EEPRollingstockGetTrack(rollingStockName)
+                local _, trackId, trackDistance, trackDirection, trackSystem =
+                EEPRollingstockGetTrack(rollingStockName)
                 -- EEP 14.2
 
                 local _, modelType = EEPRollingstockGetModelType(rollingStockName) -- EEP 14.2
@@ -285,7 +252,7 @@ local function updateTracksBy(besetztFunktion, trackType)
                     trackDirection = trackDirection or -1
                 }
                 table.insert(data[rollingStockInfos], rollingStockInfo)
-            -- data[rollingStockInfos][tostring(rollingStockInfo.name)] = rollingStockInfo
+                -- data[rollingStockInfos][tostring(rollingStockInfo.name)] = rollingStockInfo
             end
         end
         currentTrain.length = tonumber(string.format("%.2f", currentTrain.length or 0))
@@ -301,9 +268,7 @@ local function updateTracks()
 end
 
 function TrainsAndTracksJsonCollector.initialize()
-    if not enabled or initialized then
-        return
-    end
+    if not enabled or initialized then return end
 
     initializeTracks()
 
@@ -311,16 +276,12 @@ function TrainsAndTracksJsonCollector.initialize()
 end
 
 function TrainsAndTracksJsonCollector.collectData()
-    if not enabled then
-        return
-    end
+    if not enabled then return end
 
     -- reset runtime data
     data["runtime"] = {}
 
-    if not initialized then
-        TrainsAndTracksJsonCollector.initialize()
-    end
+    if not initialized then TrainsAndTracksJsonCollector.initialize() end
 
     updateTracks()
 

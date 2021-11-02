@@ -37,6 +37,9 @@ import { DashboardCardComponent } from './ui/dashboard-card/dashboard-card.compo
 import { LayoutModule } from '@angular/cdk/layout';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ConfigCardComponent } from './ui/config-card/config-card.component';
+import { RoadStopComponent } from './ui/road-stop/road-stop.component';
+import { RoadLineComponent } from './ui/road-line/road-line.component';
+import { TagEditorComponent } from './ui/tag-editor/tag-editor.component';
 
 @NgModule({
   declarations: [
@@ -50,6 +53,9 @@ import { ConfigCardComponent } from './ui/config-card/config-card.component';
     DashboardCardComponent,
     DashboardSampleComponent,
     ConfigCardComponent,
+    RoadStopComponent,
+    RoadLineComponent,
+    TagEditorComponent,
   ],
   exports: [
     CommonModule,

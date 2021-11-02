@@ -5,8 +5,6 @@
 -- 3) Verwende die folgende Zeile im Lua-Editor von EEP, um Deine Kopie in EEP mit der Anlage zu laden
 --    require("anlage1")
 -----------------------------------------------------------------------------------------------------------------------
-
-
 -- Diese Zeile lädt die Modulverwaltung der Lua-Bibliothek
 local ModuleRegistry = require("ak.core.ModuleRegistry")
 
@@ -14,11 +12,8 @@ local ModuleRegistry = require("ak.core.ModuleRegistry")
 -- * Core (immer benötigt)
 -- * Data (Export der Daten für EEP)
 -- * Crossing (für die Ampelsteuerung notwendig)
-ModuleRegistry.registerModules(
-    require("ak.core.CoreLuaModule"),
-    require("ak.data.DataLuaModule"),
-    require("ak.road.CrossingLuaModul")
-)
+ModuleRegistry.registerModules(require("ak.core.CoreLuaModule"), require("ak.data.DataLuaModule"),
+                               require("ak.road.CrossingLuaModul"))
 
 -- Die EEPMain Methode wird von EEP genutzt. Sie muss immer 1 zurückgeben.
 function EEPMain()
@@ -86,12 +81,10 @@ K8 = TrafficLight:new("K8", 30, TrafficLightModel.JS2_3er_mit_FG) -- SOUTH LEFT 
 K9 = TrafficLight:new("K9", 31, TrafficLightModel.JS2_3er_mit_FG) -- SOUTH STRAIGHT (right)
 
 -- Straßenbahn-Ampeln mit Immobilien OHNE echtes Signal
-S1 = TrafficLight:new("S1", -1, TrafficLightModel.NONE, "#5528_Straba Signal Halt",
-"#5531_Straba Signal geradeaus", "#5529_Straba Signal anhalten",
-"#5530_Straba Signal A")
-S2 = TrafficLight:new("S2", -1, TrafficLightModel.NONE, "#5435_Straba Signal Halt",
-"#5521_Straba Signal geradeaus", "#5520_Straba Signal anhalten",
-"#5518_Straba Signal A")
+S1 = TrafficLight:new("S1", -1, TrafficLightModel.NONE, "#5528_Straba Signal Halt", "#5531_Straba Signal geradeaus",
+                      "#5529_Straba Signal anhalten", "#5530_Straba Signal A")
+S2 = TrafficLight:new("S2", -1, TrafficLightModel.NONE, "#5435_Straba Signal Halt", "#5521_Straba Signal geradeaus",
+                      "#5520_Straba Signal anhalten", "#5518_Straba Signal A")
 
 -- Erzeuge Kreuzung und Fahrspuren
 crossing = Crossing:new("Dein Kreuzungsname")

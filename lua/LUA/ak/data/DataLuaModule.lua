@@ -12,12 +12,10 @@ DataLuaModule.name = "ak.data.DataLuaModule"
 local activeCollectors = {}
 
 --- Diese Funktion wird einmalig durch ModuleRegistry.initTasks() aufgerufen
--- Ist ein Modul fÃ¼r EEPWeb vorhanden, dann solltes in dieser Funktion aufgerufen werden
+-- Ist ein Modul für EEPWeb vorhanden, dann solltes in dieser Funktion aufgerufen werden
 -- @author Andreas Kreuz
 function DataLuaModule.init()
-    if not DataLuaModule.enabled or initialized then
-        return
-    end
+    if not DataLuaModule.enabled or initialized then return end
 
     -- Hier wird der DataWebConnector registriert, so dass die Kommunikation mit der WebApp funktioniert
     local DataWebConnector = require("ak.data.DataWebConnector")
@@ -26,26 +24,22 @@ function DataLuaModule.init()
     initialized = true
 end
 
---- Diese Funktion wird regelmÃ¤ÃŸig durch ModuleRegistry.runTasks() aufgerufen
+--- Diese Funktion wird regelmäßig durch ModuleRegistry.runTasks() aufgerufen
 -- @author Andreas Kreuz
 function DataLuaModule.run()
-    if not DataLuaModule.enabled then
-        return
-    end
+    if not DataLuaModule.enabled then return end
 
-    -- Hier folgen die wiederkehrenden Funktionen jedes Moduls (mÃ¼ssen dann nicht in EEPMain aufgerufen werden)
+    -- Hier folgen die wiederkehrenden Funktionen jedes Moduls (müssen dann nicht in EEPMain aufgerufen werden)
     -- Das CoreModul hat keine wiederkehrenden Funktionen
 end
 
---- Ãœber diese Funktion kann das EEP Skript die Optionen des Moduls setzen
+--- Über diese Funktion kann das EEP Skript die Optionen des Moduls setzen
 -- @author Frank Buchholz
 -- @options List of options { activeCollectors = array of jsonCollector names, }
 function DataLuaModule.setOptions(options)
     if options.activeCollectors then
         local collectorsList = {}
-        for _, value in pairs(options.activeCollectors) do
-            collectorsList[value] = true
-        end
+        for _, value in pairs(options.activeCollectors) do collectorsList[value] = true end
         activeCollectors = collectorsList
     end
 end

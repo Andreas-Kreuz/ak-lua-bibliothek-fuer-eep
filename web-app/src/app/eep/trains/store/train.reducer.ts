@@ -15,7 +15,7 @@ export interface State {
 }
 
 export const initialState: State = {
-  trainType: TrainType.Rail,
+  trainType: TrainType.rail,
   railTrains: [],
   railRollingStock: [],
   roadTrains: [],
@@ -24,39 +24,39 @@ export const initialState: State = {
   tramRollingStock: [],
 };
 
-export function reducer(state = initialState, action: TrainActions): State {
+export const reducer = (state = initialState, action: TrainActions): State => {
   switch (action.type) {
-    case TrainActionTypes.SELECT_TYPE:
+    case TrainActionTypes.selectType:
       return {
         ...state,
         trainType: action.payload,
       };
-    case TrainActionTypes.SET_RAIL_TRAINS:
+    case TrainActionTypes.setRailTrains:
       return {
         ...state,
         railTrains: [...action.payload],
       };
-    case TrainActionTypes.SET_RAIL_ROLLING_STOCK:
+    case TrainActionTypes.setRailRollingStock:
       return {
         ...state,
         railRollingStock: [...action.payload],
       };
-    case TrainActionTypes.SET_ROAD_TRAINS:
+    case TrainActionTypes.setRoadTrains:
       return {
         ...state,
         roadTrains: [...action.payload],
       };
-    case TrainActionTypes.SET_ROAD_ROLLING_STOCK:
+    case TrainActionTypes.setRoadRollingStock:
       return {
         ...state,
         roadRollingStock: [...action.payload],
       };
-    case TrainActionTypes.SET_TRAM_TRAINS:
+    case TrainActionTypes.setTramTrains:
       return {
         ...state,
         tramTrains: [...action.payload],
       };
-    case TrainActionTypes.SET_TRAM_ROLLING_STOCK:
+    case TrainActionTypes.setTramRollingStock:
       return {
         ...state,
         tramRollingStock: [...action.payload],
@@ -64,68 +64,54 @@ export function reducer(state = initialState, action: TrainActions): State {
     default:
       return state;
   }
-}
+};
 
 export const trainsState$ = createFeatureSelector('train');
 
+export const selectTrainType = createSelector(trainsState$, (state: State) => state.trainType);
+export const selectRailTrainCount = createSelector(trainsState$, (state: State) => state.railTrains.length);
+export const selectRoadTrainCount = createSelector(trainsState$, (state: State) => state.roadTrains.length);
+export const selectTramTrainCount = createSelector(trainsState$, (state: State) => state.tramTrains.length);
 
-export const selectTrainType = createSelector(
-  trainsState$, (state: State) => state.trainType
-);
-export const selectRailTrainCount = createSelector(
-  trainsState$, (state: State) => state.railTrains.length
-);
-export const selectRoadTrainCount = createSelector(
-  trainsState$, (state: State) => state.roadTrains.length
-);
-export const selectTramTrainCount = createSelector(
-  trainsState$, (state: State) => state.tramTrains.length
-);
-
-export const selectRollingStock = createSelector(
-  trainsState$,
-  (state: State) => {
-    const type = state.trainType;
-    const rollingStocksByTrain = new Map<string, RollingStock[]>();
-    let rollingStocks: RollingStock[];
-    switch (type) {
-      case 'rail':
-      default:
-        rollingStocks = [...state.railRollingStock];
-        break;
-      case 'road':
-        rollingStocks = [...state.roadRollingStock];
-        break;
-      case 'tram':
-        rollingStocks = [...state.tramRollingStock];
-        break;
-    }
-
-    rollingStocks.sort(((a, b) => {
-      const trainCompare = a.trainName.localeCompare(b.trainName);
-      if (trainCompare !== 0) {
-        return trainCompare;
-      }
-      return a.positionInTrain < b.positionInTrain
-        ? -1
-        : (a.positionInTrain > b.positionInTrain ? 1 : 0);
-    }));
-
-    for (const rollingStock of rollingStocks) {
-      let trainRs: RollingStock[];
-      if (rollingStocksByTrain.has(rollingStock.trainName)) {
-        trainRs = rollingStocksByTrain.get(rollingStock.trainName);
-      } else {
-        trainRs = [];
-        rollingStocksByTrain.set(rollingStock.trainName, trainRs);
-      }
-
-      trainRs.push(rollingStock);
-    }
-
-    return rollingStocksByTrain;
+export const selectRollingStock = createSelector(trainsState$, (state: State) => {
+  const type = state.trainType;
+  const rollingStocksByTrain = new Map<string, RollingStock[]>();
+  let rollingStocks: RollingStock[];
+  switch (type) {
+    case 'rail':
+    default:
+      rollingStocks = [...state.railRollingStock];
+      break;
+    case 'road':
+      rollingStocks = [...state.roadRollingStock];
+      break;
+    case 'tram':
+      rollingStocks = [...state.tramRollingStock];
+      break;
   }
-);
+
+  rollingStocks.sort((a, b) => {
+    const trainCompare = a.trainName.localeCompare(b.trainName);
+    if (trainCompare !== 0) {
+      return trainCompare;
+    }
+    return a.positionInTrain < b.positionInTrain ? -1 : a.positionInTrain > b.positionInTrain ? 1 : 0;
+  });
+
+  for (const rollingStock of rollingStocks) {
+    let trainRs: RollingStock[];
+    if (rollingStocksByTrain.has(rollingStock.trainName)) {
+      trainRs = rollingStocksByTrain.get(rollingStock.trainName);
+    } else {
+      trainRs = [];
+      rollingStocksByTrain.set(rollingStock.trainName, trainRs);
+    }
+
+    trainRs.push(rollingStock);
+  }
+
+  return rollingStocksByTrain;
+});
 
 export const selectTrains = createSelector(
   trainsState$,
@@ -159,7 +145,7 @@ export const selectTrains = createSelector(
       }
       newTrains.push(train);
     }
-    newTrains.sort(((a, b) => a.id.localeCompare(b.id)));
+    newTrains.sort((a, b) => a.id.localeCompare(b.id));
     return newTrains;
   }
 );

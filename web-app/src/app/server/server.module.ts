@@ -29,7 +29,7 @@ import { StoreModule } from '@ngrx/store';
     MatToolbarModule,
     ServerRoutingModule,
     EffectsModule.forFeature([ServerEffects]),
-    StoreModule.forFeature(fromServer.FeatureKey, fromServer.reducer),
+    StoreModule.forFeature(fromServer.FEATURE_KEY, fromServer.reducer),
   ],
 })
 export class ServerModule {}

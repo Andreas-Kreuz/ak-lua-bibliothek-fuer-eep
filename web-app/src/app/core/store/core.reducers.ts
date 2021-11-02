@@ -20,7 +20,7 @@ const initialState: State = {
   connectionEstablished: false,
   eepVersion: '?',
   eepLuaVersion: '?',
-  eepWebVersion: environment.VERSION,
+  eepWebVersion: environment.version,
   modules: [],
   modulesAvailable: false,
 };
@@ -33,13 +33,11 @@ const coreReducer = createReducer(
   on(CoreAction.setEepVersion, (state: State, { version: version }) => ({ ...state, eepVersion: version })),
   on(CoreAction.setEepLuaVersion, (state: State, { version: version }) => ({ ...state, eepLuaVersion: version })),
   on(CoreAction.setEepWebVersion, (state: State, { version: version }) => ({ ...state, eepWebVersion: version })),
-  on(CoreAction.setModules, (state: State, { modules: modules }) => ({ ...state, modules: modules })),
+  on(CoreAction.setModules, (state: State, { modules: modules }) => ({ ...state, modules })),
   on(CoreAction.setModulesAvailable, (state: State) => ({ ...state, modulesAvailable: true }))
 );
 
-export function reducer(state: State | undefined, action: Action) {
-  return coreReducer(state, action);
-}
+export const reducer = (state: State | undefined, action: Action) => coreReducer(state, action);
 
 export const appState = createFeatureSelector('core');
 

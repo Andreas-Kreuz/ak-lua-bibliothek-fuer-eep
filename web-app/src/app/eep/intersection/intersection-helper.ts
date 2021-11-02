@@ -13,12 +13,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { Injectable } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class IntersectionHelper {
-
-  constructor(private store: Store<fromRoot.State>) {
-  }
+  constructor(private store: Store<fromRoot.State>) {}
 
   typeIcon(type: string) {
     switch (type) {
@@ -48,21 +46,21 @@ export class IntersectionHelper {
   directionIcons(lane: IntersectionLane) {
     const images = [];
     switch (lane.type) {
-      case TrafficType.PEDESTRIAN:
+      case TrafficType.pedestrian:
       case 'PEDESTRIAN':
         images.push('../../../../assets/lane-pedestrian.svg');
         break;
-      case TrafficType.TRAM:
+      case TrafficType.tram:
       case 'TRAM':
         for (const d of lane.directions) {
           switch (d) {
-            case Direction.LEFT:
+            case Direction.left:
               images.push('../../../../assets/strab-f3.svg');
               break;
-            case Direction.STRAIGHT:
+            case Direction.straight:
               images.push('../../../../assets/strab-f1.svg');
               break;
-            case Direction.RIGHT:
+            case Direction.right:
               images.push('../../../../assets/strab-f2.svg');
               break;
           }
@@ -71,13 +69,13 @@ export class IntersectionHelper {
       default:
         for (const d of lane.directions) {
           switch (d) {
-            case Direction.LEFT:
+            case Direction.left:
               images.push('../../../../assets/sign-left.svg');
               break;
-            case Direction.STRAIGHT:
+            case Direction.straight:
               images.push('../../../../assets/sign-straight.svg');
               break;
-            case Direction.RIGHT:
+            case Direction.right:
               images.push('../../../../assets/sign-right.svg');
               break;
           }
@@ -94,43 +92,31 @@ export class IntersectionHelper {
     let cars = '';
 
     const icon = this.iconFor(lane);
-    for (let i = 0; i < lane.waitingTrains.length; i++) {
-      cars = cars +
-        '<span placement="top" ngbTooltip="lane.waitingTrains[i]">' + icons.car + '</span>';
+    for (const train of lane.waitingTrains) {
+      cars = cars + '<span placement="top" ngbTooltip="train">' + icons.car + '</span>';
     }
     return cars;
   }
 
-  private iconFor(lane: IntersectionLane) {
-    switch (lane.type) {
-      case TrafficType.PEDESTRIAN:
-        return icons.trainPassenger;
-      case TrafficType.NORMAL:
-        return icons.car;
-      case TrafficType.TRAM:
-        return icons.tram;
-    }
-  }
-
-  phaseColor(lane: IntersectionLane, switching?: IntersectionSwitching, intersection?: Intersection) {
+  phaseColor = (lane: IntersectionLane, switching?: IntersectionSwitching, intersection?: Intersection) => {
     if (switching && switching.name !== intersection.currentSwitching) {
       return '';
     }
 
     switch (lane.phase) {
       case 'PEDESTRIAN':
-      case Phase.PEDESTRIAN:
-      case Phase.GREEN:
+      case Phase.pedestrian:
+      case Phase.green:
         return 'table-success';
-      case Phase.RED:
+      case Phase.red:
         return 'table-danger';
-      case Phase.RED_YELLOW:
-      case Phase.YELLOW:
+      case Phase.redYellow:
+      case Phase.yellow:
         return 'table-warning';
       default:
         return '';
     }
-  }
+  };
 
   laneContained(lane: IntersectionLane, switching: IntersectionSwitching) {
     return lane.switchings.indexOf(switching.name) >= 0;
@@ -138,7 +124,7 @@ export class IntersectionHelper {
 
   activateCam(staticCam: string, dialog: MatDialog) {
     if (staticCam) {
-      this.store.dispatch(IntersectionAction.switchToStaticCam({staticCam: staticCam}));
+      this.store.dispatch(IntersectionAction.switchToStaticCam({ staticCam }));
     } else {
       this.openDialog(dialog);
     }
@@ -146,11 +132,22 @@ export class IntersectionHelper {
 
   openDialog(dialog: MatDialog): void {
     const dialogRef = dialog.open(CamHelpDialogComponent, {
-      width: '90%'
+      width: '90%',
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       console.log('The dialog was closed');
     });
+  }
+
+  private iconFor(lane: IntersectionLane) {
+    switch (lane.type) {
+      case TrafficType.pedestrian:
+        return icons.trainPassenger;
+      case TrafficType.normal:
+        return icons.car;
+      case TrafficType.tram:
+        return icons.tram;
+    }
   }
 }

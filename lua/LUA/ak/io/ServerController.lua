@@ -17,8 +17,8 @@ ServerController.debug = AkStartWithDebug or false
 ServerController.programVersion = "0.10.8"
 local json
 
--- ACHTUNG: DIE VERWENDUNG ERFOLGT AUF EIGENE GEFAHR. ES IST GUT MÖGLICH,
---          DASS EEP ABSTÜRZT, WENN NICHT ALLE ABHÄNGIGKEITEN DER BIBLIOTHEK
+-- ACHTUNG: DIE VERWENDUNG ERFOLGT AUF EIGENE GEFAHR. ES IST GUT MÃ–GLICH,
+--          DASS EEP ABSTÃœRZT, WENN NICHT ALLE ABHÃ„NGIGKEITEN DER BIBLIOTHEK
 --          GEFUNDEN WERDEN.
 function ServerController.useDlls(enableDlls)
     if enableDlls then
@@ -75,7 +75,8 @@ local function initializeJsonCollector(jsonCollector)
     local t1 = os.clock()
     local timeDiff = t1 - t0
     if ServerController.debug then
-        print(string.format('ServerController: initialize() %4.0f ms for "%s"', timeDiff * 1000, jsonCollector.name))
+        print(
+        string.format("ServerController: initialize() %4.0f ms for \"%s\"", timeDiff * 1000, jsonCollector.name))
     end
 end
 
@@ -183,7 +184,7 @@ function ServerController.communicateWithServer(modulus)
     local overallTime6 = overallTime3
 
     if modulus == 0 or i % modulus == 0 and serverIsReady then
-        collectData(printFirstTime, modulus)
+        collectData(printFirstTime)
         overallTime4 = os.clock()
 
         local exportData = expandData()
@@ -200,10 +201,10 @@ function ServerController.communicateWithServer(modulus)
     local allowedTimeDiff = modulus * 0.200
     if ServerController.debug and printFirstTime or timeDiff > allowedTimeDiff then
         local format = (printFirstTime and "INITIALIZATION" or "WARNING") ..
-                           ": ServerController.communicateWithServer() time is %3.0f ms --- " ..
-                           "waitForServer: %.0f ms, " .. "initialize: %.0f ms, " .. "commands: %2.0f ms, " ..
-                           "collect: %3.0f ms, " .. " expand: %3.0f ms " .. " encode: %3.0f ms " .. " write: %.0f ms" ..
-                           " (allowed: %.0f ms)"
+                       ": ServerController.communicateWithServer() time is %3.0f ms --- " ..
+                       "waitForServer: %.0f ms, " .. "initialize: %.0f ms, " .. "commands: %2.0f ms, " ..
+                       "collect: %3.0f ms, " .. " expand: %3.0f ms " .. " encode: %3.0f ms " .. " write: %.0f ms" ..
+                       " (allowed: %.0f ms)"
         print(string.format(format, (timeDiff) * 1000, (overallTime1 - overallTime0) * 1000,
                             (overallTime2 - overallTime1) * 1000, (overallTime3 - overallTime2) * 1000,
                             (overallTime4 - overallTime3) * 1000, (overallTime5 - overallTime4) * 1000,

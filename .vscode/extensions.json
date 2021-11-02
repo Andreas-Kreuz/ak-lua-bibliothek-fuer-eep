@@ -6,12 +6,11 @@
     "angular.ng-template", // Angular Language Support
     "bierner.github-markdown-preview", // To view github pages
     "davidanson.vscode-markdownlint", // Check markdown pages
+    "dbaeumer.vscode-eslint", // ESLint
     "editorconfig.editorconfig", // Support indentations by .editorconfig file
     "github.vscode-pull-request-github", // Easy GitHub Pull Requests
     "johnpapa.angular2", // Angular 9 Snippets
     "koihik.vscode-lua-format", // Nice formatter
-    "ms-vscode.vscode-typescript-tslint-plugin", // Web App Typescript support
-    "msjsdiag.debugger-for-chrome",
     "esbenp.prettier-vscode",
     "sumneko.lua", // Finds Lua symbols, but cannot reformat file
     "tyriar.sort-lines" // Sort lines
@@ -20,6 +19,7 @@
   "unwantedRecommendations": [
     "gccfeli.vscode-lua", // Bad formatting
     "knisterpeter.vscode-github", // Deprecated
-    "liwangqian.luacoderassist" // Lua Code Completion and Checking - NOT WORKING
+    "liwangqian.luacoderassist", // Lua Code Completion and Checking - NOT WORKING
+    "ms-vscode.vscode-typescript-tslint-plugin" // Web App Typescript support - SUPERSEEDED BY ESLint
   ]
 }

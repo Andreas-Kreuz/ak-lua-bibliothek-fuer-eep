@@ -11,24 +11,12 @@ function CrossingWebConnector.registerJsonCollectors()
 end
 
 function CrossingWebConnector.registerFunctions()
-    ServerController.addAcceptedRemoteFunction(
-        "Crossing.setShowRequestsOnSignal",
-        function(param)
-            Crossing.setShowRequestsOnSignal(param == "true")
-        end
-    )
-    ServerController.addAcceptedRemoteFunction(
-        "Crossing.setShowSequenceOnSignal",
-        function(param)
-            Crossing.setShowSequenceOnSignal(param == "true")
-        end
-    )
-    ServerController.addAcceptedRemoteFunction(
-        "Crossing.setShowSignalIdOnSignal",
-        function(param)
-            Crossing.setShowSignalIdOnSignal(param == "true")
-        end
-    )
+    ServerController.addAcceptedRemoteFunction("Crossing.setShowRequestsOnSignal",
+                                               function(param) Crossing.setShowRequestsOnSignal(param == "true") end)
+    ServerController.addAcceptedRemoteFunction("Crossing.setShowSequenceOnSignal",
+                                               function(param) Crossing.setShowSequenceOnSignal(param == "true") end)
+    ServerController.addAcceptedRemoteFunction("Crossing.setShowSignalIdOnSignal",
+                                               function(param) Crossing.setShowSignalIdOnSignal(param == "true") end)
     ServerController.addAcceptedRemoteFunction("AkKreuzungSchalteAutomatisch", Crossing.switchAutomatically)
     ServerController.addAcceptedRemoteFunction("AkKreuzungSchalteManuell", Crossing.switchManuallyTo)
 end

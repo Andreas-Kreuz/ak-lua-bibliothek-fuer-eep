@@ -8,17 +8,15 @@ import * as unicode from '../../../../shared/unicode-symbol.model';
 @Component({
   selector: 'app-rolling-stock-tooltip',
   templateUrl: './rolling-stock-tooltip.component.html',
-  styleUrls: ['./rolling-stock-tooltip.component.css']
+  styleUrls: ['./rolling-stock-tooltip.component.css'],
 })
 export class RollingStockTooltipComponent implements OnInit {
   @Input() rollingStock: RollingStock;
   @Input() trainType: TrainType;
 
-  constructor() {
-  }
+  constructor() {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   iconFor() {
     if (this.rollingStock.modelType > 0) {
@@ -26,11 +24,11 @@ export class RollingStockTooltipComponent implements OnInit {
     } else {
       switch (this.trainType) {
         default:
-        case TrainType.Rail:
+        case TrainType.rail:
           return unicode.tenderLoco;
-        case TrainType.Road:
+        case TrainType.road:
           return unicode.car;
-        case TrainType.Tram:
+        case TrainType.tram:
           return unicode.tram;
       }
     }
@@ -45,9 +43,11 @@ export class RollingStockTooltipComponent implements OnInit {
   }
 
   getTooltip() {
-    return this.rollingStock.name
-      + (this.typeOf() === 'UNBEKANNT'
+    return (
+      this.rollingStock.name +
+      (this.typeOf() === 'UNBEKANNT'
         ? ''
-        : ' (' + this.typeOf() + ', ' + this.rollingStock.length.toFixed(1) + 'm' + ')');
+        : ' (' + this.typeOf() + ', ' + this.rollingStock.length.toFixed(1) + 'm' + ')')
+    );
   }
 }

@@ -10,9 +10,7 @@ local signals = {}
 --- Register EEP signals.
 -- do it once
 function SignalJsonCollector.initialize()
-    if not enabled or initialized then
-        return
-    end
+    if not enabled or initialized then return end
 
     signals = {}
     for i = 1, MAX_SIGNALS do
@@ -30,13 +28,9 @@ end
 --- Get EEP signals and store them.
 -- do it frequently
 function SignalJsonCollector.collectData()
-    if not enabled then
-        return
-    end
+    if not enabled then return end
 
-    if not initialized then
-        SignalJsonCollector.initialize()
-    end
+    if not initialized then SignalJsonCollector.initialize() end
 
     local waitingOnSignals = {}
     for i = 1, #signals do
@@ -60,10 +54,7 @@ function SignalJsonCollector.collectData()
         end
     end
 
-    return {
-        ["signals"] = signals,
-        ["waiting-on-signals"] = waitingOnSignals
-    }
+    return {["signals"] = signals, ["waiting-on-signals"] = waitingOnSignals}
 end
 
 return SignalJsonCollector

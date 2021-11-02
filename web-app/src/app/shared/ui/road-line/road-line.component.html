@@ -1,0 +1,22 @@
+<mat-card class="d-flex flex-column flex-grow-1 mb-5 app-card">
+  <mat-card-title-group class="app-bg-primary app-fg-on-primary">
+    <mat-card-title>{{ nr | async }} Messe Dresden</mat-card-title>
+    <mat-card-subtitle>{{ type | async }} Linie {{ nr | async }}</mat-card-subtitle>
+    <img mat-card-avatar alt="Bus Stop" src="../../../../assets/bus-stop-de.png" />
+  </mat-card-title-group>
+  <mat-card-content>
+    <div class="line">
+      <div class="line-entry start"><a href="../stop">Striesen</a></div>
+      <div class="line-entry">
+        <a href="../stop">Hauptbahnhof</a> <span class="flex-grow-1"></span><span class="text-muted">2 min</span>
+      </div>
+      <div class="line-entry">
+        <a href="../stop">Feuerwehrgasse</a> <span class="flex-grow-1"></span><span class="text-muted">5 min</span>
+      </div>
+      <div class="line-entry end">
+        <a href="../stop">Messe Dresden</a> <span class="flex-grow-1"></span><span class="text-muted">10 min</span>
+      </div>
+    </div>
+  </mat-card-content>
+  <span class="flex-grow-1"></span>
+</mat-card>

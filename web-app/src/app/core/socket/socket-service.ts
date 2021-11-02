@@ -12,8 +12,8 @@ import * as CoreAction from '../store/core.actions';
   providedIn: 'root',
 })
 export class SocketService {
-  private socket: SocketIOClient.Socket;
   connected$ = new BehaviorSubject<boolean>(false);
+  private socket: SocketIOClient.Socket;
 
   constructor(private store: Store<fromRoot.State>) {
     this.socket = socketio(location.hostname + ':' + environment.websocketPort, {});
@@ -33,14 +33,14 @@ export class SocketService {
     console.log('----- JOINING ROOM    ----- ' + room);
     this.connected$.subscribe((connected) => {
       if (connected) {
-        this.socket.emit(RoomEvent.JoinRoom, { room: room });
+        this.socket.emit(RoomEvent.JoinRoom, { room });
       }
     });
   }
 
   leave(room: string) {
     console.log('----- LEAVING ROOM    ----- ' + room);
-    this.socket.emit(RoomEvent.LeaveRoom, { room: room });
+    this.socket.emit(RoomEvent.LeaveRoom, { room });
   }
 
   disconnect() {

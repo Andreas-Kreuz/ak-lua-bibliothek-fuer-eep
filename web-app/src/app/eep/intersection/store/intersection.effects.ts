@@ -78,7 +78,7 @@ export class IntersectionEffects {
         const list: LuaSetting<any>[] = JSON.parse(data);
         const settings = new LuaSettings('Kreuzungen', list);
 
-        return of(IntersectionActions.setModuleSettings({ settings: settings }));
+        return of(IntersectionActions.setModuleSettings({ settings }));
       })
     )
   );

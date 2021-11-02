@@ -8,21 +8,15 @@ TrafficLightModelJsonCollector.name = "ak.data.TrafficLightModelJsonCollector"
 local TrafficLightModel = require("ak.road.TrafficLightModel")
 
 function TrafficLightModelJsonCollector.initialize()
-    if not enabled or initialized then
-        return
-    end
+    if not enabled or initialized then return end
 
     initialized = true
 end
 
 function TrafficLightModelJsonCollector.collectData()
-    if not enabled then
-        return
-    end
+    if not enabled then return end
 
-    if not initialized then
-        TrafficLightModelJsonCollector.initialize()
-    end
+    if not initialized then TrafficLightModelJsonCollector.initialize() end
 
     local trafficLightModels = {}
     for _, ampelModel in pairs(TrafficLightModel.allModels) do

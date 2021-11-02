@@ -13,13 +13,13 @@ import { LuaSetting } from '../../../shared/model/lua-setting';
   providedIn: 'root',
 })
 export class IntersectionService {
-  constructor(private socket: SocketService) {}
-
   private intersectionActions$: Observable<string>;
   private laneActions$: Observable<string>;
   private switchingActions$: Observable<string>;
   private trafficLightActions$: Observable<string>;
   private luaModuleSettingsActions$: Observable<string>;
+
+  constructor(private socket: SocketService) {}
 
   getIntersectionActions(): Observable<string> {
     if (!this.intersectionActions$) {
@@ -66,14 +66,17 @@ export class IntersectionService {
   }
 
   changeStaticCam(staticCam: string) {
-    this.socket.emit(CommandEvent.ChangeStaticCam, { staticCam: staticCam });
+    this.socket.emit(CommandEvent.ChangeStaticCam, { staticCam });
   }
 
   switchAutomatically(intersectionName: string) {
-    this.socket.emit(IntersectionEvent.SwitchAutomatically, { intersectionName: intersectionName });
+    this.socket.emit(IntersectionEvent.SwitchAutomatically, { intersectionName });
   }
 
   switchManually(intersectionName: string, switchingName: string) {
-    this.socket.emit(IntersectionEvent.SwitchManually, { intersectionName: intersectionName, switchingName: switchingName });
+    this.socket.emit(IntersectionEvent.SwitchManually, {
+      intersectionName,
+      switchingName,
+    });
   }
 }

@@ -9,17 +9,13 @@ local initialized = false
 CoreLuaModule.name = "ak.core.CoreLuaModule"
 local registeredLuaModules = nil
 
-function CoreLuaModule.setRegisteredLuaModules(modules)
-    registeredLuaModules = modules
-end
+function CoreLuaModule.setRegisteredLuaModules(modules) registeredLuaModules = modules end
 
 --- Diese Funktion wird einmalig durch ModuleRegistry.initTasks() aufgerufen
 -- Ist ein Modul für EEPWeb vorhanden, dann sollte es in dieser Funktion aufgerufen werden
 -- @author Andreas Kreuz
 function CoreLuaModule.init()
-    if not CoreLuaModule.enabled or initialized then
-        return
-    end
+    if not CoreLuaModule.enabled or initialized then return end
 
     -- Hier wird der CoreWebConnector registriert, so dass die Kommunikation mit der WebApp funktioniert
     local CoreWebConnector = require("ak.core.CoreWebConnector")
@@ -32,9 +28,7 @@ end
 --- Diese Funktion wird regelmäßig durch ModuleRegistry.runTasks() aufgerufen
 -- @author Andreas Kreuz
 function CoreLuaModule.run()
-    if not CoreLuaModule.enabled then
-        return
-    end
+    if not CoreLuaModule.enabled then return end
 
     -- Hier folgen die wiederkehrenden Funktionen jedes Moduls (müssen dann nicht in EEPMain aufgerufen werden)
     -- Das CoreModul hat keine wiederkehrenden Funktionen
@@ -45,15 +39,11 @@ end
 -- @options List of options { waitForServer = true/false, activeEntries = array of entry names, }
 local ServerController = require("ak.io.ServerController")
 function CoreLuaModule.setOptions(options)
-    if options.waitForServer ~= nil then
-        ServerController.checkServerStatus = options.waitForServer
-    end
+    if options.waitForServer ~= nil then ServerController.checkServerStatus = options.waitForServer end
 
     if options.activeEntries then
         local entriesList = {}
-        for _, value in pairs(options.activeEntries) do
-            entriesList[value] = true
-        end
+        for _, value in pairs(options.activeEntries) do entriesList[value] = true end
         ServerController.activeEntries = entriesList
     end
 end

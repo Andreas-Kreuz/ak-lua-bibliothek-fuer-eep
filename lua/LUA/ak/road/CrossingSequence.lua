@@ -8,6 +8,10 @@ local Task = require("ak.scheduler.Task")
 -- Klasse CrossingSequence (schaltet mehrere Ampeln)
 ------------------------------------------------------
 ---@class CrossingSequence
+---@field type string
+---@field name string
+---@field trafficLights table<TrafficLight,TrafficLightType>
+---@field greenPhaseSeconds number
 local CrossingSequence = {}
 CrossingSequence.debug = AkStartWithDebug or false
 ---@class TrafficLightType
@@ -21,12 +25,11 @@ function CrossingSequence:new(name, greenPhaseSeconds)
     local o = {}
     setmetatable(o, self)
     self.__index = self
+    o.type = "CrossingSequence"
     o.name = name
     o.crossing = nil
     o.prio = 0
-    ---@type table<TrafficLight,TrafficLightType>
     o.trafficLights = {}
-    ---@type number Default length of a green phase in seconds
     o.greenPhaseSeconds = greenPhaseSeconds or 15
     return o
 end
@@ -43,6 +46,8 @@ end
 
 ---This will calculate all trafficLights to turn red and green
 ---@return table<TrafficLight,TrafficLightType> table<TrafficLight,TrafficLightType>
+---@param oldSequence CrossingSequence
+---@return table<TrafficLight,TrafficLightType>, table<TrafficLight,TrafficLightType>
 function CrossingSequence:trafficLightsToTurnRedAndGreen(oldSequence)
     local turnRed = {}
     local turnGreen = {}
@@ -51,7 +56,7 @@ function CrossingSequence:trafficLightsToTurnRedAndGreen(oldSequence)
     if oldSequence then
         for light, oldType in pairs(oldSequence.trafficLights) do
             local newType = self.trafficLights[light]
-            if not newType or newType ~= oldType or self.trafficLights[light].model ~= light.model then
+            if not newType or newType ~= oldType then
                 assert(light.type == "TrafficLight")
                 assert(oldType)
                 turnRed[light] = oldType
@@ -60,7 +65,7 @@ function CrossingSequence:trafficLightsToTurnRedAndGreen(oldSequence)
     end
     for light, newType in pairs(self.trafficLights) do
         local oldType = oldSequence and oldSequence.trafficLights[light] or nil
-        if not oldType or newType ~= oldType or oldSequence.trafficLights[light].model ~= light.model then
+        if not oldType or newType ~= oldType then
             assert(light.type == "TrafficLight")
             assert(newType)
             turnGreen[light] = newType
@@ -87,7 +92,8 @@ function CrossingSequence:tasksForSwitchingFrom(oldSequence, afterRedTask)
     if oldSequence then
         -- Schedule the task where the old pedestrian lights get yellow
         local reasonPed = "Schalte " .. oldSequence.name .. " auf Fussgaenger Rot"
-        local oldRedPedestrian = switchTask(toRed, CrossingSequence.Type.PEDESTRIAN, TrafficLightState.RED, reasonPed)
+        local oldRedPedestrian =
+        switchTask(toRed, CrossingSequence.Type.PEDESTRIAN, TrafficLightState.RED, reasonPed)
         table.insert(taskList, {offset = 0, task = oldRedPedestrian, precedingTask = nil})
 
         -- * Hier könnte noch die DDR-Schaltung rein (2 Sekunden grün-gelb)
@@ -179,9 +185,7 @@ end
 function CrossingSequence:lanesSortedByPriority()
     local trafficLightArray = {}
     for trafficLight, type in pairs(self.trafficLights) do
-        if type ~= CrossingSequence.Type.PEDESTRIAN then
-            table.insert(trafficLightArray, trafficLight)
-        end
+        if type ~= CrossingSequence.Type.PEDESTRIAN then table.insert(trafficLightArray, trafficLight) end
     end
 
     local sortedLanes = {}

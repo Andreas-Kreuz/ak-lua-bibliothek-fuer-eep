@@ -1,6 +1,9 @@
-if AkDebugLoad then print("Loading ak.road.TrafficLight ...") end
+if AkDebugLoad then print("Loading ak.util.Queue ...") end
 
----@class Queue<T>
+---@class Queue
+---@field first number index of first element
+---@field last number index of last element
+---@field list table all entries
 local Queue = {}
 function Queue:new()
     local o = {first = 0, last = -1, list = {}}
@@ -46,9 +49,7 @@ end
 ---@return any[]
 function Queue:elements()
     local elems = {}
-    for i = self.first, self.last, 1 do
-        table.insert(elems, self.list[i])
-    end
+    for i = self.first, self.last, 1 do table.insert(elems, self.list[i]) end
     return elems
 end
 
