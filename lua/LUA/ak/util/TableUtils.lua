@@ -12,6 +12,10 @@ function TableUtils.readOnlyTable(tb)
     return proxy
 end
 
+---Looks, if there are the same values in both arrays (ignoring the keys)
+---@param t1 table
+---@param t2 table
+---@return boolean true if both contain the same values
 function TableUtils.sameArrayEntries(t1, t2)
     local entries1 = {}
     for _, v1 in ipairs(t1) do entries1[v1] = true end
@@ -22,6 +26,16 @@ function TableUtils.sameArrayEntries(t1, t2)
     end
 
     for k in pairs(entries1) do if not entries2[k] then return false end end
+    return true
+end
+
+---Looks, if there are the same keys and values in both arrays
+---@param t1 table
+---@param t2 table
+---@return boolean true if both contain the same values
+function TableUtils.sameDictEntries(t1, t2)
+    for k1, v1 in pairs(t1) do if not t2[k1] or t2[k1] ~= v1 then return false end end
+    for k2, v2 in pairs(t2) do if not t1[k2] or t1[k2] ~= v2 then return false end end
     return true
 end
 
