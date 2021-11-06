@@ -3,11 +3,15 @@ if AkDebugLoad then print("Loading ak.data.TrackCollector ...") end
 local TableUtils = require "ak.util.TableUtils"
 local EventBroker = require "ak.util.EventBroker"
 local TrainRegistry = require "ak.train.TrainRegistry"
+local RollingStockRegistry = require "ak.train.RollingStockRegistry"
 local RuntimeRegistry = require "ak.util.RuntimeRegistry"
 local TrackCollector = {}
 local os = require("os")
 
 local MAX_TRACKS = 50000
+
+---@class Track
+---@field trackId number
 
 local registerFunction = {
     auxiliary = EEPRegisterAuxiliaryTrack,
@@ -69,18 +73,6 @@ function executeAndStoreRunTime(func, group, ...)
     return table.unpack(result)
 end
 
---- Create dummy functions for EEP functions which are not yet available depending of the version of EEP
--- -- The minimal required version is EEP 11.3 Plug-In 3 which supports some quite important functions
--- local EEPGetSignalTrainsCount = EEPGetSignalTrainsCount or function()
---         return
---     end -- EEP 13.2
-
--- local EEPGetSignalTrainName = EEPGetSignalTrainName or function()
---         return
---     end -- EEP 13.2
-
--- Based on this concept we can redefine the functions, e.g. to collect some statistics data
--- EEPGetRollingstockItemsCount = EEPGetRollingstockItemsCount  or function () return end -- EEP 13.2 Plug-In 2
 local _EEPGetRollingstockItemsCount = EEPGetRollingstockItemsCount
 local function EEPGetRollingstockItemsCount(...)
     return executeAndStoreRunTime(_EEPGetRollingstockItemsCount, "EEPGetRollingstockItemsCount", ...)
@@ -111,10 +103,6 @@ local EEPRollingstockGetModelType = EEPRollingstockGetModelType or function() en
 
 local EEPRollingstockGetTagText = EEPRollingstockGetTagText or function() end -- EEP 14.2
 
---- Ermittelt die Position des Rollmaterials im EEP-Koordinatensystem in Meter (m).
---  OK, PosX, PosY, PosZ = EEPRollingstockGetPosition("#Fahrzeug")
-local EEPRollingstockGetPosition = EEPRollingstockGetPosition or function() end -- EEP 16.1
-
 --- Ermittelt, ob der Haken eines bestimmten Rollmaterials an oder ausgeschaltet ist.
 -- OK, Status = EEPRollingstockGetHook("#Kranwagen")
 -- Haken aus = 0, an = 1, in Betrieb = 3
@@ -126,10 +114,6 @@ end -- EEP 16.1
 -- Güterhaken aus = 0, an = 1, in Benutzung = 3
 local EEPRollingstockGetHookGlue = EEPRollingstockGetHookGlue or function() -- (not used yet)
 end -- EEP 16.1
-
---- Ermittelt die zurückgelegte Strecke des Rollmaterials in Meter (m)
---  OK, Mileage = EEPRollingstockGetMileage("#Fahrzeug")
-local EEPRollingstockGetMileage = EEPRollingstockGetMileage or function() end -- EEP 16.1
 
 --- Ermittelt, ob der Rauch des benannten Rollmaterials, an- oder ausgeschaltet ist.
 -- OK, Status = EEPRollingstockGetSmoke("#Fahrzeug")
@@ -192,14 +176,17 @@ local function EEPGetRollingstockItemName(...)
     return executeAndStoreRunTime(_EEPGetRollingstockItemName, "EEPGetRollingstockItemName", ...)
 end
 
+---This will create a dictionary of train names to their location on the tracks
+---@param lastTrains table<string,boolean> train names of the last run
+---@param tracks table<number,Track> of tracks of the current type, i.e. all roads, rails, ...
+---@param detectFunction function the function to check if the track is reserved, e.g. EEPIsRoadTrackReserved
+---@return table<string,table<string,number>>
 function prepareTrainsOnTrack(lastTrains, tracks, detectFunction)
+    ---@type table<string,table<string,number>>
     local trainsOnTrack = {}
 
     -- Create empty list of tracks for each known train
-    for trainName in pairs(lastTrains) do
-        print(string.format("TRAINNAME: %s", trainName))
-        trainsOnTrack[trainName] = {}
-    end
+    for trainName in pairs(lastTrains) do trainsOnTrack[trainName] = {} end
 
     -- Fill the list of tracks for each train by looking in every track
     for _, track in pairs(tracks) do
@@ -215,202 +202,185 @@ function prepareTrainsOnTrack(lastTrains, tracks, detectFunction)
     return trainsOnTrack
 end
 
-function TrackCollector:updateTrains()
-    runtimeData = {}
-    local tx = os.clock()
+---Go through the list of all trains and update them
+---@param trainsOnTrack table<string,table<string,number>> train names and their tracks
+---@return table<string,boolean> list of train names
+function TrackCollector:checkTrains(trainsOnTrack)
+    local lastTrains = {}
+    local removedTrains = {}
 
-    local trainsOnTrack = prepareTrainsOnTrack(self.lastTrains or {}, self.tracks, self.reservedFunction)
-
-    -- Go through the list of all trains and update them
     for trainName, trackIds in pairs(trainsOnTrack) do
         local trainExists, speed = EEPGetTrainSpeed(trainName) -- EEP 11.0
         if trainExists then
-            self:updateTrainInfo(trainName, trackIds, speed)
+            self:updateTrain(trainName, trackIds, speed)
+            lastTrains[trainName] = true
         else
             TrainRegistry.trainDisappeared(trainName)
-            return false
+            removedTrains[trainName] = true
         end
     end
 
-    local t0 = os.clock()
-    storeRunTime(self.trackType .. "-trainTime new stuff", t0 - tx)
-    RuntimeRegistry.storeRunTime("TrackCollector." .. self.trackType .. ".newTrainTime", t0 - tx)
-    RuntimeRegistry.storeRunTime("TrackCollector.ALL.newTrainTime", t0 - tx)
+    return lastTrains, removedTrains
+end
 
-    -- Remove missing trains
-    for trainName, train in pairs(self.trains) do
-        local haveSpeed, speed = EEPGetTrainSpeed(trainName) -- EEP 11.0
-        if haveSpeed then
-            train.speed = speed
-        else
-            self.trains[trainName] = nil
-            self.trainInfo[trainName] = nil
+function TrackCollector:removeMissingTrains(missingTrains)
+    for trainName in pairs(missingTrains) do
+        self.trains[trainName] = nil
+        self.trainInfo[trainName] = nil
+    end
+end
 
-            TrainRegistry.trainDisappeared(trainName)
+---Go through the list of all trains and update them
+---@param knownTrains table<string,table<string,number>> train names and their tracks
+---@return table<string,boolean> list of train names
+function TrackCollector:checkRollingStock(knownTrains)
+    local lastRollingStock = {}
+    local removedRollingStock = {}
+
+    for trainName in pairs(knownTrains) do
+        local train = TrainRegistry.forName(trainName)
+        local count = train:getRollingStockCount()
+        for i = 0, count - 1, 1 do
+            local rollingStockName = EEPGetRollingstockItemName(train.name, i) -- EEP 13.2 Plug-In 2
+            lastRollingStock[rollingStockName] = true
+            local rs = RollingStockRegistry.forName(rollingStockName, train.name, i)
+            self:updateRollingStock(rs, train, i)
         end
     end
 
-    local t1 = os.clock()
-    storeRunTime(self.trackType .. "-trainTime (remove)", t1 - t0)
-    RuntimeRegistry.storeRunTime("TrackCollector." .. self.trackType .. ".removeMissingTrains", t1 - t0)
-    RuntimeRegistry.storeRunTime("TrackCollector.ALL.removeMissingTrains", t1 - t0)
-
-    -- Update the trains, if they are dirty not yet in the list
-    local movedTrains = {}
-    for _, track in pairs(self.tracks) do
-        local trackId = track.id
-        -- Limitation: only the first train on a track is found
-        local _, occupied, trainName = self.reservedFunction(trackId, true)
-        if occupied then
-            if trainName then
-                if (not self.trains[trainName]) then
-                    EventBroker.fire("Train." .. self.trackType .. ".added", trainName)
-                end
-
-                if (not self.trains[trainName] or self.dirtyTrainNames[trainName]) then
-                    self:updateTrain(trainName)
-                    movedTrains[trainName] = true
-                else
-                    if self.trains[trainName].onTrack ~= trackId then movedTrains[trainName] = true end
-                end
-
-                -- Update the trains
-                -- self:updateTrainInfo(trainName, trackId)
-            end
-        end
-
+    for name in pairs(self.lastRollingStock) do
+        if not lastRollingStock[name] then removedRollingStock[name] = true end
     end
+
+    return lastRollingStock, removedRollingStock
+end
+
+function TrackCollector:removeMissingRollingStock(missingRollingStock)
+    for rollingStockName in pairs(missingRollingStock) do
+        self.rollingStock[rollingStockName] = nil
+        self.rollingStockInfo[rollingStockName] = nil
+    end
+end
+
+function TrackCollector:updateTrains()
+    runtimeData = {}
+
+    local tx = os.clock()
+    local trainsOnTrack = prepareTrainsOnTrack(self.lastTrains or {}, self.tracks, self.reservedFunction)
+    local foundTrains, removedTrains = self:checkTrains(trainsOnTrack)
+    self:removeMissingTrains(removedTrains)
+    self.lastTrains = foundTrains
 
     local t2 = os.clock()
-    storeRunTime(self.trackType .. "-trainTime", t2 - t1)
-    RuntimeRegistry.storeRunTime("TrackCollector." .. self.trackType .. ".updateTrains", t2 - t1)
-    RuntimeRegistry.storeRunTime("TrackCollector.ALL.updateTrains", t2 - t1)
+    storeRunTime(self.trackType .. "-trainTime", t2 - tx)
+    RuntimeRegistry.storeRunTime("TrackCollector." .. self.trackType .. ".updateTrains", t2 - tx)
+    RuntimeRegistry.storeRunTime("TrackCollector.ALL.updateTrains", t2 - tx)
 
-    -- Update the rollingstock, if they are dirty not yet in the list
-    for rollingStockName, rollingStock in pairs(self.rollingStock) do
-        -- Remove all rollingstock without a train
-        if not self.trains[rollingStock.trainName] then
-            self.rollingStock[rollingStockName] = nil
-            self.rollingStockInfo[rollingStockName] = nil
-
-            EventBroker.fire("RollingStock." .. self.trackType .. ".removed", rollingStockName)
-        end
-
-        if movedTrains[rollingStock.trainName] then self:updateRollingStockInfo(rollingStockName) end
-    end
-
-    self.dirtyTrainNames = {}
+    local foundRollingStock, removedRollingStock = self:checkRollingStock(foundTrains)
+    self:removeMissingRollingStock(removedRollingStock)
+    self.lastRollingStock = foundRollingStock
 
     local t3 = os.clock()
     storeRunTime(self.trackType .. "-rollingStockTime", t3 - t2)
-    RuntimeRegistry.storeRunTime("TrackCollector." .. self.trackType .. ".updateRollingStock", t3 - tx)
-    RuntimeRegistry.storeRunTime("TrackCollector.ALL.updateRollingStock", t3 - tx)
+    RuntimeRegistry.storeRunTime("TrackCollector." .. self.trackType .. ".updateRollingStock", t3 - t2)
+    RuntimeRegistry.storeRunTime("TrackCollector.ALL.updateRollingStock", t3 - t2)
     RuntimeRegistry.storeRunTime("TrackCollector." .. self.trackType .. ".OVERALL", t3 - tx)
     RuntimeRegistry.storeRunTime("TrackCollector.ALL.OVERALL", t3 - tx)
-    -- print(
-    --     string.format(
-    --         "Track Collector %s took " ..
-    --             "\n    %.2f s remove old trains," .. "\n    %.2f s update trains"
-    --             .. "\n    %.2f s update rollingstock",
-    --         self.trackType,
-    --         t1 - t0,
-    --         t2 - t1,
-    --         t3 - t2
-    --     )
-    -- )
 end
 
-function TrackCollector:updateTrain(trainName)
-    -- Store trains
-    local haveRoute, route = EEPGetTrainRoute(trainName) -- EEP 11.2 Plugin 2
-
-    local rollingStockCount = EEPGetRollingstockItemsCount(trainName) -- EEP 13.2 Plug-In 2
-    local hasTrainLength, trainLength = EEPGetTrainLength(trainName) -- EEP 15.1 Plug-In 1
-
-    local currentTrain = {
-        id = trainName,
-        route = haveRoute and route or "",
-        rollingStockCount = rollingStockCount or 0,
-        length = tonumber(string.format("%.2f", trainLength or 0))
-    }
-    self.trains[trainName] = currentTrain
-
-    if rollingStockCount then
-        for i = 0, (currentTrain.rollingStockCount - 1) do
-            local rollingStockName = EEPGetRollingstockItemName(currentTrain.id, i) -- EEP 13.2 Plug-In 2
-            local currentRollingStock = self:updateRollingStock(rollingStockName, currentTrain, i)
-            if not hasTrainLength and trainLength then
-                currentTrain.length = currentTrain.length + currentRollingStock
-            end
-        end
-        currentTrain.length = tonumber(string.format("%.2f", currentTrain.length or 0))
-    end
-end
-
-function TrackCollector:updateTrainInfo(trainName, trackIds, speed)
+function TrackCollector:updateTrain(trainName, trackIds, speed)
     if not speed then
         local _, speed1 = EEPGetTrainSpeed(trainName)
         speed = speed1
     end
-    local train = TrainRegistry.forName(trainName)
-    train:setSpeed(speed);
-    train:setOnTrack(trackIds)
-    train:setTrackType(self.trackType)
+    local tx = os.clock()
+    local train, created = TrainRegistry.forName(trainName)
+    RuntimeRegistry.storeRunTime("TrainRegistry.forName", os.clock() - tx)
+    if created or train:getSpeed() > 0 or speed > 0 then
+        self.dirtyTrainNames[trainName] = true
+        train:setSpeed(speed);
+        train:setOnTrack(trackIds)
+        train:setTrackType(self.trackType)
+    end
 
-    local trainInfo = self.trainInfo[trainName] or {}
-    trainInfo.id = trainName
-    trainInfo.trackType = self.trackType
-    trainInfo.speed = tonumber(string.format("%.4f", speed or 0))
-    trainInfo.occupiedTacks = trackIds
-    if not self.trainInfo[trainName] then self.trainInfo[trainName] = trainInfo end
+    local trainStatic = {
+        id = train:getName(),
+        route = train:getRoute(),
+        rollingStockCount = train:getRollingStockCount(),
+        length = train:getLength()
+    }
+    self.trains[trainName] = trainStatic
+
+    local trainDynamic = {
+        id = train:getName(),
+        trackType = train:getTrackType(),
+        speed = train:getSpeed(),
+        occupiedTacks = train:getOnTrack()
+    }
+    if not self.trainInfo[trainName] then self.trainInfo[trainName] = trainDynamic end
 end
 
-function TrackCollector:updateRollingStock(rollingStockName, currentTrain, positionInTrain)
-    -- 1 Kupplung scharf, 2 Abstoßen, 3 Gekuppelt
-    local _, couplingFront = EEPRollingstockGetCouplingFront(rollingStockName) -- EEP 11.0
-    local _, couplingRear = EEPRollingstockGetCouplingRear(rollingStockName) -- EEP 11.0
+---Update the rolling stock
+---@param rs RollingStock
+---@param currentTrain Train
+---@param positionInTrain integer
+function TrackCollector:updateRollingStock(rs, currentTrain, positionInTrain)
+    if self.dirtyTrainNames[currentTrain] then
+        local start1 = os.clock()
 
-    local _, length = EEPRollingstockGetLength(rollingStockName) -- EEP 15
-    local _, propelled = EEPRollingstockGetMotor(rollingStockName) -- EEP 14.2
-    local _, modelType = EEPRollingstockGetModelType(rollingStockName) -- EEP 14.2
-    local _, tag = EEPRollingstockGetTagText(rollingStockName) -- EEP 14.2
+        rs:setPositionInTrain(positionInTrain)
+        rs:setTrainName(currentTrain.name)
+
+        RuntimeRegistry.storeRunTime("TrackCollector.updateRollingStock", os.clock() - start1)
+
+        local start2 = os.clock()
+        local _, trackId, trackDistance, trackDirection, trackSystem = EEPRollingstockGetTrack(rs.rollingStockName)
+        -- EEP 14.2
+
+        local rollingStockMoved = trackId ~= rs:getTrackId() or trackDistance ~= rs:getTrackDistance()
+
+        rs:setTrack(trackId, trackDistance, trackDirection, trackSystem)
+
+        if rollingStockMoved then
+            local hasPos, PosX, PosY, PosZ = EEPRollingstockGetPosition(rs.rollingStockName) -- EEP 16.1
+            local hasMileage, mileage = EEPRollingstockGetMileage(rs.rollingStockName) -- EEP 16.1
+
+            if hasPos then
+                rs:setPosition(hasPos and tonumber(PosX) or -1, hasPos and tonumber(PosY) or -1,
+                               hasPos and tonumber(PosZ) or -1)
+            end
+            if hasMileage then rs:setMileage(mileage) end
+        end
+
+        RuntimeRegistry.storeRunTime("TrackCollector.updateRollingStockInfo", os.clock() - start2)
+    end
 
     local currentRollingStock = {
-        name = rollingStockName,
-        trainName = currentTrain.id,
-        positionInTrain = positionInTrain,
-        couplingFront = couplingFront,
-        couplingRear = couplingRear,
-        length = tonumber(string.format("%.2f", length or -1)),
-        propelled = propelled or true,
-        modelType = modelType or -1,
-        modelTypeText = EEPRollingstockModelTypeText[modelType] or "",
-        tag = tag or ""
+        name = rs.rollingStockName,
+        trainName = rs:getTrainName(),
+        positionInTrain = rs:getPositionInTrain(),
+        couplingFront = rs:getCouplingFront(),
+        couplingRear = rs:getCouplingRear(),
+        length = rs:getLength(),
+        propelled = rs:getPropelled(),
+        modelType = rs:getModelType(),
+        modelTypeText = rs:getModelTypeText(),
+        tag = rs:getTag()
     }
-
-    -- Save
-    self.rollingStock[rollingStockName] = currentRollingStock
-    return currentRollingStock
-end
-
-function TrackCollector:updateRollingStockInfo(rollingStockName)
-    local _, trackId, trackDistance, trackDirection, trackSystem = EEPRollingstockGetTrack(rollingStockName)
-    -- EEP 14.2
-    local hasPos, PosX, PosY, PosZ = EEPRollingstockGetPosition(rollingStockName) -- EEP 16.1
-    local hasMileage, mileage = EEPRollingstockGetMileage(rollingStockName) -- EEP 16.1
+    self.rollingStock[rs.rollingStockName] = currentRollingStock
 
     local rollingStockInfo = {
-        name = rollingStockName,
-        trackId = trackId or -1,
-        trackDistance = tonumber(string.format("%.2f", trackDistance or -1)),
-        trackDirection = trackDirection or -1,
-        trackSystem = trackSystem or -1,
-        posX = hasPos and tonumber(PosX) or -1,
-        posY = hasPos and tonumber(PosY) or -1,
-        posZ = hasPos and tonumber(PosZ) or -1,
-        mileage = hasMileage and tonumber(mileage) or -1
+        name = rs.rollingStockName,
+        trackId = rs:getTrackId(),
+        trackDistance = rs:getTrackDistance(),
+        trackDirection = rs:getTrackDirection(),
+        trackSystem = rs:getTrackSystem(),
+        posX = rs:getX(),
+        posY = rs:getY(),
+        posZ = rs:getZ(),
+        mileage = rs:getMileage()
     }
-    self.rollingStockInfo[rollingStockName] = rollingStockInfo
+    self.rollingStockInfo[rs.rollingStockName] = rollingStockInfo
 end
 
 function TrackCollector:initialize()
@@ -488,7 +458,8 @@ function TrackCollector:new(trackType)
         trainInfo = {},
         rollingStock = {},
         rollingStockInfo = {},
-        dirtyTrainNames = {} -- all changes from outside will create an entry here
+        dirtyTrainNames = {}, -- all changes from outside will create an entry here
+        lastRollingStock = {}
     }
 
     self.__index = self

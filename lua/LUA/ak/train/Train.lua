@@ -17,6 +17,7 @@ local EEPGetTrainLength = EepFunctionWrapper.EEPGetTrainLength
 ---@field route string
 ---@field rollingStockCount number number of cars
 ---@field speed number
+---@field length number
 ---@field trackType string
 ---@field onTrack number
 ---@field occupiedTracks table
@@ -64,6 +65,20 @@ function Train:save(clearCurrentInfo)
         local rollingStockName = EEPGetRollingstockItemName(self.name, i)
         RollingStockRegistry.forName(rollingStockName):save(clearCurrentInfo)
     end
+end
+
+--- Gets the trains name
+---@return string trains name
+function Train:getName()
+    assert(type(self) == "table", "Need to call this method with ':'")
+    return self.name
+end
+
+--- Gets the length of the train in meters
+---@return number length of the train in meters
+function Train:getLength()
+    assert(type(self) == "table", "Need to call this method with ':'")
+    return self.length
 end
 
 ---Adds or replaces a value to ALL rolling stock of the train
