@@ -80,6 +80,7 @@ end
 ---Each line can have multiple routes, e.g. each line may have two opposite directions
 
 function Line:newRoute(routeName)
+    assert(type(self) == "table", "Need to call this method with ':'")
     assert(type(routeName) == "string", "Need 'routeName' as string")
     local route = Route:new(routeName, self.nr)
     self.routes[routeName] = route
