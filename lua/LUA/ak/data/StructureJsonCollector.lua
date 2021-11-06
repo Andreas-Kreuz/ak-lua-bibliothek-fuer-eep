@@ -11,12 +11,12 @@ local EEPStructureGetPosition = EEPStructureGetPosition or function() end -- EEP
 local EEPStructureGetModelType = EEPStructureGetModelType or function() end -- EEP 14.2
 local EEPStructureGetTagText = EEPStructureGetTagText or function() end -- EEP 14.2
 
---- Ermittelt die Ausrichtung der Immobilie/des Landschaftselementes in Grad (°)
+--- Ermittelt die Ausrichtung der Immobilie/des Landschaftselementes in Grad
 -- OK, RotX, RotY, RotZ = EEPStructureGetRotation("#aunnel")
 local EEPStructureGetRotation = EEPStructureGetRotation or function() end -- EEP 16.1
 
 function StructureJsonCollector.initialize()
-    if not enabled or initialized then end
+    if not enabled or initialized then return end
 
     for i = 0, MAX_STRUCTURES do
         local name = "#" .. tostring(i)
