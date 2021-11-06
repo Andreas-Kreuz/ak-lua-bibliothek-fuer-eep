@@ -5,7 +5,11 @@ local ServerController = require("ak.io.ServerController")
 
 -- add traceback to assert message by default
 local _assert = assert
-assert = function(v, message) _assert(v, message and (message .. "\n" .. debug.traceback()) or debug.traceback()) end
+assert = function(v, message)
+    local status, retval = pcall(_assert, v, message)
+    if not status then error(message and message .. "\n" .. debug.traceback() or debug.traceback()) end
+    return retval
+end
 
 local ModuleRegistry = {}
 ModuleRegistry.debug = AkStartWithDebug or false
