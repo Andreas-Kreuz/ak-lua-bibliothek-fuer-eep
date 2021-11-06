@@ -262,7 +262,8 @@ function TrackCollector:removeMissingRollingStock(missingRollingStock)
     end
 end
 
-function TrackCollector:updateTrains()
+function TrackCollector:findAndUpdateTrainsOnTracks()
+    -- NOTE: This method will take dirty trains into account and delete them afterwards
     runtimeData = {}
 
     local tx = os.clock()
@@ -273,8 +274,8 @@ function TrackCollector:updateTrains()
 
     local t2 = os.clock()
     storeRunTime(self.trackType .. "-trainTime", t2 - tx)
-    RuntimeRegistry.storeRunTime("TrackCollector." .. self.trackType .. ".updateTrains", t2 - tx)
-    RuntimeRegistry.storeRunTime("TrackCollector.ALL.updateTrains", t2 - tx)
+    RuntimeRegistry.storeRunTime("TrackCollector." .. self.trackType .. ".updateTrain", t2 - tx)
+    RuntimeRegistry.storeRunTime("TrackCollector.ALL.updateTrain", t2 - tx)
 
     local foundRollingStock, removedRollingStock = self:checkRollingStock(foundTrains)
     self:removeMissingRollingStock(removedRollingStock)
@@ -286,6 +287,8 @@ function TrackCollector:updateTrains()
     RuntimeRegistry.storeRunTime("TrackCollector.ALL.updateRollingStock", t3 - t2)
     RuntimeRegistry.storeRunTime("TrackCollector." .. self.trackType .. ".OVERALL", t3 - tx)
     RuntimeRegistry.storeRunTime("TrackCollector.ALL.OVERALL", t3 - tx)
+
+    self.dirtyTrainNames = {}
 end
 
 function TrackCollector:updateTrain(trainName, trackIds, speed)
@@ -296,7 +299,7 @@ function TrackCollector:updateTrain(trainName, trackIds, speed)
     local tx = os.clock()
     local train, created = TrainRegistry.forName(trainName)
     RuntimeRegistry.storeRunTime("TrainRegistry.forName", os.clock() - tx)
-    if created or train:getSpeed() > 0 or speed > 0 then
+    if created or train:getSpeed() ~= 0 or speed ~= 0 or self.dirtyTrainNames[trainName] then
         self.dirtyTrainNames[trainName] = true
         train:setSpeed(speed);
         train:setOnTrack(trackIds)
@@ -338,7 +341,6 @@ function TrackCollector:updateRollingStock(rs, currentTrain, positionInTrain)
         -- EEP 14.2
 
         local rollingStockMoved = trackId ~= rs:getTrackId() or trackDistance ~= rs:getTrackDistance()
-
         rs:setTrack(trackId, trackDistance, trackDirection, trackSystem)
 
         if rollingStockMoved then
@@ -395,10 +397,10 @@ function TrackCollector:initialize()
         end
     end
 
-    self:updateTrains()
+    self:findAndUpdateTrainsOnTracks()
 end
 
-function TrackCollector:update() self:updateTrains() end
+function TrackCollector:update() self:findAndUpdateTrainsOnTracks() end
 
 function TrackCollector:reactOnTrainChanges()
     -- React to train changes from EEP
@@ -433,7 +435,7 @@ function TrackCollector:reactOnTrainChanges()
 end
 
 function TrackCollector:updateData()
-    self:updateTrains()
+    self:findAndUpdateTrainsOnTracks()
     return {
         [self.trackType .. "-tracks"] = self.tracks,
         [self.trackType .. "-trains"] = self.trains,
