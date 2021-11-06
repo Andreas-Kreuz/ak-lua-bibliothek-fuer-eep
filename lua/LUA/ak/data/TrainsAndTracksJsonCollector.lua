@@ -40,8 +40,6 @@ function TrainsAndTracksJsonCollector.collectData()
     if not enabled then return end
 
     -- reset runtime data
-    data["runtime"] = {}
-
     if not initialized then TrainsAndTracksJsonCollector.initialize() end
 
     updateTracks()

@@ -10,6 +10,7 @@ local ServerController = require("ak.io.ServerController")
 if AkDebugLoad then print("Loading ak.io.ServerController ...") end
 local AkWebServerIo = require("ak.io.AkWebServerIo")
 local AkCommandExecutor = require("ak.io.AkCommandExecutor")
+local RuntimeRegistry = require "ak.util.RuntimeRegistry"
 local os = require("os")
 
 local ServerController = {}
@@ -43,6 +44,7 @@ ServerController.checkServerStatus = true
 ServerController.activeEntries = {}
 
 local registeredJsonCollectors = {}
+local runTimeGroupsToKeep = {}
 local collectedData = {}
 local checksum = 0
 local initialized = false
@@ -75,9 +77,11 @@ local function initializeJsonCollector(jsonCollector)
     local t1 = os.clock()
     local timeDiff = t1 - t0
     if ServerController.debug then
-        print(
-        string.format("ServerController: initialize() %4.0f ms for \"%s\"", timeDiff * 1000, jsonCollector.name))
+        print(string.format("ServerController: initialize() %4.0f ms for \"%s\"", timeDiff * 1000, jsonCollector.name))
     end
+    local group = "JsonCollector." .. jsonCollector.name .. ".initialize"
+    RuntimeRegistry.storeRunTime(group, timeDiff)
+    runTimeGroupsToKeep[group] = true
 end
 
 local function collectFrom(jsonCollector, printFirstTime)
@@ -86,8 +90,10 @@ local function collectFrom(jsonCollector, printFirstTime)
     local t1 = os.clock()
     local timeDiff = t1 - t0
     if ServerController.debug and (timeDiff > 0.01 or printFirstTime) then
-        print(string.format('ServerController: collectData() %4.0f ms for "%s"', timeDiff * 1000, jsonCollector.name))
+        print(
+        string.format("ServerController: collectData() %4.0f ms for \"%s\"", timeDiff * 1000, jsonCollector.name))
     end
+    RuntimeRegistry.storeRunTime("JsonCollector." .. jsonCollector.name .. ".collectData", timeDiff)
     return newData
 end
 
@@ -96,6 +102,7 @@ local function collectData(printFirstTime)
         local newData = collectFrom(jsonCollector, printFirstTime)
         for key, value in pairs(newData) do collectedData[key] = value end
     end
+    collectedData["runtime"] = RuntimeRegistry.getAll()
 end
 
 --- Initialize data.
@@ -136,7 +143,7 @@ local function expandData()
     local exportData = {}
     for key, value in pairs(collectedData) do
         if next(ServerController.activeEntries) == nil or ServerController.activeEntries[key] then
-		    -- empty list or requested entry type
+            -- empty list or requested entry type
             exportData[key] = value
             table.insert(orderedKeys, key)
         end
@@ -210,6 +217,20 @@ function ServerController.communicateWithServer(modulus)
                             (overallTime4 - overallTime3) * 1000, (overallTime5 - overallTime4) * 1000,
                             (overallTime6 - overallTime5) * 1000, (overallTime7 - overallTime6) * 1000,
                             (allowedTimeDiff) * 1000))
+    end
+
+    if modulus == 0 or i % modulus == 0 and serverIsReady then
+        RuntimeRegistry.resetAll(runTimeGroupsToKeep)
+        RuntimeRegistry.storeRunTime("ServerController.communicateWithServer-1-waitForServer",
+                                     overallTime1 - overallTime0)
+        RuntimeRegistry.storeRunTime("ServerController.communicateWithServer-2-initialize",
+                                     overallTime2 - overallTime1)
+        RuntimeRegistry.storeRunTime("ServerController.communicateWithServer-3-commands", overallTime3 - overallTime2)
+        RuntimeRegistry.storeRunTime("ServerController.communicateWithServer-4-collect", overallTime4 - overallTime3)
+        RuntimeRegistry.storeRunTime("ServerController.communicateWithServer-5-expand", overallTime5 - overallTime4)
+        RuntimeRegistry.storeRunTime("ServerController.communicateWithServer-6-encode", overallTime6 - overallTime5)
+        RuntimeRegistry.storeRunTime("ServerController.communicateWithServer-7-write", overallTime7 - overallTime6)
+        RuntimeRegistry.storeRunTime("ServerController.communicateWithServer-OVERALL", timeDiff)
     end
 end
 
