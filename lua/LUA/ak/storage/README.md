@@ -11,6 +11,4 @@ img: "/docs/assets/headers/SourceCode.png"
 
 Anstehende Aufgaben:
 
-- [ ] Funktionsnamen auf englisch umstellen
-
 ❗ Die Verwendung der Skripte in diesem Paket wird derzeit nicht empfohlen, da es sich noch stark ändern kann! Wer es trotzdem verwenden möchte, sollte eine eigene Kopie anlegen.
