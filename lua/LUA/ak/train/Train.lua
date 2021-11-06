@@ -152,7 +152,7 @@ end
 ---@param speed number train speed in km/h
 function Train:setSpeed(speed)
     assert(type(self) == "table", "Need to call this method with ':'")
-    assert(type(speed) == "table", "Need 'speed' as number")
+    assert(type(speed) == "number", "Need 'speed' as number")
     speed = tonumber(string.format("%1.1f", speed))
     local oldSpeed = self.speed
     self.speed = speed
