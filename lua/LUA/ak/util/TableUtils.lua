@@ -63,4 +63,18 @@ TableUtils.deepDictCompare = deepDictCompare
 ---@param array table
 function TableUtils.clearArray(array) for i = 1, #array, 1 do array[i] = nil end end
 
+-- from http://lua-users.org/wiki/CopyTable
+---@param orig table to be copied
+function TableUtils.shallowcopy(orig)
+    local orig_type = type(orig)
+    local copy
+    if orig_type == "table" then
+        copy = {}
+        for orig_key, orig_value in pairs(orig) do copy[orig_key] = orig_value end
+    else -- number, string, boolean, etc
+        copy = orig
+    end
+    return copy
+end
+
 return TableUtils
