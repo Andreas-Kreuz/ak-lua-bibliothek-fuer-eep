@@ -3,6 +3,10 @@ local TableUtils = require("ak.util.TableUtils")
 local os = require("os")
 local ServerController = require("ak.io.ServerController")
 
+-- add traceback to assert message by default
+local _assert = assert
+assert = function(v, message) _assert(v, message and (message .. "\n" .. debug.traceback()) or debug.traceback()) end
+
 local ModuleRegistry = {}
 ModuleRegistry.debug = AkStartWithDebug or false
 local enableServer = true
@@ -67,8 +71,8 @@ function ModuleRegistry.unregisterModules(...)
     updateModuleOrder()
 end
 
--- ACHTUNG: DIE VERWENDUNG ERFOLGT AUF EIGENE GEFAHR. ES IST GUT MÖGLICH,
---          DASS EEP ABSTÜRZT, WENN NICHT ALLE ABHÄNGIGKEITEN DER BIBLIOTHEK
+-- ACHTUNG: DIE VERWENDUNG ERFOLGT AUF EIGENE GEFAHR. ES IST GUT MÃƒâ€“GLICH,
+--          DASS EEP ABSTÃƒÅ“RZT, WENN NICHT ALLE ABHÃƒâ€žNGIGKEITEN DER BIBLIOTHEK
 --          GEFUNDEN WERDEN.
 function ModuleRegistry.useDlls(enableDlls)
     assert(enableDlls == true or enableDlls == false)
@@ -120,7 +124,7 @@ function ModuleRegistry.runTasks(cycleCount)
 
     local t3 = os.clock()
     if enableServer then
-        -- Sorgt dafür, dass alle JsonDaten der registrieren XxxJsonColletor zum Server kommen
+        -- Sorgt dafÃƒÂ¼r, dass alle JsonDaten der registrieren XxxJsonColletor zum Server kommen
         -- und dass die Befehle des Servers ausgewertet werden
         ServerController.communicateWithServer(cycleCount)
     end
