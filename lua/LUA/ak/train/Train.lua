@@ -39,7 +39,7 @@ function Train:new(o)
     setmetatable(o, self)
     o.type = "Train"
     o.values = o:load()
-    o:setRoute(trainRoute)
+    o.route = trainRoute
     o.rollingStockCount = rollingStockCount
     o.length = tonumber(string.format("%.2f", length or 0))
     o.speed = speed
