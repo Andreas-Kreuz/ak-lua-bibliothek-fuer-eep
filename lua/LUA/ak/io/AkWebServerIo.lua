@@ -81,7 +81,7 @@ function AkWebServerIo.setOutputDirectory(dirName)
     inFileCommands = io.open(inFileNameCommands, "r")
 end
 
---- Bestimme Dafault-Dateipfade.
+--- Bestimme Default-Dateipfade.
 AkWebServerIo.setOutputDirectory(existingDirOf({
     -- default value
     "../LUA/ak/io/exchange", "./LUA/ak/io/exchange"
