@@ -13,10 +13,16 @@ if AkDebugLoad then print("Loading ak.util.Queue ...") end
 ---@class EventBroker
 ---@field fire fun(type:string, payload:string):nil
 ---@field addListener fun(listener:EventListener):nil
+---@field printListener EventListener a default listeners to print out all events to the standard-out
 local EventBroker = {}
 local os = require("os")
 local counter = -1
 local listeners = {}
+
+---@type EventListener
+EventBroker.printListener = {
+    fireEvent = function(event) print(event.date, event.counter, event.type, event.payload) end
+}
 
 ---Inform the EventBroker of new events, which will then be given to the EventListeners
 ---@param type string
@@ -34,7 +40,7 @@ end
 ---@param listener EventListener
 function EventBroker.addListener(listener) listeners[listener] = true end
 
---EventBroker.addListener({fireEvent = function(event) print(event.date, event.counter, event.type, event.payload) end})
+if AkStartWithDebug then EventBroker.addListener(EventBroker.printListener) end
 
 EventBroker.fire("ak.EventBroker.reset", "------------------------------------------------")
 
