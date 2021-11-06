@@ -2,18 +2,14 @@ if AkDebugLoad then print("Loading ak.train.RollingStock ...") end
 local RollingStockModels = require("ak.train.RollingStockModels")
 local StorageUtility = require("ak.storage.StorageUtility")
 local TagKeys = require("ak.train.TagKeys")
+local EventBroker = require "ak.util.EventBroker"
+local json = require "ak.io.json"
 
 ---@class RollingStock
 ---@field values table
 ---@field rollingStockName string
 ---@field model RollingStockModel
 local RollingStock = {}
-
-function RollingStock.forName(rollingStockName)
-    assert(rollingStockName, "Provide a rollingStockName")
-    assert(type(rollingStockName) == "string", "Need 'rollingStockName' as string")
-    return RollingStock:new({rollingStockName = rollingStockName})
-end
 
 function RollingStock:new(o)
     assert(o.rollingStockName, "Provide a rollingStockName")
@@ -62,8 +58,13 @@ end
 function RollingStock:setStations(stations) self.model:setStations(self.rollingStockName, stations) end
 
 function RollingStock:setWagonNr(nr)
+    local oldNr = self:getValue(TagKeys.RollingStock.wagonNumber)
     self:setValue(TagKeys.RollingStock.wagonNumber, nr)
     self.model:setWagonNr(self.rollingStockName, nr)
+    if oldNr ~= nr then
+        EventBroker.fire("ak.train.RollingStock.nrChanged",
+                         json.encode({rollingStockName = self.rollingStockName, nr = nr}))
+    end
 end
 
 function RollingStock:openDoors() self.model:openDoors(self.rollingStockName) end

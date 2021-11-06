@@ -1,5 +1,5 @@
 if AkDebugLoad then print("Loading ak.roadline.StationQueueEntry ...") end
-local Train = require("ak.train.Train")
+local TrainRegistry = require("ak.train.TrainRegistry")
 
 ---@class StationQueueEntry
 ---@field trainName string
@@ -9,7 +9,7 @@ local Train = require("ak.train.Train")
 ---@field platform string
 local StationQueueEntry = {}
 function StationQueueEntry:new(trainName, timeInMinutes, platform)
-    local train = Train.forName(trainName)
+    local train = TrainRegistry.forName(trainName)
     local destination = train:getDestination()
     local line = train:getLine()
     local o = {

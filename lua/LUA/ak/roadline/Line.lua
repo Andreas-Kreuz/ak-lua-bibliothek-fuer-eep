@@ -1,6 +1,6 @@
 if AkDebugLoad then print("Loading ak.roadline.Line ...") end
 
-local Train = require("ak.train.Train")
+local TrainRegistry = require("ak.train.TrainRegistry")
 local Route = require("ak.roadline.Route")
 
 ---@class Line
@@ -35,7 +35,7 @@ function Line.changeRoute(trainName, station, departureTime)
     assert(station.type == "RoadStation", "Provide 'station' as 'RoadStation'")
     if departureTime then assert(type(departureTime) == "number", "Need 'departureTime' as number") end
 
-    local train = Train.forName(trainName)
+    local train = TrainRegistry.forName(trainName)
     local oldRoute = train:getRoute()
     if Line.debug then
         print("Change destination for " .. trainName .. " at " .. station .. " (" .. oldRoute .. ")")
@@ -97,7 +97,7 @@ function Line.scheduleDeparture(trainName, station, timeInMinutes)
     assert(station.type == "RoadStation", "Provide 'station' as 'RoadStation'")
     assert(type(timeInMinutes) == "number", "Need 'timeInMinutes' as number")
 
-    local train = Train.forName(trainName)
+    local train = TrainRegistry.forName(trainName)
     local lineName = train:getLine()
     local routeName = train:getRoute()
     assert(type(routeName) == "string", "Need 'routeName' as string")
@@ -128,7 +128,7 @@ function Line.trainDeparted(trainName, station)
     assert(station.type == "RoadStation", "Provide 'station' as 'RoadStation'")
 
     station:trainLeft(trainName)
-    local train = Train.forName(trainName)
+    local train = TrainRegistry.forName(trainName)
     local lineName = train:getLine()
     -- assert(type(lineName) == "string", "Need 'lineName' as string")
     local routeName = train:getRoute()

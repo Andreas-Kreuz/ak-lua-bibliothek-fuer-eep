@@ -9,15 +9,15 @@ describe("ak.train.RollingStock", function()
 end)
 
 insulate("parse rollingstockname", function()
-    local RollingStock = require("ak.train.RollingStock")
+    local RollingStockRegistry = require("ak.train.RollingStockRegistry")
     local RollingStockModel = require("ak.train.RollingStockModel")
     local RollingStockModels = require("ak.train.RollingStockModels")
 
     RollingStockModels.addModelByName("MyModel", RollingStockModel:new({myMarker = "MODEL A"}))
     RollingStockModels.assignModel("MyModel;005", RollingStockModel:new({myMarker = "MODEL B"}))
 
-    local stock1 = RollingStock.forName("MyModel;003")
-    local stock2 = RollingStock.forName("MyModel;005")
+    local stock1 = RollingStockRegistry.forName("MyModel;003")
+    local stock2 = RollingStockRegistry.forName("MyModel;005")
 
     it("stock1 name", function() assert.equals("MyModel;003", stock1.rollingStockName) end)
     it("stock2 name", function() assert.equals("MyModel;005", stock2.rollingStockName) end)

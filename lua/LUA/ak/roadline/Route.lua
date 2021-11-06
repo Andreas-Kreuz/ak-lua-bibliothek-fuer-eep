@@ -62,7 +62,7 @@ function Route:prepareDepartureAt(train, station, timeInMinutes)
         if haveStation then
             local timeToStation = s == station and 0 or self.stations[i].timeToStation
             timeInMinutes = timeToStation and (timeInMinutes + timeToStation) or timeInMinutes
-            s:trainArrivesIn(train.trainName, timeInMinutes)
+            s:trainArrivesIn(train.name, timeInMinutes)
         end
     end
 end
@@ -83,10 +83,10 @@ function Route:trainDeparted(train, station)
         if haveStation then
             local timeToStation = self.stations[i].timeToStation
             timeInMinutes = timeToStation and (timeInMinutes + timeToStation) or timeInMinutes
-            s:trainArrivesIn(train.trainName, timeInMinutes)
+            s:trainArrivesIn(train.name, timeInMinutes)
         end
         if s == station then
-            station:trainLeft(train.trainName)
+            station:trainLeft(train.name)
             haveStation = true
         end
     end

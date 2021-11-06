@@ -1,6 +1,6 @@
 if AkDebugLoad then print("Loading ak.roadline.RoadStation ...") end
 
-local Train = require("ak.train.Train")
+local TrainRegistry = require "ak.train.TrainRegistry"
 local StationQueue = require("ak.roadline.StationQueue")
 local StorageUtility = require("ak.storage.StorageUtility")
 
@@ -53,7 +53,7 @@ function RoadStation:trainArrivesIn(trainName, timeInMinutes)
     assert(type(trainName) == "string", "Need 'trainName' as string")
     assert(type(timeInMinutes) == "number", "Need 'timeInMinutes' as number")
 
-    local train = Train.forName(trainName)
+    local train = TrainRegistry.forName(trainName)
     local routeName = train:getRoute()
     assert(type(routeName) == "string", "Need 'routeName' as string")
 

@@ -1,6 +1,6 @@
 insulate("Line Management", function()
     local EepSimulator = require("ak.core.eep.EepSimulator")
-    local Train = require("ak.train.Train")
+    local TrainRegistry = require "ak.train.TrainRegistry"
     local Line = require("ak.roadline.Line")
     local RoadStation = require("ak.roadline.RoadStation")
 
@@ -72,7 +72,7 @@ insulate("Line Management", function()
 
     -- Create a new train
 
-    Train.forName(testTrain):setRoute(l10MesseDresden.routeName)
+    TrainRegistry.forName(testTrain):setRoute(l10MesseDresden.routeName)
 
     -- Prepare to use route 1
     -- line10:prepareDepartureAt(trainName, l10MesseDresden, 10)-- The following stations are informed

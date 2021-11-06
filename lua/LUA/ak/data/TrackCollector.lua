@@ -1,4 +1,9 @@
 if AkDebugLoad then print("Loading ak.data.TrackCollector ...") end
+
+local TableUtils = require "ak.util.TableUtils"
+local EventBroker = require "ak.util.EventBroker"
+local TrainRegistry = require "ak.train.TrainRegistry"
+local RuntimeRegistry = require "ak.util.RuntimeRegistry"
 local TrackCollector = {}
 local os = require("os")
 
@@ -46,7 +51,7 @@ function storeRunTime(group, time)
     if not runtimeData[group] then runtimeData[group] = {id = group, count = 0, time = 0} end
     local runtime = runtimeData[group]
     runtime.count = runtime.count + 1
-    runtime.time = runtime.time + time
+    runtime.time = runtime.time + time * 1000
 end
 
 --- Indirect call of EEP function (or any other function) including time measurement
@@ -187,9 +192,50 @@ local function EEPGetRollingstockItemName(...)
     return executeAndStoreRunTime(_EEPGetRollingstockItemName, "EEPGetRollingstockItemName", ...)
 end
 
+function prepareTrainsOnTrack(lastTrains, tracks, detectFunction)
+    local trainsOnTrack = {}
+
+    -- Create empty list of tracks for each known train
+    for trainName in pairs(lastTrains) do
+        print(string.format("TRAINNAME: %s", trainName))
+        trainsOnTrack[trainName] = {}
+    end
+
+    -- Fill the list of tracks for each train by looking in every track
+    for _, track in pairs(tracks) do
+        local trackId = track.id
+        -- Limitation: only the first train on a track is found
+        local _, occupied, trainName = detectFunction(trackId, true)
+        if occupied and trainName then
+            trainsOnTrack[trainName] = trainsOnTrack[trainName] or {}
+            trainsOnTrack[trainName][tostring(trackId)] = trackId
+        end
+    end
+
+    return trainsOnTrack
+end
+
 function TrackCollector:updateTrains()
     runtimeData = {}
+    local tx = os.clock()
+
+    local trainsOnTrack = prepareTrainsOnTrack(self.lastTrains or {}, self.tracks, self.reservedFunction)
+
+    -- Go through the list of all trains and update them
+    for trainName, trackIds in pairs(trainsOnTrack) do
+        local trainExists, speed = EEPGetTrainSpeed(trainName) -- EEP 11.0
+        if trainExists then
+            self:updateTrainInfo(trainName, trackIds, speed)
+        else
+            TrainRegistry.trainDisappeared(trainName)
+            return false
+        end
+    end
+
     local t0 = os.clock()
+    storeRunTime(self.trackType .. "-trainTime new stuff", t0 - tx)
+    RuntimeRegistry.storeRunTime("TrackCollector." .. self.trackType .. ".newTrainTime", t0 - tx)
+    RuntimeRegistry.storeRunTime("TrackCollector.ALL.newTrainTime", t0 - tx)
 
     -- Remove missing trains
     for trainName, train in pairs(self.trains) do
@@ -199,11 +245,15 @@ function TrackCollector:updateTrains()
         else
             self.trains[trainName] = nil
             self.trainInfo[trainName] = nil
+
+            TrainRegistry.trainDisappeared(trainName)
         end
     end
 
     local t1 = os.clock()
     storeRunTime(self.trackType .. "-trainTime (remove)", t1 - t0)
+    RuntimeRegistry.storeRunTime("TrackCollector." .. self.trackType .. ".removeMissingTrains", t1 - t0)
+    RuntimeRegistry.storeRunTime("TrackCollector.ALL.removeMissingTrains", t1 - t0)
 
     -- Update the trains, if they are dirty not yet in the list
     local movedTrains = {}
@@ -213,6 +263,10 @@ function TrackCollector:updateTrains()
         local _, occupied, trainName = self.reservedFunction(trackId, true)
         if occupied then
             if trainName then
+                if (not self.trains[trainName]) then
+                    EventBroker.fire("Train." .. self.trackType .. ".added", trainName)
+                end
+
                 if (not self.trains[trainName] or self.dirtyTrainNames[trainName]) then
                     self:updateTrain(trainName)
                     movedTrains[trainName] = true
@@ -221,7 +275,7 @@ function TrackCollector:updateTrains()
                 end
 
                 -- Update the trains
-                self:updateTrainInfo(trainName, trackId)
+                -- self:updateTrainInfo(trainName, trackId)
             end
         end
 
@@ -229,6 +283,8 @@ function TrackCollector:updateTrains()
 
     local t2 = os.clock()
     storeRunTime(self.trackType .. "-trainTime", t2 - t1)
+    RuntimeRegistry.storeRunTime("TrackCollector." .. self.trackType .. ".updateTrains", t2 - t1)
+    RuntimeRegistry.storeRunTime("TrackCollector.ALL.updateTrains", t2 - t1)
 
     -- Update the rollingstock, if they are dirty not yet in the list
     for rollingStockName, rollingStock in pairs(self.rollingStock) do
@@ -236,6 +292,8 @@ function TrackCollector:updateTrains()
         if not self.trains[rollingStock.trainName] then
             self.rollingStock[rollingStockName] = nil
             self.rollingStockInfo[rollingStockName] = nil
+
+            EventBroker.fire("RollingStock." .. self.trackType .. ".removed", rollingStockName)
         end
 
         if movedTrains[rollingStock.trainName] then self:updateRollingStockInfo(rollingStockName) end
@@ -245,6 +303,10 @@ function TrackCollector:updateTrains()
 
     local t3 = os.clock()
     storeRunTime(self.trackType .. "-rollingStockTime", t3 - t2)
+    RuntimeRegistry.storeRunTime("TrackCollector." .. self.trackType .. ".updateRollingStock", t3 - tx)
+    RuntimeRegistry.storeRunTime("TrackCollector.ALL.updateRollingStock", t3 - tx)
+    RuntimeRegistry.storeRunTime("TrackCollector." .. self.trackType .. ".OVERALL", t3 - tx)
+    RuntimeRegistry.storeRunTime("TrackCollector.ALL.OVERALL", t3 - tx)
     -- print(
     --     string.format(
     --         "Track Collector %s took " ..
@@ -285,15 +347,21 @@ function TrackCollector:updateTrain(trainName)
     end
 end
 
-function TrackCollector:updateTrainInfo(trainName, trackId)
-    local _, speed = EEPGetTrainSpeed(trainName) -- EEP 11.0
+function TrackCollector:updateTrainInfo(trainName, trackIds, speed)
+    if not speed then
+        local _, speed1 = EEPGetTrainSpeed(trainName)
+        speed = speed1
+    end
+    local train = TrainRegistry.forName(trainName)
+    train:setSpeed(speed);
+    train:setOnTrack(trackIds)
+    train:setTrackType(self.trackType)
+
     local trainInfo = self.trainInfo[trainName] or {}
     trainInfo.id = trainName
     trainInfo.trackType = self.trackType
     trainInfo.speed = tonumber(string.format("%.4f", speed or 0))
-    trainInfo.onTrack = trackId
-    trainInfo.occupiedTacks = trainInfo.occupiedTacks or {}
-    trainInfo.occupiedTacks[tostring(trackId)] = trackId
+    trainInfo.occupiedTacks = trackIds
     if not self.trainInfo[trainName] then self.trainInfo[trainName] = trainInfo end
 end
 
@@ -353,6 +421,7 @@ function TrackCollector:initialize()
             track.id = id
             -- track.position = val
             self.tracks[tostring(track.id)] = track
+            EventBroker.fire("Track." .. self.trackType .. ".added", track.id)
         end
     end
 
@@ -415,6 +484,7 @@ function TrackCollector:new(trackType)
         trackType = trackType,
         tracks = {},
         trains = {}, -- all currently known trains of this tracktype
+        cachedTrains = {},
         trainInfo = {},
         rollingStock = {},
         rollingStockInfo = {},
