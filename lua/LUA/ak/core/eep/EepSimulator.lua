@@ -91,7 +91,7 @@ local switches = {}
 -- @param signalId Id des Signals
 -- @param signalStellung Stellung des Signals
 -- @param informiereEepOnSignal (optional) Wenn = 1 dann aktiviere Funktion EEPOnSignal_x()
--- @return ok 1 wenn das Signal und die gewünschte Signalstellung existieren
+-- @return ok 1 wenn das Signal und die gewuenschte Signalstellung existieren
 -- oder 0, wenn eins von beidem nicht existiert.
 function EEPSetSignal(signalId, signalStellung, informiereEepOnSignal)
     assert(signalId > 0)
@@ -101,7 +101,7 @@ end
 
 --- Liefert die aktuelle Stellung des Signal x
 -- @param signalId Id des Signals
--- @return Stellung des Signals, Wenn das abgefragte Signal nicht existiert, ist der Rückgabewert 0.
+-- @return Stellung des Signals, Wenn das abgefragte Signal nicht existiert, ist der Rueckgabewert 0.
 function EEPGetSignal(signalId)
     assert(signalId > 0)
     return signale[signalId] and signale[signalId] or 2
@@ -111,7 +111,7 @@ end
 -- @param switchId Id der Weiche
 -- @param switchPosition Stellung der Weiche
 -- @param activateEEPOnSwitch (optional) Wenn = 1 dann aktiviere Funktion EEPOnSignal_x()
--- @return ok 1 wenn die Weiche und die gewünschte Weichenstellung existieren
+-- @return ok 1 wenn die Weiche und die gewuenschte Weichenstellung existieren
 -- oder 0, wenn eins von beidem nicht existiert.
 function EEPSetSwitch(switchId, switchPosition, activateEEPOnSwitch)
     switches[switchId] = switchPosition
@@ -147,9 +147,10 @@ local structureAxis = {}
 function EEPSetTrainSpeed(trainName, speed) trainSpeeds[trainName] = speed end
 
 --- Geschwindigkeit lesen
--- @param trainName Name des Zuges
--- @return Geschwindigkeit
-function EEPGetTrainSpeed(trainName) return trainSpeeds[trainName] ~= nil, trainSpeeds[trainName] end
+---@param trainName string Name des Zuges
+---@return boolean Ist der Zug vorhanden
+---@return number Geschwindigkeit
+function EEPGetTrainSpeed(trainName) return trainSpeeds[trainName] ~= nil, trainSpeeds[trainName] or 0 end
 
 --- Setzen der Kupplung (hinten)
 -- @param rsName Name des Rollmaterial,
@@ -537,7 +538,7 @@ function EEPGetTrainyardItemStatus(depotId, zugverband, position) return 1 end
 
 --- Argument ist der Name des Fahrzeugs.
 -- Rueckgabewert 1 ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
--- Rueckgabewert 2 ist die Länge des Fahrzeugs von Kupplung zu Kupplung in Metern.
+-- Rueckgabewert 2 ist die Laenge des Fahrzeugs von Kupplung zu Kupplung in Metern.
 function EEPRollingstockGetLength(rollingStockName) return true, 5 end
 
 --- Argument ist der Name des Fahrzeugs.
@@ -547,10 +548,10 @@ function EEPRollingstockGetMotor(rollingStockName) return true, 5 end
 
 --- Argument ist der Name des Fahrzeugs.
 -- Rueckgabewert 1 ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
--- Rückgabewert 2 ist die ID des Gleisstücks, auf dem sich das Fahrzeug befindet.
--- Rueckgabewert 3 ist der Abstand (in Metern) zum Anfang des Gleisstücks, auf dem sich das
+-- Rueckgabewert 2 ist die ID des Gleisstuecks, auf dem sich das Fahrzeug befindet.
+-- Rueckgabewert 3 ist der Abstand (in Metern) zum Anfang des Gleisstuecks, auf dem sich das
 -- Fahrzeug befindet.
--- Rueckgabewert 4 ist die Ausrichtung relativ zur Fahrtrichtung des Gleisstücks, auf dem sich das
+-- Rueckgabewert 4 ist die Ausrichtung relativ zur Fahrtrichtung des Gleisstuecks, auf dem sich das
 -- Fahrzeug befindet. 1 = in Fahrtrichtung, 0 = entgegen der Fahrtrichtung
 -- Rueckgabewert 5 ist die Nummer des Gleissystems, auf dem das Fahrzeug unterwegs ist.
 -- 1 = Bahngleise
@@ -560,7 +561,7 @@ function EEPRollingstockGetMotor(rollingStockName) return true, 5 end
 function EEPRollingstockGetTrack(rollingStockName) return true, 5, 5, 1, 1 end
 
 --- Argument ist der Fahrzeugname.
--- Rueckgabewert 1 ist true, wenn die Ausführung erfolgreich war, sonst false.
+-- Rueckgabewert 1 ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
 -- Rueckgabewert 2 ist die Kategorie, welche der Konstrukteur im Modell eingetragen hat:
 -- 1 = Tenderlok
 -- 2 = Schlepptenderlok
@@ -634,34 +635,34 @@ end
 local tags = {structures = {}, rollingStock = {}}
 
 --- Ã„ndert den Tag-Text einer Immobilie. Jede Immobilie kann jetzt einen individuellen String von
---- maximal 1024 Zeichen Länge mitführen. Diese Strings werden mit der Anlage gespeichert und
+--- maximal 1024 Zeichen Laenge mitfuehren. Diese Strings werden mit der Anlage gespeichert und
 --- geladen.
 --- Bemerkungen * Argument 1 ist der Lua-Name der Immobilie oder des LS-Elements.
---- Es genügt die Nummer mit vorangestelltem #-Zeichen.
---- * Argument 2 ist der gewünschte Text.
---- * Rückgabewert ist true, wenn die Ausführung erfolgreich war, sonst false
+--- Es genuegt die Nummer mit vorangestelltem #-Zeichen.
+--- * Argument 2 ist der gewuenschte Text.
+--- * Rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false
 function EEPStructureGetTagText(name, tag)
     tags.structures[name] = tag
     return true
 end
 
 --- Liest den Tag-Text einer Immobilie aus. Mittels Tag-Texten kÃ¶nnen Immobilien als permanente
---- Speicher für relevante Informationen genutzt werden.
+--- Speicher fuer relevante Informationen genutzt werden.
 --- Bemerkungen
 --- * Argument 1 ist der Lua-Name der Immobilie oder des LS-Elements.
---- Es genügt die Nummer mit vorangestelltem #-Zeichen.
---- * Rückgabewert 1 ist true, wenn die Ausführung erfolgreich war, sonst false.
---- * Rückgabewert 2 ist der Tag-Text, welcher der Immobilie mitgegeben wurde
+--- Es genuegt die Nummer mit vorangestelltem #-Zeichen.
+--- * Rueckgabewert 1 ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
+--- * Rueckgabewert 2 ist der Tag-Text, welcher der Immobilie mitgegeben wurde
 function EEPStructureGetTagText(name) return true, tags.structures[name] end
 
 --- Ã„ndert den Tag-Text eines Fahrzeugs. Jedes Fahrzeug kann jetzt einen eigenen String von
---- maximal 1024 Zeichen Länge mitführen. Diese Strings werden mit der Anlage gespeichert und
+--- maximal 1024 Zeichen Laenge mitfuehren. Diese Strings werden mit der Anlage gespeichert und
 --- geladen. Da die Texte individuell jedem Fahrzeug zugeordnet sind, gehen sie im Gegensatz zu
 --- Routen nicht durch RangiermanÃ¶ver etc. verloren.
 --- Bemerkungen
 --- * Argument 1 ist der Name des Fahrzeugs.
---- * Argument 2 ist der gewünschte Text.
---- * Rückgabewert ist true, wenn die Ausführung erfolgreich war, sonst false.
+--- * Argument 2 ist der gewuenschte Text.
+--- * Rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
 function EEPRollingstockSetTagText(name, tag)
     tags.rollingStock[name] = tag
     return true
@@ -671,8 +672,8 @@ end
 --- werden. Beispielsweise kann man dort Waggontypen speichern oder Bestimmungsorte.
 --- Bemerkungen
 --- * Argument 1 ist der Name des Fahrzeugs.
---- * Rückgabewert 1 ist true, wenn die Ausführung erfolgreich war, sonst false.
---- * Rückgabewert 2 ist der Tag-Text, welcher dem Waggon mitgegeben wurde.
+--- * Rueckgabewert 1 ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
+--- * Rueckgabewert 2 ist der Tag-Text, welcher dem Waggon mitgegeben wurde.
 function EEPRollingstockGetTagText(name) return true, tags.rollingStock[name] end
 
 function EEPStructureSetTextureText(name, flaeche, text) return true end
@@ -690,38 +691,38 @@ function EEPAuxiliaryTrackSetTextureText(id, flaeche, text) return true end
 
 local activeTrain = ""
 
---- Ermittelt, welcher Zug derzeit im Steuerdialog ausgewählt ist. (EEP 15.1)
--- Befindet sich der Steuerdialog im manuellen Modus, dann wird der Name des Zuges zurückgegeben,
--- welcher das ausgewählte Fahrzeug enthält
+--- Ermittelt, welcher Zug derzeit im Steuerdialog ausgewaehlt ist. (EEP 15.1)
+-- Befindet sich der Steuerdialog im manuellen Modus, dann wird der Name des Zuges zurueckgegeben,
+-- welcher das ausgewaehlte Fahrzeug enthaelt
 -- @return trainName Name des Zuges
 function EEPGetTrainActive() return activeTrain end
 
---- Wählt den angegebenen Zug im Steuerdialog aus. (EEP 15.1)
+--- Waehlt den angegebenen Zug im Steuerdialog aus. (EEP 15.1)
 -- Stellt den Steuerdialog auf Automatik-Modus um.
 -- @param trainName Name des Zuges
--- @return ok Rückgabewert ist true wenn die Aktion erfolgreich war, sonst false
+-- @return ok Rueckgabewert ist true wenn die Aktion erfolgreich war, sonst false
 function EEPSetTrainActive(trainName)
     activeTrain = trainName
     return true
 end
 
---- Ermittelt die Gesamtlänge des angegebenen Zuges. (EEP 15.1)
--- @param trainName Name des Zuges
--- @return ok Rückgabewert ist true wenn der angesprochene Zug existiert, sonst false
--- @return length Laenge des Zuges in Meter
+--- Ermittelt die Gesamtlaenge des angegebenen Zuges. (EEP 15.1)
+---@param trainName string Name des Zuges
+---@return boolean ok Rueckgabewert ist true wenn der angesprochene Zug existiert, sonst false
+---@return integer length Laenge des Zuges in Meter
 function EEPGetTrainLength(trainName) return true, 50 end
 
 local activeRollingstock = ""
 
---- Ermittelt, welches Fahrzeug derzeit im Steuerdialog ausgewählt ist. (EEP 15.1)
--- Befindet sich der Steuerdialog im Automatikmodus, dann wird ein leerer String zurückgegeben.
+--- Ermittelt, welches Fahrzeug derzeit im Steuerdialog ausgewaehlt ist. (EEP 15.1)
+-- Befindet sich der Steuerdialog im Automatikmodus, dann wird ein leerer String zurueckgegeben.
 -- @return rollingstockName Name des Rollmaterials
 function EEPRollingstockGetActive() return activeRollingstock end
 
---- Wählt das angegebene Fahrzeug im Steuerdialog aus. (EEP 15.1)
+--- Waehlt das angegebene Fahrzeug im Steuerdialog aus. (EEP 15.1)
 -- Stellt den Steuerdialog auf manuellen Modus um.
 -- @param rollingstockName Name des Rollmaterials
--- @return ok Rückgabewert ist true wenn die Aktion erfolgreich war, sonst false
+-- @return ok Rueckgabewert ist true wenn die Aktion erfolgreich war, sonst false
 function EEPRollingstockSetActive(rollingstockName)
     activeRollingstock = rollingstockName
     return true
@@ -729,8 +730,8 @@ end
 
 --- Ermittelt, welche relative Ausrichtung das angegebene Fahrzeug im Zugverband hat. (EEP 15.1)
 -- @param rollingstockName Name des Rollmaterials
--- @return ok Rückgabewert ist true wenn der angesprochene Zug existiert, sonst false
--- @return orientation Ausrichtung des Rollmaterials, true, wenn das Fahrzeug vorwärts ausgerichtet ist, sonst false
+-- @return ok Rueckgabewert ist true wenn der angesprochene Zug existiert, sonst false
+-- @return orientation Ausrichtung des Rollmaterials, true, wenn das Fahrzeug vorwaerts ausgerichtet ist, sonst false
 function EEPRollingstockGetOrientation(rollingstockName) return true, true end
 
 ---------------------
@@ -739,13 +740,13 @@ function EEPRollingstockGetOrientation(rollingstockName) return true, true end
 
 --- Ruft das Stellpult im Radarfenster auf. (EEP 16.1)
 -- @param GBSname
--- @return ok Rückgabewert ist true wenn die Ausführung erfolgreich war, sonst false
+-- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
 function EEPActivateCtrlDesk(GBSname) return true end
 
---- Lässt bei einem bestimmten Rollmaterial den Warnton (Pfeife, Hupe) ertÃ¶nen. (EEP 16.1)
+--- Laesst bei einem bestimmten Rollmaterial den Warnton (Pfeife, Hupe) ertÃ¶nen. (EEP 16.1)
 -- @param rollingstockName Name des Rollmaterials
 -- @param status true = an, false = aus
--- @return ok Rückgabewert ist true wenn die Ausführung erfolgreich war, sonst false
+-- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
 function EEPRollingstockSetHorn(rollingstockName, status) return true end
 
 local hook = {}
@@ -753,7 +754,7 @@ local hook = {}
 --- Schaltet bei einem bestimmten Rollmaterial den Haken an oder aus. (EEP 16.1)
 -- @param rollingstockName Name des Rollmaterials
 -- @param status true = an, false = aus
--- @return ok Rückgabewert ist true wenn die Ausführung erfolgreich war, sonst false
+-- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
 function EEPRollingstockSetHook(rollingstockName, status)
     hook[rollingstockName] = status
     return true
@@ -761,38 +762,38 @@ end
 
 --- Ermittelt, ob der Haken eines bestimmten Rollmaterials an oder ausgeschaltet ist (EEP 16.1)
 -- @param rollingstockName Name des Rollmaterials
--- @return ok Rückgabewert ist true wenn die Ausführung erfolgreich war, sonst false
+-- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
 -- @return status Haken aus = 0, an = 1, in Betrieb = 3
 function EEPRollingstockGetHook(rollingstockName) return true, hook[rollingstockName] and 1 or 0 end
 
 local hookGlue = {}
 
---- Beeinflusst das Verhalten von Gütern an einem Kranhaken eines Rollmaterials. (EEP 16.1)
+--- Beeinflusst das Verhalten von Guetern an einem Kranhaken eines Rollmaterials. (EEP 16.1)
 -- @param rollingstockName Name des Rollmaterials
 -- @param status true = an, false = aus
--- @return ok Rückgabewert ist true wenn die Ausführung erfolgreich war, sonst false
+-- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
 function EEPRollingstockSetHookGlue(rollingstockName, status)
     hookGlue[rollingstockName] = status
     return true
 end
 
---- Ermittelt das Verhalten von Gütern am Kranhaken eines Rollmaterials  (EEP 16.1)
+--- Ermittelt das Verhalten von Guetern am Kranhaken eines Rollmaterials  (EEP 16.1)
 -- @param rollingstockName Name des Rollmaterials
--- @return ok Rückgabewert ist true wenn die Ausführung erfolgreich war, sonst false
--- @return status Güterhaken aus = 0, an = 1, in Betrieb = 3
+-- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
+-- @return status Gueterhaken aus = 0, an = 1, in Betrieb = 3
 function EEPRollingstockGetHookGlue(rollingstockName)
     return true, hookGlue[rollingstockName] and hook[rollingstockName] or 0
 end
 
---- Ermittelt die zurückgelegte Strecke des Rollmaterials (EEP 16.1)
+--- Ermittelt die zurueckgelegte Strecke des Rollmaterials (EEP 16.1)
 -- @param rollingstockName Name des Rollmaterials
--- @return ok Rückgabewert ist true wenn die Ausführung erfolgreich war, sonst false
--- @return mileage  Die in Metern zurückgelegte Strecke des Rollmaterials seit dem Einsetzen in EEP
+-- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
+-- @return mileage  Die in Metern zurueckgelegte Strecke des Rollmaterials seit dem Einsetzen in EEP
 function EEPRollingstockGetMileage(rollingstockName) return true, 10 end
 
 --- Ermittelt die Position des Rollmaterials im EEP-Koordinatensystem. (EEP 16.1)
 -- @param rollingstockName Name des Rollmaterials
--- @return ok Rückgabewert ist true wenn die Ausführung erfolgreich war, sonst false
+-- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
 -- @return PosX
 -- @return PosY
 -- @return PosZ
@@ -801,7 +802,7 @@ function EEPRollingstockGetPosition(rollingstockName) return true, 100, -50, 3 e
 local camera = {}
 
 --- Definiert die Position der Benutzer-definierten Mitfahrkamera in Relation zum Fahrzeug (EEP 16.1)
--- Aufruf über Taste 9
+-- Aufruf ueber Taste 9
 -- @param rollingstockName Name des Rollmaterials
 -- @param PosX Kameraposition
 -- @param PosY Kameraposition
@@ -809,7 +810,7 @@ local camera = {}
 -- @param RotX Kameraausrichtung (Drehung)
 -- @param RotY Kameraausrichtung (Drehung)
 -- @param RotZ Kameraausrichtung (Drehung)
--- @return ok Rückgabewert ist true wenn die Ausführung erfolgreich war, sonst false
+-- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
 function EEPRollingstockSetUserCamera(rollingstockName, PosX, PosY, PosZ, RotX, RotY, RotZ)
     camera.rollingstockName = rollingstockName
     camera.PosX = PosX
@@ -822,14 +823,14 @@ function EEPRollingstockSetUserCamera(rollingstockName, PosX, PosY, PosZ, RotX, 
 end
 
 --- Ermittelt die aktuelle Position der Kamera (EEP 16.1)
--- @return ok Rückgabewert ist true wenn die Ausführung erfolgreich war, sonst false
+-- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
 -- @return PosX Kameraposition
 -- @return PosY Kameraposition
 -- @return PosZ Kameraposition
 function EEPGetCameraPosition() return true, camera.PosX or 0, camera.PosY or 0, camera.PosZ or 0 end
 
 --- Ermittelt die aktuelle Ausrichtung der Kamera (EEP 16.1)
--- @return ok Rückgabewert ist true wenn die Ausführung erfolgreich war, sonst false
+-- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
 -- @return RotX Kameraausrichtung (Drehung)
 -- @return RotY Kameraausrichtung (Drehung)
 -- @return RotZ Kameraausrichtung (Drehung)
@@ -839,7 +840,7 @@ function EEPGetCameraRotation() return true, camera.RotX or 0, camera.RotY or 0,
 -- @param PosX Kameraposition
 -- @param PosY Kameraposition
 -- @param PosZ Kameraposition
--- @return ok Rückgabewert ist true wenn die Ausführung erfolgreich war, sonst false
+-- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
 function EEPSetCameraPosition(PosX, PosY, PosZ)
     camera.PosX = PosX
     camera.PosY = PosY
@@ -851,7 +852,7 @@ end
 -- @param RotX Kameraausrichtung (Drehung)
 -- @param RotY Kameraausrichtung (Drehung)
 -- @param RotZ Kameraausrichtung (Drehung)
--- @return ok Rückgabewert ist true wenn die Ausführung erfolgreich war, sonst false
+-- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
 function EEPSetCameraRotation(RotX, RotY, RotZ)
     camera.RotX = RotX
     camera.RotY = RotY
@@ -861,19 +862,19 @@ end
 
 --- Ermittelt, ob der Rauch des benannten Rollmaterials, an- oder ausgeschaltet ist. (EEP 16.1)
 -- @param rollingstockName Name des Rollmaterials
--- @return ok Rückgabewert ist true wenn die Ausführung erfolgreich war, sonst false
+-- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
 -- @return status Rauch aus = 0, an = 1
 function EEPRollingstockGetSmoke(rollingstockName) return true, 0 end
 
 --- Schaltet den Rauch des bennanten Rollmaterials an oder aus. (EEP 16.1)
 -- @param rollingstockName Name des Rollmaterials
 -- @param status Rauch an = true oder aus = false
--- @return ok Rückgabewert ist true wenn die Ausführung erfolgreich war, sonst false
+-- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
 function EEPRollingstockSetSmoke(rollingstockName, status) return true end
 
 --- Ermittelt die Ausrichtung des Ladegutes. (EEP 16.1)
 -- @param goodsName Name des Ladeguts
--- @return ok Rückgabewert ist true wenn die Ausführung erfolgreich war, sonst false
+-- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
 -- @return RotX Ausrichtung (Drehung)
 -- @return RotY Ausrichtung (Drehung)
 -- @return RotZ Ausrichtung (Drehung)
@@ -881,7 +882,7 @@ function EEPGoodsGetRotation(goodsName) return true, 60, 10, -20 end
 
 --- Ermittelt die Ausrichtung der Immobilie/des Landschaftselementes. (EEP 16.1)
 -- 0 @param immobilieName Name der Immobilie/des Landschaftselementes.
--- @return ok Rückgabewert ist true wenn die Ausführung erfolgreich war, sonst false
+-- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
 -- @return RotX Ausrichtung (Drehung)
 -- @return RotY Ausrichtung (Drehung)
 -- @return RotZ Ausrichtung (Drehung)
@@ -889,86 +890,86 @@ function EEPStructureGetRotation(immobilieName) return true, 60, 10, -20 end
 
 local WindIntensity, RainIntensity, SnowIntensity, HailIntensity, FogIntensity, CloudIntensity
 
---- Ermittelt die Windstärke. (EEP 16.1)
--- @return ok Rückgabewert ist true wenn die Ausführung erfolgreich war, sonst false
--- @return intensity Windstärke in Prozent (%)
+--- Ermittelt die Windstaerke. (EEP 16.1)
+-- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
+-- @return intensity Windstaerke in Prozent (%)
 function EEPGetWindIntensity() return true, WindIntensity or 10 end
 
---- Ermittelt die Niederschlagintensität. (EEP 16.1)
--- @return ok Rückgabewert ist true wenn die Ausführung erfolgreich war, sonst false
--- @return intensity Niederschlagintensität in Prozent (%)
+--- Ermittelt die Niederschlagintensitaet. (EEP 16.1)
+-- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
+-- @return intensity Niederschlagintensitaet in Prozent (%)
 function EEPGetRainIntensity() return RainIntensity or 10 end
 
---- Ermittelt die Schneeintensität (EEP 16.1)
--- @return ok Rückgabewert ist true wenn die Ausführung erfolgreich war, sonst false
--- @return intensity Schneeintensität in Prozent (%)
+--- Ermittelt die Schneeintensitaet (EEP 16.1)
+-- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
+-- @return intensity Schneeintensitaet in Prozent (%)
 function EEPGetSnowIntensity() return SnowIntensity or 10 end
 
---- Ermittelt die Hagelintensität (EEP 16.1)
--- @return ok Rückgabewert ist true wenn die Ausführung erfolgreich war, sonst false
--- @return intensity Hagelintensität in Prozent (%)
+--- Ermittelt die Hagelintensitaet (EEP 16.1)
+-- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
+-- @return intensity Hagelintensitaet in Prozent (%)
 function EEPGetHailIntensity() return HailIntensity or 10 end
 
---- Ermittelt die Nebelintensität (EEP 16.1)
--- @return ok Rückgabewert ist true wenn die Ausführung erfolgreich war, sonst false
--- @return intensity Nebelintensität in Prozent (%)
+--- Ermittelt die Nebelintensitaet (EEP 16.1)
+-- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
+-- @return intensity Nebelintensitaet in Prozent (%)
 function EEPGetFogIntensity() return FogIntensity or 10 end
 
 --- Ermittelt der Wolkenanteil (EEP 16.1)
--- @return ok Rückgabewert ist true wenn die Ausführung erfolgreich war, sonst false
+-- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
 -- @return intensity Wolkenanteil in Prozent (%)
 function EEPGetCloudIntensity() return CloudIntensity or 10 end
 
---- Definiert die Windstärke (EEP 16.1)
--- @param Windstärke
--- @return ok Rückgabewert ist true wenn die Ausführung erfolgreich war, sonst false
+--- Definiert die Windstaerke (EEP 16.1)
+-- @param Windstaerke
+-- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
 function EEPSetWindIntensity(intensity)
     WindIntensity = intensity
     return true
 end
 
---- Verändert die Niederschlagintensität (EEP 16.1)
--- @param Niederschlagintensität
--- @return ok Rückgabewert ist true wenn die Ausführung erfolgreich war, sonst false
+--- Veraendert die Niederschlagintensitaet (EEP 16.1)
+-- @param Niederschlagintensitaet
+-- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
 function EEPSetRainIntensity(intensity)
     RainIntensity = intensity
     return true
 end
 
---- Verändert die Schneeintensität (EEP 16.1)
--- @param Schneeintensität
--- @return ok Rückgabewert ist true wenn die Ausführung erfolgreich war, sonst false
+--- Veraendert die Schneeintensitaet (EEP 16.1)
+-- @param Schneeintensitaet
+-- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
 function EEPSetSnowIntensity(intensity)
     SnowIntensity = intensity
     return true
 end
 
---- Verändert die Hagelintensität (EEP 16.1)
--- @param Hagelintensität
--- @return ok Rückgabewert ist true wenn die Ausführung erfolgreich war, sonst false
+--- Veraendert die Hagelintensitaet (EEP 16.1)
+-- @param Hagelintensitaet
+-- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
 function EEPSetHailIntensity(intensity)
     HailIntensity = intensity
     return true
 end
 
---- Verändert die Nebelintensität (EEP 16.1)
--- @param Nebelintensität
--- @return ok Rückgabewert ist true wenn die Ausführung erfolgreich war, sonst false
+--- Veraendert die Nebelintensitaet (EEP 16.1)
+-- @param Nebelintensitaet
+-- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
 function EEPSetFogIntensity(intensity)
     FogIntensity = intensity
     return true
 end
 
---- Verändert den Wolkenanteil (EEP 16.1)
+--- Veraendert den Wolkenanteil (EEP 16.1)
 -- @param Wolkenanteil
--- @return ok Rückgabewert ist true wenn die Ausführung erfolgreich war, sonst false
+-- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
 function EEPSetCloudIntensity(intensity)
     CloudIntensity = intensity
     return true
 end
 
---- EEP ruft selbständig diese Funktion auf, wenn die Anlage gespeichert wird. (EEP 16.1)
--- Im Skript definiert man die zugehörige Funktion und legt so fest, was beim Speichern der Anlage zu tun ist.
+--- EEP ruft selbstaendig diese Funktion auf, wenn die Anlage gespeichert wird. (EEP 16.1)
+-- Im Skript definiert man die zugehoerige Funktion und legt so fest, was beim Speichern der Anlage zu tun ist.
 -- @param path Speicherpfad der Anlage einschließlich Dateiname
 function EEPOnSaveAnl(path) end
 
