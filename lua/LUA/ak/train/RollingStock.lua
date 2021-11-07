@@ -72,6 +72,8 @@ function RollingStock:new(o)
 
     o.values = {}
     o.model = RollingStockModels.modelFor(o.rollingStockName)
+    o.trainName = ""
+    o.positionInTrain = -1
     o.couplingFront = couplingFront
     o.couplingRear = couplingRear
     o.length = tonumber(string.format("%.2f", length or -1))
@@ -162,7 +164,7 @@ function RollingStock:setPositionInTrain(positionInTrain)
     assert(type(self) == "table", "Need to call this method with ':'")
     assert(type(positionInTrain) == "number", "Need 'positionInTrain' as number")
     local oldPositionInTrain = self.positionInTrain
-    self.trainName = positionInTrain
+    self.positionInTrain = positionInTrain
     if oldPositionInTrain ~= positionInTrain then
         EventBroker.fire("ak.train.RollingStock.positionInTrainChanged",
                          json.encode({name = self.rollingStockName, positionInTrain = positionInTrain}))
@@ -367,5 +369,34 @@ end
 function RollingStock:openDoors() self.model:openDoors(self.rollingStockName) end
 
 function RollingStock:closeDoors() self.model:closeDoors(self.rollingStockName) end
+
+function RollingStock:toJsonStatic()
+    return {
+        name = self.rollingStockName,
+        trainName = self:getTrainName(),
+        positionInTrain = self:getPositionInTrain(),
+        couplingFront = self:getCouplingFront(),
+        couplingRear = self:getCouplingRear(),
+        length = self:getLength(),
+        propelled = self:getPropelled(),
+        modelType = self:getModelType(),
+        modelTypeText = self:getModelTypeText(),
+        tag = self:getTag()
+    }
+end
+
+function RollingStock:toJsonDynamic()
+    return {
+        name = self.rollingStockName,
+        trackId = self:getTrackId(),
+        trackDistance = self:getTrackDistance(),
+        trackDirection = self:getTrackDirection(),
+        trackSystem = self:getTrackSystem(),
+        posX = self:getX(),
+        posY = self:getY(),
+        posZ = self:getZ(),
+        mileage = self:getMileage()
+    }
+end
 
 return RollingStock

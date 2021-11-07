@@ -128,9 +128,9 @@ end
 function Train:setRoute(route)
     assert(type(self) == "table", "Need to call this method with ':'")
     assert(type(route) == "string", "Need 'route' as string")
-    local oldRoute = self.trainRoute
-    self.trainRoute = route
-    EEPSetTrainRoute(self.name, self.trainRoute)
+    local oldRoute = self.route
+    self.route = route
+    EEPSetTrainRoute(self.name, self.route)
     if oldRoute ~= route then
         EventBroker.fire("ak.train.Train.routeChanged", json.encode({name = self.name, route = route}))
     end
@@ -140,7 +140,7 @@ end
 ---@return string route name like in EEP
 function Train:getRoute()
     assert(type(self) == "table", "Need to call this method with ':'")
-    return self.trainRoute
+    return self.route
 end
 
 --- Updates the trains rolling stock count
@@ -255,6 +255,24 @@ end
 function Train:getLine()
     assert(type(self) == "table", "Need to call this method with ':'")
     return self:getValue(TagKeys.Train.line)
+end
+
+function Train:toJsonStatic()
+    return {
+        id = self:getName(),
+        route = self:getRoute(),
+        rollingStockCount = self:getRollingStockCount(),
+        length = self:getLength()
+    }
+end
+
+function Train:toJsonDynamic()
+    return {
+        id = self:getName(),
+        trackType = self:getTrackType(),
+        speed = self:getSpeed(),
+        occupiedTacks = self:getOnTrack()
+    }
 end
 
 return Train

@@ -35,8 +35,8 @@ local EEPRollingstockModelTypeText = {
     [5] = "Diesellok",
     [6] = "Triebwagen",
     [7] = "U- oder S-Bahn",
-    [8] = "StraÃŸenbahn", -- German Umlaute are ok if stored as UTF-8
-    [9] = "GÃ¼terwaggon", -- German Umlaute are ok if stored as UTF-8
+    [8] = "Straßenbahn", -- German Umlaute are ok if stored as UTF-8
+    [9] = "Güterwaggon", -- German Umlaute are ok if stored as UTF-8
     [10] = "Personenwaggon",
     [11] = "Luftfahrzeug",
     [12] = "Maschine",
@@ -78,14 +78,14 @@ local function EEPGetRollingstockItemsCount(...)
     return executeAndStoreRunTime(_EEPGetRollingstockItemsCount, "EEPGetRollingstockItemsCount", ...)
 end
 
--- Ermittelt die GesamtlÃ¤nge des angegebenen Zuges.
+-- Ermittelt die Gesamtlänge des angegebenen Zuges.
 local EEPGetTrainLength = EEPGetTrainLength or function() end -- EEP 15.1 Plug-In 1
 
--- Ermittelt, welches Fahrzeug derzeit im Steuerdialog ausgewÃ¤hlt ist.
+-- Ermittelt, welches Fahrzeug derzeit im Steuerdialog ausgewählt ist.
 local EEPRollingstockGetActive = EEPRollingstockGetActive or function() -- (not used yet)
 end -- EEP 15.1 Plug-In 1
 
--- Ermittelt, welcher Zug derzeit im Steuerdialog ausgewÃ¤hlt ist.
+-- Ermittelt, welcher Zug derzeit im Steuerdialog ausgewählt ist.
 local EEPGetTrainActive = EEPGetTrainActive or function() -- (not used yet)
 end -- EEP 15.1 Plug-In 1
 
@@ -109,9 +109,9 @@ local EEPRollingstockGetTagText = EEPRollingstockGetTagText or function() end --
 local EEPRollingstockGetHook = EEPRollingstockGetHook or function() -- (not used yet)
 end -- EEP 16.1
 
---- Ermittelt das Verhalten von GÃ¼tern am Kranhaken eines Rollmaterials
+--- Ermittelt das Verhalten von Gütern am Kranhaken eines Rollmaterials
 --  OK, Status = EEPRollingstockGetHookGlue("#Kranwagen")
--- GÃ¼terhaken aus = 0, an = 1, in Benutzung = 3
+-- Güterhaken aus = 0, an = 1, in Benutzung = 3
 local EEPRollingstockGetHookGlue = EEPRollingstockGetHookGlue or function() -- (not used yet)
 end -- EEP 16.1
 
@@ -121,7 +121,7 @@ end -- EEP 16.1
 local EEPRollingstockGetSmoke = EEPRollingstockGetSmoke or function() -- (not used yet)
 end -- EEP 16.1
 
---- Ermittelt die Ausrichtung des Ladegutes in Grad (Ã‚Â°)
+--- Ermittelt die Ausrichtung des Ladegutes in Grad (Â°)
 -- OK, RotX, RotY, RotZ = EEPGoodsGetRotation("#Container")
 local EEPGoodsGetRotation = EEPGoodsGetRotation or function() -- (not used yet)
 end -- EEP 16.1
@@ -138,27 +138,27 @@ end -- EEP 16.1
 local EEPGetCameraRotation = EEPGetCameraRotation or function() -- (not used yet)
 end -- EEP 16.1
 
---- Ermittelt die WindstÃ¤rke in Prozent (%)
+--- Ermittelt die Windstärke in Prozent (%)
 --  OK, WindIntensity = EEPGetWindIntensity()
 local EEPGetWindIntensity = EEPGetWindIntensity or function() -- (not used yet)
 end -- EEP 16.1
 
---- Ermittelt die NiederschlagintensitÃ¤t in Prozent (%)
+--- Ermittelt die Niederschlagintensität in Prozent (%)
 --  OK, RainIntensity = EEPGetRainIntensity()
 local EEPGetRainIntensity = EEPGetRainIntensity or function() -- (not used yet)
 end -- EEP 16.1
 
---- Ermittelt die SchneeintensitÃ¤ in Prozent (%)
+--- Ermittelt die Schneeintensitä in Prozent (%)
 --  OK, SnowIntensity = EEPGetSnowIntensity()
 local EEPGetSnowIntensity = EEPGetSnowIntensity or function() -- (not used yet)
 end -- EEP 16.1
 
---- Ermittelt die HagelintensitÃ¤t in Prozent (%)
+--- Ermittelt die Hagelintensität in Prozent (%)
 -- OK, HailIntensity = EEPGetHailIntensity()
 local EEPGetHailIntensity = EEPGetHailIntensity or function() -- (not used yet)
 end -- EEP 16.1
 
---- Ermittelt die NebelintensitÃ¤t in Prozent (%)
+--- Ermittelt die Nebelintensität in Prozent (%)
 -- OK, FogIntensity = EEPGetFogIntensity()
 local EEPGetFogIntensity = EEPGetFogIntensity or function() -- (not used yet)
 end -- EEP 16.1
@@ -243,7 +243,7 @@ function TrackCollector:checkRollingStock(knownTrains)
         for i = 0, count - 1, 1 do
             local rollingStockName = EEPGetRollingstockItemName(train.name, i) -- EEP 13.2 Plug-In 2
             lastRollingStock[rollingStockName] = true
-            local rs = RollingStockRegistry.forName(rollingStockName, train.name, i)
+            local rs = RollingStockRegistry.forName(rollingStockName)
             self:updateRollingStock(rs, train, i)
         end
     end
@@ -292,35 +292,22 @@ function TrackCollector:findAndUpdateTrainsOnTracks()
 end
 
 function TrackCollector:updateTrain(trainName, trackIds, speed)
-    if not speed then
-        local _, speed1 = EEPGetTrainSpeed(trainName)
-        speed = speed1
-    end
     local tx = os.clock()
     local train, created = TrainRegistry.forName(trainName)
     RuntimeRegistry.storeRunTime("TrainRegistry.forName", os.clock() - tx)
     if created or train:getSpeed() ~= 0 or speed ~= 0 or self.dirtyTrainNames[trainName] then
+        local start1 = os.clock()
         self.dirtyTrainNames[trainName] = true
         train:setSpeed(speed);
         train:setOnTrack(trackIds)
         train:setTrackType(self.trackType)
+        RuntimeRegistry.storeRunTime("TrackCollector.updateTrain", os.clock() - start1)
+    else
+        RuntimeRegistry.storeRunTime("TrackCollector.updateTrainSkipped", 0)
     end
 
-    local trainStatic = {
-        id = train:getName(),
-        route = train:getRoute(),
-        rollingStockCount = train:getRollingStockCount(),
-        length = train:getLength()
-    }
-    self.trains[trainName] = trainStatic
-
-    local trainDynamic = {
-        id = train:getName(),
-        trackType = train:getTrackType(),
-        speed = train:getSpeed(),
-        occupiedTacks = train:getOnTrack()
-    }
-    if not self.trainInfo[trainName] then self.trainInfo[trainName] = trainDynamic end
+    self.trains[trainName] = train:toJsonStatic()
+    self.trainInfo[trainName] = train:toJsonDynamic()
 end
 
 ---Update the rolling stock
@@ -328,7 +315,7 @@ end
 ---@param currentTrain Train
 ---@param positionInTrain integer
 function TrackCollector:updateRollingStock(rs, currentTrain, positionInTrain)
-    if self.dirtyTrainNames[currentTrain] then
+    if self.dirtyTrainNames[currentTrain] or rs:getPositionInTrain() == -1 then
         local start1 = os.clock()
 
         rs:setPositionInTrain(positionInTrain)
@@ -353,36 +340,13 @@ function TrackCollector:updateRollingStock(rs, currentTrain, positionInTrain)
             end
             if hasMileage then rs:setMileage(mileage) end
         end
-
         RuntimeRegistry.storeRunTime("TrackCollector.updateRollingStockInfo", os.clock() - start2)
+    else
+        RuntimeRegistry.storeRunTime("TrackCollector.updateRollingStockSkipped", 0)
     end
 
-    local currentRollingStock = {
-        name = rs.rollingStockName,
-        trainName = rs:getTrainName(),
-        positionInTrain = rs:getPositionInTrain(),
-        couplingFront = rs:getCouplingFront(),
-        couplingRear = rs:getCouplingRear(),
-        length = rs:getLength(),
-        propelled = rs:getPropelled(),
-        modelType = rs:getModelType(),
-        modelTypeText = rs:getModelTypeText(),
-        tag = rs:getTag()
-    }
-    self.rollingStock[rs.rollingStockName] = currentRollingStock
-
-    local rollingStockInfo = {
-        name = rs.rollingStockName,
-        trackId = rs:getTrackId(),
-        trackDistance = rs:getTrackDistance(),
-        trackDirection = rs:getTrackDirection(),
-        trackSystem = rs:getTrackSystem(),
-        posX = rs:getX(),
-        posY = rs:getY(),
-        posZ = rs:getZ(),
-        mileage = rs:getMileage()
-    }
-    self.rollingStockInfo[rs.rollingStockName] = rollingStockInfo
+    self.rollingStock[rs.rollingStockName] = rs:toJsonStatic()
+    self.rollingStockInfo[rs.rollingStockName] = rs:toJsonDynamic()
 end
 
 function TrackCollector:initialize()

@@ -97,12 +97,24 @@ local function collectFrom(jsonCollector, printFirstTime)
     return newData
 end
 
+local function checkObjects(collectData, path)
+    for key, value in pairs(collectData) do
+        if type(key) ~= "string" and type(key) ~= "number" then
+            error("Key must always be of type string " .. path .. "#" .. type(key))
+        end
+        if type(value) == "table" then checkObjects(value, path .. ">" .. key) end
+        if type(value) == "function" then error("Value must always be a function " .. path .. "#" .. type(key)) end
+    end
+end
+
 local function collectData(printFirstTime)
     for _, jsonCollector in pairs(registeredJsonCollectors) do
         local newData = collectFrom(jsonCollector, printFirstTime)
         for key, value in pairs(newData) do collectedData[key] = value end
     end
     collectedData["runtime"] = RuntimeRegistry.getAll()
+
+    checkObjects(collectedData, "")
 end
 
 --- Initialize data.

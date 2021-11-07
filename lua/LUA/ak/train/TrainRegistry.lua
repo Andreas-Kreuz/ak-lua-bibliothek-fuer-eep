@@ -11,7 +11,7 @@ local function initRollingStock(train)
     local count = train:getRollingStockCount()
     for i = 0, (count - 1) do
         local rollingStockName = EEPGetRollingstockItemName(train.name, i) -- EEP 13.2 Plug-In 2
-        RollingStockRegistry.forName(rollingStockName, train.name, i)
+        RollingStockRegistry.forName(rollingStockName)
     end
 end
 
@@ -35,7 +35,10 @@ end
 
 ---A train appeared on the map
 ---@param train Train
-function TrainRegistry.trainAppeared(train) EventBroker.fire("ak.TrainEvent.trainAppeared", json.encode(train)) end
+function TrainRegistry.trainAppeared(train)
+    EventBroker.fire("ak.TrainEvent.trainAppeared", json.encode(train:toJsonStatic()))
+    EventBroker.fire("ak.TrainEvent.trainInfoAppeared", json.encode(train:toJsonDynamic()))
+end
 
 ---A train dissappeared from the map
 ---@param trainName string
