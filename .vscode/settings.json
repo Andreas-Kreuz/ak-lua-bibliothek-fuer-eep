@@ -18,7 +18,7 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[lua]": {
-    "files.encoding": "windows1252",
+    "files.encoding": "utf8",
     "files.autoGuessEncoding": false,
     "editor.defaultFormatter": "Koihik.vscode-lua-format"
   },
