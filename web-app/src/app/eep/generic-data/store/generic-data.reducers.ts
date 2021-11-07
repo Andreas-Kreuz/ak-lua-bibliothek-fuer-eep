@@ -63,6 +63,9 @@ export const selectedDataStructure = (dataName: string) =>
       if (a === 'id') {
         return -1;
       }
+      if (b === 'id') {
+        return 1;
+      }
       if (a === 'name') {
         return b === 'id' ? 1 : -1;
       }
