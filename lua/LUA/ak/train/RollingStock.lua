@@ -4,7 +4,6 @@ local RollingStockModels = require("ak.train.RollingStockModels")
 local StorageUtility = require("ak.storage.StorageUtility")
 local TagKeys = require("ak.train.TagKeys")
 local EventBroker = require "ak.util.EventBroker"
-local json = require "ak.io.json"
 
 local EEPRollingstockModelTypeText = {
     [1] = "Tenderlok",
@@ -275,7 +274,7 @@ function RollingStock:setTrack(trackId, trackDistance, trackDirection, trackSyst
     self.trackDistance = trackDistance
     self.trackDirection = trackDirection
     self.trackSystem = trackSystem
-    if oldDist ~= trackId or oldDist ~= trackDistance or oldDir ~= trackDirection or oldSys ~= trackSystem then
+    if oldId ~= trackId or oldDist ~= trackDistance or oldDir ~= trackDirection or oldSys ~= trackSystem then
         EventBroker.fire("ak.train.RollingStock.trackChanged", {
             name = self.rollingStockName,
             trackId = trackId,
