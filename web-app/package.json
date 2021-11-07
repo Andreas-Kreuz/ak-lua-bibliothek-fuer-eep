@@ -30,7 +30,7 @@
     "bootstrap": "^4.6.1",
     "core-js": "^2.6.12",
     "rxjs": "~6.5.5",
-    "socket.io-client": "^2.4.0",
+    "socket.io-client": "^4.3.2",
     "tslib": "^2.0.0",
     "web-shared": "file:../web-shared",
     "zone.js": "~0.11.4"
@@ -50,7 +50,6 @@
     "@types/jasmine": "~3.6.0",
     "@types/jasminewd2": "^2.0.10",
     "@types/node": "^12.20.36",
-    "@types/socket.io-client": "^1.4.36",
     "@typescript-eslint/eslint-plugin": "4.28.2",
     "@typescript-eslint/parser": "4.28.2",
     "eslint": "^7.26.0",

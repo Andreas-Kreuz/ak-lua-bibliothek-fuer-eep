@@ -4,7 +4,7 @@ import { environment } from '../../../environments/environment';
 import { Store } from '@ngrx/store';
 import * as fromRoot from '../../app.reducers';
 import { Observable, of, BehaviorSubject } from 'rxjs';
-import * as socketio from 'socket.io-client';
+import { io, Socket } from 'socket.io-client';
 import { RoomEvent } from 'web-shared';
 import * as CoreAction from '../store/core.actions';
 
@@ -13,10 +13,10 @@ import * as CoreAction from '../store/core.actions';
 })
 export class SocketService {
   connected$ = new BehaviorSubject<boolean>(false);
-  private socket: SocketIOClient.Socket;
+  private socket: Socket;
 
   constructor(private store: Store<fromRoot.State>) {
-    this.socket = socketio(location.hostname + ':' + environment.websocketPort, {});
+    this.socket = io(location.hostname + ':' + environment.websocketPort, {});
     this.socket.on('connect', () => {
       this.connected$.next(true);
       this.store.dispatch(CoreAction.connectedToServer());

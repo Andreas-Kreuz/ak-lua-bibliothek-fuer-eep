@@ -60,6 +60,10 @@
   "devDependencies": {
     "@types/command-line-args": "^5.2.0",
     "@types/command-line-usage": "^5.0.2",
+    "@types/cors": "^2.8.6",
+    "@types/express": "^4.17.6",
+    "@types/node": "^13.13.4",
+    "@types/tail": "^2.0.0",
     "@typescript-eslint/eslint-plugin": "^5.3.0",
     "@typescript-eslint/parser": "^5.3.0",
     "electron": "^11.5.0",
@@ -69,16 +73,11 @@
     "typescript": "^3.8.3"
   },
   "dependencies": {
-    "@types/cors": "^2.8.6",
-    "@types/express": "^4.17.6",
-    "@types/node": "^13.13.4",
-    "@types/socket.io": "^2.1.4",
-    "@types/tail": "^2.0.0",
     "command-line-args": "^5.1.1",
     "command-line-usage": "^6.1.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
-    "socket.io": "^2.4.0",
+    "socket.io": "^4.3.1",
     "tail": "^2.0.3",
     "web-shared": "file:../web-shared"
   }
