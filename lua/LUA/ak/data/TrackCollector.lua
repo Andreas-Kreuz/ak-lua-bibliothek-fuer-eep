@@ -35,8 +35,8 @@ local EEPRollingstockModelTypeText = {
     [5] = "Diesellok",
     [6] = "Triebwagen",
     [7] = "U- oder S-Bahn",
-    [8] = "Straßenbahn", -- German Umlaute are ok if stored as UTF-8
-    [9] = "Güterwaggon", -- German Umlaute are ok if stored as UTF-8
+    [8] = "StraÃŸenbahn", -- German Umlaute are ok if stored as UTF-8
+    [9] = "GÃ¼terwaggon", -- German Umlaute are ok if stored as UTF-8
     [10] = "Personenwaggon",
     [11] = "Luftfahrzeug",
     [12] = "Maschine",
@@ -78,14 +78,14 @@ local function EEPGetRollingstockItemsCount(...)
     return executeAndStoreRunTime(_EEPGetRollingstockItemsCount, "EEPGetRollingstockItemsCount", ...)
 end
 
--- Ermittelt die Gesamtlänge des angegebenen Zuges.
+-- Ermittelt die GesamtlÃ¤nge des angegebenen Zuges.
 local EEPGetTrainLength = EEPGetTrainLength or function() end -- EEP 15.1 Plug-In 1
 
--- Ermittelt, welches Fahrzeug derzeit im Steuerdialog ausgewählt ist.
+-- Ermittelt, welches Fahrzeug derzeit im Steuerdialog ausgewÃ¤hlt ist.
 local EEPRollingstockGetActive = EEPRollingstockGetActive or function() -- (not used yet)
 end -- EEP 15.1 Plug-In 1
 
--- Ermittelt, welcher Zug derzeit im Steuerdialog ausgewählt ist.
+-- Ermittelt, welcher Zug derzeit im Steuerdialog ausgewÃ¤hlt ist.
 local EEPGetTrainActive = EEPGetTrainActive or function() -- (not used yet)
 end -- EEP 15.1 Plug-In 1
 
@@ -109,9 +109,9 @@ local EEPRollingstockGetTagText = EEPRollingstockGetTagText or function() end --
 local EEPRollingstockGetHook = EEPRollingstockGetHook or function() -- (not used yet)
 end -- EEP 16.1
 
---- Ermittelt das Verhalten von Gütern am Kranhaken eines Rollmaterials
+--- Ermittelt das Verhalten von GÃ¼tern am Kranhaken eines Rollmaterials
 --  OK, Status = EEPRollingstockGetHookGlue("#Kranwagen")
--- Güterhaken aus = 0, an = 1, in Benutzung = 3
+-- GÃ¼terhaken aus = 0, an = 1, in Benutzung = 3
 local EEPRollingstockGetHookGlue = EEPRollingstockGetHookGlue or function() -- (not used yet)
 end -- EEP 16.1
 
@@ -121,7 +121,7 @@ end -- EEP 16.1
 local EEPRollingstockGetSmoke = EEPRollingstockGetSmoke or function() -- (not used yet)
 end -- EEP 16.1
 
---- Ermittelt die Ausrichtung des Ladegutes in Grad (Â°)
+--- Ermittelt die Ausrichtung des Ladegutes in Grad (Ã‚Â°)
 -- OK, RotX, RotY, RotZ = EEPGoodsGetRotation("#Container")
 local EEPGoodsGetRotation = EEPGoodsGetRotation or function() -- (not used yet)
 end -- EEP 16.1
@@ -138,27 +138,27 @@ end -- EEP 16.1
 local EEPGetCameraRotation = EEPGetCameraRotation or function() -- (not used yet)
 end -- EEP 16.1
 
---- Ermittelt die Windstärke in Prozent (%)
+--- Ermittelt die WindstÃ¤rke in Prozent (%)
 --  OK, WindIntensity = EEPGetWindIntensity()
 local EEPGetWindIntensity = EEPGetWindIntensity or function() -- (not used yet)
 end -- EEP 16.1
 
---- Ermittelt die Niederschlagintensität in Prozent (%)
+--- Ermittelt die NiederschlagintensitÃ¤t in Prozent (%)
 --  OK, RainIntensity = EEPGetRainIntensity()
 local EEPGetRainIntensity = EEPGetRainIntensity or function() -- (not used yet)
 end -- EEP 16.1
 
---- Ermittelt die Schneeintensitä in Prozent (%)
+--- Ermittelt die SchneeintensitÃ¤ in Prozent (%)
 --  OK, SnowIntensity = EEPGetSnowIntensity()
 local EEPGetSnowIntensity = EEPGetSnowIntensity or function() -- (not used yet)
 end -- EEP 16.1
 
---- Ermittelt die Hagelintensität in Prozent (%)
+--- Ermittelt die HagelintensitÃ¤t in Prozent (%)
 -- OK, HailIntensity = EEPGetHailIntensity()
 local EEPGetHailIntensity = EEPGetHailIntensity or function() -- (not used yet)
 end -- EEP 16.1
 
---- Ermittelt die Nebelintensität in Prozent (%)
+--- Ermittelt die NebelintensitÃ¤t in Prozent (%)
 -- OK, FogIntensity = EEPGetFogIntensity()
 local EEPGetFogIntensity = EEPGetFogIntensity or function() -- (not used yet)
 end -- EEP 16.1
@@ -210,8 +210,8 @@ function TrackCollector:checkTrains(trainsOnTrack)
     local removedTrains = {}
 
     for trainName, trackIds in pairs(trainsOnTrack) do
-        local trainExists, speed = EEPGetTrainSpeed(trainName) -- EEP 11.0
-        if trainExists then
+        local trainOnMap, speed = EEPGetTrainSpeed(trainName) -- EEP 11.0
+        if trainOnMap then
             self:updateTrain(trainName, trackIds, speed)
             lastTrains[trainName] = true
         else
