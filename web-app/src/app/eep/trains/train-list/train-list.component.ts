@@ -17,13 +17,25 @@ import { TrainDetailsComponent } from '../train-details/train-details.component'
 })
 export class TrainListComponent implements OnInit, OnDestroy {
   trainType$: Observable<TrainType>;
-  columnsToDisplay: string[] = ['id', 'route', 'rollingStock', 'coupling', 'length'];
+  columnsToDisplay: string[] = [
+    'id',
+    'route',
+    'rollingStock',
+    'coupling',
+    'line',
+    'destination',
+    'direction',
+    'length',
+  ];
   columnNames = {
     id: 'Name',
     route: 'Route',
     rollingStock: 'Wagen',
     coupling: 'Kupplung',
     length: 'Länge',
+    line: 'Linie',
+    destination: 'Ziel',
+    direction: 'Richtung',
   };
   columnTextFunctions = {
     rollingStock: (train: Train) => (train && train.rollingStock ? train.rollingStock.length : 0),
