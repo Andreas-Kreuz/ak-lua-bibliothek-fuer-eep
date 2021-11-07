@@ -35,8 +35,8 @@ local EEPRollingstockModelTypeText = {
     [5] = "Diesellok",
     [6] = "Triebwagen",
     [7] = "U- oder S-Bahn",
-    [8] = "Straßenbahn", -- German Umlaute are ok if stored as UTF-8
-    [9] = "Güterwaggon", -- German Umlaute are ok if stored as UTF-8
+    [8] = "Straï¿½enbahn", -- German Umlaute are ok if stored as UTF-8
+    [9] = "Gï¿½terwaggon", -- German Umlaute are ok if stored as UTF-8
     [10] = "Personenwaggon",
     [11] = "Luftfahrzeug",
     [12] = "Maschine",
@@ -78,14 +78,14 @@ local function EEPGetRollingstockItemsCount(...)
     return executeAndStoreRunTime(_EEPGetRollingstockItemsCount, "EEPGetRollingstockItemsCount", ...)
 end
 
--- Ermittelt die Gesamtlänge des angegebenen Zuges.
+-- Ermittelt die Gesamtlï¿½nge des angegebenen Zuges.
 local EEPGetTrainLength = EEPGetTrainLength or function() end -- EEP 15.1 Plug-In 1
 
--- Ermittelt, welches Fahrzeug derzeit im Steuerdialog ausgewählt ist.
+-- Ermittelt, welches Fahrzeug derzeit im Steuerdialog ausgewï¿½hlt ist.
 local EEPRollingstockGetActive = EEPRollingstockGetActive or function() -- (not used yet)
 end -- EEP 15.1 Plug-In 1
 
--- Ermittelt, welcher Zug derzeit im Steuerdialog ausgewählt ist.
+-- Ermittelt, welcher Zug derzeit im Steuerdialog ausgewï¿½hlt ist.
 local EEPGetTrainActive = EEPGetTrainActive or function() -- (not used yet)
 end -- EEP 15.1 Plug-In 1
 
@@ -109,9 +109,9 @@ local EEPRollingstockGetTagText = EEPRollingstockGetTagText or function() end --
 local EEPRollingstockGetHook = EEPRollingstockGetHook or function() -- (not used yet)
 end -- EEP 16.1
 
---- Ermittelt das Verhalten von Gütern am Kranhaken eines Rollmaterials
+--- Ermittelt das Verhalten von Gï¿½tern am Kranhaken eines Rollmaterials
 --  OK, Status = EEPRollingstockGetHookGlue("#Kranwagen")
--- Güterhaken aus = 0, an = 1, in Benutzung = 3
+-- Gï¿½terhaken aus = 0, an = 1, in Benutzung = 3
 local EEPRollingstockGetHookGlue = EEPRollingstockGetHookGlue or function() -- (not used yet)
 end -- EEP 16.1
 
@@ -138,27 +138,27 @@ end -- EEP 16.1
 local EEPGetCameraRotation = EEPGetCameraRotation or function() -- (not used yet)
 end -- EEP 16.1
 
---- Ermittelt die Windstärke in Prozent (%)
+--- Ermittelt die Windstï¿½rke in Prozent (%)
 --  OK, WindIntensity = EEPGetWindIntensity()
 local EEPGetWindIntensity = EEPGetWindIntensity or function() -- (not used yet)
 end -- EEP 16.1
 
---- Ermittelt die Niederschlagintensität in Prozent (%)
+--- Ermittelt die Niederschlagintensitï¿½t in Prozent (%)
 --  OK, RainIntensity = EEPGetRainIntensity()
 local EEPGetRainIntensity = EEPGetRainIntensity or function() -- (not used yet)
 end -- EEP 16.1
 
---- Ermittelt die Schneeintensitä in Prozent (%)
+--- Ermittelt die Schneeintensitï¿½ in Prozent (%)
 --  OK, SnowIntensity = EEPGetSnowIntensity()
 local EEPGetSnowIntensity = EEPGetSnowIntensity or function() -- (not used yet)
 end -- EEP 16.1
 
---- Ermittelt die Hagelintensität in Prozent (%)
+--- Ermittelt die Hagelintensitï¿½t in Prozent (%)
 -- OK, HailIntensity = EEPGetHailIntensity()
 local EEPGetHailIntensity = EEPGetHailIntensity or function() -- (not used yet)
 end -- EEP 16.1
 
---- Ermittelt die Nebelintensität in Prozent (%)
+--- Ermittelt die Nebelintensitï¿½t in Prozent (%)
 -- OK, FogIntensity = EEPGetFogIntensity()
 local EEPGetFogIntensity = EEPGetFogIntensity or function() -- (not used yet)
 end -- EEP 16.1
@@ -357,7 +357,6 @@ function TrackCollector:initialize()
             track.id = id
             -- track.position = val
             self.tracks[tostring(track.id)] = track
-            EventBroker.fire("Track." .. self.trackType .. ".added", track.id)
         end
     end
 

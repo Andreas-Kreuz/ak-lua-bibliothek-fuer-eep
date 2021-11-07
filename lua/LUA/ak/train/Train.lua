@@ -130,7 +130,10 @@ function Train:setRoute(route)
     local oldRoute = self.route
     self.route = route
     EEPSetTrainRoute(self.name, self.route)
-    if oldRoute ~= route then EventBroker.fire("ak.train.Train.routeChanged", {name = self.name, route = route}) end
+    if oldRoute ~= route then
+        EventBroker.fireDataChange("Train Route Changed", EventBroker.change.dataUpdated, "trains", "id",
+                                   {id = self.name, route = route})
+    end
 end
 
 --- Gets the trains route like used in EEP
@@ -148,7 +151,8 @@ function Train:setRollingStockCount(count)
     local oldCount = count
     self.rollingStockCount = count
     if oldCount ~= count then
-        EventBroker.fire("ak.train.Train.rollingStockCountChanged", {name = self.name, rollingStockCount = count})
+        EventBroker.fireDataChange("Train RollingStock count Changed", EventBroker.change.dataUpdated, "trains", "id",
+                                   {id = self.name, rollingStockCount = count})
     end
 end
 
@@ -167,7 +171,10 @@ function Train:setSpeed(speed)
     speed = tonumber(string.format("%1.1f", speed))
     local oldSpeed = self.speed
     self.speed = speed
-    if oldSpeed ~= speed then EventBroker.fire("ak.train.Train.speedChanged", {name = self.name, speed = speed}) end
+    if oldSpeed ~= speed then
+        EventBroker.fireDataChange("Train Speed Changed", EventBroker.change.dataUpdated, "trainInfo", "id",
+                                   {id = self.name, speed = speed})
+    end
 end
 
 --- Gets the trains speed in km/h
@@ -185,7 +192,8 @@ function Train:setOnTrack(onTracks)
     local oldOnTracks = self.onTracks
     self.onTracks = onTracks
     if not TableUtils.sameDictEntries(oldOnTracks, onTracks) then
-        EventBroker.fire("ak.train.Train.onTrackChanged", {name = self.name, onTracks = onTracks})
+        EventBroker.fireDataChange("Train occupiedTracks Changed", EventBroker.change.dataUpdated, "trainInfo", "id",
+                                   {id = self.name, occupiedTacks = onTracks})
     end
 end
 
@@ -202,7 +210,8 @@ function Train:setTrackType(trackType)
     local oldTrackType = self.trackType
     self.trackType = trackType
     if oldTrackType ~= trackType then
-        EventBroker.fire("ak.train.Train.trackTypeChanged", {name = self.name, trackType = trackType})
+        EventBroker.fireDataChange("Train Track Type Changed", EventBroker.change.dataUpdated, "trainInfo", "id",
+                                   {id = self.name, trackType = trackType})
     end
 end
 
@@ -214,7 +223,8 @@ function Train:setDirection(direction)
     local oldDirection = self:getDirection()
     self:setValue(TagKeys.Train.direction, direction)
     if oldDirection ~= direction then
-        EventBroker.fire("ak.train.Train.directionChanged", {name = self.name, direction = direction})
+        EventBroker.fireDataChange("Train Direction Changed", EventBroker.change.dataUpdated, "trains", "id",
+                                   {id = self.name, direction = direction})
     end
 end
 
@@ -225,7 +235,8 @@ function Train:setDestination(destination)
     local oldDestination = destination
     self:setValue(TagKeys.Train.destination, destination)
     if oldDestination ~= destination then
-        EventBroker.fire("ak.train.Train.destinationChanged", {name = self.name, destination = destination})
+        EventBroker.fireDataChange("Train Destination Changed", EventBroker.change.dataUpdated, "trains", "id",
+                                   {id = self.name, destination = destination})
     end
 end
 
@@ -240,7 +251,10 @@ function Train:setLine(line)
     line = tostring(line)
     local oldLine = self:getLine()
     self:setValue(TagKeys.Train.line, line)
-    if oldLine ~= line then EventBroker.fire("ak.train.Train.lineChanged", {name = self.name, line = line}) end
+    if oldLine ~= line then
+        EventBroker.fireDataChange("Train Line Changed", EventBroker.change.dataUpdated, "trains", "id",
+                                   {id = self.name, line = line})
+    end
 end
 
 function Train:getLine()
@@ -253,7 +267,10 @@ function Train:toJsonStatic()
         id = self:getName(),
         route = self:getRoute(),
         rollingStockCount = self:getRollingStockCount(),
-        length = self:getLength()
+        length = self:getLength(),
+        line = self:getLine(),
+        destination = self:getDestination(),
+        direction = self:getDirection()
     }
 end
 

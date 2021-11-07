@@ -118,11 +118,13 @@ end
 function RollingStock:setLine(line)
     self:setValue(TagKeys.Train.line, line)
     self.model:setLine(self.rollingStockName, line)
+    -- No event here - is used by train
 end
 
 function RollingStock:setDestination(destination)
     self:setValue(TagKeys.Train.destination, destination)
     self.model:setDestination(self.rollingStockName, destination)
+    -- No event here - is used by train
 end
 
 function RollingStock:setStations(stations) self.model:setStations(self.rollingStockName, stations) end
@@ -132,8 +134,13 @@ function RollingStock:setWagonNr(nr)
     self:setValue(TagKeys.RollingStock.wagonNumber, nr)
     self.model:setWagonNr(self.rollingStockName, nr)
     if oldNr ~= nr then
-        EventBroker.fire("ak.train.RollingStock.nrChanged", {rollingStockName = self.rollingStockName, nr = nr})
+        EventBroker.fireDataChange("RollingStock wagon number Changed", EventBroker.change.dataUpdated,
+                                   "rollingStock", "name", {rollingStockName = self.rollingStockName, nr = nr})
     end
+end
+
+function RollingStock:getWagonNr()
+    return self:getValue(TagKeys.RollingStock.wagonNumber)
 end
 
 --- Updates the trains trainName
@@ -144,8 +151,8 @@ function RollingStock:setTrainName(trainName)
     local oldTrainName = self.trainName
     self.trainName = trainName
     if oldTrainName ~= trainName then
-        EventBroker.fire("ak.train.RollingStock.trainNameChanged",
-                         {name = self.rollingStockName, trainName = trainName})
+        EventBroker.fireDataChange("RollingStock train name Changed", EventBroker.change.dataUpdated, "rollingStock",
+                                   "name", {name = self.rollingStockName, trainName = trainName})
     end
 end
 
@@ -164,8 +171,9 @@ function RollingStock:setPositionInTrain(positionInTrain)
     local oldPositionInTrain = self.positionInTrain
     self.positionInTrain = positionInTrain
     if oldPositionInTrain ~= positionInTrain then
-        EventBroker.fire("ak.train.RollingStock.positionInTrainChanged",
-                         {name = self.rollingStockName, positionInTrain = positionInTrain})
+        EventBroker.fireDataChange("RollingStock position in train Changed", EventBroker.change.dataUpdated,
+                                   "rollingStock", "name",
+                                   {name = self.rollingStockName, positionInTrain = positionInTrain})
     end
 end
 
@@ -212,15 +220,16 @@ function RollingStock:getPropelled()
 end
 
 --- Updates the front coupling of the rolling stock
----@param coupling number the front coupling of the rolling stock
-function RollingStock:setCouplingFront(coupling)
+---@param couplingFront number the front coupling of the rolling stock
+function RollingStock:setCouplingFront(couplingFront)
     assert(type(self) == "table", "Need to call this method with ':'")
-    assert(type(coupling) == "number", "Need 'positionInTrain' as number")
-    local oldCoupling = self.positionInTrain
-    self.getCouplingFront = coupling
-    if oldCoupling ~= coupling then
-        EventBroker.fire("ak.train.RollingStock.couplingFrontChanged",
-                         {name = self.rollingStockName, couplingFront = coupling})
+    assert(type(couplingFront) == "number", "Need 'positionInTrain' as number")
+    local oldCoupling = self.couplingFront
+    self.couplingFront = couplingFront
+    if oldCoupling ~= couplingFront then
+        EventBroker.fireDataChange("RollingStock coupling front Changed", EventBroker.change.dataUpdated,
+                                   "rollingStock", "name",
+                                   {name = self.rollingStockName, couplingFront = couplingFront})
     end
 end
 
@@ -232,15 +241,15 @@ function RollingStock:getCouplingFront()
 end
 
 --- Updates the rear coupling of the rolling stock
----@param coupling number the rear coupling of the rolling stock
-function RollingStock:setCouplingRear(coupling)
+---@param couplingRear number the rear coupling of the rolling stock
+function RollingStock:setCouplingRear(couplingRear)
     assert(type(self) == "table", "Need to call this method with ':'")
-    assert(type(coupling) == "number", "Need 'positionInTrain' as number")
-    local oldCoupling = self.positionInTrain
-    self.getCouplingRear = coupling
-    if oldCoupling ~= coupling then
-        EventBroker.fire("ak.train.RollingStock.couplingRearChanged",
-                         {name = self.rollingStockName, couplingRear = coupling})
+    assert(type(couplingRear) == "number", "Need 'positionInTrain' as number")
+    local oldCoupling = self.couplingRear
+    self.couplingRear = couplingRear
+    if oldCoupling ~= couplingRear then
+        EventBroker.fireDataChange("RollingStock coupling rear Changed", EventBroker.change.dataUpdated,
+                                   "rollingStock", "name", {name = self.rollingStockName, couplingRear = couplingRear})
     end
 end
 
@@ -275,7 +284,8 @@ function RollingStock:setTrack(trackId, trackDistance, trackDirection, trackSyst
     self.trackDirection = trackDirection
     self.trackSystem = trackSystem
     if oldId ~= trackId or oldDist ~= trackDistance or oldDir ~= trackDirection or oldSys ~= trackSystem then
-        EventBroker.fire("ak.train.RollingStock.trackChanged", {
+        EventBroker.fireDataChange("RollingStock track Changed", EventBroker.change.dataUpdated, "rollingStockInfo",
+                                   "name", {
             name = self.rollingStockName,
             trackId = trackId,
             trackDistance = trackDistance,
@@ -320,7 +330,9 @@ function RollingStock:setPosition(x, y, z)
     self.y = y
     self.z = z
     if oldX ~= x or oldY ~= y or oldZ ~= z then
-        EventBroker.fire("ak.train.RollingStock.positionChanged", {name = self.rollingStockName, x = x, y = y, z = z})
+        EventBroker.fireDataChange("RollingStock map position Changed", EventBroker.change.dataUpdated,
+                                   "rollingStockInfo", "name",
+                                   {name = self.rollingStockName, posX = x, posY = y, posZ = z})
     end
 end
 
@@ -350,11 +362,11 @@ end
 function RollingStock:setMileage(mileage)
     assert(type(self) == "table", "Need to call this method with ':'")
     assert(type(mileage) == "number", "Need 'mileage' as number")
-    local oldMileage = self.positionInTrain
+    local oldMileage = self.mileage
     self.mileage = mileage
     if oldMileage ~= mileage then
-        EventBroker.fire("ak.train.RollingStock.positionInTrainChanged",
-                         {name = self.rollingStockName, mileage = mileage})
+        EventBroker.fireDataChange("RollingStock mileage Changed", EventBroker.change.dataUpdated, "rollingStockInfo",
+                                   "name", {name = self.rollingStockName, mileage = mileage})
     end
 end
 
@@ -380,7 +392,8 @@ function RollingStock:toJsonStatic()
         propelled = self:getPropelled(),
         modelType = self:getModelType(),
         modelTypeText = self:getModelTypeText(),
-        tag = self:getTag()
+        tag = self:getTag(),
+        nr = self:getWagonNr()
     }
 end
 
