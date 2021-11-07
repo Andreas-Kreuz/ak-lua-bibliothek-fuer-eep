@@ -61,6 +61,10 @@ function AkWebServerIo.setOutputDirectory(dirName)
     -- but only if the Web Server is listening and has finished reading the previous version of the file
     outFileNameJson = ioDirectoryName .. "/ak-eep-out.json"
 
+    -- EEP writes it's status to this file regularly
+    -- but only if the Web Server is listening and has finished reading the previous version of the file
+    AkWebServerIo.outFileNameEvents = ioDirectoryName .. "/ak-eep-out.eventlog"
+
     -- The Web Server creates this file at start and deletes it on exit
     -- Conclusion: The server is listening while this file exists
     watchFileNameServer = ioDirectoryName .. "/ak-server.iswatching"
@@ -121,7 +125,6 @@ local _clearlog = clearlog
 function clearlog()
     -- call the original clearlog function
     _clearlog()
-
     local file = io.open(outFileNameLog, "w+")
     file:close()
 end
@@ -156,7 +159,7 @@ end
 
 local writing = false
 --- Schreibe Datei.
--- @param jsonData Dateiinhalt
+---@param jsonData string Dateiinhalt als JSON-formatierter String
 function AkWebServerIo.updateJsonFile(jsonData)
     if not writing then
         writing = true
