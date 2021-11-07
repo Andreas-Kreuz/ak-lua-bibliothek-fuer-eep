@@ -14,8 +14,8 @@ local EEPRollingstockModelTypeText = {
     [5] = "Diesellok",
     [6] = "Triebwagen",
     [7] = "U- oder S-Bahn",
-    [8] = "Straßenbahn", -- German Umlaute are ok if stored as UTF-8
-    [9] = "Güterwaggon", -- German Umlaute are ok if stored as UTF-8
+    [8] = "Straï¿½enbahn", -- German Umlaute are ok if stored as UTF-8
+    [9] = "Gï¿½terwaggon", -- German Umlaute are ok if stored as UTF-8
     [10] = "Personenwaggon",
     [11] = "Luftfahrzeug",
     [12] = "Maschine",
@@ -133,8 +133,7 @@ function RollingStock:setWagonNr(nr)
     self:setValue(TagKeys.RollingStock.wagonNumber, nr)
     self.model:setWagonNr(self.rollingStockName, nr)
     if oldNr ~= nr then
-        EventBroker.fire("ak.train.RollingStock.nrChanged",
-                         json.encode({rollingStockName = self.rollingStockName, nr = nr}))
+        EventBroker.fire("ak.train.RollingStock.nrChanged", {rollingStockName = self.rollingStockName, nr = nr})
     end
 end
 
@@ -147,7 +146,7 @@ function RollingStock:setTrainName(trainName)
     self.trainName = trainName
     if oldTrainName ~= trainName then
         EventBroker.fire("ak.train.RollingStock.trainNameChanged",
-                         json.encode({name = self.rollingStockName, trainName = trainName}))
+                         {name = self.rollingStockName, trainName = trainName})
     end
 end
 
@@ -167,7 +166,7 @@ function RollingStock:setPositionInTrain(positionInTrain)
     self.positionInTrain = positionInTrain
     if oldPositionInTrain ~= positionInTrain then
         EventBroker.fire("ak.train.RollingStock.positionInTrainChanged",
-                         json.encode({name = self.rollingStockName, positionInTrain = positionInTrain}))
+                         {name = self.rollingStockName, positionInTrain = positionInTrain})
     end
 end
 
@@ -222,7 +221,7 @@ function RollingStock:setCouplingFront(coupling)
     self.getCouplingFront = coupling
     if oldCoupling ~= coupling then
         EventBroker.fire("ak.train.RollingStock.couplingFrontChanged",
-                         json.encode({name = self.rollingStockName, couplingFront = coupling}))
+                         {name = self.rollingStockName, couplingFront = coupling})
     end
 end
 
@@ -242,7 +241,7 @@ function RollingStock:setCouplingRear(coupling)
     self.getCouplingRear = coupling
     if oldCoupling ~= coupling then
         EventBroker.fire("ak.train.RollingStock.couplingRearChanged",
-                         json.encode({name = self.rollingStockName, couplingRear = coupling}))
+                         {name = self.rollingStockName, couplingRear = coupling})
     end
 end
 
@@ -271,17 +270,19 @@ function RollingStock:setTrack(trackId, trackDistance, trackDirection, trackSyst
     assert(type(trackDistance) == "number", "Need 'trackDistance' as number")
     assert(type(trackDirection) == "number", "Need 'trackDirection' as number")
     assert(type(trackSystem) == "number", "Need 'trackSystem' as number")
-    local oldX, oldY, oldZ = self.x, self.y, self.z
-    self.x = trackId
-    self.y = trackDistance
-    self.z = trackDirection
-    if oldX ~= trackId or oldY ~= trackDistance or oldZ ~= trackDirection then
-        EventBroker.fire("ak.train.RollingStock.trackChanged", json.encode({
+    local oldId, oldDist, oldDir, oldSys = self.trackId, self.trackDistance, self.trackDirection, self.trackSystem
+    self.trackId = trackId
+    self.trackDistance = trackDistance
+    self.trackDirection = trackDirection
+    self.trackSystem = trackSystem
+    if oldDist ~= trackId or oldDist ~= trackDistance or oldDir ~= trackDirection or oldSys ~= trackSystem then
+        EventBroker.fire("ak.train.RollingStock.trackChanged", {
             name = self.rollingStockName,
             trackId = trackId,
             trackDistance = trackDistance,
-            trackDirection = trackDirection
-        }))
+            trackDirection = trackDirection,
+            trackSystem = trackSystem
+        })
     end
 end
 
@@ -320,8 +321,7 @@ function RollingStock:setPosition(x, y, z)
     self.y = y
     self.z = z
     if oldX ~= x or oldY ~= y or oldZ ~= z then
-        EventBroker.fire("ak.train.RollingStock.positionChanged",
-                         json.encode({name = self.rollingStockName, x = x, y = y, z = z}))
+        EventBroker.fire("ak.train.RollingStock.positionChanged", {name = self.rollingStockName, x = x, y = y, z = z})
     end
 end
 
@@ -355,7 +355,7 @@ function RollingStock:setMileage(mileage)
     self.mileage = mileage
     if oldMileage ~= mileage then
         EventBroker.fire("ak.train.RollingStock.positionInTrainChanged",
-                         json.encode({name = self.rollingStockName, mileage = mileage}))
+                         {name = self.rollingStockName, mileage = mileage})
     end
 end
 

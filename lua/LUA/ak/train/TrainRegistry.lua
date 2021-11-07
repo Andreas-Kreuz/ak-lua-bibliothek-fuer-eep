@@ -36,15 +36,15 @@ end
 ---A train appeared on the map
 ---@param train Train
 function TrainRegistry.trainAppeared(train)
-    EventBroker.fire("ak.TrainEvent.trainAppeared", json.encode(train:toJsonStatic()))
-    EventBroker.fire("ak.TrainEvent.trainInfoAppeared", json.encode(train:toJsonDynamic()))
+    EventBroker.fire("ak.TrainEvent.trainAppeared", train:toJsonStatic())
+    EventBroker.fire("ak.TrainEvent.trainInfoAppeared", train:toJsonDynamic())
 end
 
 ---A train dissappeared from the map
 ---@param trainName string
 function TrainRegistry.trainDisappeared(trainName)
     allTrains[trainName] = nil
-    EventBroker.fire("ak.TrainEvent.trainDisappeared", json.encode({trainName = trainName}))
+    EventBroker.fire("ak.TrainEvent.trainDisappeared", {trainName = trainName})
 end
 
 return TrainRegistry
