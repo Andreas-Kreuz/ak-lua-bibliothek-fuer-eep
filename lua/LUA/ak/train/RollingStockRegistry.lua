@@ -1,5 +1,4 @@
 local EventBroker = require "ak.util.EventBroker"
-local json = require "ak.io.json"
 local RollingStock = require "ak.train.RollingStock"
 local RollingStockRegistry = {}
 local allRollingStock = {}

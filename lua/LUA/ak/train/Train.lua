@@ -1,5 +1,4 @@
 local EventBroker = require "ak.util.EventBroker"
-local json = require "ak.io.json"
 local TableUtils = require "ak.util.TableUtils"
 if AkDebugLoad then print("Loading ak.train.Train ...") end
 
