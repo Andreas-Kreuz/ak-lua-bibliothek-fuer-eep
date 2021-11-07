@@ -12,7 +12,7 @@ DataLuaModule.name = "ak.data.DataLuaModule"
 local activeCollectors = {}
 
 --- Diese Funktion wird einmalig durch ModuleRegistry.initTasks() aufgerufen
--- Ist ein Modul für EEPWeb vorhanden, dann solltes in dieser Funktion aufgerufen werden
+-- Ist ein Modul fÃ¼r EEPWeb vorhanden, dann solltes in dieser Funktion aufgerufen werden
 -- @author Andreas Kreuz
 function DataLuaModule.init()
     if not DataLuaModule.enabled or initialized then return end
@@ -24,16 +24,16 @@ function DataLuaModule.init()
     initialized = true
 end
 
---- Diese Funktion wird regelmäßig durch ModuleRegistry.runTasks() aufgerufen
+--- Diese Funktion wird regelmÃ¤ÃŸig durch ModuleRegistry.runTasks() aufgerufen
 -- @author Andreas Kreuz
 function DataLuaModule.run()
     if not DataLuaModule.enabled then return end
 
-    -- Hier folgen die wiederkehrenden Funktionen jedes Moduls (müssen dann nicht in EEPMain aufgerufen werden)
+    -- Hier folgen die wiederkehrenden Funktionen jedes Moduls (mÃ¼ssen dann nicht in EEPMain aufgerufen werden)
     -- Das CoreModul hat keine wiederkehrenden Funktionen
 end
 
---- Über diese Funktion kann das EEP Skript die Optionen des Moduls setzen
+--- Ãœber diese Funktion kann das EEP Skript die Optionen des Moduls setzen
 -- @author Frank Buchholz
 -- @options List of options { activeCollectors = array of jsonCollector names, }
 function DataLuaModule.setOptions(options)
