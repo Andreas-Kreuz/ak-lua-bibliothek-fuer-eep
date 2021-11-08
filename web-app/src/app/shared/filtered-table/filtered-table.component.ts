@@ -1,4 +1,14 @@
-import { Component, ComponentFactoryResolver, Input, OnDestroy, OnInit, Type, ViewChild } from '@angular/core';
+import {
+  AfterContentInit,
+  Component,
+  ComponentFactoryResolver,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Type,
+  ViewChild,
+} from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { TableDataSource } from './table-datasource';
 import { Observable, Subject } from 'rxjs';
@@ -21,7 +31,7 @@ import { DetailsItem } from '../details/details-item';
     ]),
   ],
 })
-export class FilteredTableComponent<T> implements OnInit, OnDestroy {
+export class FilteredTableComponent<T> implements OnInit, OnDestroy, OnChanges {
   @ViewChild(DetailsDirective) detailHost: DetailsDirective;
   @ViewChild(OldDetailsDirective) oldDetailHost: OldDetailsDirective;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -50,6 +60,12 @@ export class FilteredTableComponent<T> implements OnInit, OnDestroy {
   private filter = new Subject<string>();
 
   constructor(private componentFactoryResolver: ComponentFactoryResolver) {}
+
+  ngOnChanges() {
+    if (this.dataSource && this.columnsToDisplay) {
+      this.dataSource.setColumnsToDisplay(this.columnsToDisplay);
+    }
+  }
 
   ngOnInit() {
     this.dataSource = new TableDataSource(

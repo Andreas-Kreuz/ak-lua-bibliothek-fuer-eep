@@ -3,6 +3,7 @@ import { DataSource } from '@angular/cdk/collections';
 import { MatSort } from '@angular/material/sort';
 import { map } from 'rxjs/operators';
 import { merge, Observable, Subscription } from 'rxjs';
+import * as assert from 'assert';
 
 /**
  * Data source for the Table view. This class should
@@ -21,7 +22,7 @@ export class TableDataSource<T> extends DataSource<T> {
     private filter: Observable<string>,
     private sort: MatSort,
     private columnsToDisplay: string[],
-    private columnTextFunctions?: (T) => string
+    private columnTextFunctions?: (arg0: T) => string
   ) {
     super();
 
@@ -30,7 +31,7 @@ export class TableDataSource<T> extends DataSource<T> {
 
     this.filterPredicate = (data, filterText) => {
       // Transform the data into a lowercase string of all property values.
-      const dataStr = columnsToDisplay
+      const dataStr = this.columnsToDisplay
         .reduce((currentTerm, key) => {
           // Use an obscure Unicode character to delimit the words in the concatenated string.
           // This avoids matches where the values of two columns combined will match the user's query
@@ -46,6 +47,10 @@ export class TableDataSource<T> extends DataSource<T> {
       const transformedFilter = filterText.trim().toLowerCase();
       return dataStr.indexOf(transformedFilter) !== -1;
     };
+  }
+
+  setColumnsToDisplay(columnsToDisplay: string[]) {
+    this.columnsToDisplay = columnsToDisplay;
   }
 
   /**
