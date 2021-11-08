@@ -12,11 +12,16 @@ img: "/docs/assets/headers/SourceCode.png"
 Dieses Paket kommuniziert über Dateien (schreiben und lesen) mit dem Server, der die Daten von EEP-Web anzeigt.
 
 ## Dateien
+
 `ak-eep-out.log`
 EEP appends the log to this file.
 
+`ak-eep-out.eventlog`
+EEP appends data change events to this file.
+
 `ak-eep-out.json`
-EEP writes it's status to this file regularly but only if the Web Server is listening and has finished reading the previous version of the file.
+EEP writes it's status to this file regularly but only if the Web Server is listening and has finished reading
+the previous version of the file.
 
 `ak-server.iswatching`
 The Web Server creates this file at start and deletes it on exit.
