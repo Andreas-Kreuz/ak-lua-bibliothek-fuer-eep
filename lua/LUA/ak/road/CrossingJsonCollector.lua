@@ -161,7 +161,7 @@ local function collect(allCrossings)
                ("%3d"):format(#a)
     end)
 
-    local json = require("ak.io.json")
+    local json = require("ak.third-party.json")
     json.encode(intersections)
     json.encode(intersectionLanes)
     json.encode(intersectionSwitching)
