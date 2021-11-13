@@ -35,6 +35,47 @@ end
 -- Known Models
 ---------------------
 
+local SimpleStructure_initStation = function(displayStructure, stationName, platform)
+    assert(type(displayStructure) == "string", "Need 'displayStructure' as string not as " .. type(displayStructure))
+    assert(type(stationName) == "string", "Need 'stationName' as string")
+    assert(type(platform) == "string", "Need 'platform' as string")
+
+    -- EEPStructureSetTextureText(displayStructure, 21, stationName)
+    -- EEPStructureSetTextureText(displayStructure, 24, "Steig " .. platform)
+end
+local SimpleStructure_displayEntries = function(displayStructure, stationQueueEntries, stationName, platform)
+    local text = {stationName, " (Steig ", platform, ")<br>"}
+
+    table.insert(text, "Linie / Ziel / Minuten<br>")
+
+    for i = 1, 5 do
+        ---@type StationQueueEntry
+        local entry = stationQueueEntries[i]
+        -- local offset = (i - 1) * 4
+        -- EEPStructureSetTextureText(displayStructure, offset + 1, entry and entry.line or "")
+        -- EEPStructureSetTextureText(displayStructure, offset + 2, entry and entry.destination or "")
+        -- EEPStructureSetTextureText(displayStructure, offset + 3,
+        --                            (entry and entry.timeInMinutes > 0) and tostring(entry.timeInMinutes) or "")
+        -- EEPStructureSetTextureText(displayStructure, offset + 4, (entry and entry.timeInMinutes > 0) and "min" or "")
+
+        table.insert(text, entry and entry.line or "")
+        table.insert(text, " / ")
+        table.insert(text, entry and entry.destination or "")
+        table.insert(text, " / ")
+        table.insert(text, (entry and entry.timeInMinutes > 0) and tostring(entry.timeInMinutes) or "")
+        table.insert(text, " ")
+        table.insert(text, (entry and entry.timeInMinutes > 0) and "min" or "")
+        table.insert(text, "<br>")
+    end
+
+    text = table.concat(text, "")
+    EEPChangeInfoStructure(displayStructure, text)
+    EEPShowInfoStructure(displayStructure, true)
+end
+
+DisplayModel.SimpleStructure = DisplayModel:new("SimpleStructure", SimpleStructure_initStation,
+                                                SimpleStructure_displayEntries)
+
 -- DL1 Model
 local Tram_Schild_DL1_initStation = function(displayStructure, stationName, platform)
     assert(type(displayStructure) == "string", "Need 'displayStructure' as string not as " .. type(displayStructure))
@@ -93,8 +134,8 @@ local BusHSInfo_RG3_displayEntries = function(displayStructure, stationQueueEntr
     assert(type(platform) == "string", "Need 'platform' as string")
 end
 
-DisplayModel.BusHSInfo_RG3 = DisplayModel:new("BusHSInfo_RG3", BusHSInfo_RG3_initStation,
-                                              BusHSInfo_RG3_displayEntries)
+DisplayModel.BusHSInfo_RG3 =
+DisplayModel:new("BusHSInfo_RG3", BusHSInfo_RG3_initStation, BusHSInfo_RG3_displayEntries)
 
 local BusHSdfi_RG3_initStation = function(displayStructure, stationName, platform)
     assert(type(displayStructure) == "string", "Need 'displayStructure' as string not as " .. type(displayStructure))
