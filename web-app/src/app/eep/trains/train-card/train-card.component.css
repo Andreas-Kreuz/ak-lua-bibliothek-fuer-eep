@@ -1,3 +1,8 @@
+#expandButton {
+    position: absolute;
+    right: 1rem;
+}
+
 #bigIcon {
     text-align: center;
     font-size: 2rem;
@@ -7,10 +12,19 @@
     /* background-color: #eeeeee; */
 }
 
+#rsTitle {
+    font-weight: 400;
+}
+
 .mat-card {
     padding: 1rem;
 }
 
 .mat-card-content {
+    margin-top: 1rem;
     margin-left: 4rem;
+}
+
+.mat-card-subtitle {
+    margin-bottom: 0;
 }

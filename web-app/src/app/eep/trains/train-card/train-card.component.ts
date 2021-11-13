@@ -1,32 +1,48 @@
-import { Component, Input, OnChanges, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { Train } from '../model/train.model';
 import { Coupling } from '../model/coupling.enum';
-import { TrainType } from '../model/train-type.enum';
 import * as unicode from '../../../shared/unicode-symbol.model';
 import { iconForRollingStockType, textForRollingStockType } from '../model/rolling-stock-type.enum';
 import { RollingStock } from '../model/rolling-stock.model';
+import { select, Store } from '@ngrx/store';
+import * as fromRoot from '../../../app.reducers';
+import * as TrainAction from '../store/train.actions';
+import * as fromTrain from '../store/train.reducer';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-train-card',
   templateUrl: './train-card.component.html',
   styleUrls: ['./train-card.component.css'],
 })
-export class TrainCardComponent implements OnInit, OnChanges {
+export class TrainCardComponent implements OnInit, OnDestroy, OnChanges {
   @Input() train: Train;
+  expanded = false;
   frontCouplingReady = false;
   rearCouplingReady = false;
+  selectedTrainName$: Observable<string>;
 
-  constructor() {}
+  constructor(private store: Store<fromRoot.State>) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.selectedTrainName$ = this.store.pipe(select(fromTrain.selectedTrainName));
+    this.selectedTrainName$.subscribe((trainName) => (this.expanded = this.train.id === trainName));
+  }
+
+  ngOnDestroy(): void {}
+
   ngOnChanges(): void {
     const frontRs = this.train && this.train.rollingStock && this.train.rollingStock[0];
     this.frontCouplingReady =
       frontRs && (frontRs.couplingFront === Coupling.ready || frontRs.couplingRear === Coupling.ready);
 
-    const lastRs = this.train && this.train.rollingStock && this.train.rollingStock[this.train.rollingStock.length - 1];
+    const rearRs = this.train && this.train.rollingStock && this.train.rollingStock[this.train.rollingStock.length - 1];
     this.rearCouplingReady =
-      lastRs && (lastRs.couplingFront === Coupling.ready || lastRs.couplingRear === Coupling.ready);
+      rearRs && (rearRs.couplingFront === Coupling.ready || rearRs.couplingRear === Coupling.ready);
+  }
+
+  public favoriteTrain(): void {
+    this.store.next(TrainAction.selectTrain({ trainName: this.expanded ? null : this.train.id }));
   }
 
   iconFor(rollingStock: RollingStock) {

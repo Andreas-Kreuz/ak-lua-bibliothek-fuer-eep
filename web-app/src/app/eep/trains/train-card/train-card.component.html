@@ -1,30 +1,45 @@
-<mat-card class="mat-elevation-z3">
+<mat-card class="mat-elevation-z3" *ngIf="train.rollingStock && train.rollingStock[0]">
   <mat-card-header>
     <div mat-card-avatar id="bigIcon">{{ iconFor(train.rollingStock[0]) }}</div>
-    <mat-card-title>{{ train.id }}</mat-card-title>
+    <mat-card-title>
+      {{ train.id }}
+    </mat-card-title>
     <mat-card-subtitle>
       <app-info-route [route]="train.route"></app-info-route>
       <app-info-line [line]="train.line"></app-info-line>
-      <app-info-destination [destination]="train.destination"></app-info-destination
-      ><br *ngIf="train.line || train.destination" />
+      <app-info-destination [destination]="train.destination"></app-info-destination>
     </mat-card-subtitle>
+    <div id="expandButton">
+      <button mat-icon-button (click)="favoriteTrain()">
+        <mat-icon>{{ expanded ? "expand_less" : "expand_more" }}</mat-icon>
+      </button>
+    </div>
   </mat-card-header>
-  <mat-card-content>
+  <mat-card-content *ngIf="(selectedTrainName$ | async) === train.id">
     <mat-divider></mat-divider>
-    <app-info-direction [direction]="train.direction"></app-info-direction><br *ngIf="train.length" />
+    <!-- <app-info-direction [direction]="train.direction"></app-info-direction><br *ngIf="train.length" />
     <app-info-length [length]="train.length"></app-info-length><br *ngIf="train.length" />
     <app-info-speed [speed]="train.speed"></app-info-speed><br *ngIf="train.speed" />
     <app-info-coupling [couplingReady]="frontCouplingReady" [name]="'vorn'"></app-info-coupling> /
     <app-info-coupling [couplingReady]="rearCouplingReady" [name]="'hinten'"> </app-info-coupling><br />
 
-    <mat-divider></mat-divider>
-    <mat-list style="margin-left: -1rem; margin-right: -1rem">
+    <mat-divider style="margin-top: 1rem; margin-left: 4rem"></mat-divider> -->
+    <mat-list style="margin-top: 0.5rem; margin-left: -1rem; margin-right: -1rem">
+      <mat-list-item class="text-muted">
+        <span mat-list-icon><mat-icon>info</mat-icon></span>
+        <app-info-direction mat-line [direction]="train.direction"></app-info-direction><br *ngIf="train.length" />
+        <app-info-length mat-line [length]="train.length"></app-info-length><br *ngIf="train.length" />
+        <app-info-speed mat-line [speed]="train.speed"></app-info-speed><br *ngIf="train.speed" />
+        <span mat-line>
+          <app-info-coupling [couplingReady]="frontCouplingReady" [name]="'vorn'"></app-info-coupling> /
+          <app-info-coupling [couplingReady]="rearCouplingReady" [name]="'hinten'"> </app-info-coupling>
+        </span>
+        <mat-divider *ngIf="train.rollingStock.length > 0"></mat-divider>
+      </mat-list-item>
       <mat-list-item *ngFor="let rs of train.rollingStock; last as last">
         <span mat-list-icon>{{ iconFor(rs) }}</span>
-        <h4 mat-line>
-          {{ rs.name }}
-        </h4>
-        <p mat-line class="app-mute-on-light-bg">{{ rs.tag }}</p>
+        <h4 mat-line id="rsTitle">{{ rs.name }}</h4>
+        <p mat-line class="app-mute-on-light-bg"><mat-icon>label</mat-icon> {{ rs.tag }}</p>
         <mat-divider *ngIf="!last"></mat-divider>
       </mat-list-item>
     </mat-list>

@@ -66,6 +66,7 @@ export const reducer = (state: State | undefined, action: Action) => trainReduce
 
 export const trainsState$ = createFeatureSelector('train');
 
+export const selectedTrainName = createSelector(trainsState$, (state: State) => state.selectedTrainName);
 export const selectTrainType = createSelector(trainsState$, (state: State) => state.trainType);
 export const selectRailTrainCount = createSelector(trainsState$, (state: State) => state.railTrains.length);
 export const selectRoadTrainCount = createSelector(trainsState$, (state: State) => state.roadTrains.length);
