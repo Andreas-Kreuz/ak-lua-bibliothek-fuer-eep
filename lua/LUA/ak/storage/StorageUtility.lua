@@ -19,7 +19,7 @@ function StorageUtility.registerId(eepSaveId, name)
     assert(type(eepSaveId) == "number" and eepSaveId > 0 and eepSaveId <= 1000, eepSaveId)
     assert(saveSlots[eepSaveId] == nil,
            "Speicher-ID ist bereits vergeben: " .. eepSaveId .. " (" ..
-               (saveSlots[eepSaveId] and saveSlots[eepSaveId] or "nil") .. ")" .. "\n" .. debug.traceback())
+           (saveSlots[eepSaveId] and saveSlots[eepSaveId] or "nil") .. ")" .. "\n" .. debug.traceback())
     saveSlots[eepSaveId] = name
 end
 
@@ -56,6 +56,10 @@ function StorageUtility.loadTable(eepSaveId, name)
         end
     end
 
+    return StorageUtility.parseTableFromString(data)
+end
+
+function StorageUtility.parseTableFromString(data)
     local t = {}
     if data then
         for k, v in string.gmatch(data, "(%w+)=(.-[,])") do
@@ -85,15 +89,7 @@ function StorageUtility.loadTableRollingStock(rollingStockName)
         print("[StorageUtility  ] Load: [!!] - " .. rollingStockName .. " (RollingStock) not found!")
     end
 
-    local t = {}
-    if data then
-        for k, v in string.gmatch(data, "(%w+)=(.-[,])") do
-            v = v:sub(1, -2)
-            if StorageUtility.debug then print(k .. "=" .. v) end
-            t[k] = v
-        end
-    end
-    return t
+    return StorageUtility.parseTableFromString(data)
 end
 
 --- Hilfsroutine für die sortierte Ausgabe einer Tabelle
@@ -129,14 +125,7 @@ end
 --
 function StorageUtility.saveTable(eepSaveId, table, name)
     name = name and name or "?"
-    local text = ""
-    for k, v in pairsByKeys(table) do
-        assert(type(k) == "string", "Need 'k' as string")
-        assert(type(v) == "string", "Need 'v' as string")
-        assert(not string.find(k, ","))
-        assert(not string.find(v, ","))
-        text = text .. k .. "=" .. v .. ","
-    end
+    local text = StorageUtility.encodeTable(table)
     if text:len() > 1024 then
         print("Cannot store more than 1024 characters in slot " .. eepSaveId .. " - " .. name)
     end
@@ -144,8 +133,8 @@ function StorageUtility.saveTable(eepSaveId, table, name)
     local hresult = EEPSaveData(eepSaveId, text)
     if StorageUtility.debug then
         print(
-            "[StorageUtility  ] Speichern [" .. (hresult and "OK" or "!!") .. "] - " .. eepSaveId .. " - " .. name ..
-                " gespeichert: " .. text)
+        "[StorageUtility  ] Speichern [" .. (hresult and "OK" or "!!") .. "] - " .. eepSaveId .. " - " .. name ..
+        " gespeichert: " .. text)
     end
     savedValues[eepSaveId] = text
     if StorageUtility.debug then StorageUtility.updateDebugFile() end
@@ -154,7 +143,7 @@ end
 --- Stores the data of a table into an EEP data slot
 -- @param rollingStockName string Rolling stock name in EEP
 -- @param table table eine Lua Tabelle mit Daten und moeglichst kurzem Key und Value
-function StorageUtility.saveTableRollingStock(rollingStockName, table)
+function StorageUtility.encodeTable(table)
     local text = ""
     for k, v in pairsByKeys(table) do
         assert(type(k) == "string", "Need 'k' as string")
@@ -163,16 +152,9 @@ function StorageUtility.saveTableRollingStock(rollingStockName, table)
         assert(not string.find(v, ","))
         text = text .. k .. "=" .. v .. ","
     end
-    if text:len() > 1024 then
-        print("Cannot store more than 1024 characters in rollingStock " .. rollingStockName)
-    end
+    if text:len() > 1024 then print("Cannot store more than 1024 characters") end
     assert(text:len() <= 1024)
-    local hresult = EEPRollingstockSetTagText(rollingStockName, text)
-    if StorageUtility.debug then
-        print("[StorageUtility  ] Save [" .. (hresult and "OK" or "!!") .. "] - " .. rollingStockName ..
-                  " (RollingStock)" .. " saved: " .. text)
-    end
-    if StorageUtility.debug then StorageUtility.updateDebugFile() end
+    return text
 end
 
 --- Konvertiert einen Wert in ein boolean

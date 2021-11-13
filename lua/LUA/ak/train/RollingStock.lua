@@ -69,7 +69,6 @@ function RollingStock:new(o)
     local hasPos, posX, posY, posZ = EEPRollingstockGetPosition(o.rollingStockName) -- EEP 16.1
     local hasMileage, mileage = EEPRollingstockGetMileage(o.rollingStockName) -- EEP 16.1
 
-    o.values = {}
     o.model = RollingStockModels.modelFor(o.rollingStockName)
     o.trainName = ""
     o.positionInTrain = -1
@@ -80,6 +79,7 @@ function RollingStock:new(o)
     o.modelType = modelType or -1
     o.modelTypeText = EEPRollingstockModelTypeText[modelType] or ""
     o.tag = tag or ""
+    o.values = StorageUtility.parseTableFromString(tag)
     o.trackId = trackId or -1
     o.trackDistance = tonumber(string.format("%.2f", trackDistance or -1))
     o.trackDirection = trackDirection or -1
@@ -99,6 +99,7 @@ function RollingStock:setValue(key, value)
     assert(type(key) == "string", "Need 'key' as string")
     assert(type(value) == "string", "Need 'value' as string")
     self.values[key] = value
+    self:save();
 end
 
 ---Get the current value for key
@@ -112,7 +113,10 @@ end
 
 function RollingStock:save(clearCurrentInfo)
     local t = clearCurrentInfo and {} or self.values
-    StorageUtility.saveTableRollingStock(self.rollingStockName, t)
+    local newTag = StorageUtility.encodeTable(t)
+    self.tag = newTag
+    local hresult = EEPRollingstockSetTagText(self.rollingStockName, newTag)
+    assert(hresult)
 end
 
 function RollingStock:setLine(line)
