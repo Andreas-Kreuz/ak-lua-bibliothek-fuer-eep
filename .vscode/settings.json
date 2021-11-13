@@ -155,5 +155,6 @@
     "vue",
     "markdown",
     "html"
-  ]
+  ],
+  "editor.formatOnSave": true
 }
