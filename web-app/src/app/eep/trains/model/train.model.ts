@@ -9,6 +9,7 @@ export class Train {
     public length: number,
     public line: string,
     public destination: string,
-    public direction: string
+    public direction: string,
+    public speed: number
   ) {}
 }

@@ -1,9 +1,0 @@
-<app-rolling-stock-tooltip
-  *ngFor="let rollingStock of data.rollingStock"
-  [trainType]="trainType$ | async"
-  [rollingStock]="rollingStock"></app-rolling-stock-tooltip>
-
-<p>
-  Kupplung vorn: {{ couplingFront() }},
-  Kupplung hinten: {{ couplingRear() }}
-</p>

@@ -7,8 +7,7 @@ import * as TrainAction from '../store/train.actions';
 import * as fromTrain from '../store/train.reducer';
 import { ActivatedRoute, Params } from '@angular/router';
 import { textForTrainType, TrainType } from '../model/train-type.enum';
-import { Coupling } from '../model/coupling.enum';
-import { TrainDetailsComponent } from '../train-details/train-details.component';
+import { RollingStock } from '../model/rolling-stock.model';
 
 @Component({
   selector: 'app-train-list',
@@ -17,36 +16,7 @@ import { TrainDetailsComponent } from '../train-details/train-details.component'
 })
 export class TrainListComponent implements OnInit, OnDestroy {
   trainType$: Observable<TrainType>;
-  columnsToDisplay: string[] = [
-    'id',
-    'route',
-    'rollingStock',
-    'coupling',
-    'line',
-    'destination',
-    'direction',
-    'length',
-  ];
-  columnNames = {
-    id: 'Name',
-    route: 'Route',
-    rollingStock: 'Wagen',
-    coupling: 'Kupplung',
-    length: 'Länge',
-    line: 'Linie',
-    destination: 'Ziel',
-    direction: 'Richtung',
-  };
-  columnTextFunctions = {
-    rollingStock: (train: Train) => (train && train.rollingStock ? train.rollingStock.length : 0),
-    coupling: this.getCouplingText,
-    length: (train: Train) => (train && train.length ? train.length.toFixed(1) : 0),
-  };
-  columnAlignment = {
-    length: 'right',
-  };
   tableData$: Observable<Train[]>;
-  trainDetailsComponent = TrainDetailsComponent;
   private routeParams$: Subscription;
 
   constructor(private store: Store<fromRoot.State>, private route: ActivatedRoute) {}
@@ -67,24 +37,7 @@ export class TrainListComponent implements OnInit, OnDestroy {
     this.routeParams$.unsubscribe();
   }
 
-  private getCouplingText(train: Train): string {
-    if (train && train.rollingStock) {
-      const frontReady =
-        train.rollingStock[0].couplingFront === Coupling.ready || train.rollingStock[0].couplingRear === Coupling.ready;
-
-      const rearReady =
-        train.rollingStock[train.rollingStock.length - 1].couplingFront === Coupling.ready ||
-        train.rollingStock[train.rollingStock.length - 1].couplingRear === Coupling.ready;
-
-      if (frontReady) {
-        return rearReady ? 'Bereit (v+h)' : 'Bereit (v)';
-      } else if (rearReady) {
-        return 'Bereit (h)';
-      } else {
-        return 'Abstoßen';
-      }
-    } else {
-      return '?';
-    }
+  trackByTrainId(index: number, train: Train) {
+    return train.id;
   }
 }

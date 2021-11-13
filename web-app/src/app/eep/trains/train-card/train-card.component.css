@@ -1,0 +1,16 @@
+#bigIcon {
+    font-size: 2rem;
+}
+
+.flexContainer {
+    display: flex;
+    gap: 1rem;
+}
+
+.flexFill {
+    flex-grow: 2;
+}
+
+.mat-list-item-content {
+    padding-left: 0;
+}
