@@ -38,7 +38,7 @@ function Line.changeRoute(trainName, station, departureTime)
     local train = TrainRegistry.forName(trainName)
     local oldRoute = train:getRoute()
     if Line.debug then
-        print("Change destination for " .. trainName .. " at " .. station .. " (" .. oldRoute .. ")")
+        print("Change destination for " .. trainName .. " at " .. station.name .. " (" .. oldRoute .. ")")
     end
 
     if lineChanges[station] and lineChanges[station][oldRoute] then
@@ -55,7 +55,7 @@ function Line.changeRoute(trainName, station, departureTime)
 
         if Line.debug then
             print("[Line] CHANGED DESTINATION FOR " .. oldRoute .. " AT STATION " .. station.name .. " TO LINE " ..
-                  entry.newLine.lineName .. " (" .. entry.newRoute:getLastStation().name .. ")")
+                  entry.newLine.nr .. " (" .. entry.newRoute:getLastStation().name .. ")")
         end
     else
         print("[Line] NO DESTINATION FOUND FOR ROUTE " .. oldRoute .. " AT STATION " .. station.name)
