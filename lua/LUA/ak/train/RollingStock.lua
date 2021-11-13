@@ -139,9 +139,7 @@ function RollingStock:setWagonNr(nr)
     end
 end
 
-function RollingStock:getWagonNr()
-    return self:getValue(TagKeys.RollingStock.wagonNumber)
-end
+function RollingStock:getWagonNr() return self:getValue(TagKeys.RollingStock.wagonNumber) end
 
 --- Updates the trains trainName
 ---@param trainName string train trainName
