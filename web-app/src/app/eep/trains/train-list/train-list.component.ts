@@ -23,7 +23,7 @@ export class TrainListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.routeParams$ = this.route.params.subscribe((params: Params) => {
-      this.store.dispatch(new TrainAction.SelectType(this.route.snapshot.params['trainType']));
+      this.store.dispatch(TrainAction.selectType({ trainType: this.route.snapshot.params['trainType'] }));
       this.tableData$ = this.store.pipe(select(fromTrain.selectTrains));
       this.trainType$ = this.store.pipe(select(fromTrain.selectTrainType));
     });

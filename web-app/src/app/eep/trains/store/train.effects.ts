@@ -4,7 +4,7 @@ import { TrainService } from './train.service';
 import { filter, switchMap } from 'rxjs/operators';
 
 import { Train } from '../model/train.model';
-import * as fromTrains from './train.actions';
+import * as TrainAction from './train.actions';
 import { of } from 'rxjs';
 import { RollingStock } from '../model/rolling-stock.model';
 
@@ -14,7 +14,7 @@ export class TrainEffects {
     this.trainService.railTrainsActions$().pipe(
       switchMap((data) => {
         const list: Train[] = JSON.parse(data);
-        return of(new fromTrains.SetRailTrains(list));
+        return of(TrainAction.setRailTrains({ railTrains: list }));
       })
     )
   );
@@ -23,7 +23,7 @@ export class TrainEffects {
     this.trainService.railRollingStockActions$().pipe(
       switchMap((data) => {
         const list: RollingStock[] = JSON.parse(data);
-        return of(new fromTrains.SetRailRollingStock(list));
+        return of(TrainAction.setRailRollingStock({ railRollingStock: list }));
       })
     )
   );
@@ -32,7 +32,7 @@ export class TrainEffects {
     this.trainService.roadTrainsActions$().pipe(
       switchMap((data) => {
         const list: Train[] = JSON.parse(data);
-        return of(new fromTrains.SetRoadTrains(list));
+        return of(TrainAction.setRoadTrains({ roadTrains: list }));
       })
     )
   );
@@ -41,7 +41,7 @@ export class TrainEffects {
     this.trainService.roadRollingStockActions$().pipe(
       switchMap((data) => {
         const list: RollingStock[] = JSON.parse(data);
-        return of(new fromTrains.SetRoadRollingStock(list));
+        return of(TrainAction.setRoadRollingStock({ roadRollingStock: list }));
       })
     )
   );
@@ -50,7 +50,7 @@ export class TrainEffects {
     this.trainService.tramTrainsActions$().pipe(
       switchMap((data) => {
         const list: Train[] = JSON.parse(data);
-        return of(new fromTrains.SetTramTrains(list));
+        return of(TrainAction.setTramTrains({ tramTrains: list }));
       })
     )
   );
@@ -59,7 +59,7 @@ export class TrainEffects {
     this.trainService.tramRollingStockActions$().pipe(
       switchMap((data) => {
         const list: RollingStock[] = JSON.parse(data);
-        return of(new fromTrains.SetTramRollingStock(list));
+        return of(TrainAction.setTramRollingStock({ tramRollingStock: list }));
       })
     )
   );

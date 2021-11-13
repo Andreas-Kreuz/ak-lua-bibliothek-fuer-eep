@@ -1,6 +1,6 @@
 import { Train } from '../model/train.model';
-import { TrainActions, TrainActionTypes } from './train.actions';
-import { createFeatureSelector, createSelector } from '@ngrx/store';
+import * as TrainActions from './train.actions';
+import { Action, createFeatureSelector, createReducer, createSelector, on, props } from '@ngrx/store';
 import { RollingStock } from '../model/rolling-stock.model';
 import { TrainType } from '../model/train-type.enum';
 
@@ -12,6 +12,7 @@ export interface State {
   roadRollingStock: RollingStock[];
   tramTrains: Train[];
   tramRollingStock: RollingStock[];
+  selectedTrainName: string;
 }
 
 export const initialState: State = {
@@ -22,49 +23,46 @@ export const initialState: State = {
   roadRollingStock: [],
   tramTrains: [],
   tramRollingStock: [],
+  selectedTrainName: null,
 };
 
-export const reducer = (state = initialState, action: TrainActions): State => {
-  switch (action.type) {
-    case TrainActionTypes.selectType:
-      return {
-        ...state,
-        trainType: action.payload,
-      };
-    case TrainActionTypes.setRailTrains:
-      return {
-        ...state,
-        railTrains: [...action.payload],
-      };
-    case TrainActionTypes.setRailRollingStock:
-      return {
-        ...state,
-        railRollingStock: [...action.payload],
-      };
-    case TrainActionTypes.setRoadTrains:
-      return {
-        ...state,
-        roadTrains: [...action.payload],
-      };
-    case TrainActionTypes.setRoadRollingStock:
-      return {
-        ...state,
-        roadRollingStock: [...action.payload],
-      };
-    case TrainActionTypes.setTramTrains:
-      return {
-        ...state,
-        tramTrains: [...action.payload],
-      };
-    case TrainActionTypes.setTramRollingStock:
-      return {
-        ...state,
-        tramRollingStock: [...action.payload],
-      };
-    default:
-      return state;
-  }
-};
+const trainReducer = createReducer(
+  initialState,
+  on(TrainActions.selectTrain, (state: State, { trainName }) => ({
+    ...state,
+    selectedTrainName: trainName,
+  })),
+  on(TrainActions.selectType, (state: State, { trainType }) => ({
+    ...state,
+    trainType,
+  })),
+  on(TrainActions.setRailTrains, (state: State, { railTrains }) => ({
+    ...state,
+    railTrains,
+  })),
+  on(TrainActions.setRailRollingStock, (state: State, { railRollingStock }) => ({
+    ...state,
+    railRollingStock,
+  })),
+  on(TrainActions.setRoadTrains, (state: State, { roadTrains }) => ({
+    ...state,
+    roadTrains,
+  })),
+  on(TrainActions.setRoadRollingStock, (state: State, { roadRollingStock }) => ({
+    ...state,
+    roadRollingStock,
+  })),
+  on(TrainActions.setTramTrains, (state: State, { tramTrains }) => ({
+    ...state,
+    tramTrains,
+  })),
+  on(TrainActions.setTramRollingStock, (state: State, { tramRollingStock }) => ({
+    ...state,
+    tramRollingStock,
+  }))
+);
+
+export const reducer = (state: State | undefined, action: Action) => trainReducer(state, action);
 
 export const trainsState$ = createFeatureSelector('train');
 
