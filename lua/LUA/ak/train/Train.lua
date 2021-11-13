@@ -91,7 +91,8 @@ function Train:setValue(key, value)
     local carCount = EEPGetRollingstockItemsCount(self.name)
     for i = 0, carCount - 1 do
         local rollingStockName = EEPGetRollingstockItemName(self.name, i)
-        RollingStockRegistry.forName(rollingStockName):setValue(key, value)
+        local rs = RollingStockRegistry.forName(rollingStockName)
+        rs:setValue(key, value)
     end
 end
 
@@ -111,14 +112,10 @@ function Train:changeDestination(destination, line)
 
     self:setLine(line)
     self:setDestination(destination)
-    self:save()
 
     local carCount = EEPGetRollingstockItemsCount(self.name)
     for i = 0, carCount - 1 do
         local rollingStockName = EEPGetRollingstockItemName(self.name, i)
-        local rs = RollingStockRegistry.forName(rollingStockName)
-        rs:setLine(line)
-        rs:setDestination(destination)
         local model = RollingStockModels.modelFor(rollingStockName)
         model:setLine(rollingStockName, line)
         model:setDestination(rollingStockName, destination)
