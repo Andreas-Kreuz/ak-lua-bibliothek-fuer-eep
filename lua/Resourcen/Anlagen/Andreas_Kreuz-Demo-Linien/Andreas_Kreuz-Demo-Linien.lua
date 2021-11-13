@@ -1,5 +1,6 @@
--- Wenn Du bisher kein Lua in Deinen Anlagen verwendest, dann binde dieses Skript in EEP ein:
+clearlog()
 require("ak.demo-anlagen.demo-linien.demo-linien-main")
+
 -- Diese Zeile lädt die Modulverwaltung der Lua-Bibliothek
 local ModuleRegistry = require("ak.core.ModuleRegistry")
 
