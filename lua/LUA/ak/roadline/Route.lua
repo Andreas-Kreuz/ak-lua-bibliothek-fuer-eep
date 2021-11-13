@@ -27,6 +27,7 @@ end
 ---@param platform number Platform of the station where this route will depart
 ---@param timeToStation number optional time in minutes to this station
 function Route:addStation(roadStation, platform, timeToStation)
+    assert(type(self) == "table", "Need to call this method with ':'")
     assert(type(roadStation) == "table", "Need 'roadStation' as table")
     assert(roadStation.type == "RoadStation", "Provide 'station' as 'RoadStation'")
     assert(type(platform) == "number", "Need 'platform' as number")
@@ -48,6 +49,7 @@ function Route:getFirstStation() if #self.stations > 0 then return self.stations
 ---@param station RoadStation the first station in the route, where the train will arrive
 ---@param timeInMinutes number departure time of the train in minutes
 function Route:prepareDepartureAt(train, station, timeInMinutes)
+    assert(type(self) == "table", "Need to call this method with ':'")
     assert(type(train) == "table", "Need 'train' as table")
     assert(train.type == "Train", "Provide 'train' as 'Train'")
     assert(type(station) == "table", "Need 'station' as table")
@@ -71,6 +73,7 @@ end
 ---@param train Train the train which will arrive
 ---@param station RoadStation the first station in the route, where the train will arrive
 function Route:trainDeparted(train, station)
+    assert(type(self) == "table", "Need to call this method with ':'")
     assert(type(train) == "table", "Need 'train' as table")
     assert(train.type == "Train", "Provide 'train' as 'Train'")
     assert(type(station) == "table", "Need 'station' as table")
