@@ -4,8 +4,8 @@
   "main": "main.js",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --host 0.0.0.0 --disable-host-check --progress",
-    "build": "ng build --configuration production --aot --build-optimizer --progress --base-href=/",
+    "start": "ng serve --host 0.0.0.0 --disable-host-check",
+    "build": "ng build --configuration production --aot --build-optimizer --base-href=/",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
