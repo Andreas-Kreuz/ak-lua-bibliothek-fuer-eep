@@ -1,16 +1,16 @@
 #bigIcon {
+    text-align: center;
     font-size: 2rem;
+    line-height: 2.5rem;
+    height: 3rem;
+    width: 3rem;
+    /* background-color: #eeeeee; */
 }
 
-.flexContainer {
-    display: flex;
-    gap: 1rem;
+.mat-card {
+    padding: 1rem;
 }
 
-.flexFill {
-    flex-grow: 2;
-}
-
-.mat-list-item-content {
-    padding-left: 0;
+.mat-card-content {
+    margin-left: 4rem;
 }

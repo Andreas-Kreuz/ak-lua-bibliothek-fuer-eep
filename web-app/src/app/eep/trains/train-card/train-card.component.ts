@@ -20,13 +20,13 @@ export class TrainCardComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {}
   ngOnChanges(): void {
+    const frontRs = this.train && this.train.rollingStock && this.train.rollingStock[0];
     this.frontCouplingReady =
-      (this.train && this.train.rollingStock[0].couplingFront === Coupling.ready) ||
-      this.train.rollingStock[0].couplingRear === Coupling.ready;
+      frontRs && (frontRs.couplingFront === Coupling.ready || frontRs.couplingRear === Coupling.ready);
 
+    const lastRs = this.train && this.train.rollingStock && this.train.rollingStock[this.train.rollingStock.length - 1];
     this.rearCouplingReady =
-      (this.train && this.train.rollingStock[this.train.rollingStock.length - 1].couplingFront === Coupling.ready) ||
-      this.train.rollingStock[this.train.rollingStock.length - 1].couplingRear === Coupling.ready;
+      lastRs && (lastRs.couplingFront === Coupling.ready || lastRs.couplingRear === Coupling.ready);
   }
 
   iconFor(rollingStock: RollingStock) {

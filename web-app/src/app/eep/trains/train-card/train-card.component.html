@@ -1,29 +1,32 @@
-<mat-card>
-  <div class="flexContainer">
+<mat-card class="mat-elevation-z3">
+  <mat-card-header>
     <div mat-card-avatar id="bigIcon">{{ iconFor(train.rollingStock[0]) }}</div>
-    <div class="flexFill">
-      <mat-card-title>{{ train.id }}</mat-card-title>
-      <mat-card-subtitle>
-        <app-info-route [route]="train.route"></app-info-route>
-        <app-info-direction [direction]="train.direction"></app-info-direction><br *ngIf="train.route" />
+    <mat-card-title>{{ train.id }}</mat-card-title>
+    <mat-card-subtitle>
+      <app-info-route [route]="train.route"></app-info-route>
+      <app-info-line [line]="train.line"></app-info-line>
+      <app-info-destination [destination]="train.destination"></app-info-destination
+      ><br *ngIf="train.line || train.destination" />
+    </mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <mat-divider></mat-divider>
+    <app-info-direction [direction]="train.direction"></app-info-direction><br *ngIf="train.length" />
+    <app-info-length [length]="train.length"></app-info-length><br *ngIf="train.length" />
+    <app-info-speed [speed]="train.speed"></app-info-speed><br *ngIf="train.speed" />
+    <app-info-coupling [couplingReady]="frontCouplingReady" [name]="'vorn'"></app-info-coupling> /
+    <app-info-coupling [couplingReady]="rearCouplingReady" [name]="'hinten'"> </app-info-coupling><br />
 
-        <app-info-line [line]="train.line"></app-info-line>
-        <app-info-destination [destination]="train.destination"></app-info-destination
-        ><br *ngIf="train.line || train.destination" />
-        <app-info-length [length]="train.length"></app-info-length><br *ngIf="train.length" />
-        <app-info-speed [speed]="train.speed"></app-info-speed><br *ngIf="train.speed" />
-        <app-info-coupling [couplingReady]="frontCouplingReady" [name]="'vorn'"></app-info-coupling> /
-        <app-info-coupling [couplingReady]="rearCouplingReady" [name]="'hinten'"></app-info-coupling><br />
-      </mat-card-subtitle>
-    </div>
-  </div>
-
-  <mat-list style="margin-left: 2.2rem">
-    <mat-list-item *ngFor="let rs of train.rollingStock; last as last">
-      <span mat-list-icon>{{ iconFor(rs) }}</span>
-      <h4 mat-line class="">{{ rs.name }}</h4>
-      <p mat-line class="app-mute-on-light-bg">{{ rs.tag }}</p>
-      <mat-divider [inset]="true" *ngIf="!last"></mat-divider>
-    </mat-list-item>
-  </mat-list>
+    <mat-divider></mat-divider>
+    <mat-list style="margin-left: -1rem; margin-right: -1rem">
+      <mat-list-item *ngFor="let rs of train.rollingStock; last as last">
+        <span mat-list-icon>{{ iconFor(rs) }}</span>
+        <h4 mat-line>
+          {{ rs.name }}
+        </h4>
+        <p mat-line class="app-mute-on-light-bg">{{ rs.tag }}</p>
+        <mat-divider *ngIf="!last"></mat-divider>
+      </mat-list-item>
+    </mat-list>
+  </mat-card-content>
 </mat-card>
