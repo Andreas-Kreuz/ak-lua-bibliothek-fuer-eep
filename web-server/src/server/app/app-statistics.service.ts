@@ -52,7 +52,7 @@ export class ServerStatisticsService {
     }
 
     if (
-      diff > -1 &&
+      diff > 50 &&
       (diff < 1000 ||
         this.lastTime[ServerStatisticsService.TimeForEepJsonFile].duration > diff ||
         this.lastTime[ServerStatisticsService.TimeForJsonParsing].duration > diff)

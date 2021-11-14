@@ -4,6 +4,7 @@ import { Server, Socket } from 'socket.io';
 import { DataEvent, RoomEvent, ServerStatusEvent } from 'web-shared';
 import SocketService from '../clientio/socket-service';
 import JsonDataStore from './json-data-reducer';
+import EepEvent from './eep-event';
 
 export default class JsonDataEffects {
   [x: string]: unknown;
@@ -20,7 +21,7 @@ export default class JsonDataEffects {
 
   private socketConnected(socket: Socket) {
     socket.on(RoomEvent.JoinRoom, (rooms: { room: string }) => {
-      console.log('EMIT ' + ServerStatusEvent.Room + ' to interested parties');
+      if (this.debug) console.log('EMIT ' + ServerStatusEvent.Room + ' to interested parties');
 
       // Send data on join
       const keys = Object.keys(this.store.getJsonData());
@@ -29,7 +30,7 @@ export default class JsonDataEffects {
         const room = DataEvent.roomOf(key);
         if (room === rooms.room) {
           const event = DataEvent.eventOf(key);
-          console.log('EMIT ' + event + ' to ' + socket.id);
+          if (this.debug) console.log('EMIT ' + event + ' to ' + socket.id);
           socket.emit(event, JSON.stringify(this.store.getJsonData()[key]));
         }
       }
@@ -37,14 +38,15 @@ export default class JsonDataEffects {
       // Send JsonKeys to all JsonKey rooms
       if (rooms.room === ServerStatusEvent.Room) {
         socket.join(ServerStatusEvent.Room);
-        console.log('EMIT ' + ServerStatusEvent.UrlsChanged + ' to ' + socket.id);
+        if (this.debug) console.log('EMIT ' + ServerStatusEvent.UrlsChanged + ' to ' + socket.id);
         socket.emit(ServerStatusEvent.UrlsChanged, JSON.stringify(this.store.getUrls()));
       }
     });
   }
 
   onNewEventLine(jsonString: string) {
-    console.log('event: ' + jsonString);
+    const event: EepEvent = JSON.parse(jsonString);
+    this.store.onNewEvent(event);
   }
 
   jsonDataUpdated(jsonString: string): void {
