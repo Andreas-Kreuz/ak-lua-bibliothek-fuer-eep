@@ -7,9 +7,10 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { StatisticsEffects } from './store/statistics.effects';
 import { EffectsModule } from '@ngrx/effects';
+import { StatisticsCardComponent } from './statistics-card/statistics-card.component';
 
 @NgModule({
-  declarations: [StatisticsComponent],
+  declarations: [StatisticsComponent, StatisticsCardComponent],
   imports: [
     CommonModule,
     StatisticsRoutingModule,

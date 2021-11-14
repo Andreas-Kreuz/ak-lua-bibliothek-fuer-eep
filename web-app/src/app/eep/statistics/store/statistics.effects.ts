@@ -13,8 +13,35 @@ export class StatisticsEffects {
     this.statisticsService.getServerCollectorStats().pipe(
       switchMap((data) => {
         const list: any[] = JSON.parse(data);
-        console.log(list);
+
+        const parsedTimes = {};
+        for (const suffix of ['.collectData', '.initialize']) {
+          const times = [];
+          for (const collector of [
+            'core.ModulesJsonCollector',
+            'core.VersionJsonCollector',
+            'data.CrossingJsonCollector',
+            'data.DataSlotsJsonCollector',
+            'data.SignalJsonCollector',
+            'data.StructureJsonCollector',
+            'data.SwitchJsonCollector',
+            'data.TimeJsonCollector',
+            'data.TrafficLightModelJsonCollector',
+            'data.TrainsAndTracksJsonCollector',
+          ]) {
+            const collectorName = 'JsonCollector.ak.' + collector + suffix;
+            if (list[collectorName]) {
+              times.push(new TimeDesc(collector, list[collectorName].time));
+            } else {
+              console.warn('No such collector: ' + collectorName, list[collectorName]);
+            }
+          }
+          parsedTimes[suffix] = times;
+        }
+
         return of(
+          StatisticsAction.dataCollectorUpdate({ times: parsedTimes['.collectData'] }),
+          StatisticsAction.dataInitializeUpdate({ times: parsedTimes['.initialize'] }),
           StatisticsAction.serverControllerUpdate({
             times: [
               new TimeDesc('collect', list['ServerController.communicateWithServer-4-collect'].time),
