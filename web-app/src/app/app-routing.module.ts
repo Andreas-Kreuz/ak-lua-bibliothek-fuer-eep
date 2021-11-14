@@ -47,6 +47,10 @@ const routes: Routes = [
             path: 'ui',
             loadChildren: () => import('./shared/shared.module').then((m) => m.SharedModule),
           },
+          {
+            path: 'statistics',
+            loadChildren: () => import('./eep/statistics/statistics.module').then((m) => m.StatisticsModule),
+          },
           { path: 'switches', component: SwitchesComponent },
         ],
       },
@@ -63,8 +67,8 @@ const routes: Routes = [
 @NgModule({
   imports: [
     RouterModule.forRoot(routes, {
-    relativeLinkResolution: 'legacy'
-}),
+      relativeLinkResolution: 'legacy',
+    }),
   ],
   exports: [RouterModule],
 })

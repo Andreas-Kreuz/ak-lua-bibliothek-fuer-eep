@@ -1,4 +1,4 @@
-import { Action, createAction, props } from '@ngrx/store';
+import { createAction, props } from '@ngrx/store';
 
 import { Intersection } from '../models/intersection.model';
 import { IntersectionLane } from '../models/intersection-lane.model';

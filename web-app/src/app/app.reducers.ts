@@ -7,7 +7,7 @@ import * as fromGenericData from './eep/generic-data/store/generic-data.reducers
 import * as fromIntersection from './eep/intersection/store/intersection.reducers';
 import * as fromSignal from './eep/signals/store/signal.reducers';
 import * as fromTrain from './eep/trains/store/train.reducer';
-
+import * as fromStatistics from './eep/statistics/store/statistics.reducer';
 
 export interface State {
   core: fromCore.State;
@@ -17,6 +17,7 @@ export interface State {
   intersection: fromIntersection.State;
   signal: fromSignal.State;
   train: fromTrain.State;
+  statistics: fromStatistics.State;
 }
 
 export const reducers: ActionReducerMap<State> = {
@@ -27,4 +28,5 @@ export const reducers: ActionReducerMap<State> = {
   intersection: fromIntersection.reducer,
   signal: fromSignal.reducer,
   train: fromTrain.reducer,
+  statistics: fromStatistics.reducer,
 };
