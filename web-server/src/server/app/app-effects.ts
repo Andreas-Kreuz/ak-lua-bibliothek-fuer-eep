@@ -146,6 +146,9 @@ export default class AppEffects {
     eepService.setOnNewLogLine((logLines: string) => this.logEffects.onNewLogLine(logLines));
     eepService.setOnLogCleared(() => this.logEffects.onLogCleared());
 
+    // Init event handler
+    eepService.setOnNewEventLine((eventLines: string) => this.jsonDataEffects.onNewEventLine(eventLines));
+
     // Init CommandHandler
     this.commandEffects = new CommandEffects(this.app, this.io, this.socketService, eepService.queueCommand);
 

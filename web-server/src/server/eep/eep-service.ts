@@ -9,7 +9,7 @@ const serverReadyForJsonFile = 'ak-eep-out-json.isfinished';
 const watchedJsonFileName = 'ak-eep-out.json';
 const watchedLogFileName = 'ak-eep-out.log';
 const writtenCommandFileName = 'ak-eep-in.commands';
-const writtenEventFileName = 'ak-eep-in.event';
+const writtenEventFileName = 'ak-eep-out.eventlog';
 
 /**
  * This service is responsible for the communication with EEP.
@@ -17,10 +17,13 @@ const writtenEventFileName = 'ak-eep-in.event';
 export default class EepService {
   private dir: string;
   private lastLogFileSize: number;
+  private lastEventFileSize: number;
   private jsonFileWatcher: fs.FSWatcher;
   private logTail: Tail;
+  private eventTail: Tail;
   private onJsonUpdate: (jsonText: string, lastUpdate: number) => void;
   private logLineAppeared: (line: string) => void;
+  private eventLineAppeared: (line: string) => void;
   private logWasCleared: () => void;
   private lastJsonUpdate: number;
 
@@ -30,11 +33,18 @@ export default class EepService {
     if (this.logTail) {
       this.logTail.unwatch();
     }
+    if (this.eventTail) {
+      this.eventTail.unwatch();
+    }
     if (this.jsonFileWatcher) {
       this.jsonFileWatcher.close();
     }
     this.onJsonUpdate = (jsonText: string, lastUpdate: number) => {
       console.log('Received: ' + jsonText.length + ' bytes of JSON ' + lastUpdate);
+    };
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    this.eventLineAppeared = (line: string) => {
+      //console.log(line);
     };
     this.logLineAppeared = (line: string) => {
       console.log(line);
@@ -48,6 +58,7 @@ export default class EepService {
         callback(null, this.dir);
         this.attachAkEepOutJsonFile();
         this.attachAkEepOutLogFile();
+        this.attachAkEepOutEventFile();
         this.createAkServerFile();
       } else {
         callback('No such directory: ' + this.dir, null);
@@ -131,6 +142,30 @@ export default class EepService {
     });
   }
 
+  private attachAkEepOutEventFile(): void {
+    const logFile = path.resolve(this.dir, writtenEventFileName);
+    this.oneFileAppearance(logFile, () => {
+      const tail = new Tail(logFile, { encoding: 'latin1', fromBeginning: true });
+      tail.on('line', (line: string) => {
+        const stats = fs.statSync(logFile);
+        const fileSizeInBytes = stats['size'];
+        if (this.lastEventFileSize && fileSizeInBytes < this.lastEventFileSize) {
+          this.logWasCleared(); // TODO: NOT WORKING; BECAUSE TAIL DOES NOT LOOK BACK
+        }
+        this.lastEventFileSize = fileSizeInBytes;
+        this.eventLineAppeared(line);
+      });
+
+      tail.on('error', (error: string) => {
+        console.log(error);
+        tail.unwatch();
+        this.attachAkEepOutEventFile();
+      });
+
+      this.eventTail = tail;
+    });
+  }
+
   getCurrentLogLines = (): string => {
     try {
       console.log('Read: ' + path.resolve(this.dir, watchedLogFileName));
@@ -178,6 +213,10 @@ export default class EepService {
 
   public setOnNewLogLine(logLineFunction: (line: string) => void) {
     this.logLineAppeared = logLineFunction;
+  }
+
+  public setOnNewEventLine(eventLineFunction: (line: string) => void) {
+    this.eventLineAppeared = eventLineFunction;
   }
 
   public setOnLogCleared(logClearedFunction: () => void) {

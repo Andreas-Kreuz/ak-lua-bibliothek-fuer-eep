@@ -43,6 +43,10 @@ export default class JsonDataEffects {
     });
   }
 
+  onNewEventLine(jsonString: string) {
+    console.log('event: ' + jsonString);
+  }
+
   jsonDataUpdated(jsonString: string): void {
     // Parse the data
     const newJsonContent: { [key: string]: unknown[] } = JSON.parse(jsonString);
