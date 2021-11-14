@@ -37,4 +37,12 @@ export class GenericDataComponent implements OnInit {
     this.data$ = this.store.pipe(select(fromGenericData.selectedDataStructure(name)));
     this.data$.subscribe((data) => this.tableData.next(data.values));
   }
+
+  mapOf(columns: string[]) {
+    const myMap = new Map<string, string>();
+    for (const column of columns) {
+      myMap.set(column, column);
+    }
+    return myMap;
+  }
 }

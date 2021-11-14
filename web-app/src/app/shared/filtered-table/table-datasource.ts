@@ -22,7 +22,7 @@ export class TableDataSource<T> extends DataSource<T> {
     private filter: Observable<string>,
     private sort: MatSort,
     private columnsToDisplay: string[],
-    private columnTextFunctions?: (arg0: T) => string
+    private columnTextFunctions?: Map<string, (arg0: any) => string>
   ) {
     super();
 
@@ -127,7 +127,7 @@ export class TableDataSource<T> extends DataSource<T> {
   }
 }
 
-function textFor(columnTextFunctions: (T: any) => any, element: any, column: string) {
+function textFor(columnTextFunctions: Map<string, (arg0: any) => string>, element: any, column: string) {
   const value =
     columnTextFunctions && columnTextFunctions[column] ? columnTextFunctions[column](element) : element[column];
 

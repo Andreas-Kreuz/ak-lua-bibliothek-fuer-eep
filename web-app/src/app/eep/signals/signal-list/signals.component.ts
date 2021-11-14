@@ -11,37 +11,30 @@ import { SignalTypeDefinition } from '../models/signal-type-definition.model';
 @Component({
   selector: 'app-signals',
   templateUrl: './signals.component.html',
-  styleUrls: ['./signals.component.css']
+  styleUrls: ['./signals.component.css'],
 })
 export class SignalsComponent implements OnInit, OnDestroy {
-  columnsToDisplay: string[] = [
-    'id',
-    'position',
-    'model',
-    'waitingVehiclesCount'
-  ];
-  columnNames = {
-    id: '#',
-    position: 'Position',
-    model: 'EEP-Modell',
-    waitingVehiclesCount: '# Wartende Fahrzeuge',
-  };
-  columnTextFunctions = {
-    position: this.positionTextOf,
-    model: this.modelTextOf,
-    waitingVehiclesCount: this.waitingCarsOf,
-  };
+  columnsToDisplay: string[] = ['id', 'position', 'model', 'waitingVehiclesCount'];
+  columnNames = new Map([
+    ['id', '#'],
+    ['position', 'Position'],
+    ['model', 'EEP-Modell'],
+    ['waitingVehiclesCount', '# Wartende Fahrzeuge'],
+  ]);
+  columnTextFunctions: Map<string, (arg0: any) => string> = new Map([
+    ['position', this.positionTextOf],
+    ['model', this.modelTextOf],
+    ['waitingVehiclesCount', this.waitingCarsOf],
+  ]);
   tableData$: Observable<Signal[]>;
 
-  constructor(private store: Store<fromRoot.State>) {
-  }
+  constructor(private store: Store<fromRoot.State>) {}
 
   ngOnInit() {
     this.tableData$ = this.store.pipe(select(fromEep.signalsWithModel$));
   }
 
-  ngOnDestroy() {
-  }
+  ngOnDestroy() {}
 
   trackSignalBy(index: number, signal: Signal) {
     if (!signal) {

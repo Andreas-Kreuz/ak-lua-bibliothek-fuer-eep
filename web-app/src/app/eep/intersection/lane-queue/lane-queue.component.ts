@@ -21,10 +21,13 @@ export class LaneQueueComponent implements OnInit, OnDestroy {
   switching$: Observable<IntersectionSwitching[]>;
   lanes$: Observable<IntersectionLane[]>;
   carIcon = icons.car;
+  intersectionHelper: IntersectionHelper;
   private switchingSub: Subscription;
   private switchings: IntersectionSwitching[];
 
-  constructor(private store: Store<fromRoot.State>, private intersectionHelper: IntersectionHelper) {}
+  constructor(private store: Store<fromRoot.State>, intersectionHelper: IntersectionHelper) {
+    this.intersectionHelper = intersectionHelper;
+  }
 
   ngOnInit() {
     this.intersection$ = this.store.pipe(select(fromIntersection.intersectionById$(this.intersectionId)));

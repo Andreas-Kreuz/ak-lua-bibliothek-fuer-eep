@@ -19,10 +19,13 @@ export class LaneOverviewComponent implements OnInit, OnDestroy {
   intersection$: Observable<Intersection>;
   switching$: Observable<IntersectionSwitching[]>;
   lanes$: Observable<IntersectionLane[]>;
+  intersectionHelper: IntersectionHelper;
   private switchingSub: Subscription;
   private switchings: IntersectionSwitching[];
 
-  constructor(private store: Store<fromRoot.State>, private intersectionHelper: IntersectionHelper) {}
+  constructor(private store: Store<fromRoot.State>, intersectionHelper: IntersectionHelper) {
+    this.intersectionHelper = intersectionHelper;
+  }
 
   ngOnInit() {
     this.intersection$ = this.store.pipe(select(fromIntersection.intersectionById$(this.intersectionId)));

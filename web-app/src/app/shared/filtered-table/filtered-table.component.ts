@@ -36,9 +36,9 @@ export class FilteredTableComponent<T> implements OnInit, OnDestroy, OnChanges {
   @ViewChild(OldDetailsDirective) oldDetailHost: OldDetailsDirective;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @Input() public columnsToDisplay: string[];
-  @Input() public columnNames: string[];
+  @Input() public columnNames: Map<string, string>;
   @Input() public columnAlignment?: string[];
-  @Input() public columnTextFunctions?: (T) => string;
+  @Input() public columnTextFunctions?: Map<string, (arg0: any) => string>;
 
   @Input()
   set detailsComponent(detailsComponent: DetailsComponent<T>) {
@@ -82,7 +82,9 @@ export class FilteredTableComponent<T> implements OnInit, OnDestroy, OnChanges {
     this.dataSource.disconnect();
   }
 
-  applyFilter(filterValue: string) {
+  applyFilter(event: Event) {
+    const filterElement: HTMLTextAreaElement = event.target as HTMLTextAreaElement;
+    const filterValue = filterElement.value;
     this.filter.next(filterValue.trim().toLowerCase());
   }
 

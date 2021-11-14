@@ -15,7 +15,7 @@ import { State } from '../../../app.reducers';
 })
 export class SignalDetailComponent implements OnInit, OnDestroy {
   signal$: Observable<Signal>;
-  private signalId: number;
+  signalId: number;
   private routeParams$: Subscription;
 
   constructor(private store: Store<State>, private route: ActivatedRoute) {}
