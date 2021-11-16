@@ -100,7 +100,7 @@ export default class JsonDataEffects {
   public onDataRemoved(key: string): void {
     this.store.removeDataRoom(DataEvent.roomOf(key));
     this.io.to(ServerStatusEvent.Room).emit(ServerStatusEvent.UrlsChanged, JSON.stringify(this.store.getUrls()));
-    this.io.to(DataEvent.roomOf(key)).emit(DataEvent.eventOf(key));
+    this.io.to(DataEvent.roomOf(key)).emit(DataEvent.eventOf(key), '{}');
   }
 
   private registerApiUrls(key: string) {
