@@ -151,6 +151,8 @@ export default class EepService {
         const fileSizeInBytes = stats['size'];
         if (this.lastEventFileSize && fileSizeInBytes < this.lastEventFileSize) {
           console.log('Event log disappeared');
+          tail.unwatch();
+          this.attachAkEepOutEventFile();
         }
         this.lastEventFileSize = fileSizeInBytes;
         this.eventLineAppeared(line);
