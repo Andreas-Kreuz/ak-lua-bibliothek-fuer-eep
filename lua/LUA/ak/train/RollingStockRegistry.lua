@@ -33,8 +33,6 @@ end
 ---A train dissappeared from the map
 ---@param rollingStockName string
 function RollingStockRegistry.rollingStockDisappeared(rollingStockName)
-    local trackSystem = allRollingStock[rollingStockName].trackSystem;
-
     EventBroker.fireDataChange("RollingStock Disappeared", EventBroker.change.dataUpdated, "rolling-stocks", "id",
                                {id = rollingStockName})
     EventBroker.fireDataChange("RollingStockInfo Disappeared", EventBroker.change.dataUpdated, "rollingStockInfo",
