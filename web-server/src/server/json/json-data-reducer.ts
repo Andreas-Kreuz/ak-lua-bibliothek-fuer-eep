@@ -64,7 +64,10 @@ export default class JsonDataStore {
   }
 
   getNewStateDataCopy(): { [key: string]: unknown } {
-    const newMap = { ...this.state.rooms };
+    const newMap: Record<string, unknown> = {};
+    for (const room of Object.keys(this.state.rooms)) {
+      newMap[room] = { ...this.state.rooms[room] };
+    }
     return newMap;
   }
 
@@ -90,7 +93,7 @@ export default class JsonDataStore {
   }
 
   setJsonData(newJsonContent: Record<string, unknown>): void {
-    this.currentJsonContent = newJsonContent;
+    this.currentJsonContent = { ...newJsonContent };
   }
 
   addUrls(urls: string[]): void {
