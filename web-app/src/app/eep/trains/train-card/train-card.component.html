@@ -50,7 +50,9 @@
         <p mat-line>
           <strong id="rsTitle">{{ rs.name }}</strong>
         </p>
-        <p mat-line class="app-mute-on-light-bg"><mat-icon>label</mat-icon> {{ rs.tag }}</p>
+        <p mat-line class="app-mute-on-light-bg">
+          <mat-icon>{{ (rs.tag && "label_outlined") || "label_off" }}</mat-icon> {{ rs.tag }}
+        </p>
         <mat-divider *ngIf="!last"></mat-divider>
       </mat-list-item>
     </mat-list>
