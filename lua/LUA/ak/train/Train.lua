@@ -234,7 +234,7 @@ function Train:getDirection() return self:getValue(TagKeys.Train.direction) end
 
 function Train:setDestination(destination)
     assert(type(destination) == "string", "Need 'destination' as string")
-    local oldDestination = destination
+    local oldDestination = self:getDestination()
     self:setValue(TagKeys.Train.destination, destination)
     if oldDestination ~= destination then
         EventBroker.fireDataChange("Train Destination Changed", EventBroker.change.dataUpdated, "trains", "id",
