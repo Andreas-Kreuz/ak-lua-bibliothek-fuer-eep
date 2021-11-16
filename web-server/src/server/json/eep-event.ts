@@ -1,7 +1,7 @@
 export default interface EepEvent {
   counter: number;
   date: string;
-  type: unknown;
+  type: 'DataReset' | 'DataChanged';
   payload: undefined;
 }
 

@@ -11,58 +11,22 @@ import { DataEvent } from 'web-shared';
 export class TrainService {
   private railTrains$: Observable<string>;
   private railRollingStock$: Observable<string>;
-  private roadTrains$: Observable<string>;
-  private roadRollingStock$: Observable<string>;
-  private tramTrains$: Observable<string>;
-  private tramRollingStock$: Observable<string>;
 
   constructor(private socket: SocketService) {}
 
-  railTrainsActions$(): Observable<string> {
+  trainsActions$(): Observable<string> {
     if (!this.railTrains$) {
-      this.railTrains$ = this.socket.listen(DataEvent.eventOf('rail-trains'));
-      this.socket.join(DataEvent.roomOf('rail-trains'));
+      this.railTrains$ = this.socket.listen(DataEvent.eventOf('trains'));
+      this.socket.join(DataEvent.roomOf('trains'));
     }
     return this.railTrains$;
   }
 
-  railRollingStockActions$(): Observable<string> {
+  rollingStockActions$(): Observable<string> {
     if (!this.railRollingStock$) {
-      this.railRollingStock$ = this.socket.listen(DataEvent.eventOf('rail-rolling-stocks'));
-      this.socket.join(DataEvent.roomOf('rail-rolling-stocks'));
+      this.railRollingStock$ = this.socket.listen(DataEvent.eventOf('rolling-stocks'));
+      this.socket.join(DataEvent.roomOf('rolling-stocks'));
     }
     return this.railRollingStock$;
-  }
-
-  roadTrainsActions$(): Observable<string> {
-    if (!this.roadTrains$) {
-      this.roadTrains$ = this.socket.listen(DataEvent.eventOf('road-trains'));
-      this.socket.join(DataEvent.roomOf('road-trains'));
-    }
-    return this.roadTrains$;
-  }
-
-  roadRollingStockActions$(): Observable<string> {
-    if (!this.roadRollingStock$) {
-      this.roadRollingStock$ = this.socket.listen(DataEvent.eventOf('road-rolling-stocks'));
-      this.socket.join(DataEvent.roomOf('road-rolling-stocks'));
-    }
-    return this.roadRollingStock$;
-  }
-
-  tramTrainsActions$(): Observable<string> {
-    if (!this.tramTrains$) {
-      this.tramTrains$ = this.socket.listen(DataEvent.eventOf('tram-trains'));
-      this.socket.join(DataEvent.roomOf('tram-trains'));
-    }
-    return this.tramTrains$;
-  }
-
-  tramRollingStockActions$(): Observable<string> {
-    if (!this.tramRollingStock$) {
-      this.tramRollingStock$ = this.socket.listen(DataEvent.eventOf('tram-rolling-stocks'));
-      this.socket.join(DataEvent.roomOf('tram-rolling-stocks'));
-    }
-    return this.tramRollingStock$;
   }
 }

@@ -10,6 +10,7 @@ local EepFunctionWrapper = require("ak.core.eep.EepFunctionWrapper")
 local EEPGetTrainLength = EepFunctionWrapper.EEPGetTrainLength
 
 ---@class Train
+---@field id string
 ---@field name string
 ---@field type string
 ---@field values table of all entries stored in the train
@@ -37,6 +38,7 @@ function Train:new(o)
     assert(haveTrain, o.name)
     self.__index = self
     setmetatable(o, self)
+    o.id = o.name
     o.type = "Train"
     o.values = o:load()
     o.route = trainRoute
@@ -172,7 +174,7 @@ function Train:setSpeed(speed)
     local oldSpeed = self.speed
     self.speed = speed
     if oldSpeed ~= speed then
-        EventBroker.fireDataChange("Train Speed Changed", EventBroker.change.dataUpdated, "trainInfo", "id",
+        EventBroker.fireDataChange("Train Speed Changed", EventBroker.change.dataUpdated, "trains", "id",
                                    {id = self.name, speed = speed})
     end
 end
@@ -192,7 +194,7 @@ function Train:setOnTrack(onTracks)
     local oldOnTracks = self.onTracks
     self.onTracks = onTracks
     if not TableUtils.sameDictEntries(oldOnTracks, onTracks) then
-        EventBroker.fireDataChange("Train occupiedTracks Changed", EventBroker.change.dataUpdated, "trainInfo", "id",
+        EventBroker.fireDataChange("Train occupiedTracks Changed", EventBroker.change.dataUpdated, "trains", "id",
                                    {id = self.name, occupiedTacks = onTracks})
     end
 end
@@ -206,11 +208,11 @@ end
 
 function Train:setTrackType(trackType)
     assert(type(self) == "table", "Need to call this method with ':'")
-    assert(type(trackType) == "string", "Need 'direction' as string")
+    assert(type(trackType) == "string", "Need 'trackType' as string")
     local oldTrackType = self.trackType
     self.trackType = trackType
     if oldTrackType ~= trackType then
-        EventBroker.fireDataChange("Train Track Type Changed", EventBroker.change.dataUpdated, "trainInfo", "id",
+        EventBroker.fireDataChange("Train Track Type Changed", EventBroker.change.dataUpdated, "trains", "id",
                                    {id = self.name, trackType = trackType})
     end
 end
@@ -270,7 +272,10 @@ function Train:toJsonStatic()
         length = self:getLength(),
         line = self:getLine(),
         destination = self:getDestination(),
-        direction = self:getDirection()
+        direction = self:getDirection(),
+        trackType = self:getTrackType(),
+        speed = self:getSpeed(),
+        occupiedTacks = self:getOnTrack()
     }
 end
 

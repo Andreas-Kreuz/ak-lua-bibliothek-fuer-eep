@@ -31,11 +31,6 @@ export default class JsonDataStore {
       case 'DataChanged':
         {
           const payload: DataChangePayload<unknown> = event.payload;
-          // const room = payload.room;
-          // const keyId = payload.keyId;
-          // const element = payload.element;
-          // const changeType = payload.changeType;
-
           const room = this.createOrReturnRoom(payload.room);
           this.createOrUpdateElement(room, payload.keyId, payload.element);
         }
@@ -53,7 +48,6 @@ export default class JsonDataStore {
     } else {
       const room: Record<string, unknown> = {};
       this.state.rooms[roomName] = room;
-      this.addDataRoom(roomName);
       return room;
     }
   }
@@ -69,7 +63,12 @@ export default class JsonDataStore {
     room[key] = newElement;
   }
 
-  calcChangedKeys(keysToCheck: string[], newJsonContent: { [key: string]: unknown[] }): string[] {
+  getNewStateDataCopy(): { [key: string]: unknown } {
+    const newMap = { ...this.state.rooms };
+    return newMap;
+  }
+
+  calcChangedKeys(keysToCheck: string[], newJsonContent: { [key: string]: unknown }): string[] {
     const changedKeys: string[] = [];
     for (const key of keysToCheck) {
       const currentData = JSON.stringify(this.currentJsonContent[key]);

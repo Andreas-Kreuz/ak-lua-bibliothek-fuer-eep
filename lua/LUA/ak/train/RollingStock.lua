@@ -25,6 +25,7 @@ local EEPRollingstockModelTypeText = {
 
 ---@class RollingStock
 ---@field values table
+---@field id string
 ---@field rollingStockName string
 ---@field trainName string
 ---@field positionInTrain integer
@@ -51,6 +52,8 @@ local RollingStock = {}
 ---@return RollingStock
 function RollingStock:new(o)
     assert(o.rollingStockName, "Provide a rollingStockName")
+    o.id = o.rollingStockName
+
     assert(type(o.rollingStockName) == "string", "Need 'o.rollingStockName' as string")
     self.__index = self
     setmetatable(o, self)
@@ -139,7 +142,7 @@ function RollingStock:setWagonNr(nr)
     self.model:setWagonNr(self.rollingStockName, nr)
     if oldNr ~= nr then
         EventBroker.fireDataChange("RollingStock wagon number Changed", EventBroker.change.dataUpdated,
-                                   "rollingStock", "name", {rollingStockName = self.rollingStockName, nr = nr})
+                                   "rolling-stocks", "id", {id = self.rollingStockName, nr = nr})
     end
 end
 
@@ -153,8 +156,8 @@ function RollingStock:setTrainName(trainName)
     local oldTrainName = self.trainName
     self.trainName = trainName
     if oldTrainName ~= trainName then
-        EventBroker.fireDataChange("RollingStock train name Changed", EventBroker.change.dataUpdated, "rollingStock",
-                                   "name", {name = self.rollingStockName, trainName = trainName})
+        EventBroker.fireDataChange("RollingStock train name Changed", EventBroker.change.dataUpdated,
+                                   "rolling-stocks", "id", {id = self.id, trainName = trainName})
     end
 end
 
@@ -174,8 +177,7 @@ function RollingStock:setPositionInTrain(positionInTrain)
     self.positionInTrain = positionInTrain
     if oldPositionInTrain ~= positionInTrain then
         EventBroker.fireDataChange("RollingStock position in train Changed", EventBroker.change.dataUpdated,
-                                   "rollingStock", "name",
-                                   {name = self.rollingStockName, positionInTrain = positionInTrain})
+                                   "rolling-stocks", "id", {id = self.id, positionInTrain = positionInTrain})
     end
 end
 
@@ -230,8 +232,7 @@ function RollingStock:setCouplingFront(couplingFront)
     self.couplingFront = couplingFront
     if oldCoupling ~= couplingFront then
         EventBroker.fireDataChange("RollingStock coupling front Changed", EventBroker.change.dataUpdated,
-                                   "rollingStock", "name",
-                                   {name = self.rollingStockName, couplingFront = couplingFront})
+                                   "rolling-stocks", "id", {id = self.id, couplingFront = couplingFront})
     end
 end
 
@@ -251,7 +252,7 @@ function RollingStock:setCouplingRear(couplingRear)
     self.couplingRear = couplingRear
     if oldCoupling ~= couplingRear then
         EventBroker.fireDataChange("RollingStock coupling rear Changed", EventBroker.change.dataUpdated,
-                                   "rollingStock", "name", {name = self.rollingStockName, couplingRear = couplingRear})
+                                   "rolling-stocks", "id", {id = self.id, couplingRear = couplingRear})
     end
 end
 
@@ -287,8 +288,8 @@ function RollingStock:setTrack(trackId, trackDistance, trackDirection, trackSyst
     self.trackSystem = trackSystem
     if oldId ~= trackId or oldDist ~= trackDistance or oldDir ~= trackDirection or oldSys ~= trackSystem then
         EventBroker.fireDataChange("RollingStock track Changed", EventBroker.change.dataUpdated, "rollingStockInfo",
-                                   "name", {
-            name = self.rollingStockName,
+                                   "id", {
+            id = self.id,
             trackId = trackId,
             trackDistance = trackDistance,
             trackDirection = trackDirection,
@@ -318,6 +319,26 @@ function RollingStock:getTrackSystem()
     return self.trackSystem
 end
 
+--- Updates the trains trackType
+---@param trackType string train trackType
+function RollingStock:setTrackType(trackType)
+    assert(type(self) == "table", "Need to call this method with ':'")
+    assert(type(trackType) == "string", "Need 'trackType' as string")
+    local oldValue = self.trackType
+    self.trackType = trackType
+    if oldValue ~= trackType then
+        EventBroker.fireDataChange("RollingStock train name Changed", EventBroker.change.dataUpdated,
+                                   "rolling-stocks", "id", {id = self.id, trackType = trackType})
+    end
+end
+
+--- Get the trains trackType
+---@return string trackType trackType
+function RollingStock:getTrackType()
+    assert(type(self) == "table", "Need to call this method with ':'")
+    return self.trackType
+end
+
 --- Updates the rolling stock position on the map
 ---@param x number x coordinate
 ---@param y number y coordinate
@@ -333,8 +354,7 @@ function RollingStock:setPosition(x, y, z)
     self.z = z
     if oldX ~= x or oldY ~= y or oldZ ~= z then
         EventBroker.fireDataChange("RollingStock map position Changed", EventBroker.change.dataUpdated,
-                                   "rollingStockInfo", "name",
-                                   {name = self.rollingStockName, posX = x, posY = y, posZ = z})
+                                   "rollingStockInfo", "id", {id = self.id, posX = x, posY = y, posZ = z})
     end
 end
 
@@ -368,7 +388,7 @@ function RollingStock:setMileage(mileage)
     self.mileage = mileage
     if oldMileage ~= mileage then
         EventBroker.fireDataChange("RollingStock mileage Changed", EventBroker.change.dataUpdated, "rollingStockInfo",
-                                   "name", {name = self.rollingStockName, mileage = mileage})
+                                   "id", {id = self.id, mileage = mileage})
     end
 end
 
@@ -385,6 +405,7 @@ function RollingStock:closeDoors() self.model:closeDoors(self.rollingStockName) 
 
 function RollingStock:toJsonStatic()
     return {
+        id = self.rollingStockName,
         name = self.rollingStockName,
         trainName = self:getTrainName(),
         positionInTrain = self:getPositionInTrain(),
@@ -395,12 +416,21 @@ function RollingStock:toJsonStatic()
         modelType = self:getModelType(),
         modelTypeText = self:getModelTypeText(),
         tag = self:getTag(),
-        nr = self:getWagonNr()
+        nr = self:getWagonNr(),
+        trackId = self:getTrackId(),
+        trackDistance = self:getTrackDistance(),
+        trackDirection = self:getTrackDirection(),
+        trackSystem = self:getTrackSystem(),
+        posX = self:getX(),
+        posY = self:getY(),
+        posZ = self:getZ(),
+        mileage = self:getMileage()
     }
 end
 
 function RollingStock:toJsonDynamic()
     return {
+        id = self.rollingStockName,
         name = self.rollingStockName,
         trackId = self:getTrackId(),
         trackDistance = self:getTrackDistance(),

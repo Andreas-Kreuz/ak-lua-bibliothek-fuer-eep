@@ -27,23 +27,6 @@ local reservedFunction = {
     rail = EEPIsRailTrackReserved,
     tram = EEPIsTramTrackReserved
 }
-local EEPRollingstockModelTypeText = {
-    [1] = "Tenderlok",
-    [2] = "Schlepptenderlok",
-    [3] = "Tender",
-    [4] = "Elektrolok",
-    [5] = "Diesellok",
-    [6] = "Triebwagen",
-    [7] = "U- oder S-Bahn",
-    [8] = "Stra�enbahn", -- German Umlaute are ok if stored as UTF-8
-    [9] = "G�terwaggon", -- German Umlaute are ok if stored as UTF-8
-    [10] = "Personenwaggon",
-    [11] = "Luftfahrzeug",
-    [12] = "Maschine",
-    [13] = "Wasserfahrzeug",
-    [14] = "LKW",
-    [15] = "PKW"
-}
 
 local runtimeData = {}
 
@@ -320,6 +303,7 @@ function TrackCollector:updateRollingStock(rs, currentTrain, positionInTrain)
 
         rs:setPositionInTrain(positionInTrain)
         rs:setTrainName(currentTrain.name)
+        rs:setTrackType(currentTrain.trackType)
 
         RuntimeRegistry.storeRunTime("TrackCollector.updateRollingStock", os.clock() - start1)
 
@@ -401,10 +385,10 @@ function TrackCollector:updateData()
     self:findAndUpdateTrainsOnTracks()
     return {
         [self.trackType .. "-tracks"] = self.tracks,
-        [self.trackType .. "-trains"] = self.trains,
-        [self.trackType .. "-train-infos-dynamic"] = self.trainInfo,
-        [self.trackType .. "-rolling-stocks"] = self.rollingStock,
-        [self.trackType .. "-rolling-stock-infos-dynamic"] = self.rollingStockInfo,
+        -- [self.trackType .. "-trains"] = self.trains,
+        -- [self.trackType .. "-train-infos-dynamic"] = self.trainInfo,
+        -- [self.trackType .. "-rolling-stocks"] = self.rollingStock,
+        -- [self.trackType .. "-rolling-stock-infos-dynamic"] = self.rollingStockInfo,
         [self.trackType .. "-runtime"] = runtimeData
     }
 end

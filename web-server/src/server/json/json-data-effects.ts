@@ -51,20 +51,21 @@ export default class JsonDataEffects {
 
   jsonDataUpdated(jsonString: string): void {
     // Parse the data
-    const newJsonContent: { [key: string]: unknown[] } = JSON.parse(jsonString);
+    const jsonFileContent: { [key: string]: unknown } = JSON.parse(jsonString);
+    const eventStoreJson: { [key: string]: unknown } = { ...jsonFileContent, ...this.store.getNewStateDataCopy() };
 
     // Get those new keys from the Json Content
     const currentKeys = Object.keys(this.store.getJsonData());
-    const newJsonKeys = Object.keys(newJsonContent);
+    const newJsonKeys = Object.keys(eventStoreJson);
     const keysToAdd = newJsonKeys.filter((el) => !currentKeys.includes(el));
     const keysToCheck = newJsonKeys.filter((el) => currentKeys.includes(el));
     const keysToRemove = currentKeys.filter((el) => !newJsonKeys.includes(el));
 
     // Calculate the changes
-    const changedKeys = this.store.calcChangedKeys(keysToCheck, newJsonContent);
+    const changedKeys = this.store.calcChangedKeys(keysToCheck, eventStoreJson);
 
     // Store data
-    this.store.setJsonData(newJsonContent);
+    this.store.setJsonData(eventStoreJson);
     this.store.addUrls(keysToAdd);
     this.store.removeUrls(keysToRemove);
 
@@ -86,6 +87,7 @@ export default class JsonDataEffects {
   }
 
   public onDataAdded(key: string, json: string): void {
+    console.log('ADDED ROOM ' + key + 'AND REGISTER API?');
     this.store.addDataRoom(DataEvent.roomOf(key));
     this.registerApiUrls(key);
     this.io.to(DataEvent.roomOf(key)).emit(DataEvent.eventOf(key), json);

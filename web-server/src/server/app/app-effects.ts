@@ -125,8 +125,14 @@ export default class AppEffects {
   }
 
   private registerHandlers(eepService: EepService) {
-    // Init JsonHandler
     this.jsonDataEffects = new JsonDataEffects(this.app, this.router, this.io, this.socketService);
+
+    // Init event handler
+    eepService.setOnNewEventLine((eventLines: string) => {
+      this.jsonDataEffects.onNewEventLine(eventLines);
+    });
+
+    // Init JsonHandler
     eepService.setOnJsonContentChanged((jsonString: string, lastJsonUpdate: number) => {
       performance.mark('json-parsing:before');
       this.jsonDataEffects.jsonDataUpdated(jsonString); // The real stuff
@@ -145,9 +151,6 @@ export default class AppEffects {
     );
     eepService.setOnNewLogLine((logLines: string) => this.logEffects.onNewLogLine(logLines));
     eepService.setOnLogCleared(() => this.logEffects.onLogCleared());
-
-    // Init event handler
-    eepService.setOnNewEventLine((eventLines: string) => this.jsonDataEffects.onNewEventLine(eventLines));
 
     // Init CommandHandler
     this.commandEffects = new CommandEffects(this.app, this.io, this.socketService, eepService.queueCommand);

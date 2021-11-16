@@ -6,6 +6,7 @@ const INTERVALL_MS = 200;
 export class ServerStatisticsService {
   static readonly TimeForJsonParsing = 'json-parsing:complete-time';
   static readonly TimeForEepJsonFile = 'eep:wait-for-json';
+  debug = false;
 
   private lastStatisticsUpdate: number;
   private lastTime: { [name: string]: { name: string; startTime: number; duration: number; diffToLast: number } } = {};
@@ -30,7 +31,6 @@ export class ServerStatisticsService {
 
   start() {
     setInterval(this.updateStatistics, INTERVALL_MS);
-    // this.updateStatistics();
   }
 
   setLastEepTime(lastEepUpdate: number) {
@@ -52,6 +52,7 @@ export class ServerStatisticsService {
     }
 
     if (
+      this.debug &&
       diff > 50 &&
       (diff < 1000 ||
         this.lastTime[ServerStatisticsService.TimeForEepJsonFile].duration > diff ||

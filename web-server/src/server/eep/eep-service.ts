@@ -143,14 +143,14 @@ export default class EepService {
   }
 
   private attachAkEepOutEventFile(): void {
-    const logFile = path.resolve(this.dir, writtenEventFileName);
-    this.oneFileAppearance(logFile, () => {
-      const tail = new Tail(logFile, { encoding: 'latin1', fromBeginning: true });
+    const eventFile = path.resolve(this.dir, writtenEventFileName);
+    this.oneFileAppearance(eventFile, () => {
+      const tail = new Tail(eventFile, { encoding: 'latin1', fromBeginning: true });
       tail.on('line', (line: string) => {
-        const stats = fs.statSync(logFile);
+        const stats = fs.statSync(eventFile);
         const fileSizeInBytes = stats['size'];
         if (this.lastEventFileSize && fileSizeInBytes < this.lastEventFileSize) {
-          this.logWasCleared(); // TODO: NOT WORKING; BECAUSE TAIL DOES NOT LOOK BACK
+          console.log('Event log disappeared');
         }
         this.lastEventFileSize = fileSizeInBytes;
         this.eventLineAppeared(line);
