@@ -234,7 +234,7 @@ function ServerController.communicateWithServer(modulus)
                             (allowedTimeDiff) * 1000))
     end
 
-    if modulus == 0 or i % modulus == 0 and serverIsReady then
+    if modulus == 0 or i % modulus == 0 then
         RuntimeRegistry.storeRunTime("ServerController.communicateWithServer-1-waitForServer",
                                      overallTime1 - overallTime0)
         RuntimeRegistry.storeRunTime("ServerController.communicateWithServer-2-initialize",
