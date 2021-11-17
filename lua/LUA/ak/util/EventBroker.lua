@@ -74,7 +74,7 @@ function EventBroker.fireListChange(room, keyId, list)
     assert(room)
     assert(keyId)
     assert(list)
-    for k, v in pairs(list) do assert(v[keyId], "each element must contain the key") end
+    for _, v in pairs(list) do assert(v[keyId], "each element must contain the key") end
     fire(EventBroker.eventType.listChanged, {
         room = room, -- the affected data element, like given in the JSON collectors, e.g. "rail-trains"
         keyId = keyId, -- name of the field identifying the key, e.g. "trainName" or "id" or "name"

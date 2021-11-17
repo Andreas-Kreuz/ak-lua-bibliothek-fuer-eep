@@ -1,3 +1,4 @@
+local TableUtils = require "ak.util.TableUtils"
 if AkDebugLoad then print("Loading ak.data.DataSlotsJsonCollector ...") end
 local EventBroker = require "ak.util.EventBroker"
 
@@ -16,22 +17,9 @@ end
 
 local function updateSlot(id, name, data)
     local oldSlot = lastSlots.id
-    if not oldSlot or oldSlot.id ~= id or oldSlot.name ~= name or oldSlot.data ~= data then
-        -- local newSlot = toApiV1(id, name, data)
-        -- if newSlot.data then
-        --     EventBroker.fireDataChange(EventBroker.eventType.dataChanged, "save-slots", "id", newSlot)
-        --     if oldSlot and not oldSlot.data then
-        --         EventBroker.fireDataChange(EventBroker.eventType.dataRemoved, "free-slots", "id", {id = id})
-        --     end
-        -- else
-        --     EventBroker.fireDataChange(EventBroker.eventType.dataChanged, "free-slots", "id", newSlot)
-        --     if oldSlot and oldSlot.data then
-        --         EventBroker.fireDataChange(EventBroker.eventType.dataRemoved, "save-slots", "id", {id = id})
-        --     end
-        -- end
-
-        lastSlots.id = newSlot
-    end
+    local newSlot = toApiV1(id, name, data)
+    if not oldSlot or oldSlot.id ~= id or oldSlot.name ~= name or oldSlot.data ~= data then lastSlots[id] = newSlot end
+    return newSlot
 end
 
 function DataSlotsJsonCollector.initialize()
@@ -44,16 +32,27 @@ function DataSlotsJsonCollector.collectData()
     if not enabled then return end
     if not initialized then DataSlotsJsonCollector.initialize() end
 
+    local filledSlots = {}
+    local emptySlots = {}
+
     AkSlotNamesParser.updateSlotNames()
     for id = 1, 1000 do
         local hResult, data = EEPLoadData(id)
         if hResult then
             local name = AkSlotNamesParser.getSlotName(id) or StorageUtility.getName(id) or "?"
-            updateSlot(id, name, data)
+            local slot = updateSlot(id, name, data)
+            filledSlots[id] = slot
+            emptySlots[id] = nil
         else
-            updateSlot(id)
+            local slot = updateSlot(id)
+            filledSlots[id] = nil
+            emptySlots[id] = slot
         end
     end
+
+    -- TODO Update on changes only
+    EventBroker.fireListChange("save-slots", "id", TableUtils.valuesOfDict(filledSlots));
+    EventBroker.fireListChange("free-slots", "id", TableUtils.valuesOfDict(emptySlots));
 
     return {} -- {["save-slots"] = filledSlots, ["free-slots"] = emptySlots}
 end
