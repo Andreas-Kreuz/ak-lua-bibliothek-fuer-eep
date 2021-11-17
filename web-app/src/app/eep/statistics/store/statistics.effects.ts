@@ -12,7 +12,7 @@ export class StatisticsEffects {
   fetchIntersectionTrafficLights$ = createEffect(() =>
     this.statisticsService.getServerCollectorStats().pipe(
       switchMap((data) => {
-        const list: any[] = JSON.parse(data);
+        const record: Record<string, { id: string; count: number; time: number }> = JSON.parse(data);
 
         const parsedTimes = {};
         for (const suffix of ['.collectData', '.initialize']) {
@@ -30,10 +30,10 @@ export class StatisticsEffects {
             'data.TrainsAndTracksJsonCollector',
           ]) {
             const collectorName = 'JsonCollector.ak.' + collector + suffix;
-            if (list[collectorName]) {
-              times.push(new TimeDesc(collector, list[collectorName].time));
+            if (record[collectorName]) {
+              times.push(new TimeDesc(collector, record[collectorName].time));
             } else {
-              console.warn('No such collector: ' + collectorName, list[collectorName]);
+              console.warn('No such collector: ' + collectorName, record[collectorName]);
             }
           }
           parsedTimes[suffix] = times;
@@ -44,9 +44,9 @@ export class StatisticsEffects {
           StatisticsAction.dataInitializeUpdate({ times: parsedTimes['.initialize'] }),
           StatisticsAction.serverControllerUpdate({
             times: [
-              new TimeDesc('collect', list['ServerController.communicateWithServer-4-collect'].time),
-              new TimeDesc('encode', list['ServerController.communicateWithServer-6-encode'].time),
-              new TimeDesc('write', list['ServerController.communicateWithServer-7-write'].time),
+              new TimeDesc('collect', record['ServerController.communicateWithServer-4-collect'].time),
+              new TimeDesc('encode', record['ServerController.communicateWithServer-6-encode'].time),
+              new TimeDesc('write', record['ServerController.communicateWithServer-7-write'].time),
             ],
           })
         );

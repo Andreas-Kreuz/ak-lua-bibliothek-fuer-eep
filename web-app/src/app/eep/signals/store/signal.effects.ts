@@ -14,7 +14,8 @@ export class SignalEffects {
   fetchSignals$ = createEffect(() =>
     this.signalsService.getSignalActions().pipe(
       switchMap((data) => {
-        const list: Signal[] = JSON.parse(data);
+        const record: Record<string, Signal> = JSON.parse(data);
+        const list: Signal[] = Object.values(record);
         list.sort((a, b) => a.id - b.id);
 
         for (const signal of list) {
@@ -30,7 +31,8 @@ export class SignalEffects {
   fetchSignalTypDefinitions$ = createEffect(() =>
     this.signalsService.getSignalTypeDefinitionActions().pipe(
       switchMap((data) => {
-        const list: SignalTypeDefinition[] = JSON.parse(data);
+        const record: Record<string, SignalTypeDefinition> = JSON.parse(data);
+        const list: SignalTypeDefinition[] = Object.values(record);
         return of(new fromSignal.SetSignalTypeDefinitions(list));
       })
     )

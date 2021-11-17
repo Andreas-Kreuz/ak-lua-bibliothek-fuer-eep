@@ -21,7 +21,8 @@ export class IntersectionEffects {
   fetchIntersectionTrafficLights$ = createEffect(() =>
     this.intersectionService.getTrafficLightActions().pipe(
       switchMap((data) => {
-        const list: IntersectionTrafficLight[] = JSON.parse(data);
+        const record: Record<string, IntersectionTrafficLight> = JSON.parse(data);
+        const list: IntersectionTrafficLight[] = Object.values(record);
         const signalModels = new Map<number, string>();
         for (const element of list) {
           if (!element.lightStructures) {
@@ -45,7 +46,8 @@ export class IntersectionEffects {
   fetchIntersections$ = createEffect(() =>
     this.intersectionService.getIntersectionActions().pipe(
       switchMap((data) => {
-        const list: Intersection[] = JSON.parse(data);
+        const record: Record<string, Intersection> = JSON.parse(data);
+        const list: Intersection[] = Object.values(record);
 
         return of(IntersectionActions.setIntersections({ intersections: list }));
       })
@@ -55,7 +57,8 @@ export class IntersectionEffects {
   fetchIntersectionSwitchings$ = createEffect(() =>
     this.intersectionService.getSwitchingActions().pipe(
       switchMap((data) => {
-        const list: IntersectionSwitching[] = JSON.parse(data);
+        const record: Record<string, IntersectionSwitching> = JSON.parse(data);
+        const list: IntersectionSwitching[] = Object.values(record);
 
         return of(IntersectionActions.setSwitchings({ switchings: list }));
       })
@@ -65,7 +68,8 @@ export class IntersectionEffects {
   intersectionLanesActions$ = createEffect(() =>
     this.intersectionService.getLaneActions().pipe(
       switchMap((data) => {
-        const list: IntersectionLane[] = JSON.parse(data);
+        const record: Record<string, IntersectionLane> = JSON.parse(data);
+        const list: IntersectionLane[] = Object.values(record);
 
         return of(IntersectionActions.setLanes({ lanes: list }));
       })
@@ -75,7 +79,8 @@ export class IntersectionEffects {
   luaModuleSettingsReceivedAction$ = createEffect(() =>
     this.intersectionService.getLuaSettingsReceivedActions().pipe(
       switchMap((data) => {
-        const list: LuaSetting<any>[] = JSON.parse(data);
+        const record: Record<string, LuaSetting<any>> = JSON.parse(data);
+        const list: LuaSetting<any>[] = Object.values(record);
         const settings = new LuaSettings('Kreuzungen', list);
 
         return of(IntersectionActions.setModuleSettings({ settings }));

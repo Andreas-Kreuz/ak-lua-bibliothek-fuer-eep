@@ -78,11 +78,17 @@ export class StatisticsCardComponent implements OnDestroy, OnInit {
   }
 
   maxOfSingleList(entries: TimeDesc[]) {
-    return entries.map((a) => a.ms).reduce((a, b) => a + b);
+    if (entries && entries.length > 0) {
+      return entries.map((a) => a.ms).reduce((a, b) => a + b);
+    } else {
+      return 0;
+    }
   }
 
   scaledValueOf(i: number) {
-    if (i === 0 || this.max === 0) return 0;
+    if (i === 0 || this.max === 0) {
+      return 0;
+    }
     // maximum shall be 80 % of the scale
     return (i / this.max) * 80;
 

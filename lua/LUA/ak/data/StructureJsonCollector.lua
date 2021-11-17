@@ -61,7 +61,7 @@ function StructureJsonCollector.initialize()
             structure.fire = fire
             table.insert(structures, structure)
 
-            EventBroker.fireDataChange("Structure Added", EventBroker.change.dataAdded, "structures", "id", structure)
+            EventBroker.fireDataChange(EventBroker.eventType.dataAdded, "structures", "id", structure)
         end
     end
 
@@ -85,8 +85,7 @@ function StructureJsonCollector.collectData()
             structure.smoke = smoke
             structure.fire = fire
 
-            EventBroker.fireDataChange("Structure Changed", EventBroker.change.dataUpdated, "structures", "id",
-                                       structure)
+            EventBroker.fireDataChange(EventBroker.eventType.dataChanged, "structures", "id", structure)
         end
     end
 

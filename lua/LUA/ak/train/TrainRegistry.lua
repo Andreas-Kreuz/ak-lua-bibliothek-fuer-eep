@@ -35,16 +35,16 @@ end
 ---A train appeared on the map
 ---@param train Train
 function TrainRegistry.trainAppeared(train)
-    EventBroker.fireDataChange("Train Appeared", EventBroker.change.dataAdded, "trains", "id", train:toJsonStatic())
-    EventBroker.fireDataChange("Train Appeared", EventBroker.change.dataAdded, "trains", "id", train:toJsonDynamic())
+    EventBroker.fireDataChange(EventBroker.eventType.dataAdded, "trains", "id", train:toJsonStatic())
+    EventBroker.fireDataChange(EventBroker.eventType.dataAdded, "trains", "id", train:toJsonDynamic())
 end
 
 ---A train dissappeared from the map
 ---@param trainName string
 function TrainRegistry.trainDisappeared(trainName)
     allTrains[trainName] = nil
-    EventBroker.fireDataChange("Train Disappeared", EventBroker.change.dataRemoved, "trains", "id", {id = trainName})
-    EventBroker.fireDataChange("Train Disappeared", EventBroker.change.dataRemoved, "trains", "id", {id = trainName})
+    EventBroker.fireDataChange(EventBroker.eventType.dataRemoved, "trains", "id", {id = trainName})
+    EventBroker.fireDataChange(EventBroker.eventType.dataRemoved, "trains", "id", {id = trainName})
 end
 
 return TrainRegistry

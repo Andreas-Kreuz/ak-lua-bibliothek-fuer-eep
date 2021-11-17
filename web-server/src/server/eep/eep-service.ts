@@ -127,6 +127,9 @@ export default class EepService {
         const fileSizeInBytes = stats['size'];
         if (this.lastLogFileSize && fileSizeInBytes < this.lastLogFileSize) {
           this.logWasCleared(); // TODO: NOT WORKING; BECAUSE TAIL DOES NOT LOOK BACK
+          tail.unwatch();
+          this.lastLogFileSize = 0;
+          this.attachAkEepOutLogFile();
         }
         this.lastLogFileSize = fileSizeInBytes;
         this.logLineAppeared(line);
@@ -135,6 +138,7 @@ export default class EepService {
       tail.on('error', (error: string) => {
         console.log(error);
         tail.unwatch();
+        this.lastLogFileSize = 0;
         this.attachAkEepOutLogFile();
       });
 
@@ -146,12 +150,14 @@ export default class EepService {
     const eventFile = path.resolve(this.dir, writtenEventFileName);
     this.oneFileAppearance(eventFile, () => {
       const tail = new Tail(eventFile, { encoding: 'latin1', fromBeginning: true });
+      console.log('Attaching to ', eventFile);
       tail.on('line', (line: string) => {
         const stats = fs.statSync(eventFile);
         const fileSizeInBytes = stats['size'];
         if (this.lastEventFileSize && fileSizeInBytes < this.lastEventFileSize) {
-          console.log('Event log disappeared');
+          console.log('Event log disappeared', eventFile);
           tail.unwatch();
+          this.lastEventFileSize = 0;
           this.attachAkEepOutEventFile();
         }
         this.lastEventFileSize = fileSizeInBytes;
@@ -161,6 +167,7 @@ export default class EepService {
       tail.on('error', (error: string) => {
         console.log(error);
         tail.unwatch();
+        this.lastEventFileSize = 0;
         this.attachAkEepOutEventFile();
       });
 

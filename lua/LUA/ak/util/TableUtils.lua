@@ -77,4 +77,10 @@ function TableUtils.shallowcopy(orig)
     return copy
 end
 
+function TableUtils.valuesOfDict(dictionary)
+    local newArray = {}
+    if dictionary then for _, v in pairs(dictionary) do table.insert(newArray, v) end end
+    return newArray
+end
+
 return TableUtils

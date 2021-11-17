@@ -1,14 +1,16 @@
 export default interface EepEvent {
-  counter: number;
-  date: string;
-  type: 'DataReset' | 'DataChanged';
+  type: 'CompleteReset' | 'DataAdded' | 'DataChanged' | 'DataRemoved' | 'ListChanged';
   payload: undefined;
 }
 
 export interface DataChangePayload<T> {
-  eventId: string;
-  changeType: string;
   room: string;
   keyId: string & keyof T;
   element: T;
+}
+
+export interface ListChangePayload<T> {
+  room: string;
+  keyId: string & keyof T;
+  list: Record<string, T>;
 }

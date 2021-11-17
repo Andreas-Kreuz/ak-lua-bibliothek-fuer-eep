@@ -17,48 +17,68 @@ local EventFileWriter = require "ak.io.EventFileWriter"
 ---@field addListener fun(listener:EventListener):nil
 ---@field printListener EventListener a default listeners to print out all events to the standard-out
 local EventBroker = {}
-local os = require("os")
-local counter = -1
 local listeners = {}
-
-EventBroker.eventType = {dataChanged = "DataChanged", dataReset = "DataReset"}
 
 ---@class ChangeType
 ---@field dataAdded string
 ---@field dataRemoved string
----@field dataUpdated string
-EventBroker.change = {dataAdded = "dataAdded", dataRemoved = "dataRemoved", dataUpdated = "dataUpdated"}
+---@field dataChanged string
+---@field completeReset string
+EventBroker.eventType = {
+    completeReset = "CompleteReset",
+    dataAdded = "DataAdded",
+    dataChanged = "DataChanged",
+    listChanged = "ListChanged",
+    dataRemoved = "DataRemoved"
+}
 
 ---@type EventListener
 EventBroker.printListener = {fireEvent = function(jsonText) print(jsonText) end}
 
 ---Inform the EventBroker of new events, which will then be given to the EventListeners
----@param type string
+---@param eventType string
 ---@param payload string
-local function fire(type, payload)
-    counter = counter + 1
-
+local function fire(eventType, payload)
     ---@type Event
-    local event = {date = os.date("%X"), counter = counter, type = type, payload = payload}
+    local event = {type = eventType, payload = payload}
     local jsonText = json.encode(event)
 
     for l in pairs(listeners) do l.fireEvent(jsonText) end
 end
 
 ---Fire a data change event
----@param eventId string
----@param changeType ChangeType EventBroker.change.XXX
+---@param eventType ChangeType EventBroker.eventType.XXX
 ---@param room string
 ---@param keyId string
 ---@param element? table
-function EventBroker.fireDataChange(eventId, changeType, room, keyId, element)
-    if element then assert(element[keyId], "the element must contain the key") end
-    fire(EventBroker.eventType.dataChanged, {
-        eventId = eventId, -- a cool unique identifier, like "Train vanished" or "Train position update"
-        changeType = changeType, -- EventBroker.change.XXX
+function EventBroker.fireDataChange(eventType, room, keyId, element)
+    assert(
+    eventType == EventBroker.eventType.dataChanged or eventType == EventBroker.eventType.dataAdded or eventType ==
+    EventBroker.eventType.dataRemoved)
+    assert(room)
+    assert(keyId)
+    assert(element)
+    assert(element[keyId], "the element must contain the key")
+    fire(eventType, {
         room = room, -- the affected data element, like given in the JSON collectors, e.g. "rail-trains"
         keyId = keyId, -- name of the field identifying the key, e.g. "trainName" or "id" or "name"
         element = element -- complete object with the changed fields or object with updated fields only
+    })
+end
+
+---Fire a data change event
+---@param room string
+---@param keyId string
+---@param list table dictionary or array
+function EventBroker.fireListChange(room, keyId, list)
+    assert(room)
+    assert(keyId)
+    assert(list)
+    for k, v in pairs(list) do assert(v[keyId], "each element must contain the key") end
+    fire(EventBroker.eventType.listChanged, {
+        room = room, -- the affected data element, like given in the JSON collectors, e.g. "rail-trains"
+        keyId = keyId, -- name of the field identifying the key, e.g. "trainName" or "id" or "name"
+        list = list -- complete object with the changed fields or object with updated fields only
     })
 end
 
@@ -69,6 +89,6 @@ function EventBroker.addListener(listener) listeners[listener] = true end
 if AkStartWithDebug then EventBroker.addListener(EventBroker.printListener) end
 
 EventBroker.addListener(EventFileWriter)
-fire(EventBroker.eventType.dataReset, "-- fire a data reset on first start --")
+fire(EventBroker.eventType.completeReset, "-- fire a data reset on first start --")
 
 return EventBroker

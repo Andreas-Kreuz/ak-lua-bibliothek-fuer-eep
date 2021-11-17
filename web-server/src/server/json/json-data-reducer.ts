@@ -1,4 +1,4 @@
-import EepEvent, { DataChangePayload } from './eep-event';
+import EepEvent, { DataChangePayload, ListChangePayload } from './eep-event';
 import JsonDataEffects from './json-data-effects';
 
 interface State {
@@ -20,7 +20,7 @@ export default class JsonDataStore {
 
   onNewEvent(event: EepEvent) {
     switch (event.type) {
-      case 'DataReset':
+      case 'CompleteReset':
         {
           for (const roomName of Object.keys(this.state.rooms)) {
             this.removeDataRoom(roomName);
@@ -28,11 +28,34 @@ export default class JsonDataStore {
           this.state.rooms = {};
         }
         break;
+      case 'DataAdded':
       case 'DataChanged':
         {
           const payload: DataChangePayload<unknown> = event.payload;
           const room = this.createOrReturnRoom(payload.room);
           this.createOrUpdateElement(room, payload.keyId, payload.element);
+          // const keyToBeUpdated = payload.element[payload.keyId];
+          // console.log(payload.room, ' updateKey ', keyToBeUpdated);
+        }
+        break;
+      case 'DataRemoved':
+        {
+          const payload: DataChangePayload<unknown> = event.payload;
+          const room: Record<string, unknown> = this.createOrReturnRoom(payload.room);
+          const keyToBeRemoved = payload.element[payload.keyId];
+          room[keyToBeRemoved] = undefined;
+        }
+        break;
+      case 'ListChanged':
+        {
+          if (event.payload) {
+            // console.log(event);
+            const payload: ListChangePayload<unknown> = event.payload;
+            const room: Record<string, unknown> = this.createOrReturnRoom(payload.room);
+            for (const element of Object.values(payload.list)) {
+              room[element[payload.keyId]] = element;
+            }
+          }
         }
         break;
       default:

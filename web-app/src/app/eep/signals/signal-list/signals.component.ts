@@ -53,6 +53,7 @@ export class SignalsComponent implements OnInit, OnDestroy {
     return text;
   }
 
+  // TODO: Seems to be shown as "object"
   modelTextOf(signal: Signal) {
     if (signal.model) {
       let text = '';

@@ -28,7 +28,7 @@
     </svg>
     <mat-divider></mat-divider>
   </mat-card-content>
-  <mat-card-content>
+  <mat-card-content *ngIf="ids && ids.length > 0">
     <h4 style="margin-top: 1rem">Legende</h4>
     <svg width="100%" [attr.height]="ids.length * 2 - 1 + 'rem'" style="background-color: white">
       <ng-container *ngFor="let id of ids; let j = index">

@@ -1,3 +1,4 @@
+local EventBroker = require "ak.util.EventBroker"
 --- Export EEP data / read and execute commands.
 -- LuaDoc: http://keplerproject.github.io/luadoc/manual.html
 --
@@ -112,7 +113,6 @@ local function collectData(printFirstTime)
         local newData = collectFrom(jsonCollector, printFirstTime)
         for key, value in pairs(newData) do collectedData[key] = value end
     end
-    collectedData["runtime"] = RuntimeRegistry.getAll()
 
     checkObjects(collectedData, "")
 end
@@ -160,7 +160,6 @@ local function expandData()
             table.insert(orderedKeys, key)
         end
     end
-    -- table.insert(orderedKeys, "api-entries")
     table.sort(orderedKeys)
     fillApiEntriesV1(orderedKeys)
     return exportData, orderedKeys
@@ -202,17 +201,21 @@ function ServerController.communicateWithServer(modulus)
     local overallTime5 = overallTime3
     local overallTime6 = overallTime3
 
-    if modulus == 0 or i % modulus == 0 and serverIsReady then
+    if modulus == 0 or i % modulus == 0 then
         collectData(printFirstTime)
         overallTime4 = os.clock()
-
-        local exportData = expandData()
         overallTime5 = os.clock()
-
-        local jsonString = encode(exportData)
         overallTime6 = os.clock()
 
-        writeData(jsonString)
+        if serverIsReady then
+            local exportData = expandData()
+            overallTime5 = os.clock()
+
+            local jsonString = encode(exportData)
+            overallTime6 = os.clock()
+
+            writeData(jsonString)
+        end
     end
 
     local overallTime7 = os.clock()
@@ -232,7 +235,6 @@ function ServerController.communicateWithServer(modulus)
     end
 
     if modulus == 0 or i % modulus == 0 and serverIsReady then
-        RuntimeRegistry.resetAll(runTimeGroupsToKeep)
         RuntimeRegistry.storeRunTime("ServerController.communicateWithServer-1-waitForServer",
                                      overallTime1 - overallTime0)
         RuntimeRegistry.storeRunTime("ServerController.communicateWithServer-2-initialize",
@@ -243,7 +245,11 @@ function ServerController.communicateWithServer(modulus)
         RuntimeRegistry.storeRunTime("ServerController.communicateWithServer-6-encode", overallTime6 - overallTime5)
         RuntimeRegistry.storeRunTime("ServerController.communicateWithServer-7-write", overallTime7 - overallTime6)
         RuntimeRegistry.storeRunTime("ServerController.communicateWithServer-OVERALL", timeDiff)
+        local values = RuntimeRegistry.getAll()
+        if (values) then EventBroker.fireListChange("runtime", "id", values) end
+        RuntimeRegistry.resetAll(runTimeGroupsToKeep)
     end
+
 end
 
 return ServerController

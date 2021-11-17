@@ -9,6 +9,7 @@ import EepEvent from './eep-event';
 export default class JsonDataEffects {
   [x: string]: unknown;
   private store = new JsonDataStore(this);
+  private refreshSettings = { pending: false };
 
   constructor(
     private app: express.Express,
@@ -17,6 +18,7 @@ export default class JsonDataEffects {
     private socketService: SocketService
   ) {
     this.socketService.addOnSocketConnectedCallback((socket: Socket) => this.socketConnected(socket));
+    setInterval(() => this.refreshStateIfRequired(), 200);
   }
 
   private socketConnected(socket: Socket) {
@@ -44,15 +46,23 @@ export default class JsonDataEffects {
     });
   }
 
+  refreshStateIfRequired() {
+    if (this.refreshSettings.pending === true) {
+      this.jsonDataUpdated('{}');
+      this.refreshSettings.pending = false;
+    }
+  }
+
   onNewEventLine(jsonString: string) {
     const event: EepEvent = JSON.parse(jsonString);
     this.store.onNewEvent(event);
+    this.refreshSettings.pending = true;
   }
 
   jsonDataUpdated(jsonString: string): void {
     // Parse the data
-    const jsonFileContent: { [key: string]: unknown } = JSON.parse(jsonString);
-    const eventStoreJson: { [key: string]: unknown } = { ...jsonFileContent, ...this.store.getNewStateDataCopy() };
+    //const jsonFileContent: { [key: string]: unknown } = JSON.parse(jsonString);
+    const eventStoreJson: { [key: string]: unknown } = { ...this.store.getNewStateDataCopy() };
 
     // Get those new keys from the Json Content
     const currentKeys = Object.keys(this.store.getJsonData());
@@ -87,7 +97,6 @@ export default class JsonDataEffects {
   }
 
   public onDataAdded(key: string, json: string): void {
-    console.log('ADDED ROOM ' + key + 'AND REGISTER API?');
     this.store.addDataRoom(DataEvent.roomOf(key));
     this.registerApiUrls(key);
     this.io.to(DataEvent.roomOf(key)).emit(DataEvent.eventOf(key), json);

@@ -344,6 +344,9 @@ function TrackCollector:initialize()
         end
     end
 
+    -- TODO: Send event only with detected changes
+    EventBroker.fireListChange(self.trackType .. "-" .. "tracks", "id", self.tracks)
+
     self:findAndUpdateTrainsOnTracks()
 end
 
@@ -383,13 +386,14 @@ end
 
 function TrackCollector:updateData()
     self:findAndUpdateTrainsOnTracks()
+    EventBroker.fireListChange(self.trackType .. "-" .. "runtime", "id", runtimeData)
     return {
-        [self.trackType .. "-tracks"] = self.tracks,
+        -- [self.trackType .. "-tracks"] = self.tracks,
         -- [self.trackType .. "-trains"] = self.trains,
         -- [self.trackType .. "-train-infos-dynamic"] = self.trainInfo,
         -- [self.trackType .. "-rolling-stocks"] = self.rollingStock,
         -- [self.trackType .. "-rolling-stock-infos-dynamic"] = self.rollingStockInfo,
-        [self.trackType .. "-runtime"] = runtimeData
+        -- [self.trackType .. "-runtime"] = runtimeData
     }
 end
 

@@ -1,3 +1,4 @@
+local EventBroker = require "ak.util.EventBroker"
 if AkDebugLoad then print("Loading ak.data.SwitchJsonCollector ...") end
 SwitchJsonCollector = {}
 local enabled = true
@@ -32,7 +33,12 @@ function SwitchJsonCollector.collectData()
         switch.position = EEPGetSwitch(switch.id)
     end
 
-    return {["switches"] = switches}
+    -- TODO: Send event only with detected changes
+    EventBroker.fireListChange("switches", "id", switches)
+
+    return {
+        -- ["switches"] = switches
+    }
 end
 
 return SwitchJsonCollector
