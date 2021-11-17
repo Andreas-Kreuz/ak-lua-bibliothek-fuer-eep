@@ -100,7 +100,7 @@ export default class EepService {
   private readJsonFile(jsonFile: string, jsonReadyFile: string) {
     try {
       // EEP has written the JsonFile for us, so let's read it.
-      const data = fs.readFileSync(jsonFile, { encoding: 'latin1' });
+      //const data = fs.readFileSync(jsonFile, { encoding: 'latin1' });
       performance.mark('eep:stop-wait-for-json');
       performance.measure(
         ServerStatisticsService.TimeForEepJsonFile,
@@ -112,7 +112,7 @@ export default class EepService {
       this.deleteFileIfExists(jsonReadyFile);
       performance.mark('eep:start-wait-for-json');
 
-      this.onJsonUpdate(data, this.lastJsonUpdate);
+      //this.onJsonUpdate(data, this.lastJsonUpdate);
     } catch (err) {
       console.log(err);
     }
