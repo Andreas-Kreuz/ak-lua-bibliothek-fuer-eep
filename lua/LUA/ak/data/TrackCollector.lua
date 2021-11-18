@@ -386,7 +386,7 @@ end
 
 function TrackCollector:updateData()
     self:findAndUpdateTrainsOnTracks()
-    EventBroker.fireListChange(self.trackType .. "-" .. "runtime", "id", runtimeData)
+
     return {
         -- [self.trackType .. "-tracks"] = self.tracks,
         -- [self.trackType .. "-trains"] = self.trains,

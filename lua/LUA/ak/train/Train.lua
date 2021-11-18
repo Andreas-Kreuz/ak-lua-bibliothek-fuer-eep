@@ -1,6 +1,6 @@
-local EventBroker = require "ak.util.EventBroker"
-local TableUtils = require "ak.util.TableUtils"
 if AkDebugLoad then print("Loading ak.train.Train ...") end
+-- local EventBroker = require "ak.util.EventBroker"
+local TableUtils = require "ak.util.TableUtils"
 
 local RollingStockRegistry = require("ak.train.RollingStockRegistry")
 local RollingStockModels = require("ak.train.RollingStockModels")
@@ -48,6 +48,7 @@ function Train:new(o)
     o.trackType = nil
     o.onTracks = {}
     o.occupiedTracks = {}
+    o.valuesUpdated = true
     return o
 end
 
@@ -96,6 +97,7 @@ function Train:setValue(key, value)
         local rs = RollingStockRegistry.forName(rollingStockName)
         rs:setValue(key, value)
     end
+    self.valuesUpdated = true
 end
 
 ---Get the current value for key
@@ -132,7 +134,10 @@ function Train:setRoute(route)
     local oldRoute = self.route
     self.route = route
     EEPSetTrainRoute(self.name, self.route)
-    if oldRoute ~= route then EventBroker.fireDataChanged("trains", "id", {id = self.name, route = route}) end
+    if oldRoute ~= route then
+        self.valuesUpdated = true
+        -- EventBroker.fireDataChanged("trains", "id", {id = self.name, route = route})
+    end
 end
 
 --- Gets the trains route like used in EEP
@@ -150,7 +155,8 @@ function Train:setRollingStockCount(count)
     local oldCount = count
     self.rollingStockCount = count
     if oldCount ~= count then
-        EventBroker.fireDataChanged("trains", "id", {id = self.name, rollingStockCount = count})
+        self.valuesUpdated = true
+        -- EventBroker.fireDataChanged("trains", "id", {id = self.name, rollingStockCount = count})
     end
 end
 
@@ -169,7 +175,10 @@ function Train:setSpeed(speed)
     speed = tonumber(string.format("%1.1f", speed))
     local oldSpeed = self.speed
     self.speed = speed
-    if oldSpeed ~= speed then EventBroker.fireDataChanged("trains", "id", {id = self.name, speed = speed}) end
+    if oldSpeed ~= speed then
+        self.valuesUpdated = true
+        -- EventBroker.fireDataChanged("trains", "id", {id = self.name, speed = speed})
+    end
 end
 
 --- Gets the trains speed in km/h
@@ -187,7 +196,8 @@ function Train:setOnTrack(onTracks)
     local oldOnTracks = self.onTracks
     self.onTracks = onTracks
     if not TableUtils.sameDictEntries(oldOnTracks, onTracks) then
-        EventBroker.fireDataChanged("trains", "id", {id = self.name, occupiedTacks = onTracks})
+        self.valuesUpdated = true
+        -- EventBroker.fireDataChanged("trains", "id", {id = self.name, occupiedTacks = onTracks})
     end
 end
 
@@ -204,7 +214,8 @@ function Train:setTrackType(trackType)
     local oldTrackType = self.trackType
     self.trackType = trackType
     if oldTrackType ~= trackType then
-        EventBroker.fireDataChanged("trains", "id", {id = self.name, trackType = trackType})
+        self.valuesUpdated = true
+        -- EventBroker.fireDataChanged("trains", "id", {id = self.name, trackType = trackType})
     end
 end
 
@@ -216,7 +227,8 @@ function Train:setDirection(direction)
     local oldDirection = self:getDirection()
     self:setValue(TagKeys.Train.direction, direction)
     if oldDirection ~= direction then
-        EventBroker.fireDataChanged("trains", "id", {id = self.name, direction = direction})
+        self.valuesUpdated = true
+        -- EventBroker.fireDataChanged("trains", "id", {id = self.name, direction = direction})
     end
 end
 
@@ -227,7 +239,8 @@ function Train:setDestination(destination)
     local oldDestination = self:getDestination()
     self:setValue(TagKeys.Train.destination, destination)
     if oldDestination ~= destination then
-        EventBroker.fireDataChanged("trains", "id", {id = self.name, destination = destination})
+        self.valuesUpdated = true
+        -- EventBroker.fireDataChanged("trains", "id", {id = self.name, destination = destination})
     end
 end
 
@@ -242,7 +255,10 @@ function Train:setLine(line)
     line = tostring(line)
     local oldLine = self:getLine()
     self:setValue(TagKeys.Train.line, line)
-    if oldLine ~= line then EventBroker.fireDataChanged("trains", "id", {id = self.name, line = line}) end
+    if oldLine ~= line then
+        self.valuesUpdated = true
+        -- EventBroker.fireDataChanged("trains", "id", {id = self.name, line = line})
+    end
 end
 
 function Train:getLine()

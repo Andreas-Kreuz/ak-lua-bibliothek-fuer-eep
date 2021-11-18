@@ -1,4 +1,6 @@
 if AkDebugLoad then print("Loading ak.data.TrainsAndTracksJsonCollector ...") end
+local TrainRegistry = require "ak.train.TrainRegistry"
+local RollingStockRegistry = require "ak.train.RollingStockRegistry"
 
 TrainsAndTracksJsonCollector = {}
 local TrackCollector = require("ak.data.TrackCollector")
@@ -13,9 +15,7 @@ local trackTypes = {"auxiliary", "control", "road", "rail", "tram"}
 local trackCollectors = {}
 do for _, trackType in ipairs(trackTypes) do trackCollectors[trackType] = TrackCollector:new(trackType) end end
 
-local function initializeTracks()
-    for _, trackType in ipairs(trackTypes) do trackCollectors[trackType]:initialize() end
-end
+local function initializeTracks() for _, trackType in ipairs(trackTypes) do trackCollectors[trackType]:initialize() end end
 
 local function updateTracks()
     for _, trackType in ipairs(trackTypes) do
@@ -43,6 +43,9 @@ function TrainsAndTracksJsonCollector.collectData()
     if not initialized then TrainsAndTracksJsonCollector.initialize() end
 
     updateTracks()
+
+    TrainRegistry.fireChangeTrainsEvent()
+    RollingStockRegistry.fireChangeRollingStockEvent()
 
     return data
 end
