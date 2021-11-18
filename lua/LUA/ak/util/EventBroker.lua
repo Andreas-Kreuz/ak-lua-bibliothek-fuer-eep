@@ -18,7 +18,7 @@ local EventFileWriter = require "ak.io.EventFileWriter"
 ---@field printListener EventListener a default listeners to print out all events to the standard-out
 local EventBroker = {}
 local listeners = {}
-EventBroker.debug = {}
+EventBroker.debug = false
 
 ---@class ChangeType
 ---@field dataAdded string
