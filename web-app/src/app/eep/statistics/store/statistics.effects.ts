@@ -44,9 +44,24 @@ export class StatisticsEffects {
           StatisticsAction.dataInitializeUpdate({ times: parsedTimes['.initialize'] }),
           StatisticsAction.serverControllerUpdate({
             times: [
-              new TimeDesc('collect', record['ServerController.communicateWithServer-4-collect'].time),
-              new TimeDesc('encode', record['ServerController.communicateWithServer-6-encode'].time),
-              new TimeDesc('write', record['ServerController.communicateWithServer-7-write'].time),
+              new TimeDesc(
+                'collect',
+                record['ServerController.communicateWithServer-4-collect']
+                  ? record['ServerController.communicateWithServer-4-collect'].time
+                  : 0
+              ),
+              new TimeDesc(
+                'encode',
+                record['ServerController.communicateWithServer-6-encode']
+                  ? record['ServerController.communicateWithServer-6-encode'].time
+                  : 0
+              ),
+              new TimeDesc(
+                'write',
+                record['ServerController.communicateWithServer-7-write']
+                  ? record['ServerController.communicateWithServer-7-write'].time
+                  : 0
+              ),
             ],
           })
         );
