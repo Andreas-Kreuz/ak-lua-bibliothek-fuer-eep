@@ -24,16 +24,15 @@ end
 ---A train appeared on the map
 ---@param rollingStock RollingStock
 function RollingStockRegistry.rollingStockAppeared(rollingStock)
-    EventBroker.fireDataChange(EventBroker.eventType.dataChanged, "rolling-stocks", "id", rollingStock:toJsonStatic())
-    EventBroker.fireDataChange(EventBroker.eventType.dataChanged, "rollingStockInfo", "id",
-                               rollingStock:toJsonDynamic())
+    EventBroker.fireDataChanged("rolling-stocks", "id", rollingStock:toJsonStatic())
+    EventBroker.fireDataChanged("rollingStockInfo", "id", rollingStock:toJsonDynamic())
 end
 
 ---A train dissappeared from the map
 ---@param rollingStockName string
 function RollingStockRegistry.rollingStockDisappeared(rollingStockName)
-    EventBroker.fireDataChange(EventBroker.eventType.dataChanged, "rolling-stocks", "id", {id = rollingStockName})
-    EventBroker.fireDataChange(EventBroker.eventType.dataChanged, "rollingStockInfo", "id", {id = rollingStockName})
+    EventBroker.fireDataChanged("rolling-stocks", "id", {id = rollingStockName})
+    EventBroker.fireDataChanged("rollingStockInfo", "id", {id = rollingStockName})
 end
 
 return RollingStockRegistry

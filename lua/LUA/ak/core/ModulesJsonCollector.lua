@@ -16,9 +16,9 @@ local function checkModule(moduleName, module)
     local newModule = toApiV1(moduleName, module)
     local oldModule = knownModules[moduleName]
     if not oldModule then
-        EventBroker.fireDataChange(EventBroker.eventType.dataAdded, "modules", "id", newModule);
+        EventBroker.fireDataAdded("modules", "id", newModule);
     elseif not TableUtils.deepDictCompare(oldModule, newModule) then
-        EventBroker.fireDataChange(EventBroker.eventType.dataChanged, "modules", "id", newModule);
+        EventBroker.fireDataChanged("modules", "id", newModule);
     end
 
     knownModules[moduleName] = module

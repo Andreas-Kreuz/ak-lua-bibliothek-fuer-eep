@@ -51,39 +51,51 @@ local function fire(eventType, payload)
 end
 
 ---Fire a data change event
----@param eventType ChangeType EventBroker.eventType.XXX
----@param room string
----@param keyId string
----@param element? table
-function EventBroker.fireDataChange(eventType, room, keyId, element)
-    assert(
-    eventType == EventBroker.eventType.dataChanged or eventType == EventBroker.eventType.dataAdded or eventType ==
-    EventBroker.eventType.dataRemoved)
+---@param room string -- the affected data element, like given in the JSON collectors, e.g. "rail-trains"
+---@param keyId string -- name of the field identifying the key, e.g. "trainName" or "id" or "name"
+---@param element? table -- complete object with the changed fields or object with updated fields only
+function EventBroker.fireDataChanged(room, keyId, element)
     assert(room)
     assert(keyId)
     assert(element)
     assert(element[keyId], "the element must contain the key")
-    fire(eventType, {
-        room = room, -- the affected data element, like given in the JSON collectors, e.g. "rail-trains"
-        keyId = keyId, -- name of the field identifying the key, e.g. "trainName" or "id" or "name"
-        element = element -- complete object with the changed fields or object with updated fields only
-    })
+    fire(EventBroker.eventType.dataChanged, {room = room, keyId = keyId, element = element})
 end
 
 ---Fire a data change event
----@param room string
----@param keyId string
----@param list table dictionary or array
+---@param room string -- the affected data element, like given in the JSON collectors, e.g. "rail-trains"
+---@param keyId string -- name of the field identifying the key, e.g. "trainName" or "id" or "name"
+---@param element? table -- complete object with the changed fields or object with updated fields only
+function EventBroker.fireDataAdded(room, keyId, element)
+    assert(room)
+    assert(keyId)
+    assert(element)
+    assert(element[keyId], "the element must contain the key")
+    fire(EventBroker.eventType.dataAdded, {room = room, keyId = keyId, element = element})
+end
+
+---Fire a data change event
+---@param room string -- the affected data element, like given in the JSON collectors, e.g. "rail-trains"
+---@param keyId string -- name of the field identifying the key, e.g. "trainName" or "id" or "name"
+---@param element? table -- complete object with the changed fields or object with updated fields only
+function EventBroker.fireDataRemoved(room, keyId, element)
+    assert(room)
+    assert(keyId)
+    assert(element)
+    assert(element[keyId], "the element must contain the key")
+    fire(EventBroker.eventType.dataRemoved, {room = room, keyId = keyId, element = element})
+end
+
+---Fire a data change event
+---@param room string -- the affected data element, like given in the JSON collectors, e.g. "rail-trains"
+---@param keyId string -- name of the field identifying the key, e.g. "trainName" or "id" or "name"
+---@param list table dictionary  -- complete array with the changed objects
 function EventBroker.fireListChange(room, keyId, list)
     assert(room)
     assert(keyId)
     assert(list)
     for _, v in pairs(list) do assert(v[keyId], "each element must contain the key") end
-    fire(EventBroker.eventType.listChanged, {
-        room = room, -- the affected data element, like given in the JSON collectors, e.g. "rail-trains"
-        keyId = keyId, -- name of the field identifying the key, e.g. "trainName" or "id" or "name"
-        list = list -- complete object with the changed fields or object with updated fields only
-    })
+    fire(EventBroker.eventType.listChanged, {room = room, keyId = keyId, list = list})
 end
 
 ---Add another listener to the event broker

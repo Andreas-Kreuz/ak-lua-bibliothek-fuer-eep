@@ -121,10 +121,7 @@ function RollingStock:save(clearCurrentInfo)
     self.tag = newTag
     local hresult = EEPRollingstockSetTagText(self.rollingStockName, newTag)
     assert(hresult)
-    if oldTag ~= self.tag then
-        EventBroker.fireDataChange(EventBroker.eventType.dataChanged, "rolling-stocks", "id",
-                                   {id = self.id, tag = self.tag})
-    end
+    if oldTag ~= self.tag then EventBroker.fireDataChanged("rolling-stocks", "id", {id = self.id, tag = self.tag}) end
 end
 
 function RollingStock:setLine(line)
@@ -145,9 +142,7 @@ function RollingStock:setWagonNr(nr)
     local oldNr = self:getValue(TagKeys.RollingStock.wagonNumber)
     self:setValue(TagKeys.RollingStock.wagonNumber, nr)
     self.model:setWagonNr(self.rollingStockName, nr)
-    if oldNr ~= nr then
-        EventBroker.fireDataChange(EventBroker.eventType.dataChanged, "rolling-stocks", "id", {id = self.id, nr = nr})
-    end
+    if oldNr ~= nr then EventBroker.fireDataChanged("rolling-stocks", "id", {id = self.id, nr = nr}) end
 end
 
 function RollingStock:getWagonNr() return self:getValue(TagKeys.RollingStock.wagonNumber) end
@@ -160,8 +155,7 @@ function RollingStock:setTrainName(trainName)
     local oldTrainName = self.trainName
     self.trainName = trainName
     if oldTrainName ~= trainName then
-        EventBroker.fireDataChange(EventBroker.eventType.dataChanged, "rolling-stocks", "id",
-                                   {id = self.id, trainName = trainName})
+        EventBroker.fireDataChanged("rolling-stocks", "id", {id = self.id, trainName = trainName})
     end
 end
 
@@ -180,8 +174,7 @@ function RollingStock:setPositionInTrain(positionInTrain)
     local oldPositionInTrain = self.positionInTrain
     self.positionInTrain = positionInTrain
     if oldPositionInTrain ~= positionInTrain then
-        EventBroker.fireDataChange(EventBroker.eventType.dataChanged, "rolling-stocks", "id",
-                                   {id = self.id, positionInTrain = positionInTrain})
+        EventBroker.fireDataChanged("rolling-stocks", "id", {id = self.id, positionInTrain = positionInTrain})
     end
 end
 
@@ -235,8 +228,7 @@ function RollingStock:setCouplingFront(couplingFront)
     local oldCoupling = self.couplingFront
     self.couplingFront = couplingFront
     if oldCoupling ~= couplingFront then
-        EventBroker.fireDataChange(EventBroker.eventType.dataChanged, "rolling-stocks", "id",
-                                   {id = self.id, couplingFront = couplingFront})
+        EventBroker.fireDataChanged("rolling-stocks", "id", {id = self.id, couplingFront = couplingFront})
     end
 end
 
@@ -255,8 +247,7 @@ function RollingStock:setCouplingRear(couplingRear)
     local oldCoupling = self.couplingRear
     self.couplingRear = couplingRear
     if oldCoupling ~= couplingRear then
-        EventBroker.fireDataChange(EventBroker.eventType.dataChanged, "rolling-stocks", "id",
-                                   {id = self.id, couplingRear = couplingRear})
+        EventBroker.fireDataChanged("rolling-stocks", "id", {id = self.id, couplingRear = couplingRear})
     end
 end
 
@@ -291,7 +282,7 @@ function RollingStock:setTrack(trackId, trackDistance, trackDirection, trackSyst
     self.trackDirection = trackDirection
     self.trackSystem = trackSystem
     if oldId ~= trackId or oldDist ~= trackDistance or oldDir ~= trackDirection or oldSys ~= trackSystem then
-        EventBroker.fireDataChange(EventBroker.eventType.dataChanged, "rollingStockInfo", "id", {
+        EventBroker.fireDataChanged("rollingStockInfo", "id", {
             id = self.id,
             trackId = trackId,
             trackDistance = trackDistance,
@@ -330,8 +321,7 @@ function RollingStock:setTrackType(trackType)
     local oldValue = self.trackType
     self.trackType = trackType
     if oldValue ~= trackType then
-        EventBroker.fireDataChange(EventBroker.eventType.dataChanged, "rolling-stocks", "id",
-                                   {id = self.id, trackType = trackType})
+        EventBroker.fireDataChanged("rolling-stocks", "id", {id = self.id, trackType = trackType})
     end
 end
 
@@ -356,8 +346,7 @@ function RollingStock:setPosition(x, y, z)
     self.y = y
     self.z = z
     if oldX ~= x or oldY ~= y or oldZ ~= z then
-        EventBroker.fireDataChange(EventBroker.eventType.dataChanged, "rollingStockInfo", "id",
-                                   {id = self.id, posX = x, posY = y, posZ = z})
+        EventBroker.fireDataChanged("rollingStockInfo", "id", {id = self.id, posX = x, posY = y, posZ = z})
     end
 end
 
@@ -390,8 +379,7 @@ function RollingStock:setMileage(mileage)
     local oldMileage = self.mileage
     self.mileage = mileage
     if oldMileage ~= mileage then
-        EventBroker.fireDataChange(EventBroker.eventType.dataChanged, "rollingStockInfo", "id",
-                                   {id = self.id, mileage = mileage})
+        EventBroker.fireDataChanged("rollingStockInfo", "id", {id = self.id, mileage = mileage})
     end
 end
 
