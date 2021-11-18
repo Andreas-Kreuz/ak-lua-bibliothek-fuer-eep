@@ -60,10 +60,9 @@ function StructureJsonCollector.initialize()
             structure.smoke = smoke
             structure.fire = fire
             table.insert(structures, structure)
-
-            EventBroker.fireDataAdded("structures", "id", structure)
         end
     end
+    EventBroker.fireListChange("structures", "id", structures)
 
     initialized = true
 end
@@ -73,6 +72,7 @@ function StructureJsonCollector.collectData()
 
     if not initialized then StructureJsonCollector.initialize() end
 
+    local dirtyStructures = {}
     for i = 1, #structures do
         local structure = structures[i]
 
@@ -84,9 +84,14 @@ function StructureJsonCollector.collectData()
             structure.light = light
             structure.smoke = smoke
             structure.fire = fire
-
-            EventBroker.fireDataChanged("structures", "id", structure)
+            table.insert(dirtyStructures, structure)
         end
+
+    end
+
+    if #dirtyStructures > 0 then
+        -- Inform the event broker about all dirty structures
+        EventBroker.fireListChange("structures", "id", dirtyStructures)
     end
 
     return {}
