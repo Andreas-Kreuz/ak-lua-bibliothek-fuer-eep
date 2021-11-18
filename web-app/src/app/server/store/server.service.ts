@@ -10,6 +10,7 @@ export class ServerService {
   settingsDirOkReceived$: Observable<any>;
   settingsDirErrorReceived$: Observable<any>;
   urlsChanged$: Observable<any>;
+  counterUpdated$: Observable<any>;
 
   constructor(private socket: SocketService) {
     // Every socket NOTES event has it's own observable, will be used by ngrx effects
@@ -18,6 +19,7 @@ export class ServerService {
     this.socket.join(SettingsEvent.Room);
 
     this.urlsChanged$ = this.socket.listen(ServerStatusEvent.UrlsChanged);
+    this.counterUpdated$ = this.socket.listen(ServerStatusEvent.CounterUpdated);
     this.socket.join(ServerStatusEvent.Room);
   }
 

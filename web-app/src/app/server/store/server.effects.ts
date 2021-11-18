@@ -39,5 +39,14 @@ export class ServerEffects {
     )
   );
 
+  counterUpdate$ = createEffect(() =>
+    this.service.counterUpdated$.pipe(
+      switchMap((data: string) => {
+        const eventCounter = parseInt(data, 10);
+        return of(ServerAction.eventCounterChanged({ eventCounter }));
+      })
+    )
+  );
+
   constructor(private service: ServerService, private actions$: Actions) {}
 }

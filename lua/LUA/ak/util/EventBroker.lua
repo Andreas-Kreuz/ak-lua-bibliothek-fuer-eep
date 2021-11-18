@@ -18,6 +18,7 @@ local EventFileWriter = require "ak.io.EventFileWriter"
 ---@field printListener EventListener a default listeners to print out all events to the standard-out
 local EventBroker = {}
 local listeners = {}
+EventBroker.debug = {}
 
 ---@class ChangeType
 ---@field dataAdded string
@@ -34,13 +35,16 @@ EventBroker.eventType = {
 
 ---@type EventListener
 EventBroker.printListener = {fireEvent = function(jsonText) print(jsonText) end}
+local eventCounter = 0;
+function EventBroker.printEventCounter() if EventBroker.debug then print("EventCounter: " .. eventCounter) end end
 
 ---Inform the EventBroker of new events, which will then be given to the EventListeners
 ---@param eventType string
 ---@param payload string
 local function fire(eventType, payload)
     ---@type Event
-    local event = {type = eventType, payload = payload}
+    local event = {eventCounter = eventCounter, type = eventType, payload = payload}
+    eventCounter = eventCounter + 1
     local jsonText = json.encode(event)
 
     for l in pairs(listeners) do l.fireEvent(jsonText) end

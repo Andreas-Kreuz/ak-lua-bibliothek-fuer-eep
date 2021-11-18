@@ -5,6 +5,8 @@ import * as ServerAction from '../store/server.actions';
 import { Observable } from 'rxjs';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { EepDirDialogComponent } from './eep-dir-dialog.component';
+import { registerLocaleData } from '@angular/common';
+import localeFr from '@angular/common/locales/de';
 
 @Component({
   selector: 'app-server-status',
@@ -16,16 +18,19 @@ export class ServerStatusComponent implements OnInit {
   public eepDirOk$: Observable<boolean>;
   public urls$: Observable<string[]>;
   public urlsAvailable$: Observable<boolean>;
+  public eventCounter$: Observable<number>;
   error = true;
   dir = 'C:\\Trend\\EEP16';
 
   constructor(private store: Store<fromServer.State>, public dialog: MatDialog) {}
 
   ngOnInit() {
+    registerLocaleData(localeFr, 'de');
     this.eepDir$ = this.store.pipe(select(fromServer.eepDir$));
     this.eepDirOk$ = this.store.pipe(select(fromServer.eepDirOk$));
     this.urls$ = this.store.pipe(select(fromServer.urls$));
     this.urlsAvailable$ = this.store.pipe(select(fromServer.urlsAvailable$));
+    this.eventCounter$ = this.store.pipe(select(fromServer.selectEventCounter$));
     this.eepDirOk$.subscribe((ok) => {
       this.error = !ok;
     });

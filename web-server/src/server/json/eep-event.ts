@@ -1,6 +1,7 @@
 export default interface EepEvent {
   type: 'CompleteReset' | 'DataAdded' | 'DataChanged' | 'DataRemoved' | 'ListChanged';
   payload: undefined;
+  eventCounter: number;
 }
 
 export interface DataChangePayload<T> {

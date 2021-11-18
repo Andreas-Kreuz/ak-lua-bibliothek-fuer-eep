@@ -1,11 +1,13 @@
 import EepEvent, { DataChangePayload, ListChangePayload } from './eep-event';
 import JsonDataEffects from './json-data-effects';
 
-interface State {
+export interface State {
+  eventCounter: number;
   rooms: Record<string, Record<string, unknown>>;
 }
 
 const initialState: State = {
+  eventCounter: 0,
   rooms: {},
 };
 
@@ -19,6 +21,8 @@ export default class JsonDataStore {
   constructor(private effects: JsonDataEffects) {}
 
   onNewEvent(event: EepEvent) {
+    this.state.eventCounter = event.eventCounter;
+
     switch (event.type) {
       case 'CompleteReset':
         {
@@ -86,12 +90,16 @@ export default class JsonDataStore {
     room[key] = newElement;
   }
 
-  getNewStateDataCopy(): { [key: string]: unknown } {
-    const newMap: Record<string, unknown> = {};
+  getNewStateDataCopy(): State {
+    const copy: State = { ...this.state };
     for (const room of Object.keys(this.state.rooms)) {
-      newMap[room] = { ...this.state.rooms[room] };
+      copy.rooms[room] = { ...this.state.rooms[room] };
     }
-    return newMap;
+    return copy;
+  }
+
+  getEventCounter(): number {
+    return this.state.eventCounter;
   }
 
   calcChangedKeys(keysToCheck: string[], newJsonContent: { [key: string]: unknown }): string[] {

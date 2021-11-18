@@ -248,6 +248,7 @@ function ServerController.communicateWithServer(modulus)
         local values = RuntimeRegistry.getAll()
         if (values) then EventBroker.fireListChange("runtime", "id", values) end
         RuntimeRegistry.resetAll(runTimeGroupsToKeep)
+        EventBroker.printEventCounter()
     end
 
 end

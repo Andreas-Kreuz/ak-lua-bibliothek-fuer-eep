@@ -1,5 +1,10 @@
 import { createFeatureSelector, createReducer, createSelector, on } from '@ngrx/store';
-import { changeEepDirectoryFailure, changeEepDirectorySuccess, urlsChanged } from './server.actions';
+import {
+  changeEepDirectoryFailure,
+  changeEepDirectorySuccess,
+  eventCounterChanged,
+  urlsChanged,
+} from './server.actions';
 
 export const FEATURE_KEY = 'server';
 
@@ -7,12 +12,14 @@ export interface State {
   eepDir: string;
   eepDirOk: boolean;
   urls: string[];
+  eventCounter: number;
 }
 
 export const initialState: State = {
   eepDir: '-',
   eepDirOk: false,
   urls: [],
+  eventCounter: 0,
 };
 
 export const reducer = createReducer(
@@ -28,7 +35,11 @@ export const reducer = createReducer(
   on(urlsChanged, (state: State, { urls: urls }) => {
     console.log('URLs changed ' + urls);
     return { ...state, urls };
-  })
+  }),
+  on(eventCounterChanged, (state: State, { eventCounter }) =>
+    // console.log('URLs changed ' + eventCounter);
+    ({ ...state, eventCounter })
+  )
 );
 
 export const appState = createFeatureSelector('server');
@@ -36,3 +47,4 @@ export const eepDir$ = createSelector(appState, (state: State) => state.eepDir);
 export const eepDirOk$ = createSelector(appState, (state: State) => state.eepDirOk);
 export const urls$ = createSelector(appState, (state: State) => state.urls);
 export const urlsAvailable$ = createSelector(appState, (state: State) => state.urls.length > 0);
+export const selectEventCounter$ = createSelector(appState, (state: State) => state.eventCounter);

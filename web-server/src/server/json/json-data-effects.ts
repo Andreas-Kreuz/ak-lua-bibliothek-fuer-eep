@@ -3,13 +3,13 @@ import { Server, Socket } from 'socket.io';
 
 import { DataEvent, RoomEvent, ServerStatusEvent } from 'web-shared';
 import SocketService from '../clientio/socket-service';
-import JsonDataStore from './json-data-reducer';
+import JsonDataStore, { State } from './json-data-reducer';
 import EepEvent from './eep-event';
 
 export default class JsonDataEffects {
   [x: string]: unknown;
   private store = new JsonDataStore(this);
-  private refreshSettings = { pending: false };
+  private refreshSettings = { pending: false, inProgress: false };
 
   constructor(
     private app: express.Express,
@@ -42,13 +42,16 @@ export default class JsonDataEffects {
         socket.join(ServerStatusEvent.Room);
         if (this.debug) console.log('EMIT ' + ServerStatusEvent.UrlsChanged + ' to ' + socket.id);
         socket.emit(ServerStatusEvent.UrlsChanged, JSON.stringify(this.store.getUrls()));
+        socket.emit(ServerStatusEvent.CounterUpdated, JSON.stringify(this.store.getEventCounter()));
       }
     });
   }
 
   refreshStateIfRequired() {
-    if (this.refreshSettings.pending === true) {
+    if (this.refreshSettings.pending === true && this.refreshSettings.inProgress === false) {
+      this.refreshSettings.inProgress = true;
       this.jsonDataUpdated('{}');
+      this.refreshSettings.inProgress = false;
       this.refreshSettings.pending = false;
     }
   }
@@ -62,7 +65,8 @@ export default class JsonDataEffects {
   jsonDataUpdated(jsonString: string): void {
     // Parse the data
     //const jsonFileContent: { [key: string]: unknown } = JSON.parse(jsonString);
-    const eventStoreJson: { [key: string]: unknown } = { ...this.store.getNewStateDataCopy() };
+    const currentState: State = this.store.getNewStateDataCopy();
+    const eventStoreJson: { [key: string]: unknown } = { ...currentState.rooms };
 
     // Get those new keys from the Json Content
     const currentKeys = Object.keys(this.store.getJsonData());
@@ -94,6 +98,8 @@ export default class JsonDataEffects {
     if (keysToAdd.length > 0 || keysToRemove.length > 0) {
       this.io.to(ServerStatusEvent.Room).emit(ServerStatusEvent.UrlsChanged, JSON.stringify(this.store.getUrls()));
     }
+    // console.log('EventCounter: ', currentState.eventCounter);
+    this.io.to(ServerStatusEvent.Room).emit(ServerStatusEvent.CounterUpdated, currentState.eventCounter);
   }
 
   public onDataAdded(key: string, json: string): void {
