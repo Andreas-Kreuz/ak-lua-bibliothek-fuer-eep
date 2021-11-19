@@ -32,7 +32,7 @@ end
 
 function RuntimeRegistry.get(group) return runtimeData[group] or {id = group, count = 0, time = 0} end
 
-function RuntimeRegistry.getAll() return TableUtils.valuesOfDict(runtimeData) end
+function RuntimeRegistry.getAll() return runtimeData end
 
 function RuntimeRegistry.reset(group) runtimeData[group] = nil end
 
