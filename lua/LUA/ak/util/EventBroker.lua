@@ -1,5 +1,5 @@
+if AkDebugLoad then print("Loading ak.util.EventBroker ...") end
 local json = require "ak.third-party.json"
-if AkDebugLoad then print("Loading ak.util.Queue ...") end
 local EventFileWriter = require "ak.io.EventFileWriter"
 
 ---@class Event

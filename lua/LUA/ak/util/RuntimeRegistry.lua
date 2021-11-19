@@ -1,4 +1,5 @@
-local TableUtils = require "ak.util.TableUtils"
+if AkDebugLoad then print("Loading ak.util.RuntimeRegistry ...") end
+
 local RuntimeRegistry = {}
 
 local runtimeData = {}
