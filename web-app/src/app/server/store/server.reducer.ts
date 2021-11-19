@@ -32,14 +32,8 @@ export const reducer = createReducer(
     console.log('DIR ERROR ' + eepDir);
     return { ...state, eepDirOk: false, eepDir };
   }),
-  on(urlsChanged, (state: State, { urls: urls }) => {
-    console.log('URLs changed ' + urls);
-    return { ...state, urls };
-  }),
-  on(eventCounterChanged, (state: State, { eventCounter }) =>
-    // console.log('URLs changed ' + eventCounter);
-    ({ ...state, eventCounter })
-  )
+  on(urlsChanged, (state: State, { urls: urls }) => ({ ...state, urls })),
+  on(eventCounterChanged, (state: State, { eventCounter }) => ({ ...state, eventCounter }))
 );
 
 export const appState = createFeatureSelector('server');

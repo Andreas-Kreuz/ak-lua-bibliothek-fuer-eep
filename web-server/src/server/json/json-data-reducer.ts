@@ -11,19 +11,30 @@ const initialState: State = {
   rooms: {},
 };
 
+export interface ServerData {
+  roomToJson: Record<string, string>;
+  urls: string[];
+  urlJson: string;
+}
+
+const initialData: ServerData = {
+  roomToJson: {},
+  urls: [],
+  urlJson: JSON.stringify([]),
+};
+
 export default class JsonDataStore {
   private debug = false;
-  private currentJsonContent: { [key: string]: unknown } = {};
-  private urls: string[] = [];
+  private data = initialData;
   private state: State = initialState;
 
   constructor(private effects: JsonDataEffects) {}
 
   onNewEvent(event: EepEvent) {
-    this.state = this.updateStateOnEepEvent(event, this.state);
+    this.state = JsonDataStore.updateStateOnEepEvent(event, this.state);
   }
 
-  private updateStateOnEepEvent(event: EepEvent, state: State): State {
+  private static updateStateOnEepEvent(event: EepEvent, state: State): State {
     switch (event.type) {
       case 'CompleteReset':
         return {
@@ -81,45 +92,54 @@ export default class JsonDataStore {
     return this.state.eventCounter;
   }
 
-  calcChangedRooms(roomsToCheck: string[], newJsonContent: { [key: string]: unknown }): string[] {
-    const namesOfChangedRooms: string[] = [];
-    for (const key of roomsToCheck) {
-      const currentData = JSON.stringify(this.currentJsonContent[key]);
-      const newData = JSON.stringify(newJsonContent[key]);
-      if (currentData !== newData) {
-        namesOfChangedRooms.push(key);
-      }
-    }
+  setLastAnnouncedData(data: ServerData): void {
+    this.data = data;
+  }
 
+  getLastAnnouncedData() {
+    return this.data;
+  }
+
+  static calculateData(state: State): ServerData {
+    const data: ServerData = { roomToJson: {}, urls: [], urlJson: '' };
+    for (const roomName of Object.keys(state.rooms)) {
+      data.roomToJson[roomName] = JSON.stringify(state.rooms[roomName]);
+      data.urls.push(roomName);
+    }
+    data.urls.sort(JsonDataStore.alphabeticalSort);
+    data.urlJson = JSON.stringify(data.urls);
+    // TODO data.roomToJson['api-enties'] = JSON.stringify(data.urls);
+    return data;
+  }
+
+  static calcChangedRooms(roomsToCheck: string[], oldData: ServerData, data: ServerData): string[] {
+    const namesOfChangedRooms: string[] = [];
+    for (const room of roomsToCheck) {
+      if (oldData.roomToJson[room] !== data.roomToJson[room]) namesOfChangedRooms.push(room);
+    }
     return namesOfChangedRooms;
   }
 
-  hasJsonKey(key: string): boolean {
-    return Object.prototype.hasOwnProperty.call(this.currentJsonContent, key);
+  roomAvailable(roomName: string): boolean {
+    return Object.prototype.hasOwnProperty.call(this.data.roomToJson, roomName);
   }
 
-  getJsonData(): Record<string, unknown> {
-    return this.currentJsonContent;
+  getAllRoomNames(): string[] {
+    return Object.keys(this.data.roomToJson);
   }
 
-  setLastAnnouncedState(newJsonContent: Record<string, unknown>): void {
-    this.currentJsonContent = { ...newJsonContent };
+  getRoomJson(roomName: string): string {
+    return this.data.roomToJson[roomName];
   }
 
-  addUrls(urls: string[]): void {
-    this.urls = this.urls.concat(urls);
-    this.urls.sort(this.alphabeticalSort);
+  getUrlJson(): string {
+    return this.data.urlJson;
   }
-
-  removeUrls(urls: string[]): void {
-    this.urls = this.urls.filter((key) => urls.indexOf(key) < 0);
-  }
-
   getUrls(): string[] {
-    return this.urls;
+    return this.data.urls;
   }
 
-  private alphabeticalSort(a: string, b: string): number {
+  private static alphabeticalSort(a: string, b: string): number {
     if (a < b) {
       return -1;
     }

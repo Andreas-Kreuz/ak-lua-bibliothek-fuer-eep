@@ -3,7 +3,7 @@ import { Server, Socket } from 'socket.io';
 
 import { DataEvent, RoomEvent, ServerStatusEvent } from 'web-shared';
 import SocketService from '../clientio/socket-service';
-import JsonDataStore, { State } from './json-data-reducer';
+import JsonDataStore, { ServerData, State } from './json-data-reducer';
 import EepEvent from './eep-event';
 
 export default class JsonDataEffects {
@@ -26,14 +26,14 @@ export default class JsonDataEffects {
       if (this.debug) console.log('EMIT ' + ServerStatusEvent.Room + ' to interested parties');
 
       // Send data on join
-      const keys = Object.keys(this.store.getJsonData());
-      for (const key of keys) {
+      const roomNames = this.store.getAllRoomNames();
+      for (const roomName of roomNames) {
         // Send datatype events to datatype rooms
-        const room = DataEvent.roomOf(key);
+        const room = DataEvent.roomOf(roomName);
         if (room === rooms.room) {
-          const event = DataEvent.eventOf(key);
+          const event = DataEvent.eventOf(roomName);
           if (this.debug) console.log('EMIT ' + event + ' to ' + socket.id);
-          socket.emit(event, JSON.stringify(this.store.getJsonData()[key]));
+          socket.emit(event, this.store.getRoomJson(roomName));
         }
       }
 
@@ -41,7 +41,7 @@ export default class JsonDataEffects {
       if (rooms.room === ServerStatusEvent.Room) {
         socket.join(ServerStatusEvent.Room);
         if (this.debug) console.log('EMIT ' + ServerStatusEvent.UrlsChanged + ' to ' + socket.id);
-        socket.emit(ServerStatusEvent.UrlsChanged, JSON.stringify(this.store.getUrls()));
+        socket.emit(ServerStatusEvent.UrlsChanged, this.store.getUrlJson());
         socket.emit(ServerStatusEvent.CounterUpdated, JSON.stringify(this.store.getEventCounter()));
       }
     });
@@ -65,38 +65,34 @@ export default class JsonDataEffects {
   announceState(): void {
     // Parse the data
     const currentState: State = this.store.currentState();
-    const currentRoomData: { [key: string]: unknown } = { ...currentState.rooms };
+    const oldData: ServerData = this.store.getLastAnnouncedData();
+    const data: ServerData = JsonDataStore.calculateData(currentState);
+    this.store.setLastAnnouncedData(data);
 
     // Get those new room names from the Json Content
-    const oldRooms = Object.keys(this.store.getJsonData());
-    const newRooms = Object.keys(currentRoomData);
+    const oldRooms = Object.keys(oldData.roomToJson);
+    const newRooms = Object.keys(data.roomToJson);
 
     // Calculate room changes
     const addedRooms = newRooms.filter((el) => !oldRooms.includes(el));
     const removedRooms = oldRooms.filter((el) => !newRooms.includes(el));
     const roomsToCheck = newRooms.filter((el) => oldRooms.includes(el));
-    const modifiedRooms = this.store.calcChangedRooms(roomsToCheck, currentRoomData);
-    // console.log('Changed Rooms: ', modifiedRooms);
-
-    // Store data
-    this.store.setLastAnnouncedState(currentRoomData);
-    this.store.addUrls(addedRooms);
-    this.store.removeUrls(removedRooms);
+    const modifiedRooms = JsonDataStore.calcChangedRooms(roomsToCheck, oldData, data);
 
     // Inform the data listeners
-    for (const room of addedRooms) {
-      this.onRoomAdded(room, JSON.stringify(this.store.getJsonData()[room]));
+    for (const roomName of addedRooms) {
+      this.onRoomAdded(roomName, this.store.getRoomJson(roomName));
     }
-    for (const room of modifiedRooms) {
-      this.onRoomChanged(room, JSON.stringify(this.store.getJsonData()[room]));
+    for (const roomName of modifiedRooms) {
+      this.onRoomChanged(roomName, this.store.getRoomJson(roomName));
     }
-    for (const room of removedRooms) {
-      this.onRoomRemoved(room);
+    for (const roomName of removedRooms) {
+      this.onRoomRemoved(roomName);
     }
 
     // Inform about URL listeners
     if (addedRooms.length > 0 || removedRooms.length > 0) {
-      this.io.to(ServerStatusEvent.Room).emit(ServerStatusEvent.UrlsChanged, JSON.stringify(this.store.getUrls()));
+      this.io.to(ServerStatusEvent.Room).emit(ServerStatusEvent.UrlsChanged, this.store.getUrlJson());
     }
 
     // console.log('EventCounter: ', currentState.eventCounter);
@@ -113,7 +109,7 @@ export default class JsonDataEffects {
   }
 
   public onRoomRemoved(key: string): void {
-    this.io.to(ServerStatusEvent.Room).emit(ServerStatusEvent.UrlsChanged, JSON.stringify(this.store.getUrls()));
+    this.io.to(ServerStatusEvent.Room).emit(ServerStatusEvent.UrlsChanged, this.store.getUrlJson());
     this.io.to(DataEvent.roomOf(key)).emit(DataEvent.eventOf(key), '{}');
   }
 
@@ -125,9 +121,9 @@ export default class JsonDataEffects {
     });
   }
 
-  private getCurrentApiEntry(key: string) {
-    if (this.store.hasJsonKey(key)) {
-      return this.store.getJsonData()[key];
+  private getCurrentApiEntry(roomName: string) {
+    if (this.store.roomAvailable(roomName)) {
+      return this.store.getRoomJson(roomName);
     } else {
       return '';
     }
