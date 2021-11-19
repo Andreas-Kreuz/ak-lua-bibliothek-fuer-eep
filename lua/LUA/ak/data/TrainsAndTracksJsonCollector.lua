@@ -15,7 +15,12 @@ local trackTypes = {"auxiliary", "control", "road", "rail", "tram"}
 local trackCollectors = {}
 do for _, trackType in ipairs(trackTypes) do trackCollectors[trackType] = TrackCollector:new(trackType) end end
 
-local function initializeTracks() for _, trackType in ipairs(trackTypes) do trackCollectors[trackType]:initialize() end end
+local function initializeTracks()
+    for _, trackType in ipairs(trackTypes) do
+        -- initialize each track collector
+        trackCollectors[trackType]:initialize()
+    end
+end
 
 local function updateTracks()
     for _, trackType in ipairs(trackTypes) do
