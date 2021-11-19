@@ -15,104 +15,83 @@ export default class JsonDataStore {
   private debug = false;
   private currentJsonContent: { [key: string]: unknown } = {};
   private urls: string[] = [];
-  private dataRooms: string[] = [];
   private state: State = initialState;
 
   constructor(private effects: JsonDataEffects) {}
 
   onNewEvent(event: EepEvent) {
-    this.state.eventCounter = event.eventCounter;
+    this.state = this.updateStateOnEepEvent(event, this.state);
+  }
 
+  private updateStateOnEepEvent(event: EepEvent, state: State): State {
     switch (event.type) {
       case 'CompleteReset':
-        {
-          for (const roomName of Object.keys(this.state.rooms)) {
-            this.removeDataRoom(roomName);
-          }
-          this.state.rooms = {};
-        }
+        return {
+          ...state,
+          eventCounter: event.eventCounter,
+          rooms: {},
+        };
         break;
       case 'DataAdded':
-      case 'DataChanged':
-        {
-          const payload: DataChangePayload<unknown> = event.payload;
-          const room = this.createOrReturnRoom(payload.room);
-          this.createOrUpdateElement(room, payload.keyId, payload.element);
-          // const keyToBeUpdated = payload.element[payload.keyId];
-          // console.log(payload.room, ' updateKey ', keyToBeUpdated);
+      case 'DataChanged': {
+        const payload: DataChangePayload<unknown> = event.payload;
+        const roomName = payload.room;
+        const key = payload.element[payload.keyId];
+        return {
+          ...state,
+          eventCounter: event.eventCounter,
+          rooms: { ...state.rooms, [roomName]: { ...state.rooms[roomName], [key]: payload.element } },
+        };
+      }
+      case 'DataRemoved': {
+        const payload: DataChangePayload<unknown> = event.payload;
+        const roomName = payload.room;
+        const key = payload.element[payload.keyId];
+        return {
+          ...state,
+          eventCounter: event.eventCounter,
+          rooms: { ...state.rooms, [roomName]: { ...state.rooms[roomName], [key]: undefined } },
+        };
+      }
+      case 'ListChanged': {
+        const payload: ListChangePayload<unknown> = event.payload;
+        const roomName = payload.room;
+        const newEntries: Record<string, unknown> = {};
+        for (const element of Object.values(payload.list)) {
+          newEntries[element[payload.keyId]] = element;
         }
-        break;
-      case 'DataRemoved':
-        {
-          const payload: DataChangePayload<unknown> = event.payload;
-          const room: Record<string, unknown> = this.createOrReturnRoom(payload.room);
-          const keyToBeRemoved = payload.element[payload.keyId];
-          room[keyToBeRemoved] = undefined;
-        }
-        break;
-      case 'ListChanged':
-        {
-          if (event.payload) {
-            // console.log(event);
-            const payload: ListChangePayload<unknown> = event.payload;
-            const room: Record<string, unknown> = this.createOrReturnRoom(payload.room);
-            for (const element of Object.values(payload.list)) {
-              room[element[payload.keyId]] = element;
-            }
-          }
-        }
-        break;
+        return {
+          ...state,
+          eventCounter: event.eventCounter,
+          rooms: { ...state.rooms, [roomName]: { ...state.rooms[roomName], ...newEntries } },
+        };
+      }
       default:
         console.warn('NO SUCH event.type: ' + event.type);
+        return { ...state, eventCounter: event.eventCounter };
         break;
     }
   }
 
-  createOrReturnRoom(roomName: string): Record<string, unknown> {
-    const oldRoom: Record<string, unknown> = this.state.rooms[roomName];
-    if (oldRoom) {
-      return oldRoom;
-    } else {
-      const room: Record<string, unknown> = {};
-      this.state.rooms[roomName] = room;
-      return room;
-    }
-  }
-
-  createOrUpdateElement<T, K extends keyof T>(room: Record<string, T>, keyId: K, element: T): void {
-    const key = element[keyId as K] as unknown as string;
-    if (this.debug) console.log(keyId, key);
-    let oldElement: T = room[key];
-    if (!oldElement) {
-      oldElement = {} as T;
-    }
-    const newElement = { ...oldElement, ...element } as T;
-    room[key] = newElement;
-  }
-
-  getNewStateDataCopy(): State {
-    const copy: State = { ...this.state };
-    for (const room of Object.keys(this.state.rooms)) {
-      copy.rooms[room] = { ...this.state.rooms[room] };
-    }
-    return copy;
+  currentState(): State {
+    return this.state;
   }
 
   getEventCounter(): number {
     return this.state.eventCounter;
   }
 
-  calcChangedKeys(keysToCheck: string[], newJsonContent: { [key: string]: unknown }): string[] {
-    const changedKeys: string[] = [];
-    for (const key of keysToCheck) {
+  calcChangedRooms(roomsToCheck: string[], newJsonContent: { [key: string]: unknown }): string[] {
+    const namesOfChangedRooms: string[] = [];
+    for (const key of roomsToCheck) {
       const currentData = JSON.stringify(this.currentJsonContent[key]);
       const newData = JSON.stringify(newJsonContent[key]);
       if (currentData !== newData) {
-        changedKeys.push(key);
+        namesOfChangedRooms.push(key);
       }
     }
 
-    return changedKeys;
+    return namesOfChangedRooms;
   }
 
   hasJsonKey(key: string): boolean {
@@ -123,7 +102,7 @@ export default class JsonDataStore {
     return this.currentJsonContent;
   }
 
-  setJsonData(newJsonContent: Record<string, unknown>): void {
+  setLastAnnouncedState(newJsonContent: Record<string, unknown>): void {
     this.currentJsonContent = { ...newJsonContent };
   }
 
@@ -138,22 +117,6 @@ export default class JsonDataStore {
 
   getUrls(): string[] {
     return this.urls;
-  }
-
-  addDataRoom(dataType: string): void {
-    this.dataRooms.push(dataType);
-    this.dataRooms.sort(this.alphabeticalSort);
-  }
-
-  removeDataRoom(dataType: string): void {
-    const index = this.dataRooms.indexOf(dataType);
-    if (index >= 0) {
-      this.dataRooms.splice(index, 1);
-    }
-  }
-
-  getDataRooms(): string[] {
-    return this.dataRooms;
   }
 
   private alphabeticalSort(a: string, b: string): number {

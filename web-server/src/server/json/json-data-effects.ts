@@ -50,7 +50,7 @@ export default class JsonDataEffects {
   refreshStateIfRequired() {
     if (this.refreshSettings.pending === true && this.refreshSettings.inProgress === false) {
       this.refreshSettings.inProgress = true;
-      this.jsonDataUpdated('{}');
+      this.announceState('{}');
       this.refreshSettings.inProgress = false;
       this.refreshSettings.pending = false;
     }
@@ -62,58 +62,57 @@ export default class JsonDataEffects {
     this.refreshSettings.pending = true;
   }
 
-  jsonDataUpdated(jsonString: string): void {
+  announceState(jsonString: string): void {
     // Parse the data
-    //const jsonFileContent: { [key: string]: unknown } = JSON.parse(jsonString);
-    const currentState: State = this.store.getNewStateDataCopy();
-    const eventStoreJson: { [key: string]: unknown } = { ...currentState.rooms };
+    const currentState: State = this.store.currentState();
+    const currentRoomData: { [key: string]: unknown } = { ...currentState.rooms };
 
-    // Get those new keys from the Json Content
-    const currentKeys = Object.keys(this.store.getJsonData());
-    const newJsonKeys = Object.keys(eventStoreJson);
-    const keysToAdd = newJsonKeys.filter((el) => !currentKeys.includes(el));
-    const keysToCheck = newJsonKeys.filter((el) => currentKeys.includes(el));
-    const keysToRemove = currentKeys.filter((el) => !newJsonKeys.includes(el));
+    // Get those new room names from the Json Content
+    const oldRooms = Object.keys(this.store.getJsonData());
+    const newRooms = Object.keys(currentRoomData);
 
-    // Calculate the changes
-    const changedKeys = this.store.calcChangedKeys(keysToCheck, eventStoreJson);
+    // Calculate room changes
+    const addedRooms = newRooms.filter((el) => !oldRooms.includes(el));
+    const removedRooms = oldRooms.filter((el) => !newRooms.includes(el));
+    const roomsToCheck = newRooms.filter((el) => oldRooms.includes(el));
+    const modifiedRooms = this.store.calcChangedRooms(roomsToCheck, currentRoomData);
+    // console.log('Changed Rooms: ', modifiedRooms);
 
     // Store data
-    this.store.setJsonData(eventStoreJson);
-    this.store.addUrls(keysToAdd);
-    this.store.removeUrls(keysToRemove);
+    this.store.setLastAnnouncedState(currentRoomData);
+    this.store.addUrls(addedRooms);
+    this.store.removeUrls(removedRooms);
 
     // Inform the data listeners
-    for (const key of keysToAdd) {
-      this.onDataAdded(key, JSON.stringify(this.store.getJsonData()[key]));
+    for (const room of addedRooms) {
+      this.onRoomAdded(room, JSON.stringify(this.store.getJsonData()[room]));
     }
-    for (const key of changedKeys) {
-      this.onDataChanged(key, JSON.stringify(this.store.getJsonData()[key]));
+    for (const room of modifiedRooms) {
+      this.onRoomChanged(room, JSON.stringify(this.store.getJsonData()[room]));
     }
-    for (const key of keysToRemove) {
-      this.onDataRemoved(key);
+    for (const room of removedRooms) {
+      this.onRoomRemoved(room);
     }
 
     // Inform about URL listeners
-    if (keysToAdd.length > 0 || keysToRemove.length > 0) {
+    if (addedRooms.length > 0 || removedRooms.length > 0) {
       this.io.to(ServerStatusEvent.Room).emit(ServerStatusEvent.UrlsChanged, JSON.stringify(this.store.getUrls()));
     }
+
     // console.log('EventCounter: ', currentState.eventCounter);
     this.io.to(ServerStatusEvent.Room).emit(ServerStatusEvent.CounterUpdated, currentState.eventCounter);
   }
 
-  public onDataAdded(key: string, json: string): void {
-    this.store.addDataRoom(DataEvent.roomOf(key));
+  public onRoomAdded(key: string, json: string): void {
     this.registerApiUrls(key);
     this.io.to(DataEvent.roomOf(key)).emit(DataEvent.eventOf(key), json);
   }
 
-  public onDataChanged(key: string, json: string): void {
+  public onRoomChanged(key: string, json: string): void {
     this.io.to(DataEvent.roomOf(key)).emit(DataEvent.eventOf(key), json);
   }
 
-  public onDataRemoved(key: string): void {
-    this.store.removeDataRoom(DataEvent.roomOf(key));
+  public onRoomRemoved(key: string): void {
     this.io.to(ServerStatusEvent.Room).emit(ServerStatusEvent.UrlsChanged, JSON.stringify(this.store.getUrls()));
     this.io.to(DataEvent.roomOf(key)).emit(DataEvent.eventOf(key), '{}');
   }
