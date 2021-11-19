@@ -11,7 +11,7 @@ local os = require("os")
 local MAX_TRACKS = 50000
 
 ---@class Track
----@field trackId number
+---@field id number
 
 local registerFunction = {
     auxiliary = EEPRegisterAuxiliaryTrack,
