@@ -4,21 +4,19 @@ import * as fromGenericData from '../store/generic-data.reducers';
 import * as fromCore from '../../../core/store/core.reducers';
 import * as fromRoot from '../../../app.reducers';
 import { Observable } from 'rxjs';
-import { DataType } from '../model/data-type';
+import { DataType } from 'web-shared';
 import { GenericDataService } from '../store/generic-data.service';
 
 @Component({
   selector: 'app-generic-data-overview',
   templateUrl: './generic-data-overview.component.html',
-  styleUrls: ['./generic-data-overview.component.css']
+  styleUrls: ['./generic-data-overview.component.css'],
 })
 export class GenericDataOverviewComponent implements OnInit, OnDestroy {
   hostName$: Observable<string>;
   dataTypes$: Observable<DataType[]>;
 
-  constructor(private genericDataService: GenericDataService,
-              private store: Store<fromRoot.State>) {
-  }
+  constructor(private genericDataService: GenericDataService, private store: Store<fromRoot.State>) {}
 
   ngOnInit() {
     this.genericDataService.connect();
