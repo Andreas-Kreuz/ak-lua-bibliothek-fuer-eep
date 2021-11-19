@@ -8,13 +8,13 @@ import TimeDesc from '../store/time-desc';
   styleUrls: ['./statistics-card.component.css'],
 })
 export class StatisticsCardComponent implements OnDestroy, OnInit {
+  @Input() title = 'Bitte warten ...';
+  @Input() list$: Observable<TimeDesc[][]>;
   max = 100;
   ids = [];
   count = Array(10)
     .fill(0)
     .map((x, i) => i);
-  @Input() title = 'Bitte warten ...';
-  @Input() list$: Observable<TimeDesc[][]>;
   listSub: Subscription;
 
   constructor() {}
@@ -58,7 +58,6 @@ export class StatisticsCardComponent implements OnDestroy, OnInit {
 
   onUpdate(list: TimeDesc[][]) {
     if (list && list[0]) {
-      console.log(list);
       this.max = this.scale(list);
       this.ids = list[0].map((a) => a.id);
     }
@@ -91,8 +90,6 @@ export class StatisticsCardComponent implements OnDestroy, OnInit {
     }
     // maximum shall be 80 % of the scale
     return (i / this.max) * 80;
-
-    //return (this.max * i) / 100;
   }
 
   startXOf(index: number, list: TimeDesc[]) {
