@@ -1,6 +1,7 @@
 local EventBroker = require "ak.util.EventBroker"
 local RollingStock = require "ak.train.RollingStock"
 local RollingStockRegistry = {}
+---@type table<string,RollingStock>
 local allRollingStock = {}
 
 ---Creates a train object for the given train name, the train must exist
@@ -39,7 +40,7 @@ function RollingStockRegistry.fireChangeRollingStockEvent()
     local modifiedRollingStock = {}
     for _, rs in pairs(allRollingStock) do
         if rs.valuesUpdated then
-            modifiedRollingStock[rs.id] = rs
+            modifiedRollingStock[rs.id] = rs:toJsonStatic()
             rs.valuesUpdated = false
         end
     end

@@ -50,7 +50,7 @@ function TrainRegistry.fireChangeTrainsEvent()
     local modifiedTrains = {}
     for _, train in pairs(allTrains) do
         if train.valuesUpdated then
-            modifiedTrains[train.id] = train
+            modifiedTrains[train.id] = train:toJsonStatic()
             train.valuesUpdated = false
         end
     end

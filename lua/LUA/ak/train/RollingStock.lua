@@ -427,6 +427,7 @@ function RollingStock:toJsonStatic()
         trackDistance = self:getTrackDistance(),
         trackDirection = self:getTrackDirection(),
         trackSystem = self:getTrackSystem(),
+        trackType = self:getTrackType(),
         posX = self:getX(),
         posY = self:getY(),
         posZ = self:getZ(),
