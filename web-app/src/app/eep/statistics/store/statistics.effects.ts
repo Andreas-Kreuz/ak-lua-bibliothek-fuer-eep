@@ -33,7 +33,7 @@ export class StatisticsEffects {
             if (record[collectorName]) {
               times.push(new TimeDesc(collector, record[collectorName].time));
             } else {
-              console.warn('No such collector: ' + collectorName, record[collectorName]);
+              times.push(new TimeDesc(collector, 0));
             }
           }
           parsedTimes[suffix] = times;
