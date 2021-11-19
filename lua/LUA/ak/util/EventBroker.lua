@@ -40,13 +40,16 @@ function EventBroker.printEventCounter() if EventBroker.debug then print("EventC
 
 ---Inform the EventBroker of new events, which will then be given to the EventListeners
 ---@param eventType string
----@param payload string
+---@param payload table
 local function fire(eventType, payload)
     ---@type Event
     local event = {eventCounter = eventCounter, type = eventType, payload = payload}
     eventCounter = eventCounter + 1
+
+    -- Pack the event into JSON
     local jsonText = json.encode(event)
 
+    -- Fire the event
     for l in pairs(listeners) do l.fireEvent(jsonText) end
 end
 
