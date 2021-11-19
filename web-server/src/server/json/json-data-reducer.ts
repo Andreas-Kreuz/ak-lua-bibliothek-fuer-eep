@@ -1,5 +1,6 @@
 import EepEvent, { DataChangePayload, ListChangePayload } from './eep-event';
 import JsonDataEffects from './json-data-effects';
+import { DataType } from 'web-shared';
 
 export interface State {
   eventCounter: number;
@@ -101,14 +102,37 @@ export default class JsonDataStore {
   }
 
   static calculateData(state: State): ServerData {
+    const urlPrefix = '/api/v1/';
     const data: ServerData = { roomToJson: {}, urls: [], urlJson: '' };
+    const dataTypes: DataType[] = [];
     for (const roomName of Object.keys(state.rooms)) {
+      // Update room data
       data.roomToJson[roomName] = JSON.stringify(state.rooms[roomName]);
-      data.urls.push(roomName);
+
+      // Update URL data
+      dataTypes.push({
+        name: roomName,
+        checksum: state.eventCounter.toString(),
+        url: urlPrefix + roomName,
+        count: Object.keys(state.rooms[roomName]).length,
+        updated: true,
+      });
     }
-    data.urls.sort(JsonDataStore.alphabeticalSort);
+
+    // Add 'api-entries' Room
+    dataTypes.push({
+      name: 'api-entries',
+      checksum: state.eventCounter.toString(),
+      url: urlPrefix + 'api-entries',
+      count: dataTypes.length + 1,
+      updated: true,
+    });
+    data.roomToJson['api-entries'] = JSON.stringify(dataTypes);
+
+    // Add URLs
+    data.urls = dataTypes.map((dt) => dt.name).sort(JsonDataStore.alphabeticalSort);
     data.urlJson = JSON.stringify(data.urls);
-    // TODO data.roomToJson['api-enties'] = JSON.stringify(data.urls);
+
     return data;
   }
 
@@ -128,8 +152,12 @@ export default class JsonDataStore {
     return Object.keys(this.data.roomToJson);
   }
 
-  getRoomJson(roomName: string): string {
+  getRoomJsonString(roomName: string): string {
     return this.data.roomToJson[roomName];
+  }
+
+  getRoomJson(roomName: string): unknown {
+    return this.state.rooms[roomName];
   }
 
   getUrlJson(): string {

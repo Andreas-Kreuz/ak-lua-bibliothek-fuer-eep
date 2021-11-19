@@ -33,7 +33,7 @@ export default class JsonDataEffects {
         if (room === rooms.room) {
           const event = DataEvent.eventOf(roomName);
           if (this.debug) console.log('EMIT ' + event + ' to ' + socket.id);
-          socket.emit(event, this.store.getRoomJson(roomName));
+          socket.emit(event, this.store.getRoomJsonString(roomName));
         }
       }
 
@@ -81,10 +81,10 @@ export default class JsonDataEffects {
 
     // Inform the data listeners
     for (const roomName of addedRooms) {
-      this.onRoomAdded(roomName, this.store.getRoomJson(roomName));
+      this.onRoomAdded(roomName, this.store.getRoomJsonString(roomName));
     }
     for (const roomName of modifiedRooms) {
-      this.onRoomChanged(roomName, this.store.getRoomJson(roomName));
+      this.onRoomChanged(roomName, this.store.getRoomJsonString(roomName));
     }
     for (const roomName of removedRooms) {
       this.onRoomRemoved(roomName);

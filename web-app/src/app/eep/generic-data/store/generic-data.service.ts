@@ -20,7 +20,8 @@ export class GenericDataService {
   connect() {
     this.wsSubscription = this.socket.listen(DataEvent.eventOf('api-entries')).subscribe(
       (data) => {
-        const dataTypes: DataType[] = JSON.parse(data);
+        const record = JSON.parse(data);
+        const dataTypes: DataType[] = Object.values(record);
         dataTypes.sort((a: DataType, b: DataType) => a.name.localeCompare(b.name));
         this.store.dispatch(new fromGenericData.SetDataTypes(dataTypes));
       },
