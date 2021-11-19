@@ -2,6 +2,7 @@
 /web-app/dist
 /web-app/tmp
 /web-app/out-tsc
+/web-app/.angular
 
 # dependencies
 /web-app/node_modules
