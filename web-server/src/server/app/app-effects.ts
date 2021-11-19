@@ -135,7 +135,7 @@ export default class AppEffects {
     // Init JsonHandler
     eepService.setOnJsonContentChanged((jsonString: string, lastJsonUpdate: number) => {
       performance.mark('json-parsing:before');
-      this.jsonDataEffects.announceState(jsonString); // The real stuff
+      // this.jsonDataEffects.announceState(); // The real stuff
       performance.mark('json-parsing:after');
       performance.measure(ServerStatisticsService.TimeForJsonParsing, 'json-parsing:before', 'json-parsing:after');
       this.statistics.setLastEepTime(lastJsonUpdate);

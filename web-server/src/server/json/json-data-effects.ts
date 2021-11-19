@@ -50,7 +50,7 @@ export default class JsonDataEffects {
   refreshStateIfRequired() {
     if (this.refreshSettings.pending === true && this.refreshSettings.inProgress === false) {
       this.refreshSettings.inProgress = true;
-      this.announceState('{}');
+      this.announceState();
       this.refreshSettings.inProgress = false;
       this.refreshSettings.pending = false;
     }
@@ -62,7 +62,7 @@ export default class JsonDataEffects {
     this.refreshSettings.pending = true;
   }
 
-  announceState(jsonString: string): void {
+  announceState(): void {
     // Parse the data
     const currentState: State = this.store.currentState();
     const currentRoomData: { [key: string]: unknown } = { ...currentState.rooms };
