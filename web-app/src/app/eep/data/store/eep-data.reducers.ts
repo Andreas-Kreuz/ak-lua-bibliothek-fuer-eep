@@ -30,7 +30,7 @@ export const reducer = (state: State = initialState, action: fromEepData.EepData
   }
 };
 
-export const eepDataState$ = createFeatureSelector('eepData');
+export const eepDataState$ = createFeatureSelector<State>('eepData');
 
 export const eepData$ = createSelector(eepDataState$, (state: State) => state.eepData);
 

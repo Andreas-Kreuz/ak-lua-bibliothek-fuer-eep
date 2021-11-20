@@ -27,7 +27,7 @@ export class GenericDataComponent implements OnInit {
 
     console.log('Dispatch fetch data', snapshot.params);
     this.store.dispatch(
-      new fromGenericActions.FetchData({
+      fromGenericActions.fetchData({
         name,
         hostName,
         path,

@@ -39,7 +39,7 @@ const intersectionsReducer = createReducer(
 
 export const reducer = (state: State | undefined, action: Action) => intersectionsReducer(state, action);
 
-export const intersectionsState$ = createFeatureSelector('intersection');
+export const intersectionsState$ = createFeatureSelector<State>('intersection');
 
 export const intersections$ = createSelector(intersectionsState$, (state: State) => state.intersections);
 

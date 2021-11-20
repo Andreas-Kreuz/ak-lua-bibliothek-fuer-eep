@@ -42,7 +42,7 @@ const statisticsReducer = createReducer(
   })
 );
 
-export const statisticsState$ = createFeatureSelector('statistics');
+export const statisticsState$ = createFeatureSelector<State>('statistics');
 export const collectorInitStats$ = createSelector(statisticsState$, (state: State) => state.collectorInitStats.times);
 export const collectorRefreshStats$ = createSelector(statisticsState$, (state: State) =>
   state.collectorRefreshStats.map((l) => l.times)

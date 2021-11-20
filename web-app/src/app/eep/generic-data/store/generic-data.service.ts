@@ -23,7 +23,7 @@ export class GenericDataService {
         const record = JSON.parse(data);
         const dataTypes: DataType[] = Object.values(record);
         dataTypes.sort((a: DataType, b: DataType) => a.name.localeCompare(b.name));
-        this.store.dispatch(new fromGenericData.SetDataTypes(dataTypes));
+        this.store.dispatch(fromGenericData.setDataTypes({ dataTypes }));
       },
       (error) => {
         console.log(error);

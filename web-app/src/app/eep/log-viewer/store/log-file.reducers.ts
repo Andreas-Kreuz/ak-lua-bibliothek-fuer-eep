@@ -36,7 +36,7 @@ const logReducer = createReducer(
 
 export const reducer = (state: State | undefined, action: Action) => logReducer(state, action);
 
-export const logfileState$ = createFeatureSelector('logViewer');
+export const logfileState$ = createFeatureSelector<State>('logViewer');
 
 export const linesAsString$ = createSelector(logfileState$, (state: State) => state.linesAsString);
 export const lines$ = createSelector(logfileState$, (state: State) => state.lines);

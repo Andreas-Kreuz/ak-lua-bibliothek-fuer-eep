@@ -25,12 +25,10 @@ export class ServerStatusComponent implements OnInit {
   constructor(private store: Store<fromServer.State>, public dialog: MatDialog) {}
 
   ngOnInit() {
-    registerLocaleData(localeFr, 'de');
-    this.eepDir$ = this.store.pipe(select(fromServer.eepDir$));
-    this.eepDirOk$ = this.store.pipe(select(fromServer.eepDirOk$));
-    this.urls$ = this.store.pipe(select(fromServer.urls$));
-    this.urlsAvailable$ = this.store.pipe(select(fromServer.urlsAvailable$));
-    this.eventCounter$ = this.store.pipe(select(fromServer.selectEventCounter$));
+    this.eepDir$ = this.store.select(fromServer.eepDir$);
+    this.eepDirOk$ = this.store.select(fromServer.eepDirOk$);
+    this.urls$ = this.store.select(fromServer.urls$);
+    this.urlsAvailable$ = this.store.select(fromServer.urlsAvailable$);
     this.eepDirOk$.subscribe((ok) => {
       this.error = !ok;
     });

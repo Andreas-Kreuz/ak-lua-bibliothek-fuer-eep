@@ -64,7 +64,7 @@ const trainReducer = createReducer(
 
 export const reducer = (state: State | undefined, action: Action) => trainReducer(state, action);
 
-export const trainsState$ = createFeatureSelector('train');
+export const trainsState$ = createFeatureSelector<State>('train');
 
 export const selectedTrainName = createSelector(trainsState$, (state: State) => state.selectedTrainName);
 export const selectTrainType = createSelector(trainsState$, (state: State) => state.trainType);

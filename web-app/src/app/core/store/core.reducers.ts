@@ -39,7 +39,7 @@ const coreReducer = createReducer(
 
 export const reducer = (state: State | undefined, action: Action) => coreReducer(state, action);
 
-export const appState = createFeatureSelector('core');
+export const appState = createFeatureSelector<State>('core');
 
 export const getConnectionEstablished = createSelector(appState, (state: State) => state.connectionEstablished);
 

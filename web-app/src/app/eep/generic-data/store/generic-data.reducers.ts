@@ -1,5 +1,5 @@
 import * as fromGenericData from './generic-data.actions';
-import { createFeatureSelector, createSelector } from '@ngrx/store';
+import { createFeatureSelector, createReducer, createSelector, on } from '@ngrx/store';
 import { DataType } from 'web-shared';
 
 export interface State {
@@ -12,32 +12,16 @@ const initialState: State = {
   dataTypes: [],
 };
 
-export const reducer = (state: State = initialState, action: fromGenericData.GenericDataActions) => {
-  switch (action.type) {
-    case fromGenericData.SET_DATA:
-      const type = action.payload.type;
-      const values = action.payload.values;
-      const newData = {
-        ...state.data,
-        [type]: values,
-      };
-      const newState = {
-        ...state,
-        data: newData,
-      };
+export const reducer = createReducer(
+  initialState,
+  on(fromGenericData.updateData, (state, { type, values }) => ({
+    ...state,
+    data: { ...state.data, [type]: values },
+  })),
+  on(fromGenericData.setDataTypes, (state, { dataTypes }) => ({ ...state, ...dataTypes }))
+);
 
-      return newState;
-    case fromGenericData.SET_DATA_TYPES:
-      return {
-        ...state,
-        dataTypes: action.payload,
-      };
-    default:
-      return state;
-  }
-};
-
-export const appState = createFeatureSelector('genericData');
+export const appState = createFeatureSelector<State>('genericData');
 
 export const selectedDataStructure = (dataName: string) =>
   createSelector(appState, (state: State) => {
