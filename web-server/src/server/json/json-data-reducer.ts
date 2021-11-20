@@ -35,6 +35,14 @@ export default class JsonDataStore {
     this.state = JsonDataStore.updateStateOnEepEvent(event, this.state);
   }
 
+  init(previousState: State) {
+    if (previousState && previousState.eventCounter && previousState.rooms) {
+      this.state = previousState;
+    } else {
+      this.state = initialState;
+    }
+  }
+
   private static updateStateOnEepEvent(event: EepEvent, state: State): State {
     switch (event.type) {
       case 'CompleteReset':
@@ -85,7 +93,7 @@ export default class JsonDataStore {
     }
   }
 
-  currentState(): State {
+  currentState(): Readonly<State> {
     return this.state;
   }
 

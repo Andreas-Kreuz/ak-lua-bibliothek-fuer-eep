@@ -1,5 +1,4 @@
 if AkDebugLoad then print("Loading ak.util.EventBroker ...") end
-local json = require "ak.third-party.json"
 local EventFileWriter = require "ak.io.EventFileWriter"
 
 ---@class Event
@@ -34,7 +33,11 @@ EventBroker.eventType = {
 }
 
 ---@type EventListener
-EventBroker.printListener = {fireEvent = function(jsonText) print(jsonText) end}
+EventBroker.printListener = {
+    fireEvent = function(event)
+        print(event.eventCounter .. ": " .. event.type .. " .. " .. tostring(event.payload))
+    end
+}
 local eventCounter = 0;
 function EventBroker.printEventCounter() if EventBroker.debug then print("EventCounter: " .. eventCounter) end end
 
@@ -42,15 +45,12 @@ function EventBroker.printEventCounter() if EventBroker.debug then print("EventC
 ---@param eventType string
 ---@param payload table
 local function fire(eventType, payload)
+    eventCounter = eventCounter + 1
     ---@type Event
     local event = {eventCounter = eventCounter, type = eventType, payload = payload}
-    eventCounter = eventCounter + 1
-
-    -- Pack the event into JSON
-    local jsonText = json.encode(event)
 
     -- Fire the event
-    for l in pairs(listeners) do l.fireEvent(jsonText) end
+    for l in pairs(listeners) do l.fireEvent(event) end
 end
 
 ---Fire a data change event

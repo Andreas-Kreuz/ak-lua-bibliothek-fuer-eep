@@ -5,20 +5,25 @@ import { DataEvent, RoomEvent, ServerStatusEvent } from 'web-shared';
 import SocketService from '../clientio/socket-service';
 import JsonDataStore, { ServerData, State } from './json-data-reducer';
 import EepEvent from './eep-event';
+import { CacheService } from '../eep/cache-service';
 
 export default class JsonDataEffects {
-  [x: string]: unknown;
+  private debug = false;
   private store = new JsonDataStore(this);
-  private refreshSettings = { pending: false, inProgress: false };
+  private refreshSettings = { pending: true, inProgress: false };
 
   constructor(
     private app: express.Express,
     private router: express.Router,
     private io: Server,
-    private socketService: SocketService
+    private socketService: SocketService,
+    private cacheService: CacheService
   ) {
+    this.store.init(this.cacheService.readCache());
+    console.log('STORE INITIALIZED FROM ' + (this.store.currentState().eventCounter + 1) + ' events');
+
     this.socketService.addOnSocketConnectedCallback((socket: Socket) => this.socketConnected(socket));
-    setInterval(() => this.refreshStateIfRequired(), 200);
+    setInterval(() => this.refreshStateIfRequired(), 50);
   }
 
   private socketConnected(socket: Socket) {
@@ -57,9 +62,26 @@ export default class JsonDataEffects {
   }
 
   onNewEventLine(jsonString: string) {
-    const event: EepEvent = JSON.parse(jsonString);
-    this.store.onNewEvent(event);
-    this.refreshSettings.pending = true;
+    try {
+      const event: EepEvent = JSON.parse(jsonString);
+      const expectedEventNr = this.store.currentState().eventCounter + 1;
+      const receivedEventNr = event.eventCounter;
+
+      // Fire this event only if it is expected or a complete reset
+      if (receivedEventNr == 1 || expectedEventNr == receivedEventNr || event.type === 'CompleteReset') {
+        this.store.onNewEvent(event);
+        this.refreshSettings.pending = true;
+      } else if (receivedEventNr > expectedEventNr) {
+        console.error(
+          'STATE OUT OF SYNC: Expected next event: ' + expectedEventNr + ' / Received Event: ' + receivedEventNr
+        );
+      } else {
+        console.log('STATE expected: ' + expectedEventNr + ' / State received: ' + receivedEventNr);
+      }
+    } catch (e) {
+      console.error(jsonString.length, jsonString.substr(0, 20));
+      console.error(e);
+    }
   }
 
   announceState(): void {
@@ -67,6 +89,7 @@ export default class JsonDataEffects {
     const currentState: State = this.store.currentState();
     const oldData: ServerData = this.store.getLastAnnouncedData();
     const data: ServerData = JsonDataStore.calculateData(currentState);
+    this.cacheService.writeCache(currentState as undefined);
     this.store.setLastAnnouncedData(data);
 
     // Get those new room names from the Json Content
@@ -99,16 +122,16 @@ export default class JsonDataEffects {
     this.io.to(ServerStatusEvent.Room).emit(ServerStatusEvent.CounterUpdated, currentState.eventCounter);
   }
 
-  public onRoomAdded(key: string, json: string): void {
+  private onRoomAdded(key: string, json: string): void {
     this.registerApiUrls(key);
     this.io.to(DataEvent.roomOf(key)).emit(DataEvent.eventOf(key), json);
   }
 
-  public onRoomChanged(key: string, json: string): void {
+  private onRoomChanged(key: string, json: string): void {
     this.io.to(DataEvent.roomOf(key)).emit(DataEvent.eventOf(key), json);
   }
 
-  public onRoomRemoved(key: string): void {
+  private onRoomRemoved(key: string): void {
     this.io.to(ServerStatusEvent.Room).emit(ServerStatusEvent.UrlsChanged, this.store.getUrlJson());
     this.io.to(DataEvent.roomOf(key)).emit(DataEvent.eventOf(key), '{}');
   }

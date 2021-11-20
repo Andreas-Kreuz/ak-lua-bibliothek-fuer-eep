@@ -8,6 +8,7 @@ import { Server, Socket } from 'socket.io';
 import { RoomEvent, ServerInfoEvent, SettingsEvent } from 'web-shared';
 import SocketService from '../clientio/socket-service';
 import CommandEffects from '../command/command-effects';
+import { CacheService } from '../eep/cache-service';
 import EepService from '../eep/eep-service';
 import IntersectionEffects from '../intersection/intersection-effects';
 import JsonDataEffects from '../json/json-data-effects';
@@ -19,7 +20,7 @@ import { ServerStatisticsService } from './app-statistics.service';
 export default class AppEffects {
   private serverConfigPath = path.resolve(electron.app.getPath('appData'), 'eep-web-server');
   private serverConfigFile = path.resolve(this.serverConfigPath, 'settings.json');
-  private jsonDataEffects: JsonDataEffects;
+  private eepDataEffects: JsonDataEffects;
   private logEffects: LogEffects;
   private intersectionEffects: IntersectionEffects;
   private commandEffects: CommandEffects;
@@ -125,11 +126,17 @@ export default class AppEffects {
   }
 
   private registerHandlers(eepService: EepService) {
-    this.jsonDataEffects = new JsonDataEffects(this.app, this.router, this.io, this.socketService);
+    this.eepDataEffects = new JsonDataEffects(
+      this.app,
+      this.router,
+      this.io,
+      this.socketService,
+      eepService as CacheService
+    );
 
     // Init event handler
     eepService.setOnNewEventLine((eventLines: string) => {
-      this.jsonDataEffects.onNewEventLine(eventLines);
+      this.eepDataEffects.onNewEventLine(eventLines);
     });
 
     // Init JsonHandler

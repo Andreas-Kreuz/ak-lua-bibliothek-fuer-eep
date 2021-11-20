@@ -1,4 +1,3 @@
-local EventBroker = require "ak.util.EventBroker"
 --- Export EEP data / read and execute commands.
 -- LuaDoc: http://keplerproject.github.io/luadoc/manual.html
 --
@@ -9,6 +8,8 @@ local ServerController = require("ak.io.ServerController")
 --]] -- @author Andreas Kreuz
 -- @release 0.10.2
 if AkDebugLoad then print("Loading ak.io.ServerController ...") end
+local EventBroker = require "ak.util.EventBroker"
+local EventFileWriter = require "ak.io.EventFileWriter"
 local AkWebServerIo = require("ak.io.AkWebServerIo")
 local AkCommandExecutor = require("ak.io.AkCommandExecutor")
 local RuntimeRegistry = require "ak.util.RuntimeRegistry"
@@ -19,8 +20,8 @@ ServerController.debug = AkStartWithDebug or false
 ServerController.programVersion = "0.10.8"
 local json
 
--- ACHTUNG: DIE VERWENDUNG ERFOLGT AUF EIGENE GEFAHR. ES IST GUT MÖGLICH,
---          DASS EEP ABSTÜRZT, WENN NICHT ALLE ABHÄNGIGKEITEN DER BIBLIOTHEK
+-- ACHTUNG: DIE VERWENDUNG ERFOLGT AUF EIGENE GEFAHR. ES IST GUT MOEGLICH,
+--          DASS EEP ABSTUERZT, WENN NICHT ALLE ABHAENGIGKEITEN DER BIBLIOTHEK
 --          GEFUNDEN WERDEN.
 function ServerController.useDlls(enableDlls)
     if enableDlls then
@@ -47,30 +48,9 @@ ServerController.activeEntries = {}
 local registeredJsonCollectors = {}
 local runTimeGroupsToKeep = {}
 local collectedData = {}
-local checksum = 0
 local initialized = false
 
 function ServerController.addAcceptedRemoteFunction(fName, f) AkCommandExecutor.addAcceptedRemoteFunction(fName, f) end
-
-local function fillApiEntriesV1(orderedKeys)
-    collectedData["api-entries"] = {}
-    checksum = checksum + 1
-    local apiEntries = {}
-    local apiEntry
-    for _, key in ipairs(orderedKeys) do
-        local count = 0
-        for _ in pairs(collectedData[key]) do count = count + 1 end
-
-        local o = {name = key, url = "/api/v1/" .. key, count = count, checksum = checksum, updated = true}
-        table.insert(apiEntries, o)
-
-        if o.name == "api-entries" then apiEntry = o end
-    end
-
-    if apiEntry then apiEntry.count = #apiEntries end
-
-    collectedData["api-entries"] = apiEntries
-end
 
 local function initializeJsonCollector(jsonCollector)
     local t0 = os.clock()
@@ -104,7 +84,7 @@ local function checkObjects(collectData, path)
             error("Key must always be of type string " .. path .. "#" .. type(key))
         end
         if type(value) == "table" then checkObjects(value, path .. ">" .. key) end
-        if type(value) == "function" then error("Value must always be a function " .. path .. "#" .. type(key)) end
+        if type(value) == "function" then error("Value must not be a function " .. path .. "#" .. type(key)) end
     end
 end
 
@@ -149,24 +129,6 @@ function ServerController.addJsonCollector(...)
     end
 end
 
-local function expandData()
-    -- add statistical data
-    local orderedKeys = {}
-    local exportData = {}
-    for key, value in pairs(collectedData) do
-        if next(ServerController.activeEntries) == nil or ServerController.activeEntries[key] then
-            -- empty list or requested entry type
-            exportData[key] = value
-            table.insert(orderedKeys, key)
-        end
-    end
-    table.sort(orderedKeys)
-    fillApiEntriesV1(orderedKeys)
-    return exportData, orderedKeys
-end
-
-local function encode(exportData) return json.encode(exportData) end
-
 local function writeData(jsonString) AkWebServerIo.updateJsonFile(jsonString) end
 
 local i = -1
@@ -201,21 +163,13 @@ function ServerController.communicateWithServer(modulus)
     local overallTime5 = overallTime3
     local overallTime6 = overallTime3
 
-    if modulus == 0 or i % modulus == 0 then
+    if (modulus == 0 or i % modulus == 0) and serverIsReady then
         collectData(printFirstTime)
         overallTime4 = os.clock()
         overallTime5 = os.clock()
         overallTime6 = os.clock()
 
-        if serverIsReady then
-            local exportData = expandData()
-            overallTime5 = os.clock()
-
-            local jsonString = encode(exportData)
-            overallTime6 = os.clock()
-
-            writeData(jsonString)
-        end
+        writeData(EventFileWriter.getAndResetEvents())
     end
 
     local overallTime7 = os.clock()

@@ -1,27 +1,22 @@
 if AkDebugLoad then print("Loading ak.io.AkWebServerIo ...") end
-local AkWebServerIo = require "ak.io.AkWebServerIo"
+local json = require "ak.third-party.json"
 
 local EventFileWriter = {}
-
-local function updateEventFile(eventText)
-    local file = assert(io.open(AkWebServerIo.outFileNameEvents, "a"))
-    file:write(eventText .. "\n")
-    file:close()
-end
+local eventTexts = {}
 
 ---Fires an event
----@param jsonText string
-function EventFileWriter.fireEvent(jsonText)
-    updateEventFile(jsonText)
+---@param event table the event object string
+function EventFileWriter.fireEvent(event)
+    -- Pack the event into JSON
+    local jsonText = json.encode(event)
+    table.insert(eventTexts, jsonText)
 end
 
----Clears the event log file
-function EventFileWriter.clearEventFile()
-    local file = io.open(AkWebServerIo.outFileNameEvents, "w+")
-    file:close()
+---Get a list of all cached events
+function EventFileWriter.getAndResetEvents()
+    local lineSeparatedEvents = table.concat(eventTexts, "\n")
+    eventTexts = {}
+    return lineSeparatedEvents
 end
-
--- Clear event log when loading this class
-EventFileWriter.clearEventFile()
 
 return EventFileWriter
