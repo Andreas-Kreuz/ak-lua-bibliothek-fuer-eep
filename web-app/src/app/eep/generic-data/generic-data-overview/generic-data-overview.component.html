@@ -1,24 +1,21 @@
 <div class="mat-typography">
-  <h1 class="app-mute-on-light-bg">
-    Rohdaten
-  </h1>
-  <p>
-    EEP-Web stehen diese Rohdaten zur Verfügung.
-    Die Daten werden von der Lua-Bibliothek bereitgestellt.
-  </p>
+  <h1 class="app-mute-on-light-bg">Rohdaten</h1>
+  <p>EEP-Web stehen diese Rohdaten zur Verfügung. Die Daten werden von der Lua-Bibliothek bereitgestellt.</p>
 </div>
 
-<div *ngIf="(hostName$ | async) as hostName">
-  <mat-card class="app-card"
-            *ngIf="(dataTypes$ | async) as dataTypes">
+<div *ngIf="hostName$ | async as hostName">
+  <mat-card class="app-card mat-elevation-z2" *ngIf="dataTypes$ | async as dataTypes">
     <mat-nav-list>
-      <a mat-list-item
-         *ngFor="let dataType of dataTypes; let last = last; trackBy: trackByDataName"
-         [disableRipple]="true"
-         [routerLink]="['/generic-data/' + dataType.name, { name: dataType.name, hostName: hostName, path: dataType.url }]">
-        <mat-icon class="app-list-icon">
-          list_alt
-        </mat-icon>
+      <a
+        mat-list-item
+        *ngFor="let dataType of dataTypes; let last = last; trackBy: trackByDataName"
+        [disableRipple]="true"
+        [routerLink]="[
+          '/generic-data/' + dataType.name,
+          { name: dataType.name, hostName: hostName, path: dataType.url }
+        ]"
+      >
+        <mat-icon class="app-list-icon"> list_alt </mat-icon>
         <!--<mat-icon class="list-icon">memory</mat-icon>-->
         <!--<small class="app-mute-light-bg"> /api/v1/</small>-->
         <span>{{ dataType.name }}</span>

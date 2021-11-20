@@ -1,12 +1,18 @@
 <div class="padding">
-  <mat-card class="app-card">
+  <mat-card class="app-card mat-elevation-z2">
     <mat-card-title-group class="app-bg-accent app-fg-on-accent">
       <mat-card-title>#Straßenbahn 1 JS2</mat-card-title>
       <mat-card-subtitle>Tag Editor für den Zug</mat-card-subtitle>
     </mat-card-title-group>
     <mat-card-content>
       <table>
-        <caption>Tag-Attribute. {{ 1024 - encodedLength }} Zeichen verfügbar.</caption>
+        <caption>
+          Tag-Attribute.
+          {{
+            1024 - encodedLength
+          }}
+          Zeichen verfügbar.
+        </caption>
         <tr>
           <th id="key">Schlüssel</th>
           <th id="value">Wert</th>
@@ -16,67 +22,91 @@
         <tr>
           <td>Linie</td>
           <td>{{ model.l }}</td>
-          <td class="button"><button mat-icon-button color="accent">
+          <td class="button">
+            <button mat-icon-button color="accent">
               <mat-icon>edit</mat-icon>
-            </button></td>
-          <td class="button"><button mat-icon-button color="warn">
+            </button>
+          </td>
+          <td class="button">
+            <button mat-icon-button color="warn">
               <mat-icon>delete</mat-icon>
-            </button></td>
+            </button>
+          </td>
         </tr>
         <tr>
           <td>Ziel</td>
           <td>{{ model.d }}</td>
-          <td class="button"><button mat-icon-button color="accent">
+          <td class="button">
+            <button mat-icon-button color="accent">
               <mat-icon>edit</mat-icon>
-            </button></td>
-          <td class="button"><button mat-icon-button color="warn">
+            </button>
+          </td>
+          <td class="button">
+            <button mat-icon-button color="warn">
               <mat-icon>delete</mat-icon>
-            </button></td>
+            </button>
+          </td>
         </tr>
         <tr>
           <td>Richtung</td>
           <td>RIGHT</td>
-          <td class="button"><button mat-icon-button color="accent">
+          <td class="button">
+            <button mat-icon-button color="accent">
               <mat-icon>edit</mat-icon>
-            </button></td>
-          <td class="button"><button mat-icon-button color="warn">
+            </button>
+          </td>
+          <td class="button">
+            <button mat-icon-button color="warn">
               <mat-icon>delete</mat-icon>
-            </button></td>
+            </button>
+          </td>
         </tr>
         <tr>
           <td>Zug-Nummer</td>
           <td>{{ model.n }}</td>
-          <td class="button"><button mat-icon-button color="accent">
+          <td class="button">
+            <button mat-icon-button color="accent">
               <mat-icon>edit</mat-icon>
-            </button></td>
-          <td class="button"><button mat-icon-button color="warn">
+            </button>
+          </td>
+          <td class="button">
+            <button mat-icon-button color="warn">
               <mat-icon>delete</mat-icon>
-            </button></td>
+            </button>
+          </td>
         </tr>
         <tr>
           <td>IBIS-Nummer</td>
           <td>{{ model.i }}</td>
-          <td class="button"><button mat-icon-button color="accent">
+          <td class="button">
+            <button mat-icon-button color="accent">
               <mat-icon>edit</mat-icon>
-            </button></td>
-          <td class="button"><button mat-icon-button color="warn">
+            </button>
+          </td>
+          <td class="button">
+            <button mat-icon-button color="warn">
               <mat-icon>delete</mat-icon>
-            </button></td>
+            </button>
+          </td>
         </tr>
         <tr>
           <td>key1</td>
           <td>{{ model.key }}</td>
-          <td class="button"><button mat-icon-button color="accent">
+          <td class="button">
+            <button mat-icon-button color="accent">
               <mat-icon>edit</mat-icon>
-            </button></td>
-          <td class="button"><button mat-icon-button color="warn">
+            </button>
+          </td>
+          <td class="button">
+            <button mat-icon-button color="warn">
               <mat-icon>delete</mat-icon>
-            </button></td>
+            </button>
+          </td>
         </tr>
       </table>
     </mat-card-content>
     <mat-card-actions>
-     <button mat-button color="accent">Wert hinzufügen</button>
+      <button mat-button color="accent">Wert hinzufügen</button>
     </mat-card-actions>
   </mat-card>
 </div>
