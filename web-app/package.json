@@ -23,7 +23,6 @@
     "@angular/platform-browser": "^13.0.2",
     "@angular/platform-browser-dynamic": "^13.0.2",
     "@angular/router": "^13.0.2",
-    "@ng-bootstrap/ng-bootstrap": "^10.0.0",
     "@ngrx/effects": "^13.0.1",
     "@ngrx/router-store": "^13.0.1",
     "@ngrx/store": "^13.0.1",

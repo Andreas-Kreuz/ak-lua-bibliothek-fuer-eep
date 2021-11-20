@@ -44,7 +44,7 @@
           />
         </td>
         <td>
-          <app-tooltip *ngFor="let train of lane.waitingTrains" [text]="[carIcon]" [tooltip]="train"> </app-tooltip>
+          <span *ngFor="let train of lane.waitingTrains">{{ carIcon }} {{ train }}><br /></span>
         </td>
       </tr>
     </tbody>
