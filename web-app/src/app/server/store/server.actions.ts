@@ -18,3 +18,5 @@ export const changeEepDirectoryFailure = createAction(
 );
 export const urlsChanged = createAction('[Server] Urls Changed', props<{ urls: string[] }>());
 // export const statsReceived = createAction('[Server] Stats Received');
+
+export const eventCounterChanged = createAction('[Server] Event Counter Updated', props<{ eventCounter: number }>());

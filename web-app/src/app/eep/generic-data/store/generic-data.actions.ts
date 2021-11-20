@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { DataType } from '../model/data-type';
+import { DataType } from 'web-shared';
 
 export const FETCH_DATA_TYPES = '[Generic Data] Fetch data types';
 export const SET_DATA_TYPES = '[Generic Data] Set data types';

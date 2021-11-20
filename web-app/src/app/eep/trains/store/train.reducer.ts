@@ -78,7 +78,7 @@ export const selectRollingStock = createSelector(trainsState$, (state: State) =>
   let rollingStocks: RollingStock[];
   switch (type) {
     case 'rail':
-    default:
+      //default:
       rollingStocks = [...state.railRollingStock];
       break;
     case 'road':
@@ -132,19 +132,21 @@ export const selectTrains = createSelector(
     }
 
     const newTrains = [];
-    for (const listentry of list) {
-      const train = { ...listentry };
-      train.rollingStock = rollingStockMap.get(train.id);
+    if (list) {
+      for (const listentry of list) {
+        const train = { ...listentry };
+        train.rollingStock = rollingStockMap.get(train.id);
 
-      if (train.rollingStock) {
-        train.length = 0;
-        for (const rollingStock of train.rollingStock) {
-          train.length = train.length + rollingStock.length;
+        if (train.rollingStock) {
+          train.length = 0;
+          for (const rollingStock of train.rollingStock) {
+            train.length = train.length + rollingStock.length;
+          }
         }
+        newTrains.push(train);
       }
-      newTrains.push(train);
+      newTrains.sort((a, b) => a.id.localeCompare(b.id));
     }
-    newTrains.sort((a, b) => a.id.localeCompare(b.id));
     return newTrains;
   }
 );

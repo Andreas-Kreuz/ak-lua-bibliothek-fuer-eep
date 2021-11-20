@@ -9,15 +9,14 @@
   <div class="col col-12" *ngIf="!error">
     <mat-card>
       <h1>
-        <a href="http://localhost:3000/" target="_blank" rel="noopener noreferrer">
-          Web App im Browser öffnen
-        </a>
+        <a href="http://localhost:3000/" target="_blank" rel="noopener noreferrer"> Web App im Browser öffnen </a>
       </h1>
     </mat-card>
   </div>
   <div class="col col-12" *ngIf="!error">
     <mat-card *ngIf="(urlsAvailable$ | async) === false">
-      <span>Es wurden keine Daten von EEP gesammelt.<br />
+      <span
+        >Es wurden keine Daten von EEP gesammelt.<br />
         <span class="text-muted">Stelle sicher, dass Du den folgenden Lua-Code in EEP eingetragen hast:</span>
         <pre>
 local ModuleRegistry = require("ak.core.ModuleRegistry")
@@ -31,14 +30,20 @@ end
       </span>
     </mat-card>
     <mat-card *ngIf="(urlsAvailable$ | async) === true">
-      <span>Happily Serving<br />
-        <span class="text-muted">{{ (urls$ | async).join(', ') }}</span>
+      <span
+        >Happily Serving
+        <span *ngIf="eventCounter$ | async as counter" class="text-muted">
+          ({{ counter | number: "1.0":"de" }} events)</span
+        >
+        <br />
+        <span class="text-muted">{{ (urls$ | async).join(", ") }}</span>
       </span>
     </mat-card>
   </div>
   <div class="col col-12">
     <mat-card [ngClass]="{ error: error }">
-      <span>EEP-Verzeichnis<br />
+      <span
+        >EEP-Verzeichnis<br />
         <span class="text-muted">{{ eepDir$ | async }}</span>
       </span>
       <span class="app-spacer"></span>

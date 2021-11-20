@@ -1,6 +1,6 @@
 import * as fromGenericData from './generic-data.actions';
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import { DataType } from '../model/data-type';
+import { DataType } from 'web-shared';
 
 export interface State {
   data: { [key: string]: Record<string, unknown> };

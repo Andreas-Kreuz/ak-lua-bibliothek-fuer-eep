@@ -3,24 +3,29 @@ import path from 'path';
 import { performance } from 'perf_hooks';
 import { Tail } from 'tail';
 import { ServerStatisticsService } from '../app/app-statistics.service';
+import { CacheService } from './cache-service';
 
 const serverWatchingFile = 'ak-server.iswatching';
 const serverReadyForJsonFile = 'ak-eep-out-json.isfinished';
 const watchedJsonFileName = 'ak-eep-out.json';
 const watchedLogFileName = 'ak-eep-out.log';
 const writtenCommandFileName = 'ak-eep-in.commands';
-const writtenEventFileName = 'ak-eep-in.event';
+const serverCacheFileName = 'ak-eep-web-server-state.json';
+const eventCounterFileName = 'ak-eep-web-server-state.counter';
 
 /**
  * This service is responsible for the communication with EEP.
  */
-export default class EepService {
+export default class EepService implements CacheService {
   private dir: string;
   private lastLogFileSize: number;
+  private lastEventFileSize: number;
   private jsonFileWatcher: fs.FSWatcher;
   private logTail: Tail;
+  private eventTail: Tail;
   private onJsonUpdate: (jsonText: string, lastUpdate: number) => void;
   private logLineAppeared: (line: string) => void;
+  private eventLineAppeared: (line: string) => void;
   private logWasCleared: () => void;
   private lastJsonUpdate: number;
 
@@ -30,11 +35,18 @@ export default class EepService {
     if (this.logTail) {
       this.logTail.unwatch();
     }
+    if (this.eventTail) {
+      this.eventTail.unwatch();
+    }
     if (this.jsonFileWatcher) {
       this.jsonFileWatcher.close();
     }
     this.onJsonUpdate = (jsonText: string, lastUpdate: number) => {
       console.log('Received: ' + jsonText.length + ' bytes of JSON ' + lastUpdate);
+    };
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    this.eventLineAppeared = (line: string) => {
+      //console.log(line);
     };
     this.logLineAppeared = (line: string) => {
       console.log(line);
@@ -49,6 +61,7 @@ export default class EepService {
         this.attachAkEepOutJsonFile();
         this.attachAkEepOutLogFile();
         this.createAkServerFile();
+        this.deleteFileOnExit(eventCounterFileName);
       } else {
         callback('No such directory: ' + this.dir, null);
       }
@@ -86,10 +99,61 @@ export default class EepService {
     });
   }
 
+  public readCache(): undefined {
+    try {
+      const cacheFile = path.resolve(this.dir, serverCacheFileName);
+      const fileContents = fs.readFileSync(cacheFile);
+      const cachedObject = JSON.parse(fileContents.toString());
+      console.log('CACHE FILE READ FROM: ' + serverCacheFileName);
+      return cachedObject;
+    } catch (err) {
+      console.log(err);
+      return null;
+    }
+  }
+
+  public writeCache(data: { eventCounter: number }): void {
+    performance.mark('eep:start-write-cache-file');
+    try {
+      if (data) {
+        // console.log(
+        //   'Writing cache file: ' +
+        //     serverCacheFileName +
+        //     ' (on event ' +
+        //     (data.eventCounter ? data.eventCounter : '---') +
+        //     ')'
+        // );
+        const cacheFile = path.resolve(this.dir, serverCacheFileName);
+        const fileContents = JSON.stringify(data);
+        fs.writeFileSync(cacheFile, fileContents);
+
+        if (data.eventCounter) {
+          const counterFile = path.resolve(this.dir, eventCounterFileName);
+          fs.writeFileSync(counterFile, data.eventCounter);
+        }
+      }
+    } catch (err) {
+      console.log(err);
+    }
+    performance.mark('eep:stop-write-cache-file');
+    performance.measure(
+      ServerStatisticsService.TimeForEepJsonFile,
+      'eep:start-write-cache-file',
+      'eep:stop-write-cache-file'
+    );
+  }
+
   private readJsonFile(jsonFile: string, jsonReadyFile: string) {
     try {
       // EEP has written the JsonFile for us, so let's read it.
-      const data = fs.readFileSync(jsonFile, { encoding: 'latin1' });
+      const data: string = fs.readFileSync(jsonFile, { encoding: 'latin1' });
+      const eventLines: string[] = data.split('\n');
+      for (const line of eventLines) {
+        if (line.length > 0) {
+          this.eventLineAppeared(line);
+        }
+      }
+
       performance.mark('eep:stop-wait-for-json');
       performance.measure(
         ServerStatisticsService.TimeForEepJsonFile,
@@ -101,7 +165,7 @@ export default class EepService {
       this.deleteFileIfExists(jsonReadyFile);
       performance.mark('eep:start-wait-for-json');
 
-      this.onJsonUpdate(data, this.lastJsonUpdate);
+      //this.onJsonUpdate(data, this.lastJsonUpdate);
     } catch (err) {
       console.log(err);
     }
@@ -109,13 +173,16 @@ export default class EepService {
 
   private attachAkEepOutLogFile(): void {
     const logFile = path.resolve(this.dir, watchedLogFileName);
-    this.oneFileAppearance(logFile, () => {
+    this.onFileAppearance(logFile, () => {
       const tail = new Tail(logFile, { encoding: 'latin1', fromBeginning: true });
       tail.on('line', (line: string) => {
         const stats = fs.statSync(logFile);
         const fileSizeInBytes = stats['size'];
         if (this.lastLogFileSize && fileSizeInBytes < this.lastLogFileSize) {
           this.logWasCleared(); // TODO: NOT WORKING; BECAUSE TAIL DOES NOT LOOK BACK
+          tail.unwatch();
+          this.lastLogFileSize = 0;
+          setTimeout(() => this.attachAkEepOutLogFile(), 150);
         }
         this.lastLogFileSize = fileSizeInBytes;
         this.logLineAppeared(line);
@@ -124,6 +191,7 @@ export default class EepService {
       tail.on('error', (error: string) => {
         console.log(error);
         tail.unwatch();
+        this.lastLogFileSize = 0;
         this.attachAkEepOutLogFile();
       });
 
@@ -141,8 +209,9 @@ export default class EepService {
     // tslint:disable-next-line: semicolon
   };
 
-  private oneFileAppearance(expectedFile: string, callback: () => void): void {
+  private onFileAppearance(expectedFile: string, callback: () => void): void {
     if (fs.existsSync(expectedFile)) {
+      console.log('[FILE] Found: ' + expectedFile);
       callback();
     } else {
       console.log('[FILE] Wait for: ' + path.basename(expectedFile) + ' in ' + path.dirname(expectedFile));
@@ -160,14 +229,18 @@ export default class EepService {
     const watchFile = path.resolve(this.dir, serverWatchingFile);
     // Create the serverWatchingFile
     fs.closeSync(fs.openSync(watchFile, 'w'));
+    this.deleteFileOnExit(serverWatchingFile);
+  }
 
-    // Delete the file on exit
+  private deleteFileOnExit(fileName: string) {
+    // Delete the event counter file on exit
+    const file = path.resolve(this.dir, fileName);
     process.on('exit', () => {
-      fs.unlink(watchFile, (err) => {
+      fs.unlink(file, (err) => {
         if (err) {
-          throw err;
+          console.error(err);
         }
-        console.log('on(exit): ' + watchFile + ' successfully deleted');
+        console.log('on(exit): ' + file + ' successfully deleted');
       });
     });
   }
@@ -178,6 +251,10 @@ export default class EepService {
 
   public setOnNewLogLine(logLineFunction: (line: string) => void) {
     this.logLineAppeared = logLineFunction;
+  }
+
+  public setOnNewEventLine(eventLineFunction: (line: string) => void) {
+    this.eventLineAppeared = eventLineFunction;
   }
 
   public setOnLogCleared(logClearedFunction: () => void) {

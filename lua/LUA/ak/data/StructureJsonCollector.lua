@@ -1,3 +1,4 @@
+local EventBroker = require "ak.util.EventBroker"
 if AkDebugLoad then print("Loading ak.data.StructureJsonCollector ...") end
 StructureJsonCollector = {}
 local enabled = true
@@ -21,12 +22,13 @@ function StructureJsonCollector.initialize()
     for i = 0, MAX_STRUCTURES do
         local name = "#" .. tostring(i)
 
-        local hasLight = EEPStructureGetLight(name) -- EEP 11.1 Plug-In 1
-        local hasSmoke = EEPStructureGetSmoke(name) -- EEP 11.1 Plug-In 1
-        local hasFire = EEPStructureGetFire(name) -- EEP 11.1 Plug-In 1
+        local hasLight, light = EEPStructureGetLight(name) -- EEP 11.1 Plug-In 1
+        local hasSmoke, smoke = EEPStructureGetSmoke(name) -- EEP 11.1 Plug-In 1
+        local hasFire, fire = EEPStructureGetFire(name) -- EEP 11.1 Plug-In 1
 
         if hasLight or hasSmoke or hasFire then
             local structure = {}
+            structure.id = name
             structure.name = name
 
             local _, pos_x, pos_y, pos_z = EEPStructureGetPosition(name)
@@ -54,9 +56,13 @@ function StructureJsonCollector.initialize()
             structure.modelType = modelType or 0
             structure.modelTypeText = EEPStructureModelTypeText[modelType] or ""
             structure.tag = tag or ""
+            structure.light = light
+            structure.smoke = smoke
+            structure.fire = fire
             table.insert(structures, structure)
         end
     end
+    EventBroker.fireListChange("structures", "id", structures)
 
     initialized = true
 end
@@ -66,6 +72,7 @@ function StructureJsonCollector.collectData()
 
     if not initialized then StructureJsonCollector.initialize() end
 
+    local dirtyStructures = {}
     for i = 1, #structures do
         local structure = structures[i]
 
@@ -73,12 +80,21 @@ function StructureJsonCollector.collectData()
         local _, smoke = EEPStructureGetSmoke(structure.name) -- EEP 11.1 Plug-In 1
         local _, fire = EEPStructureGetFire(structure.name) -- EEP 11.1 Plug-In 1
 
-        structure.light = light
-        structure.smoke = smoke
-        structure.fire = fire
+        if (light ~= structure.light or fire ~= structure.fire or smoke ~= structure.smoke) then
+            structure.light = light
+            structure.smoke = smoke
+            structure.fire = fire
+            table.insert(dirtyStructures, structure)
+        end
+
     end
 
-    return {["structures"] = structures}
+    if #dirtyStructures > 0 then
+        -- Inform the event broker about all dirty structures
+        EventBroker.fireListChange("structures", "id", dirtyStructures)
+    end
+
+    return {}
 end
 
 return StructureJsonCollector

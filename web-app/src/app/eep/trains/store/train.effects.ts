@@ -10,56 +10,32 @@ import { RollingStock } from '../model/rolling-stock.model';
 
 @Injectable()
 export class TrainEffects {
-  setRailTrains$ = createEffect(() =>
-    this.trainService.railTrainsActions$().pipe(
+  setTrains$ = createEffect(() =>
+    this.trainService.trainsActions$().pipe(
       switchMap((data) => {
-        const list: Train[] = JSON.parse(data);
-        return of(TrainAction.setRailTrains({ railTrains: list }));
+        const record: Record<string, Train> = JSON.parse(data);
+        const list = Object.values(record);
+
+        return of(
+          TrainAction.setRailTrains({ railTrains: list.filter((a) => a.trackType === 'rail') }),
+          TrainAction.setRoadTrains({ roadTrains: list.filter((a) => a.trackType === 'road') }),
+          TrainAction.setTramTrains({ tramTrains: list.filter((a) => a.trackType === 'tram') })
+        );
       })
     )
   );
 
-  setRailRollingStock$ = createEffect(() =>
-    this.trainService.railRollingStockActions$().pipe(
+  setRollingStock$ = createEffect(() =>
+    this.trainService.rollingStockActions$().pipe(
       switchMap((data) => {
-        const list: RollingStock[] = JSON.parse(data);
-        return of(TrainAction.setRailRollingStock({ railRollingStock: list }));
-      })
-    )
-  );
+        const record: Record<string, RollingStock> = JSON.parse(data);
+        const list = Object.values(record);
 
-  setRoadTrains$ = createEffect(() =>
-    this.trainService.roadTrainsActions$().pipe(
-      switchMap((data) => {
-        const list: Train[] = JSON.parse(data);
-        return of(TrainAction.setRoadTrains({ roadTrains: list }));
-      })
-    )
-  );
-
-  setRoadRollingStock$ = createEffect(() =>
-    this.trainService.roadRollingStockActions$().pipe(
-      switchMap((data) => {
-        const list: RollingStock[] = JSON.parse(data);
-        return of(TrainAction.setRoadRollingStock({ roadRollingStock: list }));
-      })
-    )
-  );
-
-  setTramTrains$ = createEffect(() =>
-    this.trainService.tramTrainsActions$().pipe(
-      switchMap((data) => {
-        const list: Train[] = JSON.parse(data);
-        return of(TrainAction.setTramTrains({ tramTrains: list }));
-      })
-    )
-  );
-
-  setTramRollingStock$ = createEffect(() =>
-    this.trainService.tramRollingStockActions$().pipe(
-      switchMap((data) => {
-        const list: RollingStock[] = JSON.parse(data);
-        return of(TrainAction.setTramRollingStock({ tramRollingStock: list }));
+        return of(
+          TrainAction.setRailRollingStock({ railRollingStock: list.filter((a) => a.trackType === 'rail') }),
+          TrainAction.setRoadRollingStock({ roadRollingStock: list.filter((a) => a.trackType === 'road') }),
+          TrainAction.setTramRollingStock({ tramRollingStock: list.filter((a) => a.trackType === 'tram') })
+        );
       })
     )
   );

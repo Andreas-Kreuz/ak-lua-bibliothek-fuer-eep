@@ -36,7 +36,7 @@ export class CoreEffects {
       concatMap((data) => {
         let modules: ModuleInfo[] = [];
         if (data && '' !== data) {
-          modules = JSON.parse(data);
+          modules = Object.values(JSON.parse(data));
         }
         return of(CoreAction.setModules({ modules }), CoreAction.setModulesAvailable());
       })

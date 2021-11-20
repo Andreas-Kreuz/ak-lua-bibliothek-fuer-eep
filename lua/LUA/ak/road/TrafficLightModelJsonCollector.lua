@@ -1,4 +1,5 @@
 if AkDebugLoad then print("Loading ak.road.TrafficLightModelJsonCollector ...") end
+local EventBroker = require "ak.util.EventBroker"
 
 ---@class TrafficLightModelJsonCollector
 TrafficLightModelJsonCollector = {}
@@ -37,7 +38,12 @@ function TrafficLightModelJsonCollector.collectData()
         table.insert(trafficLightModels, o)
     end
 
-    return {["signal-type-definitions"] = trafficLightModels}
+    EventBroker.fireListChange("signal-type-definitions", "id", trafficLightModels)
+
+    return {
+        -- ["signal-type-definitions"] = trafficLightModels
+    }
+
 end
 
 return TrafficLightModelJsonCollector

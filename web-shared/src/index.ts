@@ -6,6 +6,7 @@ import { ServerInfoEvent } from './server-info-event';
 import { ServerStatusEvent } from './server-status-event';
 import { RoomEvent } from './room-event';
 import { SettingsEvent } from './settings-event';
+import { DataType } from './data/model/data-type';
 
 export {
   CommandEvent,
@@ -16,4 +17,5 @@ export {
   ServerInfoEvent,
   ServerStatusEvent,
   SettingsEvent,
+  DataType,
 };

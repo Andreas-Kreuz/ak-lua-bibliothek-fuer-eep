@@ -1,3 +1,4 @@
+local EventBroker = require "ak.util.EventBroker"
 if AkDebugLoad then print("Loading ak.core.VersionJsonCollector ...") end
 VersionJsonCollector = {}
 local ServerController = require("ak.io.ServerController")
@@ -12,6 +13,7 @@ function VersionJsonCollector.initialize()
     local versions = {
         versionInfo = {
             -- EEP-Web expects a named entry here
+            id = "versionInfo", -- EEP-Web requires that data entries have an id or name tag
             name = "versionInfo", -- EEP-Web requires that data entries have an id or name tag
             eepVersion = string.format("%.1f", EEPVer), -- show string instead of float
             luaVersion = _VERSION,
@@ -19,7 +21,11 @@ function VersionJsonCollector.initialize()
         }
     }
 
-    data = {["eep-version"] = versions}
+    -- TODO: Send event only with detected changes
+    EventBroker.fireListChange("eep-version", "id", versions)
+    data = {
+        -- ["eep-version"] = versions
+    }
     initialized = true
 end
 

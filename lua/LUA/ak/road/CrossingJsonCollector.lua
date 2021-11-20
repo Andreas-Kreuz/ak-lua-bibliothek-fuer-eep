@@ -1,4 +1,5 @@
 if AkDebugLoad then print("Loading ak.road.CrossingJsonCollector ...") end
+local EventBroker = require "ak.util.EventBroker"
 
 ---@class CrossingJsonCollector
 CrossingJsonCollector = {}
@@ -161,11 +162,11 @@ local function collect(allCrossings)
                ("%3d"):format(#a)
     end)
 
-    local json = require("ak.third-party.json")
-    json.encode(intersections)
-    json.encode(intersectionLanes)
-    json.encode(intersectionSwitching)
-    json.encode(intersectionTrafficLights)
+    -- TODO: Send event only with detected changes
+    EventBroker.fireListChange("intersections", "id", intersections)
+    EventBroker.fireListChange("intersection-lanes", "id", intersectionLanes)
+    EventBroker.fireListChange("intersection-switchings", "id", intersectionSwitching)
+    EventBroker.fireListChange("intersection-traffic-lights", "id", intersectionTrafficLights)
 
     return {
         ["intersections"] = intersections,
@@ -175,7 +176,7 @@ local function collect(allCrossings)
     }
 end
 local function collectModuleSettings()
-    return {
+    local settings = {
         {
             ["category"] = "Kreuzung",
             ["name"] = "Anforderungen als TippText",
@@ -199,6 +200,10 @@ local function collectModuleSettings()
             ["eepFunction"] = "Crossing.setShowSignalIdOnSignal"
         }
     }
+
+    -- TODO: Send event only with detected changes
+    EventBroker.fireListChange("intersection-module-settings", "name", settings)
+    return settings;
 end
 
 function CrossingJsonCollector.initialize()
@@ -212,9 +217,12 @@ function CrossingJsonCollector.collectData()
 
     if not initialized then CrossingJsonCollector.initialize() end
 
+    -- TODO Remove data assignment
     local data = collect(Crossing.allCrossings)
     data["intersection-module-settings"] = collectModuleSettings()
-    return data
+    return {
+        -- data
+    }
 end
 
 return CrossingJsonCollector

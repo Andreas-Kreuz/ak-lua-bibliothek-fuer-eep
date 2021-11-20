@@ -27,26 +27,34 @@ function TrainRegistry.forName(name)
         local train = Train:new({name = name})
         allTrains[train.name] = train
         initRollingStock(train)
-        TrainRegistry.trainAppeared(train)
         return train, true
     end
 end
 
 ---A train appeared on the map
----@param train Train
-function TrainRegistry.trainAppeared(train)
-    EventBroker.fireDataChange("Train Appeared", EventBroker.change.dataAdded, "trains", "id", train:toJsonStatic())
-    EventBroker.fireDataChange("TrainInfo Appeared", EventBroker.change.dataAdded, "trainInfo", "id",
-                               train:toJsonDynamic())
+function TrainRegistry.trainAppeared(_)
+    -- is included in "TrainRegistry.fireChangeTrainsEvent()"
+    -- EventBroker.fireDataAdded("trains", "id", train:toJsonStatic())
+    -- EventBroker.fireDataAdded("train-infos", "id", train:toJsonDynamic())
 end
 
 ---A train dissappeared from the map
 ---@param trainName string
 function TrainRegistry.trainDisappeared(trainName)
     allTrains[trainName] = nil
-    EventBroker.fireDataChange("Train Disappeared", EventBroker.change.dataRemoved, "trains", "id", {id = trainName})
-    EventBroker.fireDataChange("TrainInfo Disappeared", EventBroker.change.dataRemoved, "trainInfo", "id",
-                               {id = trainName})
+    EventBroker.fireDataRemoved("trains", "id", {id = trainName})
+    EventBroker.fireDataRemoved("train-infos", "id", {id = trainName})
+end
+
+function TrainRegistry.fireChangeTrainsEvent()
+    local modifiedTrains = {}
+    for _, train in pairs(allTrains) do
+        if train.valuesUpdated then
+            modifiedTrains[train.id] = train:toJsonStatic()
+            train.valuesUpdated = false
+        end
+    end
+    EventBroker.fireListChange("trains", "id", modifiedTrains)
 end
 
 return TrainRegistry

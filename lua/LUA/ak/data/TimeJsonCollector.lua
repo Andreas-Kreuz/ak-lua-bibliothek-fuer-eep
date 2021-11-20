@@ -1,4 +1,6 @@
 if AkDebugLoad then print("Loading ak.data.TimeJsonCollector ...") end
+local EventBroker = require "ak.util.EventBroker"
+
 TimeJsonCollector = {}
 local enabled = true
 local initialized = false
@@ -15,8 +17,9 @@ function TimeJsonCollector.collectData()
 
     if not initialized then TimeJsonCollector.initialize() end
 
-    local value = {
+    local times = {
         {
+            id = "times", -- EEP-Web requires that data entries have an id or name tag
             name = "times", -- EEP-Web requires that data entries have an id or name tag
             timeComplete = EEPTime, -- seconds since midnight
             timeH = EEPTimeH,
@@ -25,7 +28,12 @@ function TimeJsonCollector.collectData()
         }
     }
 
-    return {["times"] = value}
+    -- TODO: Send event only with detected changes
+    EventBroker.fireListChange("times", "id", times)
+
+    return {
+        -- ["times"] = times
+    }
 end
 
 return TimeJsonCollector

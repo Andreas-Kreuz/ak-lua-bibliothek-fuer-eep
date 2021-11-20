@@ -1,3 +1,5 @@
+if AkDebugLoad then print("Loading ak.util.RuntimeRegistry ...") end
+
 local RuntimeRegistry = {}
 
 local runtimeData = {}
@@ -5,6 +7,7 @@ local runtimeData = {}
 --- Store runtime information
 -- @author Frank Buchholz
 function RuntimeRegistry.storeRunTime(group, time)
+    assert(group)
     -- collect and sum runtime date, needs rework
     if not runtimeData then runtimeData = {} end
     if not runtimeData[group] then runtimeData[group] = {id = group, count = 0, time = 0} end
@@ -30,7 +33,7 @@ end
 
 function RuntimeRegistry.get(group) return runtimeData[group] or {id = group, count = 0, time = 0} end
 
-function RuntimeRegistry.getAll() return runtimeData or {} end
+function RuntimeRegistry.getAll() return runtimeData end
 
 function RuntimeRegistry.reset(group) runtimeData[group] = nil end
 

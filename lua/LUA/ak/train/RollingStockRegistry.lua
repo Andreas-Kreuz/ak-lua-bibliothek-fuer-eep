@@ -1,6 +1,7 @@
 local EventBroker = require "ak.util.EventBroker"
 local RollingStock = require "ak.train.RollingStock"
 local RollingStockRegistry = {}
+---@type table<string,RollingStock>
 local allRollingStock = {}
 
 ---Creates a train object for the given train name, the train must exist
@@ -22,21 +23,28 @@ function RollingStockRegistry.forName(rollingStockName)
 end
 
 ---A train appeared on the map
----@param rollingStock RollingStock
-function RollingStockRegistry.rollingStockAppeared(rollingStock)
-    EventBroker.fireDataChange("RollingStock Appeared", EventBroker.change.dataUpdated, "rollingStock", "name",
-                               rollingStock:toJsonStatic())
-    EventBroker.fireDataChange("RollingStockInfo Appeared", EventBroker.change.dataUpdated, "rollingStockInfo",
-                               "name", rollingStock:toJsonDynamic())
+function RollingStockRegistry.rollingStockAppeared(_)
+    -- is included in "TrainRegistry.fireChangeTrainsEvent()"
+    -- EventBroker.fireDataChanged("rolling-stocks", "id", rollingStock:toJsonStatic())
+    -- EventBroker.fireDataChanged("rolling-stock-info", "id", rollingStock:toJsonDynamic())
 end
 
 ---A train dissappeared from the map
 ---@param rollingStockName string
 function RollingStockRegistry.rollingStockDisappeared(rollingStockName)
-    EventBroker.fireDataChange("RollingStock Disappeared", EventBroker.change.dataUpdated, "rollingStock", "name",
-                               {name = rollingStockName})
-    EventBroker.fireDataChange("RollingStockInfo Disappeared", EventBroker.change.dataUpdated, "rollingStockInfo",
-                               "name", {name = rollingStockName})
+    EventBroker.fireDataChanged("rolling-stocks", "id", {id = rollingStockName})
+    EventBroker.fireDataChanged("rolling-stock-info", "id", {id = rollingStockName})
+end
+
+function RollingStockRegistry.fireChangeRollingStockEvent()
+    local modifiedRollingStock = {}
+    for _, rs in pairs(allRollingStock) do
+        if rs.valuesUpdated then
+            modifiedRollingStock[rs.id] = rs:toJsonStatic()
+            rs.valuesUpdated = false
+        end
+    end
+    EventBroker.fireListChange("rolling-stocks", "id", modifiedRollingStock)
 end
 
 return RollingStockRegistry

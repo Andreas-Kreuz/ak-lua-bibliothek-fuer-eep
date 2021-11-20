@@ -10,7 +10,8 @@ export default class LogEffects {
     private io: Server,
     private socketService: SocketService,
     private getCurrentLogLines: () => string,
-    private queueCommand: (command: string) => void
+    private queueCommand: (command: string) => void,
+    private debug = false
   ) {
     this.socketService.addOnSocketConnectedCallback((socket: Socket) => this.socketConnected(socket));
   }
@@ -18,7 +19,7 @@ export default class LogEffects {
   private socketConnected(socket: Socket) {
     socket.on(RoomEvent.JoinRoom, (rooms: { room: string }) => {
       if (rooms.room === LogEvent.Room) {
-        console.log('EMIT ' + LogEvent.LinesAdded + ' to ' + socket.id);
+        if (this.debug) console.log('EMIT ' + LogEvent.LinesAdded + ' to ' + socket.id);
         socket.emit(LogEvent.LinesAdded, this.getCurrentLogLines());
       }
     });

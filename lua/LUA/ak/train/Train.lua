@@ -1,6 +1,6 @@
-local EventBroker = require "ak.util.EventBroker"
-local TableUtils = require "ak.util.TableUtils"
 if AkDebugLoad then print("Loading ak.train.Train ...") end
+-- local EventBroker = require "ak.util.EventBroker"
+local TableUtils = require "ak.util.TableUtils"
 
 local RollingStockRegistry = require("ak.train.RollingStockRegistry")
 local RollingStockModels = require("ak.train.RollingStockModels")
@@ -10,6 +10,7 @@ local EepFunctionWrapper = require("ak.core.eep.EepFunctionWrapper")
 local EEPGetTrainLength = EepFunctionWrapper.EEPGetTrainLength
 
 ---@class Train
+---@field id string
 ---@field name string
 ---@field type string
 ---@field values table of all entries stored in the train
@@ -37,6 +38,7 @@ function Train:new(o)
     assert(haveTrain, o.name)
     self.__index = self
     setmetatable(o, self)
+    o.id = o.name
     o.type = "Train"
     o.values = o:load()
     o.route = trainRoute
@@ -46,6 +48,7 @@ function Train:new(o)
     o.trackType = nil
     o.onTracks = {}
     o.occupiedTracks = {}
+    o.valuesUpdated = true
     return o
 end
 
@@ -94,6 +97,7 @@ function Train:setValue(key, value)
         local rs = RollingStockRegistry.forName(rollingStockName)
         rs:setValue(key, value)
     end
+    self.valuesUpdated = true
 end
 
 ---Get the current value for key
@@ -131,8 +135,8 @@ function Train:setRoute(route)
     self.route = route
     EEPSetTrainRoute(self.name, self.route)
     if oldRoute ~= route then
-        EventBroker.fireDataChange("Train Route Changed", EventBroker.change.dataUpdated, "trains", "id",
-                                   {id = self.name, route = route})
+        self.valuesUpdated = true
+        -- EventBroker.fireDataChanged("trains", "id", {id = self.name, route = route})
     end
 end
 
@@ -151,8 +155,8 @@ function Train:setRollingStockCount(count)
     local oldCount = count
     self.rollingStockCount = count
     if oldCount ~= count then
-        EventBroker.fireDataChange("Train RollingStock count Changed", EventBroker.change.dataUpdated, "trains", "id",
-                                   {id = self.name, rollingStockCount = count})
+        self.valuesUpdated = true
+        -- EventBroker.fireDataChanged("trains", "id", {id = self.name, rollingStockCount = count})
     end
 end
 
@@ -172,8 +176,8 @@ function Train:setSpeed(speed)
     local oldSpeed = self.speed
     self.speed = speed
     if oldSpeed ~= speed then
-        EventBroker.fireDataChange("Train Speed Changed", EventBroker.change.dataUpdated, "trainInfo", "id",
-                                   {id = self.name, speed = speed})
+        self.valuesUpdated = true
+        -- EventBroker.fireDataChanged("trains", "id", {id = self.name, speed = speed})
     end
 end
 
@@ -192,8 +196,8 @@ function Train:setOnTrack(onTracks)
     local oldOnTracks = self.onTracks
     self.onTracks = onTracks
     if not TableUtils.sameDictEntries(oldOnTracks, onTracks) then
-        EventBroker.fireDataChange("Train occupiedTracks Changed", EventBroker.change.dataUpdated, "trainInfo", "id",
-                                   {id = self.name, occupiedTacks = onTracks})
+        self.valuesUpdated = true
+        -- EventBroker.fireDataChanged("trains", "id", {id = self.name, occupiedTacks = onTracks})
     end
 end
 
@@ -206,12 +210,12 @@ end
 
 function Train:setTrackType(trackType)
     assert(type(self) == "table", "Need to call this method with ':'")
-    assert(type(trackType) == "string", "Need 'direction' as string")
+    assert(type(trackType) == "string", "Need 'trackType' as string")
     local oldTrackType = self.trackType
     self.trackType = trackType
     if oldTrackType ~= trackType then
-        EventBroker.fireDataChange("Train Track Type Changed", EventBroker.change.dataUpdated, "trainInfo", "id",
-                                   {id = self.name, trackType = trackType})
+        self.valuesUpdated = true
+        -- EventBroker.fireDataChanged("trains", "id", {id = self.name, trackType = trackType})
     end
 end
 
@@ -223,8 +227,8 @@ function Train:setDirection(direction)
     local oldDirection = self:getDirection()
     self:setValue(TagKeys.Train.direction, direction)
     if oldDirection ~= direction then
-        EventBroker.fireDataChange("Train Direction Changed", EventBroker.change.dataUpdated, "trains", "id",
-                                   {id = self.name, direction = direction})
+        self.valuesUpdated = true
+        -- EventBroker.fireDataChanged("trains", "id", {id = self.name, direction = direction})
     end
 end
 
@@ -232,11 +236,11 @@ function Train:getDirection() return self:getValue(TagKeys.Train.direction) end
 
 function Train:setDestination(destination)
     assert(type(destination) == "string", "Need 'destination' as string")
-    local oldDestination = destination
+    local oldDestination = self:getDestination()
     self:setValue(TagKeys.Train.destination, destination)
     if oldDestination ~= destination then
-        EventBroker.fireDataChange("Train Destination Changed", EventBroker.change.dataUpdated, "trains", "id",
-                                   {id = self.name, destination = destination})
+        self.valuesUpdated = true
+        -- EventBroker.fireDataChanged("trains", "id", {id = self.name, destination = destination})
     end
 end
 
@@ -252,8 +256,8 @@ function Train:setLine(line)
     local oldLine = self:getLine()
     self:setValue(TagKeys.Train.line, line)
     if oldLine ~= line then
-        EventBroker.fireDataChange("Train Line Changed", EventBroker.change.dataUpdated, "trains", "id",
-                                   {id = self.name, line = line})
+        self.valuesUpdated = true
+        -- EventBroker.fireDataChanged("trains", "id", {id = self.name, line = line})
     end
 end
 
@@ -270,7 +274,10 @@ function Train:toJsonStatic()
         length = self:getLength(),
         line = self:getLine(),
         destination = self:getDestination(),
-        direction = self:getDirection()
+        direction = self:getDirection(),
+        trackType = self:getTrackType(),
+        speed = self:getSpeed(),
+        occupiedTacks = self:getOnTrack()
     }
 end
 

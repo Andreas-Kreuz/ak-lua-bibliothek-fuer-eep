@@ -13,6 +13,7 @@ export const SELECT_SIGNAL = '[Signals] Select';
 export const DESELECT_SIGNAL = '[Signals] Deselect';
 export const ERROR = '[Signals] ERROR';
 
+// TODO: Use new ngrx actions
 export interface FetchAction extends Action {
   payload: string;
 }
@@ -20,66 +21,57 @@ export interface FetchAction extends Action {
 export class FetchSignals implements Action, FetchAction {
   readonly type = FETCH_SIGNALS;
 
-  constructor(public payload: string) {
-  }
+  constructor(public payload: string) {}
 }
 
 export class FetchSignalTypes implements Action, FetchAction {
   readonly type = FETCH_SIGNAL_TYPES;
 
-  constructor(public payload: string) {
-  }
+  constructor(public payload: string) {}
 }
 
 export class FetchSignalTypeDefinitions implements Action, FetchAction {
   readonly type = FETCH_SIGNAL_TYPE_DEFINITIONS;
 
-  constructor(public payload: string) {
-  }
+  constructor(public payload: string) {}
 }
 
 export class SetSignals implements Action {
   readonly type = SET_SIGNALS;
 
-  constructor(public payload: Signal[]) {
-  }
+  constructor(public payload: Signal[]) {}
 }
 
 export class SetSignalTypes implements Action {
   readonly type = SET_SIGNAL_TYPES;
 
-  constructor(public payload: Map<number, string>) {
-  }
+  constructor(public payload: Map<number, string>) {}
 }
 
 export class SetSignalTypeDefinitions implements Action {
   readonly type = SET_SIGNAL_TYPE_DEFINITIONS;
 
-  constructor(public payload: SignalTypeDefinition[]) {
-  }
+  constructor(public payload: SignalTypeDefinition[]) {}
 }
 
 export class SelectSignal implements Action {
   readonly type = SELECT_SIGNAL;
 
-  constructor(public payload: number) {
-  }
+  constructor(public payload: number) {}
 }
 
 export class LogError implements Action {
   readonly type = ERROR;
 
-  constructor(public payload: HttpErrorResponse) {
-  }
+  constructor(public payload: HttpErrorResponse) {}
 }
 
 export class DeselectSignal implements Action {
   readonly type = DESELECT_SIGNAL;
 }
 
-
 export type SignalActions =
-  FetchSignals
+  | FetchSignals
   | FetchSignalTypeDefinitions
   | FetchSignalTypes
   | SetSignals

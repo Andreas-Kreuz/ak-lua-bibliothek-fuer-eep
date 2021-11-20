@@ -1,67 +1,181 @@
+import EepEvent, { DataChangePayload, ListChangePayload } from './eep-event';
 import JsonDataEffects from './json-data-effects';
+import { DataType } from 'web-shared';
+
+export interface State {
+  eventCounter: number;
+  rooms: Record<string, Record<string, unknown>>;
+}
+
+const initialState: State = {
+  eventCounter: 0,
+  rooms: {},
+};
+
+export interface ServerData {
+  roomToJson: Record<string, string>;
+  urls: string[];
+  urlJson: string;
+}
+
+const initialData: ServerData = {
+  roomToJson: {},
+  urls: [],
+  urlJson: JSON.stringify([]),
+};
 
 export default class JsonDataStore {
-  private currentJsonContent: { [key: string]: unknown } = {};
-  private urls: string[] = [];
-  private dataRooms: string[] = [];
+  private debug = false;
+  private data = initialData;
+  private state: State = initialState;
 
   constructor(private effects: JsonDataEffects) {}
 
-  calcChangedKeys(keysToCheck: string[], newJsonContent: { [key: string]: unknown[] }): string[] {
-    const changedKeys: string[] = [];
-    for (const key of keysToCheck) {
-      const currentData = JSON.stringify(this.currentJsonContent[key]);
-      const newData = JSON.stringify(newJsonContent[key]);
-      if (currentData !== newData) {
-        changedKeys.push(key);
+  onNewEvent(event: EepEvent) {
+    this.state = JsonDataStore.updateStateOnEepEvent(event, this.state);
+  }
+
+  init(previousState: State) {
+    if (previousState && previousState.eventCounter && previousState.rooms) {
+      this.state = previousState;
+    } else {
+      this.state = initialState;
+    }
+  }
+
+  private static updateStateOnEepEvent(event: EepEvent, state: State): State {
+    switch (event.type) {
+      case 'CompleteReset':
+        return {
+          ...state,
+          eventCounter: event.eventCounter,
+          rooms: {},
+        };
+        break;
+      case 'DataAdded':
+      case 'DataChanged': {
+        const payload: DataChangePayload<unknown> = event.payload;
+        const roomName = payload.room;
+        const key = payload.element[payload.keyId];
+        return {
+          ...state,
+          eventCounter: event.eventCounter,
+          rooms: { ...state.rooms, [roomName]: { ...state.rooms[roomName], [key]: payload.element } },
+        };
       }
+      case 'DataRemoved': {
+        const payload: DataChangePayload<unknown> = event.payload;
+        const roomName = payload.room;
+        const key = payload.element[payload.keyId];
+        return {
+          ...state,
+          eventCounter: event.eventCounter,
+          rooms: { ...state.rooms, [roomName]: { ...state.rooms[roomName], [key]: undefined } },
+        };
+      }
+      case 'ListChanged': {
+        const payload: ListChangePayload<unknown> = event.payload;
+        const roomName = payload.room;
+        const newEntries: Record<string, unknown> = {};
+        for (const element of Object.values(payload.list)) {
+          newEntries[element[payload.keyId]] = element;
+        }
+        return {
+          ...state,
+          eventCounter: event.eventCounter,
+          rooms: { ...state.rooms, [roomName]: { ...state.rooms[roomName], ...newEntries } },
+        };
+      }
+      default:
+        console.warn('NO SUCH event.type: ' + event.type);
+        return { ...state, eventCounter: event.eventCounter };
+        break;
+    }
+  }
+
+  currentState(): Readonly<State> {
+    return this.state;
+  }
+
+  getEventCounter(): number {
+    return this.state.eventCounter;
+  }
+
+  setLastAnnouncedData(data: ServerData): void {
+    this.data = data;
+  }
+
+  getLastAnnouncedData() {
+    return this.data;
+  }
+
+  static calculateData(state: State): ServerData {
+    const urlPrefix = '/api/v1/';
+    const data: ServerData = { roomToJson: {}, urls: [], urlJson: '' };
+    const dataTypes: DataType[] = [];
+    for (const roomName of Object.keys(state.rooms)) {
+      // Update room data
+      data.roomToJson[roomName] = JSON.stringify(state.rooms[roomName]);
+
+      // Update URL data
+      dataTypes.push({
+        name: roomName,
+        checksum: state.eventCounter.toString(),
+        url: urlPrefix + roomName,
+        count: Object.keys(state.rooms[roomName]).length,
+        updated: true,
+      });
     }
 
-    return changedKeys;
+    // Add 'api-entries' Room
+    dataTypes.push({
+      name: 'api-entries',
+      checksum: state.eventCounter.toString(),
+      url: urlPrefix + 'api-entries',
+      count: dataTypes.length + 1,
+      updated: true,
+    });
+    data.roomToJson['api-entries'] = JSON.stringify(dataTypes);
+
+    // Add URLs
+    data.urls = dataTypes.map((dt) => dt.name).sort(JsonDataStore.alphabeticalSort);
+    data.urlJson = JSON.stringify(data.urls);
+
+    return data;
   }
 
-  hasJsonKey(key: string): boolean {
-    return Object.prototype.hasOwnProperty.call(this.currentJsonContent, key);
+  static calcChangedRooms(roomsToCheck: string[], oldData: ServerData, data: ServerData): string[] {
+    const namesOfChangedRooms: string[] = [];
+    for (const room of roomsToCheck) {
+      if (oldData.roomToJson[room] !== data.roomToJson[room]) namesOfChangedRooms.push(room);
+    }
+    return namesOfChangedRooms;
   }
 
-  getJsonData(): Record<string, unknown> {
-    return this.currentJsonContent;
+  roomAvailable(roomName: string): boolean {
+    return Object.prototype.hasOwnProperty.call(this.data.roomToJson, roomName);
   }
 
-  setJsonData(newJsonContent: Record<string, unknown>): void {
-    this.currentJsonContent = newJsonContent;
+  getAllRoomNames(): string[] {
+    return Object.keys(this.data.roomToJson);
   }
 
-  addUrls(urls: string[]): void {
-    this.urls = this.urls.concat(urls);
-    this.urls.sort(this.alphabeticalSort);
+  getRoomJsonString(roomName: string): string {
+    return this.data.roomToJson[roomName];
   }
 
-  removeUrls(urls: string[]): void {
-    this.urls = this.urls.filter((key) => urls.indexOf(key) < 0);
+  getRoomJson(roomName: string): unknown {
+    return this.state.rooms[roomName];
   }
 
+  getUrlJson(): string {
+    return this.data.urlJson;
+  }
   getUrls(): string[] {
-    return this.urls;
+    return this.data.urls;
   }
 
-  addDataRoom(dataType: string): void {
-    this.dataRooms.push(dataType);
-    this.dataRooms.sort(this.alphabeticalSort);
-  }
-
-  removeDataRoom(dataType: string): void {
-    const index = this.dataRooms.indexOf(dataType);
-    if (index >= 0) {
-      this.dataRooms.splice(index, 1);
-    }
-  }
-
-  getDataRooms(): string[] {
-    return this.dataRooms;
-  }
-
-  private alphabeticalSort(a: string, b: string): number {
+  private static alphabeticalSort(a: string, b: string): number {
     if (a < b) {
       return -1;
     }
