@@ -14,11 +14,11 @@ const initialState: State = {
 
 export const reducer = createReducer(
   initialState,
-  on(fromGenericData.updateData, (state, { type, values }) => ({
+  on(fromGenericData.updateData, (state, { dataType, values }) => ({
     ...state,
-    data: { ...state.data, [type]: values },
+    data: { ...state.data, [dataType]: values },
   })),
-  on(fromGenericData.setDataTypes, (state, { dataTypes }) => ({ ...state, ...dataTypes }))
+  on(fromGenericData.setDataTypes, (state, { dataTypes }) => ({ ...state, dataTypes }))
 );
 
 export const appState = createFeatureSelector<State>('genericData');
