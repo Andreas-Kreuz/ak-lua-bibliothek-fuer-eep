@@ -1,5 +1,17 @@
 # Änderungen an der Software
 
+## 0.11.0
+
+- ⭐ Neu: Performance-Optimierung durch die Übertragung nur wenn Züge geändert wurden
+  (z.B. durch Zusammenstellung oder Bewegung)
+- ⭐ Neu: Demo-Anlage für Haltestellenanzeige
+- ⚠️ API des Webservers wurde umgestellt:
+  - Die meisten Listen sind nun als Record verfügbar (Key ist in fast allen Fällen `id`)
+  - Alle Fahrzeuge sind nun in einer Liste:
+    - Züge sind nun in `trains` (keine Trennung mehr nach dynamic und static)
+    - Fahrzeuge sind nun in `rolling-stocks` (keine Trennung mehr nach dynamic und static)
+- 🛈 extern benötigte Bibliotheken sind nach `third-party` umgezogen
+
 ## 0.10.8
 
 - 🐞 Bugfix: Beim Umschalten auf manuelle Steuerung gab es einen Programmfehler durch die Textausgabe
