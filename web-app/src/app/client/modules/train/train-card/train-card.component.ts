@@ -69,7 +69,12 @@ export class TrainCardComponent implements OnInit, OnDestroy, OnChanges {
     }
   }
 
-  changeCam(trainName: string) {
+  changeCamRollingStock(rollingStock: RollingStock) {
+    const posX = rollingStock.length / 2 + 12;
+    this.eepCommands.setCamToRollingStock(rollingStock.id, posX, -3, 5, 15, 80);
+  }
+
+  changeCamTrain(trainName: string) {
     this.eepCommands.setCamToTrain(trainName, this.currentCam);
     this.currentCam = this.nextCam(this.currentCam);
   }
