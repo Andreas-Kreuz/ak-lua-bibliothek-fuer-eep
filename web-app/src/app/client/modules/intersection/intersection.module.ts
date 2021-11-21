@@ -13,8 +13,12 @@ import { CamHelpDialogComponent } from '../../../eep/cam/cam-help-dialog/cam-hel
 import { LaneOverviewComponent } from './lane-overview/lane-overview.component';
 import { LaneQueueComponent } from './lane-queue/lane-queue.component';
 import { StoreModule } from '@ngrx/store';
+import { signalFeature } from '../signals/store/signal.reducers';
+import { SignalEffects } from '../signals/store/signal.effects';
+import { SignalsService } from '../signals/store/signals.service';
 
 @NgModule({
+  providers: [SignalsService],
   declarations: [
     IntersectionComponent,
     IntersectionSwitchingComponent,
@@ -30,6 +34,8 @@ import { StoreModule } from '@ngrx/store';
     SharedModule,
     StoreModule.forFeature(intersectionFeature),
     EffectsModule.forFeature([IntersectionEffects]),
+    StoreModule.forFeature(signalFeature),
+    EffectsModule.forFeature([SignalEffects]),
   ],
 })
 export class IntersectionModule {}

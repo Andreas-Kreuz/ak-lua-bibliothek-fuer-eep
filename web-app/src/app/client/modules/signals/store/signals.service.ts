@@ -1,13 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { SocketEvent } from '../../../core/socket/socket-event';
-import { SocketService } from '../../../core/socket/socket-service';
+import { SocketEvent } from '../../../../core/socket/socket-event';
+import { SocketService } from '../../../../core/socket/socket-service';
 import { DataEvent } from 'web-shared';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class SignalsService {
   private signals$: Observable<string>;
   private signalTypes$: Observable<string>;

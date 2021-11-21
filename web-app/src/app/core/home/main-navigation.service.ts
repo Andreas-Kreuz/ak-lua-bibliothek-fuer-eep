@@ -2,8 +2,6 @@ import { Observable, of, combineLatest } from 'rxjs';
 import { Action, select, Store } from '@ngrx/store';
 import * as fromRoot from '../../app.reducers';
 import { Injectable } from '@angular/core';
-import * as fromSignal from '../../eep/signals/store/signal.reducers';
-import * as fromTrain from '../../eep/trains/store/train.reducer';
 import * as fromCore from '../../core/store/core.reducers';
 import { map } from 'rxjs/operators';
 
@@ -28,7 +26,6 @@ export class MainNavigationService {
     name: string;
     available: Observable<boolean>;
     values: {
-      badge: null | Observable<number>;
       available: Observable<boolean>;
       icon: string;
       image: string;
@@ -45,10 +42,6 @@ export class MainNavigationService {
   private readonly kreuzungLuaModuleId = 'c5a3e6d3-0f9b-4c89-a908-ed8cf8809362'; // "ak.data.KreuzungLuaModul"
 
   constructor(private store: Store<fromRoot.State>) {
-    this.signalCount$ = this.store.pipe(select(fromSignal.signalCount$));
-    this.railTrainCount$ = this.store.pipe(select(fromTrain.selectRailTrainCount));
-    this.roadTrainCount$ = this.store.pipe(select(fromTrain.selectRoadTrainCount));
-    this.tramTrainCount$ = this.store.pipe(select(fromTrain.selectTramTrainCount));
     this.navigation = [
       {
         name: 'Home',
@@ -60,7 +53,6 @@ export class MainNavigationService {
             subtitle: null,
             link: '/',
             image: null,
-            badge: null,
             description: null,
             linkDescription: null,
             requiredModuleId: null,
@@ -82,7 +74,6 @@ export class MainNavigationService {
             subtitle: 'Lua-Bibliothek',
             link: '/intersections',
             image: 'card-img-intersection.jpg',
-            badge: this.intersectionsCount$,
             description: 'Schalte Deine Kreuzungen oder setze die passende Kamera.',
             linkDescription: 'Kreuzungen zeigen',
             requiredModuleId: this.kreuzungLuaModuleId,
@@ -98,7 +89,6 @@ export class MainNavigationService {
             subtitle: 'Straßen',
             link: '/trains/road',
             image: 'card-img-trains-road.jpg',
-            badge: this.roadTrainCount$,
             description: 'Hier findest Du auch Trams, die auf der Straße fahren.',
             linkDescription: 'Autos zeigen',
             requiredModuleId: this.dataLuaModuleId,
@@ -110,7 +100,6 @@ export class MainNavigationService {
             subtitle: 'Straßenbahngleise',
             link: '/trains/tram',
             image: 'card-img-trains-tram.jpg',
-            badge: this.tramTrainCount$,
             description: 'Trams, die auf der Straße fahren, findest Du unter Autos.',
             linkDescription: 'Trams zeigen',
             requiredModuleId: this.dataLuaModuleId,
@@ -122,7 +111,6 @@ export class MainNavigationService {
             subtitle: 'Bahngleise',
             link: '/trains/rail',
             image: 'card-img-trains-rail.jpg',
-            badge: this.railTrainCount$,
             description: 'Fahrzeuge, die auf Bahngleisen unterwegs sind.',
             linkDescription: 'Züge zeigen',
             requiredModuleId: this.dataLuaModuleId,
@@ -140,7 +128,6 @@ export class MainNavigationService {
             subtitle: null, // 'EEP-Log-Datei',
             link: '/log',
             image: null,
-            badge: null,
             description: 'Zeige die Log-Datei von EEP an',
             linkDescription: 'Log-Datei ansehen',
             requiredModuleId: null,
@@ -153,7 +140,6 @@ export class MainNavigationService {
             subtitle: null, // 'EEPDataSlot',
             link: '/data',
             image: null,
-            badge: this.slotCount$,
             description: 'Daten die mit EEPSaveData gespeichert wurden',
             linkDescription: 'Zu den Daten',
             requiredModuleId: this.dataLuaModuleId,
@@ -165,7 +151,6 @@ export class MainNavigationService {
             subtitle: null, // 'Ampeln, Signale, Schranken',
             link: '/signals',
             image: null,
-            badge: this.signalCount$,
             description: 'Enthält Signale, Ampeln und Schranken',
             linkDescription: 'Zu den Signalen',
             requiredModuleId: this.dataLuaModuleId,
@@ -181,7 +166,6 @@ export class MainNavigationService {
             subtitle: null, // 'JSON-Daten vom Server',
             link: '/generic-data',
             image: null,
-            badge: null,
             description: 'Übersicht der Rohdaten von EEP-Web',
             linkDescription: 'Zu den Daten',
             requiredModuleId: null,

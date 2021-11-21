@@ -20,7 +20,7 @@ const routes: Routes = [
           { path: '', component: HomeComponent, pathMatch: 'full' },
           {
             path: 'signals',
-            loadChildren: () => import('./eep/signals/signals.module').then((m) => m.SignalsModule),
+            loadChildren: () => import('./client/modules/signals/signals.module').then((m) => m.SignalsModule),
           },
           {
             path: 'trains',

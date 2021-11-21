@@ -1,4 +1,4 @@
-import { createFeatureSelector, createSelector } from '@ngrx/store';
+import { createFeature, createFeatureSelector, createSelector } from '@ngrx/store';
 
 import * as fromSignal from './signal.actions';
 import { Signal } from '../models/signal.model';
@@ -52,6 +52,8 @@ export const reducer = (state: State = initialState, action: fromSignal.SignalAc
       return state;
   }
 };
+
+export const signalFeature = createFeature({ name: 'signal', reducer });
 
 export const signalState$ = createFeatureSelector<State>('signal');
 

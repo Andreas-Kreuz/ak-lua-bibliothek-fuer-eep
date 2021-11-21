@@ -1,15 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
 import { Actions, ofType, createEffect } from '@ngrx/effects';
 import { map, switchMap } from 'rxjs/operators';
 import * as IntersectionActions from './intersection.actions';
 import { of } from 'rxjs';
 import { IntersectionLane } from '../models/intersection-lane.model';
-import * as fromSignals from '../../../../eep/signals/store/signal.actions';
+import * as fromSignals from '../../signals/store/signal.actions';
 import { IntersectionTrafficLight } from '../models/intersection-traffic-light.model';
 import { IntersectionService } from './intersection.service';
-import { SocketEvent } from '../../../../core/socket/socket-event';
 import { Intersection } from '../models/intersection.model';
 import { IntersectionSwitching } from '../models/intersection-switching.model';
 import { LuaSettings } from '../../../../shared/model/lua-settings';

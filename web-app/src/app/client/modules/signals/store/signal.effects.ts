@@ -6,7 +6,7 @@ import * as fromSignal from './signal.actions';
 import { Signal } from '../models/signal.model';
 import { of } from 'rxjs';
 import { SignalsService } from './signals.service';
-import { SocketEvent } from '../../../core/socket/socket-event';
+import { SocketEvent } from '../../../../core/socket/socket-event';
 import { SignalTypeDefinition } from '../models/signal-type-definition.model';
 
 @Injectable()
