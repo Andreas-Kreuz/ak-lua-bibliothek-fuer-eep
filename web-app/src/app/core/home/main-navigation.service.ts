@@ -2,7 +2,6 @@ import { Observable, of, combineLatest } from 'rxjs';
 import { Action, select, Store } from '@ngrx/store';
 import * as fromRoot from '../../app.reducers';
 import { Injectable } from '@angular/core';
-import * as fromIntersection from '../../eep/intersection/store/intersection.reducers';
 import * as fromSignal from '../../eep/signals/store/signal.reducers';
 import * as fromTrain from '../../eep/trains/store/train.reducer';
 import * as fromCore from '../../core/store/core.reducers';
@@ -46,7 +45,6 @@ export class MainNavigationService {
   private readonly kreuzungLuaModuleId = 'c5a3e6d3-0f9b-4c89-a908-ed8cf8809362'; // "ak.data.KreuzungLuaModul"
 
   constructor(private store: Store<fromRoot.State>) {
-    this.intersectionsCount$ = this.store.pipe(select(fromIntersection.intersectionsCount$));
     this.signalCount$ = this.store.pipe(select(fromSignal.signalCount$));
     this.railTrainCount$ = this.store.pipe(select(fromTrain.selectRailTrainCount));
     this.roadTrainCount$ = this.store.pipe(select(fromTrain.selectRoadTrainCount));

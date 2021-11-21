@@ -3,7 +3,7 @@ import { Observable, Subscription } from 'rxjs';
 import { Intersection } from '../models/intersection.model';
 import { IntersectionSwitching } from '../models/intersection-switching.model';
 import { select, Store } from '@ngrx/store';
-import * as fromRoot from '../../../app.reducers';
+import * as fromRoot from '../../../../app.reducers';
 import * as fromIntersection from '../store/intersection.reducers';
 import { map } from 'rxjs/operators';
 import { IntersectionLane } from '../models/intersection-lane.model';

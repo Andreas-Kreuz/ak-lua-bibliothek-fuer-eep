@@ -2,13 +2,13 @@ import { IntersectionLane } from './models/intersection-lane.model';
 import { IntersectionSwitching } from './models/intersection-switching.model';
 import { TrafficType } from './models/traffic-type.enum';
 import { Direction } from './models/direction.model';
-import * as icons from '../../shared/unicode-symbol.model';
+import * as icons from '../../../shared/unicode-symbol.model';
 import { Intersection } from './models/intersection.model';
 import { Phase } from './models/phase.enum';
 import * as IntersectionAction from './store/intersection.actions';
 import { Store } from '@ngrx/store';
-import * as fromRoot from '../../app.reducers';
-import { CamHelpDialogComponent } from '../cam/cam-help-dialog/cam-help-dialog.component';
+import * as fromRoot from '../../../app.reducers';
+import { CamHelpDialogComponent } from '../../../eep/cam/cam-help-dialog/cam-help-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { Injectable } from '@angular/core';
 

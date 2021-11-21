@@ -2,15 +2,17 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { EffectsModule } from '@ngrx/effects';
 
-import { SharedModule } from '../../shared/shared.module';
+import { SharedModule } from '../../../shared/shared.module';
 import { IntersectionComponent } from './intersection-detail/intersection.component';
 import { IntersectionSwitchingComponent } from './intersection-switching/intersection-switching.component';
 import { IntersectionsComponent } from './intersection-list/intersections.component';
 import { IntersectionRoutingModule } from './intersection-routing.module';
+import { intersectionFeature } from './store/intersection.reducers';
 import { IntersectionEffects } from './store/intersection.effects';
-import { CamHelpDialogComponent } from '../cam/cam-help-dialog/cam-help-dialog.component';
+import { CamHelpDialogComponent } from '../../../eep/cam/cam-help-dialog/cam-help-dialog.component';
 import { LaneOverviewComponent } from './lane-overview/lane-overview.component';
 import { LaneQueueComponent } from './lane-queue/lane-queue.component';
+import { StoreModule } from '@ngrx/store';
 
 @NgModule({
   declarations: [
@@ -21,16 +23,13 @@ import { LaneQueueComponent } from './lane-queue/lane-queue.component';
     LaneOverviewComponent,
     LaneQueueComponent,
   ],
-  entryComponents: [
-    CamHelpDialogComponent,
-  ],
+  entryComponents: [CamHelpDialogComponent],
   imports: [
     CommonModule,
     IntersectionRoutingModule,
     SharedModule,
-    // StoreModule.forFeature('intersection', fromIntersection.reducer),
+    StoreModule.forFeature(intersectionFeature),
     EffectsModule.forFeature([IntersectionEffects]),
   ],
 })
-export class IntersectionModule {
-}
+export class IntersectionModule {}

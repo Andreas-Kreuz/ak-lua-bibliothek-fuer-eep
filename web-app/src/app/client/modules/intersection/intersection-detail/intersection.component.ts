@@ -5,10 +5,9 @@ import { Observable, Subscription } from 'rxjs';
 
 import * as fromIntersection from '../store/intersection.reducers';
 import * as IntersectionAction from '../store/intersection.actions';
-import * as fromRoot from '../../../app.reducers';
 import { Intersection } from '../models/intersection.model';
 import { IntersectionLane } from '../models/intersection-lane.model';
-import * as icons from '../../../shared/unicode-symbol.model';
+import * as icons from '../../../../shared/unicode-symbol.model';
 import { Phase } from '../models/phase.enum';
 import { Direction } from '../models/direction.model';
 import { TrafficType } from '../models/traffic-type.enum';
@@ -30,7 +29,7 @@ export class IntersectionComponent implements OnInit, OnDestroy {
   intersectionId: number;
 
   constructor(
-    private store: Store<fromRoot.State>,
+    private store: Store<fromIntersection.State>,
     private route: ActivatedRoute,
     public intersectionHelper: IntersectionHelper,
     public dialog: MatDialog

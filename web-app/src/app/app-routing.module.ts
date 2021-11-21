@@ -28,7 +28,8 @@ const routes: Routes = [
           },
           {
             path: 'intersections',
-            loadChildren: () => import('./eep/intersection/intersection.module').then((m) => m.IntersectionModule),
+            loadChildren: () =>
+              import('./client/modules/intersection/intersection.module').then((m) => m.IntersectionModule),
           },
           {
             path: 'data',

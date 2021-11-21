@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { SocketEvent } from '../../../core/socket/socket-event';
-import { SocketService } from '../../../core/socket/socket-service';
+import { SocketEvent } from '../../../../core/socket/socket-event';
+import { SocketService } from '../../../../core/socket/socket-service';
 import { CommandEvent, DataEvent, IntersectionEvent } from 'web-shared';
-import { LuaSetting } from '../../../shared/model/lua-setting';
+import { LuaSetting } from '../../../../shared/model/lua-setting';
 
 // socket.listen\('\[Data-(.*)\]'\);
 // socket.listen(DataEvent.eventOf('$1'));this.socket.join(DataEvent.roomOf('$1'));

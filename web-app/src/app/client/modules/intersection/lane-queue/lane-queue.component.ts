@@ -4,11 +4,11 @@ import { Intersection } from '../models/intersection.model';
 import { IntersectionSwitching } from '../models/intersection-switching.model';
 import { IntersectionLane } from '../models/intersection-lane.model';
 import { select, Store } from '@ngrx/store';
-import * as fromRoot from '../../../app.reducers';
+import * as fromRoot from '../../../../app.reducers';
 import { IntersectionHelper } from '../intersection-helper';
 import * as fromIntersection from '../store/intersection.reducers';
 import { map } from 'rxjs/operators';
-import * as icons from '../../../shared/unicode-symbol.model';
+import * as icons from '../../../../shared/unicode-symbol.model';
 
 @Component({
   selector: 'app-lane-queue',

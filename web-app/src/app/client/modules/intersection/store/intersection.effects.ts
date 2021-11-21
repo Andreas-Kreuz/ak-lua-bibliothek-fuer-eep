@@ -6,14 +6,14 @@ import { map, switchMap } from 'rxjs/operators';
 import * as IntersectionActions from './intersection.actions';
 import { of } from 'rxjs';
 import { IntersectionLane } from '../models/intersection-lane.model';
-import * as fromSignals from '../../signals/store/signal.actions';
+import * as fromSignals from '../../../../eep/signals/store/signal.actions';
 import { IntersectionTrafficLight } from '../models/intersection-traffic-light.model';
 import { IntersectionService } from './intersection.service';
-import { SocketEvent } from '../../../core/socket/socket-event';
+import { SocketEvent } from '../../../../core/socket/socket-event';
 import { Intersection } from '../models/intersection.model';
 import { IntersectionSwitching } from '../models/intersection-switching.model';
-import { LuaSettings } from '../../../shared/model/lua-settings';
-import { LuaSetting } from '../../../shared/model/lua-setting';
+import { LuaSettings } from '../../../../shared/model/lua-settings';
+import { LuaSetting } from '../../../../shared/model/lua-setting';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Injectable()
@@ -136,10 +136,5 @@ export class IntersectionEffects {
     { dispatch: false }
   );
 
-  constructor(
-    private actions$: Actions,
-    private httpClient: HttpClient,
-    private router: Router,
-    private intersectionService: IntersectionService
-  ) {}
+  constructor(private actions$: Actions, private intersectionService: IntersectionService) {}
 }

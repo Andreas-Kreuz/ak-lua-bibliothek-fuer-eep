@@ -10,7 +10,6 @@ import SocketService from '../clientio/socket-service';
 import CommandEffects from '../command/command-effects';
 import { CacheService } from '../eep/cache-service';
 import EepService from '../eep/eep-service';
-import IntersectionEffects from '../intersection/intersection-effects';
 import JsonDataEffects from '../json/json-data-effects';
 import LogEffects from '../log/log-effects';
 import AppConfig from './app-config';
@@ -22,7 +21,6 @@ export default class AppEffects {
   private serverConfigFile = path.resolve(this.serverConfigPath, 'settings.json');
   private eepDataEffects: JsonDataEffects;
   private logEffects: LogEffects;
-  private intersectionEffects: IntersectionEffects;
   private commandEffects: CommandEffects;
   private store = new AppReducer();
 
@@ -162,7 +160,7 @@ export default class AppEffects {
     // Init CommandHandler
     this.commandEffects = new CommandEffects(this.app, this.io, this.socketService, eepService.queueCommand);
 
-    // Init IntersectionHandler
-    this.intersectionEffects = new IntersectionEffects(this.app, this.io, this.socketService, eepService.queueCommand);
+    // // Init IntersectionHandler
+    // this.intersectionEffects = new IntersectionEffects(this.app, this.io, this.socketService, eepService.queueCommand);
   }
 }

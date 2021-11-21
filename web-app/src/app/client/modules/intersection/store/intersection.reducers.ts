@@ -1,10 +1,10 @@
-import { createFeatureSelector, createSelector, createReducer, Action, on } from '@ngrx/store';
+import { createFeatureSelector, createSelector, createReducer, Action, on, createFeature } from '@ngrx/store';
 import * as IntersectionActions from './intersection.actions';
 import { Intersection } from '../models/intersection.model';
 import { IntersectionLane } from '../models/intersection-lane.model';
 import { IntersectionSwitching } from '../models/intersection-switching.model';
 import { IntersectionTrafficLight } from '../models/intersection-traffic-light.model';
-import { LuaSettings } from '../../../shared/model/lua-settings';
+import { LuaSettings } from '../../../../shared/model/lua-settings';
 
 export interface State {
   intersections: Intersection[];
@@ -36,6 +36,8 @@ const intersectionsReducer = createReducer(
   })),
   on(IntersectionActions.setModuleSettings, (state: State, { settings }) => ({ ...state, luaModuleSettings: settings }))
 );
+
+export const intersectionFeature = createFeature({ name: 'intersection', reducer: intersectionsReducer });
 
 export const reducer = (state: State | undefined, action: Action) => intersectionsReducer(state, action);
 
