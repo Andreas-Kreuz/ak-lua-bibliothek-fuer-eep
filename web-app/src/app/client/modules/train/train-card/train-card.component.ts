@@ -9,6 +9,7 @@ import * as fromRoot from '../../../../app.reducers';
 import * as TrainAction from '../store/train.actions';
 import * as fromTrain from '../store/train.reducer';
 import { Observable } from 'rxjs';
+import { EepCommandService } from '../../../../common/eep-communication/eep-command.service';
 
 @Component({
   selector: 'app-train-card',
@@ -21,8 +22,9 @@ export class TrainCardComponent implements OnInit, OnDestroy, OnChanges {
   frontCouplingReady = false;
   rearCouplingReady = false;
   selectedTrainName$: Observable<string>;
+  private currentCam = 9;
 
-  constructor(private store: Store<fromRoot.State>) {}
+  constructor(private store: Store<fromRoot.State>, private eepCommands: EepCommandService) {}
 
   ngOnInit(): void {
     this.selectedTrainName$ = this.store.pipe(select(fromTrain.selectedTrainName));
@@ -65,5 +67,20 @@ export class TrainCardComponent implements OnInit, OnDestroy, OnChanges {
     } else {
       return '?';
     }
+  }
+
+  changeCam(trainName: string) {
+    this.eepCommands.setCamToTrain(trainName, this.currentCam);
+    this.currentCam = this.nextCam(this.currentCam);
+  }
+
+  private nextCam(currentCam: number): number {
+    const nextCams = {
+      [9]: 3,
+      [3]: 4,
+      [4]: 10,
+      [10]: 9,
+    };
+    return nextCams[currentCam] ? nextCams[currentCam] : 9;
   }
 }

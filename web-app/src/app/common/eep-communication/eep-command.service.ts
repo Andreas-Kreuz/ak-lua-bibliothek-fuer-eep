@@ -12,7 +12,7 @@ export class EepCommandService {
     this.socket.emit(CommandEvent.ChangeCamToStatic, { staticCam: staticCamName });
   }
 
-  setCamToTrain(trainName: string) {
-    this.socket.emit(CommandEvent.ChangeCamToTrain, { trainName });
+  setCamToTrain(trainName: string, id?: number) {
+    this.socket.emit(CommandEvent.ChangeCamToTrain, { trainName, id });
   }
 }
