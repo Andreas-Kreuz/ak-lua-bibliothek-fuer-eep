@@ -53,7 +53,7 @@ export const reducer = (state: State = initialState, action: fromSignal.SignalAc
   }
 };
 
-export const signalState$ = createFeatureSelector('signal');
+export const signalState$ = createFeatureSelector<State>('signal');
 
 export const signals$ = createSelector(signalState$, (state: State) => state.signals);
 

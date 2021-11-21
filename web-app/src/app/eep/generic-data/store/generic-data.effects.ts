@@ -1,4 +1,4 @@
-import { Actions, Effect, ofType } from '@ngrx/effects';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
 import * as fromCore from '../../../core/store/core.actions';
 import * as fromGenericData from './generic-data.actions';
 import { catchError, map, switchMap } from 'rxjs/operators';
@@ -12,25 +12,26 @@ const DATA_TYPES_PATH = '/api/v1/api-entries';
 
 @Injectable()
 export class GenericDataEffects {
-  @Effect()
-  fetchData = this.actions$.pipe(
-    ofType(fromGenericData.FETCH_DATA),
-    switchMap((action: fromGenericData.FetchData) => {
-      const url = action.payload.hostName + action.payload.path;
-      console.log(url);
-      return this.httpClient.get(url).pipe(
-        map((values) => ({
-          values,
-          path: action.payload.path,
-          name: action.payload.name,
-        })),
-        catchError((error) => throwError({ error, path: action.payload.path }))
-      );
-    }),
-    switchMap((data: { values; path: string; name: string }) =>
-      of(new fromGenericData.UpdateData({ type: data.name, values: data.values }))
-    ),
-    catchError((err: { error: any; path: string }) => of())
+  fetchData = createEffect(() =>
+    this.actions$.pipe(
+      ofType(fromGenericData.fetchData),
+      switchMap((action) => {
+        const url = action.hostName + action.path;
+        console.log(url);
+        return this.httpClient.get(url).pipe(
+          map((values) => ({
+            values,
+            path: action.path,
+            name: action.name,
+          })),
+          catchError((error) => throwError({ error, path: action.path }))
+        );
+      }),
+      switchMap((data: { values; path: string; name: string }) =>
+        of(fromGenericData.updateData({ dataType: data.name, values: data.values }))
+      ),
+      catchError((err: { error: any; path: string }) => of(fromGenericData.updateData({ dataType: '', values: {} })))
+    )
   );
 
   constructor(private actions$: Actions, private httpClient: HttpClient) {}

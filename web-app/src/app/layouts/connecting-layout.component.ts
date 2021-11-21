@@ -14,7 +14,7 @@ export class ConnectingLayoutComponent implements OnInit {
   connectionEstablished$: Observable<boolean>;
   public hostname$: Observable<string>;
 
-  constructor(private store: Store<fromRoot.State>) {}
+  constructor(private store: Store<fromCore.State>) {}
 
   ngOnInit(): void {
     this.connectionEstablished$ = this.store.pipe(select(fromCore.getConnectionEstablished));

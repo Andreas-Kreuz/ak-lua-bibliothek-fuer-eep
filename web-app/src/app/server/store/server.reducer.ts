@@ -36,7 +36,7 @@ export const reducer = createReducer(
   on(eventCounterChanged, (state: State, { eventCounter }) => ({ ...state, eventCounter }))
 );
 
-export const appState = createFeatureSelector('server');
+export const appState = createFeatureSelector<State>('server');
 export const eepDir$ = createSelector(appState, (state: State) => state.eepDir);
 export const eepDirOk$ = createSelector(appState, (state: State) => state.eepDirOk);
 export const urls$ = createSelector(appState, (state: State) => state.urls);

@@ -20,8 +20,8 @@ export class GenericDataOverviewComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.genericDataService.connect();
-    this.hostName$ = this.store.pipe(select(fromCore.getJsonServerUrl));
-    this.dataTypes$ = this.store.pipe(select(fromGenericData.selectDataTypes$));
+    this.hostName$ = this.store.select(fromCore.getJsonServerUrl);
+    this.dataTypes$ = this.store.select(fromGenericData.selectDataTypes$);
   }
 
   ngOnDestroy(): void {

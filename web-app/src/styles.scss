@@ -1,9 +1,10 @@
 //app-root {
-@use '~@angular/material' as mat;
+@use "@angular/material" as mat;
 //  min-height: 100vh;
 //}
 
-html, body {
+html,
+body {
   min-height: 100vh;
   height: auto;
   margin: 0;
@@ -12,25 +13,30 @@ html, body {
 // Theme from
 // http://materialtheme.arcsine.org/?c=eyJwYWxldHRlIjp7InByaW1hcnkiOnsibWFpbiI6IiM0M2EwNDciLCJsaWdodGVyIjoiI2M3ZTNjOCIsImRhcmtlciI6IiMyYzg0MmYifSwiYWNjZW50Ijp7Im1haW4iOiIjMWU4OGU1IiwibGlnaHRlciI6IiNiY2RiZjciLCJkYXJrZXIiOiIjMTI2YmRhIn0sIndhcm4iOnsibWFpbiI6IiNmZjAwMDAiLCJsaWdodGVyIjoiI2ZmYjNiMyIsImRhcmtlciI6IiNmZjAwMDAifSwibGlnaHRUZXh0IjoiIzAwMDAwMCIsImxpZ2h0QmFja2dyb3VuZCI6IiNmZmZmZmYiLCJkYXJrVGV4dCI6IiNmZmZmZmYiLCJkYXJrQmFja2dyb3VuZCI6IiMyYzJjMmMifSwiZm9udHMiOlt7InRhcmdldCI6ImRpc3BsYXktNCIsImxpbmVIZWlnaHQiOjk2LCJzaXplIjo5Nn0seyJ0YXJnZXQiOiJkaXNwbGF5LTMiLCJ2YXJpYW50IjoibGlnaHQiLCJsaW5lSGVpZ2h0Ijo2MCwic2l6ZSI6NjB9LHsidGFyZ2V0IjoiZGlzcGxheS0yIiwibGluZUhlaWdodCI6NTIsInNpemUiOjQ4fSx7InRhcmdldCI6ImRpc3BsYXktMSJ9LHsidGFyZ2V0IjoiaGVhZGxpbmUifSx7InRhcmdldCI6InRpdGxlIiwibGluZUhlaWdodCI6MjAsInNwYWNpbmciOjAuMjV9LHsidGFyZ2V0Ijoic3ViaGVhZGluZy0yIn0seyJ0YXJnZXQiOiJzdWJoZWFkaW5nLTEifSx7InRhcmdldCI6ImJvZHktMiIsInZhcmlhbnQiOiJyZWd1bGFyIn0seyJ0YXJnZXQiOiJib2R5LTEiLCJzaXplIjoxNiwic3BhY2luZyI6MC4xNX0seyJ0YXJnZXQiOiJidXR0b24ifSx7InRhcmdldCI6ImNhcHRpb24ifSx7InRhcmdldCI6ImlucHV0Iiwic2l6ZSI6bnVsbH1dLCJpY29ucyI6IkZpbGxlZCIsImxpZ2h0bmVzcyI6dHJ1ZX0=
 
-@import 'styles-angular-theme';
-@import 'styles-variables';
-@import '~bootstrap/scss/bootstrap';
-@import '~bootstrap/scss/bootstrap-grid';
-@import '~bootstrap/scss/bootstrap-reboot';
-@import 'styles-bootstrap-reset';
-
+@import "styles-angular-theme";
+@import "styles-variables";
+@import "~bootstrap/scss/bootstrap";
+@import "~bootstrap/scss/bootstrap-grid";
+@import "~bootstrap/scss/bootstrap-reboot";
+@import "styles-bootstrap-reset";
 
 // CARDS SECTION
 .app-card {
   padding: 0 !important;
+  border-radius: 0.3rem !important;
 }
-
 
 // Set cornered border
 .mat-card,
 .app-card > .mat-card-header,
-.app-card > .mat-card-title-group {
-  border-radius: 0px !important;
+.app-card > .mat-card-title-group,
+.app-card > .mat-toolbar {
+  border-top-left-radius: 0.3rem;
+  border-top-right-radius: 0.3rem;
+}
+
+.app-card > .mat-card-header > .mat-card-avatar {
+  margin-left: 1rem;
 }
 
 .app-card > .mat-card-header,
@@ -41,12 +47,12 @@ html, body {
 
 .app-card > .mat-card-header {
   //height: calc(100% + 16px);
-  padding: 16px 0 0;
+  padding: 1.5rem 0 0;
 }
 
 .app-card > .mat-card-title-group {
   //height: calc(100% + 16px);
-  padding: 16px 16px 0;
+  padding: 1.5rem 1.5rem 0;
 }
 
 .app-card > .mat-nav-list {
@@ -56,10 +62,10 @@ html, body {
 }
 
 .app-card > .mat-card-actions {
-  margin-top: 8px;
-  margin-left: 8px;
-  margin-right: 8px;
-  margin-bottom: 8px !important;
+  margin-top: 0.75rem;
+  margin-left: 0.75rem;
+  margin-right: 0.75rem;
+  margin-bottom: 0.75rem !important;
 }
 
 .app-card > .mat-card-image {
@@ -67,10 +73,12 @@ html, body {
   width: 100%;
 }
 
+.app-card .mat-list-base .mat-list-item .mat-list-item-content,
+.app-card .mat-list-base .mat-list-option .mat-list-item-content,
 .app-card > .mat-tab-group .mat-card-content,
 .app-card > .mat-card-content {
-  padding-left: 16px;
-  padding-right: 16px;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
 }
 
 .app-card > .mat-tab-group .mat-card-content,
@@ -81,14 +89,16 @@ html, body {
 .app-card .mat-card-title-group + .mat-divider + .mat-card-content,
 .app-card .mat-card-title-group.app-bg-primary + .mat-card-content,
 .app-card .mat-card-title-group.app-bg-accent + .mat-card-content {
-  padding-top: 16px;
+  padding-top: 0.75rem;
 }
 
-
-.app-card > .mat-card-content:last-child,
 .app-card > .mat-card-header > .mat-card-title:last-child,
 .app-card > .mat-card-title-group > div > .mat-card-title:last-child {
-  padding-bottom: 8px;
+  padding-bottom: 0.75rem;
+}
+
+.app-card > .mat-card-content:last-child {
+  padding-bottom: 0.5rem;
 }
 
 .app-card .mat-card-header + .mat-list,
@@ -99,7 +109,7 @@ html, body {
 .app-card .mat-card-title-group + .mat-divider + .mat-list,
 .app-card .mat-card-title-group + .mat-card-content > .mat-list,
 .app-card .mat-card-title-group + .mat-card-content > .mat-divider + .mat-list {
-  padding-top: 0px;
+  padding-top: 0;
 }
 
 .app-card-header-primary > .mat-card-header,
@@ -140,6 +150,10 @@ html, body {
   background-color: mat.get-color-from-palette(mat.define-palette(mat.$gray-palette, 600));
 }
 
+.mat-card-title {
+  word-break: break-all;
+}
+
 .app-card-header-dark > .mat-card-title,
 .app-card-header-dark > .mat-card-subtitle {
   color: #ffffff;
@@ -147,8 +161,8 @@ html, body {
 
 .app-card-button-tr {
   position: absolute !important;
-  top: 10px;
-  right: 10px;
+  top: 0.75rem;
+  right: 0.75rem;
 }
 
 // colors section
@@ -234,9 +248,9 @@ html, body {
 }
 
 .app-nav-link {
-  border-radius: 4px;
+  border-radius: 0.25rem;
 }
 
 .tt {
-  font-family: 'Courier New', Courier, monospace;
+  font-family: "Courier New", Courier, monospace;
 }

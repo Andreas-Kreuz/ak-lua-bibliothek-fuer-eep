@@ -1,7 +1,5 @@
 import { NgModule } from '@angular/core';
-import { NgbModule, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
-import { TooltipComponent } from './tooltip/tooltip.component';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -44,7 +42,6 @@ import { TagEditorComponent } from './ui/tag-editor/tag-editor.component';
 
 @NgModule({
   declarations: [
-    TooltipComponent,
     FilteredTableComponent,
     DetailsDirective,
     OldDetailsDirective,
@@ -85,15 +82,11 @@ import { TagEditorComponent } from './ui/tag-editor/tag-editor.component';
     MatTabsModule,
     MatToolbarModule,
     MatTooltipModule,
-    NgbModule,
-    NgbTooltipModule,
-    TooltipComponent,
     MatExpansionModule,
   ],
   imports: [
     SharedRoutingModule,
     CommonModule,
-    NgbTooltipModule,
     MatBadgeModule,
     MatButtonModule,
     MatCardModule,

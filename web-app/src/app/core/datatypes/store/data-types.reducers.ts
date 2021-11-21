@@ -23,7 +23,7 @@ const featureReducer = createReducer(
 
 export const reducer = (state: State | undefined, action: Action) => featureReducer(state, action);
 
-export const dataTypesState$ = createFeatureSelector('dataTypes');
+export const dataTypesState$ = createFeatureSelector<State>('dataTypes');
 
 export const selectDataTypes = createSelector(dataTypesState$, (state: State) => state.availableDataTypes);
 export const selectIntersectionsAvailable = createSelector(

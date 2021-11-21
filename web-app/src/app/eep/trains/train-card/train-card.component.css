@@ -1,5 +1,4 @@
 #expandButton {
-    position: absolute;
     right: 1rem;
 }
 
@@ -9,22 +8,44 @@
     line-height: 2.5rem;
     height: 3rem;
     width: 3rem;
-    /* background-color: #eeeeee; */
 }
 
 #rsTitle {
     font-weight: 450;
 }
 
-.mat-card {
-    padding: 1rem;
-}
-
 .mat-card-content {
-    margin-top: 1rem;
-    margin-left: 4rem;
+    margin-left: 3.5rem;
 }
 
-.mat-card-subtitle {
-    margin-bottom: 0;
+.mat-card-header {
+    align-content: stretch;
+    justify-content: space-between;
+}
+
+.titles {
+    margin-left: 1rem;
+    margin-right: 1rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 5;
+}
+
+.mat-card-avater,
+.mat-card-header button {
+    flex-grow: 0;
+}
+
+.mat-card-header-text {
+    width: 100px;
+    height: 100px;
+    background-color: brown;
+    display: none !important;
+    flex-grow: 1;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.text-wrap {
+    word-break: break-all;
 }
