@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './core/home/home.component';
-import { SwitchesComponent } from './eep/switches/switch-list/switches.component';
 import { ConnectingLayoutComponent } from './layouts/connecting-layout.component';
 import { MainComponent } from './core/main/main.component';
 
@@ -53,7 +52,6 @@ const routes: Routes = [
             path: 'statistics',
             loadChildren: () => import('./client/modules/statistics/statistics.module').then((m) => m.StatisticsModule),
           },
-          { path: 'switches', component: SwitchesComponent },
         ],
       },
       {
