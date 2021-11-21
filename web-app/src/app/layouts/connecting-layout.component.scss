@@ -6,11 +6,22 @@
   align-items: center;
   text-align: center;
   min-height: 100vh;
+  padding: 1.5rem;
+}
+
+p {
+  margin: 0;
+  padding: 0;
+}
+
+mat-progress-spinner {
+  margin: 2rem;
 }
 
 #connecting {
   background-color: #eeeeee;
-  padding: 1.5em;
+  padding: 1.5rem;
+  margin: 2rem;
   border: 1px solid #999999;
   border-radius: 0.5em;
   display: flex;
