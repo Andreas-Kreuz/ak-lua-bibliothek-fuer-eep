@@ -1,10 +1,10 @@
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import * as fromCore from '../../../core/store/core.actions';
+import * as fromCore from '../../../../core/store/core.actions';
 import * as fromGenericData from './generic-data.actions';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { of, throwError } from 'rxjs';
-import { EepWebUrl } from '../../../core/server-status/eep-web-url.model';
-import { Status } from '../../../core/server-status/status.enum';
+import { EepWebUrl } from '../../../../core/server-status/eep-web-url.model';
+import { Status } from '../../../../core/server-status/status.enum';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 

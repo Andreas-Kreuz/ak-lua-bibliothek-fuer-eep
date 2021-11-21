@@ -14,7 +14,6 @@ import { Intersection } from '../models/intersection.model';
 import { IntersectionSwitching } from '../models/intersection-switching.model';
 import { LuaSettings } from '../../../../shared/model/lua-settings';
 import { LuaSetting } from '../../../../shared/model/lua-setting';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Injectable()
 export class IntersectionEffects {

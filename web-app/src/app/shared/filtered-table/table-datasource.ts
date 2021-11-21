@@ -3,7 +3,6 @@ import { DataSource } from '@angular/cdk/collections';
 import { MatSort } from '@angular/material/sort';
 import { map } from 'rxjs/operators';
 import { merge, Observable, Subscription } from 'rxjs';
-import * as assert from 'assert';
 
 /**
  * Data source for the Table view. This class should

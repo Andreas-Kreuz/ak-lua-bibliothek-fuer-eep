@@ -37,7 +37,8 @@ const routes: Routes = [
           },
           {
             path: 'generic-data',
-            loadChildren: () => import('./eep/generic-data/generic-data.module').then((m) => m.GenericDataModule),
+            loadChildren: () =>
+              import('./client/modules/json-data/generic-data.module').then((m) => m.GenericDataModule),
           },
           {
             path: 'log',

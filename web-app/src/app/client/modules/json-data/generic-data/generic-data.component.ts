@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import * as fromRoot from '../../../app.reducers';
 import * as fromGenericActions from '../store/generic-data.actions';
 import * as fromGenericData from '../store/generic-data.reducers';
 import { Observable, Subject } from 'rxjs';
-import { ActivatedRoute, ParamMap } from '@angular/router';
-import { switchMap, map } from 'rxjs/operators';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-generic-data',
@@ -17,7 +15,7 @@ export class GenericDataComponent implements OnInit {
   tableData = new Subject<any[]>();
   tableData$ = this.tableData.asObservable();
 
-  constructor(private store: Store<fromRoot.State>, private route: ActivatedRoute) {}
+  constructor(private store: Store<fromGenericData.State>, private route: ActivatedRoute) {}
 
   ngOnInit() {
     const snapshot = this.route.snapshot;

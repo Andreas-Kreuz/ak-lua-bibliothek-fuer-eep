@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import * as fromGenericData from '../store/generic-data.reducers';
-import * as fromCore from '../../../core/store/core.reducers';
-import * as fromRoot from '../../../app.reducers';
+import * as fromCore from '../../../../core/store/core.reducers';
+import * as fromRoot from '../../../../app.reducers';
 import { Observable } from 'rxjs';
 import { DataType } from 'web-shared';
 import { GenericDataService } from '../store/generic-data.service';

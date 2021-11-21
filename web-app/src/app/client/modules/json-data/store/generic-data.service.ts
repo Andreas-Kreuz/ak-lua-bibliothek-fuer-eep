@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 
-import * as fromRoot from '../../../app.reducers';
-import { SocketEvent } from '../../../core/socket/socket-event';
-import { SocketService } from '../../../core/socket/socket-service';
+import * as fromRoot from '../../../../app.reducers';
+import { SocketEvent } from '../../../../core/socket/socket-event';
+import { SocketService } from '../../../../core/socket/socket-service';
 import { DataType } from 'web-shared';
 import * as fromGenericData from './generic-data.actions';
 import { DataEvent } from 'web-shared';

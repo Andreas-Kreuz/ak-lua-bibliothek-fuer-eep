@@ -1,5 +1,5 @@
 import * as fromGenericData from './generic-data.actions';
-import { createFeatureSelector, createReducer, createSelector, on } from '@ngrx/store';
+import { createFeature, createFeatureSelector, createReducer, createSelector, on } from '@ngrx/store';
 import { DataType } from 'web-shared';
 
 export interface State {
@@ -20,6 +20,8 @@ export const reducer = createReducer(
   })),
   on(fromGenericData.setDataTypes, (state, { dataTypes }) => ({ ...state, dataTypes }))
 );
+
+export const genericDataFeature = createFeature({ name: 'genericData', reducer });
 
 export const appState = createFeatureSelector<State>('genericData');
 
