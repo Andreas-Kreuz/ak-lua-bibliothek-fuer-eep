@@ -51,7 +51,7 @@ const routes: Routes = [
           },
           {
             path: 'statistics',
-            loadChildren: () => import('./eep/statistics/statistics.module').then((m) => m.StatisticsModule),
+            loadChildren: () => import('./client/modules/statistics/statistics.module').then((m) => m.StatisticsModule),
           },
           { path: 'switches', component: SwitchesComponent },
         ],

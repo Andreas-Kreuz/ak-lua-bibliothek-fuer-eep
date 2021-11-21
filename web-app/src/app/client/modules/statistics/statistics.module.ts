@@ -6,8 +6,10 @@ import { StatisticsComponent } from './statistics.component';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { StatisticsEffects } from './store/statistics.effects';
+import { statisticsFeature } from './store/statistics.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { StatisticsCardComponent } from './statistics-card/statistics-card.component';
+import { StoreModule } from '@ngrx/store';
 
 @NgModule({
   declarations: [StatisticsComponent, StatisticsCardComponent],
@@ -16,6 +18,7 @@ import { StatisticsCardComponent } from './statistics-card/statistics-card.compo
     StatisticsRoutingModule,
     MatCardModule,
     MatDividerModule,
+    StoreModule.forFeature(statisticsFeature),
     EffectsModule.forFeature([StatisticsEffects]),
   ],
 })

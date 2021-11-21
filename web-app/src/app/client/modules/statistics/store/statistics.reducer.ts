@@ -1,4 +1,4 @@
-import { createFeatureSelector, createReducer, createSelector, on } from '@ngrx/store';
+import { createFeature, createFeatureSelector, createReducer, createSelector, on } from '@ngrx/store';
 import { dataCollectorUpdate, dataInitializeUpdate, serverControllerUpdate } from './statistics.actions';
 import TimeDesc from './time-desc';
 
@@ -41,6 +41,8 @@ const statisticsReducer = createReducer(
     };
   })
 );
+
+export const statisticsFeature = createFeature({ name: 'statistics', reducer: statisticsReducer });
 
 export const statisticsState$ = createFeatureSelector<State>('statistics');
 export const collectorInitStats$ = createSelector(statisticsState$, (state: State) => state.collectorInitStats.times);

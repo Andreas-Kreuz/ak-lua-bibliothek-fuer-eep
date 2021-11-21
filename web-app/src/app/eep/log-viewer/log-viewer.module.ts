@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-//import { NgxAutoScrollModule } from 'ngx-auto-scroll';
 import { LogTextFieldComponent } from './log-text-field/log-text-field.component';
 import { LogViewerRoutingModule } from './log-viewer-routing.module';
 import { EffectsModule } from '@ngrx/effects';
@@ -18,16 +17,11 @@ import { MatMenuModule } from '@angular/material/menu';
 import { LayoutModule } from '@angular/cdk/layout';
 
 @NgModule({
-  declarations: [
-    LogTextFieldComponent,
-    LogToolBarComponent,
-    LogViewerComponent,
-  ],
+  declarations: [LogTextFieldComponent, LogToolBarComponent, LogViewerComponent],
   imports: [
     SharedModule,
     LogViewerRoutingModule,
     CommonModule,
-    // NgxAutoScrollModule,
     StoreModule.forFeature('logViewer', fromLogViewer.reducer),
     EffectsModule.forFeature([LogFileEffects]),
     MatGridListModule,
@@ -36,8 +30,6 @@ import { LayoutModule } from '@angular/cdk/layout';
     MatIconModule,
     MatButtonModule,
     LayoutModule,
-  ]
+  ],
 })
-
-export class LogViewerModule {
-}
+export class LogViewerModule {}
