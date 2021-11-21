@@ -26,8 +26,9 @@ export default class CommandEffects {
       this.queueCommand(command);
     });
 
-    socket.on(CommandEvent.ChangeCamToTrain, (action: { trainName: string }) => {
-      const command = 'EEPSetPerspectiveCamera|9|' + action.trainName;
+    socket.on(CommandEvent.ChangeCamToTrain, (action: { trainName: string; id?: number }) => {
+      const camId = action.id ? action.id : 9;
+      const command = 'EEPSetPerspectiveCamera|' + camId + '|' + action.trainName;
       this.queueCommand(command);
     });
 
