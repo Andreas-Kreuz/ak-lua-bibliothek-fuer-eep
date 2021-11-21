@@ -9,7 +9,7 @@ import { IntersectionsComponent } from './intersection-list/intersections.compon
 import { IntersectionRoutingModule } from './intersection-routing.module';
 import { intersectionFeature } from './store/intersection.reducers';
 import { IntersectionEffects } from './store/intersection.effects';
-import { CamHelpDialogComponent } from '../../../eep/cam/cam-help-dialog/cam-help-dialog.component';
+import { CamHelpDialogComponent } from './cam-help-dialog/cam-help-dialog.component';
 import { LaneOverviewComponent } from './lane-overview/lane-overview.component';
 import { LaneQueueComponent } from './lane-queue/lane-queue.component';
 import { StoreModule } from '@ngrx/store';

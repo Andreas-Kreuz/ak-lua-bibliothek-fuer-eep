@@ -8,7 +8,7 @@ import { Phase } from './models/phase.enum';
 import * as IntersectionAction from './store/intersection.actions';
 import { Store } from '@ngrx/store';
 import * as fromRoot from '../../../app.reducers';
-import { CamHelpDialogComponent } from '../../../eep/cam/cam-help-dialog/cam-help-dialog.component';
+import { CamHelpDialogComponent } from './cam-help-dialog/cam-help-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { Injectable } from '@angular/core';
 
