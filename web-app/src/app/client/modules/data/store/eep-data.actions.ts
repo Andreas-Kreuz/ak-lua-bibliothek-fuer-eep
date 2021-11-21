@@ -14,33 +14,25 @@ export interface FetchAction extends Action {
 export class FetchSlots implements Action, FetchAction {
   readonly type = FETCH_SLOTS;
 
-  constructor(public payload: string) {
-  }
+  constructor(public payload: string) {}
 }
 
 export class SetSlots implements Action {
   readonly type = SET_SLOTS;
 
-  constructor(public payload: EepData[]) {
-  }
+  constructor(public payload: EepData[]) {}
 }
 
 export class FetchFreeSlots implements Action, FetchAction {
   readonly type = FETCH_FREE_SLOTS;
 
-  constructor(public payload: string) {
-  }
+  constructor(public payload: string) {}
 }
 
 export class SetFreeSlots implements Action {
   readonly type = SET_FREE_SLOTS;
 
-  constructor(public payload: EepFreeData[]) {
-  }
+  constructor(public payload: EepFreeData[]) {}
 }
 
-export type EepDataAction =
-  FetchSlots
-  | SetSlots
-  | FetchFreeSlots
-  | SetFreeSlots;
+export type EepDataAction = FetchSlots | SetSlots | FetchFreeSlots | SetFreeSlots;

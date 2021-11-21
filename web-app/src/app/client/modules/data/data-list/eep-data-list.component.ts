@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import * as fromRoot from '../../../app.reducers';
+import * as fromRoot from '../../../../app.reducers';
 import { select, Store } from '@ngrx/store';
-import * as fromEepData from '../../data/store/eep-data.reducers';
+import * as fromEepData from '../store/eep-data.reducers';
 import { EepData } from '../models/eep-data.model';
 import { EepDataService } from '../store/eep-data.service';
 import { Observable } from 'rxjs';

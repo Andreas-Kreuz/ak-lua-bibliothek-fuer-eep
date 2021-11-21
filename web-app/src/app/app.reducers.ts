@@ -2,7 +2,7 @@ import { ActionReducerMap } from '@ngrx/store';
 
 import * as fromCore from './core/store/core.reducers';
 import * as fromDataTypes from './core/datatypes/store/data-types.reducers';
-import * as fromEepData from './eep/data/store/eep-data.reducers';
+import * as fromEepData from './client/modules/data/store/eep-data.reducers';
 import * as fromGenericData from './eep/generic-data/store/generic-data.reducers';
 import * as fromIntersection from './eep/intersection/store/intersection.reducers';
 import * as fromSignal from './eep/signals/store/signal.reducers';

@@ -2,21 +2,19 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
-import * as fromRoot from '../../../app.reducers';
-import { SocketEvent } from '../../../core/socket/socket-event';
-import { SocketService } from '../../../core/socket/socket-service';
+import * as fromRoot from '../../../../app.reducers';
+import { SocketEvent } from '../../../../core/socket/socket-event';
+import { SocketService } from '../../../../core/socket/socket-service';
 import { DataEvent } from 'web-shared';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class EepDataService {
   private dataActions$: Observable<string>;
   private freeDataActions$: Observable<string>;
 
-  constructor(private socket: SocketService,
-              private store: Store<fromRoot.State>) {
-  }
+  constructor(private socket: SocketService, private store: Store<fromRoot.State>) {}
 
   getDataActions() {
     if (!this.dataActions$) {

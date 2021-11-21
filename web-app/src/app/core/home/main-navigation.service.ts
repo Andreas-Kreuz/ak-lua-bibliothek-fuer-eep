@@ -3,7 +3,7 @@ import { Action, select, Store } from '@ngrx/store';
 import * as fromRoot from '../../app.reducers';
 import { Injectable } from '@angular/core';
 import * as fromDataTypes from '../datatypes/store/data-types.reducers';
-import * as fromEepData from '../../eep/data/store/eep-data.reducers';
+import * as fromEepData from '../../client/modules/data/store/eep-data.reducers';
 import * as fromIntersection from '../../eep/intersection/store/intersection.reducers';
 import * as fromSignal from '../../eep/signals/store/signal.reducers';
 import * as fromTrain from '../../eep/trains/store/train.reducer';

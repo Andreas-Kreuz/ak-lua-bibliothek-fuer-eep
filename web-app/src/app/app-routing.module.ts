@@ -32,7 +32,7 @@ const routes: Routes = [
           },
           {
             path: 'data',
-            loadChildren: () => import('./eep/data/eep-data.module').then((m) => m.EepDataModule),
+            loadChildren: () => import('./client/modules/data/eep-data.module').then((m) => m.EepDataModule),
           },
           {
             path: 'generic-data',
