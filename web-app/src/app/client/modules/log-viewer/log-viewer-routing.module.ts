@@ -6,19 +6,14 @@ const logViewerRoutes: Routes = [
   {
     path: '',
     component: LogViewerComponent,
-    data: {title: 'Log-Datei'},
+    data: { title: 'Log-Datei' },
     pathMatch: 'full',
   },
 ];
 
 @NgModule({
-  imports: [
-    RouterModule.forChild(logViewerRoutes),
-  ],
+  imports: [RouterModule.forChild(logViewerRoutes)],
   providers: [],
-  exports: [
-    RouterModule
-  ]
+  exports: [RouterModule],
 })
-export class LogViewerRoutingModule {
-}
+export class LogViewerRoutingModule {}

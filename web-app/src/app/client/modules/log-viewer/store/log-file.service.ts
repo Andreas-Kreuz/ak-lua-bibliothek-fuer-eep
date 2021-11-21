@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { SocketService } from '../../../core/socket/socket-service';
+import { SocketService } from '../../../../core/socket/socket-service';
 import { LogEvent } from 'web-shared';
 
 @Injectable({

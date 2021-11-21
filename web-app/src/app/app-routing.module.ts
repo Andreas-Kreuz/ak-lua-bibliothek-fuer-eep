@@ -41,7 +41,7 @@ const routes: Routes = [
           },
           {
             path: 'log',
-            loadChildren: () => import('./eep/log-viewer/log-viewer.module').then((m) => m.LogViewerModule),
+            loadChildren: () => import('./client/modules/log-viewer/log-viewer.module').then((m) => m.LogViewerModule),
             data: { title: 'Log-Datei' },
           },
           {

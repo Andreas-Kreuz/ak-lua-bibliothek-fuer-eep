@@ -6,7 +6,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { LogFileEffects } from './store/log-file.effects';
 import * as fromLogViewer from './store/log-file.reducers';
-import { SharedModule } from '../../shared/shared.module';
+import { SharedModule } from '../../../shared/shared.module';
 import { LogToolBarComponent } from './log-tool-bar/log-tool-bar.component';
 import { LogViewerComponent } from './log-viewer/log-viewer.component';
 import { MatButtonModule } from '@angular/material/button';
