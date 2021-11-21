@@ -21,8 +21,13 @@ export default class CommandEffects {
       }
     });
 
-    socket.on(CommandEvent.ChangeStaticCam, (action: { staticCam: string }) => {
+    socket.on(CommandEvent.ChangeCamToStatic, (action: { staticCam: string }) => {
       const command = 'EEPSetCamera|0|' + action.staticCam;
+      this.queueCommand(command);
+    });
+
+    socket.on(CommandEvent.ChangeCamToTrain, (action: { trainName: string }) => {
+      const command = 'EEPSetPerspectiveCamera|9|' + action.trainName;
       this.queueCommand(command);
     });
 

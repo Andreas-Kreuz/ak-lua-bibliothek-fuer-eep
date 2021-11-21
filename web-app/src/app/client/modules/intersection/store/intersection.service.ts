@@ -5,6 +5,7 @@ import { SocketEvent } from '../../../../core/socket/socket-event';
 import { SocketService } from '../../../../core/socket/socket-service';
 import { CommandEvent, DataEvent, IntersectionEvent } from 'web-shared';
 import { LuaSetting } from '../../../../shared/model/lua-setting';
+import { EepCommandService } from '../../../../common/eep-communication/eep-command.service';
 
 // socket.listen\('\[Data-(.*)\]'\);
 // socket.listen(DataEvent.eventOf('$1'));this.socket.join(DataEvent.roomOf('$1'));
@@ -19,7 +20,7 @@ export class IntersectionService {
   private trafficLightActions$: Observable<string>;
   private luaModuleSettingsActions$: Observable<string>;
 
-  constructor(private socket: SocketService) {}
+  constructor(private socket: SocketService, private eepCommandService: EepCommandService) {}
 
   getIntersectionActions(): Observable<string> {
     if (!this.intersectionActions$) {
@@ -66,7 +67,7 @@ export class IntersectionService {
   }
 
   changeStaticCam(staticCam: string) {
-    this.socket.emit(CommandEvent.ChangeStaticCam, { staticCam });
+    this.eepCommandService.setCamera(staticCam);
   }
 
   switchAutomatically(intersectionName: string) {
