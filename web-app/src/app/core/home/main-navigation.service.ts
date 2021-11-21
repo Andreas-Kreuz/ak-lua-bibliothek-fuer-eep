@@ -2,8 +2,6 @@ import { Observable, of, combineLatest } from 'rxjs';
 import { Action, select, Store } from '@ngrx/store';
 import * as fromRoot from '../../app.reducers';
 import { Injectable } from '@angular/core';
-import * as fromDataTypes from '../datatypes/store/data-types.reducers';
-import * as fromEepData from '../../client/modules/data/store/eep-data.reducers';
 import * as fromIntersection from '../../eep/intersection/store/intersection.reducers';
 import * as fromSignal from '../../eep/signals/store/signal.reducers';
 import * as fromTrain from '../../eep/trains/store/train.reducer';
@@ -49,7 +47,6 @@ export class MainNavigationService {
 
   constructor(private store: Store<fromRoot.State>) {
     this.intersectionsCount$ = this.store.pipe(select(fromIntersection.intersectionsCount$));
-    this.slotCount$ = this.store.pipe(select(fromEepData.eepDataCount$));
     this.signalCount$ = this.store.pipe(select(fromSignal.signalCount$));
     this.railTrainCount$ = this.store.pipe(select(fromTrain.selectRailTrainCount));
     this.roadTrainCount$ = this.store.pipe(select(fromTrain.selectRoadTrainCount));

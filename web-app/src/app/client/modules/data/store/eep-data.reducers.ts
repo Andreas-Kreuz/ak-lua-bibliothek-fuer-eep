@@ -1,4 +1,4 @@
-import { createFeatureSelector, createSelector } from '@ngrx/store';
+import { createFeature, createFeatureSelector, createReducer, createSelector, on } from '@ngrx/store';
 import * as fromEepData from './eep-data.actions';
 import { EepData } from '../models/eep-data.model';
 import { EepFreeData } from '../models/eep-free-data.model';
@@ -13,22 +13,20 @@ const initialState: State = {
   eepFreeData: [],
 };
 
-export const reducer = (state: State = initialState, action: fromEepData.EepDataAction) => {
-  switch (action.type) {
-    case fromEepData.SET_SLOTS:
-      return {
-        ...state,
-        eepData: [...action.payload],
-      };
-    case fromEepData.SET_FREE_SLOTS:
-      return {
-        ...state,
-        eepFreeData: [...action.payload],
-      };
-    default:
-      return state;
-  }
-};
+export const eepDataFeature = createFeature({
+  name: 'eepData',
+  reducer: createReducer(
+    initialState,
+    on(fromEepData.setSlots, (state, { slots }) => ({
+      ...state,
+      eepData: [...slots],
+    })),
+    on(fromEepData.setFreeSlots, (state, { freeSlots }) => ({
+      ...state,
+      eepFreeData: [...freeSlots],
+    }))
+  ),
+});
 
 export const eepDataState$ = createFeatureSelector<State>('eepData');
 
