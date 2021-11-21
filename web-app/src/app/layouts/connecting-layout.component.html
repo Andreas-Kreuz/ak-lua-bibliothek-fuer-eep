@@ -1,31 +1,17 @@
 <ng-container *ngIf="(connectionEstablished$ | async) === false">
   <div id="centered">
-    <!-- <div class="row">
-      <div class="col-12">
-        <p class="mat-display-2"
-           style="margin-bottom: 24px; margin-top: 64px;">
-          Web App für EEP
-        </p>
-        <p class="mat-display-1 app-mute-on-light-bg">
-          Deine Anlage. Übersichtlich. Dargestellt.
-        </p>
-
-      </div>
-    </div> -->
-
-    <div id="connecting">
-      <p>Verbinde mit Server ... {{ hostname$ | async }}</p>
+    <div id="connecting" class="mat-typography">
+      <h1>Serververbindung unterbrochen</h1>
+      <p>Verbinde zu {{ hostname$ | async }}</p>
       <div class="centered">
-        <mat-progress-spinner class="my-progress"
-                              color="primary"
-                              mode="indeterminate"
-                              diameter="50">
+        <mat-progress-spinner class="my-progress" color="primary" mode="indeterminate" diameter="50">
         </mat-progress-spinner>
       </div>
+      <p>Läuft das Programm EEP-Web-Server?</p>
     </div>
   </div>
 </ng-container>
 
-<ng-container *ngIf="(connectionEstablished$ | async)">
+<ng-container *ngIf="connectionEstablished$ | async">
   <router-outlet></router-outlet>
 </ng-container>

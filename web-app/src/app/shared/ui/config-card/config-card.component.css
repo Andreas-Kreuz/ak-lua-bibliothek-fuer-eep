@@ -5,3 +5,7 @@
 .left-aligned {
     margin-left: 45px !important;
 }
+
+.mat-line {
+    white-space: normal !important;
+}

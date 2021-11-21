@@ -8,7 +8,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { SwitchesComponent } from './eep/switches/switch-list/switches.component';
 import { HttpClientModule } from '@angular/common/http';
 import { SharedModule } from './shared/shared.module';
 import { FullPageLayoutComponent } from './layouts/full-page-layout.component';
@@ -21,7 +20,7 @@ import { FormsModule } from '@angular/forms';
 import { LayoutModule } from '@angular/cdk/layout';
 
 @NgModule({
-  declarations: [AppComponent, FullPageLayoutComponent, ConnectingLayoutComponent, SwitchesComponent],
+  declarations: [AppComponent, FullPageLayoutComponent, ConnectingLayoutComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,

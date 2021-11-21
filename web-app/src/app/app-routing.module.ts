@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './core/home/home.component';
-import { SwitchesComponent } from './eep/switches/switch-list/switches.component';
 import { ConnectingLayoutComponent } from './layouts/connecting-layout.component';
 import { MainComponent } from './core/main/main.component';
 
@@ -20,27 +19,29 @@ const routes: Routes = [
           { path: '', component: HomeComponent, pathMatch: 'full' },
           {
             path: 'signals',
-            loadChildren: () => import('./eep/signals/signals.module').then((m) => m.SignalsModule),
+            loadChildren: () => import('./client/modules/signals/signals.module').then((m) => m.SignalsModule),
           },
           {
             path: 'trains',
-            loadChildren: () => import('./eep/trains/trains.module').then((m) => m.TrainsModule),
+            loadChildren: () => import('./client/modules/train/trains.module').then((m) => m.TrainsModule),
           },
           {
             path: 'intersections',
-            loadChildren: () => import('./eep/intersection/intersection.module').then((m) => m.IntersectionModule),
+            loadChildren: () =>
+              import('./client/modules/intersection/intersection.module').then((m) => m.IntersectionModule),
           },
           {
             path: 'data',
-            loadChildren: () => import('./eep/data/eep-data.module').then((m) => m.EepDataModule),
+            loadChildren: () => import('./client/modules/data/eep-data.module').then((m) => m.EepDataModule),
           },
           {
             path: 'generic-data',
-            loadChildren: () => import('./eep/generic-data/generic-data.module').then((m) => m.GenericDataModule),
+            loadChildren: () =>
+              import('./client/modules/json-data/generic-data.module').then((m) => m.GenericDataModule),
           },
           {
             path: 'log',
-            loadChildren: () => import('./eep/log-viewer/log-viewer.module').then((m) => m.LogViewerModule),
+            loadChildren: () => import('./client/modules/log-viewer/log-viewer.module').then((m) => m.LogViewerModule),
             data: { title: 'Log-Datei' },
           },
           {
@@ -49,9 +50,8 @@ const routes: Routes = [
           },
           {
             path: 'statistics',
-            loadChildren: () => import('./eep/statistics/statistics.module').then((m) => m.StatisticsModule),
+            loadChildren: () => import('./client/modules/statistics/statistics.module').then((m) => m.StatisticsModule),
           },
-          { path: 'switches', component: SwitchesComponent },
         ],
       },
       {
