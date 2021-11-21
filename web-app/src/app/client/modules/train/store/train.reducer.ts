@@ -1,6 +1,6 @@
 import { Train } from '../model/train.model';
 import * as TrainActions from './train.actions';
-import { Action, createFeatureSelector, createReducer, createSelector, on, props } from '@ngrx/store';
+import { Action, createFeature, createFeatureSelector, createReducer, createSelector, on, props } from '@ngrx/store';
 import { RollingStock } from '../model/rolling-stock.model';
 import { TrainType } from '../model/train-type.enum';
 
@@ -62,8 +62,7 @@ const trainReducer = createReducer(
   }))
 );
 
-export const reducer = (state: State | undefined, action: Action) => trainReducer(state, action);
-
+export const trainFeature = createFeature({ name: 'train', reducer: trainReducer });
 export const trainsState$ = createFeatureSelector<State>('train');
 
 export const selectedTrainName = createSelector(trainsState$, (state: State) => state.selectedTrainName);

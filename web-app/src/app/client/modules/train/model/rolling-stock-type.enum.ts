@@ -1,4 +1,4 @@
-import * as unicode from '../../../shared/unicode-symbol.model';
+import * as unicode from '../../../../shared/unicode-symbol.model';
 
 export enum RollingStockType {
   tenderLoco = 1,

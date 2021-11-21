@@ -1,11 +1,11 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { Train } from '../model/train.model';
 import { Coupling } from '../model/coupling.enum';
-import * as unicode from '../../../shared/unicode-symbol.model';
+import * as unicode from '../../../../shared/unicode-symbol.model';
 import { iconForRollingStockType, textForRollingStockType } from '../model/rolling-stock-type.enum';
 import { RollingStock } from '../model/rolling-stock.model';
 import { select, Store } from '@ngrx/store';
-import * as fromRoot from '../../../app.reducers';
+import * as fromRoot from '../../../../app.reducers';
 import * as TrainAction from '../store/train.actions';
 import * as fromTrain from '../store/train.reducer';
 import { Observable } from 'rxjs';

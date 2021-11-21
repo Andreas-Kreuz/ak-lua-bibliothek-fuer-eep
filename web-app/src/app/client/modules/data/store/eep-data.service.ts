@@ -31,9 +31,11 @@ export class EepDataService {
   disconnect() {
     if (this.dataActions$) {
       this.socket.leave(DataEvent.roomOf('save-slots'));
+      this.freeDataActions$ = undefined;
     }
     if (this.freeDataActions$) {
       this.socket.leave(DataEvent.roomOf('free-slots'));
+      this.freeDataActions$ = undefined;
     }
   }
 }

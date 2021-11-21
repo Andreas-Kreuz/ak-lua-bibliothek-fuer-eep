@@ -3,6 +3,7 @@ import { Train } from '../model/train.model';
 import { RollingStock } from '../model/rolling-stock.model';
 import { TrainType } from '../model/train-type.enum';
 
+export const disconnect = createAction('[Train] Disconnect');
 export const selectTrain = createAction('[Train] Train selected', props<{ trainName: string }>());
 export const selectType = createAction('[Train] Select Type', props<{ trainType: TrainType }>());
 export const setRailTrains = createAction('[Train] Set Rail Trains', props<{ railTrains: Train[] }>());

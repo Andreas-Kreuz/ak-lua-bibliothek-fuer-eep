@@ -1,13 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { SocketEvent } from '../../../core/socket/socket-event';
-import { SocketService } from '../../../core/socket/socket-service';
+import { SocketEvent } from '../../../../core/socket/socket-event';
+import { SocketService } from '../../../../core/socket/socket-service';
 import { DataEvent } from 'web-shared';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class TrainService {
   private railTrains$: Observable<string>;
   private railRollingStock$: Observable<string>;
@@ -28,5 +26,17 @@ export class TrainService {
       this.socket.join(DataEvent.roomOf('rolling-stocks'));
     }
     return this.railRollingStock$;
+  }
+
+  disconnect(): void {
+    if (this.railTrains$) {
+      this.socket.leave(DataEvent.eventOf('trains'));
+      this.railTrains$ = undefined;
+    }
+
+    if (this.railRollingStock$) {
+      this.socket.leave(DataEvent.roomOf('rolling-stocks'));
+      this.railRollingStock$ = undefined;
+    }
   }
 }

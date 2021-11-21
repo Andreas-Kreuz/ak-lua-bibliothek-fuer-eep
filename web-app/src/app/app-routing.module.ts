@@ -24,7 +24,7 @@ const routes: Routes = [
           },
           {
             path: 'trains',
-            loadChildren: () => import('./eep/trains/trains.module').then((m) => m.TrainsModule),
+            loadChildren: () => import('./client/modules/train/trains.module').then((m) => m.TrainsModule),
           },
           {
             path: 'intersections',

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Actions, createEffect } from '@ngrx/effects';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { TrainService } from './train.service';
-import { filter, switchMap } from 'rxjs/operators';
+import { filter, switchMap, tap } from 'rxjs/operators';
 
 import { Train } from '../model/train.model';
 import * as TrainAction from './train.actions';
@@ -38,6 +38,15 @@ export class TrainEffects {
         );
       })
     )
+  );
+
+  closeConnection = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(TrainAction.disconnect),
+        tap(() => this.trainService.disconnect())
+      ),
+    { dispatch: false }
   );
 
   constructor(private actions$: Actions, private trainService: TrainService) {}
