@@ -15,4 +15,8 @@ export class EepCommandService {
   setCamToTrain(trainName: string, id?: number) {
     this.socket.emit(CommandEvent.ChangeCamToTrain, { trainName, id });
   }
+
+  setCamToRollingStock(rollingStock: string, posX: number, posY: number, posZ: number, redH: number, redV: number) {
+    this.socket.emit(CommandEvent.ChangeCamToRollingStock, { rollingStock, posX, posY, posZ, redH, redV });
+  }
 }

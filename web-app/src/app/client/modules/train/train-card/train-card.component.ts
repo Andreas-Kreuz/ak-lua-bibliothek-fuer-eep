@@ -69,14 +69,24 @@ export class TrainCardComponent implements OnInit, OnDestroy, OnChanges {
     }
   }
 
-  changeCam(trainName: string) {
-    this.eepCommands.setCamToTrain(trainName, this.currentCam);
+  changeCamRollingStock(rollingStock: RollingStock) {
+    const posX = rollingStock.length / 2 + 12;
+    this.eepCommands.setCamToRollingStock(rollingStock.id, posX, -3, 5, 15, 80);
+  }
+
+  changeCamTrain(train: Train) {
+    if (this.currentCam === -1) {
+      this.changeCamRollingStock(train.rollingStock[0]);
+    } else {
+      this.eepCommands.setCamToTrain(train.id, this.currentCam);
+    }
     this.currentCam = this.nextCam(this.currentCam);
   }
 
   private nextCam(currentCam: number): number {
     const nextCams = {
-      [9]: 3,
+      [9]: -1,
+      [-1]: 3,
       [3]: 4,
       [4]: 10,
       [10]: 9,

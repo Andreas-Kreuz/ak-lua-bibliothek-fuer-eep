@@ -32,6 +32,27 @@ export default class CommandEffects {
       this.queueCommand(command);
     });
 
+    socket.on(
+      CommandEvent.ChangeCamToRollingStock,
+      (action: { rollingStock: string; posX: number; posY: number; posZ: number; redH: number; redV: number }) => {
+        this.queueCommand('EEPRollingstockSetActive|' + action.rollingStock);
+        const command =
+          'EEPRollingstockSetUserCamera|' +
+          action.rollingStock +
+          '|' +
+          action.posX +
+          '|' +
+          action.posY +
+          '|' +
+          action.posZ +
+          '|' +
+          action.redH +
+          '|' +
+          action.redV;
+        this.queueCommand(command);
+      }
+    );
+
     socket.on(CommandEvent.ChangeSetting, (action: { name: string; func: string; newValue: unknown }) => {
       const command = action.func + '|' + action.newValue;
       this.queueCommand(command);
