@@ -49,3 +49,11 @@
 .text-wrap {
     word-break: break-all;
 }
+
+.vf {
+    flex-direction: column;
+    display: flex;
+    gap: 0.8rem;
+    flex-grow: 0;
+    justify-content: flex-start;
+}
