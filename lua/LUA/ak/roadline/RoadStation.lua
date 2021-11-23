@@ -69,8 +69,8 @@ function RoadStation:trainArrivesIn(trainName, timeInMinutes)
     end
 
     if RoadStation.debug then
-        print(string.format("[RoadStation] %s: Planning Arrival of %s in %d min on platform %s", self.name,
-                            trainName, timeInMinutes, platform))
+        print(string.format("[RoadStation] %s: Planning Arrival of %s in %d min on platform %s", self.name, trainName,
+                            timeInMinutes, platform))
     end
 
     self.queue:push(trainName, timeInMinutes, platform)
