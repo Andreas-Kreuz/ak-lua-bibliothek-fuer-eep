@@ -11,12 +11,16 @@
 }
 
 .mat-card-content {
-    margin-left: 3.5rem;
+    margin-left: 4.5rem;
 }
 
 .mat-card-header {
     align-content: stretch;
     justify-content: space-between;
+}
+
+.mat-card-title-group {
+    align-items: flex-start;
 }
 
 .titles {

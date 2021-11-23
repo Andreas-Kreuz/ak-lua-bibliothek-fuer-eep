@@ -1,6 +1,6 @@
 <mat-card class="app-card mat-elevation-z2">
   <mat-card-title-group>
-    <div mat-card-avatar id="bigIcon">{{ iconFor(train) }}</div>
+    <img [src]="'../../../../assets/' + iconFor(train) + '.svg'" style="max-width: 4rem" />
     <div class="titles">
       <mat-card-title>
         {{ train.id }}

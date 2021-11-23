@@ -6,6 +6,7 @@ import * as fromTrain from '../store/train.reducer';
 import { Subscription } from 'rxjs';
 import { EepCommandService } from '../../../../common/eep-communication/eep-command.service';
 import { Train, TrainListEntry } from 'web-shared/build/model/trains';
+import { trainIconFor } from '../model/train-image-helper';
 
 @Component({
   selector: 'app-train-list-card',
@@ -36,6 +37,6 @@ export class TrainListCardComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   iconFor(train: TrainListEntry) {
-    return iconForRollingStockType(train.trainType);
+    return trainIconFor(train);
   }
 }
