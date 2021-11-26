@@ -24,6 +24,7 @@ export class ServerStatusComponent implements OnInit {
   constructor(private store: Store<fromServer.State>, public dialog: MatDialog) {}
 
   ngOnInit() {
+    registerLocaleData(localeDe);
     this.eepDir$ = this.store.select(fromServer.eepDir$);
     this.eepDirOk$ = this.store.select(fromServer.eepDirOk$);
     this.urls$ = this.store.select(fromServer.urls$);
@@ -35,7 +36,6 @@ export class ServerStatusComponent implements OnInit {
     this.eepDir$.subscribe((dir) => {
       this.dir = dir;
     });
-    registerLocaleData(localeDe);
   }
 
   openDialog(): void {
