@@ -26,13 +26,11 @@ export class SignalsComponent implements OnInit, OnDestroy {
     ['model', this.modelTextOf],
     ['waitingVehiclesCount', this.waitingCarsOf],
   ]);
-  tableData$: Observable<Signal[]>;
+  tableData$ = this.store.select(fromEep.signalsWithModel$);
 
   constructor(private store: Store<fromRoot.State>) {}
 
-  ngOnInit() {
-    this.tableData$ = this.store.pipe(select(fromEep.signalsWithModel$));
-  }
+  ngOnInit() {}
 
   ngOnDestroy() {}
 

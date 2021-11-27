@@ -13,8 +13,8 @@ import { textForTrainType, TrainType } from '../model/train-type.enum';
   styleUrls: ['./train-list.component.css'],
 })
 export class TrainListComponent implements OnInit, OnDestroy {
-  trainType$: Observable<TrainType>;
-  tableData$: Observable<Train[]>;
+  trainType$ = this.store.select(fromTrain.selectTrainType);
+  tableData$ = this.store.select(fromTrain.selectTrains);
   private routeParams$: Subscription;
 
   constructor(private store: Store<fromTrain.State>, private route: ActivatedRoute) {}
@@ -22,8 +22,6 @@ export class TrainListComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.routeParams$ = this.route.params.subscribe((params: Params) => {
       this.store.dispatch(TrainAction.selectType({ trainType: this.route.snapshot.params['trainType'] }));
-      this.tableData$ = this.store.pipe(select(fromTrain.selectTrains));
-      this.trainType$ = this.store.pipe(select(fromTrain.selectTrainType));
     });
   }
 

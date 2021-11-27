@@ -23,7 +23,7 @@ export class SignalDetailComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.routeParams$ = this.route.params.subscribe((params: Params) => {
       this.signalId = +this.route.snapshot.params['id'];
-      this.signal$ = this.store.pipe(select(fromEep.selectSignalById$(this.signalId)));
+      this.signal$ = this.store.select(fromEep.selectSignalById$(this.signalId));
     });
   }
 

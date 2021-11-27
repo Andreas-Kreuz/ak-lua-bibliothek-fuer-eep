@@ -12,11 +12,11 @@ import { MainNavigationService } from './main-navigation.service';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
-  hostName$: Observable<string>;
-  eepLuaVersion$: Observable<string>;
-  eepVersion$: Observable<string>;
-  eepWebVersion$: Observable<string>;
-  navigation;
+  hostName$ = this.store.select(fromCore.getJsonServerUrl);
+  eepLuaVersion$ = this.store.select(fromCore.selectEepLuaVersion);
+  eepVersion$ = this.store.select(fromCore.selectEepVersion);
+  eepWebVersion$ = this.store.select(fromCore.selectEepWebVersion);
+  navigation = this.mainNavigation.navigation;
   private mobileQuery: MediaQueryList;
 
   constructor(
@@ -27,11 +27,5 @@ export class HomeComponent implements OnInit {
     this.mobileQuery = media.matchMedia('(max-width: 600px)');
   }
 
-  ngOnInit() {
-    this.hostName$ = this.store.pipe(select(fromCore.getJsonServerUrl));
-    this.eepLuaVersion$ = this.store.pipe(select(fromCore.selectEepLuaVersion));
-    this.eepVersion$ = this.store.pipe(select(fromCore.selectEepVersion));
-    this.eepWebVersion$ = this.store.pipe(select(fromCore.selectEepWebVersion));
-    this.navigation = this.mainNavigation.navigation;
-  }
+  ngOnInit() {}
 }

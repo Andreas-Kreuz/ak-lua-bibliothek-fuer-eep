@@ -28,8 +28,8 @@ export class LaneOverviewComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.intersection$ = this.store.pipe(select(fromIntersection.intersectionById$(this.intersectionId)));
-    this.lanes$ = this.store.pipe(select(fromIntersection.laneByIntersectionId$(this.intersectionId)));
+    this.intersection$ = this.store.select(fromIntersection.intersectionById$(this.intersectionId));
+    this.lanes$ = this.store.select(fromIntersection.laneByIntersectionId$(this.intersectionId));
     this.switchingSub = this.intersection$.subscribe(
       (intersection) =>
         (this.switching$ = this.store.pipe(

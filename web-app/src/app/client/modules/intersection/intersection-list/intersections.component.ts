@@ -18,8 +18,8 @@ import * as IntersectionAction from '../store/intersection.actions';
   styleUrls: ['./intersections.component.css'],
 })
 export class IntersectionsComponent implements OnInit {
-  intersections$: Observable<Intersection[]>;
-  luaModuleSettings$: Observable<LuaSettings>;
+  intersections$ = this.store.select(fromIntersection.intersections$);
+  luaModuleSettings$ = this.store.select(fromIntersection.luaModuleSettings$);
 
   constructor(
     private store: Store<fromRoot.State>,
@@ -28,10 +28,7 @@ export class IntersectionsComponent implements OnInit {
     public dialog: MatDialog
   ) {}
 
-  ngOnInit() {
-    this.intersections$ = this.store.pipe(select(fromIntersection.intersections$));
-    this.luaModuleSettings$ = this.store.pipe(select(fromIntersection.luaModuleSettings$));
-  }
+  ngOnInit() {}
 
   trackById(index: number, intersection: Intersection) {
     if (!intersection) {

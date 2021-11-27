@@ -8,7 +8,7 @@ import { select, Store } from '@ngrx/store';
 import * as fromRoot from '../../../../app.reducers';
 import * as TrainAction from '../store/train.actions';
 import * as fromTrain from '../store/train.reducer';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { EepCommandService } from '../../../../common/eep-communication/eep-command.service';
 
 @Component({
@@ -19,19 +19,21 @@ import { EepCommandService } from '../../../../common/eep-communication/eep-comm
 export class TrainCardComponent implements OnInit, OnDestroy, OnChanges {
   @Input() train: Train;
   expanded = false;
+  expandedSub: Subscription;
   frontCouplingReady = false;
   rearCouplingReady = false;
-  selectedTrainName$: Observable<string>;
+  selectedTrainName$ = this.store.select(fromTrain.selectedTrainName);
   private currentCam = 9;
 
   constructor(private store: Store<fromRoot.State>, private eepCommands: EepCommandService) {}
 
   ngOnInit(): void {
-    this.selectedTrainName$ = this.store.pipe(select(fromTrain.selectedTrainName));
-    this.selectedTrainName$.subscribe((trainName) => (this.expanded = this.train.id === trainName));
+    this.expandedSub = this.selectedTrainName$.subscribe((trainName) => (this.expanded = this.train.id === trainName));
   }
 
-  ngOnDestroy(): void {}
+  ngOnDestroy(): void {
+    this.expandedSub.unsubscribe();
+  }
 
   ngOnChanges(): void {
     const frontRs = this.train && this.train.rollingStock && this.train.rollingStock[0];

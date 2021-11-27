@@ -9,13 +9,10 @@ import * as fromCore from '../core/store/core.reducers';
   styleUrls: ['./connecting-layout.component.scss'],
 })
 export class ConnectingLayoutComponent implements OnInit {
-  connectionEstablished$: Observable<boolean>;
-  public hostname$: Observable<string>;
+  connectionEstablished$ = this.store.select(fromCore.getConnectionEstablished);
+  public hostname$ = this.store.select(fromCore.getJsonServerUrl);
 
   constructor(private store: Store<fromCore.State>) {}
 
-  ngOnInit(): void {
-    this.connectionEstablished$ = this.store.pipe(select(fromCore.getConnectionEstablished));
-    this.hostname$ = this.store.pipe(select(fromCore.getJsonServerUrl));
-  }
+  ngOnInit(): void {}
 }

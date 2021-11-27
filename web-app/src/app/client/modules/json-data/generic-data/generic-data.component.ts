@@ -32,7 +32,7 @@ export class GenericDataComponent implements OnInit {
       })
     );
 
-    this.data$ = this.store.pipe(select(fromGenericData.selectedDataStructure(name)));
+    this.data$ = this.store.select(fromGenericData.selectedDataStructure(name));
     this.data$.subscribe((data) => this.tableData.next(data.values));
   }
 

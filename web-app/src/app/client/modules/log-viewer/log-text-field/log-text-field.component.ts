@@ -12,9 +12,9 @@ import * as fromLogFile from '../store/log-file.reducers';
   styleUrls: ['./log-text-field.component.css'],
 })
 export class LogTextFieldComponent implements OnInit, AfterViewInit {
-  lines$: Observable<string[]>;
-  linesAsString$: Observable<string>;
-  loading$: Observable<boolean>;
+  lines$ = this.store.select(fromLogFile.lines$);
+  linesAsString$ = this.store.select(fromLogFile.linesAsString$);
+  loading$ = this.store.select(fromLogFile.loading$);
   maxHeight: string;
   autoscroll: boolean;
   private container: HTMLElement;
@@ -26,9 +26,6 @@ export class LogTextFieldComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     const offset = 165;
-    this.lines$ = this.store.pipe(select(fromLogFile.lines$));
-    this.linesAsString$ = this.store.pipe(select(fromLogFile.linesAsString$));
-    this.loading$ = this.store.pipe(select(fromLogFile.loading$));
     this.maxHeight = window.innerHeight - offset + 'px';
     fromEvent(window, 'resize')
       .pipe(debounceTime(500))
