@@ -2,7 +2,7 @@ import { Server, Socket } from 'socket.io';
 import { RoomEvent } from 'web-shared';
 
 export default class SocketService {
-  private debug = false;
+  private debug = true;
   private onSocketConnectedCallbacks: Array<(socket: Socket) => void> = [];
 
   constructor(private io: Server) {
@@ -24,8 +24,9 @@ export default class SocketService {
         if (this.debug) console.log(socket.id + ' joined rooms: "' + rooms.room + '" ');
       });
 
-      socket.on(RoomEvent.LeaveRoom, (room: string) => {
-        socket.leave(room);
+      socket.on(RoomEvent.LeaveRoom, (room: { room: string }) => {
+        socket.leave(room.room);
+        if (this.debug) console.log(socket.id + ' left room: "' + room.room + '" ');
       });
     });
   }

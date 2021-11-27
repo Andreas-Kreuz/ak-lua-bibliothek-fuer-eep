@@ -45,6 +45,7 @@ export class SocketService {
 
   disconnect() {
     this.socket.disconnect();
+    console.warn('----- SOCKET DISCONNECTED ----- ');
     this.connected$.next(false);
   }
 
@@ -74,6 +75,7 @@ export class SocketService {
 
         observer.next(data);
       });
+
       // dispose of the event listener when unsubscribed
       return () => this.socket.off(event);
     });
