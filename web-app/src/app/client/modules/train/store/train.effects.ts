@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { Actions, createEffect } from '@ngrx/effects';
 import { TrainService } from './train.service';
-import { filter, switchMap, tap } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 
 import { Train } from '../model/train.model';
 import * as TrainAction from './train.actions';
@@ -11,7 +11,7 @@ import { RollingStock } from '../model/rolling-stock.model';
 @Injectable()
 export class TrainEffects {
   setTrains$ = createEffect(() =>
-    this.trainService.trainsActions$().pipe(
+    this.trainService.railTrains$.pipe(
       switchMap((data) => {
         const record: Record<string, Train> = JSON.parse(data);
         const list = Object.values(record);
@@ -26,7 +26,7 @@ export class TrainEffects {
   );
 
   setRollingStock$ = createEffect(() =>
-    this.trainService.rollingStockActions$().pipe(
+    this.trainService.railRollingStock$.pipe(
       switchMap((data) => {
         const record: Record<string, RollingStock> = JSON.parse(data);
         const list = Object.values(record);
@@ -38,15 +38,6 @@ export class TrainEffects {
         );
       })
     )
-  );
-
-  closeConnection = createEffect(
-    () =>
-      this.actions$.pipe(
-        ofType(TrainAction.disconnect),
-        tap(() => this.trainService.disconnect())
-      ),
-    { dispatch: false }
   );
 
   constructor(private actions$: Actions, private trainService: TrainService) {}

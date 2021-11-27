@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { DataEvent } from 'web-shared';
 import { SocketService } from '../../../../core/socket/socket-service';
 
 @Injectable({
@@ -13,8 +12,7 @@ export default class StatisticsService {
 
   getServerCollectorStats(): Observable<string> {
     if (!this.serverCollectorStats$) {
-      this.serverCollectorStats$ = this.socket.listen(DataEvent.eventOf('runtime'));
-      this.socket.join(DataEvent.roomOf('runtime'));
+      this.serverCollectorStats$ = this.socket.listenToData('runtime');
     }
     return this.serverCollectorStats$;
   }

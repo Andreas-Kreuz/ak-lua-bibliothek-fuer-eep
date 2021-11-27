@@ -13,10 +13,7 @@ export class CoreService {
 
   constructor(private socket: SocketService) {
     // Every socket NOTES event has it's own observable, will be used by ngrx effects
-    this.modulesChanged$ = this.socket.listen(DataEvent.eventOf('modules'));
-    this.socket.join(DataEvent.roomOf('modules'));
-
-    this.versionChanged$ = this.socket.listen(DataEvent.eventOf('eep-version'));
-    this.socket.join(DataEvent.roomOf('eep-version'));
+    this.modulesChanged$ = this.socket.listenToData('modules');
+    this.versionChanged$ = this.socket.listenToData('eep-version');
   }
 }

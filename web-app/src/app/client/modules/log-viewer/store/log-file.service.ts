@@ -13,8 +13,8 @@ export class LogFileService {
 
   constructor(private socket: SocketService) {
     // Every socket NOTES event has it's own observable, will be used by ngrx effects
-    this.logLinesAdded$ = this.socket.listen(LogEvent.LinesAdded);
-    this.logLinesCleared$ = this.socket.listen(LogEvent.LinesCleared);
+    this.logLinesAdded$ = this.socket.listenToEvent(LogEvent.LinesAdded);
+    this.logLinesCleared$ = this.socket.listenToEvent(LogEvent.LinesCleared);
     this.socket.join(LogEvent.Room);
   }
 

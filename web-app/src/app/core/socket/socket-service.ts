@@ -5,7 +5,7 @@ import { Store } from '@ngrx/store';
 import * as fromRoot from '../../app.reducers';
 import { Observable, of, BehaviorSubject } from 'rxjs';
 import { io, Socket } from 'socket.io-client';
-import { RoomEvent } from 'web-shared';
+import { DataEvent, RoomEvent } from 'web-shared';
 import * as CoreAction from '../store/core.actions';
 
 @Injectable({
@@ -28,21 +28,6 @@ export class SocketService {
     this.socket.connect();
   }
 
-  join(room: string) {
-    // auto rejoin after reconnect mechanism
-    console.log('----- JOINING ROOM    ----- ' + room);
-    this.connected$.subscribe((connected) => {
-      if (connected) {
-        this.socket.emit(RoomEvent.JoinRoom, { room });
-      }
-    });
-  }
-
-  leave(room: string) {
-    console.log('----- LEAVING ROOM    ----- ' + room);
-    this.socket.emit(RoomEvent.LeaveRoom, { room });
-  }
-
   disconnect() {
     this.socket.disconnect();
     console.warn('----- SOCKET DISCONNECTED ----- ');
@@ -58,8 +43,11 @@ export class SocketService {
     this.socket.emit(event, data);
   }
 
-  listen(event: string): Observable<any> {
-    return new Observable((observer) => {
+  listenToData(dataName: string): Observable<any> {
+    const event = DataEvent.eventOf(dataName);
+    const room = DataEvent.roomOf(dataName);
+
+    const observable = new Observable((observer) => {
       this.socket.on(event, (data: any) => {
         console.groupCollapsed('----- SOCKET INBOUND  ----- ' + event);
         console.log('Action      : ', event);
@@ -77,7 +65,57 @@ export class SocketService {
       });
 
       // dispose of the event listener when unsubscribed
-      return () => this.socket.off(event);
+      return () => {
+        console.log('Unsubscribe from ', event);
+        this.leave(room);
+        this.socket.off(event);
+      };
     });
+
+    console.log('Subscribed to ', event);
+    this.join(room);
+    return observable;
+  }
+
+  listenToEvent(eventName: string): Observable<any> {
+    const observable = new Observable((observer) => {
+      this.socket.on(eventName, (data: any) => {
+        console.groupCollapsed('----- SOCKET INBOUND  ----- ' + eventName);
+        console.log('Action      : ', eventName);
+        if (data) {
+          if ('string' === typeof data) {
+            console.log('PAYLOAD TYPE: STRING !!!');
+          } else {
+            console.log('Payload Type: ' + typeof data);
+          }
+        }
+        console.log('Payload     : ', data);
+        console.groupEnd();
+
+        observer.next(data);
+      });
+
+      // dispose of the event listener when unsubscribed
+      return () => {
+        this.socket.off(eventName);
+      };
+    });
+
+    return observable;
+  }
+
+  join(room: string): void {
+    // auto rejoin after reconnect mechanism
+    console.log('----- JOINING ROOM    ----- ' + room);
+    this.connected$.subscribe((connected) => {
+      if (connected) {
+        this.socket.emit(RoomEvent.JoinRoom, { room });
+      }
+    });
+  }
+
+  leave(room: string): void {
+    console.log('----- LEAVING ROOM    ----- ' + room);
+    this.socket.emit(RoomEvent.LeaveRoom, { room });
   }
 }

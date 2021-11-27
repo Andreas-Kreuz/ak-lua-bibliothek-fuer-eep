@@ -1,42 +1,18 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { SocketEvent } from '../../../../core/socket/socket-event';
 import { SocketService } from '../../../../core/socket/socket-service';
-import { DataEvent } from 'web-shared';
 
 @Injectable()
-export class TrainService {
-  private railTrains$: Observable<string>;
-  private railRollingStock$: Observable<string>;
+export class TrainService implements OnDestroy {
+  public railTrains$ = this.socket.listenToData('trains');
+  public railRollingStock$ = this.socket.listenToData('rolling-stocks');
 
-  constructor(private socket: SocketService) {}
-
-  trainsActions$(): Observable<string> {
-    if (!this.railTrains$) {
-      this.railTrains$ = this.socket.listen(DataEvent.eventOf('trains'));
-      this.socket.join(DataEvent.roomOf('trains'));
-    }
-    return this.railTrains$;
+  constructor(private socket: SocketService) {
+    console.log('##### Creating TrainService');
   }
 
-  rollingStockActions$(): Observable<string> {
-    if (!this.railRollingStock$) {
-      this.railRollingStock$ = this.socket.listen(DataEvent.eventOf('rolling-stocks'));
-      this.socket.join(DataEvent.roomOf('rolling-stocks'));
-    }
-    return this.railRollingStock$;
-  }
-
-  disconnect(): void {
-    if (this.railTrains$) {
-      this.socket.leave(DataEvent.eventOf('trains'));
-      this.railTrains$ = undefined;
-    }
-
-    if (this.railRollingStock$) {
-      this.socket.leave(DataEvent.roomOf('rolling-stocks'));
-      this.railRollingStock$ = undefined;
-    }
+  ngOnDestroy(): void {
+    console.log('##### Destroying TrainService');
   }
 }

@@ -31,7 +31,6 @@ export class TrainListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.routeParams$.unsubscribe();
-    this.store.dispatch(TrainAction.disconnect());
   }
 
   trackByTrainId(index: number, train: Train) {

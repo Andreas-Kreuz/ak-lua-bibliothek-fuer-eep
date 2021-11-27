@@ -18,7 +18,7 @@ export class GenericDataService {
   constructor(private socket: SocketService, private store: Store<fromRoot.State>) {}
 
   connect() {
-    this.wsSubscription = this.socket.listen(DataEvent.eventOf('api-entries')).subscribe(
+    this.wsSubscription = this.socket.listenToData('api-entries').subscribe(
       (data) => {
         const record = JSON.parse(data);
         const dataTypes: DataType[] = Object.values(record);
@@ -30,11 +30,9 @@ export class GenericDataService {
       },
       () => console.log('Closed socket: GenericDataService')
     );
-    this.socket.join(DataEvent.roomOf('api-entries'));
   }
 
   disconnect() {
-    this.socket.leave(DataEvent.roomOf('api-entries'));
     this.wsSubscription.unsubscribe();
   }
 }

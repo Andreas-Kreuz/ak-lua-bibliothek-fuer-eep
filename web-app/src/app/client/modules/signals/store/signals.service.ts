@@ -14,16 +14,14 @@ export class SignalsService {
 
   getSignalActions(): Observable<string> {
     if (!this.signals$) {
-      this.signals$ = this.socket.listen(DataEvent.eventOf('signals'));
-      this.socket.join(DataEvent.roomOf('signals'));
+      this.signals$ = this.socket.listenToData('signals');
     }
     return this.signals$;
   }
 
   getSignalTypeDefinitionActions(): Observable<string> {
     if (!this.signalTypes$) {
-      this.signalTypes$ = this.socket.listen(DataEvent.eventOf('signal-type-definitions'));
-      this.socket.join(DataEvent.roomOf('signal-type-definitions'));
+      this.signalTypes$ = this.socket.listenToData('signal-type-definitions');
     }
     return this.signalTypes$;
   }
