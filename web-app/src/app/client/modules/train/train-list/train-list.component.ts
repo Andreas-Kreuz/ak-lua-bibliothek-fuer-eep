@@ -6,6 +6,7 @@ import * as TrainAction from '../store/train.actions';
 import * as fromTrain from '../store/train.reducer';
 import { ActivatedRoute, Params } from '@angular/router';
 import { textForTrainType, TrainType } from '../model/train-type.enum';
+import { TrainService } from '../store/train.service';
 
 @Component({
   selector: 'app-train-list',
@@ -17,9 +18,14 @@ export class TrainListComponent implements OnInit, OnDestroy {
   tableData$ = this.store.select(fromTrain.selectTrains);
   private routeParams$: Subscription;
 
-  constructor(private store: Store<fromTrain.State>, private route: ActivatedRoute) {}
+  constructor(
+    private store: Store<fromTrain.State>,
+    private route: ActivatedRoute,
+    private trainService: TrainService
+  ) {}
 
   ngOnInit() {
+    this.store.dispatch(TrainAction.initModule());
     this.routeParams$ = this.route.params.subscribe((params: Params) => {
       this.store.dispatch(TrainAction.selectType({ trainType: this.route.snapshot.params['trainType'] }));
     });
@@ -30,6 +36,7 @@ export class TrainListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.store.dispatch(TrainAction.destroyModule());
     this.routeParams$.unsubscribe();
   }
 

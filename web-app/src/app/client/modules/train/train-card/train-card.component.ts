@@ -5,7 +5,6 @@ import * as unicode from '../../../../shared/unicode-symbol.model';
 import { iconForRollingStockType, textForRollingStockType } from '../model/rolling-stock-type.enum';
 import { RollingStock } from '../model/rolling-stock.model';
 import { select, Store } from '@ngrx/store';
-import * as fromRoot from '../../../../app.reducers';
 import * as TrainAction from '../store/train.actions';
 import * as fromTrain from '../store/train.reducer';
 import { Observable, Subscription } from 'rxjs';
@@ -25,7 +24,7 @@ export class TrainCardComponent implements OnInit, OnDestroy, OnChanges {
   selectedTrainName$ = this.store.select(fromTrain.selectedTrainName);
   private currentCam = 9;
 
-  constructor(private store: Store<fromRoot.State>, private eepCommands: EepCommandService) {}
+  constructor(private store: Store<fromTrain.State>, private eepCommands: EepCommandService) {}
 
   ngOnInit(): void {
     this.expandedSub = this.selectedTrainName$.subscribe((trainName) => (this.expanded = this.train.id === trainName));
