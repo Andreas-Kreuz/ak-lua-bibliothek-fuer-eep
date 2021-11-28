@@ -10,7 +10,7 @@ import SocketService from '../clientio/socket-service';
 import CommandEffects from '../command/command-effects';
 import { CacheService } from '../eep/cache-service';
 import EepService from '../eep/eep-service';
-import JsonDataEffects from '../json/json-data-effects';
+import EepDataEffects from '../json/json-data-effects';
 import LogEffects from '../log/log-effects';
 import AppConfig from './app-config';
 import AppReducer from './app-reducer';
@@ -19,7 +19,7 @@ import { ServerStatisticsService } from './app-statistics.service';
 export default class AppEffects {
   private serverConfigPath = path.resolve(electron.app.getPath('appData'), 'eep-web-server');
   private serverConfigFile = path.resolve(this.serverConfigPath, 'settings.json');
-  private eepDataEffects: JsonDataEffects;
+  private eepDataEffects: EepDataEffects;
   private logEffects: LogEffects;
   private commandEffects: CommandEffects;
   private store = new AppReducer();
@@ -124,7 +124,7 @@ export default class AppEffects {
   }
 
   private registerHandlers(eepService: EepService) {
-    this.eepDataEffects = new JsonDataEffects(
+    this.eepDataEffects = new EepDataEffects(
       this.app,
       this.router,
       this.io,
