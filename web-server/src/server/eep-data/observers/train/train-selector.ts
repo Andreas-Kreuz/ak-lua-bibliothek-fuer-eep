@@ -10,7 +10,7 @@ export class TrainSelector {
 
   constructor(private rollingStockSelector: RollingStockSelector) {}
 
-  updateFromState(state: fromJsonData.State): void {
+  updateFromState = (state: Readonly<fromJsonData.State>): void => {
     if (this.state === state) {
       return;
     }
@@ -18,6 +18,7 @@ export class TrainSelector {
 
     const trainDict: Record<string, EepTrainDto> = state.rooms['trains'] as unknown as Record<string, EepTrainDto>;
     Object.values(trainDict).forEach((trainDto: EepTrainDto) => {
+      const rollingStock = this.rollingStockSelector.rollingStockListOfTrain(trainDto.id);
       const trainType: number = this.getTrainType(state, trainDto);
       const trainListEntry: TrainListEntry = {
         id: trainDto.id,
@@ -33,7 +34,7 @@ export class TrainSelector {
       const train: Train = {
         ...trainListEntry,
         trackSystem: trainDto.trackSystem,
-        rollingStock: this.rollingStockSelector.rollingStockListOfTrain(trainDto.id),
+        rollingStock,
         length: trainDto.length,
         direction: trainDto.direction,
         speed: trainDto.speed,
@@ -41,13 +42,7 @@ export class TrainSelector {
 
       this.trainMap.set(train.id, train);
     });
-  }
-
-  // getAuxiliaryTrainList = () => this.getTrainList('auxiliary');
-  // getControlTrainList = () => this.getTrainList('control');
-  // getRailTrainList = () => this.getTrainList('rail');
-  // getRoadTrainList = () => this.getTrainList('road');
-  // getTramTrainList = () => this.getTrainList('tram');
+  };
 
   getTrainList(trackType: string): TrainListEntry[] {
     return Array.from(this.trainListEntryMap.values())
@@ -60,6 +55,6 @@ export class TrainSelector {
   }
 
   getTrainType(state: fromJsonData.State, train: EepTrainDto): number {
-    return this.rollingStockSelector.rollingStockInTrain(train.id, 1).modelType;
+    return this.rollingStockSelector.rollingStockInTrain(train.id, 0).modelType;
   }
 }

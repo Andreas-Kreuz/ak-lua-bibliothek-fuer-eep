@@ -15,19 +15,27 @@ export default class DynamicRoom {
     return this.roomPrefix + entryId + this.roomPostfix;
   }
 
-  eventIdDataChange(entryId: string): string {
-    return this.dataPrefix + entryId + this.dataPostfix;
+  eventId(eventId: string): string {
+    return this.dataPrefix + eventId + this.dataPostfix;
   }
 
   matchesRoom(roomId: string) {
     return roomId.indexOf(this.roomPrefix) === 0;
   }
 
-  entryIdOf(roomId: string): string {
+  idOfRoom(roomId: string): string {
     if (roomId.indexOf(this.roomPrefix) === 0) {
-      return roomId.substring(this.roomPrefix.length, roomId.length - 2);
+      return roomId.substring(this.roomPrefix.length, roomId.length - this.roomPostfix.length);
     } else {
       throw new Error('roomId does not start with prefix: ' + roomId);
+    }
+  }
+
+  idOfEvent(eventId: string): string {
+    if (eventId.indexOf(this.dataPrefix) === 0) {
+      return eventId.substring(this.dataPrefix.length, eventId.length - this.dataPostfix.length);
+    } else {
+      throw new Error('eventId does not start with prefix: ' + eventId);
     }
   }
 }

@@ -1,33 +1,42 @@
-import { Train } from '../model/train.model';
+import { OldTrain } from '../model/train.model';
 import * as TrainActions from './train.actions';
 import { Action, createFeature, createFeatureSelector, createReducer, createSelector, on, props } from '@ngrx/store';
 import { RollingStock } from '../model/rolling-stock.model';
 import { TrainType } from '../model/train-type.enum';
+import { TrainListEntry } from 'web-shared/src/model/trains';
 
 export interface State {
   trainType: TrainType;
-  railTrains: Train[];
+  trainList: TrainListEntry[];
+  selectedTrain: OldTrain;
+  railTrains: OldTrain[];
   railRollingStock: RollingStock[];
-  roadTrains: Train[];
+  roadTrains: OldTrain[];
   roadRollingStock: RollingStock[];
-  tramTrains: Train[];
+  tramTrains: OldTrain[];
   tramRollingStock: RollingStock[];
   selectedTrainName: string;
 }
 
 export const initialState: State = {
   trainType: TrainType.rail,
+  trainList: [],
+  selectedTrain: undefined,
   railTrains: [],
   railRollingStock: [],
   roadTrains: [],
   roadRollingStock: [],
   tramTrains: [],
   tramRollingStock: [],
-  selectedTrainName: null,
+  selectedTrainName: undefined,
 };
 
 const trainReducer = createReducer(
   initialState,
+  on(TrainActions.trainListUpdated, (state: State, { trainList }) => ({
+    ...state,
+    trainList,
+  })),
   on(TrainActions.selectTrain, (state: State, { trainName }) => ({
     ...state,
     selectedTrainName: trainName,
@@ -116,7 +125,7 @@ export const selectTrains = createSelector(
   selectRollingStock,
   (state: State, rollingStockMap: Map<string, RollingStock[]>) => {
     const type = state.trainType;
-    let list: Train[] = null;
+    let list: OldTrain[] = null;
     switch (type) {
       case 'rail':
       default:

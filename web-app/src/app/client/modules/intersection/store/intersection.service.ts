@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { SocketService } from '../../../../core/socket/socket-service';
-import { CommandEvent, DataEvent, IntersectionEvent } from 'web-shared';
+import { CommandEvent, IntersectionEvent } from 'web-shared';
+import { ApiDataRoom } from 'web-shared/build/rooms';
 import { LuaSetting } from '../../../../shared/model/lua-setting';
 import { EepCommandService } from '../../../../common/eep-communication/eep-command.service';
 
@@ -19,35 +20,35 @@ export class IntersectionService {
 
   getIntersectionActions(): Observable<string> {
     if (!this.intersectionActions$) {
-      this.intersectionActions$ = this.socket.listenToData('intersections');
+      this.intersectionActions$ = this.socket.listenToData(ApiDataRoom, 'intersections');
     }
     return this.intersectionActions$;
   }
 
   getLaneActions(): Observable<string> {
     if (!this.laneActions$) {
-      this.laneActions$ = this.socket.listenToData('intersection-lanes');
+      this.laneActions$ = this.socket.listenToData(ApiDataRoom, 'intersection-lanes');
     }
     return this.laneActions$;
   }
 
   getSwitchingActions(): Observable<string> {
     if (!this.switchingActions$) {
-      this.switchingActions$ = this.socket.listenToData('intersection-switchings');
+      this.switchingActions$ = this.socket.listenToData(ApiDataRoom, 'intersection-switchings');
     }
     return this.switchingActions$;
   }
 
   getTrafficLightActions(): Observable<string> {
     if (!this.trafficLightActions$) {
-      this.trafficLightActions$ = this.socket.listenToData('intersection-traffic-lights');
+      this.trafficLightActions$ = this.socket.listenToData(ApiDataRoom, 'intersection-traffic-lights');
     }
     return this.trafficLightActions$;
   }
 
   getLuaSettingsReceivedActions(): Observable<string> {
     if (!this.luaModuleSettingsActions$) {
-      this.luaModuleSettingsActions$ = this.socket.listenToData('intersection-module-settings');
+      this.luaModuleSettingsActions$ = this.socket.listenToData(ApiDataRoom, 'intersection-module-settings');
     }
     return this.luaModuleSettingsActions$;
   }

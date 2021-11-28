@@ -11,14 +11,14 @@ const initialState: State = {
   rooms: {},
 };
 
-export default class JsonDataStore {
+export default class EepDataStore {
   private debug = false;
   private state: State = initialState;
 
   constructor(private effects: EepDataEffects) {}
 
   onNewEvent(event: EepDataEvent) {
-    this.state = JsonDataStore.updateStateOnEepEvent(event, this.state);
+    this.state = EepDataStore.updateStateOnEepEvent(event, this.state);
   }
 
   init(previousState: State) {

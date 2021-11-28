@@ -1,6 +1,6 @@
 import { RollingStock } from './rolling-stock.model';
 
-export class Train {
+export class OldTrain {
   constructor(
     public id: string,
     public trackSystem: string,

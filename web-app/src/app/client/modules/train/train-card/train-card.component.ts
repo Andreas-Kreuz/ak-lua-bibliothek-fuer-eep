@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
-import { Train } from '../model/train.model';
+import { OldTrain } from '../model/train.model';
 import { Coupling } from '../model/coupling.enum';
 import * as unicode from '../../../../shared/unicode-symbol.model';
 import { iconForRollingStockType, textForRollingStockType } from '../model/rolling-stock-type.enum';
@@ -16,7 +16,7 @@ import { EepCommandService } from '../../../../common/eep-communication/eep-comm
   styleUrls: ['./train-card.component.css'],
 })
 export class TrainCardComponent implements OnInit, OnDestroy, OnChanges {
-  @Input() train: Train;
+  @Input() train: OldTrain;
   expanded = false;
   expandedSub: Subscription;
   frontCouplingReady = false;
@@ -56,7 +56,7 @@ export class TrainCardComponent implements OnInit, OnDestroy, OnChanges {
     }
   }
 
-  getCouplingText(train: Train): string {
+  getCouplingText(train: OldTrain): string {
     if (train && train.rollingStock) {
       if (this.frontCouplingReady) {
         return this.rearCouplingReady ? 'Bereit (v+h)' : 'Bereit (v)';
@@ -75,7 +75,7 @@ export class TrainCardComponent implements OnInit, OnDestroy, OnChanges {
     this.eepCommands.setCamToRollingStock(rollingStock.id, posX, -3, 5, 15, 80);
   }
 
-  changeCamTrain(train: Train) {
+  changeCamTrain(train: OldTrain) {
     if (this.currentCam === -1) {
       this.changeCamRollingStock(train.rollingStock[0]);
     } else {

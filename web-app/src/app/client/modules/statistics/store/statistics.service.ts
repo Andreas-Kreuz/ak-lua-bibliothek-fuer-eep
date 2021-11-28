@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { SocketService } from '../../../../core/socket/socket-service';
+import { ApiDataRoom } from 'web-shared/build/rooms';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +13,7 @@ export default class StatisticsService {
 
   getServerCollectorStats(): Observable<string> {
     if (!this.serverCollectorStats$) {
-      this.serverCollectorStats$ = this.socket.listenToData('runtime');
+      this.serverCollectorStats$ = this.socket.listenToData(ApiDataRoom, 'runtime');
     }
     return this.serverCollectorStats$;
   }

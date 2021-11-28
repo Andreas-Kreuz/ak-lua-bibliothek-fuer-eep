@@ -5,7 +5,8 @@ import { Store } from '@ngrx/store';
 import * as fromRoot from '../../app.reducers';
 import { Observable, of, BehaviorSubject } from 'rxjs';
 import { io, Socket } from 'socket.io-client';
-import { DataEvent, RoomEvent } from 'web-shared';
+import { RoomEvent } from 'web-shared';
+import { DynamicRoom } from 'web-shared/build/rooms';
 import * as CoreAction from '../store/core.actions';
 
 @Injectable({
@@ -43,9 +44,9 @@ export class SocketService {
     this.socket.emit(event, data);
   }
 
-  listenToData(dataName: string): Observable<any> {
-    const event = DataEvent.eventOf(dataName);
-    const room = DataEvent.roomOf(dataName);
+  listenToData(dynamicRoom: DynamicRoom, dataName: string): Observable<any> {
+    const room = dynamicRoom.roomId(dataName);
+    const event = dynamicRoom.eventId(dataName);
 
     const observable = new Observable((observer) => {
       this.socket.on(event, (data: any) => {
@@ -66,13 +67,13 @@ export class SocketService {
 
       // dispose of the event listener when unsubscribed
       return () => {
-        console.log('Unsubscribe from ', event);
+        console.log('Unsubscribe from ', event, ' of room ', room);
         this.leave(room);
         this.socket.off(event);
       };
     });
 
-    console.log('Subscribed to ', event);
+    console.log('Subscribed to ', event, ' of room ', room);
     this.join(room);
     return observable;
   }

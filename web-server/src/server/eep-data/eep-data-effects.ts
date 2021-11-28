@@ -6,14 +6,15 @@ import SocketService from '../clientio/socket-service';
 import EepDataReducer from './eep-data-reducer';
 import EepDataEvent from './eep-data-event';
 import { CacheService } from '../eep-service/cache-service';
-import TrainRoomObserver from './observers/train/train-room-effects';
-import StateObserver from './observers/state-observer';
-import JsonApiRoomObserver from './observers/json-data/json-api-room-observer';
+import TrainUpdateService from './observers/train/train-update-service';
+import JsonApiRoomObserver from './observers/json-data/json-api-update-service';
+import EepDataUpdateService from './observers/eep-data-update-service';
 
 export default class EepDataEffects {
   private debug = false;
   private store = new EepDataReducer(this);
-  private stateObservers: StateObserver[] = [];
+  private stateController: EepDataUpdateService;
+  private jsonApiController: JsonApiRoomObserver;
   private refreshSettings = { pending: true, inProgress: false };
 
   constructor(
@@ -27,8 +28,11 @@ export default class EepDataEffects {
     console.log('STORE INITIALIZED FROM ' + (this.store.currentState().eventCounter + 1) + ' events');
 
     this.socketService.addOnSocketConnectedCallback((socket: Socket) => this.socketConnected(socket));
-    this.addStateObserver(new JsonApiRoomObserver(app, router, io, cacheService));
-    this.addStateObserver(new TrainRoomObserver(io));
+    this.stateController = new EepDataUpdateService(io);
+    this.jsonApiController = new JsonApiRoomObserver(app, router, io, cacheService);
+
+    // Register the state observers, which will fill all rooms according to their needs
+    this.stateController.registerFeatureService(new TrainUpdateService(io));
 
     setInterval(() => this.refreshStateIfRequired(), 50);
   }
@@ -37,9 +41,8 @@ export default class EepDataEffects {
     socket.on(RoomEvent.JoinRoom, (rooms: { room: string }) => {
       const room = rooms.room;
       if (this.debug) console.log('EMIT ' + ServerStatusEvent.Room + ' to interested parties');
-      for (const obs of this.stateObservers) {
-        obs.onJoinRoom(socket, room);
-      }
+      this.jsonApiController.onJoinRoom(socket, room);
+      this.stateController.onJoinRoom(socket, room);
 
       // Send JsonKeys to all JsonKey rooms
       if (room === ServerStatusEvent.Room) {
@@ -47,10 +50,6 @@ export default class EepDataEffects {
         socket.emit(ServerStatusEvent.CounterUpdated, JSON.stringify(this.store.getEventCounter()));
       }
     });
-  }
-
-  addStateObserver(roomObserver: StateObserver) {
-    this.stateObservers.push(roomObserver);
   }
 
   refreshStateIfRequired() {
@@ -77,7 +76,7 @@ export default class EepDataEffects {
           'STATE OUT OF SYNC: Expected next event: ' + expectedEventNr + ' / Received Event: ' + receivedEventNr
         );
       } else {
-        console.log('STATE expected: ' + expectedEventNr + ' / State received: ' + receivedEventNr);
+        if (this.debug) console.log('STATE expected: ' + expectedEventNr + ' / State received: ' + receivedEventNr);
       }
     } catch (e) {
       console.error(jsonString.length, jsonString.substr(0, 20));
@@ -87,8 +86,12 @@ export default class EepDataEffects {
 
   announceStateChange(): void {
     // Inform all observers about state changes
-    for (const observer of this.stateObservers) {
-      observer.onStateChange(this.store as Readonly<EepDataReducer>);
+    try {
+      this.jsonApiController.onStateChange(this.store as Readonly<EepDataReducer>);
+      this.stateController.onStateChange(this.store as Readonly<EepDataReducer>);
+    } catch (e) {
+      console.error(e);
+      throw e;
     }
   }
 }

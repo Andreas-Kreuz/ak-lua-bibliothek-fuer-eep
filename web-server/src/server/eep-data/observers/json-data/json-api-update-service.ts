@@ -1,13 +1,14 @@
 import express = require('express');
 import { Server, Socket } from 'socket.io';
 import { CacheService } from '../../../eep-service/cache-service';
-import { DataEvent, ServerStatusEvent } from 'web-shared';
-import JsonDataStore, { State } from '../../eep-data-reducer';
-import StateObserver from '../state-observer';
+import { ServerStatusEvent } from 'web-shared';
+import EepDataStore, { State } from '../../eep-data-reducer';
 import JsonApiReducer, { ServerData } from './json-api-reducer';
 
-export default class JsonDataObserver implements StateObserver {
-  private debug = true;
+import { ApiDataRoom } from 'web-shared/build/rooms';
+
+export default class JsonApiUpdateService {
+  private debug = false;
   private reducer = new JsonApiReducer();
 
   constructor(
@@ -22,9 +23,9 @@ export default class JsonDataObserver implements StateObserver {
     const roomNames = this.reducer.getAllRoomNames();
     for (const roomName of roomNames) {
       // Send datatype events to datatype rooms
-      const room = DataEvent.roomOf(roomName);
+      const room = ApiDataRoom.roomId(roomName);
       if (room === room) {
-        const event = DataEvent.eventOf(roomName);
+        const event = ApiDataRoom.eventId(roomName);
         if (this.debug) console.log('EMIT ' + event + ' to ' + socket.id);
         socket.emit(event, this.reducer.getRoomJsonString(roomName));
       }
@@ -41,7 +42,13 @@ export default class JsonDataObserver implements StateObserver {
   onLeaveRoom = (socket: Socket, room: string) => {
     // Nothing to do here
   };
-  onStateChange = (store: Readonly<JsonDataStore>) => {
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  onSocketClose = (socket: Socket): void => {
+    // Nothing to do here yet
+  };
+
+  onStateChange = (store: Readonly<EepDataStore>) => {
     const currentState: State = store.currentState();
     const oldData: ServerData = this.reducer.getLastAnnouncedData();
     const data: ServerData = JsonApiReducer.calculateData(currentState);
@@ -52,7 +59,7 @@ export default class JsonDataObserver implements StateObserver {
   };
 
   private announceEepData(
-    store: Readonly<JsonDataStore>,
+    store: Readonly<EepDataStore>,
     oldData: ServerData,
     data: ServerData,
     eventCounter: number
@@ -89,20 +96,20 @@ export default class JsonDataObserver implements StateObserver {
 
   private onRoomAdded(key: string, json: string): void {
     this.registerApiUrls(key);
-    this.io.to(DataEvent.roomOf(key)).emit(DataEvent.eventOf(key), json);
+    this.io.to(ApiDataRoom.roomId(key)).emit(ApiDataRoom.eventId(key), json);
   }
 
   private onRoomChanged(key: string, json: string): void {
-    this.io.to(DataEvent.roomOf(key)).emit(DataEvent.eventOf(key), json);
+    this.io.to(ApiDataRoom.roomId(key)).emit(ApiDataRoom.eventId(key), json);
   }
 
   private onRoomRemoved(key: string): void {
     this.io.to(ServerStatusEvent.Room).emit(ServerStatusEvent.UrlsChanged, this.reducer.getUrlJson());
-    this.io.to(DataEvent.roomOf(key)).emit(DataEvent.eventOf(key), '{}');
+    this.io.to(ApiDataRoom.roomId(key)).emit(ApiDataRoom.eventId(key), '{}');
   }
 
   private registerApiUrls(key: string) {
-    console.log('Register: /api/v1/' + key);
+    if (this.debug) console.log('Register: /api/v1/' + key);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     this.router.get('/' + key, (req: any, res: any) => {
       res.json(this.getCurrentApiEntry(key));

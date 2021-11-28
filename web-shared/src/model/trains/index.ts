@@ -1,7 +1,7 @@
 import RollingStock from './rolling-stock';
 import Train from './train';
-import { TrainDetailsRoom, TrainListRoom } from './train-rooms';
 import TrainListEntry from './train-list-entry';
 import TrainType from './train-type';
+import { TrackType } from './track-type';
 
-export { RollingStock, TrainDetailsRoom, TrainListRoom, Train, TrainListEntry, TrainType };
+export { RollingStock, TrackType, Train, TrainListEntry, TrainType };

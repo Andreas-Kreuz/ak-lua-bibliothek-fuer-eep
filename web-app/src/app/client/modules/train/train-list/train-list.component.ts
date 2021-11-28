@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
-import { Train } from '../model/train.model';
+import { OldTrain } from '../model/train.model';
 import { select, Store } from '@ngrx/store';
 import * as TrainAction from '../store/train.actions';
 import * as fromTrain from '../store/train.reducer';
@@ -18,11 +18,7 @@ export class TrainListComponent implements OnInit, OnDestroy {
   tableData$ = this.store.select(fromTrain.selectTrains);
   private routeParams$: Subscription;
 
-  constructor(
-    private store: Store<fromTrain.State>,
-    private route: ActivatedRoute,
-    private trainService: TrainService
-  ) {}
+  constructor(private store: Store<fromTrain.State>, private route: ActivatedRoute) {}
 
   ngOnInit() {
     this.store.dispatch(TrainAction.initModule());
@@ -40,7 +36,7 @@ export class TrainListComponent implements OnInit, OnDestroy {
     this.routeParams$.unsubscribe();
   }
 
-  trackByTrainId(index: number, train: Train) {
+  trackByTrainId(index: number, train: OldTrain) {
     return train.id;
   }
 }
