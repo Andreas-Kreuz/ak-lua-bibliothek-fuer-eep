@@ -10,7 +10,7 @@ import SocketService from '../clientio/socket-service';
 import CommandEffects from '../command/command-effects';
 import { CacheService } from '../eep/cache-service';
 import EepService from '../eep/eep-service';
-import EepDataEffects from '../json/json-data-effects';
+import EepDataEffects from '../json/eep-data-effects';
 import LogEffects from '../log/log-effects';
 import AppConfig from './app-config';
 import AppReducer from './app-reducer';

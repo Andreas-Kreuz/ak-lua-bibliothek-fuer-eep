@@ -2,7 +2,7 @@ import express = require('express');
 import { Server, Socket } from 'socket.io';
 import { CacheService } from '../../../eep/cache-service';
 import { DataEvent, ServerStatusEvent } from 'web-shared';
-import JsonDataStore, { State } from '../../json-data-reducer';
+import JsonDataStore, { State } from '../../eep-data-reducer';
 import StateObserver from '../state-observer';
 import JsonApiReducer, { ServerData } from './json-api-reducer';
 

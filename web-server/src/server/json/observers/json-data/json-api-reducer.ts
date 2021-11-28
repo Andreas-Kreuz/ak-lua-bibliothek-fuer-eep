@@ -1,4 +1,4 @@
-import * as fromEepStore from '../../json-data-reducer';
+import * as fromEepStore from '../../eep-data-reducer';
 import { DataType } from 'web-shared';
 
 export interface ServerData {

@@ -1,5 +1,5 @@
 import { Server, Socket } from 'socket.io';
-import JsonDataStore from '../../json-data-reducer';
+import JsonDataStore from '../../eep-data-reducer';
 import { TrainListRoom, TrainDetailsRoom } from 'web-shared/build/model/trains';
 import { TrainSelector } from './train-selector';
 import { RollingStockSelector } from './rolling-stock-selector';

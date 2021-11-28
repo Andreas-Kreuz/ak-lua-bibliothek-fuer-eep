@@ -1,5 +1,5 @@
 import { RollingStock } from 'web-shared/build/model/trains';
-import * as fromJsonData from '../../json-data-reducer';
+import * as fromJsonData from '../../eep-data-reducer';
 import EepRollingStockDto from './eep-rolling-stock-dto';
 
 export class RollingStockSelector {

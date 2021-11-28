@@ -3,8 +3,8 @@ import { Server, Socket } from 'socket.io';
 
 import { RoomEvent, ServerStatusEvent } from 'web-shared';
 import SocketService from '../clientio/socket-service';
-import EepDataReducer from './json-data-reducer';
-import EepEvent from './eep-event';
+import EepDataReducer from './eep-data-reducer';
+import EepDataEvent from './eep-data-event';
 import { CacheService } from '../eep/cache-service';
 import TrainRoomObserver from './observers/train/train-room-effects';
 import StateObserver from './observers/state-observer';
@@ -64,7 +64,7 @@ export default class EepDataEffects {
 
   onNewEventLine(jsonString: string) {
     try {
-      const event: EepEvent = JSON.parse(jsonString);
+      const event: EepDataEvent = JSON.parse(jsonString);
       const expectedEventNr = this.store.currentState().eventCounter + 1;
       const receivedEventNr = event.eventCounter;
 

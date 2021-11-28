@@ -1,5 +1,5 @@
-import EepEvent, { DataChangePayload, ListChangePayload } from './eep-event';
-import EepDataEffects from './json-data-effects';
+import EepDataEvent, { DataChangePayload, ListChangePayload } from './eep-data-event';
+import EepDataEffects from './eep-data-effects';
 
 export interface State {
   eventCounter: number;
@@ -17,7 +17,7 @@ export default class JsonDataStore {
 
   constructor(private effects: EepDataEffects) {}
 
-  onNewEvent(event: EepEvent) {
+  onNewEvent(event: EepDataEvent) {
     this.state = JsonDataStore.updateStateOnEepEvent(event, this.state);
   }
 
@@ -29,7 +29,7 @@ export default class JsonDataStore {
     }
   }
 
-  private static updateStateOnEepEvent(event: EepEvent, state: State): State {
+  private static updateStateOnEepEvent(event: EepDataEvent, state: State): State {
     switch (event.type) {
       case 'CompleteReset':
         return {
