@@ -5,7 +5,7 @@ import { RoomEvent, ServerStatusEvent } from 'web-shared';
 import SocketService from '../clientio/socket-service';
 import EepDataReducer from './eep-data-reducer';
 import EepDataEvent from './eep-data-event';
-import { CacheService } from '../eep/cache-service';
+import { CacheService } from '../eep-service/cache-service';
 import TrainRoomObserver from './observers/train/train-room-effects';
 import StateObserver from './observers/state-observer';
 import JsonApiRoomObserver from './observers/json-data/json-api-room-observer';

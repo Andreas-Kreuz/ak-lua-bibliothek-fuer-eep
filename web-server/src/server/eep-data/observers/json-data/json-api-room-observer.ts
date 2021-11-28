@@ -1,6 +1,6 @@
 import express = require('express');
 import { Server, Socket } from 'socket.io';
-import { CacheService } from '../../../eep/cache-service';
+import { CacheService } from '../../../eep-service/cache-service';
 import { DataEvent, ServerStatusEvent } from 'web-shared';
 import JsonDataStore, { State } from '../../eep-data-reducer';
 import StateObserver from '../state-observer';
