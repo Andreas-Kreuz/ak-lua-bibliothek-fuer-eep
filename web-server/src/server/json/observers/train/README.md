@@ -1,6 +1,6 @@
 # Train Observer
 
-Dieser Observer bereitet die von EEP gesammelten Daten in folgende Dinge um:
+Dieser Observer wandelt die von EEP gesammelten Daten in folgende Dinge um:
 
 - `TrainListEntry[]` eine Liste von Einträgen, die als Züge dargestellt werden sollen.
 
@@ -19,3 +19,5 @@ Dieser Observer bereitet die von EEP gesammelten Daten in folgende Dinge um:
   ```
 
 ℹ Die Daten sind nur verfügbar, wenn das Modul für Züge geladen ist.
+
+ℹ Die Daten werden nur erstellt, wenn jemand am entsprechenden Raum angemeldet ist.
