@@ -6,7 +6,7 @@ import SocketService from '../clientio/socket-service';
 import EepDataReducer from './json-data-reducer';
 import EepEvent from './eep-event';
 import { CacheService } from '../eep/cache-service';
-// import TrainRoomObserver from './observers/train/train-room-effects';
+import TrainRoomObserver from './observers/train/train-room-effects';
 import StateObserver from './observers/state-observer';
 import JsonApiRoomObserver from './observers/json-data/json-api-room-observer';
 
@@ -28,7 +28,7 @@ export default class EepDataEffects {
 
     this.socketService.addOnSocketConnectedCallback((socket: Socket) => this.socketConnected(socket));
     this.addStateObserver(new JsonApiRoomObserver(app, router, io, cacheService));
-    // this.addStateObserver(new TrainRoomObserver(io));
+    this.addStateObserver(new TrainRoomObserver(io));
 
     setInterval(() => this.refreshStateIfRequired(), 50);
   }
