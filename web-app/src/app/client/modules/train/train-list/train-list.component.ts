@@ -7,6 +7,7 @@ import * as fromTrain from '../store/train.reducer';
 import { ActivatedRoute, Params } from '@angular/router';
 import { textForTrainType, TrainType } from '../model/train-type.enum';
 import { TrainService } from '../store/train.service';
+import { Train, TrainListEntry } from 'web-shared/build/model/trains';
 
 @Component({
   selector: 'app-train-list',
@@ -14,8 +15,8 @@ import { TrainService } from '../store/train.service';
   styleUrls: ['./train-list.component.css'],
 })
 export class TrainListComponent implements OnInit, OnDestroy {
-  trainType$ = this.store.select(fromTrain.selectTrainType);
-  tableData$ = this.store.select(fromTrain.selectTrains);
+  trainList = this.store.select(fromTrain.sortedTrainList);
+  trainType$ = this.store.select(fromTrain.trainFeature.selectTrainType);
   private routeParams$: Subscription;
 
   constructor(private store: Store<fromTrain.State>, private route: ActivatedRoute) {}
@@ -36,7 +37,7 @@ export class TrainListComponent implements OnInit, OnDestroy {
     this.routeParams$.unsubscribe();
   }
 
-  trackByTrainId(index: number, train: OldTrain) {
+  trackByTrainId(index: number, train: TrainListEntry) {
     return train.id;
   }
 }

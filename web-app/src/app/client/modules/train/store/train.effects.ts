@@ -23,36 +23,15 @@ export class TrainEffects {
     { dispatch: false }
   );
 
-  setTrains$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(TrainAction.trainsUpdated),
-      switchMap((action) => {
-        const record: Record<string, OldTrain> = JSON.parse(action.json);
-        const list = Object.values(record);
-
-        return of(
-          TrainAction.setRailTrains({ railTrains: list.filter((a) => a.trackType === 'rail') }),
-          TrainAction.setRoadTrains({ roadTrains: list.filter((a) => a.trackType === 'road') }),
-          TrainAction.setTramTrains({ tramTrains: list.filter((a) => a.trackType === 'tram') })
-        );
-      })
-    )
-  );
-
-  setRollingStock$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(TrainAction.rollingStockUpdated),
-      switchMap((action) => {
-        const record: Record<string, RollingStock> = JSON.parse(action.json);
-        const list = Object.values(record);
-
-        return of(
-          TrainAction.setRailRollingStock({ railRollingStock: list.filter((a) => a.trackType === 'rail') }),
-          TrainAction.setRoadRollingStock({ roadRollingStock: list.filter((a) => a.trackType === 'road') }),
-          TrainAction.setTramRollingStock({ tramRollingStock: list.filter((a) => a.trackType === 'tram') })
-        );
-      })
-    )
+  selectTrain = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(TrainAction.selectTrain),
+        tap((action) => {
+          this.trainService.listenToTrain(action.trainName);
+        })
+      ),
+    { dispatch: false }
   );
 
   initModule = createEffect(

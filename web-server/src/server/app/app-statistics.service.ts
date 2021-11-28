@@ -7,7 +7,7 @@ export class ServerStatisticsService {
   static readonly TimeForJsonParsing = 'json-parsing:complete-time';
   static readonly TimeForEepJsonFile = 'eep:wait-for-json';
   static readonly TimeForCacheFile = 'cache:file:writing';
-  debug = false;
+  debug = true;
 
   private lastStatisticsUpdate: number;
   private lastTime: { [name: string]: { name: string; startTime: number; duration: number; diffToLast: number } } = {};
@@ -64,7 +64,6 @@ export class ServerStatisticsService {
 
       console.log('EepWait: ' + eepTimeDiff + file + json);
       this.lastTimeOfStatistic = timeOfStatistic;
-      // tslint:disable-next-line: semicolon
     }
   };
 

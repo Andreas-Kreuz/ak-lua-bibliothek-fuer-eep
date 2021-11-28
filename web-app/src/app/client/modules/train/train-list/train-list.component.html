@@ -4,6 +4,6 @@
   </h1>
 </div>
 
-<div *ngIf="tableData$ | async as trains" class="mat-typography" id="cardHolder">
-  <app-train-card *ngFor="let train of trains; trackBy: trackByTrainId" [train]="train"></app-train-card>
+<div *ngIf="trainList | async as trains" class="mat-typography" id="cardHolder">
+  <app-train-list-card *ngFor="let train of trains; trackBy: trackByTrainId" [train]="train"></app-train-list-card>
 </div>
