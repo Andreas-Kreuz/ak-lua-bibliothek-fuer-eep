@@ -8,7 +8,7 @@ export class RollingStockSelector {
   private trainRollingStock = new Map<string, Map<number, RollingStock>>();
 
   updateFromState(state: fromJsonData.State): void {
-    if (state === this.lastState) {
+    if (state === this.lastState || !state.rooms['rolling-stocks']) {
       return;
     }
 

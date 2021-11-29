@@ -11,7 +11,7 @@ export class TrainSelector {
   constructor(private rollingStockSelector: RollingStockSelector) {}
 
   updateFromState = (state: Readonly<fromJsonData.State>): void => {
-    if (this.state === state) {
+    if (this.state === state || !state.rooms['trains']) {
       return;
     }
     this.rollingStockSelector.updateFromState(state);
