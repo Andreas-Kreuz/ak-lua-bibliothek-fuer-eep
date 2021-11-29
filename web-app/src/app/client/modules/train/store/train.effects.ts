@@ -1,49 +1,52 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { TrainService } from './train.service';
-import { filter, switchMap, tap } from 'rxjs/operators';
+import { switchMap, tap } from 'rxjs/operators';
 
-import { Train } from '../model/train.model';
+import { OldTrain } from '../model/train.model';
 import * as TrainAction from './train.actions';
 import { of } from 'rxjs';
 import { RollingStock } from '../model/rolling-stock.model';
+import { TrackType } from 'web-shared/src/model/trains';
 
 @Injectable()
 export class TrainEffects {
-  setTrains$ = createEffect(() =>
-    this.trainService.trainsActions$().pipe(
-      switchMap((data) => {
-        const record: Record<string, Train> = JSON.parse(data);
-        const list = Object.values(record);
-
-        return of(
-          TrainAction.setRailTrains({ railTrains: list.filter((a) => a.trackType === 'rail') }),
-          TrainAction.setRoadTrains({ roadTrains: list.filter((a) => a.trackType === 'road') }),
-          TrainAction.setTramTrains({ tramTrains: list.filter((a) => a.trackType === 'tram') })
-        );
-      })
-    )
-  );
-
-  setRollingStock$ = createEffect(() =>
-    this.trainService.rollingStockActions$().pipe(
-      switchMap((data) => {
-        const record: Record<string, RollingStock> = JSON.parse(data);
-        const list = Object.values(record);
-
-        return of(
-          TrainAction.setRailRollingStock({ railRollingStock: list.filter((a) => a.trackType === 'rail') }),
-          TrainAction.setRoadRollingStock({ roadRollingStock: list.filter((a) => a.trackType === 'road') }),
-          TrainAction.setTramRollingStock({ tramRollingStock: list.filter((a) => a.trackType === 'tram') })
-        );
-      })
-    )
-  );
-
-  closeConnection = createEffect(
+  loadList = createEffect(
     () =>
       this.actions$.pipe(
-        ofType(TrainAction.disconnect),
+        ofType(TrainAction.selectType),
+        switchMap((action) => {
+          const trackType = action.trainType;
+          return of(this.trainService.listenTo(trackType));
+        })
+      ),
+    { dispatch: false }
+  );
+
+  selectTrain = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(TrainAction.selectTrain),
+        tap((action) => {
+          this.trainService.listenToTrain(action.trainName);
+        })
+      ),
+    { dispatch: false }
+  );
+
+  initModule = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(TrainAction.initModule),
+        tap(() => this.trainService.connect())
+      ),
+    { dispatch: false }
+  );
+
+  destroyModule = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(TrainAction.destroyModule),
         tap(() => this.trainService.disconnect())
       ),
     { dispatch: false }

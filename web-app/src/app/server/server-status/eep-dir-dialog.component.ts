@@ -12,15 +12,13 @@ import * as fromServer from '../store/server.reducer';
   templateUrl: './eep-dir-dialog.component.html',
 })
 export class EepDirDialogComponent {
-  public eepDir$: Observable<string>;
+  public eepDir$ = this.store.select(fromServer.eepDir$);
 
   constructor(
     private store: Store<fromServer.State>,
     public dialogRef: MatDialogRef<EepDirDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData
-  ) {
-    this.eepDir$ = this.store.pipe(select(fromServer.eepDir$));
-  }
+  ) {}
 
   onNoClick(): void {
     this.dialogRef.close();

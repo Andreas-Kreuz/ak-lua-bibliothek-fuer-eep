@@ -24,7 +24,7 @@ export class IntersectionSwitchingComponent implements OnInit, OnDestroy {
   constructor(private store: Store<fromRoot.State>, public dialog: MatDialog) {}
 
   ngOnInit() {
-    this.intersection$ = this.store.pipe(select(fromIntersection.intersectionById$(this.intersectionId)));
+    this.intersection$ = this.store.select(fromIntersection.intersectionById$(this.intersectionId));
     // this.lanes$ = this.store.pipe(
     //   select(fromIntersection.laneByIntersectionId$(intersectionId)));
     this.switchingSub = this.intersection$.subscribe(

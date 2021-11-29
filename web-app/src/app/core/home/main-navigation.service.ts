@@ -63,12 +63,12 @@ export class MainNavigationService {
       {
         name: 'Verkehr',
         available: combineLatest([
-          this.store.pipe(select(fromCore.isModuleLoaded$(this.kreuzungLuaModuleId))),
-          this.store.pipe(select(fromCore.isModuleLoaded$(this.dataLuaModuleId))),
+          this.store.select(fromCore.isModuleLoaded$(this.kreuzungLuaModuleId)),
+          this.store.select(fromCore.isModuleLoaded$(this.dataLuaModuleId)),
         ]).pipe(map((b1) => b1[0] || b1[1])),
         values: [
           {
-            available: this.store.pipe(select(fromCore.isModuleLoaded$(this.kreuzungLuaModuleId))),
+            available: this.store.select(fromCore.isModuleLoaded$(this.kreuzungLuaModuleId)),
             icon: 'gamepad',
             title: 'Kreuzungen',
             subtitle: 'Lua-Bibliothek',
@@ -83,7 +83,7 @@ export class MainNavigationService {
           // {
           //   name: 'Fahrzeuge', values: [
           {
-            available: this.store.pipe(select(fromCore.isModuleLoaded$(this.dataLuaModuleId))),
+            available: this.store.select(fromCore.isModuleLoaded$(this.dataLuaModuleId)),
             icon: 'directions_car',
             title: 'Autos',
             subtitle: 'Straßen',
@@ -94,7 +94,7 @@ export class MainNavigationService {
             requiredModuleId: this.dataLuaModuleId,
           },
           {
-            available: this.store.pipe(select(fromCore.isModuleLoaded$(this.dataLuaModuleId))),
+            available: this.store.select(fromCore.isModuleLoaded$(this.dataLuaModuleId)),
             icon: 'tram',
             title: 'Trams',
             subtitle: 'Straßenbahngleise',
@@ -105,7 +105,7 @@ export class MainNavigationService {
             requiredModuleId: this.dataLuaModuleId,
           },
           {
-            available: this.store.pipe(select(fromCore.isModuleLoaded$(this.dataLuaModuleId))),
+            available: this.store.select(fromCore.isModuleLoaded$(this.dataLuaModuleId)),
             icon: 'train',
             title: 'Züge',
             subtitle: 'Bahngleise',
@@ -134,7 +134,7 @@ export class MainNavigationService {
           },
           // {icon: 'directions', name: 'Weichen', link: '/switches'},
           {
-            available: this.store.pipe(select(fromCore.isModuleLoaded$(this.dataLuaModuleId))),
+            available: this.store.select(fromCore.isModuleLoaded$(this.dataLuaModuleId)),
             icon: 'memory',
             title: 'Speicher',
             subtitle: null, // 'EEPDataSlot',
@@ -145,7 +145,7 @@ export class MainNavigationService {
             requiredModuleId: this.dataLuaModuleId,
           },
           {
-            available: this.store.pipe(select(fromCore.isModuleLoaded$(this.dataLuaModuleId))),
+            available: this.store.select(fromCore.isModuleLoaded$(this.dataLuaModuleId)),
             icon: 'traffic',
             title: 'Signale',
             subtitle: null, // 'Ampeln, Signale, Schranken',
@@ -160,7 +160,7 @@ export class MainNavigationService {
           // {
           //   name: 'Roh-Daten', values: [
           {
-            available: this.store.pipe(select(fromCore.isModulesAvailable)),
+            available: this.store.select(fromCore.isModulesAvailable),
             icon: 'list_alt',
             title: 'Roh-Daten',
             subtitle: null, // 'JSON-Daten vom Server',

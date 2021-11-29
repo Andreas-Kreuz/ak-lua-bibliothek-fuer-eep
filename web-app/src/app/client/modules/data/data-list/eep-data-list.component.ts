@@ -21,15 +21,12 @@ export class EepDataListComponent implements OnInit, OnDestroy {
     ['name', 'Name'],
     ['data', 'Inhalt]'],
   ]);
-  tableData$: Observable<EepData[]>;
-  firstFreeSlots$: Observable<EepFreeData[]>;
+  tableData$ = this.store.select(fromEepData.eepData$);
+  firstFreeSlots$ = this.store.select(fromEepData.firstEepFreeData$);
 
   constructor(private eepDataService: EepDataService, private store: Store<fromRoot.State>) {}
 
-  ngOnInit() {
-    this.tableData$ = this.store.pipe(select(fromEepData.eepData$));
-    this.firstFreeSlots$ = this.store.pipe(select(fromEepData.firstEepFreeData$));
-  }
+  ngOnInit() {}
 
   ngOnDestroy() {
     this.store.dispatch(EepSlotAction.disconnect());

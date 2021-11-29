@@ -38,11 +38,11 @@ export class IntersectionComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.routeParams$ = this.route.params.subscribe((params: Params) => {
       this.intersectionId = +this.route.snapshot.params['id'];
-      this.intersection$ = this.store.pipe(select(fromIntersection.intersectionById$(this.intersectionId)));
-      this.lanes$ = this.store.pipe(select(fromIntersection.laneByIntersectionId$(this.intersectionId)));
+      this.intersection$ = this.store.select(fromIntersection.intersectionById$(this.intersectionId));
+      this.lanes$ = this.store.select(fromIntersection.laneByIntersectionId$(this.intersectionId));
       this.switchingSub = this.intersection$.subscribe(
         (intersection) =>
-          (this.switching$ = this.store.pipe(select(fromIntersection.switchingNamesByIntersection$(intersection))))
+          (this.switching$ = this.store.select(fromIntersection.switchingNamesByIntersection$(intersection)))
       );
     });
   }

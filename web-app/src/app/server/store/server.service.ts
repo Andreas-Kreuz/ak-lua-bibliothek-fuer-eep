@@ -14,12 +14,12 @@ export class ServerService {
 
   constructor(private socket: SocketService) {
     // Every socket NOTES event has it's own observable, will be used by ngrx effects
-    this.settingsDirOkReceived$ = this.socket.listen(SettingsEvent.DirOk);
-    this.settingsDirErrorReceived$ = this.socket.listen(SettingsEvent.DirError);
+    this.settingsDirOkReceived$ = this.socket.listenToEvent(SettingsEvent.DirOk);
+    this.settingsDirErrorReceived$ = this.socket.listenToEvent(SettingsEvent.DirError);
     this.socket.join(SettingsEvent.Room);
 
-    this.urlsChanged$ = this.socket.listen(ServerStatusEvent.UrlsChanged);
-    this.counterUpdated$ = this.socket.listen(ServerStatusEvent.CounterUpdated);
+    this.urlsChanged$ = this.socket.listenToEvent(ServerStatusEvent.UrlsChanged);
+    this.counterUpdated$ = this.socket.listenToEvent(ServerStatusEvent.CounterUpdated);
     this.socket.join(ServerStatusEvent.Room);
   }
 

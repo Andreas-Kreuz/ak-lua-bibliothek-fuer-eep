@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-
-import { SocketEvent } from '../../../../core/socket/socket-event';
 import { SocketService } from '../../../../core/socket/socket-service';
-import { DataEvent } from 'web-shared';
+import { ApiDataRoom } from 'web-shared/build/rooms';
 
 @Injectable()
 export class SignalsService {
@@ -14,16 +12,14 @@ export class SignalsService {
 
   getSignalActions(): Observable<string> {
     if (!this.signals$) {
-      this.signals$ = this.socket.listen(DataEvent.eventOf('signals'));
-      this.socket.join(DataEvent.roomOf('signals'));
+      this.signals$ = this.socket.listenToData(ApiDataRoom, 'signals');
     }
     return this.signals$;
   }
 
   getSignalTypeDefinitionActions(): Observable<string> {
     if (!this.signalTypes$) {
-      this.signalTypes$ = this.socket.listen(DataEvent.eventOf('signal-type-definitions'));
-      this.socket.join(DataEvent.roomOf('signal-type-definitions'));
+      this.signalTypes$ = this.socket.listenToData(ApiDataRoom, 'signal-type-definitions');
     }
     return this.signalTypes$;
   }

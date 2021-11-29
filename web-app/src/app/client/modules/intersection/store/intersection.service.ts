@@ -1,14 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-
-import { SocketEvent } from '../../../../core/socket/socket-event';
 import { SocketService } from '../../../../core/socket/socket-service';
-import { CommandEvent, DataEvent, IntersectionEvent } from 'web-shared';
+import { CommandEvent, IntersectionEvent } from 'web-shared';
+import { ApiDataRoom } from 'web-shared/build/rooms';
 import { LuaSetting } from '../../../../shared/model/lua-setting';
 import { EepCommandService } from '../../../../common/eep-communication/eep-command.service';
-
-// socket.listen\('\[Data-(.*)\]'\);
-// socket.listen(DataEvent.eventOf('$1'));this.socket.join(DataEvent.roomOf('$1'));
 
 @Injectable({
   providedIn: 'root',
@@ -24,40 +20,35 @@ export class IntersectionService {
 
   getIntersectionActions(): Observable<string> {
     if (!this.intersectionActions$) {
-      this.intersectionActions$ = this.socket.listen(DataEvent.eventOf('intersections'));
-      this.socket.join(DataEvent.roomOf('intersections'));
+      this.intersectionActions$ = this.socket.listenToData(ApiDataRoom, 'intersections');
     }
     return this.intersectionActions$;
   }
 
   getLaneActions(): Observable<string> {
     if (!this.laneActions$) {
-      this.laneActions$ = this.socket.listen(DataEvent.eventOf('intersection-lanes'));
-      this.socket.join(DataEvent.roomOf('intersection-lanes'));
+      this.laneActions$ = this.socket.listenToData(ApiDataRoom, 'intersection-lanes');
     }
     return this.laneActions$;
   }
 
   getSwitchingActions(): Observable<string> {
     if (!this.switchingActions$) {
-      this.switchingActions$ = this.socket.listen(DataEvent.eventOf('intersection-switchings'));
-      this.socket.join(DataEvent.roomOf('intersection-switchings'));
+      this.switchingActions$ = this.socket.listenToData(ApiDataRoom, 'intersection-switchings');
     }
     return this.switchingActions$;
   }
 
   getTrafficLightActions(): Observable<string> {
     if (!this.trafficLightActions$) {
-      this.trafficLightActions$ = this.socket.listen(DataEvent.eventOf('intersection-traffic-lights'));
-      this.socket.join(DataEvent.roomOf('intersection-traffic-lights'));
+      this.trafficLightActions$ = this.socket.listenToData(ApiDataRoom, 'intersection-traffic-lights');
     }
     return this.trafficLightActions$;
   }
 
   getLuaSettingsReceivedActions(): Observable<string> {
     if (!this.luaModuleSettingsActions$) {
-      this.luaModuleSettingsActions$ = this.socket.listen(DataEvent.eventOf('intersection-module-settings'));
-      this.socket.join(DataEvent.roomOf('intersection-module-settings'));
+      this.luaModuleSettingsActions$ = this.socket.listenToData(ApiDataRoom, 'intersection-module-settings');
     }
     return this.luaModuleSettingsActions$;
   }

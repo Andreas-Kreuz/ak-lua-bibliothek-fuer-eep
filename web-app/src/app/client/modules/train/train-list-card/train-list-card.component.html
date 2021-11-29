@@ -1,0 +1,19 @@
+<mat-card class="app-card mat-elevation-z2">
+  <mat-card-title-group>
+    <div mat-card-avatar id="bigIcon">{{ iconFor(train) }}</div>
+    <div class="titles">
+      <mat-card-title>
+        {{ train.id }}
+      </mat-card-title>
+      <mat-card-subtitle>
+        <app-info-route [route]="train.route"></app-info-route>
+        <app-info-line [line]="train.line"></app-info-line>
+        <app-info-destination [destination]="train.destination"></app-info-destination>
+      </mat-card-subtitle>
+    </div>
+    <button mat-icon-button (click)="favoriteTrain()">
+      <mat-icon>{{ expanded ? "expand_less" : "expand_more" }}</mat-icon>
+    </button>
+  </mat-card-title-group>
+  <app-train-details-card *ngIf="(selectedTrainName | async) === train.id"></app-train-details-card>
+</mat-card>

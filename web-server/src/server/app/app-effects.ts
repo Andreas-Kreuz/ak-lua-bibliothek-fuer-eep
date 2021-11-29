@@ -8,18 +8,19 @@ import { Server, Socket } from 'socket.io';
 import { RoomEvent, ServerInfoEvent, SettingsEvent } from 'web-shared';
 import SocketService from '../clientio/socket-service';
 import CommandEffects from '../command/command-effects';
-import { CacheService } from '../eep/cache-service';
-import EepService from '../eep/eep-service';
-import JsonDataEffects from '../json/json-data-effects';
+import { CacheService } from '../eep-service/cache-service';
+import EepService from '../eep-service/eep-service';
+import EepDataEffects from '../eep-data/eep-data-effects';
 import LogEffects from '../log/log-effects';
 import AppConfig from './app-config';
 import AppReducer from './app-reducer';
 import { ServerStatisticsService } from './app-statistics.service';
 
 export default class AppEffects {
+  private debug = false;
   private serverConfigPath = path.resolve(electron.app.getPath('appData'), 'eep-web-server');
   private serverConfigFile = path.resolve(this.serverConfigPath, 'settings.json');
-  private eepDataEffects: JsonDataEffects;
+  private eepDataEffects: EepDataEffects;
   private logEffects: LogEffects;
   private commandEffects: CommandEffects;
   private store = new AppReducer();
@@ -46,7 +47,7 @@ export default class AppEffects {
     socket.on(RoomEvent.JoinRoom, (rooms: { room: string }) => {
       if (rooms.room === SettingsEvent.Room) {
         const event = this.store.getEepDirOk() ? SettingsEvent.DirOk : SettingsEvent.DirError;
-        console.log('EMIT ' + event + ' to ' + socket.id + this.getEepDirectory());
+        if (this.debug) console.log('EMIT ' + event + ' to ' + socket.id + this.getEepDirectory());
         socket.emit(SettingsEvent.Dir, this.getEepDirectory());
         socket.emit(event, this.getEepDirectory());
       }
@@ -57,7 +58,7 @@ export default class AppEffects {
     });
 
     socket.on(SettingsEvent.ChangeDir, (dir: string) => {
-      console.log(SettingsEvent.ChangeDir + '"' + dir + '"');
+      if (this.debug) console.log(SettingsEvent.ChangeDir + '"' + dir + '"');
       this.changeEepDirectory(dir);
     });
   }
@@ -124,7 +125,7 @@ export default class AppEffects {
   }
 
   private registerHandlers(eepService: EepService) {
-    this.eepDataEffects = new JsonDataEffects(
+    this.eepDataEffects = new EepDataEffects(
       this.app,
       this.router,
       this.io,

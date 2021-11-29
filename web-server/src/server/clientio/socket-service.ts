@@ -19,13 +19,14 @@ export default class SocketService {
         addSocketEvents(socket);
       }
 
-      socket.on(RoomEvent.JoinRoom, (rooms: { room: string }) => {
-        socket.join(rooms.room);
-        if (this.debug) console.log(socket.id + ' joined rooms: "' + rooms.room + '" ');
+      socket.on(RoomEvent.JoinRoom, (room: { room: string }) => {
+        socket.join(room.room);
+        if (this.debug) console.log('JOIN ' + room.room + ' from ' + socket.id);
       });
 
-      socket.on(RoomEvent.LeaveRoom, (room: string) => {
-        socket.leave(room);
+      socket.on(RoomEvent.LeaveRoom, (room: { room: string }) => {
+        socket.leave(room.room);
+        if (this.debug) console.log('LEFT ' + room.room + ' by ' + socket.id);
       });
     });
   }

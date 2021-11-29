@@ -6,7 +6,8 @@ import { EffectsModule } from '@ngrx/effects';
 import { TrainListComponent } from './train-list/train-list.component';
 import { TrainsRoutingModule } from './trains-routing.module';
 import { RollingStockTooltipComponent } from './icon-and-tooltip/rolling-stock-tooltip.component';
-import { TrainCardComponent } from './train-card/train-card.component';
+import { TrainListCardComponent } from './train-list-card/train-list-card.component';
+import { TrainDetailsCardComponent } from './train-details-card/train-details-card.component';
 import { InfoRouteComponent } from './info-route/info-route.component';
 import { InfoSpeedComponent } from './info-speed/info-speed.component';
 import { InfoLengthComponent } from './info-length/info-length.component';
@@ -23,8 +24,9 @@ import { TrainService } from './store/train.service';
   providers: [TrainService],
   declarations: [
     TrainListComponent,
+    TrainListCardComponent,
+    TrainDetailsCardComponent,
     RollingStockTooltipComponent,
-    TrainCardComponent,
     InfoRouteComponent,
     InfoSpeedComponent,
     InfoLengthComponent,
