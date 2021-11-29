@@ -1,0 +1,28 @@
+name: lua-test
+
+on: [push]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@master
+
+      - uses: leafo/gh-actions-lua@v8.0.0
+        with:
+          luaVersion: "5.3"
+
+      - uses: leafo/gh-actions-luarocks@v4
+
+      - name: setup
+        run: |
+          luarocks install luacheck
+          luarocks install busted
+          luarocks install luacov
+          luarocks install luacov-coveralls
+
+      - name: test
+        run: |
+          luacheck --std max+busted lua/LUA
+          busted --verbose --coverage --
