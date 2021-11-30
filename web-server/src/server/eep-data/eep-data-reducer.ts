@@ -53,10 +53,13 @@ export default class EepDataStore {
         const payload: DataChangePayload<unknown> = event.payload;
         const roomName = payload.room;
         const key = payload.element[payload.keyId];
+        // We assign the key to an unused variable to get the remaining entries
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { [key]: _, ...remainingEntries } = state.rooms[roomName];
         return {
           ...state,
           eventCounter: event.eventCounter,
-          rooms: { ...state.rooms, [roomName]: { ...state.rooms[roomName], [key]: undefined } },
+          rooms: { ...state.rooms, [roomName]: remainingEntries },
         };
       }
       case 'ListChanged': {
