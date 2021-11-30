@@ -6,7 +6,7 @@ Dieser Observer wandelt die von EEP gesammelten Daten in folgende Dinge um:
 
   ```typescript
 
-  // Raum verlassen - für Züge vom Typ xxx
+  // Raum betreten - für Züge vom Typ xxx
   // xxx ist auxiliary | control | rail | road | tram
   socket.emit('[Room] Join', { "[Train List 'xxx']" });
   ```
