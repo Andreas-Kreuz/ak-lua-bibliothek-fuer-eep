@@ -1,5 +1,6 @@
 if AkDebugLoad then print("Loading ak.roadline.Line ...") end
 
+local StorageUtility = require("ak.storage.StorageUtility")
 local TrainRegistry = require("ak.train.TrainRegistry")
 local Route = require("ak.roadline.Route")
 
@@ -11,6 +12,27 @@ local Line = {}
 Line.debug = AkDebugLoad or false
 local lines = {}
 local lineChanges = {}
+Line.showDepartureTippText = true
+
+function Line.loadSettingsFromSlot(eepSaveId)
+    StorageUtility.registerId(eepSaveId, "Line settings")
+    Line.saveSlot = eepSaveId
+    local data = StorageUtility.loadTable(Line.saveSlot, "Line settings")
+    Line.showDepartureTippText = StorageUtility.toboolean(data["depInfo"]) or Line.showDepartureTippText
+end
+
+function Line.saveSettings()
+    if Line.saveSlot then
+        local data = {["depInfo"] = tostring(Line.showDepartureTippText)}
+        StorageUtility.saveTable(Line.saveSlot, data, "Crossing settings")
+    end
+end
+
+function Line.setShowDepartureTippText(value)
+    assert(value == true or value == false)
+    Line.showDepartureTippText = value
+    Line.saveSettings()
+end
 
 function Line.addRouteChange(station, oldRoute, newRoute, newLine)
     assert(type(station) == "table", "Need 'station' as table")

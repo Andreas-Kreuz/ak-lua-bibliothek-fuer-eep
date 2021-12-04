@@ -1,5 +1,7 @@
 if AkDebugLoad then print("Loading ak.roadline.RoadStationDisplayModel ...") end
 
+local Line = require "ak.roadline.Line"
+
 ------------------------------------------------------------------------------------------
 -- Klasse DisplayModel
 -- Weiss, welche Signalstellung fuer rot, gelb und gruen geschaltet werden muessen.
@@ -51,19 +53,11 @@ local SimpleStructure_displayEntries = function(displayStructure, stationQueueEn
     assert(type(platform) == "string", "Need 'platform' as string")
 
     local text = {stationName, " (Steig ", platform, ")<br>"}
-
     table.insert(text, "Linie / Ziel / Minuten<br>")
 
     for i = 1, 5 do
         ---@type StationQueueEntry
         local entry = stationQueueEntries[i]
-        -- local offset = (i - 1) * 4
-        -- EEPStructureSetTextureText(displayStructure, offset + 1, entry and entry.line or "")
-        -- EEPStructureSetTextureText(displayStructure, offset + 2, entry and entry.destination or "")
-        -- EEPStructureSetTextureText(displayStructure, offset + 3,
-        --                            (entry and entry.timeInMinutes > 0) and tostring(entry.timeInMinutes) or "")
-        -- EEPStructureSetTextureText(displayStructure, offset + 4, (entry and entry.timeInMinutes > 0) and "min" or "")
-
         table.insert(text, entry and entry.line or "")
         table.insert(text, " / ")
         table.insert(text, entry and entry.destination or "")
@@ -76,7 +70,7 @@ local SimpleStructure_displayEntries = function(displayStructure, stationQueueEn
 
     text = table.concat(text, "")
     EEPChangeInfoStructure(displayStructure, text)
-    EEPShowInfoStructure(displayStructure, true)
+    EEPShowInfoStructure(displayStructure, Line.showDepartureTippText)
 end
 
 DisplayModel.SimpleStructure = DisplayModel:new("SimpleStructure", SimpleStructure_initStation,
@@ -125,7 +119,7 @@ local Tram_Schild_DL1_displayEntries = function(displayStructure, stationQueueEn
 
     text = table.concat(text, "")
     EEPChangeInfoStructure(displayStructure, text)
-    EEPShowInfoStructure(displayStructure, true)
+    EEPShowInfoStructure(displayStructure, Line.showDepartureTippText)
 end
 
 DisplayModel.Tram_Schild_DL1 = DisplayModel:new("Tram_Schild_DL1", Tram_Schild_DL1_initStation,
@@ -136,6 +130,8 @@ local BusHSInfo_RG3_initStation = function(displayStructure, stationName, platfo
     assert(type(stationName) == "string", "Need 'stationName' as string")
     assert(type(platform) == "string", "Need 'platform' as string")
     EEPStructureSetTextureText(displayStructure, 1, stationName)
+    -- EEPStructureSetTextureText(displayStructure, 2, stationName)
+    -- EEPStructureSetTextureText(displayStructure, 3, stationName)
     EEPStructureSetTextureText(displayStructure, 4, "Steig " .. platform)
 end
 
@@ -202,7 +198,7 @@ local BusHSdfi_RG3_displayEntries = function(displayStructure, stationQueueEntri
 
     text = table.concat(text, "")
     EEPChangeInfoStructure(displayStructure, text)
-    EEPShowInfoStructure(displayStructure, true)
+    EEPShowInfoStructure(displayStructure, Line.showDepartureTippText)
 end
 
 DisplayModel.BusHSdfi_RG3 = DisplayModel:new("BusHSdfi_RG3", BusHSdfi_RG3_initStation, BusHSdfi_RG3_displayEntries)
@@ -210,16 +206,18 @@ DisplayModel.BusHSdfi_RG3 = DisplayModel:new("BusHSdfi_RG3", BusHSdfi_RG3_initSt
 --------------------------------------------------------------------------------------------------------------------
 -- V15NRG35023
 --------------------------------------------------------------------------------------------------------------------
-local BusHS_Tram_Info_6_RG3_initStation = function(displayStructure, stationName, platform)
+local BusHS_Tram_Info_6_RG3_initStation = function(displayStructure, stationName, platform, routeNames)
     assert(type(displayStructure) == "string", "Need 'displayStructure' as string not as " .. type(displayStructure))
     assert(type(stationName) == "string", "Need 'stationName' as string")
     assert(type(platform) == "string", "Need 'platform' as string")
     EEPStructureSetTextureText(displayStructure, 1, stationName)
-    EEPStructureSetTextureText(displayStructure, 2, "")
-    EEPStructureSetTextureText(displayStructure, 3, "")
-    EEPStructureSetTextureText(displayStructure, 4, "")
-    EEPStructureSetTextureText(displayStructure, 5, "")
-    EEPStructureSetTextureText(displayStructure, 6, "")
+    if (routeNames) then
+        for i = 1, 5 do
+            local route = routeNames[i]
+            local index = i + 1
+            EEPStructureSetTextureText(displayStructure, index, route or "")
+        end
+    end
     EEPStructureSetTextureText(displayStructure, 7, "Steig " .. platform)
 end
 
@@ -308,7 +306,7 @@ local BusHS_Tram_dfi_6_RG3_displayEntries = function(displayStructure, stationQu
 
     text = table.concat(text, "")
     EEPChangeInfoStructure(displayStructure, text)
-    EEPShowInfoStructure(displayStructure, true)
+    EEPShowInfoStructure(displayStructure, Line.showDepartureTippText)
 end
 
 DisplayModel.BusHS_Tram_dfi_6_RG3 = DisplayModel:new("BusHS_Tram_dfi_6_RG3", BusHS_Tram_dfi_6_RG3_initStation,

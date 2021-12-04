@@ -95,7 +95,6 @@ insulate("Line Management", function()
     changeDestination(testTrain, sStriesen)
 
     -- Drive through route 2 by contacts
-
     stationArrivalPlanned(testTrain, sStriesen, 0)
     stationLeft(testTrain, sStriesen)
     stationArrivalPlanned(testTrain, sHauptbahnhof, 0)
