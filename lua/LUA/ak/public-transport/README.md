@@ -3,8 +3,8 @@
 ## Einmaliger Import für Haltestellen
 
 ```lua
-local RoadStation = require("ak.roadline.RoadStation")
-local RoadStationDisplayModel = require("ak.roadline.RoadStationDisplayModel")
+local RoadStation = require("ak.public-transport.RoadStation")
+local RoadStationDisplayModel = require("ak.public-transport.RoadStationDisplayModel")
 ```
 
 ## Einrichten der Haltestellen in der Anlage
@@ -43,7 +43,7 @@ sHochbaum:addDisplay("#3_Bus-Haltestelle modern", RoadStationDisplayModel.Simple
 ## Einmaliger Import von Line
 
 ```lua
-local Line = require("ak.roadline.Line")
+local Line = require("ak.public-transport.Line")
 ```
 
 ## Aufrufe in Kontaktpunkten

@@ -6,7 +6,7 @@ LineJsonCollector = {}
 local enabled = true
 local initialized = false
 LineJsonCollector.name = "ak.data.LineJsonCollector"
-local Line = require("ak.roadline.Line")
+local Line = require("ak.public-transport.Line")
 
 local function collectModuleSettings()
     local settings = {

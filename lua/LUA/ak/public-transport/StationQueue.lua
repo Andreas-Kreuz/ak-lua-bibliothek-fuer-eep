@@ -1,6 +1,6 @@
-if AkDebugLoad then print("Loading ak.roadline.StationQueue ...") end
+if AkDebugLoad then print("Loading ak.public-transport.StationQueue ...") end
 
-local StationQueueEntry = require("ak.roadline.StationQueueEntry")
+local StationQueueEntry = require("ak.public-transport.StationQueueEntry")
 
 ---@class StationQueue
 ---@field type string

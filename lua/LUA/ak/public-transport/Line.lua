@@ -1,8 +1,8 @@
-if AkDebugLoad then print("Loading ak.roadline.Line ...") end
+if AkDebugLoad then print("Loading ak.public-transport.Line ...") end
 
 local StorageUtility = require("ak.storage.StorageUtility")
 local TrainRegistry = require("ak.train.TrainRegistry")
-local Route = require("ak.roadline.Route")
+local Route = require("ak.public-transport.Route")
 
 ---@class Line
 ---@field type string

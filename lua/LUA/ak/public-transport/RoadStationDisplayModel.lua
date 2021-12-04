@@ -1,6 +1,6 @@
-if AkDebugLoad then print("Loading ak.roadline.RoadStationDisplayModel ...") end
+if AkDebugLoad then print("Loading ak.public-transport.RoadStationDisplayModel ...") end
 
-local Line = require "ak.roadline.Line"
+local Line = require "ak.public-transport.Line"
 
 ------------------------------------------------------------------------------------------
 -- Klasse DisplayModel

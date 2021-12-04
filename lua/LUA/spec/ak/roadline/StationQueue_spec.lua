@@ -1,11 +1,11 @@
-describe("ak.roadline.StationQueue", function()
+describe("ak.public-transport.StationQueue", function()
     local EepSimulator = require("ak.core.eep.EepSimulator")
     EepSimulator.addTrain("train1", "RollingStock 1a", "RollingStock 2b")
     EepSimulator.addTrain("train2", "RollingStock 1a", "RollingStock 2b")
     EepSimulator.addTrain("train3", "RollingStock 1a", "RollingStock 2b")
 
     insulate("new Queue is empty", function()
-        local Queue = require("ak.roadline.StationQueue")
+        local Queue = require("ak.public-transport.StationQueue")
 
         local myQueue = Queue:new();
         it("First is nil", function() assert.same({}, myQueue.entries) end)
@@ -13,29 +13,29 @@ describe("ak.roadline.StationQueue", function()
     end)
 
     insulate("Queue with elements is not empty", function()
-        local Queue = require("ak.roadline.StationQueue")
+        local Queue = require("ak.public-transport.StationQueue")
 
         local myQueue = Queue:new()
         myQueue:push("train1", 5)
         myQueue:push("train2", 5)
         myQueue:push("train3", 5)
 
-        it("First is nil", function() assert.same({ "train1", "train2", "train3" }, myQueue.entriesByArrival) end)
+        it("First is nil", function() assert.same({"train1", "train2", "train3"}, myQueue.entriesByArrival) end)
     end)
 
     insulate("Queue with elements is not empty", function()
-        local Queue = require("ak.roadline.StationQueue")
+        local Queue = require("ak.public-transport.StationQueue")
 
         local myQueue = Queue:new()
         myQueue:push("train1", 2, 1)
         myQueue:push("train2", 4, 2)
         myQueue:push("train3", 3, 3)
 
-        it("First is nil", function() assert.same({ "train1", "train3", "train2" }, myQueue.entriesByArrival) end)
+        it("First is nil", function() assert.same({"train1", "train3", "train2"}, myQueue.entriesByArrival) end)
     end)
 
     insulate("Queue with elements is not empty", function()
-        local Queue = require("ak.roadline.StationQueue")
+        local Queue = require("ak.public-transport.StationQueue")
 
         local myQueue = Queue:new()
         myQueue:push("train1", 5, 1)
