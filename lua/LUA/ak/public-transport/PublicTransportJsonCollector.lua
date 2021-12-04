@@ -21,23 +21,23 @@ local function collectModuleSettings()
     }
 
     -- TODO: Send event only with detected changes
-    EventBroker.fireListChange("line-module-settings", "name", settings)
+    EventBroker.fireListChange("public-transport-module-settings", "name", settings)
     return settings;
 end
 
 local function collect()
-    local roadStations = {}
-    local roadLines = {} -- Line.lines
+    local publicTransportStations = {}
+    local publicTransportLines = {} -- Line.lines
     local publicTransportSettings = collectModuleSettings()
 
     -- TODO: Send event only with detected changes
-    EventBroker.fireListChange("public-transport-stations", "id", roadStations)
-    EventBroker.fireListChange("public-transport-lines", "id", roadLines)
+    EventBroker.fireListChange("public-transport-stations", "id", publicTransportStations)
+    EventBroker.fireListChange("public-transport-lines", "id", publicTransportLines)
     EventBroker.fireListChange("public-transport-module-settings", "name", publicTransportSettings)
 
     return {
-        ["public-transport-stations"] = roadStations,
-        ["public-transport-lines"] = roadLines,
+        ["public-transport-stations"] = publicTransportStations,
+        ["public-transport-lines"] = publicTransportLines,
         ["public-transport-module-settings"] = publicTransportSettings
     }
 end

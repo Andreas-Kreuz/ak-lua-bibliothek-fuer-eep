@@ -144,17 +144,9 @@
   "Lua.workspace.useGitIgnore": false,
   "lua.preferLuaCheckErrors": true,
   "lua.targetVersion": "5.3",
+  "Lua.runtime.version": "Lua 5.3",
   "vscode-lua-format.configPath": "lua-format.conf",
   //"eslint.nodePath": "web-app/node_modules/",
-  "eslint.probe": [
-    "javascript",
-    "javascriptreact",
-    "typescript",
-    "typescriptreact",
-    "html",
-    "vue",
-    "markdown",
-    "html"
-  ],
+  "eslint.probe": ["javascript", "javascriptreact", "typescript", "typescriptreact", "html", "vue", "markdown", "html"],
   "editor.formatOnSave": true
 }

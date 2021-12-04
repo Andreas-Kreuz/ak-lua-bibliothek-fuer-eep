@@ -1,0 +1,17 @@
+if AkDebugLoad then print("Loading ak.public-transport.PublicTransportWebConnector ...") end
+local ServerController = require("ak.io.ServerController")
+local Line = require("ak.public-transport.Line")
+
+---@class PublicTransportWebConnector
+local PublicTransportWebConnector = {}
+
+function PublicTransportWebConnector.registerJsonCollectors()
+    ServerController.addJsonCollector(require("ak.public-transport.PublicTransportJsonCollector"))
+end
+
+function PublicTransportWebConnector.registerFunctions()
+    ServerController.addAcceptedRemoteFunction("Crossing.setShowRequestsOnSignal",
+                                               function(param) Line.setShowDepartureTippText(param == "true") end)
+end
+
+return PublicTransportWebConnector
