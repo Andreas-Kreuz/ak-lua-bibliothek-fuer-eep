@@ -18,8 +18,20 @@ local RoadStationDisplayModel = require("ak.public-transport.RoadStationDisplayM
   fügt der Haltestelle ein Display für eine bestimmte Plattform hinzu (Bussteig, Tramsteig, Bahnsteig)
   - `eepImmoId`: ID der Immobilie in EEP, z.B. `#223` oder `#223_Bus-Haltestelle modern` - unterstützt das Modell der Immobilie die Anzeige von Linien, Bahnsteig oder Abfahrten, dann werden diese automatisch angezeigt.
   - `displayModel`: Ein RoadStationDisplayModel, z.B.
-    - `RoadStationDisplayModel.SimpleStructure` - dieses Modell unterstütz die Anzeige von TippTexten für die Haltestelle an jeder beliebigen Immobilie
-    - ``
+    - `RoadStationDisplayModel.SimpleStructure`
+      dieses Modell unterstützt die Anzeige von TippTexten für die Haltestelle an jeder beliebigen Immobilie
+    - `RoadStationDisplayModel.Tram_Schild_DL1`
+      für EEP-Modell V15NDL10027 - Texturierbare Zielanzeigen für Haltestellen
+    - `RoadStationDisplayModel.BusHSdfi_RG3`
+      für Anzeige aus EEP-Modell V15NRG35002
+    - `RoadStationDisplayModel.BusHSInfo_RG3`
+      für Haltestellenschild aus EEP-Modell V15NRG35002
+    - `RoadStationDisplayModel.BusHS_Tram_dfi_6_RG3`
+      für Anzeige aus EEP-Modell V15NRG35023
+    - `RoadStationDisplayModel.BusHS_Tram_Info_6_RG3`
+      für Haltestellenschild aus EEP-Modell V15NRG35023
+  - `platformId` Plattform, der dieses Display zugeordnet werden soll.
+    Wenn nicht angegeben, werden am Display die Abfahrten aller Züge der Haltestelle angezeigt.
 
 ```lua
 -- Haltestelle Schnalzlaut
@@ -57,13 +69,13 @@ Line.scheduleDeparture(trainName, station, timeInMinutes)
 
 -- wenn ein Zug eine Route wechseln soll:
 Line.changeRoute(trainName, station, departureTime)
-```lua
+```
 
 ## Einrichten der Route
 
 ```lua
 -- Line 285
-local line285 = Line:new({{ "{" }}nr = "285"{{ "}" }})
+local line285 = Line:new({ nr = "285" })
 
 -- Linie 285 Richtung Hochbaum
 local route285Hochbaum = line285:newRoute("Linie 285 Hochbaum")
