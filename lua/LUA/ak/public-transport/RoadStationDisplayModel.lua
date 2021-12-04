@@ -61,7 +61,7 @@ DisplayModel.BusHSdfi_RG3 = DisplayModel:new(BusHSdfi_RG3.name, BusHSdfi_RG3.ini
 --------------------------------------------------------------------------------------------------------------------
 DisplayModel.BusHS_Tram_Info_6_RG3 = DisplayModel:new(BusHS_Tram_Info_6_RG3.name, BusHS_Tram_Info_6_RG3.initStation,
                                                       BusHS_Tram_Info_6_RG3.displayEntries)
-DisplayModel.BusHSdfi_RG3 = DisplayModel:new(BusHS_Tram_dfi_6_RG3.name, BusHS_Tram_dfi_6_RG3.initStation,
-                                             BusHS_Tram_dfi_6_RG3.displayEntries)
+DisplayModel.BusHS_Tram_dfi_6_RG3 = DisplayModel:new(BusHS_Tram_dfi_6_RG3.name, BusHS_Tram_dfi_6_RG3.initStation,
+                                                     BusHS_Tram_dfi_6_RG3.displayEntries)
 
 return DisplayModel
