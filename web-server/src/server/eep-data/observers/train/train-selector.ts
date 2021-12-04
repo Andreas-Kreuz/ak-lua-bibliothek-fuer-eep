@@ -16,6 +16,9 @@ export class TrainSelector {
     }
     this.rollingStockSelector.updateFromState(state);
 
+    this.trainMap.clear();
+    this.trainListEntryMap.clear();
+
     const trainDict: Record<string, EepTrainDto> = state.rooms['trains'] as unknown as Record<string, EepTrainDto>;
     Object.values(trainDict).forEach((trainDto: EepTrainDto) => {
       const rollingStock = this.rollingStockSelector.rollingStockListOfTrain(trainDto.id);

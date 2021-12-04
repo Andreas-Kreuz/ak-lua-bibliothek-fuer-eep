@@ -32,12 +32,11 @@ export default class EepDataStore {
   private static updateStateOnEepEvent(event: EepDataEvent, state: State): State {
     switch (event.type) {
       case 'CompleteReset':
+        console.log('Resetting state');
         return {
-          ...state,
           eventCounter: event.eventCounter,
           rooms: {},
         };
-        break;
       case 'DataAdded':
       case 'DataChanged': {
         const payload: DataChangePayload<unknown> = event.payload;

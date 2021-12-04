@@ -14,6 +14,7 @@ export class RollingStockSelector {
 
     this.allRollingStock.clear();
     this.trainRollingStock.clear();
+
     const rollingStockDict: Record<string, EepRollingStockDto> = state.rooms['rolling-stocks'] as unknown as Record<
       string,
       EepRollingStockDto
