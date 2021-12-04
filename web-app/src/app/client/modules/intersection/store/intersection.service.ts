@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { SocketService } from '../../../../core/socket/socket-service';
 import { CommandEvent, IntersectionEvent } from 'web-shared';
 import { ApiDataRoom } from 'web-shared/build/rooms';
-import { LuaSetting } from '../../../../shared/model/lua-setting';
+import { LuaSetting } from 'web-shared/build/model/settings';
 import { EepCommandService } from '../../../../common/eep-communication/eep-command.service';
 
 @Injectable({

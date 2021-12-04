@@ -4,8 +4,7 @@ import { Intersection } from '../models/intersection.model';
 import { IntersectionLane } from '../models/intersection-lane.model';
 import { IntersectionSwitching } from '../models/intersection-switching.model';
 import { IntersectionTrafficLight } from '../models/intersection-traffic-light.model';
-import { LuaSetting } from '../../../../shared/model/lua-setting';
-import { LuaSettings } from '../../../../shared/model/lua-settings';
+import { LuaSetting, LuaSettings } from 'web-shared/build/model/settings';
 
 export const setIntersections = createAction(
   '[Intersections] Set Intersections',

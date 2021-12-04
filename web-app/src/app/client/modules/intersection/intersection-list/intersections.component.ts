@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import { select, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 
 import { Intersection } from '../models/intersection.model';
 import * as fromRoot from '../../../../app.reducers';
@@ -8,8 +7,7 @@ import * as fromIntersection from '../store/intersection.reducers';
 import { Router } from '@angular/router';
 import { IntersectionHelper } from '../intersection-helper';
 import { MatDialog } from '@angular/material/dialog';
-import { LuaSettings } from '../../../../shared/model/lua-settings';
-import { LuaSettingChangeEvent } from '../../../../shared/model/lua-setting-change-event';
+import { LuaSettingChangeEvent } from 'web-shared/build/model/settings';
 import * as IntersectionAction from '../store/intersection.actions';
 
 @Component({

@@ -4,7 +4,7 @@ import { Intersection } from '../models/intersection.model';
 import { IntersectionLane } from '../models/intersection-lane.model';
 import { IntersectionSwitching } from '../models/intersection-switching.model';
 import { IntersectionTrafficLight } from '../models/intersection-traffic-light.model';
-import { LuaSettings } from '../../../../shared/model/lua-settings';
+import { LuaSettings } from 'web-shared/build/model/settings';
 
 export interface State {
   intersections: Intersection[];

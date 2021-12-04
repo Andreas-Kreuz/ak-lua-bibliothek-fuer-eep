@@ -9,8 +9,7 @@ import { IntersectionTrafficLight } from '../models/intersection-traffic-light.m
 import { IntersectionService } from './intersection.service';
 import { Intersection } from '../models/intersection.model';
 import { IntersectionSwitching } from '../models/intersection-switching.model';
-import { LuaSettings } from '../../../../shared/model/lua-settings';
-import { LuaSetting } from '../../../../shared/model/lua-setting';
+import { LuaSetting, LuaSettings } from 'web-shared/build/model/settings';
 
 @Injectable()
 export class IntersectionEffects {
