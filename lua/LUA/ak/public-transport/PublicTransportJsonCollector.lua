@@ -1,11 +1,11 @@
-if AkDebugLoad then print("Loading ak.road.LineJsonCollector ...") end
+if AkDebugLoad then print("Loading ak.public-transport.PublicTransportJsonCollector ...") end
 local EventBroker = require "ak.util.EventBroker"
 
----@class LineJsonCollector
-LineJsonCollector = {}
+---@class PublicTransportJsonCollector
+PublicTransportJsonCollector = {}
 local enabled = true
 local initialized = false
-LineJsonCollector.name = "ak.data.LineJsonCollector"
+PublicTransportJsonCollector.name = "ak.public-transport.data.PublicTransportJsonCollector"
 local Line = require("ak.public-transport.Line")
 
 local function collectModuleSettings()
@@ -28,30 +28,30 @@ end
 local function collect()
     local roadStations = {}
     local roadLines = {} -- Line.lines
-    local roadStationSettings = collectModuleSettings()
+    local publicTransportSettings = collectModuleSettings()
 
     -- TODO: Send event only with detected changes
-    EventBroker.fireListChange("roadstation-stations", "id", roadStations)
-    EventBroker.fireListChange("roadstation-lines", "id", roadLines)
-    EventBroker.fireListChange("roadstation-module-settings", "name", roadStationSettings)
+    EventBroker.fireListChange("public-transport-stations", "id", roadStations)
+    EventBroker.fireListChange("public-transport-lines", "id", roadLines)
+    EventBroker.fireListChange("public-transport-module-settings", "name", publicTransportSettings)
 
     return {
-        ["roadstation-stations"] = roadStations,
-        ["roadstation-lines"] = roadLines,
-        ["roadstation-module-settings"] = roadStationSettings
+        ["public-transport-stations"] = roadStations,
+        ["public-transport-lines"] = roadLines,
+        ["public-transport-module-settings"] = publicTransportSettings
     }
 end
 
-function LineJsonCollector.initialize()
+function PublicTransportJsonCollector.initialize()
     if not enabled or initialized then return end
 
     initialized = true
 end
 
-function LineJsonCollector.collectData()
+function PublicTransportJsonCollector.collectData()
     if not enabled then return end
 
-    if not initialized then LineJsonCollector.initialize() end
+    if not initialized then PublicTransportJsonCollector.initialize() end
 
     collect()
     return {
@@ -59,4 +59,4 @@ function LineJsonCollector.collectData()
     }
 end
 
-return LineJsonCollector
+return PublicTransportJsonCollector
