@@ -1,3 +1,13 @@
+# ÖPNV in Lua
+
+- **Linie** (`Line`): enthält eine Liste von Haltestellen.\
+  Alle Haltestellen der Linie werden von einem Fahrzeug nacheinander angesteuert.\
+  Die Linie ist geschlossen, d.h. nach der letzten Haltestelle kommt die erste Haltestelle.
+- **Haltestelle** (`RoadStation`):
+  kann von den Fahrzeugen verschiedener Linien angefahren werden.
+- **Steig** (`platform`):
+  Eine Haltestelle kann einen oder mehrere Bus-, Bahn- bzw. Tram-Steige haben, an denen die Fahrzeuge verschiedener Linien halten.
+
 # Haltestellen in Lua
 
 ## Einmaliger Import für Haltestellen
@@ -9,12 +19,13 @@ local RoadStationDisplayModel = require("ak.public-transport.RoadStationDisplayM
 
 ## Einrichten der Haltestellen in der Anlage
 
-- Neue Haltestelle anlegen: `RoadStation:new(name, speicherSlot)`
-
+- Neue Haltestelle anlegen:\
+  `RoadStation:new(name, speicherSlot)`
   - `name`: Name der Haltestelle
-  - `speicherSlot`: Freier Speicherslot in EEP - hier könnten optional die Einstellungen gespeichert werden (`-1`, wenn nicht benötigt)
-
-- Ein Display zur Haltestelle hinzufügen: `RoadStation:addDisplay(eepImmoId, displayModel, platformId)`
+  - `speicherSlot`: Freier Speicherslot in EEP - hier könnten optional die Einstellungen gespeichert werden\
+    Wird der Speicherslot nicht benötigt, kann `-1` verwendet werden.
+- Ein Haltestellentafel oder Abfahrtstafel zur Haltestelle hinzufügen:\
+  `RoadStation:addDisplay(eepImmoId, displayModel, platformId)`
   fügt der Haltestelle ein Display für eine bestimmte Plattform hinzu (Bussteig, Tramsteig, Bahnsteig)
   - `eepImmoId`: ID der Immobilie in EEP, z.B. `#223` oder `#223_Bus-Haltestelle modern` - unterstützt das Modell der Immobilie die Anzeige von Linien, Bahnsteig oder Abfahrten, dann werden diese automatisch angezeigt.
   - `displayModel`: Ein RoadStationDisplayModel, z.B.
