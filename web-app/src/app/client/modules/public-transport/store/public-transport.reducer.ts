@@ -1,12 +1,12 @@
 import { createFeatureSelector, createSelector, createReducer, Action, on, createFeature } from '@ngrx/store';
 import * as PublicTransportActions from './public-transport.actions';
-import { PublicTransportLineListEntry, PublicTransportStationListEntry } from 'web-shared/build/model/public-transport';
+import { LineListEntry, StationListEntry } from 'web-shared/build/model/public-transport';
 import { LuaSettings } from 'web-shared/build/model/settings';
 
 export interface State {
   moduleSettings: LuaSettings;
-  lineList: PublicTransportLineListEntry[];
-  stationList: PublicTransportStationListEntry[];
+  lineList: LineListEntry[];
+  stationList: StationListEntry[];
 }
 
 const initialState: State = {

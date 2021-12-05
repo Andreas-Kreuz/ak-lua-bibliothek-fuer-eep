@@ -10,7 +10,7 @@ import {
   PublicTransportStationListRoom,
 } from 'web-shared/build/rooms';
 import { LuaSetting, LuaSettings } from 'web-shared/build/model/settings';
-import { PublicTransportLineListEntry, PublicTransportStationListEntry } from 'web-shared/build/model/public-transport';
+import { LineListEntry, StationListEntry } from 'web-shared/build/model/public-transport';
 
 @Injectable()
 export class PublicTransportService implements OnDestroy {
@@ -39,7 +39,7 @@ export class PublicTransportService implements OnDestroy {
     }
     const observer = this.socket.listenToData(PublicTransportLineListRoom, trackType);
     this.publicTransportLineListSub = observer.subscribe((data) => {
-      const lineList: PublicTransportLineListEntry[] = JSON.parse(data);
+      const lineList: LineListEntry[] = JSON.parse(data);
       this.store.dispatch(PublicTransportActions.lineListUpdated({ lineList }));
     });
   }
@@ -50,7 +50,7 @@ export class PublicTransportService implements OnDestroy {
     }
     const observer = this.socket.listenToData(PublicTransportStationListRoom, trackType);
     this.publicTransportStationListSub = observer.subscribe((data) => {
-      const stationList: PublicTransportStationListEntry[] = JSON.parse(data);
+      const stationList: StationListEntry[] = JSON.parse(data);
       this.store.dispatch(PublicTransportActions.stationListUpdated({ stationList }));
     });
   }

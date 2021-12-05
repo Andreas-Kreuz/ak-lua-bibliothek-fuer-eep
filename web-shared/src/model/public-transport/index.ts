@@ -1,4 +1,4 @@
-import PublicTransportLineListEntry from './line-list-entry';
-import PublicTransportStationListEntry from './station-list-entry';
+import LineListEntry from './line-list-entry';
+import StationListEntry from './station-list-entry';
 
-export { PublicTransportLineListEntry, PublicTransportStationListEntry };
+export { LineListEntry, StationListEntry };
