@@ -2,7 +2,7 @@ import { createAction, props } from '@ngrx/store';
 import { OldTrain } from '../model/train.model';
 import { RollingStock } from '../model/rolling-stock.model';
 import { TrainType } from '../model/train-type.enum';
-import { TrainListEntry } from 'web-shared/src/model/trains';
+import { TrainListEntry } from 'web-shared/build/model/trains';
 import { Train } from 'web-shared/build/model/trains';
 
 export const initModule = createAction('[Train] Init Module');

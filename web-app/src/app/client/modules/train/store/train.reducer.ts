@@ -1,9 +1,7 @@
-import { OldTrain } from '../model/train.model';
 import * as TrainActions from './train.actions';
-import { Action, createFeature, createFeatureSelector, createReducer, createSelector, on, props } from '@ngrx/store';
-import { RollingStock } from '../model/rolling-stock.model';
+import { createFeature, createReducer, createSelector, on, props } from '@ngrx/store';
 import { TrainType } from '../model/train-type.enum';
-import { Train, TrainListEntry } from 'web-shared/src/model/trains';
+import { Train, TrainListEntry } from 'web-shared/build/model/trains';
 
 export interface State {
   trainType: TrainType;
