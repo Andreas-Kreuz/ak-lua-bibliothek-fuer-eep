@@ -1,7 +1,18 @@
-# ÖPNV in Lua
+---
+layout: page_with_toc
+title: Linien für den Nahverkehr
+subtitle: Die Dateien in diesem Verzeichnis dienenen dazu Linien und Haltestellen zu verwalten
+permalink: lua/ak/public-transport
+feature-img: "/docs/assets/headers/SourceCode.png"
+img: "/docs/assets/headers/SourceCode.png"
+---
 
-- **Linie** (`Line`): enthält eine Liste von Haltestellen.\
-  Alle Haltestellen der Linie werden von einem Fahrzeug nacheinander angesteuert.\
+# Paket `ak.public-transport`
+
+Dieses Paket bietet folgende Einstellungen:
+
+- **Linie** (`Line`): enthält eine Liste von Haltestellen.  
+  Alle Haltestellen der Linie werden von einem Fahrzeug nacheinander angesteuert.  
   Die Linie ist geschlossen, d.h. nach der letzten Haltestelle kommt die erste Haltestelle.
 - **Haltestelle** (`RoadStation`):
   kann von den Fahrzeugen verschiedener Linien angefahren werden.
@@ -19,12 +30,12 @@ local RoadStationDisplayModel = require("ak.public-transport.RoadStationDisplayM
 
 ## Einrichten der Haltestellen in der Anlage
 
-- Neue Haltestelle anlegen:\
+- Neue Haltestelle anlegen:  
   `RoadStation:new(name, speicherSlot)`
   - `name`: Name der Haltestelle
-  - `speicherSlot`: Freier Speicherslot in EEP - hier könnten optional die Einstellungen gespeichert werden\
+  - `speicherSlot`: Freier Speicherslot in EEP - hier könnten optional die Einstellungen gespeichert werden  
     Wird der Speicherslot nicht benötigt, kann `-1` verwendet werden.
-- Ein Haltestellentafel oder Abfahrtstafel zur Haltestelle hinzufügen:\
+- Ein Haltestellentafel oder Abfahrtstafel zur Haltestelle hinzufügen:  
   `RoadStation:addDisplay(eepImmoId, displayModel, platformId)`
   fügt der Haltestelle ein Display für eine bestimmte Plattform hinzu (Bussteig, Tramsteig, Bahnsteig)
   - `eepImmoId`: ID der Immobilie in EEP, z.B. `#223` oder `#223_Bus-Haltestelle modern` - unterstützt das Modell der Immobilie die Anzeige von Linien, Bahnsteig oder Abfahrten, dann werden diese automatisch angezeigt.
@@ -43,6 +54,11 @@ local RoadStationDisplayModel = require("ak.public-transport.RoadStationDisplayM
       für Haltestellenschild aus EEP-Modell V15NRG35023
   - `platformId` Plattform, der dieses Display zugeordnet werden soll.
     Wenn nicht angegeben, werden am Display die Abfahrten aller Züge der Haltestelle angezeigt.
+
+Um eine Haltestelle anzulegen, weise einer Variable z.B. `sSchnalzlaut` das Ergebnis des Aufrufs `RoadStation:new("Schnalzlaut", -1)`.
+Danach kannst Du dieser Variable dann mit `:addDisplay(...)` weitere Anzeigetafeln oder Haltestellenschilder für bestimmte Steige hinzufügen, z.B. `sSchnalzlaut:addDisplay("#2", RoadStationDisplayModel.SimpleStructure, 1)`.
+
+Das Ganze sieht dann so aus:
 
 ```lua
 -- Haltestelle Schnalzlaut
@@ -71,16 +87,35 @@ local Line = require("ak.public-transport.Line")
 
 ## Aufrufe in Kontaktpunkten
 
-````lua
+### wenn ein Zug eine Haltestelle verlässt
+
+Wenn der Zug die Haltestelle `meineHaltestelle` verlässt, dann nutze im Kontaktpunkt folgende Funktion: `Line.trainDeparted(trainName, meineHaltestelle)`
+
+```lua
 -- wenn ein Zug eine Haltestelle verlässt:
 Line.trainDeparted(trainName, station)
+```
 
+### wenn ein Zug demnächst eine Haltestelle erreicht
+
+Wenn der Zug die Haltestelle `meineHaltestelle` in 7 Minuten erreicht, dann nutze im Kontaktpunkt folgende Funktion: `Line.scheduleDeparture(trainName, meineHaltestelle, 7)`
+
+```lua
 -- wenn ein Zug demnächst eine Haltestelle erreicht:
 Line.scheduleDeparture(trainName, station, timeInMinutes)
+```
 
+### wenn ein Zug eine Route wechseln soll
+
+Wenn der Zug an diesem Kontaktpunkt die Route wechseln soll, dann verwende im Kontaktpunkt folgende Funktion:
+`Line.changeRoute(trainName, station, departureTime)`
+
+```lua
 -- wenn ein Zug eine Route wechseln soll:
 Line.changeRoute(trainName, station, departureTime)
 ```
+
+Der Zug wird die Route nur dann wechseln, wenn die Routenänderung mit `Line.addRouteChange(...)` hinterlegt wurde.
 
 ## Einrichten der Route
 
@@ -117,4 +152,4 @@ route285Schnalzlaut:addStation(sSchnalzlaut, 1, 2)
 -- 4. Parameter: Line - neue Linie
 Line.addRouteChange(sHochbaum, route285Hochbaum, route285Schnalzlaut, line285)
 Line.addRouteChange(sSchnalzlaut, route285Schnalzlaut, route285Hochbaum, line285)
-````
+```
