@@ -12,7 +12,7 @@ export const settingsUpdated = createAction(
   props<{ moduleSettings: LuaSettings }>()
 );
 export const settingChanged = createAction(
-  'Public Transport Settings Updated',
+  'Public Transport Setting Changed',
   props<{ setting: LuaSetting<unknown>; value: unknown }>()
 );
 export const lineListUpdated = createAction('Public Transport Lines Updated', props<{ lineList: LineListEntry[] }>());
