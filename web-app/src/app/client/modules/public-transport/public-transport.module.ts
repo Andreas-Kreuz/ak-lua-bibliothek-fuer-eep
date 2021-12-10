@@ -16,15 +16,26 @@ import { StoreModule } from '@ngrx/store';
 import { PublicTransportEffects } from './store/public-transport.effects';
 import { publicTransportFeature } from './store/public-transport.reducer';
 import { SharedModule } from '../../../shared/shared.module';
+import { SettingsIconComponent } from './settings-icon/settings-icon.component';
+import { SettingsDialogComponent } from './settings-dialog/settings-dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   providers: [PublicTransportService],
-  declarations: [LinesComponent, PublicTransportComponent, PublicTransportHomeComponent, StopsComponent],
+  declarations: [
+    LinesComponent,
+    PublicTransportComponent,
+    PublicTransportHomeComponent,
+    StopsComponent,
+    SettingsIconComponent,
+    SettingsDialogComponent,
+  ],
   imports: [
     CommonModule,
     SharedModule,
     MatButtonModule,
     MatCardModule,
+    MatDialogModule,
     MatDividerModule,
     MatListModule,
     StoreModule.forFeature(publicTransportFeature),

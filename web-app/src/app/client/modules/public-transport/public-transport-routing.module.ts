@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { LinesComponent } from './lines/lines.component';
 import { PublicTransportHomeComponent } from './public-transport-home/public-transport-home.component';
 import { PublicTransportComponent } from './public-transport.component';
+import { SettingsIconComponent } from './settings-icon/settings-icon.component';
 import { StopsComponent } from './stops/stops.component';
 
 const routes: Routes = [
@@ -15,6 +16,7 @@ const routes: Routes = [
       { path: 'stops', component: StopsComponent },
     ],
   },
+  { path: '', outlet: 'main-toolbar-icons', component: SettingsIconComponent },
 ];
 
 @NgModule({

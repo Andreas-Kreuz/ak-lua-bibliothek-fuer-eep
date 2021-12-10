@@ -7,5 +7,6 @@
 }
 
 .mat-line {
-    white-space: normal !important;
+    white-space: inherit;
+    /* white-space: normal !important; */
 }
