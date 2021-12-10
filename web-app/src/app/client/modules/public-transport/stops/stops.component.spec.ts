@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PublicTransportComponent } from './public-transport.component';
+import { StopsComponent } from './stops.component';
 
-describe('PublicTransportComponent', () => {
-  let component: PublicTransportComponent;
-  let fixture: ComponentFixture<PublicTransportComponent>;
+describe('StopsComponent', () => {
+  let component: StopsComponent;
+  let fixture: ComponentFixture<StopsComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PublicTransportComponent ]
+      declarations: [ StopsComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PublicTransportComponent);
+    fixture = TestBed.createComponent(StopsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

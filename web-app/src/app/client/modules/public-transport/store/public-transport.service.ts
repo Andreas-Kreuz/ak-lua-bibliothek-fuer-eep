@@ -57,6 +57,7 @@ export class PublicTransportService implements OnDestroy {
 
   connect(): void {
     console.log('##### Connecting PublicTransportService');
+    this.listenToSettings('');
   }
 
   disconnect(): void {
