@@ -157,4 +157,6 @@ end
 
 function RoadStation.stationByName(stationName) return allStations[stationName] end
 
+function RoadStation.showTippText() for _, station in pairs(allStations) do station:updateDisplays() end end
+
 return RoadStation

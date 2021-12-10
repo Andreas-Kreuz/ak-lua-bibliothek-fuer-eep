@@ -1,3 +1,4 @@
+local RoadStation = require "ak.public-transport.RoadStation"
 if AkDebugLoad then print("Loading ak.public-transport.Line ...") end
 
 local StorageUtility = require("ak.storage.StorageUtility")
@@ -32,6 +33,7 @@ function Line.setShowDepartureTippText(value)
     assert(value == true or value == false)
     Line.showDepartureTippText = value
     Line.saveSettings()
+    RoadStation.showTippText()
 end
 
 function Line.addRouteChange(station, oldRoute, newRoute, newLine)
