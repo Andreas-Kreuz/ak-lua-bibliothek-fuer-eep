@@ -18,12 +18,11 @@ export class PublicTransportHomeComponent implements OnInit {
   ngOnInit(): void {}
 
   onSettingChanged(event: LuaSettingChangeEvent) {
-    // TODO
-    // this.store.dispatch(
-    //   PublicTransportAction.settingsUpdated({
-    //     setting: event.setting,
-    //     value: event.newValue,
-    //   })
-    // );
+    this.store.dispatch(
+      PublicTransportAction.settingChanged({
+        setting: event.setting,
+        value: event.newValue,
+      })
+    );
   }
 }

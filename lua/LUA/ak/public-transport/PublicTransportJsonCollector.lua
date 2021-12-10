@@ -16,7 +16,7 @@ local function collectModuleSettings()
             ["description"] = "Zeige Abfahrten für Bus und Tram-Linien als TippText an",
             ["type"] = "boolean",
             ["value"] = Line.showDepartureTippText,
-            ["eepFunction"] = "Line.showLineInfoOnStructures"
+            ["eepFunction"] = "Line.setShowDepartureTippText"
         }
     }
 

@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { LuaSettings } from 'web-shared/build/model/settings';
+import { LuaSetting, LuaSettings } from 'web-shared/build/model/settings';
 import { DynamicRoom } from 'web-shared/build/rooms';
 import { LineListEntry, StationListEntry } from 'web-shared/build/model/public-transport';
 
@@ -10,6 +10,10 @@ export const leaveRoom = createAction('Public Transport Leave Room', props<{ roo
 export const settingsUpdated = createAction(
   'Public Transport Settings Updated',
   props<{ moduleSettings: LuaSettings }>()
+);
+export const settingChanged = createAction(
+  'Public Transport Settings Updated',
+  props<{ setting: LuaSetting<unknown>; value: unknown }>()
 );
 export const lineListUpdated = createAction('Public Transport Lines Updated', props<{ lineList: LineListEntry[] }>());
 export const stationListUpdated = createAction(

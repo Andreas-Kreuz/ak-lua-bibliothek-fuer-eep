@@ -11,6 +11,7 @@ import {
 } from 'web-shared/build/rooms';
 import { LuaSetting, LuaSettings } from 'web-shared/build/model/settings';
 import { LineListEntry, StationListEntry } from 'web-shared/build/model/public-transport';
+import { CommandEvent } from 'web-shared';
 
 @Injectable()
 export class PublicTransportService implements OnDestroy {
@@ -31,6 +32,10 @@ export class PublicTransportService implements OnDestroy {
       const moduleSettings: LuaSettings = JSON.parse(data);
       this.store.dispatch(PublicTransportActions.settingsUpdated({ moduleSettings }));
     });
+  }
+
+  changeModuleSettings(setting: LuaSetting<any>, value: any) {
+    this.socket.emit(CommandEvent.ChangeSetting, { name: setting.name, func: setting.eepFunction, newValue: value });
   }
 
   listenToLines(trackType: string) {
