@@ -18,7 +18,11 @@
     </mat-card-actions>
   </mat-card> -->
 
-  <app-config-card [luaSettings]="luaModuleSettings$" (settingChanged)="onSettingChanged($event)"></app-config-card>
+  <app-config-card
+    title="Lua-Einstellungen für ÖPNV"
+    [luaSettings]="luaModuleSettings$"
+    (settingChanged)="onSettingChanged($event)"
+  ></app-config-card>
 
   <!-- <mat-card class="app-card">
     <mat-card-title-group>
