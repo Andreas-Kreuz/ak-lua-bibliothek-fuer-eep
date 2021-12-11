@@ -13,19 +13,19 @@ local Line = {}
 Line.debug = AkDebugLoad or false
 local lines = {}
 local lineChanges = {}
-Line.showDepartureTippText = true
+Line.showDepartureTippText = false
 
 function Line.loadSettingsFromSlot(eepSaveId)
     StorageUtility.registerId(eepSaveId, "Line settings")
     Line.saveSlot = eepSaveId
     local data = StorageUtility.loadTable(Line.saveSlot, "Line settings")
-    Line.showDepartureTippText = StorageUtility.toboolean(data["depInfo"]) or Line.showDepartureTippText
+    Line.showDepartureTippText = StorageUtility.toboolean(data["depInfo"]) or false
 end
 
 function Line.saveSettings()
     if Line.saveSlot then
         local data = {["depInfo"] = tostring(Line.showDepartureTippText)}
-        StorageUtility.saveTable(Line.saveSlot, data, "Crossing settings")
+        StorageUtility.saveTable(Line.saveSlot, data, "Line settings")
     end
 end
 
