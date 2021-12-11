@@ -8,6 +8,7 @@ local Route = require("ak.public-transport.Route")
 ---@class Line
 ---@field type string
 ---@field routes table
+---@field id string
 ---@field nr string
 local Line = {}
 Line.debug = AkDebugLoad or false
@@ -92,6 +93,7 @@ end
 function Line:new(o)
     assert(type(o) == "table", "Need 'o' as table")
     assert(type(o.nr) == "string", "Need 'o.nr' as string")
+    o.id = o.nr
     o.type = "Line"
     o.routes = {}
     self.__index = self
@@ -102,7 +104,6 @@ end
 
 ---Creates a new route on the line
 ---Each line can have multiple routes, e.g. each line may have two opposite directions
-
 function Line:newRoute(routeName)
     assert(type(self) == "table", "Need to call this method with ':'")
     assert(type(routeName) == "string", "Need 'routeName' as string")
@@ -174,5 +175,7 @@ function Line.trainDeparted(trainName, station)
         print("[Line] Train has no line: " .. trainName)
     end
 end
+
+function Line:toJsonStatic() return {id = self.id, nr = self.nr, routes = self.routes} end
 
 return Line
