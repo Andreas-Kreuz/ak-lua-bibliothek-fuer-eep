@@ -11,7 +11,7 @@ local Line = require("ak.public-transport.Line")
 local function collectModuleSettings()
     local settings = {
         {
-            ["category"] = "Tipp-Texte für Anzeigen",
+            ["category"] = "Tipp-Texte für Anzeigetafeln",
             ["name"] = "Nächste Abfahrten",
             ["description"] = "Zeige Abfahrten für Bus und Tram-Linien als TippText an",
             ["type"] = "boolean",
