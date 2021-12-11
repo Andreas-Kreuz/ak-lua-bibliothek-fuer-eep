@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
+import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
 
 import { Intersection } from '../models/intersection.model';
-import * as fromRoot from '../../../../app.reducers';
-import * as fromIntersection from '../store/intersection.reducers';
-import { Router } from '@angular/router';
 import { IntersectionHelper } from '../intersection-helper';
-import { MatDialog } from '@angular/material/dialog';
 import { LuaSettingChangeEvent } from 'web-shared/build/model/settings';
+
+import * as fromIntersection from '../store/intersection.reducers';
 import * as IntersectionAction from '../store/intersection.actions';
 
 @Component({
@@ -20,7 +20,7 @@ export class IntersectionsComponent implements OnInit {
   luaModuleSettings$ = this.store.select(fromIntersection.luaModuleSettings$);
 
   constructor(
-    private store: Store<fromRoot.State>,
+    private store: Store<fromIntersection.State>,
     private router: Router,
     public intersectionHelper: IntersectionHelper,
     public dialog: MatDialog

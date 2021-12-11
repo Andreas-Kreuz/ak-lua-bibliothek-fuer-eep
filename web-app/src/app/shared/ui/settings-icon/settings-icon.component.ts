@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import * as assert from 'assert';
 import { Observable } from 'rxjs';
 import { LuaSettingChangeEvent, LuaSettings } from 'web-shared/build/model/settings';
 import { SettingsDialogComponent } from '../settings-dialog/settings-dialog.component';
@@ -21,10 +22,6 @@ export class SettingsIconComponent implements OnInit {
 
   openDialog(): void {
     this.dialog.open(SettingsDialogComponent, {
-      height: '100%',
-      width: '100%',
-      maxWidth: '800px',
-      maxHeight: '800px',
       data: {
         title: this.title,
         subtitle: this.subtitle,

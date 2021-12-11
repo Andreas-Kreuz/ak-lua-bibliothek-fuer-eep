@@ -16,6 +16,7 @@ import { StoreModule } from '@ngrx/store';
 import { signalFeature } from '../signals/store/signal.reducers';
 import { SignalEffects } from '../signals/store/signal.effects';
 import { SignalsService } from '../signals/store/signals.service';
+import { IntersectionSettingsIconComponent } from './intersection-settings-icon/intersection-settings-icon.component';
 
 @NgModule({
   providers: [SignalsService],
@@ -26,6 +27,7 @@ import { SignalsService } from '../signals/store/signals.service';
     CamHelpDialogComponent,
     LaneOverviewComponent,
     LaneQueueComponent,
+    IntersectionSettingsIconComponent,
   ],
   entryComponents: [CamHelpDialogComponent],
   imports: [

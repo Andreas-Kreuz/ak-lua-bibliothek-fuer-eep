@@ -16,8 +16,7 @@ import { StoreModule } from '@ngrx/store';
 import { PublicTransportEffects } from './store/public-transport.effects';
 import { publicTransportFeature } from './store/public-transport.reducer';
 import { SharedModule } from '../../../shared/shared.module';
-import { SettingsIconComponent } from './settings-icon/settings-icon.component';
-import { SettingsDialogComponent } from './settings-dialog/settings-dialog.component';
+import { PublicTransportSettingsIconComponent } from './public-transport-settings-icon/public-transport-settings-icon.component';
 import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
@@ -26,9 +25,8 @@ import { MatDialogModule } from '@angular/material/dialog';
     LinesComponent,
     PublicTransportComponent,
     PublicTransportHomeComponent,
+    PublicTransportSettingsIconComponent,
     StopsComponent,
-    SettingsIconComponent,
-    SettingsDialogComponent,
   ],
   imports: [
     CommonModule,
