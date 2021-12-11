@@ -1,6 +1,6 @@
 if AkDebugLoad then print("Loading ak.train.Train ...") end
--- local EventBroker = require "ak.util.EventBroker"
-local TableUtils = require "ak.util.TableUtils"
+-- local EventBroker = require("ak.util.EventBroker")
+local TableUtils = require("ak.util.TableUtils")
 
 local RollingStockRegistry = require("ak.train.RollingStockRegistry")
 local RollingStockModels = require("ak.train.RollingStockModels")

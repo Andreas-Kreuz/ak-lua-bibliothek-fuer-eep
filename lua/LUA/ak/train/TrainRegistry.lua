@@ -1,6 +1,6 @@
-local EventBroker = require "ak.util.EventBroker"
-local Train = require "ak.train.Train"
-local RollingStockRegistry = require "ak.train.RollingStockRegistry"
+local EventBroker = require("ak.util.EventBroker")
+local Train = require("ak.train.Train")
+local RollingStockRegistry = require("ak.train.RollingStockRegistry")
 local TrainRegistry = {}
 local allTrains = {}
 

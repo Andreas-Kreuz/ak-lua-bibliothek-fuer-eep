@@ -1,7 +1,7 @@
 if AkDebugLoad then print("Loading ak.public-transport.PublicTransportJsonCollector ...") end
-local LineRegistry = require "ak.public-transport.LineRegistry"
-local RouteRegistry = require "ak.public-transport.RouteRegistry"
-local EventBroker = require "ak.util.EventBroker"
+local LineRegistry = require("ak.public-transport.LineRegistry")
+local RouteRegistry = require("ak.public-transport.RouteRegistry")
+local EventBroker = require("ak.util.EventBroker")
 
 ---@class PublicTransportJsonCollector
 PublicTransportJsonCollector = {}

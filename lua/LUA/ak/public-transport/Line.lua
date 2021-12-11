@@ -1,4 +1,4 @@
-local RoadStation = require "ak.public-transport.RoadStation"
+local RoadStation = require("ak.public-transport.RoadStation")
 if AkDebugLoad then print("Loading ak.public-transport.Line ...") end
 
 local StorageUtility = require("ak.storage.StorageUtility")

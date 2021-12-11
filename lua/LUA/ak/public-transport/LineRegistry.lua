@@ -1,5 +1,5 @@
-local EventBroker = require "ak.util.EventBroker"
-local Line = require "ak.public-transport.Line"
+local EventBroker = require("ak.util.EventBroker")
+local Line = require("ak.public-transport.Line")
 local LineRegistry = {}
 local allLines = {}
 

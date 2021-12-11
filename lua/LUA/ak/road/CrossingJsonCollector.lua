@@ -1,5 +1,5 @@
 if AkDebugLoad then print("Loading ak.road.CrossingJsonCollector ...") end
-local EventBroker = require "ak.util.EventBroker"
+local EventBroker = require("ak.util.EventBroker")
 
 ---@class CrossingJsonCollector
 CrossingJsonCollector = {}

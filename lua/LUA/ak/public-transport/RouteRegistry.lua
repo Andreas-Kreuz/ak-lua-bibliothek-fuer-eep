@@ -1,5 +1,5 @@
-local EventBroker = require "ak.util.EventBroker"
-local Route = require "ak.public-transport.Route"
+local EventBroker = require("ak.util.EventBroker")
+local Route = require("ak.public-transport.Route")
 local RouteRegistry = {}
 local allRoutes = {}
 
