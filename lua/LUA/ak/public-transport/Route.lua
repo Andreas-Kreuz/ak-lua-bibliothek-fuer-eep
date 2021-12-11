@@ -1,4 +1,4 @@
-if AkDebugLoad then print("Loading ak.roadline.Route ...") end
+if AkDebugLoad then print("Loading ak.public-transport.Route ...") end
 
 ---@class Route
 ---@field type string

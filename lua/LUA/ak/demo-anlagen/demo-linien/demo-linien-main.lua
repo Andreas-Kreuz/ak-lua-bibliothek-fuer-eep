@@ -1,7 +1,7 @@
 -- Linienführung
-local Line = require("ak.roadline.Line")
-local RoadStation = require("ak.roadline.RoadStation")
-local RoadStationDisplayModel = require("ak.roadline.RoadStationDisplayModel")
+local Line = require("ak.public-transport.Line")
+local RoadStation = require("ak.public-transport.RoadStation")
+local RoadStationDisplayModel = require("ak.public-transport.RoadStationDisplayModel")
 local BetterContacts = require("ak.third-party.BetterContacts_BH2")
 BetterContacts.setOptions({varname = "trainName", varnameTrackID = "trackId"})
 

@@ -39,6 +39,9 @@ import { ConfigCardComponent } from './ui/config-card/config-card.component';
 import { RoadStopComponent } from './ui/road-stop/road-stop.component';
 import { RoadLineComponent } from './ui/road-line/road-line.component';
 import { TagEditorComponent } from './ui/tag-editor/tag-editor.component';
+import { SettingsDialogComponent } from './ui/settings-dialog/settings-dialog.component';
+import { SettingsIconComponent } from './ui/settings-icon/settings-icon.component';
+import { SettingsPanelComponent } from './ui/settings-panel/settings-panel.component';
 
 @NgModule({
   declarations: [
@@ -54,6 +57,9 @@ import { TagEditorComponent } from './ui/tag-editor/tag-editor.component';
     RoadStopComponent,
     RoadLineComponent,
     TagEditorComponent,
+    SettingsDialogComponent,
+    SettingsIconComponent,
+    SettingsPanelComponent,
   ],
   exports: [
     CommonModule,
@@ -83,6 +89,7 @@ import { TagEditorComponent } from './ui/tag-editor/tag-editor.component';
     MatToolbarModule,
     MatTooltipModule,
     MatExpansionModule,
+    SettingsIconComponent,
   ],
   imports: [
     SharedRoutingModule,

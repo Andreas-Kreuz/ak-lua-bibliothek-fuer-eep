@@ -1,6 +1,6 @@
 import { RollingStock } from 'web-shared/build/model/trains';
 import * as fromJsonData from '../../eep-data-reducer';
-import EepRollingStockDto from './eep-rolling-stock-dto';
+import EepRollingStockDto from '../../../eep-model/eep-rolling-stock-dto';
 
 export class RollingStockSelector {
   private lastState: fromJsonData.State = undefined;

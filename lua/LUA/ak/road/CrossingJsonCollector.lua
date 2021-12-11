@@ -178,22 +178,22 @@ end
 local function collectModuleSettings()
     local settings = {
         {
-            ["category"] = "Kreuzung",
-            ["name"] = "Anforderungen als TippText",
+            ["category"] = "Tipp-Texte für Ampeln",
+            ["name"] = "Anforderungen einblenden",
             ["description"] = "Zeigt für alle Ampeln einen TippText mit den Anforderungen",
             ["type"] = "boolean",
             ["value"] = Crossing.showRequestsOnSignal,
             ["eepFunction"] = "Crossing.setShowRequestsOnSignal"
         }, {
-            ["category"] = "Kreuzung",
-            ["name"] = "Schaltungen als TippText",
+            ["category"] = "Tipp-Texte für Ampeln",
+            ["name"] = "Schaltungen einblenden",
             ["description"] = "Zeigt für alle Ampeln einen TippText mit den Schaltungen",
             ["type"] = "boolean",
             ["value"] = Crossing.showSequenceOnSignal,
             ["eepFunction"] = "Crossing.setShowSequenceOnSignal"
         }, {
-            ["category"] = "Signale",
-            ["name"] = "Signal-ID als TippText",
+            ["category"] = "Tipp-Texte für Signale (allgemein)",
+            ["name"] = "Signal-ID einblenden",
             ["description"] = "Zeigt an jedem Signal dessen Nummer als TippText",
             ["type"] = "boolean",
             ["value"] = Crossing.showSignalIdOnSignal,

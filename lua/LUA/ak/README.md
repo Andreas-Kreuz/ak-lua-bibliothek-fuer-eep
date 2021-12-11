@@ -1,6 +1,6 @@
 ---
 layout: page_landing
-title:  Dokumentation der Lua-Bibliothek
+title: Dokumentation der Lua-Bibliothek
 subtitle: Hier findest Du Informationen zum Verwenden der Programmierschnittstelle
 permalink: lua/ak/
 feature-img: "/docs/assets/headers/SourceCode.png"
@@ -26,6 +26,11 @@ img: "/docs/assets/headers/SourceCode.png"
     <tr>
       <td><nobr><a href="modellpacker/">📦&nbsp;ak/modellpacker</a></nobr></td>
       <td>Erzeuge installierbare Dateien für EEP</td>
+    </tr>
+    <tr>
+      <td><a href="public-transport/">📦&nbsp;ak/public-transport</a></td>
+      <td>Linienverkehr im ÖPNV</td>
+    </tr>
     </tr>
     <tr>
       <td><a class="text-muted" href="rail/">⚡&nbsp;ak/rail</a></td>

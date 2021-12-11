@@ -1,7 +1,7 @@
-if AkDebugLoad then print("Loading ak.roadline.RoadStation ...") end
+if AkDebugLoad then print("Loading ak.public-transport.RoadStation ...") end
 
-local TrainRegistry = require "ak.train.TrainRegistry"
-local StationQueue = require("ak.roadline.StationQueue")
+local TrainRegistry = require("ak.train.TrainRegistry")
+local StationQueue = require("ak.public-transport.StationQueue")
 local StorageUtility = require("ak.storage.StorageUtility")
 
 ---@class RoadStation
@@ -9,6 +9,7 @@ local StorageUtility = require("ak.storage.StorageUtility")
 ---@field name string
 ---@field displays table table of RoadStationDisplay
 ---@field queue StationQueue
+---@field routes Route
 local RoadStation = {}
 RoadStation.debug = false
 local allStations = {}
@@ -93,6 +94,21 @@ function RoadStation:setPlatform(route, platform)
     self.routes = self.routes or {}
     self.routes[routeName] = self.routes[routeName] or {}
     self.routes[routeName].platform = platform
+    self:updateRoutesOnPlatform(platform)
+end
+
+function RoadStation:updateRoutesOnPlatform(platform)
+    local routesOfPlatform = {}
+    for r, p in pairs(self.routes or {}) do if p.platform == platform then table.insert(routesOfPlatform, r) end end
+    table.sort(routesOfPlatform, function(a, b) return a < b end)
+
+    for p, displays in pairs(self.displays or {}) do
+        if platform == p or platform == "ALL" then
+            for _, display in ipairs(displays) do
+                display.model.initStation(display.structure, self.name, platform, routesOfPlatform)
+            end
+        end
+    end
 end
 
 function RoadStation:updateDisplays()
@@ -116,12 +132,12 @@ function RoadStation:addDisplay(structure, model, platform)
     platform = platform and tostring(platform) or nil
     self.displays[platform or "ALL"] = self.displays[platform or "ALL"] or {}
     table.insert(self.displays[platform or "ALL"], {structure = structure, model = model})
-    model.initStation(structure, self.name, platform)
+    self:updateRoutesOnPlatform(platform)
 end
 
 --- Creates a new Bus or Tram Station
----@param name string @Name der Fahrspur einer Kreuzung
----@param eepSaveId number, @EEPSaveSlot-Id fuer das Speichern der Fahrspur
+---@param name string @Name der Haltestelle
+---@param eepSaveId number, @EEPSaveSlot-Id fuer das Speichern der Fahrzeuge dieser Haltestelle
 ---@return RoadStation
 function RoadStation:new(name, eepSaveId)
     assert(name, "Bitte geben Sie den Namen \"name\" fuer diese Fahrspur an.")
@@ -140,5 +156,7 @@ function RoadStation:new(name, eepSaveId)
 end
 
 function RoadStation.stationByName(stationName) return allStations[stationName] end
+
+function RoadStation.showTippText() for _, station in pairs(allStations) do station:updateDisplays() end end
 
 return RoadStation

@@ -1,8 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { LuaSetting } from '../../model/lua-setting';
-import { LuaSettings } from '../../model/lua-settings';
-import { LuaSettingChangeEvent } from '../../model/lua-setting-change-event';
+import { LuaSetting, LuaSettings, LuaSettingChangeEvent } from 'web-shared/build/model/settings';
 
 @Component({
   selector: 'app-config-card',

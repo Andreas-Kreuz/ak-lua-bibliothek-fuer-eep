@@ -52,6 +52,11 @@ const routes: Routes = [
             path: 'statistics',
             loadChildren: () => import('./client/modules/statistics/statistics.module').then((m) => m.StatisticsModule),
           },
+          {
+            path: 'public-transport',
+            loadChildren: () =>
+              import('./client/modules/public-transport/public-transport.module').then((m) => m.PublicTransportModule),
+          },
         ],
       },
       {

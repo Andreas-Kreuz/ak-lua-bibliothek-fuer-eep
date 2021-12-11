@@ -1,0 +1,15 @@
+<div class="mat-typography" *ngIf="categories | async as bla">
+  <p class="text-muted">Lege hier die gewünschten Einstellungen für das Modul fest:</p>
+  <div *ngFor="let category of bla | keyvalue">
+    <h2 style="margin-top: 2rem; margin-bottom: 0" class="text-muted">{{ category.key }}</h2>
+    <mat-selection-list>
+      <mat-list-option
+        *ngFor="let setting of category.value; let i = index"
+        (click)="onToggle(setting)"
+        [selected]="setting.value"
+      >
+        <p>{{ setting.name }}</p>
+      </mat-list-option>
+    </mat-selection-list>
+  </div>
+</div>

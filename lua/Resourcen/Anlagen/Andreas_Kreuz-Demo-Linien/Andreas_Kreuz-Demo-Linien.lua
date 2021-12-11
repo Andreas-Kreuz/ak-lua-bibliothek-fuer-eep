@@ -9,7 +9,8 @@ local ModuleRegistry = require("ak.core.ModuleRegistry")
 -- * Data (Export der Daten für EEP)
 -- * Crossing (für die Ampelsteuerung notwendig)
 ModuleRegistry.registerModules(require("ak.core.CoreLuaModule"), require("ak.data.DataLuaModule"),
-                               require("ak.road.CrossingLuaModul"))
+                               require("ak.road.CrossingLuaModul"),
+                               require("ak.public-transport.PublicTransportLuaModule"))
 
 -- Die EEPMain Methode wird von EEP genutzt. Sie muss immer 1 zurückgeben.
 function EEPMain()

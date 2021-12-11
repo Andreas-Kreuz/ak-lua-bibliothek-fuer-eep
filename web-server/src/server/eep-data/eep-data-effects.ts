@@ -9,6 +9,7 @@ import { CacheService } from '../eep-service/cache-service';
 import TrainUpdateService from './observers/train/train-update-service';
 import JsonApiRoomObserver from './observers/json-data/json-api-update-service';
 import EepDataUpdateService from './observers/eep-data-update-service';
+import PublicTransportService from './observers/public-transport/public-transport-update-service';
 
 export default class EepDataEffects {
   private debug = false;
@@ -33,6 +34,7 @@ export default class EepDataEffects {
 
     // Register the state observers, which will fill all rooms according to their needs
     this.stateController.registerFeatureService(new TrainUpdateService(io));
+    this.stateController.registerFeatureService(new PublicTransportService(io));
 
     setInterval(() => this.refreshStateIfRequired(), 50);
   }

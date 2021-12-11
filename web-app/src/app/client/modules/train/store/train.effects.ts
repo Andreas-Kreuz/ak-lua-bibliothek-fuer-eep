@@ -3,11 +3,8 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { TrainService } from './train.service';
 import { switchMap, tap } from 'rxjs/operators';
 
-import { OldTrain } from '../model/train.model';
 import * as TrainAction from './train.actions';
 import { of } from 'rxjs';
-import { RollingStock } from '../model/rolling-stock.model';
-import { TrackType } from 'web-shared/src/model/trains';
 
 @Injectable()
 export class TrainEffects {

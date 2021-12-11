@@ -24,6 +24,8 @@ body {
 .app-card {
   padding: 0 !important;
   border-radius: 0.3rem !important;
+  flex-grow: 1;
+  flex-shrink: 1;
 }
 
 // Set cornered border
@@ -154,18 +156,39 @@ body {
   word-break: break-all;
 }
 
-.app-card-header-dark > .mat-card-title,
-.app-card-header-dark > .mat-card-subtitle {
-  color: #ffffff;
-}
-
 .app-card-button-tr {
   position: absolute !important;
   top: 0.75rem;
   right: 0.75rem;
 }
 
+.app-card > .mat-card-content > .mat-divider + h1,
+.app-card > .mat-card-content > .mat-divider + h2,
+.app-card > .mat-card-content > .mat-divider + h3,
+.app-card > .mat-card-content > .mat-divider + h4,
+.app-card > .mat-card-content > .mat-divider + p {
+  padding-top: 0.75rem;
+}
+
+.app-card > .mat-card-content > h1 {
+  font-size: 1.4rem;
+}
+.app-card > .mat-card-content > h2 {
+  font-size: 1.3rem;
+}
+.app-card > .mat-card-content > h3 {
+  font-size: 1.2rem;
+}
+.app-card > .mat-card-content > h4 {
+  font-size: 1.1rem;
+}
+
 // colors section
+.app-card-header-dark > .mat-card-title,
+.app-card-header-dark > .mat-card-subtitle {
+  color: #ffffff;
+}
+
 .app-bg-primary {
   background-color: mat.get-color-from-palette($ak-eep-web-primary);
 }
@@ -239,7 +262,7 @@ body {
   top: 0;
   right: 0;
   left: 0;
-  z-index: 1030;
+  z-index: 500;
 }
 
 // Navigation stuff
@@ -252,5 +275,47 @@ body {
 }
 
 .tt {
-  font-family: "Courier New", Courier, monospace;
+  font-family: monospace;
+}
+
+// Card grid layout
+.app-card-grid,
+.app-card-grid-wide {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: stretch;
+  align-content: stretch;
+  gap: 2rem;
+  margin-bottom: 1rem;
+}
+
+.app-card-grid > * {
+  width: calc(25% - 6rem / 4);
+  max-width: calc(25% - 6rem / 4);
+}
+
+.app-card-grid-wide > * {
+  width: calc(50% - 1rem);
+  max-width: calc(50% - 1rem);
+}
+
+@media screen and (max-width: 1200px) {
+  .app-card-grid > * {
+    width: calc(50% - 1rem);
+    max-width: calc(50% - 1rem);
+  }
+
+  .app-card-grid-wide > * {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .app-card-grid > * {
+    width: 100%;
+    max-width: 100%;
+  }
 }
