@@ -8,4 +8,5 @@ export default interface TrainListEntry {
   destination: string;
   trainType: number;
   trackType: string;
+  rollingStockCount: number;
 }

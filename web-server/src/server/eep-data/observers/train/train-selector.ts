@@ -31,6 +31,7 @@ export class TrainSelector {
         destination: trainDto.destination,
         trainType: trainType,
         trackType: trainDto.trackType,
+        rollingStockCount: rollingStock.length,
       };
       this.trainListEntryMap.set(trainListEntry.id, trainListEntry);
 
