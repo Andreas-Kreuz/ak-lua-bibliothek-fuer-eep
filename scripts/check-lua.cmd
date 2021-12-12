@@ -19,7 +19,7 @@ IF %ERRORLEVEL% NEQ 0 (
     exit /b %ERRORLEVEL%
 )
 
-call busted --verbose --coverage -o plainTerminal --
+call busted --verbose --coverage -o plainTerminal -- .
 IF %ERRORLEVEL% NEQ 0 (
     echo %ERRORLEVEL%
     exit /b %ERRORLEVEL%
