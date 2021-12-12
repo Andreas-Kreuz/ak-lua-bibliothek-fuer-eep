@@ -127,14 +127,14 @@ function Train:changeDestination(destination, line)
 end
 
 --- Changes the trains route
----@param route string Route like set in EEP
-function Train:setRoute(route)
+---@param routeName string Route like set in EEP
+function Train:setRoute(routeName)
     assert(type(self) == "table", "Need to call this method with ':'")
-    assert(type(route) == "string", "Need 'route' as string")
+    assert(type(routeName) == "string", "Need 'route' as string")
     local oldRoute = self.route
-    self.route = route
+    self.route = routeName
     EEPSetTrainRoute(self.name, self.route)
-    if oldRoute ~= route then
+    if oldRoute ~= routeName then
         self.valuesUpdated = true
         -- EventBroker.fireDataChanged("trains", "id", {id = self.name, route = route})
     end
