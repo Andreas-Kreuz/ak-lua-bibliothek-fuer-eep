@@ -40,7 +40,7 @@ function LineRegistry.fireChangeLinesEvent()
             line.valuesUpdated = false
         end
     end
-    -- EventBroker.fireListChange("lines", "id", modifiedLines)
+    EventBroker.fireListChange("public-transport-line-names", "id", modifiedLines)
 end
 
 return LineRegistry
