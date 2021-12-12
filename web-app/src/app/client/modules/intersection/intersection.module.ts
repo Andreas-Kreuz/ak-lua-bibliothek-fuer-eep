@@ -19,25 +19,24 @@ import { SignalsService } from '../signals/store/signals.service';
 import { IntersectionSettingsIconComponent } from './intersection-settings-icon/intersection-settings-icon.component';
 
 @NgModule({
-  providers: [SignalsService],
-  declarations: [
-    IntersectionComponent,
-    IntersectionSwitchingComponent,
-    IntersectionsComponent,
-    CamHelpDialogComponent,
-    LaneOverviewComponent,
-    LaneQueueComponent,
-    IntersectionSettingsIconComponent,
-  ],
-  entryComponents: [CamHelpDialogComponent],
-  imports: [
-    CommonModule,
-    IntersectionRoutingModule,
-    SharedModule,
-    StoreModule.forFeature(intersectionFeature),
-    EffectsModule.forFeature([IntersectionEffects]),
-    StoreModule.forFeature(signalFeature),
-    EffectsModule.forFeature([SignalEffects]),
-  ],
+    providers: [SignalsService],
+    declarations: [
+        IntersectionComponent,
+        IntersectionSwitchingComponent,
+        IntersectionsComponent,
+        CamHelpDialogComponent,
+        LaneOverviewComponent,
+        LaneQueueComponent,
+        IntersectionSettingsIconComponent,
+    ],
+    imports: [
+        CommonModule,
+        IntersectionRoutingModule,
+        SharedModule,
+        StoreModule.forFeature(intersectionFeature),
+        EffectsModule.forFeature([IntersectionEffects]),
+        StoreModule.forFeature(signalFeature),
+        EffectsModule.forFeature([SignalEffects]),
+    ]
 })
 export class IntersectionModule {}

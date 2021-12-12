@@ -1,5 +1,7 @@
 if AkDebugLoad then print("Loading ak.public-transport.PublicTransportJsonCollector ...") end
-local EventBroker = require "ak.util.EventBroker"
+local LineRegistry = require("ak.public-transport.LineRegistry")
+local RouteRegistry = require("ak.public-transport.RouteRegistry")
+local EventBroker = require("ak.util.EventBroker")
 
 ---@class PublicTransportJsonCollector
 PublicTransportJsonCollector = {}
@@ -11,7 +13,7 @@ local Line = require("ak.public-transport.Line")
 local function collectModuleSettings()
     local settings = {
         {
-            ["category"] = "Tipp-Texte für Anzeigen",
+            ["category"] = "Tipp-Texte für Anzeigetafeln",
             ["name"] = "Nächste Abfahrten",
             ["description"] = "Zeige Abfahrten für Bus und Tram-Linien als TippText an",
             ["type"] = "boolean",
@@ -31,9 +33,11 @@ local function collect()
     local publicTransportSettings = collectModuleSettings()
 
     -- TODO: Send event only with detected changes
-    EventBroker.fireListChange("public-transport-stations", "id", publicTransportStations)
-    EventBroker.fireListChange("public-transport-lines", "id", publicTransportLines)
+    -- EventBroker.fireListChange("public-transport-stations", "id", publicTransportStations)
+    -- EventBroker.fireListChange("public-transport-lines", "id", publicTransportLines)
     EventBroker.fireListChange("public-transport-module-settings", "name", publicTransportSettings)
+    LineRegistry.fireChangeLinesEvent()
+    RouteRegistry.fireChangeRoutesEvent()
 
     return {
         ["public-transport-stations"] = publicTransportStations,

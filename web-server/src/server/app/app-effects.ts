@@ -15,6 +15,7 @@ import LogEffects from '../log/log-effects';
 import AppConfig from './app-config';
 import AppReducer from './app-reducer';
 import { ServerStatisticsService } from './app-statistics.service';
+import IntersectionEffects from '../intersection/intersection-effects';
 
 export default class AppEffects {
   private debug = false;
@@ -23,6 +24,7 @@ export default class AppEffects {
   private eepDataEffects: EepDataEffects;
   private logEffects: LogEffects;
   private commandEffects: CommandEffects;
+  private intersectionEffects: IntersectionEffects;
   private store = new AppReducer();
 
   // Statistic data
@@ -161,7 +163,7 @@ export default class AppEffects {
     // Init CommandHandler
     this.commandEffects = new CommandEffects(this.app, this.io, this.socketService, eepService.queueCommand);
 
-    // // Init IntersectionHandler
-    // this.intersectionEffects = new IntersectionEffects(this.app, this.io, this.socketService, eepService.queueCommand);
+    // Init IntersectionHandler
+    this.intersectionEffects = new IntersectionEffects(this.app, this.io, this.socketService, eepService.queueCommand);
   }
 }

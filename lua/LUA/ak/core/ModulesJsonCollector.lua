@@ -1,6 +1,6 @@
 if AkDebugLoad then print("Loading ak.core.ModulesJsonCollector ...") end
-local EventBroker = require "ak.util.EventBroker"
-local TableUtils = require "ak.util.TableUtils"
+local EventBroker = require("ak.util.EventBroker")
+local TableUtils = require("ak.util.TableUtils")
 
 ---@class JsonCollector
 ModulesJsonCollector = {}

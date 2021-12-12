@@ -1,5 +1,5 @@
-local EventBroker = require "ak.util.EventBroker"
-local RollingStock = require "ak.train.RollingStock"
+local EventBroker = require("ak.util.EventBroker")
+local RollingStock = require("ak.train.RollingStock")
 local RollingStockRegistry = {}
 ---@type table<string,RollingStock>
 local allRollingStock = {}

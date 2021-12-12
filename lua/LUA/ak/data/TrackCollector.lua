@@ -1,10 +1,10 @@
 if AkDebugLoad then print("Loading ak.data.TrackCollector ...") end
 
-local TableUtils = require "ak.util.TableUtils"
-local EventBroker = require "ak.util.EventBroker"
-local TrainRegistry = require "ak.train.TrainRegistry"
-local RollingStockRegistry = require "ak.train.RollingStockRegistry"
-local RuntimeRegistry = require "ak.util.RuntimeRegistry"
+local TableUtils = require("ak.util.TableUtils")
+local EventBroker = require("ak.util.EventBroker")
+local TrainRegistry = require("ak.train.TrainRegistry")
+local RollingStockRegistry = require("ak.train.RollingStockRegistry")
+local RuntimeRegistry = require("ak.util.RuntimeRegistry")
 local TrackCollector = {}
 local os = require("os")
 

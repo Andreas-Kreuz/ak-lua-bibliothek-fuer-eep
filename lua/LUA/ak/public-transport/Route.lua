@@ -1,6 +1,7 @@
 if AkDebugLoad then print("Loading ak.public-transport.Route ...") end
 
 ---@class Route
+---@field id string = the routeName
 ---@field type string
 ---@field lineNr string
 ---@field routeName string
@@ -14,6 +15,7 @@ Route.debug = AkDebugLoad or false
 function Route:new(routeName, lineNr)
     assert(type(routeName) == "string", "Need 'routeName' as string")
     local o = {}
+    o.id = routeName
     o.type = "Route"
     o.lineNr = lineNr
     o.routeName = routeName
@@ -93,6 +95,10 @@ function Route:trainDeparted(train, station)
             haveStation = true
         end
     end
+end
+
+function Route:toJsonStatic()
+    return {id = self.id, stations = self.stations, routeName = self.routeName, lineNr = self.lineNr}
 end
 
 return Route

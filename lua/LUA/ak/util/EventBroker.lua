@@ -1,5 +1,5 @@
 if AkDebugLoad then print("Loading ak.util.EventBroker ...") end
-local EventFileWriter = require "ak.io.EventFileWriter"
+local EventFileWriter = require("ak.io.EventFileWriter")
 
 ---@class Event
 ---@field date string

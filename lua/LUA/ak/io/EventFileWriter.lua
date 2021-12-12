@@ -1,5 +1,5 @@
 if AkDebugLoad then print("Loading ak.io.AkWebServerIo ...") end
-local json = require "ak.third-party.json"
+local json = require("ak.third-party.json")
 
 local EventFileWriter = {}
 local eventTexts = {}

@@ -1,6 +1,6 @@
 if AkDebugLoad then print("Loading ak.data.TrainsAndTracksJsonCollector ...") end
-local TrainRegistry = require "ak.train.TrainRegistry"
-local RollingStockRegistry = require "ak.train.RollingStockRegistry"
+local TrainRegistry = require("ak.train.TrainRegistry")
+local RollingStockRegistry = require("ak.train.RollingStockRegistry")
 
 TrainsAndTracksJsonCollector = {}
 local TrackCollector = require("ak.data.TrackCollector")

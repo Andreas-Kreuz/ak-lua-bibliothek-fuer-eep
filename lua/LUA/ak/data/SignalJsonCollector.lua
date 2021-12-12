@@ -1,5 +1,5 @@
 if AkDebugLoad then print("Loading ak.data.SignalJsonCollector ...") end
-local EventBroker = require "ak.util.EventBroker"
+local EventBroker = require("ak.util.EventBroker")
 local SignalJsonCollector = {}
 local enabled = true
 local initialized = false

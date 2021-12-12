@@ -8,11 +8,11 @@ local ServerController = require("ak.io.ServerController")
 --]] -- @author Andreas Kreuz
 -- @release 0.10.2
 if AkDebugLoad then print("Loading ak.io.ServerController ...") end
-local EventBroker = require "ak.util.EventBroker"
-local EventFileWriter = require "ak.io.EventFileWriter"
+local EventBroker = require("ak.util.EventBroker")
+local EventFileWriter = require("ak.io.EventFileWriter")
 local AkWebServerIo = require("ak.io.AkWebServerIo")
 local AkCommandExecutor = require("ak.io.AkCommandExecutor")
-local RuntimeRegistry = require "ak.util.RuntimeRegistry"
+local RuntimeRegistry = require("ak.util.RuntimeRegistry")
 local os = require("os")
 
 local ServerController = {}
