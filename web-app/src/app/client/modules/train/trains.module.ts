@@ -21,27 +21,26 @@ import { TrainEffects } from './store/train.effects';
 import { TrainService } from './store/train.service';
 
 @NgModule({
-  providers: [TrainService],
-  declarations: [
-    TrainListComponent,
-    TrainListCardComponent,
-    TrainDetailsCardComponent,
-    RollingStockTooltipComponent,
-    InfoRouteComponent,
-    InfoSpeedComponent,
-    InfoLengthComponent,
-    InfoLineComponent,
-    InfoDirectionComponent,
-    InfoDestinationComponent,
-    InfoCouplingComponent,
-  ],
-  entryComponents: [],
-  imports: [
-    SharedModule,
-    TrainsRoutingModule,
-    CommonModule,
-    StoreModule.forFeature(trainFeature),
-    EffectsModule.forFeature([TrainEffects]),
-  ],
+    providers: [TrainService],
+    declarations: [
+        TrainListComponent,
+        TrainListCardComponent,
+        TrainDetailsCardComponent,
+        RollingStockTooltipComponent,
+        InfoRouteComponent,
+        InfoSpeedComponent,
+        InfoLengthComponent,
+        InfoLineComponent,
+        InfoDirectionComponent,
+        InfoDestinationComponent,
+        InfoCouplingComponent,
+    ],
+    imports: [
+        SharedModule,
+        TrainsRoutingModule,
+        CommonModule,
+        StoreModule.forFeature(trainFeature),
+        EffectsModule.forFeature([TrainEffects]),
+    ]
 })
 export class TrainsModule {}
