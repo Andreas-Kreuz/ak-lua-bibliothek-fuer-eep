@@ -18,6 +18,7 @@ import { effects } from './app.effects';
 import { environment } from '../environments/environment';
 import { FormsModule } from '@angular/forms';
 import { LayoutModule } from '@angular/cdk/layout';
+import { ServiceWorkerModule } from '@angular/service-worker';
 
 @NgModule({
   declarations: [AppComponent, FullPageLayoutComponent, ConnectingLayoutComponent],
@@ -34,6 +35,12 @@ import { LayoutModule } from '@angular/cdk/layout';
     StoreRouterConnectingModule.forRoot({ serializer: DefaultRouterStateSerializer }),
     environment.production ? [] : StoreDevtoolsModule.instrument(),
     AppRoutingModule,
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: environment.production,
+      // Register the ServiceWorker as soon as the app is stable
+      // or after 30 seconds (whichever comes first).
+      registrationStrategy: 'registerWhenStable:30000',
+    }),
   ],
   exports: [],
   providers: [],
