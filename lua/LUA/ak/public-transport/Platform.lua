@@ -1,10 +1,9 @@
-local Platform = {}
-
 ---@class Platform
 ---@field type string
 ---@field id string
 ---@field roadStation RoadStation
 ---@field platformNumber number
+local Platform = {}
 
 --- Creates a new Bus or Tram Station
 ---@param roadStation RoadStation a roadstation
