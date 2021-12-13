@@ -45,6 +45,7 @@ local EEPRollingstockModelTypeText = {
 ---@field z integer
 ---@field model RollingStockModel
 ---@field tag string Tag text
+---@field type string "RollingStock"
 local RollingStock = {}
 
 ---Create a new RollingStock and init it
@@ -72,6 +73,7 @@ function RollingStock:new(o)
     local hasPos, posX, posY, posZ = EEPRollingstockGetPosition(o.id) -- EEP 16.1
     local hasMileage, mileage = EEPRollingstockGetMileage(o.id) -- EEP 16.1
 
+    o.type = "RollingStock"
     o.model = RollingStockModels.modelFor(o.id)
     o.trainName = ""
     o.positionInTrain = -1
@@ -99,7 +101,7 @@ end
 ---@param key string
 ---@param value string
 function RollingStock:setValue(key, value)
-    assert(type(self) == "table", "Need to call this method with ':'")
+    assert(type(self) == "table" and self.type == "RollingStock", "Call this method with ':'")
     assert(type(key) == "string", "Need 'key' as string")
     assert(type(value) == "string", "Need 'value' as string")
     self.values[key] = value
@@ -110,7 +112,7 @@ end
 ---@param key string
 ---@return string value
 function RollingStock:getValue(key)
-    assert(type(self) == "table", "Need to call this method with ':'")
+    assert(type(self) == "table" and self.type == "RollingStock", "Call this method with ':'")
     assert(type(key) == "string", "Need 'key' as string")
     return self.values[key]
 end
@@ -157,7 +159,7 @@ function RollingStock:getWagonNr() return self:getValue(TagKeys.RollingStock.wag
 --- Updates the trains trainName
 ---@param trainName string train trainName
 function RollingStock:setTrainName(trainName)
-    assert(type(self) == "table", "Need to call this method with ':'")
+    assert(type(self) == "table" and self.type == "RollingStock", "Call this method with ':'")
     assert(type(trainName) == "string", "Need 'trainName' as string")
     local oldTrainName = self.trainName
     self.trainName = trainName
@@ -170,14 +172,14 @@ end
 --- Get the trains trainName
 ---@return string train trainName
 function RollingStock:getTrainName()
-    assert(type(self) == "table", "Need to call this method with ':'")
+    assert(type(self) == "table" and self.type == "RollingStock", "Call this method with ':'")
     return self.trainName
 end
 
 --- Updates the rolling stock position in the train
 ---@param positionInTrain number rolling stock position in the train
 function RollingStock:setPositionInTrain(positionInTrain)
-    assert(type(self) == "table", "Need to call this method with ':'")
+    assert(type(self) == "table" and self.type == "RollingStock", "Call this method with ':'")
     assert(type(positionInTrain) == "number", "Need 'positionInTrain' as number")
     local oldPositionInTrain = self.positionInTrain
     self.positionInTrain = positionInTrain
@@ -190,49 +192,49 @@ end
 --- Get the rolling stock position in the train
 ---@return number rolling stock position in the train
 function RollingStock:getPositionInTrain()
-    assert(type(self) == "table", "Need to call this method with ':'")
+    assert(type(self) == "table" and self.type == "RollingStock", "Call this method with ':'")
     return self.positionInTrain
 end
 
 --- Get the length of this rolling stock
 ---@return number length of this rolling stock
 function RollingStock:getLength()
-    assert(type(self) == "table", "Need to call this method with ':'")
+    assert(type(self) == "table" and self.type == "RollingStock", "Call this method with ':'")
     return self.length
 end
 
 --- Get the type of this rolling stock
 ---@return number type of this rolling stock
 function RollingStock:getModelType()
-    assert(type(self) == "table", "Need to call this method with ':'")
+    assert(type(self) == "table" and self.type == "RollingStock", "Call this method with ':'")
     return self.modelType
 end
 
 --- Get the type of this rolling stock
 ---@return string type of this rolling stock
 function RollingStock:getModelTypeText()
-    assert(type(self) == "table", "Need to call this method with ':'")
+    assert(type(self) == "table" and self.type == "RollingStock", "Call this method with ':'")
     return self.modelTypeText
 end
 
 --- Get the type of this rolling stock
 ---@return string type of this rolling stock
 function RollingStock:getTag()
-    assert(type(self) == "table", "Need to call this method with ':'")
+    assert(type(self) == "table" and self.type == "RollingStock", "Call this method with ':'")
     return self.tag
 end
 
 --- Get the propelled value of this rolling stock
 ---@return boolean propelled value of this rolling stock
 function RollingStock:getPropelled()
-    assert(type(self) == "table", "Need to call this method with ':'")
+    assert(type(self) == "table" and self.type == "RollingStock", "Call this method with ':'")
     return self.propelled
 end
 
 --- Updates the front coupling of the rolling stock
 ---@param couplingFront number the front coupling of the rolling stock
 function RollingStock:setCouplingFront(couplingFront)
-    assert(type(self) == "table", "Need to call this method with ':'")
+    assert(type(self) == "table" and self.type == "RollingStock", "Call this method with ':'")
     assert(type(couplingFront) == "number", "Need 'positionInTrain' as number")
     local oldCoupling = self.couplingFront
     self.couplingFront = couplingFront
@@ -245,14 +247,14 @@ end
 --- Get the front coupling of the rolling stock
 ---@return number the front coupling of the rolling stock
 function RollingStock:getCouplingFront()
-    assert(type(self) == "table", "Need to call this method with ':'")
+    assert(type(self) == "table" and self.type == "RollingStock", "Call this method with ':'")
     return self.couplingFront
 end
 
 --- Updates the rear coupling of the rolling stock
 ---@param couplingRear number the rear coupling of the rolling stock
 function RollingStock:setCouplingRear(couplingRear)
-    assert(type(self) == "table", "Need to call this method with ':'")
+    assert(type(self) == "table" and self.type == "RollingStock", "Call this method with ':'")
     assert(type(couplingRear) == "number", "Need 'positionInTrain' as number")
     local oldCoupling = self.couplingRear
     self.couplingRear = couplingRear
@@ -265,14 +267,14 @@ end
 --- Get the rear coupling of the rolling stock
 ---@return number the rear coupling of the rolling stock
 function RollingStock:getCouplingRear()
-    assert(type(self) == "table", "Need to call this method with ':'")
+    assert(type(self) == "table" and self.type == "RollingStock", "Call this method with ':'")
     return self.couplingRear
 end
 
 --- Get the track id of the rolling stock
 ---@return number the track id of the rolling stock
 function RollingStock:getTrackId()
-    assert(type(self) == "table", "Need to call this method with ':'")
+    assert(type(self) == "table" and self.type == "RollingStock", "Call this method with ':'")
     return self.trackId
 end
 
@@ -282,7 +284,7 @@ end
 ---@param trackDirection number track direction
 ---@param trackSystem number track system
 function RollingStock:setTrack(trackId, trackDistance, trackDirection, trackSystem)
-    assert(type(self) == "table", "Need to call this method with ':'")
+    assert(type(self) == "table" and self.type == "RollingStock", "Call this method with ':'")
     assert(type(trackId) == "number", "Need 'trackId' as number")
     assert(type(trackDistance) == "number", "Need 'trackDistance' as number")
     assert(type(trackDirection) == "number", "Need 'trackDirection' as number")
@@ -307,28 +309,28 @@ end
 --- Get the track distance of the rolling stock
 ---@return number the track distance of the rolling stock
 function RollingStock:getTrackDistance()
-    assert(type(self) == "table", "Need to call this method with ':'")
+    assert(type(self) == "table" and self.type == "RollingStock", "Call this method with ':'")
     return self.trackDistance
 end
 
 --- Get the track direction of the rolling stock
 ---@return number the track direction of the rolling stock
 function RollingStock:getTrackDirection()
-    assert(type(self) == "table", "Need to call this method with ':'")
+    assert(type(self) == "table" and self.type == "RollingStock", "Call this method with ':'")
     return self.trackDirection
 end
 
 --- Get the track system of the rolling stock
 ---@return number the track system of the rolling stock
 function RollingStock:getTrackSystem()
-    assert(type(self) == "table", "Need to call this method with ':'")
+    assert(type(self) == "table" and self.type == "RollingStock", "Call this method with ':'")
     return self.trackSystem
 end
 
 --- Updates the trains trackType
 ---@param trackType string train trackType
 function RollingStock:setTrackType(trackType)
-    assert(type(self) == "table", "Need to call this method with ':'")
+    assert(type(self) == "table" and self.type == "RollingStock", "Call this method with ':'")
     assert(type(trackType) == "string", "Need 'trackType' as string")
     local oldValue = self.trackType
     self.trackType = trackType
@@ -341,7 +343,7 @@ end
 --- Get the trains trackType
 ---@return string trackType trackType
 function RollingStock:getTrackType()
-    assert(type(self) == "table", "Need to call this method with ':'")
+    assert(type(self) == "table" and self.type == "RollingStock", "Call this method with ':'")
     return self.trackType
 end
 
@@ -350,7 +352,7 @@ end
 ---@param y number y coordinate
 ---@param z number z coordinate
 function RollingStock:setPosition(x, y, z)
-    assert(type(self) == "table", "Need to call this method with ':'")
+    assert(type(self) == "table" and self.type == "RollingStock", "Call this method with ':'")
     assert(type(x) == "number", "Need 'x' as number")
     assert(type(y) == "number", "Need 'y' as number")
     assert(type(z) == "number", "Need 'z' as number")
@@ -367,28 +369,28 @@ end
 --- Get the x coordinate of this rolling stock
 ---@return number x coordinate of this rolling stock
 function RollingStock:getX()
-    assert(type(self) == "table", "Need to call this method with ':'")
+    assert(type(self) == "table" and self.type == "RollingStock", "Call this method with ':'")
     return self.x
 end
 
 --- Get the y coordinate of this rolling stock
 ---@return number y coordinate of this rolling stock
 function RollingStock:getY()
-    assert(type(self) == "table", "Need to call this method with ':'")
+    assert(type(self) == "table" and self.type == "RollingStock", "Call this method with ':'")
     return self.y
 end
 
 --- Get the z coordinate of this rolling stock
 ---@return number z coordinate of this rolling stock
 function RollingStock:getZ()
-    assert(type(self) == "table", "Need to call this method with ':'")
+    assert(type(self) == "table" and self.type == "RollingStock", "Call this method with ':'")
     return self.z
 end
 
 --- Get the mileage of this rolling stock
 ---@param mileage number mileage of this rolling stock
 function RollingStock:setMileage(mileage)
-    assert(type(self) == "table", "Need to call this method with ':'")
+    assert(type(self) == "table" and self.type == "RollingStock", "Call this method with ':'")
     assert(type(mileage) == "number", "Need 'mileage' as number")
     local oldMileage = self.mileage
     self.mileage = mileage
@@ -401,7 +403,7 @@ end
 --- Get the mileage of this rolling stock
 ---@return number mileage of this rolling stock
 function RollingStock:getMileage()
-    assert(type(self) == "table", "Need to call this method with ':'")
+    assert(type(self) == "table" and self.type == "RollingStock", "Call this method with ':'")
     return self.mileage
 end
 

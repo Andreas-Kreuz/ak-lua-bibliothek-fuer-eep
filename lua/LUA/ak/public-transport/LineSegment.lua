@@ -15,7 +15,7 @@ LineSegment.debug = AkDebugLoad or false
 ---@param routeName table table with entry "nr" of type string
 ---@return LineSegment
 function LineSegment:new(routeName, line, destination)
-    assert(type(self) == "table", "Need 'self' as table")
+    assert(type(self) == "table", "Call this method with ':'")
     assert(type(routeName) == "string", "Need 'routeName' as string")
     assert(type(line) == "table" and line.type == "Line", "Need 'line' as Line")
     assert(type(destination) == "string", "Need 'destination' as string")
@@ -42,7 +42,7 @@ end
 ---@param platform Platform Platform of the station where this route will depart
 ---@param timeToStation number optional time in minutes to this station
 function LineSegment:addStop(platform, timeToStation)
-    assert(type(self) == "table", "Need to call this method with ':'")
+    assert(type(self) == "table" and self.type == "LineSegment", "Call this method with ':'")
     assert(type(platform) == "table", "Need 'platform' as table")
     assert(platform.type == "Platform", "Provide 'platform' as 'Platform'")
     if timeToStation then assert(type(timeToStation) == "number", "Need 'timeToStation' as number") end
@@ -56,12 +56,12 @@ end
 ---@param newLineSegment LineSegment
 ---@param timeInMinutes number
 function LineSegment:setNextSection(newLineSegment, timeInMinutes)
-    assert(type(self) == "table", "Need to call this method with ':'")
+    assert(type(self) == "table" and self.type == "LineSegment", "Call this method with ':'")
     self.nextLineSegmentInfo = {followingSegment = newLineSegment, timeInMinutes = timeInMinutes}
 end
 
 function LineSegment:getAllSegments()
-    assert(type(self) == "table", "Need to call this method with ':'")
+    assert(type(self) == "table" and self.type == "LineSegment", "Call this method with ':'")
     local viewed = {}
     local segments = {}
 
@@ -83,7 +83,7 @@ function LineSegment:getAllSegments()
 end
 
 function LineSegment:stationsListAfterStation(routeName, nextStation)
-    assert(type(self) == "table", "Need to call this method with ':'")
+    assert(type(self) == "table" and self.type == "LineSegment", "Call this method with ':'")
     assert(type(routeName) == "string", "Provide 'routeName' as 'string'")
     assert(type(nextStation) == "table" and nextStation.type == "RoadStation",
            "Provide 'nextStation' as 'RoadStation'")
@@ -138,7 +138,7 @@ function LineSegment:getFirstStation() if #self.stationInfos > 0 then return sel
 ---@param station RoadStation the first station in the route, where the train will arrive
 ---@param timeInMinutes number departure time of the train in minutes
 function LineSegment:prepareDepartureAt(train, station, timeInMinutes)
-    assert(type(self) == "table", "Need to call this method with ':'")
+    assert(type(self) == "table" and self.type == "LineSegment", "Call this method with ':'")
     assert(type(train) == "table", "Need 'train' as table")
     assert(train.type == "Train", "Provide 'train' as 'Train'")
     assert(type(station) == "table", "Need 'station' as table")
@@ -162,7 +162,7 @@ end
 ---@param train Train the train which will arrive
 ---@param station RoadStation the first station in the route, where the train will arrive
 function LineSegment:trainDeparted(train, station)
-    assert(type(self) == "table", "Need to call this method with ':'")
+    assert(type(self) == "table" and self.type == "LineSegment", "Call this method with ':'")
     assert(type(train) == "table", "Need 'train' as table")
     assert(train.type == "Train", "Provide 'train' as 'Train'")
     assert(type(station) == "table", "Need 'station' as table")

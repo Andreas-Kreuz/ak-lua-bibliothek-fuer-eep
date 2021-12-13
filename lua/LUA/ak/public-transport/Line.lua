@@ -64,7 +64,7 @@ end
 ---@param destination string name of the destination station, this will be set in the train
 ---@return LineSegment
 function Line:addSection(routeName, destination)
-    assert(type(self) == "table", "Need to call this method with ':'")
+    assert(type(self) == "table" and self.type == "Line", "Call this method with ':'")
     assert(type(routeName) == "string", "Need 'routeName' as string")
     assert(type(destination) == "string", "Need 'destination' as string")
     local lineSegment = LineSegment:new(routeName, self, destination);
