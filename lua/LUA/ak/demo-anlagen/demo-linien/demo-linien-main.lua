@@ -3,7 +3,11 @@ local Line = require("ak.public-transport.Line")
 local RoadStation = require("ak.public-transport.RoadStation")
 local RoadStationDisplayModel = require("ak.public-transport.RoadStationDisplayModel")
 local BetterContacts = require("ak.third-party.BetterContacts_BH2")
+local LineSegment = require("ak.public-transport.LineSegment")
 BetterContacts.setOptions({varname = "trainName", varnameTrackID = "trackId"})
+Line.setShowDepartureTippText(true)
+LineSegment.debug = false
+RoadStation.debug = false
 
 -- Kontaktpunktfunktion für "Das Fahrzeug hat die Haltestelle verlassen"
 ---@param trainName string
@@ -29,21 +33,6 @@ function stationArrivalPlanned(trainName, station, timeInMinutes)
     Line.scheduleDeparture(trainName, station, timeInMinutes)
 end
 
--- Kontaktpunktfunktion
--- 1. Parameter: Zugname aus Bennys EEP-Schnipsel
--- 2. Parameter: Stationsname wie in Destinations.changeOn() hinterlegt
--- 3. Parameter: Abfahrtszeit in Minuten (optional)
-function changeDestination(trainName, station, departureTime)
-    assert(type(trainName) == "string", "Provide 'trainName' as 'string' was " .. type(trainName))
-    assert(type(station) == "table", "Provide 'station' as 'table' was " .. type(station))
-    assert(station.type == "RoadStation", "Provide 'station' as 'RoadStation'")
-    if departureTime then
-        assert(type(departureTime) == "number", "Provide 'departureTime' as 'number' was " .. type(departureTime))
-    end
-
-    Line.changeRoute(trainName, station, departureTime)
-end
-
 -- Haltestelle Schnalzlaut
 sSchnalzlaut = RoadStation:new("Schnalzlaut", -1)
 sSchnalzlaut:addDisplay("#2_Bus-Haltestelle modern", RoadStationDisplayModel.SimpleStructure, 1)
@@ -60,27 +49,24 @@ sHochbaum = RoadStation:new("Hochbaum", -1)
 sHochbaum:addDisplay("#3_Bus-Haltestelle modern", RoadStationDisplayModel.SimpleStructure, 1)
 
 -- Line 285
-local line285 = Line:new({nr = "285"})
+local line285 = Line.forName("285")
 
 -- Linie 285 Richtung Hochbaum
-local route285Hochbaum = line285:newRoute("Linie 285 Hochbaum")
-route285Hochbaum:addStation(sSchnalzlaut, 1, 0) -- Steig 1 wird genutzt von Line 285 Richtung Hochbaum
-route285Hochbaum:addStation(sWindpark, 1, 2) -- Steig 1 wird genutzt von Line 285 Richtung Hochbaum
-route285Hochbaum:addStation(sBaywa, 1, 2) -- Steig 1 wird genutzt von Line 285 Richtung Hochbaum
-route285Hochbaum:addStation(sHochbaum, 1, 2) -- Steig 1 wird genutzt von Line 285 Richtung Hochbaum
+local abschnitt285Hochbaum = line285:addSection("Linie 285 Hochbaum", "Hochbaum")
+abschnitt285Hochbaum:addStop(sSchnalzlaut:platform(1), 3) -- Steig 1 wird genutzt von Line 285 Richtung Hochbaum
+abschnitt285Hochbaum:addStop(sWindpark:platform(1), 4) -- Steig 1 wird genutzt von Line 285 Richtung Hochbaum
+abschnitt285Hochbaum:addStop(sBaywa:platform(1), 5) -- Steig 1 wird genutzt von Line 285 Richtung Hochbaum
 
 -- Linie 285 Richtung Schnalzlaut
-local route285Schnalzlaut = line285:newRoute("Linie 285 Schnalzlaut")
-route285Schnalzlaut:addStation(sHochbaum, 1, 0) -- Steig 2 wird genutzt von Line 285 Richtung Schnalzlaut
-route285Schnalzlaut:addStation(sBaywa, 2, 2) -- Steig 2 wird genutzt von Line 285 Richtung Schnalzlaut
-route285Schnalzlaut:addStation(sWindpark, 2, 2) -- Steig 2 wird genutzt von Line 285 Richtung Schnalzlaut
-route285Schnalzlaut:addStation(sSchnalzlaut, 1, 2) -- Steig 2 wird genutzt von Line 285 Richtung Schnalzlaut
+local abschnitt285Schnalzlaut = line285:addSection("Linie 285 Schnalzlaut", "Schnalzlaut")
+abschnitt285Schnalzlaut:addStop(sHochbaum:platform(1), 7) -- Steig 2 wird genutzt von Line 285 Richtung Schnalzlaut
+abschnitt285Schnalzlaut:addStop(sBaywa:platform(2), 5) -- Steig 2 wird genutzt von Line 285 Richtung Schnalzlaut
+abschnitt285Schnalzlaut:addStop(sWindpark:platform(2), 4) -- Steig 2 wird genutzt von Line 285 Richtung Schnalzlaut
 
 -- Geplante Linienaenderungen, wenn eine Linie die Kontaktpunktfunktion "changeDestination" aufruft
 -- 1. Parameter: RoadStation, an der der Wechsel durchgeführt werden soll
 -- 2. Parameter: Route - alte Fahrplan Route
 -- 3. Parameter: Route - neue Fahrplan Route
 -- 4. Parameter: Line - neue Linie
-Line.addRouteChange(sHochbaum, route285Hochbaum, route285Schnalzlaut, line285)
-Line.addRouteChange(sSchnalzlaut, route285Schnalzlaut, route285Hochbaum, line285)
-
+abschnitt285Hochbaum:setNextSection(abschnitt285Schnalzlaut, 2)
+abschnitt285Schnalzlaut:setNextSection(abschnitt285Hochbaum, 2)

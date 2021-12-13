@@ -1,5 +1,4 @@
 if AkDebugLoad then print("Loading ak.public-transport.StationQueueEntry ...") end
-local TrainRegistry = require("ak.train.TrainRegistry")
 
 ---@class StationQueueEntry
 ---@field trainName string
@@ -8,10 +7,8 @@ local TrainRegistry = require("ak.train.TrainRegistry")
 ---@field timeInMinutes number
 ---@field platform string
 local StationQueueEntry = {}
-function StationQueueEntry:new(trainName, timeInMinutes, platform)
-    local train = TrainRegistry.forName(trainName)
-    local destination = train:getDestination()
-    local line = train:getLine()
+function StationQueueEntry:new(trainName, destination, line, timeInMinutes, platform)
+    assert(type(self) == "table", "Call this method with ':'")
     local o = {
         trainName = trainName,
         line = line,
@@ -22,6 +19,17 @@ function StationQueueEntry:new(trainName, timeInMinutes, platform)
     self.__index = self
     setmetatable(o, self)
     return o
+end
+
+function StationQueueEntry.keyFor(trainName, destination, line)
+    assert(type(trainName) == "string", "Need 'trainName' as string")
+    assert(type(destination) == "string", "Need 'destination' as string")
+    assert(type(line) == "string", "Need 'line' as string")
+    return line .. "&" .. destination .. "&" .. trainName
+end
+function StationQueueEntry:getKey()
+    assert(type(self) == "table", "Need 'trainName' as string")
+    return StationQueueEntry.keyFor(self.trainName, self.destination, self.line)
 end
 
 return StationQueueEntry
