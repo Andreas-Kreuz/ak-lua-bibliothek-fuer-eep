@@ -20,6 +20,7 @@ import { PublicTransportService } from './store/public-transport.service';
 import { PublicTransportSettingsIconComponent } from './public-transport-settings-icon/public-transport-settings-icon.component';
 import { StopComponent } from './stop/stop.component';
 import { StopsComponent } from './stops/stops.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   providers: [PublicTransportService],
