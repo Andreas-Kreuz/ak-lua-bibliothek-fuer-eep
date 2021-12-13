@@ -82,11 +82,19 @@ function LineSegment:getAllSegments()
     return segments
 end
 
-function LineSegment:stationsListAfterStation(routeName, nextStation)
+---comment
+---@param routeName string
+---@param nextStation RoadStation use this to schedule the departure at the next station
+---@param currentStation RoadStation use this after train departed at the current station
+---@return TimeToStationEntry[]
+function LineSegment:nextStationList(routeName, nextStation, currentStation)
     assert(type(self) == "table" and self.type == "LineSegment", "Call this method with ':'")
     assert(type(routeName) == "string", "Provide 'routeName' as 'string'")
-    assert(type(nextStation) == "table" and nextStation.type == "RoadStation",
+    assert((currentStation ~= nil and nextStation == nil) or (currentStation == nil and nextStation ~= nil))
+    assert(nextStation == nil or type(nextStation) == "table" and nextStation.type == "RoadStation",
            "Provide 'nextStation' as 'RoadStation'")
+    assert(currentStation == nil or type(currentStation) == "table" and currentStation.type == "RoadStation",
+           "Provide 'currentStation' as 'RoadStation'")
 
     ---@type TimeToStationEntry[]
     local allStationInfos = {}
@@ -101,25 +109,32 @@ function LineSegment:stationsListAfterStation(routeName, nextStation)
             pos = pos + 1
 
             ---@class TimeToStationEntry
-            ---@field routeName string
             ---@field station RoadStation
+            ---@field destination RoadStation
+            ---@field lineNr RoadStation
             ---@field timeToStation number
             ---@field totalTime number
             local info = {}
-            info.routeName = segment.routeName
+            info.destination = segment.destination
+            info.lineNr = segment.line.nr
             info.station = station
-            info.timeToStation = s.timeToStation
+            info.timeToStation = s.timeToStation or 2
 
             -- Resets the index to 1 if the nextStation is found
             if routeName == segment.routeName and station == nextStation then pos = 1 end
             table.insert(allStationInfos, pos, info)
+            if routeName == segment.routeName and station == currentStation then pos = 0 end
         end
     end
 
     local total = 0
     for index, info in ipairs(allStationInfos) do
-        if index > 1 then total = total + info.timeToStation end
+        if currentStation or index > 1 then total = total + info.timeToStation end
         info.totalTime = total
+        if LineSegment.debug then
+            print(info.lineNr .. "->" .. info.destination .. " " .. info.station.name .. " (" .. info.totalTime ..
+                  ") " .. info.timeToStation)
+        end
     end
 
     return allStationInfos
@@ -135,58 +150,48 @@ function LineSegment:getFirstStation() if #self.stationInfos > 0 then return sel
 
 ---Will inform the given stations about the train arrival in minutes and all sequential stations with the offset
 ---@param train Train the train which will arrive
----@param station RoadStation the first station in the route, where the train will arrive
+---@param nextStation RoadStation the first station in the route, where the train will arrive
 ---@param timeInMinutes number departure time of the train in minutes
-function LineSegment:prepareDepartureAt(train, station, timeInMinutes)
+function LineSegment:prepareDepartureAt(train, nextStation, timeInMinutes)
     assert(type(self) == "table" and self.type == "LineSegment", "Call this method with ':'")
     assert(type(train) == "table", "Need 'train' as table")
     assert(train.type == "Train", "Provide 'train' as 'Train'")
-    assert(type(station) == "table", "Need 'station' as table")
-    assert(station.type == "RoadStation", "Provide 'station' as 'RoadStation'")
+    assert(type(nextStation) == "table", "Need 'nextStation' as table")
+    assert(nextStation.type == "RoadStation", "Provide 'station' as 'RoadStation'")
     if timeInMinutes then assert(type(timeInMinutes) == "number", "Need 'timeInMinutes' as number") end
 
     timeInMinutes = timeInMinutes or 0
-    local haveStation = false
-    for i = 1, #self.stationInfos do
-        local s = self.stationInfos[i].station
-        if s == station then haveStation = true end
-        if haveStation then
-            local timeToStation = s == station and 0 or self.stationInfos[i].timeToStation
-            timeInMinutes = timeToStation and (timeInMinutes + timeToStation) or timeInMinutes
-            s:trainArrivesIn(train.name, timeInMinutes)
-        end
+    local infoList = self:nextStationList(train:getRoute(), nextStation, nil)
+    for _, info in ipairs(infoList) do
+        local station = info.station
+        station:trainArrivesIn(train.name, info.destination, info.lineNr, timeInMinutes + info.totalTime)
     end
 end
 
 ---Will inform the given stations about the train arrival in minutes and all sequential stations with the offset
 ---@param train Train the train which will arrive
----@param station RoadStation the first station in the route, where the train will arrive
-function LineSegment:trainDeparted(train, station)
+---@param currentStation RoadStation the first station in the route, where the train will arrive
+function LineSegment:trainDeparted(train, currentStation)
     assert(type(self) == "table" and self.type == "LineSegment", "Call this method with ':'")
     assert(type(train) == "table", "Need 'train' as table")
     assert(train.type == "Train", "Provide 'train' as 'Train'")
-    assert(type(station) == "table", "Need 'station' as table")
-    assert(station.type == "RoadStation", "Provide 'station' as 'RoadStation'")
+    assert(type(currentStation) == "table", "Need 'currentStation' as table")
+    assert(currentStation.type == "RoadStation", "Provide 'currentStation' as 'RoadStation'")
 
-    local timeInMinutes = 0
-    local haveStation = false
-    for i = 1, #self.stationInfos do
-        local s = self.stationInfos[i].station
-        if haveStation then
-            local timeToStation = self.stationInfos[i].timeToStation
-            timeInMinutes = timeToStation and (timeInMinutes + timeToStation) or timeInMinutes
-            s:trainArrivesIn(train.name, timeInMinutes)
-        end
-        if s == station then
-            station:trainLeft(train.name)
-            haveStation = true
-        end
-    end
+    local oldDestination = train:getDestination()
+    local oldLine = train:getLine()
+    local infoList = self:nextStationList(train:getRoute(), nil, currentStation)
 
-    if station == self:getLastStation() and train:getRoute() == self.routeName and self.nextLineSegmentInfo then
+    if currentStation == self:getLastStation() and train:getRoute() == self.routeName and self.nextLineSegmentInfo then
         local nextSegment = self.nextLineSegmentInfo.followingSegment
         train:setRoute(nextSegment.routeName)
         train:changeDestination(nextSegment.destination, nextSegment.line.nr)
+    end
+
+    for _, info in ipairs(infoList) do
+        local station = info.station
+        if station == currentStation then currentStation:trainLeft(train.name, oldDestination, oldLine) end
+        station:trainArrivesIn(train.name, info.destination, info.lineNr, info.totalTime)
     end
 end
 

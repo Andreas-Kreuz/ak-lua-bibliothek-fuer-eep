@@ -3,8 +3,11 @@ local Line = require("ak.public-transport.Line")
 local RoadStation = require("ak.public-transport.RoadStation")
 local RoadStationDisplayModel = require("ak.public-transport.RoadStationDisplayModel")
 local BetterContacts = require("ak.third-party.BetterContacts_BH2")
+local LineSegment = require("ak.public-transport.LineSegment")
 BetterContacts.setOptions({varname = "trainName", varnameTrackID = "trackId"})
 Line.setShowDepartureTippText(true)
+LineSegment.debug = false
+RoadStation.debug = false
 
 -- Kontaktpunktfunktion für "Das Fahrzeug hat die Haltestelle verlassen"
 ---@param trainName string
@@ -50,15 +53,15 @@ local line285 = Line.forName("285")
 
 -- Linie 285 Richtung Hochbaum
 local abschnitt285Hochbaum = line285:addSection("Linie 285 Hochbaum", "Hochbaum")
-abschnitt285Hochbaum:addStop(sSchnalzlaut:platform(1), 0) -- Steig 1 wird genutzt von Line 285 Richtung Hochbaum
-abschnitt285Hochbaum:addStop(sWindpark:platform(1), 2) -- Steig 1 wird genutzt von Line 285 Richtung Hochbaum
-abschnitt285Hochbaum:addStop(sBaywa:platform(1), 2) -- Steig 1 wird genutzt von Line 285 Richtung Hochbaum
+abschnitt285Hochbaum:addStop(sSchnalzlaut:platform(1), 3) -- Steig 1 wird genutzt von Line 285 Richtung Hochbaum
+abschnitt285Hochbaum:addStop(sWindpark:platform(1), 4) -- Steig 1 wird genutzt von Line 285 Richtung Hochbaum
+abschnitt285Hochbaum:addStop(sBaywa:platform(1), 5) -- Steig 1 wird genutzt von Line 285 Richtung Hochbaum
 
 -- Linie 285 Richtung Schnalzlaut
 local abschnitt285Schnalzlaut = line285:addSection("Linie 285 Schnalzlaut", "Schnalzlaut")
-abschnitt285Schnalzlaut:addStop(sHochbaum:platform(1), 0) -- Steig 2 wird genutzt von Line 285 Richtung Schnalzlaut
-abschnitt285Schnalzlaut:addStop(sBaywa:platform(2), 2) -- Steig 2 wird genutzt von Line 285 Richtung Schnalzlaut
-abschnitt285Schnalzlaut:addStop(sWindpark:platform(2), 2) -- Steig 2 wird genutzt von Line 285 Richtung Schnalzlaut
+abschnitt285Schnalzlaut:addStop(sHochbaum:platform(1), 7) -- Steig 2 wird genutzt von Line 285 Richtung Schnalzlaut
+abschnitt285Schnalzlaut:addStop(sBaywa:platform(2), 5) -- Steig 2 wird genutzt von Line 285 Richtung Schnalzlaut
+abschnitt285Schnalzlaut:addStop(sWindpark:platform(2), 4) -- Steig 2 wird genutzt von Line 285 Richtung Schnalzlaut
 
 -- Geplante Linienaenderungen, wenn eine Linie die Kontaktpunktfunktion "changeDestination" aufruft
 -- 1. Parameter: RoadStation, an der der Wechsel durchgeführt werden soll
@@ -67,4 +70,3 @@ abschnitt285Schnalzlaut:addStop(sWindpark:platform(2), 2) -- Steig 2 wird genutz
 -- 4. Parameter: Line - neue Linie
 abschnitt285Hochbaum:setNextSection(abschnitt285Schnalzlaut, 2)
 abschnitt285Schnalzlaut:setNextSection(abschnitt285Hochbaum, 2)
-

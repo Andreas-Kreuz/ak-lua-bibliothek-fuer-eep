@@ -44,7 +44,7 @@ insulate("Line Management Ring Line", function()
         it("1st line ok", function() assert.are.equal(ringLineSegment, segments[1].segment) end)
         it("1st time ok", function() assert.are.equal(2, segments[1].timeInMinutes) end)
 
-        local stations = ringLineSegment:stationsListAfterStation(ringLineSegment.routeName, RoadStation.forName("C"))
+        local stations = ringLineSegment:nextStationList(ringLineSegment.routeName, RoadStation.forName("C"))
         it("Got 1 line segments", function() assert.are.equal(3, #stations) end)
         it("1st line ok", function() assert.are.equal("C", stations[1].station.name) end)
         it("1st line ok", function() assert.are.equal("A", stations[2].station.name) end)
@@ -145,11 +145,46 @@ insulate("Line Management 4 Line segments", function()
 
         insulate("train1", function()
             Line.trainDeparted("train1", RoadStation.forName("Hauptbahnhof"))
+            local route = train1:getRoute()
+            local destination = train1:getDestination()
+
             it("changes line to Striesen",
-               function() assert.are.equal("Linie 10: Tram in Richtung Striesen", train1.route) end)
-            it("changes destination to Striesen", function()
-                assert.are.equal("Striesen", train1:getDestination())
+               function() assert.are.equal("Linie 10: Tram in Richtung Striesen", route) end)
+            it("changes destination to Striesen", function() assert.are.equal("Striesen", destination) end)
+        end)
+
+        insulate("nextStations", function()
+            EepSimulator.addTrain("train4", "RollingStock 4a", "RollingStock 4b")
+            local train4 = TrainRegistry.forName("train4")
+            train4:setRoute(linie10Messe.routeName)
+            train4:changeDestination(linie10Messe.destination, linie10Messe.line.nr)
+            local LineSegment = require("ak.public-transport.LineSegment")
+
+            -- Depart from 1st station
+            Line.trainDeparted("train4", RoadStation.forName("Straßbuger Platz"))
+            local route = train4:getRoute()
+            it("", function() assert.are.equal("Linie 10: Tram in Richtung Messe Dresden", route) end)
+
+            -- Depart for Line Change
+            Line.trainDeparted("train4", RoadStation.forName("Hauptbahnhof"))
+            local route2 = train4:getRoute()
+            local queue = RoadStation.forName("Hauptbahnhof").queue
+            local queueLength = #queue.entriesByArrival
+            local queueText = RoadStation.queueToText(queue)
+            it("", function() assert.are.equal("Linie 10: Tram in Richtung Striesen", route2) end)
+            it("", function() assert.are.equal(4, queueLength) end)
+            it("", function()
+                assert.are.equal(
+                "10&Striesen&train1|10&Striesen&train4|10&Messe Dresden&train1|10&Messe Dresden&train4", queueText)
             end)
+
+            LineSegment.debug = false
+            -- Depart for last Line Change
+            train4:setRoute(linie12Striesen.routeName)
+            train4:changeDestination(linie12Striesen.destination, linie12Striesen.line.nr)
+            Line.trainDeparted("train4", RoadStation.forName("Straßbuger Platz"))
+            local route5 = train4:getRoute()
+            it("", function() assert.are.equal("Linie 10: Tram in Richtung Messe Dresden", route5) end)
         end)
     end)
 
@@ -165,8 +200,8 @@ insulate("Line Management 4 Line segments", function()
         it("2nd time ok", function() assert.are.equal(6, segments[2].timeInMinutes) end)
         it("3rd time ok", function() assert.are.equal(7, segments[3].timeInMinutes) end)
         it("4th time ok", function() assert.are.equal(8, segments[4].timeInMinutes) end)
-
     end)
+
 end)
 
 insulate("Line Management", function()
@@ -185,14 +220,14 @@ insulate("Line Management", function()
     local sStriesen = RoadStation:new("Striesen", -1)
 
     -- Route definition
-    local line10 = Line:new({nr = "1a"})
+    local line10 = Line.forName("10")
     local l10Striesen = line10:addSection("10 Striesen", "Striesen")
     l10Striesen:addStop(sMesseDresden:platform(1))
     l10Striesen:addStop(sFeuerwehrGasse:platform(1), 2)
     l10Striesen:addStop(sHauptbahnhof:platform(1), 2)
     l10Striesen:addStop(sStriesen:platform(1), 3)
 
-    local l10MesseDresden = line10:addSection("10 Messe Dresden", "Dresden")
+    local l10MesseDresden = line10:addSection("10 Messe Dresden", "Messe Dresden")
     l10MesseDresden:addStop(sStriesen:platform(2), 0)
     l10MesseDresden:addStop(sHauptbahnhof:platform(2), 3)
     l10MesseDresden:addStop(sFeuerwehrGasse:platform(2), 2)
@@ -202,10 +237,10 @@ insulate("Line Management", function()
     it("Station 1", function() assert.equals("Messe Dresden", l10Striesen:getFirstStation().name) end)
     it("Station 4", function() assert.equals("Striesen", l10Striesen:getLastStation().name) end)
 
-    it("", function() assert.equals("2", sHauptbahnhof.routePlatforms[l10MesseDresden.routeName].platform) end)
-    it("", function() assert.equals("1", sHauptbahnhof.routePlatforms[l10Striesen.routeName].platform) end)
-    it("", function() assert.equals("2", sFeuerwehrGasse.routePlatforms[l10MesseDresden.routeName].platform) end)
-    it("", function() assert.equals("1", sFeuerwehrGasse.routePlatforms[l10Striesen.routeName].platform) end)
+    it("", function() assert.equals("2", sHauptbahnhof.routePlatforms["10->Messe Dresden"].platform) end)
+    it("", function() assert.equals("1", sHauptbahnhof.routePlatforms["10->Striesen"].platform) end)
+    it("", function() assert.equals("2", sFeuerwehrGasse.routePlatforms["10->Messe Dresden"].platform) end)
+    it("", function() assert.equals("1", sFeuerwehrGasse.routePlatforms["10->Striesen"].platform) end)
 
     -- Check reverse route
     it("Station 1", function() assert.equals("Striesen", l10MesseDresden:getFirstStation().name) end)

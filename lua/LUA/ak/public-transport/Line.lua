@@ -113,12 +113,12 @@ function Line.trainDeparted(trainName, station)
     assert(type(station) == "table", "Need 'station' as table")
     assert(station.type == "RoadStation", "Provide 'station' as 'RoadStation'")
 
-    station:trainLeft(trainName)
     local train = TrainRegistry.forName(trainName)
     local lineName = train:getLine()
     -- assert(type(lineName) == "string", "Need 'lineName' as string")
     local routeName = train:getRoute()
     assert(type(routeName) == "string", "Need 'routeName' as string")
+    station:trainLeft(trainName, train:getDestination(), train:getLine())
 
     if lineName then
         local line = lines[lineName]
