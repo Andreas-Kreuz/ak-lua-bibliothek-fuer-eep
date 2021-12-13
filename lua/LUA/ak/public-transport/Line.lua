@@ -1,19 +1,18 @@
+local LineSegment = require("ak.public-transport.LineSegment")
 local RoadStation = require("ak.public-transport.RoadStation")
-if AkDebugLoad then print("Loading ak.public-transport.Line ...") end
-
 local StorageUtility = require("ak.storage.StorageUtility")
 local TrainRegistry = require("ak.train.TrainRegistry")
-local Route = require("ak.public-transport.Route")
+if AkDebugLoad then print("Loading ak.public-transport.Line ...") end
 
 ---@class Line
 ---@field type string
----@field routes table
+---@field lineSegments table<string, LineSegment>
 ---@field id string
 ---@field nr string
 local Line = {}
 Line.debug = AkDebugLoad or false
+---@type table<string, Line>
 local lines = {}
-local lineChanges = {}
 Line.showDepartureTippText = false
 
 function Line.loadSettingsFromSlot(eepSaveId)
@@ -37,54 +36,12 @@ function Line.setShowDepartureTippText(value)
     RoadStation.showTippText()
 end
 
-function Line.addRouteChange(station, oldRoute, newRoute, newLine)
-    assert(type(station) == "table", "Need 'station' as table")
-    assert(station.type == "RoadStation", "Provide 'station' as 'RoadStation'")
-    assert(type(oldRoute) == "table", "Need 'oldRoute' as table")
-    assert(oldRoute.type == "Route", "Provide 'oldRoute' as 'Route'")
-    assert(type(oldRoute) == "table", "Need 'oldRoute' as table")
-    assert(oldRoute.type == "Route", "Provide 'newRoute' as 'Route'")
-    assert(type(newLine) == "table", "Need 'newLine' as table")
-    assert(newLine.type == "Line", "Provide 'newLine' as 'Line'")
-    assert(newLine.routes[newRoute.routeName], "'newRoute' is not part of 'newLine'")
-    assert(type(newLine.nr) == "string", "Need 'newLine.nr' as string")
-
-    lineChanges[station] = lineChanges[station] or {}
-    lineChanges[station][oldRoute.routeName] = lineChanges[station][oldRoute.routeName] or {}
-    lineChanges[station][oldRoute.routeName] = {newRoute = newRoute, newLine = newLine}
-end
-
-function Line.changeRoute(trainName, station, departureTime)
-    assert(type(trainName) == "string", "Need 'trainName' as string")
-    assert(type(station) == "table", "Need 'station' as table")
-    assert(station.type == "RoadStation", "Provide 'station' as 'RoadStation'")
-    if departureTime then assert(type(departureTime) == "number", "Need 'departureTime' as number") end
-
-    local train = TrainRegistry.forName(trainName)
-    local oldRoute = train:getRoute()
-    if Line.debug then
-        print("Change destination for " .. trainName .. " at " .. station.name .. " (" .. oldRoute .. ")")
-    end
-
-    if lineChanges[station] and lineChanges[station][oldRoute] then
-        local entry = lineChanges[station][oldRoute]
-        assert(type(entry.newRoute) == "table", "Need 'entry.newRoute' as table")
-        assert(entry.newRoute.type == "Route", "Provide 'entry.newRoute' as 'Route'")
-        assert(entry.newLine.type == "Line", "Provide 'entry.newLine' as 'Line'")
-        assert(type(entry.newLine.nr) == "string", "Need 'entry.newLine.nr' as string")
-
-        train:setRoute(entry.newRoute.routeName)
-        train:changeDestination(entry.newRoute:getLastStation().name, entry.newLine.nr)
-        entry.newRoute:prepareDepartureAt(train, entry.newRoute:getFirstStation(), departureTime)
-        if entry.axis and entry.axisValue then EEPSetTrainAxis(trainName, entry.axis, entry.axisValue) end
-
-        if Line.debug then
-            print("[Line] CHANGED DESTINATION FOR " .. oldRoute .. " AT STATION " .. station.name .. " TO LINE " ..
-                  entry.newLine.nr .. " (" .. entry.newRoute:getLastStation().name .. ")")
-        end
-    else
-        print("[Line] NO DESTINATION FOUND FOR ROUTE " .. oldRoute .. " AT STATION " .. station.name)
-    end
+---Get or create a new bus or tram line
+---@param name string name of the line, like "A" or "68"
+---@return Line
+function Line.forName(name)
+    local LineRegistry = require("ak.public-transport.LineRegistry")
+    return LineRegistry.forId(name)
 end
 
 ---Creates a new bus or tram line
@@ -95,21 +52,24 @@ function Line:new(o)
     assert(type(o.nr) == "string", "Need 'o.nr' as string")
     o.id = o.nr
     o.type = "Line"
-    o.routes = {}
+    o.lineSegments = {}
     self.__index = self
     setmetatable(o, self)
     lines[o.nr] = o
     return o
 end
 
----Creates a new route on the line
----Each line can have multiple routes, e.g. each line may have two opposite directions
-function Line:newRoute(routeName)
+---Adds a new line segment with its own destination
+---@param routeName string name of the route in EEP. This route is used on route changes
+---@param destination string name of the destination station, this will be set in the train
+---@return LineSegment
+function Line:addSection(routeName, destination)
     assert(type(self) == "table", "Need to call this method with ':'")
     assert(type(routeName) == "string", "Need 'routeName' as string")
-    local route = Route:new(routeName, self.nr)
-    self.routes[routeName] = route
-    return route
+    assert(type(destination) == "string", "Need 'destination' as string")
+    local lineSegment = LineSegment:new(routeName, self, destination);
+    self.lineSegments[routeName] = lineSegment
+    return lineSegment
 end
 
 ---
@@ -130,11 +90,12 @@ function Line.scheduleDeparture(trainName, station, timeInMinutes)
     if lineName then
         local line = lines[lineName]
         if line then
-            local route = line.routes[routeName]
-            if route then
-                route:prepareDepartureAt(train, station, timeInMinutes)
+            ---@type LineSegment
+            local lineSegment = line.lineSegments[routeName]
+            if lineSegment then
+                lineSegment:prepareDepartureAt(train, station, timeInMinutes)
             else
-                print("[Line] Could not find trains route: " .. routeName)
+                print("[Line] Could not find lineSegment for route: " .. routeName)
             end
         else
             print("[Line] Could not find trains line: " .. lineName)
@@ -162,11 +123,12 @@ function Line.trainDeparted(trainName, station)
     if lineName then
         local line = lines[lineName]
         if line then
-            local route = line.routes[routeName]
-            if route then
-                route:trainDeparted(train, station)
+            local lineSegment = line.lineSegments[routeName]
+            if lineSegment then
+                ---@type LineSegment
+                lineSegment:trainDeparted(train, station)
             else
-                print("[Line] Could not find trains route: " .. routeName)
+                print("[Line] Could not find lineSegment for route: " .. routeName)
             end
         else
             print("[Line] Could not find trains line: " .. lineName)
@@ -176,6 +138,6 @@ function Line.trainDeparted(trainName, station)
     end
 end
 
-function Line:toJsonStatic() return {id = self.id, nr = self.nr, routes = self.routes} end
+function Line:toJsonStatic() return {id = self.id, nr = self.nr, lineSegments = self.lineSegments} end
 
 return Line

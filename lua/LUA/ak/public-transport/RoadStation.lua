@@ -1,5 +1,6 @@
 if AkDebugLoad then print("Loading ak.public-transport.RoadStation ...") end
 
+local Platform = require("ak.public-transport.Platform")
 local TrainRegistry = require("ak.train.TrainRegistry")
 local StationQueue = require("ak.public-transport.StationQueue")
 local StorageUtility = require("ak.storage.StorageUtility")
@@ -8,8 +9,9 @@ local StorageUtility = require("ak.storage.StorageUtility")
 ---@field type string
 ---@field name string
 ---@field displays table table of RoadStationDisplay
+---@field platforms table table of Platform
 ---@field queue StationQueue
----@field routes Route
+---@field routePlatforms table<string, PlatformAssignment>
 local RoadStation = {}
 RoadStation.debug = false
 local allStations = {}
@@ -59,8 +61,8 @@ function RoadStation:trainArrivesIn(trainName, timeInMinutes)
     assert(type(routeName) == "string", "Need 'routeName' as string")
 
     local platform
-    if self.routes and self.routes[routeName] and self.routes[routeName].platform then
-        platform = self.routes[routeName].platform
+    if self.routePlatforms and self.routePlatforms[routeName] and self.routePlatforms[routeName].platform then
+        platform = self.routePlatforms[routeName].platform
     else
         -- if RoadStation.debug then
         print("[RoadStation] " .. self.name .. " NO PLATFORM FOR TRAIN: " .. trainName ..
@@ -83,23 +85,25 @@ function RoadStation:trainLeft(trainName)
     self:updateDisplays()
 end
 
-function RoadStation:setPlatform(route, platform)
-    assert(type(route) == "table", "Need 'route' as table")
-    assert(route.type == "Route", "Provide 'route' as 'Route'")
+function RoadStation:setPlatform(segment, platform)
+    assert(type(segment) == "table", "Need 'segment' as table")
+    assert(segment.type == "LineSegment", "Provide 'segment' as 'Route'")
     assert(type(platform) == "number", "Need 'platform' as number")
 
-    local routeName = route.routeName
+    local routeName = segment.routeName
     platform = tostring(platform)
 
-    self.routes = self.routes or {}
-    self.routes[routeName] = self.routes[routeName] or {}
-    self.routes[routeName].platform = platform
+    self.routePlatforms = self.routePlatforms or {}
+    self.routePlatforms[routeName] = self.routePlatforms[routeName] or {}
+    self.routePlatforms[routeName].platform = platform
     self:updateRoutesOnPlatform(platform)
 end
 
 function RoadStation:updateRoutesOnPlatform(platform)
     local routesOfPlatform = {}
-    for r, p in pairs(self.routes or {}) do if p.platform == platform then table.insert(routesOfPlatform, r) end end
+    for r, p in pairs(self.routePlatforms or {}) do
+        if p.platform == platform then table.insert(routesOfPlatform, r) end
+    end
     table.sort(routesOfPlatform, function(a, b) return a < b end)
 
     for p, displays in pairs(self.displays or {}) do
@@ -125,14 +129,23 @@ function RoadStation:updateDisplays()
     end
 end
 
-function RoadStation:addDisplay(structure, model, platform)
-    platform = platform and tostring(platform) or "1"
+function RoadStation:addDisplay(structure, model, platformNr)
+    platformNr = platformNr and tostring(platformNr) or "1"
     assert(type(structure) == "string", "Need 'structure' as string")
     assert(type(model) == "table", "Need 'model' as table")
-    platform = platform and tostring(platform) or nil
-    self.displays[platform or "ALL"] = self.displays[platform or "ALL"] or {}
-    table.insert(self.displays[platform or "ALL"], {structure = structure, model = model})
-    self:updateRoutesOnPlatform(platform)
+    platformNr = platformNr and tostring(platformNr) or nil
+    self.displays[platformNr or "ALL"] = self.displays[platformNr or "ALL"] or {}
+    table.insert(self.displays[platformNr or "ALL"], {structure = structure, model = model})
+    self:updateRoutesOnPlatform(platformNr)
+end
+
+function RoadStation:platform(platformNr)
+    local platform = self.platforms[platformNr]
+    if not platform then
+        platform = Platform:new(self, platformNr)
+        self.platforms[platformNr] = platform
+    end
+    return platform
 end
 
 --- Creates a new Bus or Tram Station
@@ -145,7 +158,20 @@ function RoadStation:new(name, eepSaveId)
     assert(eepSaveId, "Bitte geben Sie den Wert \"eepSaveId\" fuer diese Fahrspur an.")
     assert(type(eepSaveId) == "number", "Need 'eepSaveId' as number")
     if eepSaveId ~= -1 then StorageUtility.registerId(eepSaveId, "Lane " .. name) end
-    local o = {type = "RoadStation", name = name, eepSaveId = eepSaveId, queue = StationQueue:new(), displays = {}}
+
+    ---@class PlatformAssignment
+    ---@field platform number
+    local routePlatforms = {}
+
+    local o = {
+        type = "RoadStation",
+        name = name,
+        eepSaveId = eepSaveId,
+        queue = StationQueue:new(),
+        displays = {},
+        platforms = {},
+        routePlatforms = routePlatforms
+    }
 
     self.__index = self
     setmetatable(o, self)
@@ -155,7 +181,10 @@ function RoadStation:new(name, eepSaveId)
     return o
 end
 
-function RoadStation.stationByName(stationName) return allStations[stationName] end
+---Get a roadstation by creation or lookup (use this instead of RoadStation:new()!)
+---@param name string
+---@return RoadStation
+function RoadStation.forName(name) return allStations[name] or RoadStation:new(name, -1) end
 
 function RoadStation.showTippText() for _, station in pairs(allStations) do station:updateDisplays() end end
 

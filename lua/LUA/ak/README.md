@@ -7,6 +7,17 @@ feature-img: "/docs/assets/headers/SourceCode.png"
 img: "/docs/assets/headers/SourceCode.png"
 ---
 
+## ⚠ Bitte beachten
+
+⚠ **Diese Bibliothek verwenden `EEPRollingstockSetTagText` um Daten in Fahrzeugen abzulegen.**
+
+- **Eigene mit `EEPRollingstockSetTagText` gespeicherte Daten werden dabei verloren gehen!**
+- Man kann jedoch eigene Daten in einem Zug wie folgt ablegen:
+  - `Train.forName("#meinZug")`**`.setValue("schlüssel","wert")`**
+  - `local meinWert = Train.forName("#meinZug")`**`.getValue("schlüssel")`**
+
+## Pakete
+
 <table class="table flex" style="width: 35em; max-width: inherit;">
   <thead>
     <tr>
