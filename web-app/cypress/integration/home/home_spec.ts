@@ -3,27 +3,24 @@ import EepSimulator from '../../test-helpers/eep-simulator';
 const simulator = new EepSimulator();
 
 beforeEach(() => {
-  simulator.resetEvent();
+  simulator.reset();
 });
 
-describe('Home Page without modules and no connection', () => {
-  it('has the following entries', () => {
+describe('App Home', () => {
+  it('contains Log and EEP-Web version after reset', () => {
     cy.visit('/');
     cy.contains('Log');
     cy.contains('Daten');
     cy.contains('EEP-Web:');
   });
-});
-
-describe('Home Page without modules and version info', () => {
-  it('has the following entries', () => {
+  it('contains EEP-Web, EEP-Lua, and EEP version', () => {
     simulator.eepEvent('eep-version-complete.json');
 
     cy.visit('/');
     cy.contains('Log');
     cy.contains('Daten');
-    cy.contains('EEP-Web:');
-    cy.contains('EEP:');
-    cy.contains('EEP:');
+    cy.contains('EEP-Web: ');
+    cy.contains('EEP-Lua: Lua 5.3');
+    cy.contains('EEP: 17.0');
   });
 });

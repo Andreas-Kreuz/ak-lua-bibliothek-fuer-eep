@@ -1,20 +1,19 @@
 enum FileNames {
-  eepOutJsonOut = 'ak-eep-out.json',
-  eepOutJsonOutFinished = 'ak-eep-out-json.isfinished',
-  eepOutLog = 'ak-eep-out.log',
-  eepInCommands = 'ak-eep-in.commands',
-  serverWatching = 'ak-server.iswatching',
-  serverCache = 'ak-eep-web-server-state.json',
-  serverEventCounter = 'ak-eep-web-server-state.counter',
+  eepOutJsonOut = 'cypress/io/ak-eep-out.json',
+  eepOutJsonOutFinished = 'cypress/io/ak-eep-out-json.isfinished',
+  eepOutLog = 'cypress/io/ak-eep-out.log',
+  serverOutCommands = 'cypress/io/ak-eep-in.commands',
+  serverWatching = 'cypress/io/ak-server.iswatching',
 }
 
 export default class EepSimulator {
   private eventCounter = 0;
 
-  resetEvent = () => {
+  reset = () => {
     this.eventCounter = 0;
-    cy.readFile('cypress/io/' + FileNames.serverWatching).should('exist');
-    cy.writeFile('cypress/io/' + FileNames.eepOutLog, '');
+    cy.readFile(FileNames.serverWatching).should('exist');
+    cy.writeFile(FileNames.eepOutLog, '');
+    cy.writeFile(FileNames.serverOutCommands, '');
     this.eepEvent('reset.json');
   };
 
@@ -23,9 +22,9 @@ export default class EepSimulator {
     cy.fixture('eep-output/' + fileName).then((x) => {
       x.eventCounter = this.eventCounter;
       console.log(x);
-      cy.writeFile('cypress/io/' + FileNames.eepOutJsonOut, JSON.stringify(x), 'latin1');
-      cy.writeFile('cypress/io/' + FileNames.eepOutJsonOutFinished, '');
-      cy.readFile('cypress/io/' + FileNames.eepOutJsonOutFinished).should('not.exist');
+      cy.writeFile(FileNames.eepOutJsonOut, JSON.stringify(x), 'latin1');
+      cy.writeFile(FileNames.eepOutJsonOutFinished, '');
+      cy.readFile(FileNames.eepOutJsonOutFinished).should('not.exist');
     });
   }
 }
