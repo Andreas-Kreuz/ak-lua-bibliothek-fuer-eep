@@ -5,6 +5,9 @@
   "scripts": {
     "build-shared": "npm run build --prefix ../web-shared",
     "build-app": "npm run build --prefix ../web-app",
+    "copy-web-app": "run-script-os",
+    "copy-web-app:win32": "npm run pub-del && npm run pub-mkdir && npm run pub-copy",
+    "copy-web-app:darwin:linux": "npm run pub-mkdir && npm run pub-copy",
     "pub-del": "run-script-os",
     "pub-del:win32": "if exist build\\public_html rmdir /s /q build\\public_html",
     "pub-del:darwin:linux": "test -d build/public_html && rm -rf build/public_html",
@@ -14,7 +17,7 @@
     "pub-copy": "run-script-os",
     "pub-copy:win32": "xcopy /s /q ..\\web-app\\dist\\ak-eep-web\\* build\\public_html\\",
     "pub-copy:darwin:linux": "cp -r ../web-app/dist/ak-eep-web/* build/public_html/",
-    "build": "npm run build-shared && npm run build-app && npm run pub-del && npm run pub-mkdir && npm run pub-copy && tsc",
+    "build": "npm run build-shared && npm run build-app && npm run copy-web-app && tsc",
     "watch": "tsc -w",
     "lint": "eslint -c .eslintrc.json --ext .ts src",
     "start": "tsc && electron ./build/main.js",
