@@ -1,0 +1,40 @@
+name: Cypress Tests
+
+on: [push]
+
+jobs:
+  cypress-run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install server
+        uses: actions/setup-node@v2
+        with:
+          node-version: "14"
+          cache: "npm"
+
+      - name: Web-Server Install
+        run: npm install
+        working-directory: web-server
+
+      - name: Web-Server Build
+        run: npm build
+        working-directory: web-server
+
+      - name: Web-App Install
+        run: npm install
+        working-directory: web-app
+
+      - name: Web-App Build
+        run: npm build
+        working-directory: web-app
+
+      # Install NPM dependencies, cache them correctly
+      # and run all Cypress tests
+      - name: Cypress run
+        uses: cypress-io/github-action@v2
+        with:
+          start: npm cy-tests-run
+          working-directory: web-app
