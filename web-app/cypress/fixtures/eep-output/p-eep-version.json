@@ -1,0 +1,17 @@
+{
+  "payload": {
+    "keyId": "id",
+    "room": "eep-version",
+    "list": {
+      "versionInfo": {
+        "singleVersion": "0.10.8",
+        "id": "versionInfo",
+        "luaVersion": "Lua 5.3",
+        "eepVersion": "17.0",
+        "name": "versionInfo"
+      }
+    }
+  },
+  "type": "ListChanged",
+  "eventCounter": 2
+}

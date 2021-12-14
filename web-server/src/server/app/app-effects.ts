@@ -16,6 +16,7 @@ import AppConfig from './app-config';
 import AppReducer from './app-reducer';
 import { ServerStatisticsService } from './app-statistics.service';
 import IntersectionEffects from '../intersection/intersection-effects';
+import CommandLineParser from '../command-line-parser';
 
 export default class AppEffects {
   private debug = false;
@@ -26,6 +27,7 @@ export default class AppEffects {
   private commandEffects: CommandEffects;
   private intersectionEffects: IntersectionEffects;
   private store = new AppReducer();
+  private TESTMODE = false;
 
   // Statistic data
   private statistics: ServerStatisticsService;
@@ -68,28 +70,33 @@ export default class AppEffects {
   private loadConfig(): void {
     let appConfig = new AppConfig();
     try {
-      if (fs.statSync(this.serverConfigFile).isFile()) {
+      const options = new CommandLineParser().parseOptions();
+      appConfig.eepDir = path.resolve(options['exchange-dir'] || '../web-app/cypress/simulated-ak-io-exchange');
+      this.TESTMODE = options.testmode || false;
+      if (!this.TESTMODE && fs.statSync(this.serverConfigFile).isFile()) {
         const data = fs.readFileSync(this.serverConfigFile, { encoding: 'utf8' });
         const config = JSON.parse(data);
         appConfig = config;
       }
     } catch (error) {
-      // IGNORE console.log(error);
+      console.log(error);
     }
     this.store.setAppConfig(appConfig);
     this.io.to(SettingsEvent.Room).emit(SettingsEvent.DirError, this.store.getEepDir());
   }
 
   private saveConfig(config: { eepDir: string }): void {
-    try {
-      fs.mkdirSync(this.serverConfigPath);
-    } catch (error) {
-      // IGNORE console.log(error);
-    }
-    try {
-      fs.writeFileSync(this.serverConfigFile, JSON.stringify(config));
-    } catch (error) {
-      console.log(error);
+    if (!this.TESTMODE) {
+      try {
+        fs.mkdirSync(this.serverConfigPath);
+      } catch (error) {
+        // IGNORE console.log(error);
+      }
+      try {
+        fs.writeFileSync(this.serverConfigFile, JSON.stringify(config));
+      } catch (error) {
+        console.log(error);
+      }
     }
   }
 
@@ -104,7 +111,7 @@ export default class AppEffects {
 
   public changeEepDirectory(eepDir: string) {
     // Append the exchange directory to the path
-    const completeDir = path.resolve(eepDir, 'LUA/ak/io/exchange/');
+    const completeDir = path.resolve(eepDir, this.TESTMODE ? '' : 'LUA/ak/io/exchange/');
 
     // Check the directory and register handlers on success
     const eepService = new EepService();

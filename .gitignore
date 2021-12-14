@@ -1,4 +1,5 @@
 # compiled output
+/web-app/cypress/simulated-ak-io-exchange/ak*
 /web-app/dist
 /web-app/tmp
 /web-app/out-tsc
@@ -98,4 +99,5 @@ luac.out
 *.i*86
 *.x86_64
 *.hex
+
 
