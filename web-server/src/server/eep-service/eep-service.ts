@@ -5,13 +5,15 @@ import { Tail } from 'tail';
 import { ServerStatisticsService } from '../app/app-statistics.service';
 import { CacheService } from './cache-service';
 
-const serverWatchingFile = 'ak-server.iswatching';
-const serverReadyForJsonFile = 'ak-eep-out-json.isfinished';
-const watchedJsonFileName = 'ak-eep-out.json';
-const watchedLogFileName = 'ak-eep-out.log';
-const writtenCommandFileName = 'ak-eep-in.commands';
-const serverCacheFileName = 'ak-eep-web-server-state.json';
-const eventCounterFileName = 'ak-eep-web-server-state.counter';
+export enum FileNames {
+  eepOutJsonOut = 'ak-eep-out.json',
+  eepOutJsonOutFinished = 'ak-eep-out-json.isfinished',
+  eepOutLog = 'ak-eep-out.log',
+  serverOutCommands = 'ak-eep-in.commands',
+  serverWatching = 'ak-server.iswatching',
+  serverCache = 'ak-eep-web-server-state.json',
+  serverEventCounter = 'ak-eep-web-server-state.counter',
+}
 
 /**
  * This service is responsible for the communication with EEP.
@@ -61,7 +63,7 @@ export default class EepService implements CacheService {
         this.attachAkEepOutJsonFile();
         this.attachAkEepOutLogFile();
         this.createAkServerFile();
-        this.deleteFileOnExit(eventCounterFileName);
+        this.deleteFileOnExit(FileNames.serverEventCounter);
       } else {
         callback('No such directory: ' + this.dir, null);
       }
@@ -72,13 +74,13 @@ export default class EepService implements CacheService {
     try {
       fs.unlinkSync(file);
     } catch (err) {
-      /* ignored */
+      console.log(err);
     }
   }
 
   private attachAkEepOutJsonFile(): void {
-    const jsonFile = path.resolve(this.dir, watchedJsonFileName);
-    const jsonReadyFile = path.resolve(this.dir, serverReadyForJsonFile);
+    const jsonFile = path.resolve(this.dir, FileNames.eepOutJsonOut);
+    const jsonReadyFile = path.resolve(this.dir, FileNames.eepOutJsonOutFinished);
 
     // First start: Read the JSON file - ignore if EEP is ready
     if (!this.jsonFileWatcher) {
@@ -92,8 +94,9 @@ export default class EepService implements CacheService {
     // Watch in the directory, if the file is recreated
     this.jsonFileWatcher = fs.watch(this.dir, {}, (eventType: string, filename: string) => {
       // If the jsonReadyFile exists: Read the data and remove the file
-      if (filename === serverReadyForJsonFile && fs.existsSync(jsonReadyFile)) {
+      if (filename === FileNames.eepOutJsonOutFinished && fs.existsSync(jsonReadyFile)) {
         this.lastJsonUpdate = performance.now();
+        console.log('Reading: ', jsonFile);
         this.readJsonFile(jsonFile, jsonReadyFile);
       }
     });
@@ -101,10 +104,10 @@ export default class EepService implements CacheService {
 
   public readCache(): undefined {
     try {
-      const cacheFile = path.resolve(this.dir, serverCacheFileName);
+      const cacheFile = path.resolve(this.dir, FileNames.serverCache);
       const fileContents = fs.readFileSync(cacheFile);
       const cachedObject = JSON.parse(fileContents.toString());
-      console.log('CACHE FILE READ FROM: ' + serverCacheFileName);
+      console.log('CACHE FILE READ FROM: ' + FileNames.serverCache);
       return cachedObject;
     } catch (err) {
       console.log(err);
@@ -123,12 +126,12 @@ export default class EepService implements CacheService {
         //     (data.eventCounter ? data.eventCounter : '---') +
         //     ')'
         // );
-        const cacheFile = path.resolve(this.dir, serverCacheFileName);
+        const cacheFile = path.resolve(this.dir, FileNames.serverCache);
         const fileContents = JSON.stringify(data);
         fs.writeFileSync(cacheFile, fileContents);
 
         if (data.eventCounter) {
-          const counterFile = path.resolve(this.dir, eventCounterFileName);
+          const counterFile = path.resolve(this.dir, FileNames.serverEventCounter);
           fs.writeFileSync(counterFile, data.eventCounter);
         }
       }
@@ -144,6 +147,7 @@ export default class EepService implements CacheService {
   }
 
   private readJsonFile(jsonFile: string, jsonReadyFile: string) {
+    console.log('################# REMOVE FILE: ', jsonReadyFile);
     try {
       // EEP has written the JsonFile for us, so let's read it.
       const data: string = fs.readFileSync(jsonFile, { encoding: 'latin1' });
@@ -172,7 +176,7 @@ export default class EepService implements CacheService {
   }
 
   private attachAkEepOutLogFile(): void {
-    const logFile = path.resolve(this.dir, watchedLogFileName);
+    const logFile = path.resolve(this.dir, FileNames.eepOutLog);
     this.onFileAppearance(logFile, () => {
       const tail = new Tail(logFile, { encoding: 'latin1', fromBeginning: true });
       tail.on('line', (line: string) => {
@@ -201,8 +205,8 @@ export default class EepService implements CacheService {
 
   getCurrentLogLines = (): string => {
     try {
-      console.log('Read: ' + path.resolve(this.dir, watchedLogFileName));
-      return fs.readFileSync(path.resolve(this.dir, watchedLogFileName), { encoding: 'latin1' });
+      console.log('Read: ' + path.resolve(this.dir, FileNames.eepOutLog));
+      return fs.readFileSync(path.resolve(this.dir, FileNames.eepOutLog), { encoding: 'latin1' });
     } catch (e) {
       console.log(e);
     }
@@ -226,10 +230,10 @@ export default class EepService implements CacheService {
   }
 
   public createAkServerFile() {
-    const watchFile = path.resolve(this.dir, serverWatchingFile);
+    const watchFile = path.resolve(this.dir, FileNames.serverWatching);
     // Create the serverWatchingFile
     fs.closeSync(fs.openSync(watchFile, 'w'));
-    this.deleteFileOnExit(serverWatchingFile);
+    this.deleteFileOnExit(FileNames.serverWatching);
   }
 
   private deleteFileOnExit(fileName: string) {
@@ -262,7 +266,7 @@ export default class EepService implements CacheService {
   }
 
   queueCommand = (command: string) => {
-    const file = path.resolve(this.dir, writtenCommandFileName);
+    const file = path.resolve(this.dir, FileNames.serverOutCommands);
     try {
       console.log('Queuing: ' + command);
       fs.appendFileSync(file, command + '\n', { encoding: 'latin1' });
