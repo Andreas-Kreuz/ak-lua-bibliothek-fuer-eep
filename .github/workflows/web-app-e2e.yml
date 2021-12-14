@@ -36,5 +36,5 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v2
         with:
-          start: npm run-script cy-tests-run
+          start: npm run-script cy-tests-run-gh
           working-directory: web-app
