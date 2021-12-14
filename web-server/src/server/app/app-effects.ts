@@ -71,7 +71,7 @@ export default class AppEffects {
     let appConfig = new AppConfig();
     try {
       const options = new CommandLineParser().parseOptions();
-      appConfig.eepDir = path.resolve(options['exchange-dir'] || '../web-app/cypress/simulated-ak-io-exchange');
+      appConfig.eepDir = path.resolve(options['exchange-dir'] || '../web-app/cypress/io');
       this.TESTMODE = options.testmode || false;
       if (!this.TESTMODE && fs.statSync(this.serverConfigFile).isFile()) {
         const data = fs.readFileSync(this.serverConfigFile, { encoding: 'utf8' });

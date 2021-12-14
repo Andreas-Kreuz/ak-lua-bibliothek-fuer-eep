@@ -1,5 +1,5 @@
 # compiled output
-/web-app/cypress/simulated-ak-io-exchange/ak*
+/web-app/cypress/io/ak*
 /web-app/dist
 /web-app/tmp
 /web-app/out-tsc
