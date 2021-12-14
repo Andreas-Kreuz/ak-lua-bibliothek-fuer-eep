@@ -23,13 +23,9 @@ jobs:
         run: npm install
         working-directory: web-app
 
-      - name: Web-Server Build
+      - name: Web-Server Build (includes building the Web-App)
         run: npm run-script build
         working-directory: web-server
-
-      - name: Web-App Build
-        run: npm run-script build
-        working-directory: web-app
 
       # Install NPM dependencies, cache them correctly
       # and run all Cypress tests
