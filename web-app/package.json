@@ -9,6 +9,7 @@
     "test": "ng test",
     "fire-up-testserver": "npm run start-with-e2e-test-dir --prefix ../web-server",
     "cy-tests": "concurrently -k \"npm run fire-up-testserver\" \"npm run start\" \"cypress open\"",
+    "cy-tests-run": "concurrently -k \"npm run fire-up-testserver\" \"npm run start\" \"cypress run\"",
     "lint": "ng lint",
     "e2e": "ng e2e",
     "cypress:open": "cypress open",
