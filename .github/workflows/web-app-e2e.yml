@@ -19,13 +19,13 @@ jobs:
         run: npm install
         working-directory: web-server
 
-      - name: Web-Server Build
-        run: npm run-script build
-        working-directory: web-server
-
       - name: Web-App Install
         run: npm install
         working-directory: web-app
+
+      - name: Web-Server Build
+        run: npm run-script build
+        working-directory: web-server
 
       - name: Web-App Build
         run: npm run-script build
