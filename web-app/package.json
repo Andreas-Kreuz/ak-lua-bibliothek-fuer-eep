@@ -8,7 +8,9 @@
     "build": "ng build --configuration production --aot --build-optimizer --base-href=/",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run"
   },
   "private": true,
   "dependencies": {
@@ -45,6 +47,7 @@
     "@angular/cli": "^13.1.1",
     "@angular/compiler-cli": "^13.1.0",
     "@angular/language-service": "^13.1.0",
+    "@cypress/schematic": "^1.6.0",
     "@ngrx/schematics": "^13.0.2",
     "@ngrx/store-devtools": "^13.0.2",
     "@types/jasmine": "~3.6.0",
