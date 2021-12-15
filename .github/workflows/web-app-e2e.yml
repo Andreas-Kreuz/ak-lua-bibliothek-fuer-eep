@@ -32,5 +32,6 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v2
         with:
+          config: pageLoadTimeout=100000
           start: npm run-script cy-tests-run-gh
           working-directory: web-app
