@@ -74,7 +74,7 @@ export default class EepService implements CacheService {
     try {
       fs.unlinkSync(file);
     } catch (err) {
-      console.log(err);
+      // IGNORED - console.log(err);
     }
   }
 
@@ -119,13 +119,6 @@ export default class EepService implements CacheService {
     performance.mark('eep:start-write-cache-file');
     try {
       if (data) {
-        // console.log(
-        //   'Writing cache file: ' +
-        //     serverCacheFileName +
-        //     ' (on event ' +
-        //     (data.eventCounter ? data.eventCounter : '---') +
-        //     ')'
-        // );
         const cacheFile = path.resolve(this.dir, FileNames.serverCache);
         const fileContents = JSON.stringify(data);
         fs.writeFileSync(cacheFile, fileContents);
@@ -147,7 +140,6 @@ export default class EepService implements CacheService {
   }
 
   private readJsonFile(jsonFile: string, jsonReadyFile: string) {
-    console.log('################# REMOVE FILE: ', jsonReadyFile);
     try {
       // EEP has written the JsonFile for us, so let's read it.
       const data: string = fs.readFileSync(jsonFile, { encoding: 'latin1' });
@@ -168,8 +160,6 @@ export default class EepService implements CacheService {
       // Delete the EEP FINISHED file, so EEP will know we are ready
       this.deleteFileIfExists(jsonReadyFile);
       performance.mark('eep:start-wait-for-json');
-
-      //this.onJsonUpdate(data, this.lastJsonUpdate);
     } catch (err) {
       console.log(err);
     }
