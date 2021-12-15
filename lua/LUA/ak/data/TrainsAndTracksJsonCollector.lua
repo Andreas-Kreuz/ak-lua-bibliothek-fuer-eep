@@ -44,7 +44,6 @@ end
 function TrainsAndTracksJsonCollector.collectData()
     if not enabled then return end
 
-    -- reset runtime data
     if not initialized then TrainsAndTracksJsonCollector.initialize() end
 
     updateTracks()

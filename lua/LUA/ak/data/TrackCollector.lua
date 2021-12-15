@@ -28,19 +28,6 @@ local reservedFunction = {
     tram = EEPIsTramTrackReserved
 }
 
-local runtimeData = {}
-
---- Store runtime information
--- @author Frank Buchholz
-function storeRunTime(group, time)
-    -- collect and sum runtime date, needs rework
-    if not runtimeData then runtimeData = {} end
-    if not runtimeData[group] then runtimeData[group] = {id = group, count = 0, time = 0} end
-    local runtime = runtimeData[group]
-    runtime.count = runtime.count + 1
-    runtime.time = runtime.time + time * 1000
-end
-
 --- Indirect call of EEP function (or any other function) including time measurement
 -- @author Frank Buchholz
 function executeAndStoreRunTime(func, group, ...)
@@ -51,9 +38,17 @@ function executeAndStoreRunTime(func, group, ...)
     local result = {func(...)}
 
     local t1 = os.clock()
-    storeRunTime(group, t1 - t0)
+    RuntimeRegistry.storeRunTime("TrackCollector.function(" .. group .. ")", t1 - t0)
 
     return table.unpack(result)
+end
+
+---store runtime
+---@param identifier string
+---@param time number
+function TrackCollector:storeRunTime(identifier, time)
+    RuntimeRegistry.storeRunTime("TrackCollector.ALL." .. identifier, time)
+    RuntimeRegistry.storeRunTime("TrackCollector." .. self.trackType .. "." .. identifier, time)
 end
 
 local _EEPGetRollingstockItemsCount = EEPGetRollingstockItemsCount
@@ -76,7 +71,10 @@ end -- EEP 15.1 Plug-In 1
 local EEPRollingstockGetOrientation = EEPRollingstockGetOrientation or function() -- (not used yet)
 end -- EEP 15.1 Plug-In 1
 
-local EEPRollingstockGetLength = EEPRollingstockGetLength or function() end -- EEP 14.2
+local _EEPRollingstockGetLength = EEPRollingstockGetLength or function() end -- EEP 14.2
+local function EEPRollingstockGetLength(...)
+    return executeAndStoreRunTime(_EEPRollingstockGetLength, "EEPRollingstockGetLength", ...)
+end
 
 local EEPRollingstockGetMotor = EEPRollingstockGetMotor or function() end -- EEP 14.2
 
@@ -157,6 +155,14 @@ local function EEPGetTrainSpeed(...) return executeAndStoreRunTime(_EEPGetTrainS
 local _EEPGetRollingstockItemName = EEPGetRollingstockItemName or function() end -- EEP 13.2 Plug-In 2
 local function EEPGetRollingstockItemName(...)
     return executeAndStoreRunTime(_EEPGetRollingstockItemName, "EEPGetRollingstockItemName", ...)
+end
+local _EEPRollingstockGetTrainName = EEPRollingstockGetTrainName or function() end -- EEP 13.2 Plug-In 2
+local function EEPRollingstockGetTrainName(...)
+    return executeAndStoreRunTime(_EEPRollingstockGetTrainName, "EEPRollingstockGetTrainName", ...)
+end
+local _EEPRollingstockGetCouplingFront = EEPRollingstockGetCouplingFront or function() end -- EEP 13.2 Plug-In 2
+local function EEPRollingstockGetCouplingFront(...)
+    return executeAndStoreRunTime(_EEPRollingstockGetCouplingFront, "EEPRollingstockGetCouplingFront", ...)
 end
 
 ---This will create a dictionary of train names to their location on the tracks
@@ -246,9 +252,6 @@ function TrackCollector:removeMissingRollingStock(missingRollingStock)
 end
 
 function TrackCollector:findAndUpdateTrainsOnTracks()
-    -- NOTE: This method will take dirty trains into account and delete them afterwards
-    runtimeData = {}
-
     local tx = os.clock()
     local trainsOnTrack = prepareTrainsOnTrack(self.lastTrains or {}, self.tracks, self.reservedFunction)
     local foundTrains, removedTrains = self:checkTrains(trainsOnTrack)
@@ -256,20 +259,15 @@ function TrackCollector:findAndUpdateTrainsOnTracks()
     self.lastTrains = foundTrains
 
     local t2 = os.clock()
-    storeRunTime(self.trackType .. "-trainTime", t2 - tx)
-    RuntimeRegistry.storeRunTime("TrackCollector." .. self.trackType .. ".updateTrain", t2 - tx)
-    RuntimeRegistry.storeRunTime("TrackCollector.ALL.updateTrain", t2 - tx)
+    self:storeRunTime("updateTrain", t2 - tx)
 
     local foundRollingStock, removedRollingStock = self:checkRollingStock(foundTrains)
     self:removeMissingRollingStock(removedRollingStock)
     self.lastRollingStock = foundRollingStock
 
     local t3 = os.clock()
-    storeRunTime(self.trackType .. "-rollingStockTime", t3 - t2)
-    RuntimeRegistry.storeRunTime("TrackCollector." .. self.trackType .. ".updateRollingStock", t3 - t2)
-    RuntimeRegistry.storeRunTime("TrackCollector.ALL.updateRollingStock", t3 - t2)
-    RuntimeRegistry.storeRunTime("TrackCollector." .. self.trackType .. ".OVERALL", t3 - tx)
-    RuntimeRegistry.storeRunTime("TrackCollector.ALL.OVERALL", t3 - tx)
+    self:storeRunTime("updateRollingStock", t3 - t2)
+    self:storeRunTime("OVERALL", t3 - tx)
 
     self.dirtyTrainNames = {}
 end
@@ -278,15 +276,16 @@ function TrackCollector:updateTrain(trainName, trackIds, speed)
     local tx = os.clock()
     local train, created = TrainRegistry.forName(trainName)
     RuntimeRegistry.storeRunTime("TrainRegistry.forName", os.clock() - tx)
+    self:storeRunTime("TrainRegistry.forName", os.clock() - tx)
     if created or train:getSpeed() ~= 0 or speed ~= 0 or self.dirtyTrainNames[trainName] then
         local start1 = os.clock()
         self.dirtyTrainNames[trainName] = true
         train:setSpeed(speed);
         train:setOnTrack(trackIds)
         train:setTrackType(self.trackType)
-        RuntimeRegistry.storeRunTime("TrackCollector.updateTrain", os.clock() - start1)
+        self:storeRunTime("updateTrain-dynamic+static", os.clock() - start1)
     else
-        RuntimeRegistry.storeRunTime("TrackCollector.updateTrainSkipped", 0)
+        self:storeRunTime("updateTrain-skipped", 0)
     end
 
     self.trains[trainName] = train:toJsonStatic()
@@ -305,7 +304,7 @@ function TrackCollector:updateRollingStock(rs, currentTrain, positionInTrain)
         rs:setTrainName(currentTrain.name)
         rs:setTrackType(currentTrain.trackType)
 
-        RuntimeRegistry.storeRunTime("TrackCollector.updateRollingStock", os.clock() - start1)
+        self:storeRunTime("updateRollingStock-static", os.clock() - start1)
 
         local start2 = os.clock()
         local _, trackId, trackDistance, trackDirection, trackSystem = EEPRollingstockGetTrack(rs.rollingStockName)
@@ -324,9 +323,10 @@ function TrackCollector:updateRollingStock(rs, currentTrain, positionInTrain)
             end
             if hasMileage then rs:setMileage(mileage) end
         end
-        RuntimeRegistry.storeRunTime("TrackCollector.updateRollingStockInfo", os.clock() - start2)
+        self:storeRunTime("updateRollingStock-dynamic", os.clock() - start2)
+        print("Update Train: ", rs.rollingStockName)
     else
-        RuntimeRegistry.storeRunTime("TrackCollector.updateRollingStockSkipped", 0)
+        self:storeRunTime("updateRollingStock-skipped", 0)
     end
 
     self.rollingStock[rs.rollingStockName] = rs:toJsonStatic()
