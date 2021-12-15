@@ -2,7 +2,7 @@
 layout: page_with_toc
 title: Linien für den Nahverkehr
 subtitle: Die Dateien in diesem Verzeichnis dienenen dazu Linien und Haltestellen zu verwalten
-permalink: lua/ak/public-transport
+permalink: lua/ak/public-transport/
 feature-img: "/docs/assets/headers/SourceCode.png"
 img: "/docs/assets/headers/SourceCode.png"
 ---
