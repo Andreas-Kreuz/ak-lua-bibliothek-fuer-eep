@@ -26,7 +26,7 @@ end
 
 --- Indirect call of EEP function (or any other function) including time measurement
 -- @author Frank Buchholz
-function executeAndStoreRunTime(func, group, ...)
+function RuntimeRegistry.executeAndStoreRunTime(func, group, ...)
     if not func then return end
 
     local t0 = os.clock()
@@ -34,7 +34,7 @@ function executeAndStoreRunTime(func, group, ...)
     local result = {func(...)}
 
     local t1 = os.clock()
-    storeRunTime(group, t1 - t0)
+    RuntimeRegistry.storeRunTime(group, t1 - t0)
 
     return table.unpack(result)
 end

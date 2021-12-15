@@ -1,17 +1,31 @@
 local EventBroker = require("ak.util.EventBroker")
 local Train = require("ak.train.Train")
 local RollingStockRegistry = require("ak.train.RollingStockRegistry")
+
 local TrainRegistry = {}
+---@type table<string, Train>
 local allTrains = {}
+---@type table<string,table<string,string>> table of trainName -> index(string) -> rollingstockname
+local trainRollingStockNames = {}
 
 ---Initialize the rolling stock of a newly found train
 ---@param train Train
 local function initRollingStock(train)
+    trainRollingStockNames[train.name] = {}
     local count = train:getRollingStockCount()
     for i = 0, (count - 1) do
         local rollingStockName = EEPGetRollingstockItemName(train.name, i) -- EEP 13.2 Plug-In 2
         RollingStockRegistry.forName(rollingStockName)
+        trainRollingStockNames[train.name][tostring(i)] = rollingStockName
     end
+end
+
+---Get the name of a rolling stock in a train (was initialized by initRollingStock)
+---@param name string name of a train
+---@param index number index of the rollingStock in the train
+---@return string name of the rollingStock or nil
+function TrainRegistry.rollingStockNameInTrain(name, index)
+    return trainRollingStockNames[name] and trainRollingStockNames[name][tostring(index)] or nil
 end
 
 ---Creates a train object for the given train name, the train must exist

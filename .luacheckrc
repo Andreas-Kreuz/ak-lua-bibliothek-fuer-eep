@@ -82,6 +82,7 @@ files["lua/LUA/ak/demo-anlagen"].ignore = {"131"}
 files["lua/LUA/ak/data/AkSlotNamesParser.lua"].ignore = {"212"}
 files["lua/LUA/ak/road/Road.lua"].ignore = {"131"}
 files["lua/LUA/ak/data/TrackCollector.lua"].ignore = {"121", "211"}
+files["lua/LUA/ak/data/TrainDetection.lua"].ignore = {"121", "211"}
 
 exclude_files = {
     ".vscode",
