@@ -1,0 +1,38 @@
+name: CI Tests for Web-App
+
+on: [push]
+
+jobs:
+  cypress-run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install server
+        uses: actions/setup-node@v2
+        with:
+          node-version: "14"
+          cache: "npm"
+
+      - name: Web-Server Install
+        run: npm install
+        working-directory: web-server
+
+      - name: Web-App Install
+        run: npm install
+        working-directory: web-app
+
+      - name: Web-Server Build (includes building the Web-App)
+        run: npm run-script build
+        working-directory: web-server
+
+      # Install NPM dependencies, cache them correctly
+      # and run all Cypress tests
+      - name: Cypress run
+        uses: cypress-io/github-action@v2
+        with:
+          start: npm run-script start-server-headless
+          working-directory: web-app
+          wait-on: "http://localhost:3000"
+          config: baseUrl=http://localhost:3000

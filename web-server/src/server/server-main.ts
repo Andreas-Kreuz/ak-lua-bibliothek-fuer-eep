@@ -22,7 +22,7 @@ export class ServerMain {
   private appEffects: AppEffects;
   private socketService: SocketService;
 
-  constructor(private port = 3000) {
+  constructor(private serverConfigPath: string, private port = 3000) {
     // Init the server
     EventEmitter.defaultMaxListeners = 50;
     app.use(cors());
@@ -41,7 +41,7 @@ export class ServerMain {
     httpServer.listen(this.port, () => {
       console.log('Express server listening on port ' + app.get('port'));
     });
-    this.appEffects = new AppEffects(app, router, io, this.socketService);
+    this.appEffects = new AppEffects(app, router, io, this.socketService, this.serverConfigPath);
     this.appEffects.changeEepDirectory(this.appEffects.getEepDirectory());
   }
 }

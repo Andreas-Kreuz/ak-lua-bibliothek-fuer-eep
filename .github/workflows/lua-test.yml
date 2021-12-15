@@ -1,4 +1,4 @@
-name: lua-test
+name: CI Tests for Lua
 
 on: [push]
 

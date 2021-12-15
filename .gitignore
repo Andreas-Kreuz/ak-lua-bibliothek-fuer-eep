@@ -1,4 +1,6 @@
 # compiled output
+/web-app/cypress/io/ak*
+/web-app/cypress/videos
 /web-app/dist
 /web-app/tmp
 /web-app/out-tsc
@@ -98,4 +100,5 @@ luac.out
 *.i*86
 *.x86_64
 *.hex
+
 

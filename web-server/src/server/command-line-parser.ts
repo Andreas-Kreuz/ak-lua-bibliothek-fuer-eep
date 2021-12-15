@@ -11,6 +11,12 @@ export default class CommandLineParser {
         description: 'The directory to process.',
       },
       {
+        name: 'testmode',
+        alias: 't',
+        type: Boolean,
+        description: 'If true, this app will go to TESTMODE.',
+      },
+      {
         name: 'help',
         alias: 'h',
         type: Boolean,
