@@ -44,6 +44,7 @@ read_globals = {
     "EEPRollingstockGetModelType",
     "EEPRollingstockGetMotor",
     "EEPRollingstockGetOrientation",
+    "EEPRollingstockGetTrainName",
     "EEPRollingstockGetPosition",
     "EEPRollingstockGetSmoke",
     "EEPRollingstockGetTagText",
@@ -67,7 +68,7 @@ read_globals = {
     "describe",
     "insulate",
     "it",
-    "pending",
+    "pending"
 }
 
 allow_defined_top = true
@@ -76,11 +77,11 @@ allow_defined_top = true
 -- 121 - global assignment to readonly
 -- 131 - global assignment
 -- 212 - unused argument
-files["lua/LUA/ak/core/eep"].ignore = { "212" , "131" }
-files["lua/LUA/ak/demo-anlagen"].ignore = { "131" }
-files["lua/LUA/ak/data/AkSlotNamesParser.lua"].ignore = { "212" }
-files["lua/LUA/ak/road/Road.lua"].ignore = { "131" }
-files["lua/LUA/ak/data/TrackCollector.lua"].ignore = { "121", "211" }
+files["lua/LUA/ak/core/eep"].ignore = {"212", "131"}
+files["lua/LUA/ak/demo-anlagen"].ignore = {"131"}
+files["lua/LUA/ak/data/AkSlotNamesParser.lua"].ignore = {"212"}
+files["lua/LUA/ak/road/Road.lua"].ignore = {"131"}
+files["lua/LUA/ak/data/TrackCollector.lua"].ignore = {"121", "211"}
 
 exclude_files = {
     ".vscode",
@@ -90,7 +91,7 @@ exclude_files = {
     "lua/LUA/ak/anlagen/**",
     "lua/LUA/ak/io/crc32lua.lua",
     "lua/LUA/ak/io/dkjson.lua",
-    "lua/LUA/ak/io/json.lua",	
+    "lua/LUA/ak/io/json.lua",
     "lua/LUA/ak/third-party/**",
     "lua/Resourcen/Anlagen/Andreas_Kreuz-Demo-Ampel/Andreas_Kreuz-Demoanlage-Ampel-Grundmodelle.lua",
     "lua/Resourcen/Anlagen/Andreas_Kreuz-Demo-Testen/Andreas_Kreuz-Lua-Testbeispiel.lua",
