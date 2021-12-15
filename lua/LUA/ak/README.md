@@ -9,7 +9,7 @@ img: "/docs/assets/headers/SourceCode.png"
 
 ## ⚠ Bitte beachten
 
-⚠ **Diese Bibliothek verwenden `EEPRollingstockSetTagText` um Daten in Fahrzeugen abzulegen.**
+⚠ **Diese Bibliothek verwendet `EEPRollingstockSetTagText`, um Daten in Fahrzeugen abzulegen.**
 
 - **Eigene mit `EEPRollingstockSetTagText` gespeicherte Daten werden dabei verloren gehen!**
 - Man kann jedoch eigene Daten in einem Zug wie folgt ablegen:

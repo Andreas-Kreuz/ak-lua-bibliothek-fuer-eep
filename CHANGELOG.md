@@ -1,11 +1,32 @@
 # Änderungen an der Software
 
-## 0.11.0
+## v.0.11.0
 
-- ⭐ Neu: Performance-Optimierung durch die Übertragung nur wenn Züge geändert wurden
+### Bitte beachten
+
+⚠ Diese Bibliothek verwendet `EEPRollingstockSetTagText`, um Daten in Fahrzeugen abzulegen.
+
+- ⚠ Eigene mit `EEPRollingstockSetTagText` gespeicherte Daten werden dabei verloren gehen oder zu Konflikten führen!
+- Es ist jedoch möglich eigene Daten in einem Zug wie folgt abzulegen:
+  - Ablegen: `Train.forName("#meinZug").setValue("schlüssel","wert")`
+  - Auslesen: `local meinWert = Train.forName("#meinZug").getValue("schlüssel")`
+
+### Web-App
+
+- ⭐ Die Ausgabe der api auf <http://localhost:3000/api/v1/> wurde überarbeitet
+- ⭐ Anzeige der Fahrzeuge für Smartphones optimiert
+- ⭐ Kameraknopf in der Detailansicht für Fahrzeuge
+
+### Lua
+
+- ⭐ Neu: Erhebliche Performance-Optimierung durch die Übertragung nur wenn Züge geändert wurden
   (z.B. durch Zusammenstellung oder Bewegung)
-- ⭐ Neu: Demo-Anlage für Haltestellenanzeige
-- ⚠️ API des Webservers wurde umgestellt:
+- ⭐ Neu: Statistikausgabe für die benötigte Zeit der Ausgabe in der App unter <http://localhost:3000/statistics>
+- ⭐ Neu: Vorbereitung für ÖPNV inkl. Demo-Anlage für Haltestellenanzeige (Demo Linien)
+
+### Web-Server
+
+- ⚠ API des Webservers wurde umgestellt:
   - Die meisten Listen sind nun als Record verfügbar (Key ist in fast allen Fällen `id`)
   - Alle Fahrzeuge sind nun in einer Liste:
     - Züge sind nun in `trains` (keine Trennung mehr nach dynamic und static)
