@@ -24,7 +24,7 @@ IF %ERRORLEVEL% NEQ 0 (
    exit /b %ERRORLEVEL%
 )
 
-call npm run-script cy-tests-run
+call npm run-script cy-tests-run-gui
 IF %ERRORLEVEL% NEQ 0 (
    exit /b %ERRORLEVEL%
 )

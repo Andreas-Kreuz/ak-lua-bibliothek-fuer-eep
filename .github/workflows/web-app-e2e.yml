@@ -32,7 +32,7 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v2
         with:
-          start: npm run-script cy-tests-run-gh
+          start: npm run-script start-server-headless
           working-directory: web-app
-          wait-on: "http://localhost:4200"
-          config: pageLoadTimeout=100000
+          wait-on: "http://localhost:3000"
+          config: baseUrl=http://localhost:3000
