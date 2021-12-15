@@ -104,6 +104,7 @@
     "EEPRollingstockGetSmoke",
     "EEPRollingstockGetTagText",
     "EEPRollingstockGetTrack",
+    "EEPRollingstockGetTrainName",
     "EEPSaveData",
     "EEPShowInfoStructure",
     "EEPStructureGetAxis",

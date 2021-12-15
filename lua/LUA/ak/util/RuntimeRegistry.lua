@@ -2,6 +2,7 @@ if AkDebugLoad then print("Loading ak.util.RuntimeRegistry ...") end
 
 local RuntimeRegistry = {}
 
+---@type RunTimeEntry[]
 local runtimeData = {}
 
 --- Store runtime information
@@ -10,7 +11,14 @@ function RuntimeRegistry.storeRunTime(group, time)
     assert(group)
     -- collect and sum runtime date, needs rework
     if not runtimeData then runtimeData = {} end
-    if not runtimeData[group] then runtimeData[group] = {id = group, count = 0, time = 0} end
+    if not runtimeData[group] then
+        ---@class RunTimeEntry
+        ---@field group string
+        ---@field count number
+        ---@field time number
+        local runTimeEntry = {id = group, count = 0, time = 0}
+        runtimeData[group] = runTimeEntry
+    end
     local runtime = runtimeData[group]
     runtime.count = runtime.count + 1
     runtime.time = runtime.time + time * 1000
@@ -18,7 +26,7 @@ end
 
 --- Indirect call of EEP function (or any other function) including time measurement
 -- @author Frank Buchholz
-function executeAndStoreRunTime(func, group, ...)
+function RuntimeRegistry.executeAndStoreRunTime(func, group, ...)
     if not func then return end
 
     local t0 = os.clock()
@@ -26,7 +34,7 @@ function executeAndStoreRunTime(func, group, ...)
     local result = {func(...)}
 
     local t1 = os.clock()
-    storeRunTime(group, t1 - t0)
+    RuntimeRegistry.storeRunTime(group, t1 - t0)
 
     return table.unpack(result)
 end
