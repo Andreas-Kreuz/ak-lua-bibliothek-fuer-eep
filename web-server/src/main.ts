@@ -1,6 +1,6 @@
 import { app, BrowserWindow, shell } from 'electron';
 import * as path from 'path';
-
+import electron = require('electron');
 import { ServerMain } from './server/server-main';
 
 let mainWindow: Electron.BrowserWindow;
@@ -19,7 +19,7 @@ function createWindow() {
   mainWindow.removeMenu();
 
   // User App Code
-  const server = new ServerMain();
+  const server = new ServerMain(path.resolve(electron.app.getPath('appData'), 'eep-web-server'));
   server.start();
 
   // and load the index.html of the app.

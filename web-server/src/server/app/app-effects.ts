@@ -1,4 +1,3 @@
-import electron = require('electron');
 import express = require('express');
 import fs from 'fs';
 import path from 'path';
@@ -20,7 +19,6 @@ import CommandLineParser from '../command-line-parser';
 
 export default class AppEffects {
   private debug = false;
-  private serverConfigPath = path.resolve(electron.app.getPath('appData'), 'eep-web-server');
   private serverConfigFile = path.resolve(this.serverConfigPath, 'settings.json');
   private eepDataEffects: EepDataEffects;
   private logEffects: LogEffects;
@@ -37,7 +35,8 @@ export default class AppEffects {
     private app: any,
     private router: express.Router,
     private io: Server,
-    private socketService: SocketService
+    private socketService: SocketService,
+    private serverConfigPath: string
   ) {
     // Start collecting statistic data
     this.statistics = new ServerStatisticsService();
