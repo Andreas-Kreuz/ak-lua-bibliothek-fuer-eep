@@ -96,7 +96,7 @@ export default class EepService implements CacheService {
       // If the jsonReadyFile exists: Read the data and remove the file
       if (filename === FileNames.eepOutJsonOutFinished && fs.existsSync(jsonReadyFile)) {
         this.lastJsonUpdate = performance.now();
-        console.log('Reading: ', jsonFile);
+        // console.log('Reading: ', jsonFile);
         this.readJsonFile(jsonFile, jsonReadyFile);
       }
     });
