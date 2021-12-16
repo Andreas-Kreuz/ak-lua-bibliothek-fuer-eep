@@ -20,21 +20,26 @@ body {
 @import "~bootstrap/scss/bootstrap-reboot";
 @import "styles-bootstrap-reset";
 
+:root {
+  --card-border-radius: 0.5rem;
+  --default-padding: 1.5rem;
+}
+
 // CARDS SECTION
 .app-card {
   padding: 0 !important;
-  border-radius: 0.3rem !important;
+  border-radius: var(--card-border-radius) !important;
   flex-grow: 1;
   flex-shrink: 1;
 }
 
 // Set cornered border
 .mat-card,
-.app-card > .mat-card-header,
-.app-card > .mat-card-title-group,
-.app-card > .mat-toolbar {
-  border-top-left-radius: 0.3rem;
-  border-top-right-radius: 0.3rem;
+.app-card > .mat-card-header:first-child,
+.app-card > .mat-card-title-group:first-child,
+.app-card > .mat-toolbar:first-child {
+  border-top-left-radius: var(--card-border-radius);
+  border-top-right-radius: var(--card-border-radius);
 }
 
 .app-card > .mat-card-header > .mat-card-avatar {
@@ -49,12 +54,12 @@ body {
 
 .app-card > .mat-card-header {
   //height: calc(100% + 16px);
-  padding: 1.5rem 0 0;
+  padding: var(--default-padding) 0 0;
 }
 
 .app-card > .mat-card-title-group {
   //height: calc(100% + 16px);
-  padding: 1.5rem 1.5rem 0;
+  padding: var(--default-padding) var(--default-padding) 0;
 }
 
 .app-card > .mat-nav-list {
@@ -64,10 +69,10 @@ body {
 }
 
 .app-card > .mat-card-actions {
-  margin-top: 0.75rem;
-  margin-left: 0.75rem;
-  margin-right: 0.75rem;
-  margin-bottom: 0.75rem !important;
+  margin-top: calc(var(--default-padding) - 1rem);
+  margin-left: calc(var(--default-padding) - 1rem) !important;
+  margin-right: calc(var(--default-padding) - 1rem);
+  margin-bottom: calc(var(--default-padding) - 1rem) !important;
 }
 
 .app-card > .mat-card-image {
@@ -79,8 +84,8 @@ body {
 .app-card .mat-list-base .mat-list-option .mat-list-item-content,
 .app-card > .mat-tab-group .mat-card-content,
 .app-card > .mat-card-content {
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
+  padding-left: var(--default-padding);
+  padding-right: var(--default-padding);
 }
 
 .app-card > .mat-tab-group .mat-card-content,
@@ -91,16 +96,16 @@ body {
 .app-card .mat-card-title-group + .mat-divider + .mat-card-content,
 .app-card .mat-card-title-group.app-bg-primary + .mat-card-content,
 .app-card .mat-card-title-group.app-bg-accent + .mat-card-content {
-  padding-top: 0.75rem;
+  padding-top: calc(var(--default-padding) - 0.75rem);
 }
 
 .app-card > .mat-card-header > .mat-card-title:last-child,
 .app-card > .mat-card-title-group > div > .mat-card-title:last-child {
-  padding-bottom: 0.75rem;
+  padding-bottom: calc(var(--default-padding) - 0.75rem);
 }
 
 .app-card > .mat-card-content:last-child {
-  padding-bottom: 0.5rem;
+  padding-bottom: calc(var(--default-padding) - 0.75rem);
 }
 
 .app-card .mat-card-header + .mat-list,
@@ -158,8 +163,8 @@ body {
 
 .app-card-button-tr {
   position: absolute !important;
-  top: 0.75rem;
-  right: 0.75rem;
+  top: calc(var(--default-padding) / 2);
+  right: calc(var(--default-padding) / 2);
 }
 
 .app-card > .mat-card-content > .mat-divider + h1,
@@ -167,7 +172,7 @@ body {
 .app-card > .mat-card-content > .mat-divider + h3,
 .app-card > .mat-card-content > .mat-divider + h4,
 .app-card > .mat-card-content > .mat-divider + p {
-  padding-top: 0.75rem;
+  padding-top: calc(var(--default-padding) / 2);
 }
 
 .app-card > .mat-card-content > h1 {
