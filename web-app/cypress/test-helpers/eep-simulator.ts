@@ -9,6 +9,7 @@ enum FileNames {
 }
 
 export default class EepSimulator {
+  fileNames = FileNames;
   private eventCounter = 0;
 
   reset = () => {
@@ -34,6 +35,7 @@ export default class EepSimulator {
     }
     const eventJsons = this.loadFixtures(eventFileNames).then((jsons) => {
       cy.log(jsons.length.toLocaleString());
+      cy.writeFile(FileNames.serverOutCommands, '');
       this.writeNewEepEventFile(jsons.map((x) => JSON.stringify(x)).join('\n'));
     });
   }

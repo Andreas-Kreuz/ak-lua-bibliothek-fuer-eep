@@ -11,5 +11,9 @@
 </div>
 
 <div *ngIf="trainList | async as trains" id="cardHolder" class="mt-4">
-  <app-train-list-card *ngFor="let train of trains; trackBy: trackByTrainId" [train]="train"></app-train-list-card>
+  <app-train-list-card
+    *ngFor="let train of trains; trackBy: trackByTrainId; let indexOfelement = index"
+    [train]="train"
+    [index]="indexOfelement"
+  ></app-train-list-card>
 </div>

@@ -21,7 +21,7 @@
         <app-info-coupling [couplingReady]="false" [name]="'hinten'" class="text-muted"> </app-info-coupling>
       </span>
       <div class="vf">
-        <button mat-mini-fab (click)="changeCamTrain(train)" color="accent">
+        <button mat-mini-fab (click)="changeCamTrain(train)" color="accent" [id]="'cam-btn' + index">
           <mat-icon>videocam</mat-icon>
         </button>
       </div>
