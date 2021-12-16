@@ -6,6 +6,9 @@
 /web-app/out-tsc
 /web-app/.angular
 
+# Ressources
+/web-app/cypress/fixtures/from-eep
+
 # dependencies
 /web-app/node_modules
 
