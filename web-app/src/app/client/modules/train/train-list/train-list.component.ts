@@ -15,6 +15,7 @@ import { Train, TrainListEntry } from 'web-shared/build/model/trains';
   styleUrls: ['./train-list.component.css'],
 })
 export class TrainListComponent implements OnInit, OnDestroy {
+  trainTypes = Object.values(TrainType).map((a) => ({ key: [textForTrainType(a)], value: a }));
   trainList = this.store.select(fromTrain.sortedTrainList);
   trainType$ = this.store.select(fromTrain.trainFeature.selectTrainType);
   private routeParams$: Subscription;
@@ -28,13 +29,13 @@ export class TrainListComponent implements OnInit, OnDestroy {
     });
   }
 
-  typeString(t: TrainType) {
-    return textForTrainType(t);
-  }
-
   ngOnDestroy(): void {
     this.store.dispatch(TrainAction.destroyModule());
     this.routeParams$.unsubscribe();
+  }
+
+  typeString(t: TrainType): string {
+    return textForTrainType(t);
   }
 
   trackByTrainId(index: number, train: TrainListEntry) {

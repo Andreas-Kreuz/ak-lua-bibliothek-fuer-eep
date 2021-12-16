@@ -1,7 +1,9 @@
 export enum TrainType {
-  rail = 'rail',
   road = 'road',
   tram = 'tram',
+  rail = 'rail',
+  auxiliary = 'auxiliary',
+  control = 'control',
 }
 
 export const textForTrainType = (t: TrainType) => {
@@ -12,6 +14,10 @@ export const textForTrainType = (t: TrainType) => {
       return 'Züge';
     case TrainType.tram:
       return 'Trams';
+    case TrainType.auxiliary:
+      return 'Sonstige';
+    case TrainType.control:
+      return 'Steuerstrecken';
     default:
       return 'UNBEKANNT';
   }
