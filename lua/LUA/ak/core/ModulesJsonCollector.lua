@@ -10,6 +10,7 @@ ModulesJsonCollector.name = "ak.core.ModulesJsonCollector"
 ---@type table<string,LuaModule>
 local registeredLuaModules = nil
 
+---@type table<string,LuaModule>
 local knownModules = {}
 local function toApiV1(moduleName, module) return {id = module.id, name = moduleName, enabled = module.enabled} end
 local function checkModule(moduleName, module)
@@ -17,7 +18,7 @@ local function checkModule(moduleName, module)
     local oldModule = knownModules[moduleName]
     if not oldModule then
         EventBroker.fireDataAdded("modules", "id", newModule);
-    elseif not TableUtils.deepDictCompare(oldModule, newModule) then
+    elseif not TableUtils.sameDictEntries(oldModule, newModule) then
         EventBroker.fireDataChanged("modules", "id", newModule);
     end
 
@@ -29,13 +30,17 @@ function ModulesJsonCollector.setRegisteredLuaModules(modules) registeredLuaModu
 function ModulesJsonCollector.initialize()
     if not enabled or initialized then return end
 
+    for moduleName, module in pairs(registeredLuaModules) do checkModule(moduleName, module) end
+
     initialized = true
 end
 
 function ModulesJsonCollector.collectData()
     local moduleInfo = {}
     moduleInfo.modules = {}
-    for moduleName, module in pairs(registeredLuaModules) do checkModule(moduleName, module) end
+
+    for _, v in pairs(registeredLuaModules) do moduleInfo[v.id] = {id = v.id, name = v.name, enabled = v.enabled} end
+
     return moduleInfo
 end
 
