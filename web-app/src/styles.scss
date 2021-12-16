@@ -37,7 +37,9 @@ body {
 .mat-card,
 .app-card > .mat-card-header:first-child,
 .app-card > .mat-card-title-group:first-child,
+.app-card > .mat-card-image:first-child,
 .app-card > .mat-toolbar:first-child {
+  margin-top: 0 !important;
   border-top-left-radius: var(--card-border-radius);
   border-top-right-radius: var(--card-border-radius);
 }
