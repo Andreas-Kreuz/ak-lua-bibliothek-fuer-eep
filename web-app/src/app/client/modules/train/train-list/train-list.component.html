@@ -1,9 +1,9 @@
-<div class="mat-typography">
+<div>
   <h1 class="app-mute-on-light-bg">
     {{ typeString(trainType$ | async) }}
   </h1>
 </div>
 
-<div *ngIf="trainList | async as trains" class="mat-typography" id="cardHolder">
+<div *ngIf="trainList | async as trains" id="cardHolder">
   <app-train-list-card *ngFor="let train of trains; trackBy: trackByTrainId" [train]="train"></app-train-list-card>
 </div>
