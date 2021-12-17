@@ -1,8 +1,8 @@
 <div mat-dialog-title>
-  <div style="display: flex; align-items: flex-start" class="mat-typography">
+  <div style="display: flex; align-items: flex-start">
     <div style="margin: 0 1rem 1.5rem 0">
-      <h1 style="margin: 0">{{ title }}</h1>
-      <h2 style="margin: 0.25rem 0 0 0" class="text-muted">{{ subtitle }}</h2>
+      <h2 class="mat-title" style="margin: 0">{{ title }}</h2>
+      <h3 class="mat-subheading-1" style="margin: 0.25rem 0 0 0">{{ subtitle }}</h3>
     </div>
     <span class="app-spacer"></span>
     <button mat-icon-button aria-label="Schließen" mat-dialog-close tabindex="-1" (click)="closeDialog()">

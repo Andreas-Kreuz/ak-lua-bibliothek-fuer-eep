@@ -1,5 +1,5 @@
 <div class="row">
-  <div class="col-12 mat-typography">
+  <div class="col-12">
     <h1 class="app-mute-on-light-bg">Kreuzungen</h1>
   </div>
 </div>
@@ -8,24 +8,18 @@
   <ng-container *ngFor="let intersection of intersections; trackBy: trackById; let last = last">
     <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3 d-flex">
       <mat-card class="d-flex flex-column flex-grow-1 mb-3 app-card mat-elevation-z2">
+        <mat-card-title-group class="w-100 app-bg-primary app-fg-on-primary">
+          <mat-card-title>{{ intersection.name }}</mat-card-title>
+          <mat-card-subtitle
+            >{{ intersection.currentSwitching ? intersection.currentSwitching : "Schaltung" }}
+          </mat-card-subtitle>
+        </mat-card-title-group>
         <img
           mat-card-image
           alt="intersection-icon"
           class="d-none d-xl-flex"
           src="../../../../assets/card-img-intersection.jpg"
         />
-        <mat-card-title-group class="w-100 app-bg-primary app-fg-on-primary">
-          <img
-            mat-card-avatar
-            alt="intersection-icon"
-            class="d-xl-none"
-            src="../../../../assets/card-img-intersection.jpg"
-          />
-          <mat-card-title>{{ intersection.name }}</mat-card-title>
-          <mat-card-subtitle
-            >{{ intersection.currentSwitching ? intersection.currentSwitching : "Schaltung" }}
-          </mat-card-subtitle>
-        </mat-card-title-group>
         <mat-card-content class="d-none d-xl-block">
           <p class="mat-caption">Modus</p>
           <p *ngIf="!intersection.manualSwitching">Modus: Automatisch.</p>

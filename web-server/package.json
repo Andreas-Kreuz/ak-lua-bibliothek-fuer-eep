@@ -26,7 +26,8 @@
     "start-e2e-electron": "tsc && electron ./build/main.js --testmode --exchange-dir ../web-app/cypress/io",
     "package-win": "npm run build && electron-builder build --win --x64",
     "pack": "electron-builder --dir",
-    "dist": "electron-builder"
+    "dist": "electron-builder",
+    "persist-eep-state": "tsc && node ./build/server/eep-service/eep-state-reader.js"
   },
   "repository": "https://github.com/ak-lua-bibliothek-fuer-eep",
   "keywords": [

@@ -1,61 +1,70 @@
 .full-width-table {
-  width: 100%;
+    width: 100%;
+    max-width: 100% !important;
 }
 
 .hidden {
-  display: none;
+    display: none;
 }
 
 p {
-  margin: 0;
-  padding: 0;
+    margin: 0;
+    padding: 0;
 }
 
-
 table {
-  width: 100%;
+    width: 100%;
 }
 
 tr.example-detail-row {
-  height: 0;
+    height: 0;
 }
-
 tr.example-element-row:not(.example-expanded-row):hover {
-  background: #f5f5f5;
+    background: #f5f5f5;
 }
 
 tr.example-element-row:not(.example-expanded-row):active {
-  background: #efefef;
+    background: #efefef;
 }
 
 .example-element-row td {
-  border-bottom-width: 0;
+    border-bottom-width: 0;
 }
 
 .example-element-detail {
-  overflow: hidden;
-  display: flex;
+    overflow: hidden;
+    display: flex;
 }
 
 .example-element-diagram {
-  min-width: 80px;
-  border: 2px solid black;
-  padding: 8px;
-  font-weight: lighter;
-  margin: 8px 0;
-  height: 104px;
+    min-width: 80px;
+    border: 2px solid black;
+    padding: 8px;
+    font-weight: lighter;
+    margin: 8px 0;
+    height: 104px;
 }
 
 .example-element-symbol {
-  font-weight: bold;
-  font-size: 40px;
-  line-height: normal;
+    font-weight: bold;
+    font-size: 40px;
+    line-height: normal;
 }
 
 .example-element-description {
-  padding: 16px;
+    padding: 16px;
 }
 
 .example-element-description-attribution {
-  opacity: 0.5;
+    opacity: 0.5;
+}
+
+.example-element-row .mat-cell {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    word-break: break-all;
+}
+
+.example-element-row .mat-cell:not(::first()) {
+    padding-left: 1rem;
 }

@@ -1,9 +1,19 @@
-<div class="mat-typography">
-  <h1 class="app-mute-on-light-bg">
-    {{ typeString(trainType$ | async) }}
-  </h1>
+<div>
+  <h1 class="app-mute-on-light-bg">Zugverbände</h1>
 </div>
 
-<div *ngIf="trainList | async as trains" class="mat-typography" id="cardHolder">
-  <app-train-list-card *ngFor="let train of trains; trackBy: trackByTrainId" [train]="train"></app-train-list-card>
+<div class="mt-0 mb-5">
+  <mat-chip-list aria-label="Train Type Selection">
+    <mat-chip *ngFor="let t of trainTypes" [selected]="(trainType$ | async) === t.value" [routerLink]="'../' + t.value"
+      ><mat-icon *ngIf="(trainType$ | async) === t.value" class="material-icons">check</mat-icon>{{ t.key }}
+    </mat-chip>
+  </mat-chip-list>
+</div>
+
+<div *ngIf="trainList | async as trains" id="cardHolder" class="mt-4">
+  <app-train-list-card
+    *ngFor="let train of trains; trackBy: trackByTrainId; let indexOfelement = index"
+    [train]="train"
+    [index]="indexOfelement"
+  ></app-train-list-card>
 </div>

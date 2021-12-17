@@ -2,16 +2,10 @@
   <mat-toolbar-row>
     <h1>Log-Datei</h1>
     <span class="app-spacer"></span>
-    <button (click)="sendTestMessage()"
-            mat-icon-button
-            matTooltip="Testnachricht senden"
-            type="button">
+    <button (click)="sendTestMessage()" mat-icon-button matTooltip="Testnachricht senden" type="button">
       <mat-icon>message</mat-icon>
     </button>
-    <button (click)="clearLog()"
-            mat-icon-button
-            matTooltip="Löschen"
-            type="button">
+    <button (click)="clearLog()" mat-icon-button matTooltip="Löschen" type="button" id="delete-log-button">
       <mat-icon>delete</mat-icon>
     </button>
   </mat-toolbar-row>

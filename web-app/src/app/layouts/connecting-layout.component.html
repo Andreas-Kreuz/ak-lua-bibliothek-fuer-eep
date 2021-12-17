@@ -1,6 +1,6 @@
 <ng-container *ngIf="(connectionEstablished$ | async) === false">
   <div id="centered">
-    <div id="connecting" class="mat-typography">
+    <div id="connecting">
       <h1>Serververbindung unterbrochen</h1>
       <p>Verbinde zu {{ hostname$ | async }}</p>
       <div class="centered">

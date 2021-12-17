@@ -1,6 +1,6 @@
-<p [ngClass]="{ hidden: (this.data$ | async) }" class="mat-typography">Daten werden geladen.</p>
+<p [ngClass]="{ hidden: (this.data$ | async) }">Daten werden geladen.</p>
 <mat-progress-bar [ngClass]="{ hidden: (this.data$ | async) }" mode="query"></mat-progress-bar>
-<p *ngIf="(data$ | async)?.length === 0" class="mat-typography">Es sind keine Daten vorhanden.</p>
+<p *ngIf="(data$ | async)?.length === 0">Es sind keine Daten vorhanden.</p>
 <mat-form-field *ngIf="(data$ | async)?.length > 0">
   <input matInput (keyup)="applyFilter($event)" placeholder="Filter" />
 </mat-form-field>
@@ -53,6 +53,4 @@
   <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
 </table>
 
-<p *ngIf="(data$ | async)?.length > 0 && (filteredRows$ | async)?.length === 0" class="mat-typography">
-  Es passen keine Daten zum Filter.
-</p>
+<p *ngIf="(data$ | async)?.length > 0 && (filteredRows$ | async)?.length === 0">Es passen keine Daten zum Filter.</p>

@@ -10,6 +10,8 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
+    "start-server-for-playing": "npm run start --prefix ../web-server",
+    "start-playing": "concurrently -k \"npm run start-server-for-playing\" \"npm run start\"",
     "start-server-electron": "npm run start-e2e-electron --prefix ../web-server",
     "start-server-headless": "npm run start-e2e-headless --prefix ../web-server",
     "cy-tests": "concurrently -k \"npm run start-server-electron\" \"npm run start\" \"cypress open\"",

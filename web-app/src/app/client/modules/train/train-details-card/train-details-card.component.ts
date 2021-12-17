@@ -1,5 +1,5 @@
 import { Store } from '@ngrx/store';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import * as fromTrain from '../store/train.reducer';
 import { RollingStock, Train } from 'web-shared/build/model/trains';
 import { EepCommandService } from '../../../../common/eep-communication/eep-command.service';
@@ -10,6 +10,7 @@ import { EepCommandService } from '../../../../common/eep-communication/eep-comm
   styleUrls: ['./train-details-card.component.css'],
 })
 export class TrainDetailsCardComponent implements OnInit {
+  @Input() index = 0;
   train$ = this.store.select(fromTrain.trainFeature.selectSelectedTrain);
   currentCam = -1;
 

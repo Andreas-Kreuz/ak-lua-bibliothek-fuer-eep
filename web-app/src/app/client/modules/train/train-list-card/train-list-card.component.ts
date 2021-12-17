@@ -15,6 +15,7 @@ import { trainIconFor } from '../model/train-image-helper';
 })
 export class TrainListCardComponent implements OnInit, OnDestroy, OnChanges {
   @Input() train: TrainListEntry;
+  @Input() index: number;
   selectedTrainName = this.store.select(fromTrain.trainFeature.selectSelectedTrainName);
   expanded = false;
   expandedSub: Subscription;

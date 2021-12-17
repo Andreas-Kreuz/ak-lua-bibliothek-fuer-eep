@@ -4,7 +4,6 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatOptionModule } from '@angular/material/core';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -14,6 +13,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatOptionModule } from '@angular/material/core';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatRadioModule } from '@angular/material/radio';
@@ -24,6 +24,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatChipsModule } from '@angular/material/chips';
 import { FilteredTableComponent } from './filtered-table/filtered-table.component';
 import { DetailsDirective } from './details/details.directive';
 import { OldDetailsDirective } from './details/old-details.directive';
@@ -69,6 +70,7 @@ import { SettingsPanelComponent } from './ui/settings-panel/settings-panel.compo
     MatButtonModule,
     MatCardModule,
     MatCheckboxModule,
+    MatChipsModule,
     MatDialogModule,
     MatDividerModule,
     MatExpansionModule,

@@ -11,9 +11,9 @@
         <app-info-destination [destination]="train.destination"></app-info-destination>
       </mat-card-subtitle>
     </div>
-    <button mat-icon-button (click)="favoriteTrain()">
+    <button mat-icon-button (click)="favoriteTrain()" [id]="'expand-btn' + index">
       <mat-icon>{{ expanded ? "expand_less" : "expand_more" }}</mat-icon>
     </button>
   </mat-card-title-group>
-  <app-train-details-card *ngIf="(selectedTrainName | async) === train.id"></app-train-details-card>
+  <app-train-details-card *ngIf="(selectedTrainName | async) === train.id" [id]="index"></app-train-details-card>
 </mat-card>
