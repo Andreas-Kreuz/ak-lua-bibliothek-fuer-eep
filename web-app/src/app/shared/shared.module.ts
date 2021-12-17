@@ -43,6 +43,7 @@ import { TagEditorComponent } from './ui/tag-editor/tag-editor.component';
 import { SettingsDialogComponent } from './ui/settings-dialog/settings-dialog.component';
 import { SettingsIconComponent } from './ui/settings-icon/settings-icon.component';
 import { SettingsPanelComponent } from './ui/settings-panel/settings-panel.component';
+import { SvgDisplayComponent } from './ui/svg-display/svg-display.component';
 
 @NgModule({
   declarations: [
@@ -61,6 +62,7 @@ import { SettingsPanelComponent } from './ui/settings-panel/settings-panel.compo
     SettingsDialogComponent,
     SettingsIconComponent,
     SettingsPanelComponent,
+    SvgDisplayComponent,
   ],
   exports: [
     CommonModule,

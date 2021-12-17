@@ -1,0 +1,25 @@
+.bold {
+    stroke-width: 0.2rem;
+    stroke-opacity: 0.5;
+}
+
+.green {
+    stroke: green;
+}
+
+.red {
+    stroke: red;
+}
+
+.svg-container {
+    padding: 1rem 1rem;
+    display: flex;
+    align-items: stretch;
+}
+
+svg {
+    height: auto;
+    width: 100%;
+    left: 0;
+    top: 0;
+}
