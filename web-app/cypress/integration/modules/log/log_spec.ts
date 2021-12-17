@@ -12,6 +12,7 @@ describe('Logger', () => {
     cy.visit('/log');
     cy.get('ul.list-pre').children().should('have.length', 0);
   });
+
   describe('displays', () => {
     it('log line "Let us test something"', () => {
       simulator.writeLogLine('Let us test something');
