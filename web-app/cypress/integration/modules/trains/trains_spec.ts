@@ -68,18 +68,18 @@ describe('Trains generally', () => {
   describe('have navigation chips', () => {
     it('in road', () => {
       cy.visit('/trains/road');
-      cy.get('mat-chip').contains('Autos').should('have.attr', 'ng-reflect-selected', 'true');
-      cy.get('mat-chip').contains('Züge').should('have.attr', 'ng-reflect-selected', 'false');
-      cy.get('mat-chip').contains('Trams').should('have.attr', 'ng-reflect-selected', 'false');
-      cy.get('mat-chip').contains('Trams').should('have.attr', 'ng-reflect-selected', 'false');
-      cy.get('mat-chip').contains('Trams').should('have.attr', 'ng-reflect-selected', 'false');
+      cy.get('mat-chip').contains('Autos').children('mat-icon').contains('check');
+      cy.get('mat-chip').contains('Züge').not('mat-icon');
+      cy.get('mat-chip').contains('Trams').not('mat-icon');
+      cy.get('mat-chip').contains('Trams').not('mat-icon');
+      cy.get('mat-chip').contains('Trams').not('mat-icon');
       cy.get('mat-chip').contains('Züge').click();
       cy.url().should('include', '/trains/rail');
     });
     it('in rail', () => {
       cy.visit('/trains/rail');
-      cy.get('mat-chip').contains('Autos').should('have.attr', 'ng-reflect-selected', 'false');
-      cy.get('mat-chip').contains('Züge').should('have.attr', 'ng-reflect-selected', 'true');
+      cy.get('mat-chip').contains('Autos').not('mat-icon');
+      cy.get('mat-chip').contains('Züge').children('mat-icon').contains('check');
       cy.get('mat-chip').contains('Autos').click();
       cy.url().should('include', '/trains/road');
     });
