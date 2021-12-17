@@ -25,14 +25,19 @@ export class LogTextFieldComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    const offset = 165;
-    this.maxHeight = window.innerHeight - offset + 'px';
+    this.resetMaxHeight();
     fromEvent(window, 'resize')
       .pipe(debounceTime(500))
       .subscribe((event) => {
-        this.maxHeight = window.innerHeight - offset + 'px';
+        this.resetMaxHeight();
       });
   }
+
+  resetMaxHeight = () => {
+    const offset = 165;
+    const small = window.innerWidth < 576;
+    this.maxHeight = 'calc(' + window.innerHeight + 'px - ' + offset + 'px' + (small ? '' : ' - 4rem') + ')';
+  };
 
   logEntries(index, item) {
     return index;
