@@ -48,6 +48,13 @@ export default class EepSimulator {
     });
   }
 
+  writeLogLine(line: string) {
+    cy.readFile(FileNames.eepOutLog, 'latin1').then((oldLines) => {
+      cy.log(oldLines);
+      cy.writeFile(FileNames.eepOutLog, oldLines + '\n' + line, 'latin1');
+    });
+  }
+
   private writeNewEepEventFile(eventLines: string) {
     cy.writeFile(FileNames.eepOutJsonOut, eventLines, 'latin1');
     cy.writeFile(FileNames.eepOutJsonOutFinished, '');
