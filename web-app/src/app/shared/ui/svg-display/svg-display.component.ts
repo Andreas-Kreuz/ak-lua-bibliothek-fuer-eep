@@ -25,11 +25,10 @@ export class SvgDisplayComponent implements OnInit {
       const group = document.getElementById('G3-' + id);
       if (group) {
         const copy = group.firstChild.cloneNode();
-        group.parentNode.appendChild(copy);
-
         this.renderer.addClass(copy, 'bold');
         this.renderer.addClass(copy, 'red');
         this.renderer.setProperty(copy, 'id', 'G3-' + id + '-copy');
+        this.renderer.appendChild(group.parentNode, copy);
       }
     }
 
@@ -37,11 +36,10 @@ export class SvgDisplayComponent implements OnInit {
       const group = document.getElementById('G3-' + id);
       if (group) {
         const copy = group.firstChild.cloneNode();
-        group.parentNode.appendChild(copy);
-
         this.renderer.addClass(copy, 'bold');
         this.renderer.addClass(copy, 'green');
         this.renderer.setProperty(copy, 'id', 'G3-' + id + '-copy');
+        this.renderer.appendChild(group.parentNode, copy);
       }
     }
   }
