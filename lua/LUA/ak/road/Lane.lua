@@ -446,7 +446,7 @@ function Lane:switchTrafficLightTo(phase, grund)
 end
 
 function Lane:setHighLightingTracks(...)
-    for _, track in pairs(...) do assert(type(track) == "number", "Provide tracks as numbers") end
+    for _, track in ipairs({...}) do assert(type(track) == "number", "Provide tracks as numbers") end
 
     self.tracksForHighlighting = ... or {}
     return self
