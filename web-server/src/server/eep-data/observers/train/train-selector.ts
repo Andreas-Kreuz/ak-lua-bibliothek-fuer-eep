@@ -59,6 +59,10 @@ export class TrainSelector {
   }
 
   getTrainType(state: fromJsonData.State, train: EepTrainDto): number {
-    return this.rollingStockSelector.rollingStockInTrain(train.id, 0).modelType;
+    if (this.rollingStockSelector.rollingStockInTrain(train.id, 0)) {
+      return this.rollingStockSelector.rollingStockInTrain(train.id, 0).modelType;
+    } else {
+      return 1;
+    }
   }
 }

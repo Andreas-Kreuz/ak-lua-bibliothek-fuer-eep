@@ -43,7 +43,7 @@ export class RollingStockSelector {
 
   rollingStockListOfTrain(trainId: string): RollingStock[] {
     const rsList: RollingStock[] = [];
-    const trainRollingStock = this.trainRollingStock.get(trainId);
+    const trainRollingStock = this.trainRollingStock.get(trainId) || new Map<number, RollingStock>();
     const sortedKeys: number[] = Array.from(trainRollingStock.keys()).sort();
     for (const key of sortedKeys) {
       rsList.push(trainRollingStock.get(key));
@@ -52,6 +52,10 @@ export class RollingStockSelector {
   }
 
   rollingStockInTrain(trainId: string, positionOfRollingStock: number): RollingStock {
-    return this.trainRollingStock.get(trainId).get(positionOfRollingStock);
+    if (this.trainRollingStock && this.trainRollingStock.get(trainId)) {
+      return this.trainRollingStock.get(trainId).get(positionOfRollingStock);
+    } else {
+      return undefined;
+    }
   }
 }
