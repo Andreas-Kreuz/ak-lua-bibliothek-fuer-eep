@@ -85,13 +85,23 @@ Benutze danach das Skript `.\scripts\build-package.cmd` um das ganze Programm ei
 
 Dabei werden App, Server und Lua in eine EEP-Installationsdatei zusammengepackt.
 
-### Server im Entwicklungsmodus starten
+### Testmodus starten
 
-Das Skript `.\scripts\start-web-server.cmd` startet den Server im Testmodus. Das erlaubt das lokale Verwenden des Servers, während Du die App entwickelst.
+Das Skript `.\scripts\start-developing.cmd` startet den Server und die Web-App im "Testmodus".  
+Das erlaubt das automatische Ausführen von Test, während Du die App entwickelst.  
+Der Testmodus zeigt unter <http://localhost:4200/> die Daten des aktuellen Tests an. Willst Du Deine Anlage in EEP sehen, kannst Du den Spielmodus starten.
 
-### App im Entwicklungsmodus starten
+#### Von Hand testen
 
-Das Skript `.\scripts\start-web-app.cmd` startet die Web-App. Du findest sie nach dem Start unter <http://localhost:4200/>. Der Web-Server kann dann genutzt werden, um die Web-App mit Daten zu versorgen. Er muss auf dem selben Rechner gestartet werden.
+Wenn Du vor dem Upload selbst testen willst, kannst Du
+
+- Tests für Lua ausführen: `.\scripts\check-lua.cmd`
+- Web-App Tests ausführen: `.\scripts\check-web-app-e2e.cmd`
+
+### Spielmodus starten
+
+Das Skript `.\scripts\start-playing.cmd` starten den Server und die Web-App im "Spielmodus".  
+Der Spielmodus zeigt unter <http://localhost:4200/> die aktuell in EEP geöffnete Anlage an.
 
 ## Sonstiges
 
