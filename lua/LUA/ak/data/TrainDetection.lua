@@ -17,6 +17,33 @@ local movedTrainNames = {}
 ---@type table<string, boolean>
 local dirtyTrainNames = {}
 
+local function removeTrain(trainName)
+    TrainRegistry.trainDisappeared(trainName)
+    for _, rsName in pairs(TrainRegistry.allRollingStockNamesOf(trainName)) do
+        local ok = EEPRollingstockGetTrainName(rsName)
+        if not ok then RollingStockRegistry.rollingStockDisappeared(rsName) end
+    end
+end
+
+---Fills the trackinformation from a train
+---@param train Train
+---@param info TrainUpdateInfo
+local function fillTrackInfoFromTrain(train, info)
+    local firstRollingStock = TrainRegistry.rollingStockNameInTrain(train.name, 0)
+    local ok, trackId, _, _, trackTypeId = EEPRollingstockGetTrack(firstRollingStock)
+    assert(ok, "Rollingstock not found: " .. firstRollingStock)
+
+    local trackType = "control"
+    if trackTypeId == 1 then trackType = "rail" end
+    if trackTypeId == 2 then trackType = "tram" end
+    if trackTypeId == 3 then trackType = "road" end
+    if trackTypeId == 4 then trackType = "auxiliary" end
+
+    info.tracks = {[tostring(trackId)] = trackId}
+    info.trackType = trackType
+    if (TrainDetection.debug) then print("ZUG GEFUNDEN: " .. trackType .. " -> " .. trackTypeId) end
+end
+
 ---This will register callbacks to get informed, e.g. if a train has been coupled or lost coupling
 function TrainDetection.registerForTrainDetection()
     -- React to train changes from EEP
@@ -63,24 +90,13 @@ function TrainDetection.refreshTrainInfos(allKnownTrains)
 
     for trainName, info in pairs(allKnownTrains) do
         if TrainDetection.debug then print(string.format("Updating %s", trainName)) end
+        ---@type Train
         local train = TrainRegistry.forName(trainName)
         if info.dirty or info.moved or info.created then
             if info.dirty then TrainRegistry.initRollingStock(train) end
 
             if not train:getTrackType() and not info.tracks or not info.trackType then
-                local firstRollingStock = TrainRegistry.rollingStockNameInTrain(trainName, 0)
-                local ok, trackId, _, _, trackTypeId = EEPRollingstockGetTrack(firstRollingStock)
-                assert(ok, "Rollingstock not found: " .. firstRollingStock)
-
-                local trackType = "control"
-                if trackTypeId == 1 then trackType = "rail" end
-                if trackTypeId == 2 then trackType = "tram" end
-                if trackTypeId == 3 then trackType = "road" end
-                if trackTypeId == 4 then trackType = "auxiliary" end
-
-                info.tracks = {[tostring(trackId)] = trackId}
-                info.trackType = trackType
-                -- print("ZUG GEFUNDEN: " .. trackType .. " -> " .. trackTypeId)
+                fillTrackInfoFromTrain(train, info)
             end
 
             local start1 = os.clock()
@@ -162,8 +178,7 @@ function TrainDetection.trainInfosForAllTrains(detected, dirtyTrains, movedTrain
 
             if created then TrainRegistry.trainAppeared(train) end
         else
-            TrainRegistry.trainDisappeared(trainName)
-            -- removedTrains[trainName] = true
+            removeTrain(trainName)
         end
     end
 
@@ -197,6 +212,7 @@ function TrainDetection.update()
     local moved = movedTrainNames
     local detected = {}
     local trainTracks = {}
+    for trainName in pairs(TrainRegistry.getAllTrainNames()) do detected[trainName] = true end
     for trainName in pairs(dirty) do detected[trainName] = true end
     for trainName in pairs(moved) do detected[trainName] = true end
     for trackType, trackDetection in pairs(trackCollectors) do

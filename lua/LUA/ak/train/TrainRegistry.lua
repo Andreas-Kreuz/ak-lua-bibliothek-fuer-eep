@@ -22,6 +22,13 @@ function TrainRegistry.initRollingStock(train)
     end
 end
 
+---Get the names of all rolling stock in a train (was initialized by initRollingStock)
+---@param trainName string name of a train
+---@return table<string,string> string of index to rollingStockName
+function TrainRegistry.allRollingStockNamesOf(trainName)
+    return trainRollingStockNames[trainName] and trainRollingStockNames[trainName] or {}
+end
+
 ---Get the name of a rolling stock in a train (was initialized by initRollingStock)
 ---@param name string name of a train
 ---@param index number index of the rollingStock in the train
