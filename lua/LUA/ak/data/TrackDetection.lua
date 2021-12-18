@@ -2,6 +2,11 @@ if AkDebugLoad then print("Loading ak.data.TrackCollector ...") end
 
 local EventBroker = require("ak.util.EventBroker")
 local RuntimeRegistry = require("ak.util.RuntimeRegistry")
+---@class TrackDetection
+---@field tracks table<number, Track>
+---@field trackType string
+---@field reservedFunction function
+---@field registerFunction function
 local TrackDetection = {}
 
 local MAX_TRACKS = 50000
