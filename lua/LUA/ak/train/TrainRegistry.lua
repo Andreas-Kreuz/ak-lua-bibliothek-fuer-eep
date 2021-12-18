@@ -3,6 +3,7 @@ local Train = require("ak.train.Train")
 local RollingStockRegistry = require("ak.train.RollingStockRegistry")
 
 local TrainRegistry = {}
+TrainRegistry.debug = false
 ---@type table<string, Train>
 local allTrains = {}
 ---@type table<string,table<string,string>> table of trainName -> index(string) -> rollingstockname
@@ -10,9 +11,10 @@ local trainRollingStockNames = {}
 
 ---Initialize the rolling stock of a newly found train
 ---@param train Train
-local function initRollingStock(train)
+function TrainRegistry.initRollingStock(train)
     trainRollingStockNames[train.name] = {}
-    local count = train:getRollingStockCount()
+    local count = EEPGetRollingstockItemsCount(train.name)
+    train:setRollingStockCount(count)
     for i = 0, (count - 1) do
         local rollingStockName = EEPGetRollingstockItemName(train.name, i) -- EEP 13.2 Plug-In 2
         RollingStockRegistry.forName(rollingStockName)
@@ -40,24 +42,27 @@ function TrainRegistry.forName(name)
         -- Initialize the train
         local train = Train:new({name = name})
         allTrains[train.name] = train
-        initRollingStock(train)
+        TrainRegistry.initRollingStock(train)
         return train, true
     end
 end
 
 ---A train appeared on the map
-function TrainRegistry.trainAppeared(_)
+---@param train Train
+function TrainRegistry.trainAppeared(train)
+    if TrainRegistry.debug then
+        print(string.format("[TrainRegistry] train created: %s (%s)", train:getName(), train:getTrackType()))
+    end
     -- is included in "TrainRegistry.fireChangeTrainsEvent()"
     -- EventBroker.fireDataAdded("trains", "id", train:toJsonStatic())
-    -- EventBroker.fireDataAdded("train-infos", "id", train:toJsonDynamic())
 end
 
 ---A train dissappeared from the map
 ---@param trainName string
 function TrainRegistry.trainDisappeared(trainName)
+    if TrainRegistry.debug then print(string.format("[TrainRegistry] train removed: %s", trainName)) end
     allTrains[trainName] = nil
     EventBroker.fireDataRemoved("trains", "id", {id = trainName})
-    EventBroker.fireDataRemoved("train-infos", "id", {id = trainName})
 end
 
 function TrainRegistry.fireChangeTrainsEvent()
@@ -69,6 +74,12 @@ function TrainRegistry.fireChangeTrainsEvent()
         end
     end
     EventBroker.fireListChange("trains", "id", modifiedTrains)
+end
+
+function TrainRegistry.getAllTrainNames()
+    local names = {}
+    for trainName in pairs(allTrains) do names[trainName] = true end
+    return names
 end
 
 return TrainRegistry

@@ -1,11 +1,24 @@
-
 describe("EepFunktionen.lua", function()
-    describe("EEPStructureSetLight", function()
+    insulate("Trains", function()
+        local EepSimulator = require("ak.core.eep.EepSimulator")
+
+        local countInitial = EEPGetRollingstockItemsCount("#Train1")
+        it("", function() assert.equals(0, countInitial) end)
+
+        EepSimulator.addTrain("#Train1", "RollingStock 1", "RollingStock 2")
+        local countAfterInsert = EEPGetRollingstockItemsCount("#Train1")
+        it("", function() assert.equals(2, countAfterInsert) end)
+
+        EepSimulator.splitTrain("#Train1", 1)
+        local countAfterInsert = EEPGetRollingstockItemsCount("#Train1")
+        it("", function() assert.equals(1, countAfterInsert) end)
+    end)
+
+    insulate("EEPStructureSetLight", function()
         require("ak.core.eep.EepSimulator")
         it("", function() assert.equals("#1234", string.gsub("#1234", "(#%d*).*", "%1")) end)
         it("", function() assert.equals("#1234", string.gsub("#1234_SomeImmoModel", "(#%d*).*", "%1")) end)
         it("", function() assert.equals("#123", string.gsub("#123_", "(#%d*).*", "%1")) end)
-
 
         EEPStructureSetLight("#14", true)
         local _, on = EEPStructureGetLight("#14")
@@ -57,13 +70,13 @@ describe("EepFunktionen.lua", function()
             EEPSimulator.queueTrainOnSignal(52, "#train1-B")
             EEPSimulator.queueTrainOnSignal(52, "#train2-B")
 
-            it("train1 and train2 wait on signal 52", function() assert.equals(2, EEPGetSignalTrainsCount(52)) end)
             it("train1 and train2 wait on signal 52", function()
-                assert.equals("#train1-B", EEPGetSignalTrainName(52, 1))
+                assert.equals(2, EEPGetSignalTrainsCount(52))
             end)
-            it("train1 and train2 wait on signal 52", function()
-                assert.equals("#train2-B", EEPGetSignalTrainName(52, 2))
-            end)
+            it("train1 and train2 wait on signal 52",
+               function() assert.equals("#train1-B", EEPGetSignalTrainName(52, 1)) end)
+            it("train1 and train2 wait on signal 52",
+               function() assert.equals("#train2-B", EEPGetSignalTrainName(52, 2)) end)
         end)
 
         insulate("second train moves up, if first train leaves", function()

@@ -152,7 +152,7 @@ end
 function Train:setRollingStockCount(count)
     assert(type(self) == "table" and self.type == "Train", "Call this method with ':'")
     assert(type(count) == "number", "Need 'count' as number")
-    local oldCount = count
+    local oldCount = self.rollingStockCount
     self.rollingStockCount = count
     if oldCount ~= count then
         self.valuesUpdated = true
