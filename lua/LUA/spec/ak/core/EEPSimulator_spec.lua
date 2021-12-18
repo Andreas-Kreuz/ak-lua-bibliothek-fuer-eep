@@ -10,8 +10,8 @@ describe("EepFunktionen.lua", function()
         it("", function() assert.equals(2, countAfterInsert) end)
 
         EepSimulator.splitTrain("#Train1", 1)
-        local countAfterInsert = EEPGetRollingstockItemsCount("#Train1")
-        it("", function() assert.equals(1, countAfterInsert) end)
+        local countAfterSplit = EEPGetRollingstockItemsCount("#Train1")
+        it("", function() assert.equals(1, countAfterSplit) end)
     end)
 
     insulate("EEPStructureSetLight", function()

@@ -27,7 +27,7 @@ describe("TrainDetection", function()
         it("no #EepTrain1;001 after inserting", function() assert.is_falsy(haveTrain2AfterInserting) end)
         it("#EepTrain1 has 2 rollingStock", function() assert.equals(2, rsCount1AfterInserting) end)
         it("train #EepTrain1 was not created", function()
-            local train, created = TrainRegistry.forName("#EepTrain1")
+            local _, created = TrainRegistry.forName("#EepTrain1")
             assert.is_false(created)
         end)
 

@@ -40,9 +40,9 @@ end
 function EepSimulator.splitTrain(trainName, index)
     local newName = trainName .. ";001"
     ---@type string[]
-    oldRs = {}
+    local oldRs = {}
     ---@type string[]
-    newRs = {}
+    local newRs = {}
 
     for i, rollingStockName in pairs(trains[trainName]) do
         table.insert(i <= index and oldRs or newRs, rollingStockName)

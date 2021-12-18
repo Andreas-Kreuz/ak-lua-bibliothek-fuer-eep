@@ -184,7 +184,10 @@ end
 TrainDetection.registerForTrainDetection()
 
 ---Called once for initialization
-function TrainDetection.initialize() for _, trackDetection in pairs(trackCollectors) do trackDetection:initialize() end end
+function TrainDetection.initialize()
+    -- init once
+    for _, trackDetection in pairs(trackCollectors) do trackDetection:initialize() end
+end
 
 ---Called after initialization and in each data detection cycle
 function TrainDetection.update()
