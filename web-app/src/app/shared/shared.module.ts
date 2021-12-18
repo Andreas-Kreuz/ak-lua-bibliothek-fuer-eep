@@ -102,6 +102,7 @@ import { SvgDisplayComponent } from './ui/svg-display/svg-display.component';
     MatButtonModule,
     MatCardModule,
     MatCheckboxModule,
+    MatChipsModule,
     MatDialogModule,
     MatDividerModule,
     MatExpansionModule,

@@ -13,7 +13,7 @@ export class SvgDisplayComponent implements OnInit {
     const l2 = [270, 282, 248, 30];
     const l3 = [271, 280, 247, 265];
     const l4 = [569, 568, 567, 566, 565, 564, 563, 562, 561, 166, 257, 199];
-    const l5 = [549, 548, 547, 546, 545, 544, 543, 542, 521, 541, 585, 584];
+    const l5 = [357, 549, 548, 547, 546, 545, 544, 543, 542, 521, 541, 585, 584];
     const l5a = [520, 530, 529, 528, 527, 526, 525, 524, 523, 522, 216, 582, 210];
     const l6 = [211, 34, 76, 143, 140];
     const l7 = [208, 209];
@@ -29,6 +29,7 @@ export class SvgDisplayComponent implements OnInit {
 
         this.renderer.addClass(copy, 'bold');
         this.renderer.addClass(copy, 'red');
+        this.renderer.setProperty(copy, 'id', 'G3-' + id + '-copy');
       }
     }
 
@@ -40,7 +41,10 @@ export class SvgDisplayComponent implements OnInit {
 
         this.renderer.addClass(copy, 'bold');
         this.renderer.addClass(copy, 'green');
+        this.renderer.setProperty(copy, 'id', 'G3-' + id + '-copy');
       }
     }
   }
+
+  animateMe() {}
 }
