@@ -26,14 +26,13 @@ end
 function RollingStockRegistry.rollingStockAppeared(_)
     -- is included in "TrainRegistry.fireChangeTrainsEvent()"
     -- EventBroker.fireDataChanged("rolling-stocks", "id", rollingStock:toJsonStatic())
-    -- EventBroker.fireDataChanged("rolling-stock-info", "id", rollingStock:toJsonDynamic())
 end
 
 ---A train dissappeared from the map
 ---@param rollingStockName string
 function RollingStockRegistry.rollingStockDisappeared(rollingStockName)
+    allRollingStock[rollingStockName] = nil
     EventBroker.fireDataChanged("rolling-stocks", "id", {id = rollingStockName})
-    EventBroker.fireDataChanged("rolling-stock-info", "id", {id = rollingStockName})
 end
 
 function RollingStockRegistry.fireChangeRollingStockEvent()
