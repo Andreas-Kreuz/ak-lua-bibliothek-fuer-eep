@@ -13,6 +13,7 @@ function clearlog()
 end
 
 local EepSimulator = {}
+EepSimulator.debug = false
 ---@type table<number,number>
 local signalsTrainCount = {}
 ---@type string[]
@@ -31,7 +32,30 @@ local trains = {}
 ---Add a train and its rollingStock
 ---@param trainName string Name of the train
 ---param ... string Name of the rollingstock
-function EepSimulator.addTrain(trainName, ...) trains[trainName] = {...} end
+function EepSimulator.addTrain(trainName, ...)
+    trains[trainName] = {...}
+    EEPSetTrainSpeed(trainName, 0)
+end
+
+function EepSimulator.splitTrain(trainName, index)
+    local newName = trainName .. ";001"
+    ---@type string[]
+    oldRs = {}
+    ---@type string[]
+    newRs = {}
+
+    for i, rollingStockName in pairs(trains[trainName]) do
+        table.insert(i <= index and oldRs or newRs, rollingStockName)
+    end
+
+    trains[trainName] = oldRs
+    EepSimulator.addTrain(newName, table.unpack(newRs))
+    if EepSimulator.debug then
+        print(string.format("Old Train: %s    : %s\nNew Train: %s: %s", trainName, table.concat(oldRs, ","), newName,
+                            table.concat(newRs, ",")))
+    end
+    if (EEPOnTrainLooseCoupling) then EEPOnTrainLooseCoupling(trainName, newName, trainName) end
+end
 
 local function stripImmoName(name) return name:gsub("(#%d*).*", "%1") end
 
@@ -495,8 +519,7 @@ end
 -- @param zugverband Name des Zugverbandes
 -- @param Nummer
 --
-function EEPGetRollingstockItemName(zugverband, Nummer)
-    return trains[zugverband][Nummer + 1] end
+function EEPGetRollingstockItemName(zugverband, Nummer) return trains[zugverband][Nummer + 1] end
 
 --- Anzahl der Zuege, welche vom Signal Signal_ID gehalten werden
 -- @param signalId ID des Signals
