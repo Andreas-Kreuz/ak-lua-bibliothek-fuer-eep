@@ -1,0 +1,18 @@
+<mat-card
+  routerLink="{{ routerUrl }}"
+  class="d-flex flex-row flex-sm-column flex-grow-1 p-0 rounded-3 pb-0 border mat-elevation-z0"
+  style="overflow: hidden"
+>
+  <figure *ngIf="imageUrl" class="col-3 col-sm-12 d-flex m-0" [ngClass]="{ 'cropping-from-1-1': handsetPortrait }">
+    <img class="" [ngClass]="{ 'cropping-from-1-1': handsetPortrait }" [alt]="title" [src]="imageUrl" />
+  </figure>
+  <div class="col-9 d-flex flex-column flex-fill m-3 p-0">
+    <mat-card-title-group class="m-0 p-0">
+      <mat-card-title class="mat-title" [ngClass]="{ 'mb-0': !subtitle }">{{ title }}</mat-card-title>
+      <mat-card-subtitle class="mat-subheading-1 mb-0" *ngIf="subtitle">{{ subtitle }}</mat-card-subtitle>
+    </mat-card-title-group>
+    <mat-card-content *ngIf="description" class="d-none d-md-block flex-fill flex-grow-1 mt-3 mb-0">
+      {{ description }}
+    </mat-card-content>
+  </div>
+</mat-card>

@@ -6,12 +6,9 @@ body {
   margin: 0;
 }
 
-// Theme from
-// http://materialtheme.arcsine.org/?c=eyJwYWxldHRlIjp7InByaW1hcnkiOnsibWFpbiI6IiM0M2EwNDciLCJsaWdodGVyIjoiI2M3ZTNjOCIsImRhcmtlciI6IiMyYzg0MmYifSwiYWNjZW50Ijp7Im1haW4iOiIjMWU4OGU1IiwibGlnaHRlciI6IiNiY2RiZjciLCJkYXJrZXIiOiIjMTI2YmRhIn0sIndhcm4iOnsibWFpbiI6IiNmZjAwMDAiLCJsaWdodGVyIjoiI2ZmYjNiMyIsImRhcmtlciI6IiNmZjAwMDAifSwibGlnaHRUZXh0IjoiIzAwMDAwMCIsImxpZ2h0QmFja2dyb3VuZCI6IiNmZmZmZmYiLCJkYXJrVGV4dCI6IiNmZmZmZmYiLCJkYXJrQmFja2dyb3VuZCI6IiMyYzJjMmMifSwiZm9udHMiOlt7InRhcmdldCI6ImRpc3BsYXktNCIsImxpbmVIZWlnaHQiOjk2LCJzaXplIjo5Nn0seyJ0YXJnZXQiOiJkaXNwbGF5LTMiLCJ2YXJpYW50IjoibGlnaHQiLCJsaW5lSGVpZ2h0Ijo2MCwic2l6ZSI6NjB9LHsidGFyZ2V0IjoiZGlzcGxheS0yIiwibGluZUhlaWdodCI6NTIsInNpemUiOjQ4fSx7InRhcmdldCI6ImRpc3BsYXktMSJ9LHsidGFyZ2V0IjoiaGVhZGxpbmUifSx7InRhcmdldCI6InRpdGxlIiwibGluZUhlaWdodCI6MjAsInNwYWNpbmciOjAuMjV9LHsidGFyZ2V0Ijoic3ViaGVhZGluZy0yIn0seyJ0YXJnZXQiOiJzdWJoZWFkaW5nLTEifSx7InRhcmdldCI6ImJvZHktMiIsInZhcmlhbnQiOiJyZWd1bGFyIn0seyJ0YXJnZXQiOiJib2R5LTEiLCJzaXplIjoxNiwic3BhY2luZyI6MC4xNX0seyJ0YXJnZXQiOiJidXR0b24ifSx7InRhcmdldCI6ImNhcHRpb24ifSx7InRhcmdldCI6ImlucHV0Iiwic2l6ZSI6bnVsbH1dLCJpY29ucyI6IkZpbGxlZCIsImxpZ2h0bmVzcyI6dHJ1ZX0=
-
 @import "styles-angular-theme";
 @import "styles-variables";
-@import "~bootstrap/scss/bootstrap";
+@import "~bootstrap/scss/bootstrap-utilities";
 @import "~bootstrap/scss/bootstrap-grid";
 @import "~bootstrap/scss/bootstrap-reboot";
 @import "styles-bootstrap-reset";
@@ -30,7 +27,6 @@ body {
 }
 
 // Set cornered border
-.mat-card,
 .app-card > .mat-card-header:first-child,
 .app-card > .mat-card-title-group:first-child,
 .app-card > .mat-card-image:first-child,
@@ -119,7 +115,7 @@ body {
 
 .app-card-header-primary > .mat-card-header,
 .app-card-header-primary > .mat-card-title-group {
-  background-color: mat.get-color-from-palette($ak-eep-web-primary);
+  background-color: var(--primary-color);
 }
 
 .app-card-header-primary > .mat-card-title {
@@ -132,22 +128,12 @@ body {
 
 .app-card-header-accent > .mat-card-header,
 .app-card-header-accent > .mat-card-title-group {
-  background-color: mat.get-color-from-palette($ak-eep-web-accent);
-}
-
-.app-card-header-accent > .mat-card-title,
-.app-card-header-accent > .mat-card-subtitle {
-  // color: #ffffff;
+  background-color: var(--accent-color);
 }
 
 .app-card-header-light > .mat-card-header,
 .app-card-header-light > .mat-card-title-group {
   background-color: mat.get-color-from-palette(mat.define-palette(mat.$gray-palette, 300));
-}
-
-.app-card-header-light > .mat-card-title,
-.app-card-header-light > .mat-card-subtitle {
-  // color: #ffffff;
 }
 
 .app-card-header-dark > .mat-card-header,
@@ -193,19 +179,19 @@ body {
 }
 
 .app-bg-primary {
-  background-color: mat.get-color-from-palette($ak-eep-web-primary);
+  background-color: var(--primary-color);
 }
 
 .app-bg-accent {
-  background-color: mat.get-color-from-palette($ak-eep-web-accent);
+  background-color: var(--accent-color);
 }
 
 .app-fg-primary {
-  color: mat.get-color-from-palette($ak-eep-web-primary);
+  color: var(--primary-color);
 }
 
 .app-fg-accent {
-  color: mat.get-color-from-palette($ak-eep-web-accent);
+  color: var(--accent-color);
 }
 
 .app-fg-on-primary,
@@ -242,10 +228,6 @@ body {
   color: #c8c8c8;
 }
 
-.app-list-icon {
-  /*margin-right: 0.3em;*/
-}
-
 .mat-form-field {
   //font-size: 14px;
   width: 100%;
@@ -270,7 +252,7 @@ body {
 
 // Navigation stuff
 .app-nav-link-active {
-  background-color: mat.get-color-from-palette($ak-eep-web-primary, 0.4);
+  background-color: var(--primary-lighter-color);
 }
 
 .app-nav-link {

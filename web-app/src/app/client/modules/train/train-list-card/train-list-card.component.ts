@@ -19,9 +19,8 @@ export class TrainListCardComponent implements OnInit, OnDestroy, OnChanges {
   selectedTrainName = this.store.select(fromTrain.trainFeature.selectSelectedTrainName);
   expanded = false;
   expandedSub: Subscription;
-  private currentCam = 9;
 
-  constructor(private store: Store<fromTrain.State>, private eepCommands: EepCommandService) {}
+  constructor(private store: Store<fromTrain.State>) {}
 
   ngOnInit(): void {
     this.expandedSub = this.selectedTrainName.subscribe((trainName) => (this.expanded = this.train.id === trainName));

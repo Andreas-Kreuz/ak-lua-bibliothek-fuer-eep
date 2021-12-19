@@ -12,21 +12,29 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { RouterModule } from '@angular/router';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatListModule } from '@angular/material/list';
+import { CommonModule } from '@angular/common';
+import { CardComponent } from './card/card.component';
 
 @NgModule({
-  declarations: [MainComponent, HomeComponent, HeaderToolBarComponent],
+  declarations: [CardComponent, MainComponent, HomeComponent, HeaderToolBarComponent, CardComponent],
   imports: [
     RouterModule,
-    SharedModule,
     HttpClientModule,
     AppRoutingModule,
+    CommonModule,
     LayoutModule,
     MatGridListModule,
     MatCardModule,
+    MatToolbarModule,
     MatMenuModule,
     MatIconModule,
     MatButtonModule,
+    MatListModule,
+    MatSidenavModule,
   ],
-  exports: [AppRoutingModule, HomeComponent, MainComponent],
+  exports: [CardComponent, AppRoutingModule, HomeComponent, MainComponent],
 })
 export class CoreModule {}

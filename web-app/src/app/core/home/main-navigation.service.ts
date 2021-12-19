@@ -140,7 +140,7 @@ export class MainNavigationService {
             subtitle: null, // 'EEPDataSlot',
             link: '/data',
             image: null,
-            description: 'Daten die mit EEPSaveData gespeichert wurden',
+            description: 'Mit EEPSaveData gespeicherte Felder',
             linkDescription: 'Zu den Daten',
             requiredModuleId: this.dataLuaModuleId,
           },
