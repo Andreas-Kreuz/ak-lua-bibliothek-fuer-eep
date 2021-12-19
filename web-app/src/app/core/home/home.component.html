@@ -1,10 +1,12 @@
 <ng-container *ngFor="let category of navigation; let last_outer = last; let first_outer = first">
   <ng-container *ngIf="category.name !== 'Home' && category.available | async">
-    <h1 class="mb-3 app-mute-on-light-bg">{{ category.name }}</h1>
+    <h1 class="mb-3 app-mute-on-light-bg" [ngClass]="{ 'pt-4': 'Verkehr' !== category.name }">
+      {{ category.name }}
+    </h1>
     <div class="row d-flex">
       <ng-container *ngFor="let element of category.values; let last = last">
         <app-card2
-          class="col-sm-6 mb-3 flex-grow-1 d-flex"
+          class="col-sm-6 mb-4 flex-grow-1 d-flex"
           [ngClass]="{
             'col-6': !element.image || smallPortrait,
             'col-12': element.image,
