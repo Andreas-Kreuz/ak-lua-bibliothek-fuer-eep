@@ -17,14 +17,19 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { CommonModule } from '@angular/common';
 import { CardComponent } from './card/card.component';
+import { NavRailComponent } from './nav-rail/nav-rail.component';
+import { MatRippleModule } from '@angular/material/core';
+import { MatChipsModule } from '@angular/material/chips';
 
 @NgModule({
-  declarations: [CardComponent, MainComponent, HomeComponent, HeaderToolBarComponent, CardComponent],
+  declarations: [CardComponent, MainComponent, HomeComponent, HeaderToolBarComponent, CardComponent, NavRailComponent],
   imports: [
     RouterModule,
     HttpClientModule,
     AppRoutingModule,
     CommonModule,
+    MatChipsModule,
+    MatRippleModule,
     LayoutModule,
     MatGridListModule,
     MatCardModule,
