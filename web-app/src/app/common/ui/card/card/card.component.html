@@ -6,7 +6,11 @@
   <figure *ngIf="imageUrl" class="col-3 col-sm-12 d-flex m-0" [ngClass]="{ 'cropping-from-1-1': handsetPortrait }">
     <img class="" [ngClass]="{ 'cropping-from-1-1': handsetPortrait }" [alt]="title" [src]="imageUrl" />
   </figure>
-  <div class="col-9 d-flex flex-column flex-fill m-3 p-0">
+  <div
+    class="col-9 col-sm-12 d-flex flex-column flex-fill mx-3 my-auto m-sm-3 p-0"
+    style="width: calc(100% - 2rem)"
+    [ngClass]="{ 'my-auto': imageUrl, 'my-3': !imageUrl }"
+  >
     <mat-card-title-group class="m-0 p-0">
       <mat-card-title class="mat-title" [ngClass]="{ 'mb-0': !subtitle }">{{ title }}</mat-card-title>
       <mat-card-subtitle class="mat-subheading-1 mb-0" *ngIf="subtitle">{{ subtitle }}</mat-card-subtitle>

@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { MainComponent } from './main/main.component';
 import { HomeComponent } from './home/home.component';
-import { SharedModule } from '../shared/shared.module';
 import { AppRoutingModule } from '../app-routing.module';
 import { HttpClientModule } from '@angular/common/http';
 import { HeaderToolBarComponent } from './header-tool-bar/header-tool-bar.component';
@@ -16,18 +15,19 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { CommonModule } from '@angular/common';
-import { CardComponent } from './card/card.component';
 import { NavRailComponent } from './nav-rail/nav-rail.component';
 import { MatRippleModule } from '@angular/material/core';
 import { MatChipsModule } from '@angular/material/chips';
+import { CardModule } from '../common/ui/card/card.module';
 
 @NgModule({
-  declarations: [CardComponent, MainComponent, HomeComponent, HeaderToolBarComponent, CardComponent, NavRailComponent],
+  declarations: [MainComponent, HomeComponent, HeaderToolBarComponent, NavRailComponent],
   imports: [
+    CommonModule,
     RouterModule,
     HttpClientModule,
     AppRoutingModule,
-    CommonModule,
+    CardModule,
     MatChipsModule,
     MatRippleModule,
     LayoutModule,
@@ -40,6 +40,6 @@ import { MatChipsModule } from '@angular/material/chips';
     MatListModule,
     MatSidenavModule,
   ],
-  exports: [CardComponent, AppRoutingModule, HomeComponent, MainComponent],
+  exports: [AppRoutingModule, HomeComponent, MainComponent],
 })
 export class CoreModule {}
