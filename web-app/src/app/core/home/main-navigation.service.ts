@@ -65,6 +65,17 @@ export class MainNavigationService {
             linkDescription: 'Kreuzungen zeigen',
             requiredModuleId: this.kreuzungLuaModuleId,
           },
+          // {
+          //   available: this.store.select(fromCore.isModuleLoaded$(this.dataLuaModuleId)),
+          //   icon: 'directions_car',
+          //   title: 'Fahrzeuge',
+          //   subtitle: 'Fahrzeuge und Waggons',
+          //   link: '/trains/road',
+          //   image: 'card-img-traffic.jpg',
+          //   description: 'Hier findest Du auch Trams, die auf der Straße fahren.',
+          //   linkDescription: 'Autos zeigen',
+          //   requiredModuleId: this.dataLuaModuleId,
+          // },
           {
             available: this.store.select(fromCore.isModuleLoaded$(this.dataLuaModuleId)),
             icon: 'directions_car',
