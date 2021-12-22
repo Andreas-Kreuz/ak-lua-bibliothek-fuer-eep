@@ -4,8 +4,7 @@ import { Store } from '@ngrx/store';
 import * as TrainAction from '../store/train.actions';
 import * as fromTrain from '../store/train.reducer';
 import { Subscription } from 'rxjs';
-import { EepCommandService } from '../../../../common/eep-communication/eep-command.service';
-import { Train, TrainListEntry } from 'web-shared/build/model/trains';
+import { TrainListEntry } from 'web-shared/build/model/trains';
 import { trainIconFor } from '../model/train-image-helper';
 
 @Component({
