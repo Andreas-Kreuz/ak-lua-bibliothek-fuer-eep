@@ -17,7 +17,7 @@ export interface State {
 
 const initialState: State = {
   jsonServerUrl: 'http://localhost:3000',
-  connectionEstablished: false,
+  connectionEstablished: true,
   eepVersion: '?',
   eepLuaVersion: '?',
   eepWebVersion: environment.version,
