@@ -448,7 +448,7 @@ end
 function Lane:setHighLightingTracks(...)
     for _, track in ipairs({...}) do assert(type(track) == "number", "Provide tracks as numbers") end
 
-    self.tracksForHighlighting = ... or {}
+    self.tracksForHighlighting = {...} or {}
     return self
 end
 

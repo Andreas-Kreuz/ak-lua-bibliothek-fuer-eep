@@ -15,4 +15,5 @@ export class IntersectionLane {
   phase: Phase;
   directions: Direction[];
   switchings: string[];
+  tracks: number[];
 }

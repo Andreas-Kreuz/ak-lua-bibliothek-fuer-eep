@@ -143,7 +143,8 @@ local function collect(allCrossings)
             waitingTrains = {},
             waitingForGreenCyclesCount = lane.waitCount,
             directions = lane.directions,
-            switchings = laneSequences[lane] or {}
+            switchings = laneSequences[lane] or {},
+            tracks = lane.tracksForHighlighting or {}
         }
         for i, f in pairs(lane.queue:elements()) do o.waitingTrains[i] = f end
         table.insert(intersectionLanes, o)
