@@ -19,6 +19,7 @@ import { SignalsService } from '../signals/store/signals.service';
 import { IntersectionSettingsIconComponent } from './intersection-settings-icon/intersection-settings-icon.component';
 import { IntersectionDetailsCardComponent } from './intersection-details-card/intersection-details-card.component';
 import { CardModule } from '../../../common/ui/card/card.module';
+import { IntersectionLaneDisplayComponent } from './intersection-lane-display/intersection-lane-display.component';
 
 @NgModule({
   providers: [SignalsService],
@@ -31,6 +32,7 @@ import { CardModule } from '../../../common/ui/card/card.module';
     LaneQueueComponent,
     IntersectionSettingsIconComponent,
     IntersectionDetailsCardComponent,
+    IntersectionLaneDisplayComponent,
   ],
   imports: [
     CardModule,
