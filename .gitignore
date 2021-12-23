@@ -106,3 +106,4 @@ luac.out
 *.hex
 
 
+web-app/src/app/client/modules/intersection/intersection-lane-display/example-svg.ts

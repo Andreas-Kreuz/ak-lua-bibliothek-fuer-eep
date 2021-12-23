@@ -6,6 +6,11 @@
 
 <div class="row d-flex" *ngIf="intersections$ | async as intersections">
   <ng-container *ngFor="let intersection of intersections; trackBy: trackById; let last = last">
+    <!-- <app-intersection-lane-display
+      class="col-12 col-sm-6 col-md-6 col-xl-3 mb-3"
+      [intersection]="intersection"
+      [lanes]="this.store.select(laneSelect(intersection.id)) | async"
+    ></app-intersection-lane-display> -->
     <app-intersection-details-card
       class="col-12 col-sm-6 col-md-6 col-xl-3 mb-3 d-flex"
       [intersection]="intersection"

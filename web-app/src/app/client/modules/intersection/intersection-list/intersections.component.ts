@@ -1,14 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-
-import { Intersection } from '../models/intersection.model';
-import { IntersectionHelper } from '../intersection-helper';
+import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
 import { LuaSettingChangeEvent } from 'web-shared/build/model/settings';
-
-import * as fromIntersection from '../store/intersection.reducers';
+import { IntersectionHelper } from '../intersection-helper';
+import { Intersection } from '../models/intersection.model';
 import * as IntersectionAction from '../store/intersection.actions';
+import * as fromIntersection from '../store/intersection.reducers';
 
 @Component({
   selector: 'app-crossings',
@@ -17,10 +15,11 @@ import * as IntersectionAction from '../store/intersection.actions';
 })
 export class IntersectionsComponent implements OnInit {
   intersections$ = this.store.select(fromIntersection.intersections$);
+  laneSelect = fromIntersection.laneByIntersectionId$;
   luaModuleSettings$ = this.store.select(fromIntersection.luaModuleSettings$);
 
   constructor(
-    private store: Store<fromIntersection.State>,
+    public store: Store<fromIntersection.State>,
     private router: Router,
     public intersectionHelper: IntersectionHelper,
     public dialog: MatDialog
