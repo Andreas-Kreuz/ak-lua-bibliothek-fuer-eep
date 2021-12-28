@@ -13,6 +13,7 @@ TrafficLight.zeigeAnforderungen = true
 -- Damit kommt wird die Variable "Zugname" automatisch durch EEP belegt
 -- http://emaps-eep.de/lua/code-schnipsel
 ------------------------------------------------
+--require("ak.third-party.BetterContacts_BH2")
 setmetatable(_ENV, {
     __index = function(_, k)
         local p = load(k);
@@ -70,17 +71,17 @@ Grundmodell_Ampel_3_FG = TrafficLightModel:new("Grundmodell Ampel 3 FG", -- Name
 
 -- region K2-Fahrspuren
 do
-    --    +---------------------------- Variablenname der Ampel
-    --    |    +----------------------- Legt eine neue Ampel an
-    --    |    |                +------ Signal-ID dieser Ampel
-    --    |    |                |   +-- Modell dieser Ampel - weiss wo rot, gelb und gruen ist
+    --    +---------------------------------- Variablenname der Ampel
+    --    |    +----------------------------- Legt eine neue Ampel an
+    --    |    |                      +------ Signal-ID dieser Ampel
+    --    |    |                      |   +-- Modell dieser Ampel - weiss wo rot, gelb und gruen ist
     local K1 = TrafficLight:new("K1", 32, Grundmodell_Ampel_3)
     local K2 = TrafficLight:new("K2", 31, Grundmodell_Ampel_3)
     local K3 = TrafficLight:new("K3", 34, Grundmodell_Ampel_3)
     local K4 = TrafficLight:new("K4", 33, Grundmodell_Ampel_3)
     local K5 = TrafficLight:new("K5", 30, Grundmodell_Ampel_3)
     -------------------------------------------------------------------------------------------------------------------
-    -- Definiere alle Fahrspuren fuer Kreuzung 1
+    -- Definiere alle Fahrspuren fuer Kreuzung 2
     -------------------------------------------------------------------------------------------------------------------
 
     --        +------------------------------------------------------ Neue Fahrspur
@@ -94,7 +95,7 @@ do
     c2Lane4 = Lane:new("Fahrspur 4 - K2", 124, K4, {'LEFT'})
     c2Lane5 = Lane:new("Fahrspur 5 - K2", 125, K5, {'LEFT', 'RIGHT'})
 
-    -- region K1-Schaltungen
+    -- region K2-Schaltungen
     -------------------------------------------------------------------------------------------------------------------
     -- Definiere alle Schaltungen fuer Kreuzung 2
     -------------------------------------------------------------------------------------------------------------------
@@ -128,10 +129,10 @@ end
 
 -- region K1-Fahrspuren
 do
-    --    +---------------------------- Variablenname der Ampel
-    --    |    +----------------------- Legt eine neue Ampel an
-    --    |    |                +------ Signal-ID dieser Ampel
-    --    |    |                |   +-- Modell dieser Ampel - weiss wo rot, gelb und gruen ist
+    --    +---------------------------------- Variablenname der Ampel
+    --    |    +----------------------------- Legt eine neue Ampel an
+    --    |    |                      +------ Signal-ID dieser Ampel
+    --    |    |                      |   +-- Modell dieser Ampel - weiss wo rot, gelb und gruen ist
     local K1 = TrafficLight:new("K1", 17, Grundmodell_Ampel_3)
     local K2 = TrafficLight:new("K2", 13, Grundmodell_Ampel_3)
     local K3 = TrafficLight:new("K3", 12, Grundmodell_Ampel_3)
@@ -205,8 +206,11 @@ end
 -- endregion
 
 local ModuleRegistry = require("ak.core.ModuleRegistry")
-ModuleRegistry.registerModules(require("ak.core.CoreLuaModule"), require("ak.data.DataLuaModule"),
-                               require("ak.road.CrossingLuaModul"))
+ModuleRegistry.registerModules(
+    require("ak.core.CoreLuaModule"),
+    require("ak.data.DataLuaModule"),
+    require("ak.road.CrossingLuaModul")
+)
 
 function EEPMain()
     -- print("Speicher: " .. collectgarbage("count"))

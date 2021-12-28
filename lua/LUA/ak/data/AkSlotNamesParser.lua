@@ -1,3 +1,4 @@
+if AkDebugLoad then print("Loading ak.data.AkSlotNamesParser ...") end
 local SlotNamesParser = {}
 
 local function isModuleAvailable(name)
