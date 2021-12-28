@@ -1,4 +1,4 @@
-if AkDebugLoad then print("Loading ak.io.AkWebServerIo ...") end
+if AkDebugLoad then print("Loading ak.io.EventFileWriter ...") end
 local json = require("ak.third-party.json")
 
 local EventFileWriter = {}
