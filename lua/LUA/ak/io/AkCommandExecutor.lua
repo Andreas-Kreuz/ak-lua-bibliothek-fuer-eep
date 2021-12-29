@@ -24,8 +24,8 @@ local acceptedRemoteFunctions = {}
 ---@param fName string @using the name of the function as called from EEP-Web
 ---@param f function
 function AkCommandExecutor.addAcceptedRemoteFunction(fName, f)
-    assert(type(fName) == "string", "Need 'fName' as string")
-    assert(type(f) == "function", fName)
+    assert(fName and type(fName) == "string", "Es muss ein Funktionsname angegeben werden.")
+    assert(f and type(f) == "function", "Es muss eine Funktion angegeben werden fuer " .. fName)
     acceptedRemoteFunctions[fName] = f
 end
 
@@ -50,7 +50,7 @@ function AkCommandExecutor.callSavely(functionAndArgs)
 
     local f = acceptedRemoteFunctions[fName]
 
-    assert(f, fName)
+    assert(f, "Funktionsname nicht hinterlegt: " .. fName)
 
     if f then
         local status, error = pcall(f, table.unpack(args))

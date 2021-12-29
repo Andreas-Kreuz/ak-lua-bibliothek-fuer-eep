@@ -81,9 +81,11 @@ cd web-shared
 npm install
 ```
 
-Benutze danach das Skript `.\scripts\build-package.cmd` um das ganze Programm einmal zu bauen.
+Anstatt dieser 3 Befehle kannst du auch das Skript `.\scripts\install-npms.cmd` starten.
 
-Dabei werden App, Server und Lua in eine EEP-Installationsdatei zusammengepackt.
+Benutze danach das Skript `.\scripts\build-server-with-app.cmd` um das ganze Programm einmal zu bauen.
+
+Mit dem Skript `.\scripts\build-package.cmd` wird ebenfalls das ganze Programm gebaut und es werden die App, der Server und alle Lua-Dateien  in eine EEP-Installationsdatei zusammengepackt.
 
 ### Server im Entwicklungsmodus starten
 

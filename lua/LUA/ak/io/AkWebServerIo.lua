@@ -35,7 +35,7 @@ end
 --- Schreibe Datei.
 local function writeFile(fileName, inhalt)
     local file = io.open(fileName, "w")
-    assert(file, fileName)
+    assert(file, "Kann Datei nicht schreiben " .. fileName)
     file:write(inhalt)
     file:flush()
     file:close()
