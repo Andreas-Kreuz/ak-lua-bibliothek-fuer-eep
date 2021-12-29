@@ -108,6 +108,6 @@ function EventBroker.addListener(listener) listeners[listener] = true end
 if AkStartWithDebug then EventBroker.addListener(EventBroker.printListener) end
 
 EventBroker.addListener(EventFileWriter)
-fire(EventBroker.eventType.completeReset, "-- fire a data reset on first start --")
+fire(EventBroker.eventType.completeReset, {info = "-- fire a data reset on first start --"})
 
 return EventBroker
