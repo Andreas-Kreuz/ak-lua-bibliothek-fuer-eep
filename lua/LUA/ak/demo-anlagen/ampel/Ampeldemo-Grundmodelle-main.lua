@@ -13,7 +13,7 @@ TrafficLight.zeigeAnforderungen = true
 -- Damit kommt wird die Variable "Zugname" automatisch durch EEP belegt
 -- http://emaps-eep.de/lua/code-schnipsel
 ------------------------------------------------
--- require("ak.third-party.BetterContacts_BH2")
+--require("ak.third-party.BetterContacts_BH2")
 setmetatable(_ENV, {
     __index = function(_, k)
         local p = load(k);
@@ -89,11 +89,11 @@ do
     --        |              |            +------------------------- Speicher ID - um die Anzahl der Fahrzeuge
     --        |              |            |                                        und die Wartezeit zu speichern
     --        |              |            |    +-------------------- Ampel (Variablenname von oben)
-    c2Lane1 = Lane:new("Fahrspur 1 - K2", 121, K1, {"RIGHT"})
-    c2Lane2 = Lane:new("Fahrspur 2 - K2", 122, K2, {"STRAIGHT"})
-    c2Lane3 = Lane:new("Fahrspur 3 - K2", 123, K3, {"STRAIGHT"})
-    c2Lane4 = Lane:new("Fahrspur 4 - K2", 124, K4, {"LEFT"})
-    c2Lane5 = Lane:new("Fahrspur 5 - K2", 125, K5, {"LEFT", "RIGHT"})
+    c2Lane1 = Lane:new("Fahrspur 1 - K2", 121, K1, {'RIGHT'})
+    c2Lane2 = Lane:new("Fahrspur 2 - K2", 122, K2, {'STRAIGHT'})
+    c2Lane3 = Lane:new("Fahrspur 3 - K2", 123, K3, {'STRAIGHT'})
+    c2Lane4 = Lane:new("Fahrspur 4 - K2", 124, K4, {'LEFT'})
+    c2Lane5 = Lane:new("Fahrspur 5 - K2", 125, K5, {'LEFT', 'RIGHT'})
 
     -- region K2-Schaltungen
     -------------------------------------------------------------------------------------------------------------------
@@ -150,14 +150,14 @@ do
     --        |        |                  +------------------------- Speicher ID - um die Anzahl der Fahrzeuge
     --        |        |                  |                                        und die Wartezeit zu speichern
     --        |        |                  |    +-------------------- Ampel (Variablenname von oben)
-    c1Lane1 = Lane:new("Fahrspur 1 - K1", 101, K1, {"STRAIGHT", "RIGHT"})
-    c1Lane2 = Lane:new("Fahrspur 2 - K1", 102, K2, {"LEFT"})
-    c1Lane3 = Lane:new("Fahrspur 3 - K1", 103, K3, {"STRAIGHT", "RIGHT"})
-    c1Lane4 = Lane:new("Fahrspur 4 - K1", 104, K4, {"LEFT"})
-    c1Lane5 = Lane:new("Fahrspur 5 - K1", 105, K5, {"STRAIGHT", "RIGHT"})
-    c1Lane6 = Lane:new("Fahrspur 6 - K1", 106, K6, {"LEFT"})
-    c1Lane7 = Lane:new("Fahrspur 7 - K1", 107, K7, {"STRAIGHT", "RIGHT"})
-    c1Lane8 = Lane:new("Fahrspur 8 - K1", 108, K8, {"LEFT"})
+    c1Lane1 = Lane:new("Fahrspur 1 - K1", 101, K1, {'STRAIGHT', 'RIGHT'})
+    c1Lane2 = Lane:new("Fahrspur 2 - K1", 102, K2, {'LEFT'})
+    c1Lane3 = Lane:new("Fahrspur 3 - K1", 103, K3, {'STRAIGHT', 'RIGHT'})
+    c1Lane4 = Lane:new("Fahrspur 4 - K1", 104, K4, {'LEFT'})
+    c1Lane5 = Lane:new("Fahrspur 5 - K1", 105, K5, {'STRAIGHT', 'RIGHT'})
+    c1Lane6 = Lane:new("Fahrspur 6 - K1", 106, K6, {'LEFT'})
+    c1Lane7 = Lane:new("Fahrspur 7 - K1", 107, K7, {'STRAIGHT', 'RIGHT'})
+    c1Lane8 = Lane:new("Fahrspur 8 - K1", 108, K8, {'LEFT'})
 
     local F1 = TrafficLight:new("F1", 40, Grundmodell_Ampel_3_FG)
     local F2 = TrafficLight:new("F2", 41, Grundmodell_Ampel_3_FG)
@@ -206,8 +206,11 @@ end
 -- endregion
 
 local ModuleRegistry = require("ak.core.ModuleRegistry")
-ModuleRegistry.registerModules(require("ak.core.CoreLuaModule"), require("ak.data.DataLuaModule"),
-                               require("ak.road.CrossingLuaModul"))
+ModuleRegistry.registerModules(
+    require("ak.core.CoreLuaModule"),
+    require("ak.data.DataLuaModule"),
+    require("ak.road.CrossingLuaModul")
+)
 
 function EEPMain()
     -- print("Speicher: " .. collectgarbage("count"))

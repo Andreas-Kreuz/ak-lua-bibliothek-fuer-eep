@@ -160,25 +160,31 @@ function ServerController.communicateWithServer(modulus)
     -- export data regularly
     local overallTime3 = os.clock()
     local overallTime4 = overallTime3
+    local overallTime5 = overallTime3
+    local overallTime6 = overallTime3
 
     if (modulus == 0 or i % modulus == 0) and serverIsReady then
         collectData(printFirstTime)
         overallTime4 = os.clock()
+        overallTime5 = os.clock()
+        overallTime6 = os.clock()
 
         writeData(EventFileWriter.getAndResetEvents())
     end
 
-    local overallTime5 = os.clock()
-    local timeDiff = overallTime5 - overallTime0
+    local overallTime7 = os.clock()
+    local timeDiff = overallTime7 - overallTime0
     local allowedTimeDiff = modulus * 0.200
     if ServerController.debug and printFirstTime or timeDiff > allowedTimeDiff then
         local format = (printFirstTime and "INITIALIZATION" or "WARNING") ..
                        ": ServerController.communicateWithServer() time is %3.0f ms --- " ..
                        "waitForServer: %.0f ms, " .. "initialize: %.0f ms, " .. "commands: %2.0f ms, " ..
-                       "collect: %3.0f ms, " .. " write: %.0f ms" .. " (allowed: %.0f ms)"
+                       "collect: %3.0f ms, " .. " expand: %3.0f ms " .. " encode: %3.0f ms " .. " write: %.0f ms" ..
+                       " (allowed: %.0f ms)"
         print(string.format(format, (timeDiff) * 1000, (overallTime1 - overallTime0) * 1000,
                             (overallTime2 - overallTime1) * 1000, (overallTime3 - overallTime2) * 1000,
                             (overallTime4 - overallTime3) * 1000, (overallTime5 - overallTime4) * 1000,
+                            (overallTime6 - overallTime5) * 1000, (overallTime7 - overallTime6) * 1000,
                             (allowedTimeDiff) * 1000))
     end
 
@@ -189,7 +195,9 @@ function ServerController.communicateWithServer(modulus)
                                      overallTime2 - overallTime1)
         RuntimeRegistry.storeRunTime("ServerController.communicateWithServer-3-commands", overallTime3 - overallTime2)
         RuntimeRegistry.storeRunTime("ServerController.communicateWithServer-4-collect", overallTime4 - overallTime3)
-        RuntimeRegistry.storeRunTime("ServerController.communicateWithServer-5-write", overallTime5 - overallTime4)
+        RuntimeRegistry.storeRunTime("ServerController.communicateWithServer-5-expand", overallTime5 - overallTime4)
+        RuntimeRegistry.storeRunTime("ServerController.communicateWithServer-6-encode", overallTime6 - overallTime5)
+        RuntimeRegistry.storeRunTime("ServerController.communicateWithServer-7-write", overallTime7 - overallTime6)
         RuntimeRegistry.storeRunTime("ServerController.communicateWithServer-OVERALL", timeDiff)
         local values = RuntimeRegistry.getAll()
         if (values) then EventBroker.fireListChange("runtime", "id", values) end
