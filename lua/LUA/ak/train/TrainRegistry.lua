@@ -1,9 +1,10 @@
+if AkDebugLoad then print("Loading ak.data.TrainRegistry ...") end
 local EventBroker = require("ak.util.EventBroker")
 local Train = require("ak.train.Train")
 local RollingStockRegistry = require("ak.train.RollingStockRegistry")
 
 local TrainRegistry = {}
-TrainRegistry.debug = false
+TrainRegistry.debug = AkStartWithDebug or false
 ---@type table<string, Train>
 local allTrains = {}
 ---@type table<string,table<string,string>> table of trainName -> index(string) -> rollingstockname

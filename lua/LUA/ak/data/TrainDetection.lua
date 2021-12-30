@@ -5,7 +5,7 @@ local TrackDetection = require("ak.data.TrackDetection")
 local RollingStockRegistry = require("ak.train.RollingStockRegistry")
 
 local TrainDetection = {}
-TrainDetection.debug = false
+TrainDetection.debug = AkStartWithDebug or false
 
 -- trackCollectors will dectect trains by using their RegisteredFunctions
 local trackTypes = {"auxiliary", "control", "road", "rail", "tram"}
