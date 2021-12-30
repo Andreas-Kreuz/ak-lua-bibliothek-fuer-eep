@@ -3,7 +3,7 @@ local RollingStockModel = require("ak.train.RollingStockModel")
 
 local ModelV15NMA10013 = {}
 
-GT_A = RollingStockModel:new({})
+local GT_A = RollingStockModel:new({})
 
 function GT_A:setLine(rollingStockName, line)
     assert(type(self) == "table", "Call this method with ':'")
@@ -41,7 +41,7 @@ function GT_A:openDoors(rollingStockName)
     EEPRollingstockSetAxis(rollingStockName, "Türen vorn", 100)
 end
 
-function GT_A:openDoors(rollingStockName)
+function GT_A:closeDoors(rollingStockName)
     assert(type(self) == "table", "Call this method with ':'")
     EEPRollingstockSetAxis(rollingStockName, "Türen Mitte", 0)
     EEPRollingstockSetAxis(rollingStockName, "Türen vorn", 0)

@@ -266,6 +266,24 @@ function Train:getLine()
     return self:getValue(TagKeys.Train.line)
 end
 
+function Train:openDoors()
+    local carCount = EEPGetRollingstockItemsCount(self.name)
+    for i = 0, carCount - 1 do
+        local rollingStockName = EEPGetRollingstockItemName(self.name, i)
+        local model = RollingStockModels.modelFor(rollingStockName)
+        model:openDoors(rollingStockName)
+    end
+end
+
+function Train:closeDoors()
+    local carCount = EEPGetRollingstockItemsCount(self.name)
+    for i = 0, carCount - 1 do
+        local rollingStockName = EEPGetRollingstockItemName(self.name, i)
+        local model = RollingStockModels.modelFor(rollingStockName)
+        model:closeDoors(rollingStockName)
+    end
+end
+
 function Train:toJsonStatic()
     return {
         id = self:getName(),
