@@ -47,5 +47,9 @@ RollingStockModels.addModelByName("GT4 Serie 2 (1) Wagen A", ModelV15NMA10013["G
 RollingStockModels.addModelByName("GT4 Serie 2 (1) Wagen B", ModelV15NMA10013["GT4 Serie 2 (1) Wagen B"])
 RollingStockModels.addModelByName("GT4 Serie 2 (2) Wagen A", ModelV15NMA10013["GT4 Serie 2 (2) Wagen A"])
 RollingStockModels.addModelByName("GT4 Serie 2 (2) Wagen B", ModelV15NMA10013["GT4 Serie 2 (2) Wagen B"])
+RollingStockModels.addModelByName("GT4 Serie 2 (1) Wagen A TT 01 MA1", ModelV15NMA10013["GT4 Serie 2 (1) Wagen A"])
+RollingStockModels.addModelByName("GT4 Serie 2 (1) Wagen B TT 01 MA1", ModelV15NMA10013["GT4 Serie 2 (1) Wagen B"])
+RollingStockModels.addModelByName("GT4 Serie 2 (2) Wagen A TT 01 MA1", ModelV15NMA10013["GT4 Serie 2 (2) Wagen A"])
+RollingStockModels.addModelByName("GT4 Serie 2 (2) Wagen B TT 01 MA1", ModelV15NMA10013["GT4 Serie 2 (2) Wagen B"])
 
 return RollingStockModels
