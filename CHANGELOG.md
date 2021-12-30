@@ -1,5 +1,12 @@
 # Änderungen an der Software
 
+## v.0.11.1
+
+### Lua
+
+- 🐞 Bugfix: Fügt man neue Fahrzeuge in eine Anlage ein, werden diese automatisch anhand ihrer Route der passenden
+  ÖPNV-Linie zugeordnet und es kommt nicht mehr zu einem Programmfehler.
+
 ## v.0.11.0
 
 ### Bitte beachten

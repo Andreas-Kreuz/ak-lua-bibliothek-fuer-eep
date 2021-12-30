@@ -72,6 +72,24 @@ function Line:addSection(routeName, destination)
     return lineSegment
 end
 
+---Change the train line according to the trains route, if no line is set in the train
+---@param train Train
+local function checkLine(train)
+    if train then
+        local lineName = train:getLine()
+        local routeName = train:getRoute()
+        if not lineName then
+            for _, line in pairs(lines) do
+                for _, segment in pairs(line.lineSegments) do
+                    if segment.routeName == routeName then
+                        train:changeDestination(segment.destination, line.nr)
+                    end
+                end
+            end
+        end
+    end
+end
+
 ---
 ---@param trainName string
 ---@param station RoadStation
@@ -85,6 +103,7 @@ function Line.scheduleDeparture(trainName, station, timeInMinutes)
     local train = TrainRegistry.forName(trainName)
     local lineName = train:getLine()
     local routeName = train:getRoute()
+    checkLine(train)
     assert(type(routeName) == "string", "Need 'routeName' as string")
 
     if lineName then
@@ -115,12 +134,12 @@ function Line.trainDeparted(trainName, station)
 
     local train = TrainRegistry.forName(trainName)
     local lineName = train:getLine()
-    -- assert(type(lineName) == "string", "Need 'lineName' as string")
     local routeName = train:getRoute()
+    checkLine(train)
     assert(type(routeName) == "string", "Need 'routeName' as string")
-    station:trainLeft(trainName, train:getDestination(), train:getLine())
 
     if lineName then
+        station:trainLeft(trainName, train:getDestination(), lineName)
         local line = lines[lineName]
         if line then
             local lineSegment = line.lineSegments[routeName]

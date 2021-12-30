@@ -109,6 +109,9 @@ function Train:getValue(key)
     return self.values[key]
 end
 
+---Changes line and destination of the train
+---@param destination string
+---@param line string
 function Train:changeDestination(destination, line)
     assert(type(self) == "table" and self.type == "Train", "Call this method with ':'")
     assert(type(destination) == "string", "Need 'destination' as string")
