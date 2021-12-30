@@ -164,13 +164,37 @@ end
 --
 function StorageUtility.toboolean(value) return (value and value == "true") and true or false end
 
+function StorageUtility.calcEepLuaData()
+    local ausgabeT = {"[EEPLuaData]\n"}
+    for i = 1, 1000 do
+        local t = type(savedValues[i])
+        local typeValue
+        local encodedValue
+        if t == "string" then
+            typeValue = "DS_"
+            encodedValue = "\"" .. savedValues[i] .. "\""
+        elseif t == "number" then
+            typeValue = "DN_"
+            encodedValue = string.format("%f", savedValues[i])
+        elseif t == "boolean" then
+            typeValue = "DB_"
+            encodedValue = savedValues[i] and "1" or "0"
+        end
+
+        if (encodedValue) then
+            table.insert(ausgabeT, typeValue)
+            table.insert(ausgabeT, i)
+            table.insert(ausgabeT, " = ")
+            table.insert(ausgabeT, encodedValue)
+            table.insert(ausgabeT, "\n")
+        end
+    end
+    return table.concat(ausgabeT, "")
+end
+
 function StorageUtility.updateDebugFile()
     local datei = assert(io.open(StorageUtility.debugDatei, "w"))
-    local ausgabe = ""
-    for i = 1, 1000 do
-        if savedValues[i] then ausgabe = ausgabe .. "DS_" .. i .. " = \"" .. savedValues[i] .. "\"\n" end
-    end
-    datei:write(ausgabe .. "\n")
+    datei:write(StorageUtility.calcEepLuaData())
     datei:close()
 end
 
