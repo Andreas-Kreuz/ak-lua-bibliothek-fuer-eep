@@ -23,6 +23,9 @@
   (z.B. durch Zusammenstellung oder Bewegung)
 - ⭐ Neu: Statistikausgabe für die benötigte Zeit der Ausgabe in der App unter <http://localhost:3000/statistics>
 - ⭐ Neu: Vorbereitung für ÖPNV inkl. Demo-Anlage für Haltestellenanzeige (Demo Linien)
+- ⭐ Neu: Türen öffnen/schließen für Züge mit `TrainRegistry.forName("#MeinZug"):openDoors()` bzw. `:closeDoors()`
+- 🐞 Bugfix: Debug-Einstellungen der einzelnen Lua-Skripte richten sich nun nach `AkStartWithDebug`
+- 🐞 Bugfix: StorageUtilities erstellt die Debug-Datei nun im EEP-Format (kein Fehler mehr, wenn ein `EEPSaveData(x, true)` verwendet wurde)
 
 ### Web-Server
 
