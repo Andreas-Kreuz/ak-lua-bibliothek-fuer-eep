@@ -224,12 +224,15 @@ function EEPRollingstockGetAxis(rsName, achse) end
 --- Laedt Daten aus Slot
 -- @param slot Slot 1 bis 1000
 -- @return true (wenn gefunden), Boolean|Zahl|"String"| nil
-function EEPLoadData(slot) return (eepdata[slot] and true or false), eepdata[slot] end
+function EEPLoadData(slot) return ((eepdata[slot] or eepdata[slot] == false) and true or false), eepdata[slot] end
 
 --- Speichert Daten in Slot
 -- @param slot Slot 1 bis 1000
 -- @param data Boolean|Zahl|"String"| nil
-function EEPSaveData(slot, data) eepdata[slot] = data end
+function EEPSaveData(slot, data)
+    eepdata[slot] = data
+    return true
+end
 
 ------------------------------
 -- Neu ab EEP 11 - Plugin 1 --
