@@ -1,4 +1,20 @@
 describe("EepFunktionen.lua", function()
+    insulate("EEPSave/Load", function()
+        require("ak.core.eep.EepSimulator")
+
+        local ok1 = EEPSaveData(1, true)
+        local ok2 = EEPSaveData(2, false)
+        it("Could save true", function() assert.is_true(ok1) end)
+        it("Could save false", function() assert.is_true(ok2) end)
+
+        local loadOk1, val1 = EEPLoadData(1)
+        local loadOk2, val2 = EEPLoadData(2)
+        it("Could load 1", function() assert.is_true(loadOk1) end)
+        it("Correct val 1", function() assert.is_true(val1) end)
+        it("Could load 2", function() assert.is_true(loadOk2) end)
+        it("Correct val 2", function() assert.is_false(val2) end)
+    end)
+
     insulate("Trains", function()
         local EepSimulator = require("ak.core.eep.EepSimulator")
 
