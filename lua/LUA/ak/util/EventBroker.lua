@@ -18,7 +18,7 @@ local TableUtils = require("ak.util.TableUtils")
 ---@field printListener EventListener a default listeners to print out all events to the standard-out
 local EventBroker = {}
 local listeners = {}
-EventBroker.debug = false
+EventBroker.debug = AkStartWithDebug or false
 
 ---@class ChangeType
 ---@field dataAdded string
@@ -36,17 +36,15 @@ EventBroker.eventType = {
 ---@type EventListener
 EventBroker.printListener = {
     fireEvent = function(event)
-		local t = type(event.payload)
-		if t == "table" then
-			if event.payload.room then
-				t = event.payload.room .. ": " .. t
-			end
-			if event.payload.list and type(event.payload.list) == "table" then
-				t = t .. " with " .. TableUtils.length(event.payload.list) .. " entries"
-			end
-		else
-			t = t .. ": " .. tostring(event.payload)
-		end
+        local t = type(event.payload)
+        if t == "table" then
+            if event.payload.room then t = event.payload.room .. ": " .. t end
+            if event.payload.list and type(event.payload.list) == "table" then
+                t = t .. " with " .. TableUtils.length(event.payload.list) .. " entries"
+            end
+        else
+            t = t .. ": " .. tostring(event.payload)
+        end
         print(event.eventCounter .. ": " .. event.type .. " .. " .. t)
     end
 }
@@ -117,7 +115,7 @@ end
 ---@param listener EventListener
 function EventBroker.addListener(listener) listeners[listener] = true end
 
-if AkStartWithDebug then EventBroker.addListener(EventBroker.printListener) end
+if EventBroker.debug then EventBroker.addListener(EventBroker.printListener) end
 
 EventBroker.addListener(EventFileWriter)
 fire(EventBroker.eventType.completeReset, {info = "-- fire a data reset on first start --"})
