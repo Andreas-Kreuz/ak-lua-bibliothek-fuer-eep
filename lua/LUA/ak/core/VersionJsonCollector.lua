@@ -1,5 +1,5 @@
-local EventBroker = require("ak.util.EventBroker")
 if AkDebugLoad then print("Loading ak.core.VersionJsonCollector ...") end
+local EventBroker = require("ak.util.EventBroker")
 VersionJsonCollector = {}
 local ServerController = require("ak.io.ServerController")
 local enabled = true

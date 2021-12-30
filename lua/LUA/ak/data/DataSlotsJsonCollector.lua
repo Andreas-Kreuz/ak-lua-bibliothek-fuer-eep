@@ -1,5 +1,5 @@
-local TableUtils = require("ak.util.TableUtils")
 if AkDebugLoad then print("Loading ak.data.DataSlotsJsonCollector ...") end
+local TableUtils = require("ak.util.TableUtils")
 local EventBroker = require("ak.util.EventBroker")
 
 local DataSlotsJsonCollector = {}

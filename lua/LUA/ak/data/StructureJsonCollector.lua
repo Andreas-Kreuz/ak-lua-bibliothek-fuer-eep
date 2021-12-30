@@ -1,5 +1,5 @@
-local EventBroker = require("ak.util.EventBroker")
 if AkDebugLoad then print("Loading ak.data.StructureJsonCollector ...") end
+local EventBroker = require("ak.util.EventBroker")
 StructureJsonCollector = {}
 local enabled = true
 local initialized = false

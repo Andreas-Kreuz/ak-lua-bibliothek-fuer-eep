@@ -1,3 +1,4 @@
+if AkDebugLoad then print("Loading ak.util.TableUtils ...") end
 local TableUtils = {}
 
 ---Creates are read-only table by wrapping the current table into a proxy.
@@ -81,6 +82,14 @@ function TableUtils.valuesOfDict(dictionary)
     local newArray = {}
     if dictionary then for _, v in pairs(dictionary) do table.insert(newArray, v) end end
     return newArray
+end
+
+-- Get count of table entries
+---@param t table
+function TableUtils.length(t)
+    local i = 0
+    for _ in pairs(t) do i = i + 1 end
+    return i
 end
 
 return TableUtils

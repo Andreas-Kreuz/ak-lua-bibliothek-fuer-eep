@@ -45,7 +45,7 @@ Die Funktion `runTasks()` besitzt einen zusätzlichen Parameter mit der angegebe
 
 Die Standardfunktion `clearlog()` wird von dem Modul überladen. Damit wird dann nicht nur das Protokoll in EEP gelöscht sondern auch der Inhalt der exportierten Log-Datei.
 
-```
+```lua
 clearlog() -- This call before loading EEP-Web clears the log within EEP but does not clear the log file of EEP Web
 
 -- Load EEP Web Modules

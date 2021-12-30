@@ -1,3 +1,4 @@
+if AkDebugLoad then print("Loading ak.data.TrainDetection ...") end
 local TrainRegistry = require("ak.train.TrainRegistry")
 local RuntimeRegistry = require("ak.util.RuntimeRegistry")
 local TrackDetection = require("ak.data.TrackDetection")

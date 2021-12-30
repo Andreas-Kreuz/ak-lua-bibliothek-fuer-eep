@@ -1,5 +1,6 @@
 if AkDebugLoad then print("Loading ak.util.EventBroker ...") end
 local EventFileWriter = require("ak.io.EventFileWriter")
+local TableUtils = require("ak.util.TableUtils")
 
 ---@class Event
 ---@field date string
@@ -35,7 +36,18 @@ EventBroker.eventType = {
 ---@type EventListener
 EventBroker.printListener = {
     fireEvent = function(event)
-        print(event.eventCounter .. ": " .. event.type .. " .. " .. tostring(event.payload))
+		local t = type(event.payload)
+		if t == "table" then
+			if event.payload.room then
+				t = event.payload.room .. ": " .. t
+			end
+			if event.payload.list and type(event.payload.list) == "table" then
+				t = t .. " with " .. TableUtils.length(event.payload.list) .. " entries"
+			end
+		else
+			t = t .. ": " .. tostring(event.payload)
+		end
+        print(event.eventCounter .. ": " .. event.type .. " .. " .. t)
     end
 }
 local eventCounter = 0;
