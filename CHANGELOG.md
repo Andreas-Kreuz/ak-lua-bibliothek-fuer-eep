@@ -2,7 +2,7 @@
 
 ## v.0.11.1
 
-### Lua
+### Lua (0.11.1)
 
 - 🐞 Bugfix: Fügt man neue Fahrzeuge in eine Anlage ein, werden diese automatisch anhand ihrer Route der passenden
   ÖPNV-Linie zugeordnet und es kommt nicht mehr zu einem Programmfehler.
@@ -24,7 +24,7 @@
 - ⭐ Anzeige der Fahrzeuge für Smartphones optimiert
 - ⭐ Kameraknopf in der Detailansicht für Fahrzeuge
 
-### Lua
+### Lua (0.11.0)
 
 - ⭐ Neu: Erhebliche Performance-Optimierung durch die Übertragung nur wenn Züge geändert wurden
   (z.B. durch Zusammenstellung oder Bewegung)
