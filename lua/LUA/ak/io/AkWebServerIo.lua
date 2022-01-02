@@ -90,43 +90,61 @@ AkWebServerIo.setOutputDirectory(existingDirOf({
     -- default value
     "../LUA/ak/io/exchange", "./LUA/ak/io/exchange"
 }) or ".")
-local _assert = assert
-local _print = print
---- Schreibe log zusätzlich in Datei.
-function print(...)
-    -- print the output to the log file (Why do we open/close the file within every call? What about flush?)
-    local file = _assert(io.open(outFileNameLog, "a"))
-    local args = {...}
-    local time = ""
-    if os.date then time = os.date("%X ") end
-    local text = "" .. time
-    for _, arg in pairs(args) do text = text .. tostring(arg):gsub("\n", "\n       . ") end
-    file:write(text .. "\n")
-    file:close()
 
-    -- call the original print function
-    _print(...)
+local _assert = assert
+local _error = error
+local _print = print
+local _warn = warn
+
+local function printToFile(...)
+    if ... then
+        -- We open the file for every write, so EEP will not keep this file open all the time
+        local file = _assert(io.open(outFileNameLog, "a"))
+        local time = ""
+        if os.date then time = os.date("%X ") end
+        local text = "" .. time
+        local args = {...}
+        for _, arg in pairs(args) do text = text .. tostring(arg):gsub("\n", "\n       . ") end
+        file:write(text .. "\n")
+        file:close()
+    end
 end
 
 --- Schreibe log zusätzlich in Datei.
--- function assert(v, message)
---     -- print the output to the file
---     if not v then
---         local file = _assert(io.open(outFileNameLog, "a"))
---         local text = message or "Assertion failed!"
---         file:write(text .. "\n")
---         file:close()
---     end
---     -- call the original assert function
---     _assert(v, message)
--- end
+function print(...)
+    printToFile(...) -- print the output to the log file
+    _print(...) -- call the original print function
+end
+
+--- Schreibe Fehler zusätzlich in Datei.
+error = function(message, level)
+    printToFile(message) -- print the output to the file
+    _error(message, level) -- call the original assert function
+end
+
+--- Schreibe Fehler zusätzlich in Datei.
+warn = function(message, ...)
+    printToFile(message, ...) -- print the output to the file
+    _warn(message, ...) -- call the original assert function
+end
+
+-- add traceback to assert message by default
+assert = function(v, message)
+    local status, retval = pcall(_assert, v, message)
+    if not status then error(message and message .. "\n" .. debug.traceback() or debug.traceback()) end
+    return retval
+end
+
 local _clearlog = clearlog
 --- Lösche Inhalt der log-Datei.
 function clearlog()
     -- call the original clearlog function
-    _clearlog()
     local file = io.open(outFileNameLog, "w+")
     file:close()
+    file = _assert(io.open(outFileNameLog, "a"))
+    file:write("")
+    file:close()
+    _clearlog()
 end
 
 -- These two functions must be registered AFTER print and clearlog are overwritten

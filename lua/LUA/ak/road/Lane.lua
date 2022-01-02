@@ -9,6 +9,7 @@ local fmt = require("ak.core.eep.TippTextFormatter")
 ---@class Lane
 ---@field queue Queue
 ---@field name string
+---@field private type string ("Lane")
 ---@field trafficLight TrafficLight
 ---@field tracksForRequests table
 local Lane = {}
@@ -31,6 +32,35 @@ Lane.Directions = {
 }
 ---@class LaneType
 Lane.Type = {BUS = "BUS", CAR = "CAR", TRAM = "TRAM", PEDESTRIAN = "PEDESTRIAN", BICYCLE = "BICYCLE"}
+
+---Liefert true, wenn das erste Fahrzeug fahren darf (anhand der für die Fahrspur gültigen Ampeln)
+---Is true, if the first vehicle can drive (according to the lane's traffic lights)
+local function updateLaneSignal(lane, reason)
+    if lane.trafficLightsToDriveOn then
+        if not lane.queue:isEmpty() then assert(lane.firstVehiclesRoute) end
+
+        local haveGreen = false
+        local greenTrafficLights = {}
+        for trafficLight in pairs(lane.trafficLightsToDriveOn) do
+            if Lane.debug then
+                print(string.format("[Lane] %s can drive on: %s (%s): %s", lane.name, trafficLight.name,
+                                    trafficLight.phase, tostring(TrafficLightState.canDrive(trafficLight.phase))))
+            end
+            if TrafficLightState.canDrive(trafficLight.phase) then
+                haveGreen = true
+                table.insert(greenTrafficLights, trafficLight)
+            end
+        end
+
+        local canDrive
+        if haveGreen then
+            canDrive = Lane.laneCanDrive(lane, greenTrafficLights)
+        else
+            canDrive = false
+        end
+        lane.trafficLight:switchTo(canDrive and TrafficLightState.GREEN or TrafficLightState.RED, reason)
+    end
+end
 
 -- Might bring some performance
 local EEPGetTrainRoute = EEPGetTrainRoute
@@ -216,35 +246,6 @@ function Lane.laneCanDrive(lane, trafficLights)
 
 end
 
----Liefert true, wenn das erste Fahrzeug fahren darf (anhand der für die Fahrspur gültigen Ampeln)
----Is true, if the first vehicle can drive (according to the lane's traffic lights)
-function updateLaneSignal(lane, reason)
-    if lane.trafficLightsToDriveOn then
-        if not lane.queue:isEmpty() then assert(lane.firstVehiclesRoute) end
-
-        local haveGreen = false
-        local greenTrafficLights = {}
-        for trafficLight in pairs(lane.trafficLightsToDriveOn) do
-            if Lane.debug then
-                print(string.format("[Lane] %s can drive on: %s (%s): %s", lane.name, trafficLight.name,
-                                    trafficLight.phase, tostring(TrafficLightState.canDrive(trafficLight.phase))))
-            end
-            if TrafficLightState.canDrive(trafficLight.phase) then
-                haveGreen = true
-                table.insert(greenTrafficLights, trafficLight)
-            end
-        end
-
-        local canDrive
-        if haveGreen then
-            canDrive = Lane.laneCanDrive(lane, greenTrafficLights)
-        else
-            canDrive = false
-        end
-        lane.trafficLight:switchTo(canDrive and TrafficLightState.GREEN or TrafficLightState.RED, reason)
-    end
-end
-
 --------------------
 -- Klasse Fahrspur
 --------------------
@@ -409,6 +410,7 @@ function Lane:vehicleLeft(trainName)
 end
 
 function Lane:resetVehicles()
+    assert(self and self.type == "Lane")
     while not self.queue:isEmpty() do self.queue:pop() end
     self.vehicleCount = 0
     refreshRequests(self)
@@ -477,6 +479,7 @@ function Lane:new(name, eepSaveId, trafficLight, directions, trafficType)
     if eepSaveId ~= -1 then StorageUtility.registerId(eepSaveId, "Lane " .. name) end
     local o = {
         name = name,
+        type = "Lane",
         eepSaveId = eepSaveId,
         trafficLight = trafficLight,
         requestType = Lane.RequestType.NORMAL,
@@ -523,9 +526,8 @@ end
 ---@param trafficLight TrafficLight
 function Lane:trafficLightChanged(trafficLight)
     if trafficLight ~= self.trafficLight then
-        assert(self.trafficLightsToDriveOn,
-               "There is no traffic light registered on this lane: " .. trafficLight.signalId .. " / " ..
-               self.trafficLight.signalId)
+        assert(self.trafficLightsToDriveOn, "There is no traffic light registered on this lane: " ..
+               trafficLight.signalId .. " / " .. self.trafficLight.signalId)
         assert(self.trafficLightsToDriveOn[trafficLight],
                "This lane does not drive on the given traffic light: " .. trafficLight.signalId)
     end

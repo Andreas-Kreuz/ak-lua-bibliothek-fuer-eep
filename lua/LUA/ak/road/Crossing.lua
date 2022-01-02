@@ -10,9 +10,12 @@ local fmt = require("ak.core.eep.TippTextFormatter")
 --------------------
 -- Klasse Kreuzung
 --------------------
+---@type table<string,Crossing>
 local allCrossings = {}
 ---@class Crossing
 ---@field public name string @Intersection Name
+---@field private lanes table<string, Lane>
+---@field private trafficLights table<string, TrafficLight>
 ---@field private currentSequence CrossingSequence @Currently used sequence
 ---@field private sequences CrossingSequence[] @All sequences of the intersection
 ---@field private greenPhaseFinished boolean @If true, the Intersection can be switched
