@@ -16,28 +16,33 @@ const routes: Routes = [
         component: MainComponent,
         // These Children do all have the main menu bar
         children: [
-          { path: '', component: HomeComponent, pathMatch: 'full' },
+          { path: '', component: HomeComponent, pathMatch: 'full', data: { title: 'EEP-Web' } },
           {
             path: 'signals',
             loadChildren: () => import('./client/modules/signals/signals.module').then((m) => m.SignalsModule),
+            data: { title: 'Signale' },
           },
           {
             path: 'trains',
             loadChildren: () => import('./client/modules/train/trains.module').then((m) => m.TrainsModule),
+            data: { title: 'Zugverbände' },
           },
           {
             path: 'intersections',
             loadChildren: () =>
               import('./client/modules/intersection/intersection.module').then((m) => m.IntersectionModule),
+            data: { title: 'Kreuzungen' },
           },
           {
             path: 'data',
             loadChildren: () => import('./client/modules/data/eep-data.module').then((m) => m.EepDataModule),
+            data: { title: 'Speicherplätze' },
           },
           {
             path: 'generic-data',
             loadChildren: () =>
               import('./client/modules/json-data/generic-data.module').then((m) => m.GenericDataModule),
+            data: { title: 'Roh-Daten' },
           },
           {
             path: 'log',
@@ -47,15 +52,18 @@ const routes: Routes = [
           {
             path: 'ui',
             loadChildren: () => import('./shared/shared.module').then((m) => m.SharedModule),
+            data: { title: 'Testing' },
           },
           {
             path: 'statistics',
             loadChildren: () => import('./client/modules/statistics/statistics.module').then((m) => m.StatisticsModule),
+            data: { title: 'Statistik' },
           },
           {
             path: 'public-transport',
             loadChildren: () =>
               import('./client/modules/public-transport/public-transport.module').then((m) => m.PublicTransportModule),
+            data: { title: 'ÖPNV' },
           },
         ],
       },
