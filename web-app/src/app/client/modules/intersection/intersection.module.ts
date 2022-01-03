@@ -19,6 +19,7 @@ import { LaneOverviewComponent } from './lane-overview/lane-overview.component';
 import { LaneQueueComponent } from './lane-queue/lane-queue.component';
 import { IntersectionEffects } from './store/intersection.effects';
 import { intersectionFeature } from './store/intersection.reducers';
+import { TitleResolver } from './store/title.resolver';
 
 @NgModule({
   providers: [SignalsService],
