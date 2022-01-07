@@ -57,6 +57,7 @@ scratch.*
 # System files
 .DS_Store
 Thumbs.db
+desktop.ini
 
 # Jekyll documentation files
 _site
@@ -106,3 +107,4 @@ luac.out
 *.hex
 
 
+web-app/src/app/client/modules/intersection/intersection-lane-display/example-svg.ts

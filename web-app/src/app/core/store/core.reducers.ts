@@ -2,7 +2,6 @@ import { createFeatureSelector, createSelector, on, createReducer, Action } from
 
 import * as CoreAction from './core.actions';
 import { environment } from '../../../environments/environment';
-import { Status } from '../server-status/status.enum';
 import { ModuleInfo } from '../model/module-info.model';
 
 export interface State {
@@ -17,7 +16,7 @@ export interface State {
 
 const initialState: State = {
   jsonServerUrl: 'http://localhost:3000',
-  connectionEstablished: false,
+  connectionEstablished: true,
   eepVersion: '?',
   eepLuaVersion: '?',
   eepWebVersion: environment.version,

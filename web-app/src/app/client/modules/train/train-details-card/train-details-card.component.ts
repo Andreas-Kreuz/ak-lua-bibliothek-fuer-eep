@@ -2,7 +2,7 @@ import { Store } from '@ngrx/store';
 import { Component, Input, OnInit } from '@angular/core';
 import * as fromTrain from '../store/train.reducer';
 import { RollingStock, Train } from 'web-shared/build/model/trains';
-import { EepCommandService } from '../../../../common/eep-communication/eep-command.service';
+import { EepCommandService } from '../../../eep-services/eep-command.service';
 
 @Component({
   selector: 'app-train-details-card',

@@ -1,5 +1,12 @@
-<div>
-  <h1 class="app-mute-on-light-bg">Ein bisschen Statistik</h1>
+<div class="container-fluid p-2 p-sm-4">
+  <div class="row">
+    <div class="col-12 col-lg-6">
+      <h1 class="app-mute-on-light-bg">Info nach Datentyp</h1>
+      <app-statistics-card title="Zeit für den Refresh" [list$]="collectorRefreshTimes$"></app-statistics-card>
+    </div>
+    <div class="col-12 col-lg-6">
+      <h1 class="app-mute-on-light-bg">Daten ausleiten</h1>
+      <app-statistics-card title="Ausleiten zum Server" [list$]="serverTimes$"></app-statistics-card>
+    </div>
+  </div>
 </div>
-<app-statistics-card title="Zeit für den Refresh" [list$]="collectorRefreshTimes$"></app-statistics-card>
-<app-statistics-card title="Ausleiten zum Server" [list$]="serverTimes$"></app-statistics-card>

@@ -4,7 +4,7 @@ import { SocketService } from '../../../../core/socket/socket-service';
 import { CommandEvent, IntersectionEvent } from 'web-shared';
 import { ApiDataRoom } from 'web-shared/build/rooms';
 import { LuaSetting } from 'web-shared/build/model/settings';
-import { EepCommandService } from '../../../../common/eep-communication/eep-command.service';
+import { EepCommandService } from '../../../eep-services/eep-command.service';
 
 @Injectable({
   providedIn: 'root',

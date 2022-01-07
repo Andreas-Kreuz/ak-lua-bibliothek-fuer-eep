@@ -2,11 +2,12 @@ import { ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit, Output }
 import { AppComponent } from '../../app.component';
 import { Store } from '@ngrx/store';
 import * as fromRoot from '../../app.reducers';
-import { MediaMatcher } from '@angular/cdk/layout';
+import { BreakpointObserver, Breakpoints, MediaMatcher } from '@angular/cdk/layout';
 import { MainNavigationService } from '../home/main-navigation.service';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { filter, map } from 'rxjs/operators';
 import { Title } from '@angular/platform-browser';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-main',
@@ -19,6 +20,9 @@ export class MainComponent implements OnInit, OnDestroy {
   navigation;
   mobileQuery: MediaQueryList;
   atHome = true;
+
+  tableSub: Subscription;
+  isPhone = true;
   private parentUrl: string;
 
   constructor(
@@ -29,6 +33,7 @@ export class MainComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private titleService: Title,
     media: MediaMatcher,
+    bo: BreakpointObserver,
     private router: Router
   ) {
     this.mobileQuery = media.matchMedia('(max-width: 600px)');
@@ -48,6 +53,12 @@ export class MainComponent implements OnInit, OnDestroy {
           this.titleService.setTitle(data ? data + ' - EEP-Web' : 'EEP-Web');
         }
       });
+
+    const tabletBreakpoints = [Breakpoints.Handset];
+    this.isPhone = bo.isMatched(tabletBreakpoints);
+    this.tableSub = bo.observe(tabletBreakpoints).subscribe((thingy) => {
+      this.isPhone = thingy.matches;
+    });
   }
 
   ngOnInit() {
@@ -57,7 +68,9 @@ export class MainComponent implements OnInit, OnDestroy {
     this.titleService.setTitle(!data || data === 'EEP-Web' ? 'EEP-Web' : data + ' - EEP-Web');
   }
 
-  ngOnDestroy(): void {}
+  ngOnDestroy(): void {
+    this.tableSub.unsubscribe();
+  }
 
   navigateUp() {
     this.router.navigateByUrl(this.parentUrl);

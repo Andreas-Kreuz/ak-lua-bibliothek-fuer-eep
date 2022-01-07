@@ -4,6 +4,7 @@ import * as fromRoot from '../../app.reducers';
 import { Injectable } from '@angular/core';
 import * as fromCore from '../../core/store/core.reducers';
 import { map } from 'rxjs/operators';
+import NavigationInfo from '../store/navigation.model';
 
 class AppAction {
   constructor(public iconName: string, public action: Action, public tooltip: string) {}
@@ -22,21 +23,7 @@ export class MainNavigationService {
   railTrainCount$: Observable<number>;
   roadTrainCount$: Observable<number>;
   tramTrainCount$: Observable<number>;
-  navigation: {
-    name: string;
-    available: Observable<boolean>;
-    values: {
-      available: Observable<boolean>;
-      icon: string;
-      image: string;
-      title: string;
-      subtitle: string | null;
-      description: string | null;
-      linkDescription: string | null;
-      link: string;
-      requiredModuleId: string;
-    }[];
-  }[];
+  navigation: NavigationInfo[];
 
   private readonly dataLuaModuleId = 'e538a124-3f0a-4848-98cf-02b08563bf32'; // "ak.data.DataLuaModule"
   private readonly kreuzungLuaModuleId = 'c5a3e6d3-0f9b-4c89-a908-ed8cf8809362'; // "ak.data.KreuzungLuaModul"
@@ -45,20 +32,20 @@ export class MainNavigationService {
     this.navigation = [
       {
         name: 'Home',
+        available: of(true),
         values: [
           {
             available: of(true),
             icon: 'home',
+            image: undefined,
             title: 'Home',
-            subtitle: null,
             link: '/',
-            image: null,
-            description: null,
-            linkDescription: null,
-            requiredModuleId: null,
+            subtitle: undefined,
+            description: undefined,
+            linkDescription: undefined,
+            requiredModuleId: undefined,
           },
         ],
-        available: of(true),
       },
       {
         name: 'Verkehr',
@@ -78,10 +65,17 @@ export class MainNavigationService {
             linkDescription: 'Kreuzungen zeigen',
             requiredModuleId: this.kreuzungLuaModuleId,
           },
-          //   ]
-          // },
           // {
-          //   name: 'Fahrzeuge', values: [
+          //   available: this.store.select(fromCore.isModuleLoaded$(this.dataLuaModuleId)),
+          //   icon: 'directions_car',
+          //   title: 'Fahrzeuge',
+          //   subtitle: 'Fahrzeuge und Waggons',
+          //   link: '/trains/road',
+          //   image: 'card-img-traffic.jpg',
+          //   description: 'Hier findest Du auch Trams, die auf der Straße fahren.',
+          //   linkDescription: 'Autos zeigen',
+          //   requiredModuleId: this.dataLuaModuleId,
+          // },
           {
             available: this.store.select(fromCore.isModuleLoaded$(this.dataLuaModuleId)),
             icon: 'directions_car',
@@ -125,22 +119,21 @@ export class MainNavigationService {
             available: of(true),
             icon: 'message',
             title: 'Log',
-            subtitle: null, // 'EEP-Log-Datei',
+            subtitle: undefined, // 'EEP-Log-Datei',
             link: '/log',
-            image: null,
+            image: undefined,
             description: 'Zeige die Log-Datei von EEP an',
             linkDescription: 'Log-Datei ansehen',
-            requiredModuleId: null,
+            requiredModuleId: undefined,
           },
-          // {icon: 'directions', name: 'Weichen', link: '/switches'},
           {
             available: this.store.select(fromCore.isModuleLoaded$(this.dataLuaModuleId)),
             icon: 'memory',
             title: 'Speicher',
-            subtitle: null, // 'EEPDataSlot',
+            subtitle: undefined, // 'EEPDataSlot',
             link: '/data',
-            image: null,
-            description: 'Daten die mit EEPSaveData gespeichert wurden',
+            image: undefined,
+            description: 'Mit EEPSaveData gespeicherte Felder',
             linkDescription: 'Zu den Daten',
             requiredModuleId: this.dataLuaModuleId,
           },
@@ -148,27 +141,23 @@ export class MainNavigationService {
             available: this.store.select(fromCore.isModuleLoaded$(this.dataLuaModuleId)),
             icon: 'traffic',
             title: 'Signale',
-            subtitle: null, // 'Ampeln, Signale, Schranken',
+            subtitle: undefined, // 'Ampeln, Signale, Schranken',
             link: '/signals',
-            image: null,
+            image: undefined,
             description: 'Enthält Signale, Ampeln und Schranken',
             linkDescription: 'Zu den Signalen',
             requiredModuleId: this.dataLuaModuleId,
           },
-          //   ]
-          // },
-          // {
-          //   name: 'Roh-Daten', values: [
           {
             available: this.store.select(fromCore.isModulesAvailable),
             icon: 'list_alt',
             title: 'Roh-Daten',
-            subtitle: null, // 'JSON-Daten vom Server',
+            subtitle: undefined, // 'JSON-Daten vom Server',
             link: '/generic-data',
-            image: null,
+            image: undefined,
             description: 'Übersicht der Rohdaten von EEP-Web',
             linkDescription: 'Zu den Daten',
-            requiredModuleId: null,
+            requiredModuleId: undefined,
           },
         ],
       },

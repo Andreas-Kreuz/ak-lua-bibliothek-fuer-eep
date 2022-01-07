@@ -1,103 +1,47 @@
-<div class="row">
-  <div class="col-12">
-    <h1 class="app-mute-on-light-bg">Kreuzungen</h1>
+<div class="container-fluid p-2 p-sm-4">
+  <div class="row">
+    <div class="col-12">
+      <h1 class="app-mute-on-light-bg">Kreuzungen</h1>
+    </div>
   </div>
-</div>
 
-<div class="row" *ngIf="intersections$ | async as intersections">
-  <ng-container *ngFor="let intersection of intersections; trackBy: trackById; let last = last">
-    <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3 d-flex">
-      <mat-card class="d-flex flex-column flex-grow-1 mb-3 app-card mat-elevation-z2">
-        <mat-card-title-group class="w-100 app-bg-primary app-fg-on-primary">
-          <mat-card-title>{{ intersection.name }}</mat-card-title>
-          <mat-card-subtitle
-            >{{ intersection.currentSwitching ? intersection.currentSwitching : "Schaltung" }}
-          </mat-card-subtitle>
+  <div class="row d-flex" *ngIf="intersections$ | async as intersections">
+    <ng-container *ngFor="let intersection of intersections; trackBy: trackById; let last = last">
+      <!-- <app-intersection-lane-display
+      class="col-12 col-sm-6 col-md-6 col-xl-3 mb-3"
+      [intersection]="intersection"
+      [lanes]="this.store.select(laneSelect(intersection.id)) | async"
+    ></app-intersection-lane-display> -->
+      <app-intersection-details-card
+        class="col-12 col-sm-6 col-md-6 col-xl-3 mb-3 d-flex"
+        [intersection]="intersection"
+      ></app-intersection-details-card>
+    </ng-container>
+  </div>
+
+  <h1 class="mt-5 mb-4 app-mute-on-light-bg">Weitere Informationen</h1>
+  <div class="row">
+    <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 d-flex">
+      <mat-card class="flex-fill mb-5 app-card mat-elevation-z2">
+        <mat-card-title-group>
+          <mat-card-title>Hilfe</mat-card-title>
         </mat-card-title-group>
-        <img
-          mat-card-image
-          alt="intersection-icon"
-          class="d-none d-xl-flex"
-          src="../../../../assets/card-img-intersection.jpg"
-        />
-        <mat-card-content class="d-none d-xl-block">
-          <p class="mat-caption">Modus</p>
-          <p *ngIf="!intersection.manualSwitching">Modus: Automatisch.</p>
-          <p *ngIf="intersection.manualSwitching">Modus: Manuell.</p>
-          <p class="mat-caption pt-3">Aktuelle Schaltung</p>
-          <p>{{ intersection.currentSwitching }}</p>
+        <mat-card-content>
+          <p>Erfahre wie Du Kreuzungen mit der Lua-Bibliothek einrichtest</p>
         </mat-card-content>
-        <span class="flex-grow-1"></span>
         <mat-card-actions>
-          <mat-menu #menu="matMenu" xPosition="before">
-            <button
-              mat-menu-item
-              *ngFor="let cam of intersection.staticCams"
-              (click)="intersectionHelper.activateCam(cam, dialog)"
-            >
-              <mat-icon>videocam</mat-icon>
-              {{ cam }}
-            </button>
-          </mat-menu>
-          <button
-            mat-icon-button
-            color="accent"
-            class="cam-button"
-            matTooltip="Kamera wählen"
-            *ngIf="!intersection.staticCams || intersection.staticCams.length <= 1"
-            (click)="intersectionHelper.activateCam(intersection.staticCams[0], dialog)"
-            aria-label="Go to Cam"
+          <a
+            mat-button
+            color="primary"
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://andreas-kreuz.github.io/ak-lua-bibliothek-fuer-eep/docs/anleitungen/"
           >
-            <mat-icon>videocam</mat-icon>
-          </button>
-          <button
-            mat-icon-button
-            color="accent"
-            class="cam-button"
-            matTooltip="Kamera wählen"
-            *ngIf="intersection.staticCams && intersection.staticCams.length > 1"
-            [matMenuTriggerFor]="menu"
-            aria-label="Toggle menu"
-          >
-            <mat-icon>videocam</mat-icon>
-          </button>
-          <a mat-button color="primary" routerLink="{{ intersection.id }}"> Details </a>
+            Anleitung
+            <mat-icon>launch</mat-icon>
+          </a>
         </mat-card-actions>
       </mat-card>
     </div>
-  </ng-container>
-</div>
-
-<h1 class="mt-5 mb-4">Weitere Informationen</h1>
-<div class="row">
-  <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 d-flex">
-    <app-config-card
-      class="flex-fill mb-5"
-      title="Lua-Einstellungen für Kreuzungen"
-      [luaSettings]="luaModuleSettings$"
-      (settingChanged)="onSettingChanged($event)"
-    ></app-config-card>
-  </div>
-  <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 d-flex">
-    <mat-card class="flex-fill mb-5 app-card mat-elevation-z2">
-      <mat-card-title-group>
-        <mat-card-title>Hilfe</mat-card-title>
-      </mat-card-title-group>
-      <mat-card-content>
-        <p>Erfahre wie Du Kreuzungen mit der Lua-Bibliothek einrichtest</p>
-      </mat-card-content>
-      <mat-card-actions>
-        <a
-          mat-button
-          color="primary"
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://andreas-kreuz.github.io/ak-lua-bibliothek-fuer-eep/docs/anleitungen/"
-        >
-          Anleitung
-          <mat-icon>launch</mat-icon>
-        </a>
-      </mat-card-actions>
-    </mat-card>
   </div>
 </div>

@@ -11,6 +11,7 @@ local fmt = require("ak.core.eep.TippTextFormatter")
 ---@field name string
 ---@field private type string ("Lane")
 ---@field trafficLight TrafficLight
+---@field tracksForHighlighting table
 ---@field tracksForRequests table
 local Lane = {}
 Lane.debug = AkStartWithDebug or false
@@ -442,6 +443,13 @@ end
 function Lane:switchTrafficLightTo(phase, grund)
     self.trafficLight:switchTo(phase, grund)
     self.phase = phase
+end
+
+function Lane:setHighLightingTracks(...)
+    for _, track in ipairs({...}) do assert(type(track) == "number", "Provide tracks as numbers") end
+
+    self.tracksForHighlighting = {...} or {}
+    return self
 end
 
 function Lane:setDirections(...)

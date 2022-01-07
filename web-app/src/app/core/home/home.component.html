@@ -1,41 +1,36 @@
-<ng-container *ngFor="let category of navigation; let last_outer = last; let first_outer = first">
-  <ng-container *ngIf="category.name !== 'Home' && category.available | async">
-    <h1 class="mb-4 app-mute-on-light-bg">{{ category.name }}</h1>
-
-    <div class="row">
-      <ng-container *ngFor="let element of category.values; let last = last">
-        <div *ngIf="element.available | async" class="col-sm-12 col-md-6 col-xl-3 d-flex">
-          <mat-card class="d-flex flex-column flex-grow-1 mb-5 app-card mat-elevation-z2">
-            <mat-card-title-group class="app-bg-primary app-fg-on-primary">
-              <mat-card-title>{{ element.title }}</mat-card-title>
-              <mat-card-subtitle *ngIf="element.subtitle">{{ element.subtitle }}</mat-card-subtitle>
-            </mat-card-title-group>
-            <img
-              *ngIf="element.image"
-              alt="{{ element.title }}"
-              mat-card-image
-              src="../../../../assets/{{ element.image }}"
-            />
-            <mat-card-content *ngIf="element.description">
-              {{ element.description }}
-            </mat-card-content>
-            <span class="flex-grow-1"></span>
-            <mat-card-actions>
-              <a mat-button color="primary" routerLink="{{ element.link }}">
-                {{ element.linkDescription }}
-              </a>
-            </mat-card-actions>
-          </mat-card>
-        </div>
-      </ng-container>
-    </div>
+<div class="container-fluid p-2 p-sm-4">
+  <ng-container *ngFor="let category of navigation; let last_outer = last; let first_outer = first">
+    <ng-container *ngIf="category.name !== 'Home' && category.available | async">
+      <h1 class="mb-3 app-mute-on-light-bg" [ngClass]="{ 'pt-4': 'Verkehr' !== category.name }">
+        {{ category.name }}
+      </h1>
+      <div class="row d-flex">
+        <ng-container *ngFor="let element of category.values; let last = last">
+          <app-card2
+            *ngIf="element.available | async"
+            class="col-sm-6 mb-4 d-flex"
+            [ngClass]="{
+              'col-6': !element.image || smallPortrait,
+              'col-12': element.image && smallPortrait,
+              'col-md-3': !smallPortrait,
+              'col-md-6': smallPortrait
+            }"
+            [title]="element.title"
+            [subtitle]="element.subtitle"
+            [routerUrl]="element.link"
+            [imageUrl]="(element.image && '../../../../assets/' + element.image) || undefined"
+            [description]="element.description"
+          ></app-card2>
+        </ng-container>
+      </div>
+    </ng-container>
   </ng-container>
-</ng-container>
 
-<h5 class="mt-5 mb-4 app-mute-on-light-bg">Versionen</h5>
-<p class="mat-small mat-caption app-mute-on-light-bg">
-  EEP-Web: {{ eepWebVersion$ | async
-  }}<span *ngIf="(eepVersion$ | async) !== '?'"
-    >, EEP-Lua: {{ eepLuaVersion$ | async }}, EEP: {{ eepVersion$ | async }}
-  </span>
-</p>
+  <h5 class="mt-5 mb-0 app-mute-on-light-bg">Versionen</h5>
+  <p class="mat-small mat-caption app-mute-on-light-bg">
+    EEP-Web: {{ eepWebVersion$ | async
+    }}<span *ngIf="(eepVersion$ | async) !== '?'"
+      >, EEP-Lua: {{ eepLuaVersion$ | async }}, EEP: {{ eepVersion$ | async }}
+    </span>
+  </p>
+</div>

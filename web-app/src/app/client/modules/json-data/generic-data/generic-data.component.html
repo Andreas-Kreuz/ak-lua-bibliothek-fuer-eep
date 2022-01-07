@@ -1,13 +1,15 @@
-<div>
-  <h1 class="app-mute-on-light-bg material-icons">Verfügbare &quot;{{ (data$ | async)?.dataName }}&quot;</h1>
-  <p *ngIf="data$ | async as data">Für &quot;{{ data.dataName }}&quot; stehen folgende Daten zur Verfügung:</p>
-</div>
+<div class="container-fluid p-2 p-sm-4">
+  <div>
+    <h1 class="app-mute-on-light-bg material-icons">Verfügbare &quot;{{ (data$ | async)?.dataName }}&quot;</h1>
+    <p *ngIf="data$ | async as data">Für &quot;{{ data.dataName }}&quot; stehen folgende Daten zur Verfügung:</p>
+  </div>
 
-<mat-card *ngIf="data$ | async as data">
-  <app-filtered-table
-    [columnNames]="mapOf(data.valueColumns)"
-    [columnsToDisplay]="data.valueColumns"
-    [tableData]="tableData$"
-  >
-  </app-filtered-table>
-</mat-card>
+  <mat-card *ngIf="data$ | async as data">
+    <app-filtered-table
+      [columnNames]="mapOf(data.valueColumns)"
+      [columnsToDisplay]="data.valueColumns"
+      [tableData]="tableData$"
+    >
+    </app-filtered-table>
+  </mat-card>
+</div>
