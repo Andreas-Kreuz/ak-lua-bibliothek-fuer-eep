@@ -5,7 +5,7 @@ if AkDebugLoad then print("Loading ak.core.eep.EepSimulator ...") end
 ------------------
 
 --- Versionsnummer von EEP.
-EEPVer = 16.1
+EEPVer = 16.3
 
 -- Der Inhalt des EEP-EreignisFensters wird geloescht
 function clearlog()
@@ -659,6 +659,7 @@ function EEPStructureGetModelType(name)
 end
 
 local tags = {structures = {}, rollingStock = {}}
+local texturesTexts = {rollingStock = {}}
 
 --- Ã„ndert den Tag-Text einer Immobilie. Jede Immobilie kann jetzt einen individuellen String von
 --- maximal 1024 Zeichen Laenge mitfuehren. Diese Strings werden mit der Anlage gespeichert und
@@ -703,7 +704,11 @@ end
 function EEPRollingstockGetTagText(name) return true, tags.rollingStock[name] end
 
 function EEPStructureSetTextureText(name, flaeche, text) return true end
-function EEPRollingstockSetTextureText(name, flaeche, text) return true end
+function EEPRollingstockSetTextureText(name, flaeche, text)
+    textutreTexts.rollingStock[name] = {}
+    textutreTexts.rollingStock[name][flaeche] = {text}
+    return true
+end
 function EEPSignalSetTextureText(id, flaeche, text) return true end
 function EEPGoodsSetTextureText(name, flaeche, text) return true end
 function EEPRailTrackSetTextureText(id, flaeche, text) return true end
@@ -824,6 +829,18 @@ function EEPRollingstockGetMileage(rollingstockName) return true, 10 end
 -- @return PosY
 -- @return PosZ
 function EEPRollingstockGetPosition(rollingstockName) return true, 100, -50, 3 end
+
+-- Liest den Text einer beschreibbaren Fläche eines Rollmaterials aus (EEP 16.3)
+-- @param rollingstockName Name des Rollmaterials
+-- @param flaeche Nummer der Fläche, welche den Text enthaelt.
+-- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
+-- @return textureText
+function EEPRollingstockGetTextureText(rollingstockName, fleache)
+    local textureTexts = textureTexts.rollingStock[rollingstockName] or {}
+    local textureText = textureTexts[fleache]
+    locak ok = textureText and true or false
+    return ok, textureText
+end
 
 local camera = {}
 
