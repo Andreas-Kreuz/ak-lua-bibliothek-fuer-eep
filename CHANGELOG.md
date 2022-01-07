@@ -1,5 +1,12 @@
 # Änderungen an der Software
 
+## v0.12.0
+
+- ⭐ Neu: Verbesserte Ansicht auf dem Smartphone
+- ⭐ Neu: Log-Ansicht: Verzicht auf doppelte Toolbar
+- ⭐ Neu: Einstellungen für Kreuzungen und Log sind in die Toolbar gewandert (Icon oben rechts)
+- ⭐ Neu: In der Toolbar (und im Browser-Tab) wird der Titel der aktuellen Seite angezeigt
+
 ## v.0.11.1
 
 ### Lua (0.11.1)
