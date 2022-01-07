@@ -57,6 +57,7 @@ scratch.*
 # System files
 .DS_Store
 Thumbs.db
+desktop.ini
 
 # Jekyll documentation files
 _site
