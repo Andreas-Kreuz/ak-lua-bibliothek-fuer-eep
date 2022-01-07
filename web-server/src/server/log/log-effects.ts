@@ -1,3 +1,4 @@
+import { bufferTime, Subject } from 'rxjs';
 import { Server, Socket } from 'socket.io';
 
 import { LogEvent, RoomEvent } from 'web-shared';
@@ -11,9 +12,15 @@ export default class LogEffects {
     private socketService: SocketService,
     private getCurrentLogLines: () => string,
     private queueCommand: (command: string) => void,
-    private debug = false
+    private debug = false,
+    private logLinesSubject = new Subject<string>()
   ) {
     this.socketService.addOnSocketConnectedCallback((socket: Socket) => this.socketConnected(socket));
+    this.logLinesSubject.pipe(bufferTime(500)).forEach((lines) => {
+      if (lines && lines.length > 0) {
+        this.io.to(LogEvent.Room).emit(LogEvent.LinesAdded, lines.join('\n'));
+      }
+    });
   }
 
   private socketConnected(socket: Socket) {
@@ -35,8 +42,7 @@ export default class LogEffects {
   }
 
   onNewLogLine(line: string): void {
-    // console.log('Would send log: ' + line);
-    this.io.to(LogEvent.Room).emit(LogEvent.LinesAdded, line);
+    this.logLinesSubject.next(line);
   }
 
   onLogCleared(): void {

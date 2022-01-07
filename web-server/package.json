@@ -91,6 +91,7 @@
     "command-line-usage": "^6.1.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "rxjs": "^7.5.1",
     "socket.io": "^4.4.0",
     "tail": "^2.2.4",
     "web-shared": "file:../web-shared"
