@@ -125,7 +125,7 @@ export default class EepService implements CacheService {
 
         if (data.eventCounter) {
           const counterFile = path.resolve(this.dir, FileNames.serverEventCounter);
-          fs.writeFileSync(counterFile, data.eventCounter);
+          fs.writeFileSync(counterFile, data.eventCounter.toString(10));
         }
       }
     } catch (err) {
