@@ -15,7 +15,10 @@
   <router-outlet name="main-toolbar-tabs"></router-outlet>
 </div>
 
-<mat-sidenav-container class="sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 0 : 0">
+<mat-sidenav-container
+  class="sidenav-container"
+  [ngClass]="{ 'top-small-toolbar-padding': mobileQuery.matches, 'top-big-toolbar-padding': !mobileQuery.matches }"
+>
   <mat-sidenav #leftNavigation [opened]="false" [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="true"
     ><app-nav-rail *ngIf="false"></app-nav-rail>
     <div *ngIf="true">
@@ -46,9 +49,7 @@
       </div>
     </div>
   </mat-sidenav>
-  <mat-sidenav-content class="pb-3 pb-sm-5 pt-4 pt-sm-5 p-sm-4 mh-100">
-    <div class="container-fluid">
-      <router-outlet></router-outlet>
-    </div>
+  <mat-sidenav-content class="m-0 p-0">
+    <router-outlet></router-outlet>
   </mat-sidenav-content>
 </mat-sidenav-container>

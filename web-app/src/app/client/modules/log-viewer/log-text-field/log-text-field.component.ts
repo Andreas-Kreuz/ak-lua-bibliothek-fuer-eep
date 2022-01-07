@@ -34,9 +34,8 @@ export class LogTextFieldComponent implements OnInit, AfterViewInit {
   }
 
   resetMaxHeight = () => {
-    const offset = 101;
     const small = window.innerWidth < 576;
-    this.maxHeight = 'calc(' + window.innerHeight + 'px - ' + offset + 'px' + (small ? '' : ' - 4rem') + ')';
+    this.maxHeight = 'calc(' + window.innerHeight + 'px - ' + (small ? '56px' : '64px') + ')';
   };
 
   logEntries(index, item) {

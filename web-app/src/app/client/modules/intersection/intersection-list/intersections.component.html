@@ -1,45 +1,47 @@
-<div class="row">
-  <div class="col-12">
-    <h1 class="app-mute-on-light-bg">Kreuzungen</h1>
+<div class="container-fluid p-2 p-sm-4">
+  <div class="row">
+    <div class="col-12">
+      <h1 class="app-mute-on-light-bg">Kreuzungen</h1>
+    </div>
   </div>
-</div>
 
-<div class="row d-flex" *ngIf="intersections$ | async as intersections">
-  <ng-container *ngFor="let intersection of intersections; trackBy: trackById; let last = last">
-    <!-- <app-intersection-lane-display
+  <div class="row d-flex" *ngIf="intersections$ | async as intersections">
+    <ng-container *ngFor="let intersection of intersections; trackBy: trackById; let last = last">
+      <!-- <app-intersection-lane-display
       class="col-12 col-sm-6 col-md-6 col-xl-3 mb-3"
       [intersection]="intersection"
       [lanes]="this.store.select(laneSelect(intersection.id)) | async"
     ></app-intersection-lane-display> -->
-    <app-intersection-details-card
-      class="col-12 col-sm-6 col-md-6 col-xl-3 mb-3 d-flex"
-      [intersection]="intersection"
-    ></app-intersection-details-card>
-  </ng-container>
-</div>
+      <app-intersection-details-card
+        class="col-12 col-sm-6 col-md-6 col-xl-3 mb-3 d-flex"
+        [intersection]="intersection"
+      ></app-intersection-details-card>
+    </ng-container>
+  </div>
 
-<h1 class="mt-5 mb-4">Weitere Informationen</h1>
-<div class="row">
-  <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 d-flex">
-    <mat-card class="flex-fill mb-5 app-card mat-elevation-z2">
-      <mat-card-title-group>
-        <mat-card-title>Hilfe</mat-card-title>
-      </mat-card-title-group>
-      <mat-card-content>
-        <p>Erfahre wie Du Kreuzungen mit der Lua-Bibliothek einrichtest</p>
-      </mat-card-content>
-      <mat-card-actions>
-        <a
-          mat-button
-          color="primary"
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://andreas-kreuz.github.io/ak-lua-bibliothek-fuer-eep/docs/anleitungen/"
-        >
-          Anleitung
-          <mat-icon>launch</mat-icon>
-        </a>
-      </mat-card-actions>
-    </mat-card>
+  <h1 class="mt-5 mb-4">Weitere Informationen</h1>
+  <div class="row">
+    <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 d-flex">
+      <mat-card class="flex-fill mb-5 app-card mat-elevation-z2">
+        <mat-card-title-group>
+          <mat-card-title>Hilfe</mat-card-title>
+        </mat-card-title-group>
+        <mat-card-content>
+          <p>Erfahre wie Du Kreuzungen mit der Lua-Bibliothek einrichtest</p>
+        </mat-card-content>
+        <mat-card-actions>
+          <a
+            mat-button
+            color="primary"
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://andreas-kreuz.github.io/ak-lua-bibliothek-fuer-eep/docs/anleitungen/"
+          >
+            Anleitung
+            <mat-icon>launch</mat-icon>
+          </a>
+        </mat-card-actions>
+      </mat-card>
+    </div>
   </div>
 </div>

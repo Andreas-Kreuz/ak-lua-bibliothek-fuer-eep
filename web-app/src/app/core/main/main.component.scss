@@ -11,8 +11,16 @@
 
 .sidenav-container {
   flex: 1 0 auto;
+}
+
+.top-small-toolbar-padding {
+  padding-top: 56px;
+  min-height: calc(100vh - 56px);
+}
+
+.top-big-toolbar-padding {
   padding-top: 64px;
-  min-height: 100vh;
+  min-height: calc(100vh - 64px);
 }
 
 .side-toolbar {
