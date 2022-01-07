@@ -66,7 +66,7 @@ function RollingStock:new(o)
     local _, propelled = EEPRollingstockGetMotor(o.id) -- EEP 14.2
     local _, modelType = EEPRollingstockGetModelType(o.id) -- EEP 14.2
     local _, tag = EEPRollingstockGetTagText(o.id) -- EEP 14.2
-    local _, textureText = EEPRollingstockGetTextureText(o.id) -- EEP 16.3
+    local _, textureText = EEPRollingstockGetTextureText(o.id, 1) -- EEP 16.3 (limited to first entry)
 
     local _, trackId, trackDistance, trackDirection, trackSystem = EEPRollingstockGetTrack(o.id)
     -- EEP 14.2
