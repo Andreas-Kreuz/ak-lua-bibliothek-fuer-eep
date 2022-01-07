@@ -1,8 +1,7 @@
-import { Component, OnInit, AfterViewChecked, AfterViewInit } from '@angular/core';
-import { debounceTime } from 'rxjs/operators';
-import { fromEvent, Observable } from 'rxjs';
-import { select, Store } from '@ngrx/store';
-
+import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { fromEvent } from 'rxjs';
+import { auditTime, debounceTime } from 'rxjs/operators';
 import * as fromRoot from '../../../../app.reducers';
 import * as fromLogFile from '../store/log-file.reducers';
 
@@ -13,16 +12,14 @@ import * as fromLogFile from '../store/log-file.reducers';
 })
 export class LogTextFieldComponent implements OnInit, AfterViewInit {
   lines$ = this.store.select(fromLogFile.lines$);
-  linesAsString$ = this.store.select(fromLogFile.linesAsString$);
   loading$ = this.store.select(fromLogFile.loading$);
   maxHeight: string;
-  autoscroll: boolean;
+  private autoscroll = true;
+  private firstScroll = true;
   private container: HTMLElement;
   private isNearBottom = true;
 
-  constructor(private store: Store<fromRoot.State>) {
-    this.autoscroll = true;
-  }
+  constructor(private store: Store<fromRoot.State>) {}
 
   ngOnInit() {
     this.resetMaxHeight();
@@ -43,8 +40,9 @@ export class LogTextFieldComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.container = document.getElementById('container');
-    this.linesAsString$.subscribe((_) => this.onItemElementsChanged());
+    this.container = document.getElementById('app-log-container');
+    this.lines$.pipe(auditTime(50)).subscribe((_) => this.onItemElementsChanged());
+    this.scrollToBottom();
   }
 
   scrolled(event: any): void {
@@ -52,21 +50,20 @@ export class LogTextFieldComponent implements OnInit, AfterViewInit {
   }
 
   private scrollToBottom() {
-    this.container.scroll({
-      top: this.container.scrollHeight,
-      left: 0,
-      behavior: 'smooth',
-    });
+    if (this.container) {
+      this.container.scroll(0, this.container.scrollHeight);
+      this.firstScroll = false;
+    }
   }
 
   private onItemElementsChanged(): void {
-    if (this.isNearBottom && this.autoscroll) {
+    if (this.firstScroll || (this.isNearBottom && this.autoscroll)) {
       this.scrollToBottom();
     }
   }
 
   private isUserNearBottom(): boolean {
-    const threshold = 150;
+    const threshold = window.innerHeight / 2;
     const position = this.container.scrollTop + this.container.offsetHeight;
     const height = this.container.scrollHeight;
     return position > height - threshold;
