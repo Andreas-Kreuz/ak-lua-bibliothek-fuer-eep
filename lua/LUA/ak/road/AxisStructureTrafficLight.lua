@@ -1,4 +1,4 @@
-if AkDebugLoad then print("Loading ak.road.AxisStructureTrafficLight ...") end
+if AkDebugLoad then print("[#Start] Loading ak.road.AxisStructureTrafficLight ...") end
 
 ---@class AxisStructureTrafficLight
 ---@field structureName string Name der Immobilie, deren Achse gesteuert werden soll

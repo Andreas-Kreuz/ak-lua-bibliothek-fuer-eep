@@ -1,4 +1,4 @@
-if AkDebugLoad then print("Loading ak.scheduler.SchedulerLuaModule ...") end
+if AkDebugLoad then print("[#Start] Loading ak.scheduler.SchedulerLuaModule ...") end
 SchedulerLuaModule = {}
 SchedulerLuaModule.id = "725585f1-cfee-4237-97e1-135c5e9f4d02"
 SchedulerLuaModule.enabled = true
@@ -25,7 +25,7 @@ end
 -- @author Andreas Kreuz
 function SchedulerLuaModule.run()
     if not SchedulerLuaModule.enabled then
-        print("WARNING: PlannerLuaModul is not enabled")
+        print("[#SchedulerLuaModule] WARNING: SchedulerLuaModule is not enabled")
         return
     end
 

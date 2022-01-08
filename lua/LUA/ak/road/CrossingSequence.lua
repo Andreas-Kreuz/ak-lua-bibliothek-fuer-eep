@@ -1,4 +1,4 @@
-if AkDebugLoad then print("Loading ak.road.CrossingSequence ...") end
+if AkDebugLoad then print("[#Start] Loading ak.road.CrossingSequence ...") end
 
 local Task = require("ak.scheduler.Task")
 -- local Lane = require("ak.road.Lane")
@@ -92,8 +92,7 @@ function CrossingSequence:tasksForSwitchingFrom(oldSequence, afterRedTask)
     if oldSequence then
         -- Schedule the task where the old pedestrian lights get yellow
         local reasonPed = "Schalte " .. oldSequence.name .. " auf Fussgaenger Rot"
-        local oldRedPedestrian =
-        switchTask(toRed, CrossingSequence.Type.PEDESTRIAN, TrafficLightState.RED, reasonPed)
+        local oldRedPedestrian = switchTask(toRed, CrossingSequence.Type.PEDESTRIAN, TrafficLightState.RED, reasonPed)
         table.insert(taskList, {offset = 0, task = oldRedPedestrian, precedingTask = nil})
 
         -- * Hier könnte noch die DDR-Schaltung rein (2 Sekunden grün-gelb)

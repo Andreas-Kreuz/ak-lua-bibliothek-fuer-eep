@@ -1,4 +1,4 @@
-if AkDebugLoad then print("Loading ak.core.eep.TippTextFormatter ...") end
+if AkDebugLoad then print("[#Start] Loading ak.core.eep.TippTextFormatter ...") end
 
 local TippTextFormatter = {
     -- <br> neue Zeile

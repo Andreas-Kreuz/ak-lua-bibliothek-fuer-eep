@@ -1,4 +1,4 @@
-if AkDebugLoad then print("Loading ak.io.AkCommandExecutor ...") end
+if AkDebugLoad then print("[#Start] Loading ak.io.AkCommandExecutor ...") end
 
 -- split a string
 local function split(text, delimiter)
@@ -35,7 +35,7 @@ AkCommandExecutor.addAcceptedRemoteFunction("EEPPause", EEPPause)
 -- Accept all EEP*Set functions
 for name, value in pairs(_G) do
     if string.find(name, "^EEP.*Set") and type(value) == "function" then
-        -- print(string.format("Adding %s to acceptedRemoteFunctions", name))
+        -- print(string.format("[#CommandExecutor] Adding %s to acceptedRemoteFunctions", name))
         AkCommandExecutor.addAcceptedRemoteFunction(name, value)
     end
 end
@@ -56,7 +56,7 @@ function AkCommandExecutor.callSavely(functionAndArgs)
         local status, error = pcall(f, table.unpack(args))
         if not status then print(error) end
     else
-        print("Aufruf von " .. fName .. " nicht erlaubt")
+        print("[#CommandExecutor] Aufruf von " .. fName .. " nicht erlaubt")
     end
 end
 
@@ -65,7 +65,7 @@ function AkCommandExecutor.execute(commands)
 
     for _, command in ipairs(commands) do
         if command ~= "" then
-            -- print("Command: " .. command)
+            -- print("[#CommandExecutor] Command: " .. command)
             local functionAndArgs = split(command, "|")
 
             AkCommandExecutor.callSavely(functionAndArgs)

@@ -1,4 +1,4 @@
-if AkDebugLoad then print("Loading ak.road.TrafficLight ...") end
+if AkDebugLoad then print("[#Start] Loading ak.road.TrafficLight ...") end
 
 local Crossing = require("ak.road.Crossing")
 local AxisStructureTrafficLight = require("ak.road.AxisStructureTrafficLight")
@@ -188,8 +188,9 @@ function TrafficLight:switchTo(phase, reason)
 
     local sigIndex = self.trafficLightModel:signalIndexOf(self.phase)
     if (self.debug or TrafficLight.debug) then
-        print(string.format("[TrafficLight    ] Schalte Ampel %04d auf %s (%01d)", self.signalId, self.phase,
-                            sigIndex) .. lightDbg .. axisDbg .. " - " .. reason)
+        print(
+        string.format("[TrafficLight    ] Schalte Ampel %04d auf %s (%01d)", self.signalId, self.phase, sigIndex) ..
+        lightDbg .. axisDbg .. " - " .. reason)
     end
     self:switchSignal(sigIndex)
     self:changed()
@@ -211,8 +212,7 @@ function TrafficLight:switchStructureLight()
         end
         if lightTL.greenStructure then
             local onOff = self.phase == TrafficLightState.GREEN
-            lightDbg = lightDbg ..
-                       string.format(", Licht in %s: %s", lightTL.greenStructure, onOff and "an" or "aus")
+            lightDbg = lightDbg .. string.format(", Licht in %s: %s", lightTL.greenStructure, onOff and "an" or "aus")
             EEPStructureSetLight(lightTL.greenStructure, onOff)
         end
     end

@@ -1,4 +1,4 @@
-if AkDebugLoad then print("Loading AkEepFunctions ...") end
+if AkDebugLoad then print("[#Start] Loading AkEepFunctions ...") end
 require("ak.core.eep.EepSimulator")
 
 local Scheduler = require("ak.scheduler.Scheduler")
@@ -25,7 +25,7 @@ EEPStructureSetLight("#33_Straba Signal A", false) --         Anforderung
 --------------------------------------------------------------------
 -- Zeigt erweiterte Informationen waehrend der erste Schitte an   --
 --------------------------------------------------------------------
-if AkDebugLoad then print("Loading ak.demo-anlagen.tutorial-ampel.meine-ampel-main ...") end
+if AkDebugLoad then print("[#Start] Loading ak.demo-anlagen.tutorial-ampel.meine-ampel-main ...") end
 require("ak.demo-anlagen.tutorial-ampel.meine-ampel-main")
 
 --------------------------------------------------------------------

@@ -1,4 +1,4 @@
-if AkDebugLoad then print("Loading AkEepFunctions ...") end
+if AkDebugLoad then print("[#Start] Loading AkEepFunctions ...") end
 local EepSimulator = require("ak.core.eep.EepSimulator")
 
 local Scheduler = require("ak.scheduler.Scheduler")
@@ -25,7 +25,9 @@ EEPStructureSetLight("#33_Straba Signal A", false) --         Anforderung
 --------------------------------------------------------------------
 -- Zeigt erweiterte Informationen waehrend der erste Schitte an   --
 --------------------------------------------------------------------
-if AkDebugLoad then print("Loading ak.demo-anlagen.tutorial-ampel.Andreas_Kreuz-Tutorial-Ampelkreuzung-2-main ...") end
+if AkDebugLoad then
+    print("[#Start] Loading ak.demo-anlagen.tutorial-ampel.Andreas_Kreuz-Tutorial-Ampelkreuzung-2-main ...")
+end
 require("ak.demo-anlagen.tutorial-ampel.Andreas_Kreuz-Tutorial-Ampelkreuzung-2-main")
 
 --------------------------------------------------------------------
@@ -60,7 +62,7 @@ os:resetQueueFromSignal()
 assert(1 == os.queue:size())
 
 for i = 1, 10 do
-    print(i)
+    print("[#Test] run nr. " .. i)
     run()
     run()
     run()

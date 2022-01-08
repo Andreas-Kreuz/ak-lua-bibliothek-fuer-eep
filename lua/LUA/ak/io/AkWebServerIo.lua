@@ -1,4 +1,4 @@
-if AkDebugLoad then print("Loading ak.io.AkWebServerIo ...") end
+if AkDebugLoad then print("[#Start] Loading ak.io.AkWebServerIo ...") end
 local AkCommandExecutor = require("ak.io.AkCommandExecutor")
 local os = require("os")
 
@@ -157,7 +157,9 @@ local serverWasListeningLastTime = true
 function AkWebServerIo.checkWebServer()
     if fileExists(watchFileNameServer) then -- file: ak-server.iswatching
         if fileExists(watchFileNameLua) then -- file: ak-eep-out-json.isfinished
-            if AkWebServerIo.debug and serverWasReadyLastTime then print("SERVER IS NOT READY") end
+            if AkWebServerIo.debug and serverWasReadyLastTime then
+                print("[#WebServerIo] SERVER IS NOT READY")
+            end
             serverWasReadyLastTime = false
             return false
         else
@@ -169,7 +171,9 @@ function AkWebServerIo.checkWebServer()
             return true
         end
     else
-        if AkWebServerIo.debug and serverWasListeningLastTime then print("SERVER IS NOT LISTENING") end
+        if AkWebServerIo.debug and serverWasListeningLastTime then
+            print("[#WebServerIo] SERVER IS NOT LISTENING")
+        end
         serverWasListeningLastTime = false
         return false
     end
@@ -182,7 +186,7 @@ function AkWebServerIo.updateJsonFile(jsonData)
     if not writing then
         writing = true
         if not pcall(writeFile, outFileNameJson, jsonData .. "\n") then -- file: ak-eep-out.json
-            print("CANNOT WRITE TO " .. outFileNameJson)
+            print("[#WebServerIo] CANNOT WRITE TO " .. outFileNameJson)
         end
         writing = false
     end

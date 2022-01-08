@@ -1,4 +1,4 @@
-if AkDebugLoad then print("Loading ak.road.Crossing ...") end
+if AkDebugLoad then print("[#Start] Loading ak.road.Crossing ...") end
 
 local Task = require("ak.scheduler.Task")
 local Scheduler = require("ak.scheduler.Scheduler")
@@ -69,14 +69,14 @@ function Crossing.setShowSignalIdOnSignal(value)
 end
 
 function Crossing.switchManuallyTo(crossingName, sequenceName)
-    print("switchManuallyTo:" .. crossingName .. "/" .. sequenceName)
+    if Crossing.debug then print("[#Crossing] switchManuallyTo:" .. crossingName .. "/" .. sequenceName) end
     ---@type Crossing
     local k = Crossing.allCrossings[crossingName]
     if k then k:setManualSequence(sequenceName) end
 end
 
 function Crossing.switchAutomatically(crossingName)
-    print("switchAutomatically:" .. crossingName)
+    if Crossing.debug then print("[#Crossing] switchAutomatically:" .. crossingName) end
     ---@type Crossing
     local k = Crossing.allCrossings[crossingName]
     if k then k:setAutomaticSequence() end
@@ -126,7 +126,7 @@ function Crossing:setManualSequence(sequenceName)
     for _, sequence in ipairs(self.sequences) do
         if sequence.name == sequenceName then
             self.manualSequence = sequence
-            print("Manuell geschaltet auf: " .. sequence.name .. " (" .. self.name .. "')")
+            print("[#Crossing] Manuell geschaltet auf: " .. sequence.name .. " (" .. self.name .. "')")
             self:setGreenPhaseFinished(true)
         end
     end
@@ -135,7 +135,7 @@ end
 function Crossing:setAutomaticSequence()
     self.manualSequence = nil
     self:setGreenPhaseFinished(true)
-    print("Automatikmodus aktiviert. (" .. self.name .. "')")
+    print("[#Crossing] Automatikmodus aktiviert. (" .. self.name .. "')")
 end
 
 function Crossing:setSwitchInStrictOrder(value)
@@ -157,7 +157,7 @@ function Crossing:addStaticCam(kameraName) table.insert(self.staticCams, kameraN
 
 function Crossing.resetVehicles()
     for _, crossing in pairs(allCrossings) do
-        print("[Crossing ] SETZE ZURUECK: " .. crossing.name)
+        print("[#Crossing] SETZE ZURUECK: " .. crossing.name)
         if crossing.lanes then for _, lane in pairs(crossing.lanes) do lane:resetVehicles() end end
     end
 end
@@ -220,7 +220,7 @@ local function switch(crossing)
     local TrafficLight = require("ak.road.TrafficLight")
 
     if Crossing.debug then
-        local msg = "[Crossing ] Schalte Kreuzung %s: %s"
+        local msg = "[#Crossing] Schalte Kreuzung %s: %s"
         print(string.format(msg, crossing:getName(), crossing:isGreenPhaseFinished() and "Ja" or "Nein"))
     end
 
@@ -238,7 +238,7 @@ local function switch(crossing)
     local nextName = crossing.name .. " " .. nextSequence:getName()
 
     if Crossing.debug then
-        local msg = "[Crossing ] Schalte %s zu %s (%s)"
+        local msg = "[#Crossing] Schalte %s zu %s (%s)"
         print(string.format(msg, crossing:getName(), nextName, nextSequence:lanesNamesText()))
     end
     if not currentSequence then
@@ -263,7 +263,7 @@ local function switch(crossing)
     -- After the sequence is ready, the current sequence is active
     local greenPhaseReachedTask = Task:new(function()
         if Crossing.debug then
-            local msg = "[Crossing ] %s: Kreuzung ist auf grün geschaltet."
+            local msg = "[#Crossing] %s: Kreuzung ist auf grün geschaltet."
             print(string.format(msg, crossing.name))
         end
         crossing.greenPhaseReached = true
@@ -274,7 +274,7 @@ local function switch(crossing)
     local greenPhaseSeconds = nextSequence.greenPhaseSeconds
     local crossingFinishedTask = Task:new(function()
         if Crossing.debug then
-            local msg = "[Crossing ] %s: Fahrzeuge sind gefahren, kreuzung ist dann frei."
+            local msg = "[#Crossing] %s: Fahrzeuge sind gefahren, kreuzung ist dann frei."
             print(string.format(msg, crossing.name))
         end
         crossing:setGreenPhaseFinished(true)
@@ -360,13 +360,13 @@ function Crossing.initSequences()
                 laneFound = true
             end
             if not laneFound then
-                print("No LANE found in sequence " .. sequence.name .. " (" .. crossing.name .. ")")
+                print("[#Crossing] No LANE found in sequence " .. sequence.name .. " (" .. crossing.name .. ")")
             end
             assert(laneFound)
             for v in pairs(sequence.trafficLights) do crossing.trafficLights[v.signalId] = v end
 
             if Crossing.debug then
-                local text = "[Crossing ] %s - %s: %s"
+                local text = "[#Crossing] %s - %s: %s"
                 print(string.format(text, crossing.name, sequence.name, sequence:lanesNamesText()))
             end
         end

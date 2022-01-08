@@ -36,13 +36,13 @@ setmetatable(_ENV, {
 --------------------------------------------
 function enterLane(Zugname, lane)
     assert(lane, "lane darf nicht nil sein. Richtige Lua-Funktion im Kontaktpunkt?")
-    -- print(lane.name .. " betreten durch: " .. Zugname)
+    -- print("[#Anlage] " .. lane.name .. " betreten durch: " .. Zugname)
     lane:vehicleEntered(Zugname)
 end
 
 function leaveLane(Zugname, lane)
     assert(lane, "lane darf nicht nil sein. Richtige Lua-Funktion im Kontaktpunkt?")
-    -- print(lane.name .. " verlassen von: " .. Zugname)
+    -- print("[#Anlage] " .. lane.name .. " verlassen von: " .. Zugname)
     lane:vehicleLeft(Zugname)
 end
 
@@ -210,7 +210,7 @@ ModuleRegistry.registerModules(require("ak.core.CoreLuaModule"), require("ak.dat
                                require("ak.road.CrossingLuaModul"))
 
 function EEPMain()
-    -- print("Speicher: " .. collectgarbage("count"))
+    -- print("[#Anlage] Speicher: " .. collectgarbage("count"))
     ModuleRegistry.runTasks(1)
     return 1
 end

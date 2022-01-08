@@ -1,4 +1,4 @@
-if AkDebugLoad then print("Loading ak.data.StructureJsonCollector ...") end
+if AkDebugLoad then print("[#Start] Loading ak.data.StructureJsonCollector ...") end
 local EventBroker = require("ak.util.EventBroker")
 StructureJsonCollector = {}
 local enabled = true

@@ -1,4 +1,4 @@
-if AkDebugLoad then print("Loading ak.train.ModelV15NMA10013 ...") end
+if AkDebugLoad then print("[#Start] Loading ak.train.ModelV15NMA10013 ...") end
 local RollingStockModel = require("ak.train.RollingStockModel")
 
 local ModelV15NMA10013 = {}

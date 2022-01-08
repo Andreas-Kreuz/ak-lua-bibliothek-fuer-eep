@@ -39,16 +39,16 @@ function AkModellPaket:fuegeDateienHinzu(basisOrdner, praefix, unterOrdner, pfad
     assert(type(praefix) == "string", "Need 'praefix' as string")
     assert(type(unterOrdner) == "string", "Need 'unterOrdner' as string")
     local neuePfade = {}
-    print(string.format("Durchsuche \"%s\" in Unterordner \"%s\"", basisOrdner, unterOrdner))
+    print(string.format("[#ModellPaket] Durchsuche \"%s\" in Unterordner \"%s\"", basisOrdner, unterOrdner))
     local _, dateiGefunden = AkModellPacker.dateienSuchen(neuePfade, basisOrdner, unterOrdner)
     assert(dateiGefunden,
            string.format("Keine Datei gefunden: \"%s\" in Unterordner \"%s\"", basisOrdner, unterOrdner))
 
     for pfad, datei in pairs(neuePfade) do
         if pfadAusschlussMuster and AkModellPaket.pfadAusschliessen(pfad, pfadAusschlussMuster) then
-            print("Ueberspringe: " .. pfad)
+            print("[#ModellPaket] Ueberspringe: " .. pfad)
         else
-            print("Fuege Datei hinzu: " .. pfad)
+            print("[#ModellPaket] Fuege Datei hinzu: " .. pfad)
             self.installationsPfade[praefix .. pfad] = datei
             self.modellPfade[basisOrdner .. "\\" .. pfad] = datei
         end

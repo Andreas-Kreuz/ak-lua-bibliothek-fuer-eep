@@ -1,4 +1,4 @@
-if AkDebugLoad then print("Loading ak.public-transport.StationQueue ...") end
+if AkDebugLoad then print("[#Start] Loading ak.public-transport.StationQueue ...") end
 
 local StationQueueEntry = require("ak.public-transport.StationQueueEntry")
 

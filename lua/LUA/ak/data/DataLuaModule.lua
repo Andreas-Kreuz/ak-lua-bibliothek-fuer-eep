@@ -1,4 +1,4 @@
-if AkDebugLoad then print("Loading ak.data.DataLuaModule ...") end
+if AkDebugLoad then print("[#Start] Loading ak.data.DataLuaModule ...") end
 ---@class DataLuaModule
 DataLuaModule = {}
 DataLuaModule.id = "e538a124-3f0a-4848-98cf-02b08563bf32"

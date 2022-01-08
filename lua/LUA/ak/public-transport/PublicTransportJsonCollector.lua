@@ -1,4 +1,4 @@
-if AkDebugLoad then print("Loading ak.public-transport.PublicTransportJsonCollector ...") end
+if AkDebugLoad then print("[#Start] Loading ak.public-transport.PublicTransportJsonCollector ...") end
 local LineRegistry = require("ak.public-transport.LineRegistry")
 local EventBroker = require("ak.util.EventBroker")
 

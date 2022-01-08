@@ -1,4 +1,4 @@
-if AkDebugLoad then print("Loading ak.public-transport.LineSegment ...") end
+if AkDebugLoad then print("[#Start] Loading ak.public-transport.LineSegment ...") end
 
 ---@class LineSegment
 ---@field id string = the routeName
@@ -132,8 +132,8 @@ function LineSegment:nextStationList(routeName, nextStation, currentStation)
         if currentStation or index > 1 then total = total + info.timeToStation end
         info.totalTime = total
         if LineSegment.debug then
-            print(info.lineNr .. "->" .. info.destination .. " " .. info.station.name .. " (" .. info.totalTime ..
-                  ") " .. info.timeToStation)
+            print("[#LineSegment] " .. info.lineNr .. "->" .. info.destination .. " " .. info.station.name .. " (" ..
+                  info.totalTime .. ") " .. info.timeToStation)
         end
     end
 
