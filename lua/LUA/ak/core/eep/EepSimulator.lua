@@ -659,7 +659,7 @@ function EEPStructureGetModelType(name)
 end
 
 local tags = {structures = {}, rollingStock = {}}
-local texturesTexts = {rollingStock = {}}
+local textureTexts = {rollingStock = {}}
 
 --- Ändert den Tag-Text einer Immobilie. Jede Immobilie kann jetzt einen individuellen String von
 --- maximal 1024 Zeichen Laenge mitfuehren. Diese Strings werden mit der Anlage gespeichert und
@@ -705,8 +705,8 @@ function EEPRollingstockGetTagText(name) return true, tags.rollingStock[name] en
 
 function EEPStructureSetTextureText(name, flaeche, text) return true end
 function EEPRollingstockSetTextureText(name, flaeche, text)
-    textutreTexts.rollingStock[name] = {}
-    textutreTexts.rollingStock[name][flaeche] = {text}
+    textureTexts.rollingStock[name] = {}
+    textureTexts.rollingStock[name][flaeche] = text
     return true
 end
 function EEPSignalSetTextureText(id, flaeche, text) return true end
@@ -838,7 +838,7 @@ function EEPRollingstockGetPosition(rollingstockName) return true, 100, -50, 3 e
 function EEPRollingstockGetTextureText(rollingstockName, fleache)
     local textureTexts = textureTexts.rollingStock[rollingstockName] or {}
     local textureText = textureTexts[fleache]
-    locak ok = textureText and true or false
+    local ok = textureText and true or false
     return ok, textureText
 end
 
