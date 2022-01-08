@@ -30,4 +30,7 @@ EEPRollingstockGetModelType = EEPRollingstockGetModelType or function() end -- E
 
 EEPRollingstockGetTagText = EEPRollingstockGetTagText or function() end -- EEP 14.2
 
+-- Liest den Text einer beschreibbaren Fläche eines Rollmaterials aus
+EEPRollingstockGetTextureText = EEPRollingstockGetTextureText or function() end -- EEP16.3
+
 return EepFunctionWrapper

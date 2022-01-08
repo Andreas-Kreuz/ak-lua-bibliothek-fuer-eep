@@ -66,6 +66,7 @@ function RollingStock:new(o)
     local _, propelled = EEPRollingstockGetMotor(o.id) -- EEP 14.2
     local _, modelType = EEPRollingstockGetModelType(o.id) -- EEP 14.2
     local _, tag = EEPRollingstockGetTagText(o.id) -- EEP 14.2
+    local _, textureText = EEPRollingstockGetTextureText(o.id, 1) -- EEP 16.3 (limited to first entry)
 
     local _, trackId, trackDistance, trackDirection, trackSystem = EEPRollingstockGetTrack(o.id)
     -- EEP 14.2
@@ -84,6 +85,7 @@ function RollingStock:new(o)
     o.modelType = modelType or -1
     o.modelTypeText = EEPRollingstockModelTypeText[modelType] or ""
     o.tag = tag or ""
+    o.textureText = textureText or ""
     o.values = StorageUtility.parseTableFromString(tag)
     o.trackId = trackId or -1
     o.trackDistance = tonumber(string.format("%.2f", trackDistance or -1))
