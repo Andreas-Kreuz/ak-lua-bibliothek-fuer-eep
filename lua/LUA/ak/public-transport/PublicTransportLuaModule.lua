@@ -1,4 +1,4 @@
-if AkDebugLoad then print("Loading ak.public-transport.PublicTransportLuaModul ...") end
+if AkDebugLoad then print("[#Start] Loading ak.public-transport.PublicTransportLuaModul ...") end
 ---@class CrossingLuaModul
 PublicTransportLuaModul = {}
 PublicTransportLuaModul.id = "83ce6b42-1bda-45e0-8b4a-e8daeed047ab"

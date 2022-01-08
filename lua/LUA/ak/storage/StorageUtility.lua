@@ -1,4 +1,4 @@
-if AkDebugLoad then print("Loading ak.storage.StorageUtility ...") end
+if AkDebugLoad then print("[#Start] Loading ak.storage.StorageUtility ...") end
 
 local saveSlots = {}
 local savedValues = {}
@@ -48,11 +48,11 @@ function StorageUtility.loadTable(eepSaveId, name)
     local hResult, data = EEPLoadData(eepSaveId)
     if hResult then
         if StorageUtility.debug then
-            print("[StorageUtility  ] Laden: [OK] - " .. eepSaveId .. " - " .. name .. " gefunden: " .. data)
+            print("[#StorageUtility] Laden: [OK] - " .. eepSaveId .. " - " .. name .. " gefunden: " .. data)
         end
     else
         if StorageUtility.debug then
-            print("[StorageUtility  ] Laden: [!!] - " .. eepSaveId .. " (DataSlot) - " .. name .. " nicht gefunden!")
+            print("[#StorageUtility] Laden: [!!] - " .. eepSaveId .. " (DataSlot) - " .. name .. " nicht gefunden!")
         end
     end
 
@@ -64,7 +64,7 @@ function StorageUtility.parseTableFromString(data)
     if data then
         for k, v in string.gmatch(data, "(%w+)=(.-[,])") do
             v = v:sub(1, -2)
-            if StorageUtility.debug then print(k .. "=" .. v) end
+            if StorageUtility.debug then print("[#StorageUtility] " .. k .. "=" .. v) end
             t[k] = v
         end
     end
@@ -83,10 +83,10 @@ function StorageUtility.loadTableRollingStock(rollingStockName)
     local hResult, data = EEPRollingstockGetTagText(rollingStockName)
     if hResult then
         if StorageUtility.debug then
-            print("[StorageUtility  ] Load: [OK] - " .. rollingStockName .. " (RollingStock) found: " .. data)
+            print("[#StorageUtility] Load: [OK] - " .. rollingStockName .. " (RollingStock) found: " .. data)
         end
     else
-        print("[StorageUtility  ] Load: [!!] - " .. rollingStockName .. " (RollingStock) not found!")
+        print("[#StorageUtility] Load: [!!] - " .. rollingStockName .. " (RollingStock) not found!")
     end
 
     return StorageUtility.parseTableFromString(data)
@@ -127,14 +127,13 @@ function StorageUtility.saveTable(eepSaveId, table, name)
     name = name and name or "?"
     local text = StorageUtility.encodeTable(table)
     if text:len() > 1024 then
-        print("Cannot store more than 1024 characters in slot " .. eepSaveId .. " - " .. name)
+        print("[#StorageUtility] Cannot store more than 1024 characters in slot " .. eepSaveId .. " - " .. name)
     end
     assert(text:len() <= 1024)
     local hresult = EEPSaveData(eepSaveId, text)
     if StorageUtility.debug then
-        print(
-        "[StorageUtility  ] Speichern [" .. (hresult and "OK" or "!!") .. "] - " .. eepSaveId .. " - " .. name ..
-        " gespeichert: " .. text)
+        print("[#StorageUtility] Speichern [" .. (hresult and "OK" or "!!") .. "] - " .. eepSaveId .. " - " .. name ..
+              " gespeichert: " .. text)
     end
     savedValues[eepSaveId] = text
     if StorageUtility.debug then StorageUtility.updateDebugFile() end
@@ -152,7 +151,7 @@ function StorageUtility.encodeTable(table)
         assert(not string.find(v, ","))
         text = text .. k .. "=" .. v .. ","
     end
-    if text:len() > 1024 then print("Cannot store more than 1024 characters") end
+    if text:len() > 1024 then print("[#StorageUtility] Cannot store more than 1024 characters") end
     assert(text:len() <= 1024)
     return text
 end

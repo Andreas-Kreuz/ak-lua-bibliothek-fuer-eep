@@ -1,4 +1,4 @@
-if AkDebugLoad then print("Loading ak.core.CoreLuaModule ...") end
+if AkDebugLoad then print("[#Start] Loading ak.core.CoreLuaModule ...") end
 
 ---@class LuaModule
 CoreLuaModule = {}

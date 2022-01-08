@@ -1,4 +1,4 @@
-if AkDebugLoad then print("Loading ak.util.RuntimeRegistry ...") end
+if AkDebugLoad then print("[#Start] Loading ak.util.RuntimeRegistry ...") end
 
 local RuntimeRegistry = {}
 

@@ -1,4 +1,4 @@
-if AkDebugLoad then print("Loading ak.rail.Rail ...") end
+if AkDebugLoad then print("[#Start] Loading ak.rail.Rail ...") end
 local StorageUtility = require("ak.storage.StorageUtility")
 local fmt = require("ak.core.eep.TippTextFormatter")
 
@@ -109,8 +109,8 @@ function AkFsSignal:setRoutePosition(trainName, route)
     EEPShowInfoSignal(self.signalId, dbg.fs_schaltung)
     EEPChangeInfoSignal(self.signalId,
                         "<c>: " .. route.name .. " :\n" .. "<c>GESCHALTET AUF " .. self.positionForRoute ..
-                            " (ROUTE) fuer\n" .. "<c>--------------------------------------------\n" .. "<j>" ..
-                            trainName .. " ")
+                        " (ROUTE) fuer\n" .. "<c>--------------------------------------------\n" .. [[<j>]] ..
+                        trainName .. " ")
 end
 
 function AkFsSignal:setDefaultPosition(trainName, route)
@@ -119,8 +119,8 @@ function AkFsSignal:setDefaultPosition(trainName, route)
     EEPShowInfoSignal(self.signalId, false)
     EEPChangeInfoSignal(self.signalId,
                         "<c>: " .. route.name .. " :\n" .. "<c>GESCHALTET AUF " .. self.defaultPosition ..
-                            " (DEFAULT) fuer\n" .. "<c>--------------------------------------------\n" .. "<j>" ..
-                            trainName .. " ")
+                        " (DEFAULT) fuer\n" .. "<c>--------------------------------------------\n" .. "<j>" ..
+                        trainName .. " ")
 end
 
 --- Weichenstellungen fuer eine Fahrstrasse
@@ -154,8 +154,8 @@ function AkFsSwitch:setRouteStand(trainName, route)
     EEPShowInfoSwitch(self.switchId, dbg.fs_schaltung)
     EEPChangeInfoSwitch(self.switchId,
                         "<c>: " .. route.name .. " :\n" .. "<c>GESCHALTET AUF " .. self.positionForRoute ..
-                            " (ROUTE) FueR\n" .. "<c>--------------------------------------------\n" .. "<j>" ..
-                            trainName .. " ")
+                        " (ROUTE) FueR\n" .. "<c>--------------------------------------------\n" .. [[<j>]] ..
+                        trainName .. " ")
 end
 
 function AkFsSwitch:setDefaultStand(trainName, route)
@@ -164,8 +164,8 @@ function AkFsSwitch:setDefaultStand(trainName, route)
     EEPShowInfoSwitch(self.switchId, false)
     EEPChangeInfoSwitch(self.switchId,
                         "<c>: " .. route.name .. " :\n" .. "<c>GESCHALTET AUF " .. self.defaultStand ..
-                            " (DEFAULT) FueR\n" .. "<c>--------------------------------------------\n" .. "<j>" ..
-                            trainName .. " ")
+                        " (DEFAULT) FueR\n" .. "<c>--------------------------------------------\n" .. [[<j>]] ..
+                        trainName .. " ")
 end
 
 --- Schranken fuer Bahnuebergang
@@ -208,7 +208,7 @@ function AkCrossing:closeForRoute(trainName, route)
     local alreadyBlocked = false
     for fs, _ in pairs(self.routen) do
         alreadyBlocked = true
-        print("Bahnuebergang bereits blockiert durch: " .. fs.name)
+        print("[#Rail] Bahnuebergang bereits blockiert durch: " .. fs.name)
     end
     self.routen[route] = true
 
@@ -220,7 +220,7 @@ function AkCrossing:closeForRoute(trainName, route)
         EEPShowInfoSignal(self.signalId1, dbg.fs_schaltung)
         EEPShowInfoSignal(self.signalId2, dbg.fs_schaltung)
         local info = "<c>: " .. route.name .. " :\n" .. "<c>GESCHALTET AUF " .. self.positionForRoute .. " FueR\n" ..
-                         "<c>--------------------------------------------\n" .. "<j>" .. trainName .. " "
+                     "<c>--------------------------------------------\n" .. "<j>" .. trainName .. " "
         EEPChangeInfoSignal(self.signalId1, info)
         EEPChangeInfoSignal(self.signalId2, info)
         self.currentClosingTime = EEPTime + self.requiredClosingTime
@@ -237,7 +237,7 @@ function AkCrossing:openForRoute(trainName, route)
     local stillBlocked = false
     for fs, _ in pairs(self.routen) do
         stillBlocked = true
-        print("Bahnuebergang noch blockiert durch: " .. fs.name)
+        print("[#Rail] Bahnuebergang noch blockiert durch: " .. fs.name)
     end
 
     if not stillBlocked then
@@ -248,7 +248,7 @@ function AkCrossing:openForRoute(trainName, route)
         EEPShowInfoSignal(self.signalId1, false)
         EEPShowInfoSignal(self.signalId2, false)
         local info = "<c>: " .. route.name .. " :\n" .. "<c>GESCHALTET AUF " .. self.defaultPosition .. " FueR\n" ..
-                         "<c>--------------------------------------------\n" .. "<j>" .. trainName .. " "
+                     "<c>--------------------------------------------\n" .. "<j>" .. trainName .. " "
         EEPChangeInfoSignal(self.signalId1, info)
         EEPChangeInfoSignal(self.signalId2, info)
         self.currentClosingTime = -1
@@ -295,8 +295,8 @@ end
 
 function AkBlock:getRoutesToCurrentTrainDirection()
     if not self.trainDirection then
-        print("ERROR: Train in Block \"" .. self.name .. "\" has no direction set in \"enterReservedBlock()\"\n" ..
-                  debug.traceback())
+        print("[#Rail] ERROR: Train in Block \"" .. self.name ..
+              "\" has no direction set in \"enterReservedBlock()\"\n" .. debug.traceback())
         return {}
     end
     return self.routes[self.trainDirection]
@@ -304,7 +304,7 @@ end
 
 function AkBlock:findFreeRoute()
     if not self.taken then
-        print("ERROR: Block \"" .. self.name .. "\" war nicht belegt!" .. "\n" .. debug.traceback())
+        print("[#Rail] ERROR: Block \"" .. self.name .. "\" war nicht belegt!" .. "\n" .. debug.traceback())
     end
     for _, route in ipairs(self:getRoutesToCurrentTrainDirection()) do
         assert(route.block1 == self)
@@ -349,8 +349,8 @@ end
 function AkBlock:reserve(trainName)
     assert(trainName)
     if (self.taken) then
-        print("ERROR: Block \"" .. self.name .. "\" already locked by " ..
-                  (self.trainName and self.trainName or "UNKNOWN TRAIN") .. "\n" .. debug.traceback())
+        print("[#Rail] ERROR: Block \"" .. self.name .. "\" already locked by " ..
+              (self.trainName and self.trainName or "UNKNOWN TRAIN") .. "\n" .. debug.traceback())
     end
     self.taken = true
     self.trainName = trainName
@@ -361,12 +361,12 @@ function AkBlock:enterReservedBlock(trainName, trainDirection)
     assert(trainName)
     assert(trainDirection)
     if trainName ~= self.trainName then
-        print("ERROR: Block " .. self.name .. " reserved for .: " ..
-                  (self.trainName and self.trainName or "UNKNOWN TRAIN") .. " but entered by: " ..
-                  (trainName and trainName or "UNKNOWN TRAIN") .. "\n" .. debug.traceback())
+        print("[#Rail] ERROR: Block " .. self.name .. " reserved for .: " ..
+              (self.trainName and self.trainName or "UNKNOWN TRAIN") .. " but entered by: " ..
+              (trainName and trainName or "UNKNOWN TRAIN") .. "\n" .. debug.traceback())
     end
     if not self.taken then
-        print("ERROR: Block \"" .. self.name .. "\" was not reserved!" .. "\n" .. debug.traceback())
+        print("[#Rail] ERROR: Block \"" .. self.name .. "\" was not reserved!" .. "\n" .. debug.traceback())
     end
     self.taken = true
     self.trainName = trainName
@@ -387,9 +387,10 @@ end
 function AkBlock:leaveBlock(trainName)
     assert(trainName)
     if self.trainName ~= trainName then
-        print("ERROR: Block \"" .. self.name .. "\" left by wrong train:" .. " \n...... expected to leave: " ..
-                  (self.trainName and self.trainName or "UNBEKANNT") .. " \n...... left the block:    " .. trainName ..
-                  "\n" .. debug.traceback())
+        print(
+        "[#Rail] ERROR: Block \"" .. self.name .. "\" left by wrong train:" .. " \n...... expected to leave: " ..
+        (self.trainName and self.trainName or "UNBEKANNT") .. " \n...... left the block:    " .. trainName .. "\n" ..
+        debug.traceback())
     end
     self.taken = false
     self.trainName = nil
@@ -460,7 +461,7 @@ function AkRoute:stopMarkerFor(trainName)
     local b, route = EEPGetTrainRoute(trainName)
     if b then
         for prefix, akSignal in pairs(self.shortTrainStopMarkers) do
-            -- print("Pruefe " .. prefix .. " gegen " .. string.sub(route, 1, string.len(prefix)))
+            -- print("[#Rail] Pruefe " .. prefix .. " gegen " .. string.sub(route, 1, string.len(prefix)))
             if prefix == string.sub(route, 1, string.len(prefix)) then return akSignal end
         end
     end
@@ -487,9 +488,9 @@ function AkRoute:conflictsWith(otherRoute) return self.conflicts[otherRoute] and
 
 --- Schreibt die Konflikte der anderen Fahrstrassen
 function AkRoute:printConflicts()
-    print("Konflikte fuer: " .. self.name)
+    print("[#Rail] Konflikte fuer: " .. self.name)
     for otherRoute, _ in pairs(self.conflicts) do
-        print(" - " .. otherRoute.name .. " - " .. (otherRoute.taken and "belegt" or "frei"))
+        print("[#Rail]  - " .. otherRoute.name .. " - " .. (otherRoute.taken and "belegt" or "frei"))
     end
 end
 
@@ -533,13 +534,13 @@ end
 function AkRoute:lockRoute(trainName)
     assert(trainName)
     if self.trainName ~= trainName then
-        print("ERROR: Switching route \"" .. self.name .. "\"" .. "\n reserved for ...: " ..
-                  (self.trainName or "UNKNOWN TRAIN") .. "\n but switched for: " .. (trainName or "UNKNOWN TRAIN") ..
-                  "\n" .. debug.traceback())
+        print("[#Rail] ERROR: Switching route \"" .. self.name .. "\"" .. "\n reserved for ...: " ..
+              (self.trainName or "UNKNOWN TRAIN") .. "\n but switched for: " .. (trainName or [[UNKNOWN TRAIN]]) ..
+              "\n" .. debug.traceback())
     end
     if self.block2.taken then
-        print("ERROR: Switching route \"" .. self.name .. "\"" .. "\n Block " .. self.block2.name ..
-                  " already locked." .. "\n" .. debug.traceback())
+        print("[#Rail] ERROR: Switching route \"" .. self.name .. "\"" .. "\n Block " .. self.block2.name ..
+              " already locked." .. "\n" .. debug.traceback())
     end
 
     self.block2:reserve(trainName)
@@ -565,9 +566,9 @@ end
 function AkRoute:unlockRoute(trainName)
     pdbg(dbg.fs_schaltung, "Gebe Fahrstrasse: \"" .. self.name .. "\" nach Verlassen von " .. trainName .. " frei.")
     if self.trainName ~= trainName then
-        print("ERROR: Route \"" .. self.name .. "\" unlocking by unexpected train" .. "\n reserved for: " ..
-                  (self.trainName and self.trainName or "UNKNOWN TRAIN") .. "\n unlocked by : " ..
-                  (trainName and trainName or "UNKNOWN TRAIN") .. "\n" .. debug.traceback())
+        print("[#Rail] ERROR: Route \"" .. self.name .. "\" unlocking by unexpected train" .. "\n reserved for: " ..
+              (self.trainName and self.trainName or "UNKNOWN TRAIN") .. "\n unlocked by : " ..
+              (trainName and trainName or "UNKNOWN TRAIN") .. "\n" .. debug.traceback())
     end
 
     local maxOpeningTime = 0
@@ -824,15 +825,14 @@ function AkTrainControl.calculateRoutes()
             else
                 pdbg(dbg.debug,
                      "Keine freie Fahrstrasse fuer " .. blockAnforderung.eepSaveId .. " (" .. blockAnforderung.name ..
-                         " -> " ..
-                         (blockAnforderung.trainDirection and blockAnforderung.trainDirection or "NO DIRECTION!") ..
-                         ")")
+                     " -> " ..
+                     (blockAnforderung.trainDirection and blockAnforderung.trainDirection or "NO DIRECTION!") .. ")")
             end
         else
             pdbg(dbg.fs_pruefung,
                  "Fahrstrasse fuer " .. blockAnforderung.name .. " Richtung " ..
-                     (blockAnforderung.trainDirection or "UNBEKANNT") .. " wird spaeter angefordert: " ..
-                     scheduledTime .. " (" .. currentTime .. ")")
+                 (blockAnforderung.trainDirection or "UNBEKANNT") .. " wird spaeter angefordert: " .. scheduledTime ..
+                 " (" .. currentTime .. ")")
         end
     end
 

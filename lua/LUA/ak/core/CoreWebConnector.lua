@@ -1,4 +1,4 @@
-if AkDebugLoad then print("Loading ak.core.CoreWebConnector ...") end
+if AkDebugLoad then print("[#Start] Loading ak.core.CoreWebConnector ...") end
 local CoreWebConnector = {}
 local ServerController = require("ak.io.ServerController")
 local registeredLuaModules = nil

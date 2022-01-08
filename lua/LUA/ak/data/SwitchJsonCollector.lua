@@ -1,4 +1,4 @@
-if AkDebugLoad then print("Loading ak.data.SwitchJsonCollector ...") end
+if AkDebugLoad then print("[#Start] Loading ak.data.SwitchJsonCollector ...") end
 local EventBroker = require("ak.util.EventBroker")
 SwitchJsonCollector = {}
 local enabled = true

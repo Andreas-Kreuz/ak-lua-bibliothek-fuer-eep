@@ -1,4 +1,4 @@
-if AkDebugLoad then print("Loading ak.util.EventBroker ...") end
+if AkDebugLoad then print("[#Start] Loading ak.util.EventBroker ...") end
 local EventFileWriter = require("ak.io.EventFileWriter")
 local TableUtils = require("ak.util.TableUtils")
 
@@ -45,11 +45,13 @@ EventBroker.printListener = {
         else
             t = t .. ": " .. tostring(event.payload)
         end
-        print(event.eventCounter .. ": " .. event.type .. " .. " .. t)
+        print("[#EventCounter] " .. event.eventCounter .. ": " .. event.type .. " .. " .. t)
     end
 }
 local eventCounter = 0;
-function EventBroker.printEventCounter() if EventBroker.debug then print("EventCounter: " .. eventCounter) end end
+function EventBroker.printEventCounter()
+    if EventBroker.debug then print("[#EventCounter] " .. "value " .. eventCounter) end
+end
 
 ---Inform the EventBroker of new events, which will then be given to the EventListeners
 ---@param eventType string

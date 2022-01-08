@@ -1,4 +1,4 @@
-if AkDebugLoad then print("Loading Bus ...") end
+if AkDebugLoad then print("[#Start] Loading Bus ...") end
 
 -----------------------
 -- Bushaltestellen

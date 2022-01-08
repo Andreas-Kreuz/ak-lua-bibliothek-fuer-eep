@@ -1,4 +1,4 @@
-if AkDebugLoad then print("Loading ak.road.TramSwitch ...") end
+if AkDebugLoad then print("[#Start] Loading ak.road.TramSwitch ...") end
 
 local TramSwitch = {}
 --- Registriert eine neue Strassenbahnweiche und schaltet das Licht der angegeben Immobilien anhand der Weichenstellung

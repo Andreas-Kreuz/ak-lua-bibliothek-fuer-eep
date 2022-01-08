@@ -1,4 +1,4 @@
-if AkDebugLoad then print("Loading ak.public-transport.RoadStationDisplayModel ...") end
+if AkDebugLoad then print("[#Start] Loading ak.public-transport.RoadStationDisplayModel ...") end
 local SimpleStructure = require("ak.public-transport.models.SimpleStructure")
 local Tram_Schild_DL1 = require("ak.public-transport.models.V15NDL10027_Tram_Schild_DL1")
 local BusHSInfo_RG3 = require("ak.public-transport.models.V15NRG35002_BusHSInfo_RG3")
@@ -31,7 +31,7 @@ function DisplayModel:new(name, initStation, displayEntries)
     return x
 end
 
-function DisplayModel:printName() print(self.name) end
+function DisplayModel:printName() print("[#DisplayModel] name: " .. self.name) end
 
 function DisplayModel:print(displayStructure, stationQueueEntries)
     self.displayEntries(displayStructure, stationQueueEntries)

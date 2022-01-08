@@ -1,4 +1,4 @@
-if AkDebugLoad then print("Loading ak.road.LaneSettings ...") end
+if AkDebugLoad then print("[#Start] Loading ak.road.LaneSettings ...") end
 
 local Lane = require("ak.road.Lane")
 -- local Queue = require("ak.util.Queue")

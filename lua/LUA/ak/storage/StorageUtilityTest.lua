@@ -13,7 +13,7 @@ StorageUtility.registerId(800, "Speicherplatz 800")
 if pcall(StorageUtility.registerId, 800, "Speicherplatz 800") then
     assert(false, "Wenn das auftritt, dann wurde Speicherplatz 800 mehrfach angefragt.")
 else
-    print("Alles ok: Speicherplatz 800 konnte nicht doppelt verwendet werden.")
+    print("[#StorageUtilityTest] Alles ok: Speicherplatz 800 konnte nicht doppelt verwendet werden.")
 end
 
 ------------------------------------------------------------------------------------
@@ -29,14 +29,14 @@ do
     local boolean1 = true
     local boolean2 = false
 
-    print("-----------------------------------------")
-    print("Vor dem Speichern:")
-    print("-----------------------------------------")
-    print(zahl .. " (Typ: " .. type(zahl) .. ")")
-    print(text1 .. " (Typ: " .. type(text1) .. ")")
-    print(text2 .. " (Typ: " .. type(text2) .. ")")
-    print(tostring(boolean1) .. " (Typ: " .. type(boolean1) .. ")")
-    print(tostring(boolean2) .. " (Typ: " .. type(boolean2) .. ")")
+    print("[#StorageUtilityTest] -----------------------------------------")
+    print("[#StorageUtilityTest] Vor dem Speichern:")
+    print("[#StorageUtilityTest] -----------------------------------------")
+    print("[#StorageUtilityTest] " .. zahl .. " (Typ: " .. type(zahl) .. ")")
+    print("[#StorageUtilityTest] " .. text1 .. " (Typ: " .. type(text1) .. ")")
+    print("[#StorageUtilityTest] " .. text2 .. " (Typ: " .. type(text2) .. ")")
+    print("[#StorageUtilityTest] " .. tostring(boolean1) .. " (Typ: " .. type(boolean1) .. ")")
+    print("[#StorageUtilityTest] " .. tostring(boolean2) .. " (Typ: " .. type(boolean2) .. ")")
 
     -- Die Daten werden in eine Tabelle umgewandelt, welche als Schlüssel und Wert nur Text enthÃ¤lt
     -- dies am besten in eine Funktion auslagern
@@ -52,11 +52,11 @@ do
 
     StorageUtility.saveTable(700, zuSpeicherndeDaten, "Meine Daten")
 
-    print("-----------------------------------------")
-    print("Speicherplatzinhalt nach dem Speichern:")
-    print("-----------------------------------------")
+    print("[#StorageUtilityTest] " .. "-----------------------------------------")
+    print("[#StorageUtilityTest] " .. "Speicherplatzinhalt nach dem Speichern:")
+    print("[#StorageUtilityTest] " .. "-----------------------------------------")
     local _, speicherplatz_inhalt = EEPLoadData(700)
-    print(speicherplatz_inhalt)
+    print("[#StorageUtilityTest] " .. speicherplatz_inhalt)
 end
 
 do
@@ -72,14 +72,14 @@ do
     local boolean1 = StorageUtility.toboolean(geladene_daten.b1)
     local boolean2 = StorageUtility.toboolean(geladene_daten.b2)
 
-    print("-----------------------------------------")
-    print("Nach dem Laden:")
-    print("-----------------------------------------")
-    print(zahl .. " (Typ: " .. type(zahl) .. ")")
-    print(text1 .. " (Typ: " .. type(text1) .. ")")
-    print(text2 .. " (Typ: " .. type(text2) .. ")")
-    print(tostring(boolean1) .. " (Typ: " .. type(boolean1) .. ")")
-    print(tostring(boolean2) .. " (Typ: " .. type(boolean2) .. ")")
+    print("[#StorageUtilityTest] " .. "-----------------------------------------")
+    print("[#StorageUtilityTest] " .. "Nach dem Laden:")
+    print("[#StorageUtilityTest] " .. "-----------------------------------------")
+    print("[#StorageUtilityTest] " .. zahl .. " (Typ: " .. type(zahl) .. ")")
+    print("[#StorageUtilityTest] " .. text1 .. " (Typ: " .. type(text1) .. ")")
+    print("[#StorageUtilityTest] " .. text2 .. " (Typ: " .. type(text2) .. ")")
+    print("[#StorageUtilityTest] " .. tostring(boolean1) .. " (Typ: " .. type(boolean1) .. ")")
+    print("[#StorageUtilityTest] " .. tostring(boolean2) .. " (Typ: " .. type(boolean2) .. ")")
 end
 
 require("ak.storage.StorageUtility")
@@ -101,10 +101,10 @@ do
 
     StorageUtility.saveTable(600, daten_zum_speichern, "Meine Daten")
 
-    print("-----------------------------------------\n" .. "Speicherplatzinhalt nach dem Speichern:" ..
-          "\n-----------------------------------------")
+    print("[#StorageUtilityTest] " .. "-----------------------------------------\n" ..
+          "Speicherplatzinhalt nach dem Speichern:" .. "\n-----------------------------------------")
     local _, speicherplatz_inhalt = EEPLoadData(600)
-    print(speicherplatz_inhalt)
+    print("[#StorageUtilityTest] " .. speicherplatz_inhalt)
 end
 
 do
@@ -119,13 +119,16 @@ do
         prio = tonumber(geladene_daten.p)
     }
 
-    print("-----------------------------------------")
-    print("Nach dem Laden:")
-    print("-----------------------------------------")
-    print("anzahl_fahrzeuge=" .. tostring(anzahl_fahrzeuge) .. " (Typ: " .. type(anzahl_fahrzeuge) .. ")")
-    print("block.belegt=" .. tostring(block.belegt) .. " (Typ: " .. type(block.belegt) .. ")")
-    print("block.zugname=" .. tostring(block.zugname) .. " (Typ: " .. type(block.zugname) .. ")")
-    print("block.prio=" .. tostring(block.prio) .. " (Typ: " .. type(block.prio) .. ")")
+    print("[#StorageUtilityTest] " .. "-----------------------------------------")
+    print("[#StorageUtilityTest] " .. "Nach dem Laden:")
+    print("[#StorageUtilityTest] " .. "-----------------------------------------")
+    print("[#StorageUtilityTest] " .. "anzahl_fahrzeuge=" .. tostring(anzahl_fahrzeuge) .. " (Typ: " ..
+          type(anzahl_fahrzeuge) .. ")")
+    print("[#StorageUtilityTest] " .. "block.belegt=" .. tostring(block.belegt) .. " (Typ: " .. type(block.belegt) ..
+          ")")
+    print(
+    "[#StorageUtilityTest] " .. "block.zugname=" .. tostring(block.zugname) .. " (Typ: " .. type(block.zugname) .. ")")
+    print("[#StorageUtilityTest] " .. "block.prio=" .. tostring(block.prio) .. " (Typ: " .. type(block.prio) .. ")")
 end
 
-print("Test bestanden")
+print("[#StorageUtilityTest] " .. "Test bestanden")

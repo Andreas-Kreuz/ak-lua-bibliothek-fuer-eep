@@ -1,4 +1,4 @@
-if AkDebugLoad then print("Loading ak.util.TableUtils ...") end
+if AkDebugLoad then print("[#Start] Loading ak.util.TableUtils ...") end
 local TableUtils = {}
 
 ---Creates are read-only table by wrapping the current table into a proxy.

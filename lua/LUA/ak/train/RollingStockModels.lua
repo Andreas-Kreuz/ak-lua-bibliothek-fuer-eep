@@ -1,4 +1,4 @@
-if AkDebugLoad then print("Loading ak.train.RollingStockModels ...") end
+if AkDebugLoad then print("[#Start] Loading ak.train.RollingStockModels ...") end
 
 local RollingStockModels = {}
 local assignedModels = {}

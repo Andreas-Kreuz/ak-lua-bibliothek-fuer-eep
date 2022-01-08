@@ -1,4 +1,4 @@
-if AkDebugLoad then print("Loading ak.public-transport.StationQueueEntry ...") end
+if AkDebugLoad then print("[#Start] Loading ak.public-transport.StationQueueEntry ...") end
 
 ---@class StationQueueEntry
 ---@field trainName string

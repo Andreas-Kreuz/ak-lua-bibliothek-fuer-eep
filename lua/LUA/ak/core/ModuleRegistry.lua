@@ -1,4 +1,4 @@
-if AkDebugLoad then print("Loading ak.core.ModuleRegistry ...") end
+if AkDebugLoad then print("[#Start] Loading ak.core.ModuleRegistry ...") end
 local ServerController = require("ak.io.ServerController")
 local TableUtils = require("ak.util.TableUtils")
 local os = require("os")
@@ -76,25 +76,25 @@ function ModuleRegistry.useDlls(enableDlls)
 end
 
 local function initTask(module)
-    if ModuleRegistry.debug then print(string.format("[ModuleRegistry] Begin initTask() for \"%s\"", module.name)) end
+    if ModuleRegistry.debug then print(string.format("[#ModuleRegistry] Begin initTask() for \"%s\"", module.name)) end
     local t0 = os.clock()
     module.init()
     local t1 = os.clock()
     local timeDiff = t1 - t0
     if ModuleRegistry.debug then
-        print(string.format("[ModuleRegistry].initTask() %.3f seconds for \"%s\"", timeDiff, module.name))
+        print(string.format("[#ModuleRegistry].initTask() %.3f seconds for \"%s\"", timeDiff, module.name))
     end
 end
 
 local function runTask(module)
-    if ModuleRegistry.debug then print(string.format("[ModuleRegistry] Begin runTask() for \"%s\"", module.name)) end
+    if ModuleRegistry.debug then print(string.format("[#ModuleRegistry] Begin runTask() for \"%s\"", module.name)) end
     local t0 = os.clock()
     module.run()
     local t1 = os.clock()
     local timeDiff = t1 - t0
     -- print(string.format('[ModuleRegistry].runTask() %.3f seconds for "%s"', timeDiff, module.name))
     if ModuleRegistry.debug and timeDiff > 0.01 then
-        print(string.format("[ModuleRegistry] WARNING: runTask() %.3f seconds for \"%s\"", timeDiff, module.name))
+        print(string.format("[#ModuleRegistry] WARNING: runTask() %.3f seconds for \"%s\"", timeDiff, module.name))
     end
 end
 
@@ -127,7 +127,7 @@ function ModuleRegistry.runTasks(cycleCount)
     local t4 = os.clock()
 
     if ModuleRegistry.debug then
-        print(string.format("[ModuleRegistry] runTasks(%d) time: %.0f ms " ..
+        print(string.format("[#ModuleRegistry] runTasks(%d) time: %.0f ms " ..
                             "(%.0f ms initTasks, %.0f ms runTask, %.0f ms serveData)", --
         cycleCount, -- how often we update
         (t4 - t1) * 1000, -- total time

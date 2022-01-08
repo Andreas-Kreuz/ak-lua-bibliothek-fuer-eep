@@ -1,4 +1,4 @@
-if AkDebugLoad then print("Loading ak.data.TimeJsonCollector ...") end
+if AkDebugLoad then print("[#Start] Loading ak.data.TimeJsonCollector ...") end
 local EventBroker = require("ak.util.EventBroker")
 
 TimeJsonCollector = {}

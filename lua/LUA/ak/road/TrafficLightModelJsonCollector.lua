@@ -1,4 +1,4 @@
-if AkDebugLoad then print("Loading ak.road.TrafficLightModelJsonCollector ...") end
+if AkDebugLoad then print("[#Start] Loading ak.road.TrafficLightModelJsonCollector ...") end
 local EventBroker = require("ak.util.EventBroker")
 
 ---@class TrafficLightModelJsonCollector

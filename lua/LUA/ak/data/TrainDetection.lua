@@ -1,4 +1,4 @@
-if AkDebugLoad then print("Loading ak.data.TrainDetection ...") end
+if AkDebugLoad then print("[#Start] Loading ak.data.TrainDetection ...") end
 local TrainRegistry = require("ak.train.TrainRegistry")
 local RuntimeRegistry = require("ak.util.RuntimeRegistry")
 local TrackDetection = require("ak.data.TrackDetection")
@@ -42,7 +42,9 @@ local function fillTrackInfoFromTrain(train, info)
 
     info.tracks = {[tostring(trackId)] = trackId}
     info.trackType = trackType
-    if (TrainDetection.debug) then print("ZUG GEFUNDEN: " .. trackType .. " -> " .. trackTypeId) end
+    if (TrainDetection.debug) then
+        print("[#TrainDetection] TRAIN DETECTED: " .. trackType .. " -> " .. trackTypeId)
+    end
 end
 
 ---This will register callbacks to get informed, e.g. if a train has been coupled or lost coupling
@@ -56,7 +58,7 @@ function TrainDetection.registerForTrainDetection()
         dirtyTrainNames[trainB] = true
         dirtyTrainNames[trainNew] = true
         if TrainDetection.debug then
-            print(string.format("%s and %s were coupled to %s", trainA, trainB, trainNew))
+            print(string.format("[#TrainDetection] %s and %s were coupled to %s", trainA, trainB, trainNew))
         end
         -- Call the original function
         return _EEPOnTrainCoupling(trainA, trainB, trainNew)
@@ -70,7 +72,7 @@ function TrainDetection.registerForTrainDetection()
         dirtyTrainNames[trainB] = true
         dirtyTrainNames[trainOld] = true
         if TrainDetection.debug then
-            print(string.format("%s lost coupling and got to %s and %s", trainOld, trainA, trainB))
+            print(string.format("[#TrainDetection] %s lost coupling and got to %s and %s", trainOld, trainA, trainB))
         end
         -- Call the original function
         return _EEPOnTrainLooseCoupling(trainA, trainB, trainOld)
@@ -90,7 +92,7 @@ function TrainDetection.refreshTrainInfos(allKnownTrains)
     assert(type(allKnownTrains) == "table", "Need allKnownTrains as table")
 
     for trainName, info in pairs(allKnownTrains) do
-        if TrainDetection.debug then print(string.format("Updating %s", trainName)) end
+        if TrainDetection.debug then print(string.format("[#TrainDetection] updating %s", trainName)) end
         ---@type Train
         local train = TrainRegistry.forName(trainName)
         if info.dirty or info.moved or info.created then

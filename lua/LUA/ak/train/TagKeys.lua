@@ -1,4 +1,4 @@
-if AkDebugLoad then print("Loading ak.train.TagKeys ...") end
+if AkDebugLoad then print("[#Start] Loading ak.train.TagKeys ...") end
 
 ---@class TagKeys
 local TagKeys = {}

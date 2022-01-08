@@ -19,7 +19,7 @@ AkStartWithDebug = false
 --------------------------------------------------------------------
 -- Zeigt erweiterte Informationen waehrend der erste Schitte an   --
 --------------------------------------------------------------------
-if AkDebugLoad then print("Loading Ampeldemo-Grundmodelle-main ...") end
+if AkDebugLoad then print("[#Start] Loading Ampeldemo-Grundmodelle-main ...") end
 require("ak.demo-anlagen.ampel.Ampeldemo-Grundmodelle-main")
 
 --------------------------------------------------------------------
@@ -55,13 +55,13 @@ local function run()
 end
 
 for _ = 1, 10 do
-    print("Betritt Block")
+    print("[#Test] Betritt Block")
     enterLane(Zugname, c1Lane8)
     run()
     run()
     run()
     run()
-    print("Verlasse Block")
+    print("[#Test] Verlasse Block")
     leaveLane(Zugname, c1Lane8, true)
     run()
 end

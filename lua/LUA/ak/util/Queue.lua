@@ -1,4 +1,4 @@
-if AkDebugLoad then print("Loading ak.util.Queue ...") end
+if AkDebugLoad then print("[#Start] Loading ak.util.Queue ...") end
 
 ---@class Queue
 ---@field first number index of first element

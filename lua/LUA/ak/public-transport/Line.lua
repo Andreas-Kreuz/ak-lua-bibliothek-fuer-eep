@@ -2,7 +2,7 @@ local LineSegment = require("ak.public-transport.LineSegment")
 local RoadStation = require("ak.public-transport.RoadStation")
 local StorageUtility = require("ak.storage.StorageUtility")
 local TrainRegistry = require("ak.train.TrainRegistry")
-if AkDebugLoad then print("Loading ak.public-transport.Line ...") end
+if AkDebugLoad then print("[#Start] Loading ak.public-transport.Line ...") end
 
 ---@class Line
 ---@field type string
@@ -114,13 +114,13 @@ function Line.scheduleDeparture(trainName, station, timeInMinutes)
             if lineSegment then
                 lineSegment:prepareDepartureAt(train, station, timeInMinutes)
             else
-                print("[Line] Could not find lineSegment for route: " .. routeName)
+                print("[#Line] Could not find lineSegment for route: " .. routeName)
             end
         else
-            print("[Line] Could not find trains line: " .. lineName)
+            print("[#Line] Could not find trains line: " .. lineName)
         end
     else
-        print("[Line] Train has no line: " .. trainName)
+        print("[#Line] Train has no line: " .. trainName)
     end
 end
 
@@ -147,13 +147,13 @@ function Line.trainDeparted(trainName, station)
                 ---@type LineSegment
                 lineSegment:trainDeparted(train, station)
             else
-                print("[Line] Could not find lineSegment for route: " .. routeName)
+                print("[#Line] Could not find lineSegment for route: " .. routeName)
             end
         else
-            print("[Line] Could not find trains line: " .. lineName)
+            print("[#Line] Could not find trains line: " .. lineName)
         end
     else
-        print("[Line] Train has no line: " .. trainName)
+        print("[#Line] Train has no line: " .. trainName)
     end
 end
 

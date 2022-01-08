@@ -7,7 +7,7 @@
 local ServerController = require("ak.io.ServerController")
 --]] -- @author Andreas Kreuz
 -- @release 0.10.2
-if AkDebugLoad then print("Loading ak.io.ServerController ...") end
+if AkDebugLoad then print("[#Start] Loading ak.io.ServerController ...") end
 local EventBroker = require("ak.util.EventBroker")
 local EventFileWriter = require("ak.io.EventFileWriter")
 local AkWebServerIo = require("ak.io.AkWebServerIo")
@@ -26,7 +26,7 @@ local json
 function ServerController.useDlls(enableDlls)
     if enableDlls then
         package.cpath = package.cpath .. ";.\\LUA\\ak\\?.dll"
-        if ServerController.debug then print(package.cpath) end
+        if ServerController.debug then print("[#ServerController] " .. package.cpath) end
         json = require("cjson")
         -- Important: Empty tables must not be packed as objects {}, but as lists []
         json.encode_empty_table_as_object(false)
@@ -58,7 +58,8 @@ local function initializeJsonCollector(jsonCollector)
     local t1 = os.clock()
     local timeDiff = t1 - t0
     if ServerController.debug then
-        print(string.format("ServerController: initialize() %4.0f ms for \"%s\"", timeDiff * 1000, jsonCollector.name))
+        print(string.format("[#ServerController] initialize() %4.0f ms for \"%s\"", timeDiff * 1000,
+                            jsonCollector.name))
     end
     local group = "JsonCollector." .. jsonCollector.name .. ".initialize"
     RuntimeRegistry.storeRunTime(group, timeDiff)
@@ -71,8 +72,8 @@ local function collectFrom(jsonCollector, printFirstTime)
     local t1 = os.clock()
     local timeDiff = t1 - t0
     if ServerController.debug and (timeDiff > 0.01 or printFirstTime) then
-        print(
-        string.format("ServerController: collectData() %4.0f ms for \"%s\"", timeDiff * 1000, jsonCollector.name))
+        print(string.format("[#ServerController] collectData() %4.0f ms for \"%s\"", timeDiff * 1000,
+                            jsonCollector.name))
     end
     RuntimeRegistry.storeRunTime("JsonCollector." .. jsonCollector.name .. ".collectData", timeDiff)
     return newData
@@ -100,7 +101,7 @@ end
 --- Initialize data.
 -- do it once
 local function initialize()
-    if ServerController.debug then print("ServerController: initialize()") end
+    if ServerController.debug then print("[#ServerController] initialize()") end
     for _, jsonCollector in pairs(registeredJsonCollectors) do initializeJsonCollector(jsonCollector) end
 
     initialized = true
@@ -121,7 +122,7 @@ function ServerController.addJsonCollector(...)
 
         -- Remember the jsonCollector by it's name
         if ServerController.debug then
-            print(string.format("ServerController.addJsonCollector(%s)", jsonCollector.name))
+            print(string.format("[#ServerController] addJsonCollector(%s)", jsonCollector.name))
         end
         registeredJsonCollectors[jsonCollector.name] = jsonCollector
 
@@ -177,7 +178,7 @@ function ServerController.communicateWithServer(modulus)
     local allowedTimeDiff = modulus * 0.200
     if ServerController.debug and printFirstTime or timeDiff > allowedTimeDiff then
         local format = (printFirstTime and "INITIALIZATION" or "WARNING") ..
-                       ": ServerController.communicateWithServer() time is %3.0f ms --- " ..
+                       ": [#ServerController] communicateWithServer() time is %3.0f ms --- " ..
                        "waitForServer: %.0f ms, " .. "initialize: %.0f ms, " .. "commands: %2.0f ms, " ..
                        "collect: %3.0f ms, " .. " expand: %3.0f ms " .. " encode: %3.0f ms " .. " write: %.0f ms" ..
                        " (allowed: %.0f ms)"

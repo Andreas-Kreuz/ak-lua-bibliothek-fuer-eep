@@ -1,4 +1,4 @@
-if AkDebugLoad then print("Loading ak.data.DataWebConnector ...") end
+if AkDebugLoad then print("[#Start] Loading ak.data.DataWebConnector ...") end
 local ServerController = require("ak.io.ServerController")
 local DataWebConnector = {}
 

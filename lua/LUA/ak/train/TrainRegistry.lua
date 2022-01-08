@@ -1,4 +1,4 @@
-if AkDebugLoad then print("Loading ak.data.TrainRegistry ...") end
+if AkDebugLoad then print("[#Start] Loading ak.data.TrainRegistry ...") end
 local EventBroker = require("ak.util.EventBroker")
 local Train = require("ak.train.Train")
 local RollingStockRegistry = require("ak.train.RollingStockRegistry")
@@ -59,7 +59,7 @@ end
 ---@param train Train
 function TrainRegistry.trainAppeared(train)
     if TrainRegistry.debug then
-        print(string.format("[TrainRegistry] train created: %s (%s)", train:getName(), train:getTrackType()))
+        print(string.format("[#TrainRegistry] train created: %s (%s)", train:getName(), train:getTrackType()))
     end
     -- is included in "TrainRegistry.fireChangeTrainsEvent()"
     -- EventBroker.fireDataAdded("trains", "id", train:toJsonStatic())
@@ -68,7 +68,7 @@ end
 ---A train dissappeared from the map
 ---@param trainName string
 function TrainRegistry.trainDisappeared(trainName)
-    if TrainRegistry.debug then print(string.format("[TrainRegistry] train removed: %s", trainName)) end
+    if TrainRegistry.debug then print(string.format("[#TrainRegistry] train removed: %s", trainName)) end
     allTrains[trainName] = nil
     EventBroker.fireDataRemoved("trains", "id", {id = trainName})
 end

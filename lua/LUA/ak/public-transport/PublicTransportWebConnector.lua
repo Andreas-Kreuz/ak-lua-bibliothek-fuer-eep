@@ -1,4 +1,4 @@
-if AkDebugLoad then print("Loading ak.public-transport.PublicTransportWebConnector ...") end
+if AkDebugLoad then print("[#Start] Loading ak.public-transport.PublicTransportWebConnector ...") end
 local ServerController = require("ak.io.ServerController")
 local Line = require("ak.public-transport.Line")
 

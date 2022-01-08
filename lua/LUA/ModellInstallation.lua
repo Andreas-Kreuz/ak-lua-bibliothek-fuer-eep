@@ -6,7 +6,7 @@ local AkModellPaket = require("ak.modellpacker.AkModellPaket")
 
 local aktuellerOrdner = ".."
 if arg and arg[1] then aktuellerOrdner = arg[1] end
-print("Suche Installationsdateien in Verzeichnis \"" .. aktuellerOrdner .. "\"")
+print("[#ModellInstallation] Suche Installationsdateien in Verzeichnis \"" .. aktuellerOrdner .. "\"")
 
 -----------------------------------------
 -- Paket: Skripte von Andreas Kreuz
@@ -50,10 +50,10 @@ paket3:fuegeDateienHinzu(aktuellerOrdner, "", "LUA\\ak\\demo-anlagen\\tutorial-a
 paket3:fuegeDateienHinzu(aktuellerOrdner, "", "Resourcen\\Anlagen\\Andreas_Kreuz-Tutorial-Ampelkreuzung",
                          {".dds", "README.md"})
 
-print(paket0.deutscherName)
-print(paket1.deutscherName)
-print(paket2.deutscherName)
-print(paket3.deutscherName)
+print("[#ModellInstallation] " .. paket0.deutscherName)
+print("[#ModellInstallation] " .. paket1.deutscherName)
+print("[#ModellInstallation] " .. paket2.deutscherName)
+print("[#ModellInstallation] " .. paket3.deutscherName)
 
 local installer = AkModellInstaller:new("Installer-AK-Lua-Bibliothek-fuer-EEP")
 installer:fuegeModellPaketHinzu(paket0)

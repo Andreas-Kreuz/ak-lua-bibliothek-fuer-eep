@@ -1,4 +1,4 @@
-if AkDebugLoad then print("Loading ak.train.Train ...") end
+if AkDebugLoad then print("[#Start] Loading ak.train.Train ...") end
 -- local EventBroker = require("ak.util.EventBroker")
 local TableUtils = require("ak.util.TableUtils")
 

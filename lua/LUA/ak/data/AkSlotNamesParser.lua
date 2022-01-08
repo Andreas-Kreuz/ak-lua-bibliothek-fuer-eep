@@ -1,4 +1,4 @@
-if AkDebugLoad then print("Loading ak.data.AkSlotNamesParser ...") end
+if AkDebugLoad then print("[#Start] Loading ak.data.AkSlotNamesParser ...") end
 local SlotNamesParser = {}
 
 local function isModuleAvailable(name)
@@ -29,11 +29,11 @@ function SlotNamesParser.updateSlotNames()
                 table.insert(path, k)
                 local pathString = table.concat(path, ".")
                 if type(v) == "table" then
-                    -- print(pathString .. '> Lookup Table '  .. pathString)
+                    -- print("[#SlotNameParser]" .. pathString .. '> Lookup Table '  .. pathString)
                     recursiveLookup(v, prefix .. "--", path)
                 else
                     local slotNumber = SlotFuncs.lookupSlotNr(table.unpack(path))
-                    -- print(pathString .. '> Found Slot: ' .. tostring(s))
+                    -- print("[#SlotNameParser]" .. pathString .. '> Found Slot: ' .. tostring(s))
 
                     namesToSlots[tostring(slotNumber)] = pathString
                 end
