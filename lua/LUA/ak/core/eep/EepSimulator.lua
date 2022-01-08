@@ -836,8 +836,8 @@ function EEPRollingstockGetPosition(rollingstockName) return true, 100, -50, 3 e
 -- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
 -- @return textureText
 function EEPRollingstockGetTextureText(rollingstockName, fleache)
-    local textureTexts = textureTexts.rollingStock[rollingstockName] or {}
-    local textureText = textureTexts[fleache]
+    local rollingStockTextureTexts = textureTexts.rollingStock[rollingstockName] or {}
+    local textureText = rollingStockTextureTexts[fleache]
     local ok = textureText and true or false
     return ok, textureText
 end
