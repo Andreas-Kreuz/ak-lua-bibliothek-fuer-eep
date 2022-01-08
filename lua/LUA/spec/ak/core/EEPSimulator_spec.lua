@@ -48,7 +48,7 @@ describe("EepFunktionen.lua", function()
     end)
     insulate("EEPVer", function()
         require("ak.core.eep.EepSimulator")
-        it("EEPVer has value \"16.3\"", function() assert.are.equals(16.3, EEPVer) end)
+        it("EEPVer has value \"15\"", function() assert.are.equals(16.3, EEPVer) end)
     end)
 
     insulate("clearlog", function()
