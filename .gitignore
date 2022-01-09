@@ -1,5 +1,6 @@
 # compiled output
 /web-app/cypress/io/ak*
+/web-app/cypress/io/LUA/ak/io/exchange/ak*
 /web-app/cypress/videos
 /web-app/cypress/screenshots
 /web-app/dist

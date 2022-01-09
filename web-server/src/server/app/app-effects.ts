@@ -110,7 +110,7 @@ export default class AppEffects {
 
   public changeEepDirectory(eepDir: string) {
     // Append the exchange directory to the path
-    const completeDir = path.resolve(eepDir, this.TESTMODE ? '' : 'LUA/ak/io/exchange/');
+    const completeDir = path.resolve(eepDir, 'LUA/ak/io/exchange/');
 
     // Check the directory and register handlers on success
     const eepService = new EepService();

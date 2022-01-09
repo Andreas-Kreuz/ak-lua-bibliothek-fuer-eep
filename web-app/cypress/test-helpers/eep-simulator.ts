@@ -1,11 +1,11 @@
 import { all } from 'cypress/types/bluebird';
 
 enum FileNames {
-  eepOutJsonOut = 'cypress/io/ak-eep-out.json',
-  eepOutJsonOutFinished = 'cypress/io/ak-eep-out-json.isfinished',
-  eepOutLog = 'cypress/io/ak-eep-out.log',
-  serverOutCommands = 'cypress/io/ak-eep-in.commands',
-  serverWatching = 'cypress/io/ak-server.iswatching',
+  eepOutJsonOut = 'cypress/io/LUA/ak/io/exchange/ak-eep-out.json',
+  eepOutJsonOutFinished = 'cypress/io/LUA/ak/io/exchange/ak-eep-out-json.isfinished',
+  eepOutLog = 'cypress/io/LUA/ak/io/exchange/ak-eep-out.log',
+  serverOutCommands = 'cypress/io/LUA/ak/io/exchange/ak-eep-in.commands',
+  serverWatching = 'cypress/io/LUA/ak/io/exchange/ak-server.iswatching',
 }
 
 export default class EepSimulator {
