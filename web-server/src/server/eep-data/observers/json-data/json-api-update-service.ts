@@ -52,7 +52,9 @@ export default class JsonApiUpdateService {
     const currentState: State = store.currentState();
     const oldData: ServerData = this.reducer.getLastAnnouncedData();
     const data: ServerData = JsonApiReducer.calculateData(currentState);
-    this.cacheService.writeCache(currentState as undefined);
+    if (!store.hasInitialState()) {
+      this.cacheService.writeCache(currentState as undefined);
+    }
     this.reducer.setLastAnnouncedData(data);
 
     this.announceEepData(store, oldData, data, currentState.eventCounter);

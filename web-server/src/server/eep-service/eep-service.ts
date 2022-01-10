@@ -32,7 +32,28 @@ export default class EepService implements CacheService {
   private lastJsonUpdate: number;
 
   reInit(dir: string, callback: (err: string, dir: string) => void): void {
+    this.disconnectFromFiles();
+
     this.dir = path.resolve(dir);
+    fs.stat(this.dir, (err, stats) => {
+      if (!err && stats.isDirectory()) {
+        callback(null, this.dir);
+        this.connectToFiles();
+      } else {
+        callback('No such directory: ' + this.dir, null);
+      }
+    });
+  }
+
+  private connectToFiles(): void {
+    this.attachAkEepOutJsonFile();
+    this.attachAkEepOutLogFile();
+    this.createAkServerFile();
+    this.deleteFileOnExit(FileNames.serverEventCounter);
+  }
+
+  private disconnectFromFiles(): void {
+    this.deleteFileIfExists(path.resolve(this.dir, FileNames.serverWatching));
 
     if (this.logTail) {
       this.logTail.unwatch();
@@ -56,50 +77,6 @@ export default class EepService implements CacheService {
     this.logWasCleared = () => {
       console.log('Log was cleared');
     };
-
-    fs.stat(this.dir, (err, stats) => {
-      if (!err && stats.isDirectory()) {
-        callback(null, this.dir);
-        this.attachAkEepOutJsonFile();
-        this.attachAkEepOutLogFile();
-        this.createAkServerFile();
-        this.deleteFileOnExit(FileNames.serverEventCounter);
-      } else {
-        callback('No such directory: ' + this.dir, null);
-      }
-    });
-  }
-
-  private deleteFileIfExists(file: string): void {
-    try {
-      fs.unlinkSync(file);
-    } catch (err) {
-      // IGNORED - console.log(err);
-    }
-  }
-
-  private attachAkEepOutJsonFile(): void {
-    const jsonFile = path.resolve(this.dir, FileNames.eepOutJsonOut);
-    const jsonReadyFile = path.resolve(this.dir, FileNames.eepOutJsonOutFinished);
-
-    // First start: Read the JSON file - ignore if EEP is ready
-    if (!this.jsonFileWatcher) {
-      this.readJsonFile(jsonFile, jsonReadyFile);
-    }
-
-    // First start: Delete the EEP FINISHED file, so EEP will know we are ready
-    this.deleteFileIfExists(jsonReadyFile);
-    performance.mark('eep:start-wait-for-json');
-
-    // Watch in the directory, if the file is recreated
-    this.jsonFileWatcher = fs.watch(this.dir, {}, (eventType: string, filename: string) => {
-      // If the jsonReadyFile exists: Read the data and remove the file
-      if (filename === FileNames.eepOutJsonOutFinished && fs.existsSync(jsonReadyFile)) {
-        this.lastJsonUpdate = performance.now();
-        // console.log('Reading: ', jsonFile);
-        this.readJsonFile(jsonFile, jsonReadyFile);
-      }
-    });
   }
 
   public readCache(): undefined {
@@ -137,6 +114,38 @@ export default class EepService implements CacheService {
       'eep:start-write-cache-file',
       'eep:stop-write-cache-file'
     );
+  }
+
+  private deleteFileIfExists(file: string): void {
+    try {
+      fs.unlinkSync(file);
+    } catch (err) {
+      // IGNORED - console.log(err);
+    }
+  }
+
+  private attachAkEepOutJsonFile(): void {
+    const jsonFile = path.resolve(this.dir, FileNames.eepOutJsonOut);
+    const jsonReadyFile = path.resolve(this.dir, FileNames.eepOutJsonOutFinished);
+
+    // First start: Read the JSON file - ignore if EEP is ready
+    if (!this.jsonFileWatcher) {
+      this.readJsonFile(jsonFile, jsonReadyFile);
+    }
+
+    // First start: Delete the EEP FINISHED file, so EEP will know we are ready
+    this.deleteFileIfExists(jsonReadyFile);
+    performance.mark('eep:start-wait-for-json');
+
+    // Watch in the directory, if the file is recreated
+    this.jsonFileWatcher = fs.watch(this.dir, {}, (eventType: string, filename: string) => {
+      // If the jsonReadyFile exists: Read the data and remove the file
+      if (filename === FileNames.eepOutJsonOutFinished && fs.existsSync(jsonReadyFile)) {
+        this.lastJsonUpdate = performance.now();
+        // console.log('Reading: ', jsonFile);
+        this.readJsonFile(jsonFile, jsonReadyFile);
+      }
+    });
   }
 
   private readJsonFile(jsonFile: string, jsonReadyFile: string) {

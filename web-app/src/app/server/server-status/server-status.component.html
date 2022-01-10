@@ -14,41 +14,42 @@
     </mat-card>
   </div>
   <div class="col col-12" *ngIf="!error">
-    <mat-card *ngIf="(urlsAvailable$ | async) === false">
-      <span
-        >Es wurden keine Daten von EEP gesammelt.<br />
-        <span class="text-muted">Stelle sicher, dass Du den folgenden Lua-Code in EEP eingetragen hast:</span>
-        <pre>
+    <mat-card>
+      <mat-card-content>
+        <div *ngIf="(urls$ | async).length > 0">
+          Happily Serving
+          <span *ngIf="eventCounter$ | async as counter" class="text-muted">
+            ({{ counter | number: "1.0":"de" }} events)</span
+          >
+          <br />
+          <span class="text-muted">{{ (urls$ | async).join(", ") }}</span>
+        </div>
+        <div *ngIf="(urlsAvailable$ | async) === false" class="mt-3">
+          Es wurden keine Daten von EEP gesammelt.<br />
+          <span class="text-muted">Stelle sicher, dass Du den folgenden Lua-Code in EEP eingetragen hast:</span>
+          <pre style="margin-bottom: 0">
 local ModuleRegistry = require("ak.core.ModuleRegistry")
 ModuleRegistry.registerModules(require("ak.core.CoreLuaModule"))
 
 function EEPMain()
     ModuleRegistry.runTasks()
     return 1
-end
-        </pre>
-      </span>
-    </mat-card>
-    <mat-card *ngIf="(urlsAvailable$ | async) === true">
-      <span
-        >Happily Serving
-        <span *ngIf="eventCounter$ | async as counter" class="text-muted">
-          ({{ counter | number: "1.0":"de" }} events)</span
-        >
-        <br />
-        <span class="text-muted">{{ (urls$ | async).join(", ") }}</span>
-      </span>
+end</pre
+          >
+        </div>
+      </mat-card-content>
     </mat-card>
   </div>
-  <div class="col col-12">
+  <div class="col col-12" *ngIf="eepDir$ | async as selectedDir">
     <mat-card [ngClass]="{ error: error }">
       <span
         >EEP-Verzeichnis<br />
-        <span class="text-muted">{{ eepDir$ | async }}</span>
+        <span class="text-muted" id="choose-dir-current-dir">{{ selectedDir }}</span>
       </span>
       <span class="app-spacer"></span>
-      <button *ngIf="error" mat-flat-button (click)="openDialog()" color="warn">Verzeichnis wählen</button>
-      <button *ngIf="!error" mat-stroked-button (click)="openDialog()">Verzeichnis wählen</button>
+      <button mat-flat-button (click)="openDialog()" id="choose-dir-button" [color]="error ? 'warn' : 'primary'">
+        Verzeichnis wählen
+      </button>
     </mat-card>
   </div>
   <div class="col col-12" *ngIf="error">

@@ -81,7 +81,6 @@ export default class AppEffects {
       console.log(error);
     }
     this.store.setAppConfig(appConfig);
-    this.io.to(SettingsEvent.Room).emit(SettingsEvent.DirError, this.store.getEepDir());
   }
 
   private saveConfig(config: { eepDir: string }): void {

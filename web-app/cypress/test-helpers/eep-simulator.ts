@@ -1,5 +1,6 @@
 import { all } from 'cypress/types/bluebird';
 
+const eepDir = 'cypress/io/LUA/ak/io/exchange/';
 enum FileNames {
   eepOutJsonOut = 'cypress/io/LUA/ak/io/exchange/ak-eep-out.json',
   eepOutJsonOutFinished = 'cypress/io/LUA/ak/io/exchange/ak-eep-out-json.isfinished',
@@ -10,7 +11,11 @@ enum FileNames {
 
 export default class EepSimulator {
   fileNames = FileNames;
+  eepDir = eepDir;
   private eventCounter = 0;
+  private sim = this;
+
+  logEventCounter = () => cy.log('Current Counter: ' + this.eventCounter.toString());
 
   reset = () => {
     this.eventCounter = 0;
@@ -42,8 +47,10 @@ export default class EepSimulator {
 
   eepEvent(fileName: string) {
     this.eventCounter++;
+    const count = this.eventCounter;
     cy.fixture('eep-output/' + fileName).then((x) => {
-      x.eventCounter = this.eventCounter;
+      x.eventCounter = count;
+      cy.log(x.eventCounter, fileName, x);
       this.writeNewEepEventFile(JSON.stringify(x));
     });
   }

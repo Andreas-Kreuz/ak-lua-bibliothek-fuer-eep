@@ -12,8 +12,6 @@ import * as fromServer from '../store/server.reducer';
   templateUrl: './eep-dir-dialog.component.html',
 })
 export class EepDirDialogComponent {
-  public eepDir$ = this.store.select(fromServer.eepDir$);
-
   constructor(
     private store: Store<fromServer.State>,
     public dialogRef: MatDialogRef<EepDirDialogComponent>,
