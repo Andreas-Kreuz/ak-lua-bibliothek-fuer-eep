@@ -53,7 +53,9 @@ export default class EepService implements CacheService {
   }
 
   private disconnectFromFiles(): void {
-    this.deleteFileIfExists(path.resolve(this.dir, FileNames.serverWatching));
+    if (this.dir) {
+      this.deleteFileIfExists(path.resolve(this.dir, FileNames.serverWatching));
+    }
 
     if (this.logTail) {
       this.logTail.unwatch();
