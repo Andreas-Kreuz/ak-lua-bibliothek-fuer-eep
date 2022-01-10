@@ -1,6 +1,3 @@
-import { all } from 'cypress/types/bluebird';
-
-const eepDir = 'cypress/io/LUA/ak/io/exchange/';
 enum FileNames {
   eepOutJsonOut = 'cypress/io/LUA/ak/io/exchange/ak-eep-out.json',
   eepOutJsonOutFinished = 'cypress/io/LUA/ak/io/exchange/ak-eep-out-json.isfinished',
@@ -11,9 +8,7 @@ enum FileNames {
 
 export default class EepSimulator {
   fileNames = FileNames;
-  eepDir = eepDir;
   private eventCounter = 0;
-  private sim = this;
 
   logEventCounter = () => cy.log('Current Counter: ' + this.eventCounter.toString());
 
