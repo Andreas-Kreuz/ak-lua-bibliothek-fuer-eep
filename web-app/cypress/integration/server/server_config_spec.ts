@@ -39,7 +39,9 @@ describe('Server Tests "/server"', () => {
             .click()
             .then(() => {
               cy.get('input#dir-dialog-dir')
+                .should('exist')
                 .should('be.visible')
+                .wait(100)
                 .clear()
                 .type(pwd.dir)
                 .then((bla) => {
@@ -109,6 +111,8 @@ describe('Server Tests "/server"', () => {
           .click()
           .then(() => {
             cy.get('input#dir-dialog-dir')
+              .should('exist')
+              .should('be.visible')
               .wait(100)
               .clear()
               .type(pwd.dir + '-empty')
@@ -131,6 +135,8 @@ describe('Server Tests "/server"', () => {
               .then(() => {
                 cy.get('input#dir-dialog-dir')
                   .should('exist')
+                  .should('be.visible')
+                  .wait(100)
                   .clear()
                   .type(pwd.dir)
                   .then(() => {
