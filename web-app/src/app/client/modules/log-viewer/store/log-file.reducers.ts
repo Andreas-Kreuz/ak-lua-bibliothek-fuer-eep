@@ -13,17 +13,17 @@ const initialState: State = {
 
 const logReducer = createReducer(
   initialState,
-  on(logActions.linesCleared, (state: State) => ({ ...state, linesAsString: '', lines: [] })),
+  on(logActions.linesCleared, (state: State) => ({ ...state, loading: false, lines: [] })),
   on(logActions.linesAdded, (state: State, { lines: lines }) => {
-    const newLines = [];
-    newLines.push(...state.lines);
-    for (const s of lines.split('\n')) {
+    const newLines = [...state.lines];
+    const fetchedLines = lines.split('\n');
+    for (const s of fetchedLines) {
       if (s.length > 0) {
-        const l = newLines.push(s);
-        while (newLines.length > 10000) {
-          newLines.shift();
-        }
+        newLines.push(s);
       }
+    }
+    while (newLines.length > 10000) {
+      newLines.shift();
     }
     return {
       ...state,
