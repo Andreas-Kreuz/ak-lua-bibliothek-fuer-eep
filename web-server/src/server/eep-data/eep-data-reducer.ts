@@ -77,7 +77,6 @@ export default class EepDataStore {
       default:
         console.warn('NO SUCH event.type: ' + event.type);
         return { ...state, eventCounter: event.eventCounter };
-        break;
     }
   }
 
@@ -87,5 +86,9 @@ export default class EepDataStore {
 
   getEventCounter(): number {
     return this.state.eventCounter;
+  }
+
+  hasInitialState(): boolean {
+    return this.state === initialState;
   }
 }

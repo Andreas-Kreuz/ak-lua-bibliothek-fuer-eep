@@ -81,7 +81,6 @@ export default class AppEffects {
       console.log(error);
     }
     this.store.setAppConfig(appConfig);
-    this.io.to(SettingsEvent.Room).emit(SettingsEvent.DirError, this.store.getEepDir());
   }
 
   private saveConfig(config: { eepDir: string }): void {
@@ -110,7 +109,7 @@ export default class AppEffects {
 
   public changeEepDirectory(eepDir: string) {
     // Append the exchange directory to the path
-    const completeDir = path.resolve(eepDir, this.TESTMODE ? '' : 'LUA/ak/io/exchange/');
+    const completeDir = path.resolve(eepDir, 'LUA/ak/io/exchange/');
 
     // Check the directory and register handlers on success
     const eepService = new EepService();

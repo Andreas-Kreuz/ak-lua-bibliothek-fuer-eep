@@ -35,9 +35,7 @@ export class LogTextFieldComponent implements OnInit, AfterViewInit {
     this.maxHeight = 'calc(' + window.innerHeight + 'px - ' + (small ? '56px' : '64px') + ')';
   };
 
-  logEntries(index, item) {
-    return index;
-  }
+  logEntries = (index, item) => item;
 
   ngAfterViewInit() {
     this.container = document.getElementById('app-log-container');
