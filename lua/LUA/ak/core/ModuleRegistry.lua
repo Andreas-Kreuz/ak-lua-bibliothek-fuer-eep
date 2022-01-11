@@ -5,6 +5,7 @@ local os = require("os")
 
 local ModuleRegistry = {}
 ModuleRegistry.debug = AkStartWithDebug or false
+ModuleRegistry.pauseEepDuringInitialization = false -- Option to pause EEP during initialization
 local enableServer = true
 local initialized = false
 ---@type table<string,LuaModule>
@@ -82,7 +83,7 @@ local function initTask(module)
     local t1 = os.clock()
     local timeDiff = t1 - t0
     if ModuleRegistry.debug then
-        print(string.format("[#ModuleRegistry].initTask() %.3f seconds for \"%s\"", timeDiff, module.name))
+        print(string.format("[ModuleRegistry] End initTask() for \"%s\" after %.3f seconds", module.name, timeDiff))
     end
 end
 
@@ -113,7 +114,17 @@ end
 -- @param cycleCount Repetion frequency (1: every 200 ms, 5: every second, ...)
 function ModuleRegistry.runTasks(cycleCount)
     local t1 = os.clock()
-    if not initialized then ModuleRegistry.initTasks() end
+    local resumeEEP
+    if not initialized then
+        -- Process option to suspend EEP during initialization
+        if ModuleRegistry.pauseEepDuringInitialization then
+            if ModuleRegistry.debug then print("[ModuleRegistry] Pause EEP during initialization") end
+            EEPPause(1)
+            resumeEEP = true
+        end
+
+        ModuleRegistry.initTasks()
+    end
 
     local t2 = os.clock()
     for _, moduleName in ipairs(executionOrderModuleNames) do runTask(registeredLuaModules[moduleName]) end
@@ -125,6 +136,14 @@ function ModuleRegistry.runTasks(cycleCount)
         ServerController.communicateWithServer(cycleCount)
     end
     local t4 = os.clock()
+
+    -- resume EEP after initialization
+    if resumeEEP then
+        if ModuleRegistry.debug then
+            print(string.format("[ModuleRegistry] Resume EEP after initialization %3.0f ms", (t4 - t1) * 1000))
+        end
+        EEPPause(0)
+    end
 
     if ModuleRegistry.debug then
         print(string.format("[#ModuleRegistry] runTasks(%d) time: %.0f ms " ..

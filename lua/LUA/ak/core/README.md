@@ -50,6 +50,8 @@ clearlog() -- This call before loading EEP-Web clears the log within EEP but doe
 
 -- Load EEP Web Modules
 local ModuleRegistry = require("ak.core.ModuleRegistry")
+ModuleRegistry.debug = true -- or use AkStartWithDebug = true
+ModuleRegistry.pauseEepDuringInitialization = true -- Pause EEP during initialization
 local modules = ModuleRegistry.registerModules(
     require("ak.core.CoreLuaModule"),
     require("ak.data.DataLuaModule")
