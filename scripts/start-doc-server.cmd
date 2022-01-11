@@ -1,7 +1,7 @@
 @REM NOTE:
 @REM -----
 @REM The "bundle" command must be in the PATH variable
-@REM Requires Ruby to be installed (https://https://rubyinstaller.org//)
+@REM Requires Ruby to be installed (https://rubyinstaller.org/)
 
 setlocal
 SET oldDir=%CD%

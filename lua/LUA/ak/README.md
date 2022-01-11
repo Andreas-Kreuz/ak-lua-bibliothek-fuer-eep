@@ -13,7 +13,7 @@ img: "/docs/assets/headers/SourceCode.png"
 
 - **Eigene mit `EEPRollingstockSetTagText` gespeicherte Daten werden dabei verloren gehen!**
 - Man kann jedoch eigene Daten in einem Zug wie folgt ablegen:
-  - `Train.forName("#meinZug")`**`.setValue("schlüssel","wert")`**
+  - `Train.forName("#meinZug")`**`.setValue("schlüssel", "wert")`**
   - `local meinWert = Train.forName("#meinZug")`**`.getValue("schlüssel")`**
 
 ## Pakete
@@ -41,7 +41,6 @@ img: "/docs/assets/headers/SourceCode.png"
     <tr>
       <td><a href="public-transport/">📦&nbsp;ak/public-transport</a></td>
       <td>Linienverkehr im ÖPNV</td>
-    </tr>
     </tr>
     <tr>
       <td><a class="text-muted" href="rail/">⚡&nbsp;ak/rail</a></td>
