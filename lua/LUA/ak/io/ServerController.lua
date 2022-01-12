@@ -41,10 +41,6 @@ ServerController.useDlls(false)
 -- false: Update json file without checking if the EEP-Web Server is ready
 ServerController.checkServerStatus = true
 
--- List of entries which should be active (default = all)
--- Example: { ["api-entries"] = true, ["eep-version"] = true, }
-ServerController.activeEntries = {}
-
 local registeredJsonCollectors = {}
 local runTimeGroupsToKeep = {}
 local collectedData = {}
