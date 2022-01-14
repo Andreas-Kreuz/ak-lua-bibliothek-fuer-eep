@@ -78,8 +78,7 @@ describe('Server Tests "/server"', () => {
         .should('be.visible')
         .should('contain.value', 'io')
         .clear()
-        .should('have.value', '')
-        .then(() => {
+        .then((field) => {
           cy.get('#dir-dialog-choose').should('be.disabled');
           cy.get('#dir-dialog-cancel').should('be.enabled');
           cy.get('#dir-dialog-cancel').should('be.enabled').click().should('not.exist');
