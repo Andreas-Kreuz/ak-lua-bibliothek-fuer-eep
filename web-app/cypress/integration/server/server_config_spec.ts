@@ -77,11 +77,13 @@ describe('Server Tests "/server"', () => {
       cy.get('input#dir-dialog-dir')
         .should('be.visible')
         .should('contain.value', 'io')
+        .wait(100)
+        .clear()
+        .type('{selectall}{backspace}')
         .then(() => {
-          cy.get('input#dir-dialog-dir')
-            .clear()
-            .then((field) => {
-              cy.get('#dir-dialog-choose').should('be.disabled');
+          cy.get('#dir-dialog-choose')
+            .should('be.disabled')
+            .then(() => {
               cy.get('#dir-dialog-cancel').should('be.enabled');
               cy.get('#dir-dialog-cancel').should('be.enabled').click().should('not.exist');
             });
