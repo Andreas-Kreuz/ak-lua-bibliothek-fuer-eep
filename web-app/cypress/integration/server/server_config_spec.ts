@@ -77,13 +77,14 @@ describe('Server Tests "/server"', () => {
       cy.get('input#dir-dialog-dir')
         .should('be.visible')
         .should('contain.value', 'io')
-        .clear()
-        .wait(100)
-        .should('have.value', '')
-        .then((field) => {
-          cy.get('#dir-dialog-choose').should('be.disabled');
-          cy.get('#dir-dialog-cancel').should('be.enabled');
-          cy.get('#dir-dialog-cancel').should('be.enabled').click().should('not.exist');
+        .then(() => {
+          cy.get('input#dir-dialog-dir')
+            .clear()
+            .then((field) => {
+              cy.get('#dir-dialog-choose').should('be.disabled');
+              cy.get('#dir-dialog-cancel').should('be.enabled');
+              cy.get('#dir-dialog-cancel').should('be.enabled').click().should('not.exist');
+            });
         });
     });
     describe('Changing to "bad" directory', () => {
