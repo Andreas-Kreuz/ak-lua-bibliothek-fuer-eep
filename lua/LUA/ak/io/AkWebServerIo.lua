@@ -104,7 +104,7 @@ local function printToFile(...)
         if os.date then time = os.date("%X ") end
         local text = "" .. time
         local args = {...}
-        for _, arg in pairs(args) do text = text .. tostring(arg):gsub("\n", "\n       . ") end
+        for _, arg in ipairs(args) do text = text .. tostring(arg):gsub("\n", "\n       . ") end
         file:write(text .. "\n")
         file:close()
     end
