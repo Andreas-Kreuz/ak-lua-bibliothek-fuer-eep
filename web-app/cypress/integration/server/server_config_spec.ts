@@ -9,14 +9,15 @@ describe('Server Tests "/server"', () => {
   before(() => {
     // Remember the old server dir otherwise the following tests will not work!
     cy.visit('/server');
-    cy.wait(500);
-    cy.get('#choose-dir-current-dir')
-      .should('not.have.text', '-')
-      .should('not.contain.text', 'io-empty')
-      .invoke('text')
-      .then((value) => {
-        pwd.dir = value as string;
-      });
+    cy.wait(500).then(() => {
+      cy.get('#choose-dir-current-dir')
+        .should('not.have.text', '-')
+        .should('not.contain.text', 'io-empty')
+        .invoke('text')
+        .then((value) => {
+          pwd.dir = value as string;
+        });
+    });
     simulator.reset();
     simulator.eepEvent('eep-version-complete.json');
     cy.wait(500).then(() => {
