@@ -76,10 +76,10 @@ describe('Server Tests "/server"', () => {
       cy.get('#choose-dir-button').click();
       cy.get('input#dir-dialog-dir')
         .should('be.visible')
-        .wait(100)
+        .should('contain.value', 'io')
         .clear()
         .should('have.value', '')
-        .then((field) => {
+        .then(() => {
           cy.get('#dir-dialog-choose').should('be.disabled');
           cy.get('#dir-dialog-cancel').should('be.enabled');
           cy.get('#dir-dialog-cancel').should('be.enabled').click().should('not.exist');
