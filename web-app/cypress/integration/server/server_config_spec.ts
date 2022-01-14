@@ -9,14 +9,15 @@ describe('Server Tests "/server"', () => {
   before(() => {
     // Remember the old server dir otherwise the following tests will not work!
     cy.visit('/server');
-    cy.wait(500);
-    cy.get('#choose-dir-current-dir')
-      .should('not.have.text', '-')
-      .should('not.contain.text', 'io-empty')
-      .invoke('text')
-      .then((value) => {
-        pwd.dir = value as string;
-      });
+    cy.wait(500).then(() => {
+      cy.get('#choose-dir-current-dir')
+        .should('not.have.text', '-')
+        .should('not.contain.text', 'io-empty')
+        .invoke('text')
+        .then((value) => {
+          pwd.dir = value as string;
+        });
+    });
     simulator.reset();
     simulator.eepEvent('eep-version-complete.json');
     cy.wait(500).then(() => {
@@ -75,13 +76,17 @@ describe('Server Tests "/server"', () => {
       cy.get('#choose-dir-button').click();
       cy.get('input#dir-dialog-dir')
         .should('be.visible')
+        .should('contain.value', 'io')
         .wait(100)
         .clear()
-        .should('have.value', '')
-        .then((field) => {
-          cy.get('#dir-dialog-choose').should('be.disabled');
-          cy.get('#dir-dialog-cancel').should('be.enabled');
-          cy.get('#dir-dialog-cancel').should('be.enabled').click().should('not.exist');
+        .type('{selectall}{backspace}')
+        .then(() => {
+          cy.get('#dir-dialog-choose')
+            .should('be.disabled')
+            .then(() => {
+              cy.get('#dir-dialog-cancel').should('be.enabled');
+              cy.get('#dir-dialog-cancel').should('be.enabled').click().should('not.exist');
+            });
         });
     });
     describe('Changing to "bad" directory', () => {
