@@ -36,3 +36,7 @@ jobs:
           working-directory: web-app
           wait-on: "http://localhost:3000"
           config: baseUrl=http://localhost:3000
+          record: true
+        env:
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
