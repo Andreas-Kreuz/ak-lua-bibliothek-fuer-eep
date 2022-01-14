@@ -19,10 +19,11 @@ describe('Server Tests "/server"', () => {
       });
     simulator.reset();
     simulator.eepEvent('eep-version-complete.json');
-    cy.wait(500);
-    cy.contains('(2 events)');
-    cy.contains('api-entries');
-    cy.contains('eep-version');
+    cy.wait(500).then(() => {
+      cy.contains('api-entries');
+      cy.contains('eep-version');
+      cy.contains('(2 events)');
+    });
   });
 
   after(() => {
