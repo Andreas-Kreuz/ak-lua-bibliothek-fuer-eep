@@ -119,19 +119,19 @@ end
 --- Schreibe Fehler zusätzlich in Datei.
 error = function(message, level)
     printToFile(message) -- print the output to the file
-    _error(message, level) -- call the original assert function
+    _error(message, level) -- call the original error function
 end
 
 --- Schreibe Fehler zusätzlich in Datei.
 warn = function(message, ...)
     printToFile(message, ...) -- print the output to the file
-    _warn(message, ...) -- call the original assert function
+    _warn(message, ...) -- call the original warn function
 end
 
 -- add traceback to assert message by default
 assert = function(v, message)
     local status, retval = pcall(_assert, v, message)
-    if not status then error(message and message .. "\n" .. debug.traceback() or debug.traceback()) end
+    if not status then error(debug.traceback(message and message or "Assertion failed.", 2), 0) end
     return retval
 end
 
