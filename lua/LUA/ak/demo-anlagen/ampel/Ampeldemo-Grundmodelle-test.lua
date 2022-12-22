@@ -62,6 +62,6 @@ for _ = 1, 10 do
     run()
     run()
     print("[#Test] Verlasse Block")
-    leaveLane(Zugname, c1Lane8, true)
+    leaveLane(Zugname, c1Lane8)
     run()
 end

@@ -50,7 +50,7 @@ end
 ---This will register callbacks to get informed, e.g. if a train has been coupled or lost coupling
 function TrainDetection.registerForTrainDetection()
     -- React to train changes from EEP
-    local _EEPOnTrainCoupling = EEPOnTrainCoupling or function() -- EEP 14 Plug-In 1
+    local _EEPOnTrainCoupling = EEPOnTrainCoupling or function(_, _, _) -- EEP 14 Plug-In 1
     end
     EEPOnTrainCoupling = function(trainA, trainB, trainNew)
         -- Mark these trains as dirty, i.e. refresh their data
@@ -64,7 +64,7 @@ function TrainDetection.registerForTrainDetection()
         return _EEPOnTrainCoupling(trainA, trainB, trainNew)
     end
 
-    local _EEPOnTrainLooseCoupling = EEPOnTrainLooseCoupling or function() -- EEP 14 Plug-In 1
+    local _EEPOnTrainLooseCoupling = EEPOnTrainLooseCoupling or function(_, _, _) -- EEP 14 Plug-In 1
     end
     EEPOnTrainLooseCoupling = function(trainA, trainB, trainOld)
         -- Mark these trains as dirty, i.e. refresh their data
@@ -78,7 +78,7 @@ function TrainDetection.registerForTrainDetection()
         return _EEPOnTrainLooseCoupling(trainA, trainB, trainOld)
     end
 
-    local _EEPOnTrainExitTrainyard = EEPOnTrainExitTrainyard or function() -- EEP 14 Plug-In 1
+    local _EEPOnTrainExitTrainyard = EEPOnTrainExitTrainyard or function(_, _) -- EEP 14 Plug-In 1
     end
     EEPOnTrainExitTrainyard = function(depotId, trainName)
         movedTrainNames[trainName] = true

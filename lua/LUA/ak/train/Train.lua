@@ -43,7 +43,7 @@ function Train:new(o)
     o.values = o:load()
     o.route = trainRoute
     o.rollingStockCount = rollingStockCount
-    o.length = tonumber(string.format("%.2f", length or 0))
+    o.length = tonumber(string.format("%.2f", length or 0)) or 0
     o.speed = speed
     o.trackType = nil
     o.onTracks = {}
@@ -164,7 +164,7 @@ function Train:setRollingStockCount(count)
 end
 
 --- Gets the trains route like used in EEP
----@return string integer number of cars
+---@return number number of cars
 function Train:getRollingStockCount()
     assert(type(self) == "table" and self.type == "Train", "Call this method with ':'")
     return self.rollingStockCount
@@ -175,7 +175,7 @@ end
 function Train:setSpeed(speed)
     assert(type(self) == "table" and self.type == "Train", "Call this method with ':'")
     assert(type(speed) == "number", "Need 'speed' as number")
-    speed = tonumber(string.format("%1.1f", speed))
+    speed = tonumber(string.format("%1.1f", speed)) or 0
     local oldSpeed = self.speed
     self.speed = speed
     if oldSpeed ~= speed then
@@ -191,8 +191,8 @@ function Train:getSpeed()
     return self.speed
 end
 
---- Updates the trains speed in km/h
----@param onTracks number train speed in km/h
+--- Updates tracks of the current train
+---@param onTracks table<string, number>
 function Train:setOnTrack(onTracks)
     assert(type(self) == "table" and self.type == "Train", "Call this method with ':'")
     assert(type(onTracks) == "table", "Need 'onTracks' as table")
@@ -204,8 +204,8 @@ function Train:setOnTrack(onTracks)
     end
 end
 
---- Gets the trains speed in km/h
----@return number train speed in km/h
+--- Gets the tracks of the current train
+---@return table<string, number>
 function Train:getOnTrack()
     assert(type(self) == "table" and self.type == "Train", "Call this method with ':'")
     return self.onTracks

@@ -13,6 +13,8 @@ local fmt = require("ak.core.eep.TippTextFormatter")
 ---@field trafficLight TrafficLight
 ---@field tracksForHighlighting table
 ---@field tracksForRequests table
+---@field firstVehiclesRoute string
+---@field routesToCount table
 local Lane = {}
 Lane.debug = AkStartWithDebug or false
 
@@ -23,7 +25,7 @@ Lane.RequestType = {
     NORMAL = "NORMAL",
     FUSSGAENGER = "FUSSGAENGER"
 }
----@class LaneDirection
+---@enum LaneDirection
 Lane.Directions = {
     LEFT = "LEFT",
     HALF_LEFT = "HALF-LEFT",
@@ -473,8 +475,8 @@ end
 ---@param name string @Name der Fahrspur einer Kreuzung
 ---@param eepSaveId number, @EEPSaveSlot-Id fuer das Speichern der Fahrspur
 ---@param trafficLight TrafficLight @genau eine Ampeln
----@param directions string[] eine oder mehrere Ampeln
----@param trafficType string eine oder mehrere Ampeln
+---@param directions? string[] eine oder mehrere Ampeln
+---@param trafficType? string (default: "NORMAL")
 ---@return Lane
 function Lane:new(name, eepSaveId, trafficLight, directions, trafficType)
     assert(name, "Bitte geben Sie den Namen \"name\" fuer diese Fahrspur an.")

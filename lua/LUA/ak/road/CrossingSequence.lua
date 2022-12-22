@@ -14,7 +14,7 @@ local Task = require("ak.scheduler.Task")
 ---@field greenPhaseSeconds number
 local CrossingSequence = {}
 CrossingSequence.debug = AkStartWithDebug or false
----@class TrafficLightType
+---@enum TrafficLightType
 CrossingSequence.Type = {BUS = "BUS", CAR = "CAR", TRAM = "TRAM", PEDESTRIAN = "PEDESTRIAN", BICYCLE = "BICYCLE"}
 
 function CrossingSequence.getType() return "CrossingSequence" end
@@ -35,7 +35,7 @@ function CrossingSequence:new(name, greenPhaseSeconds)
 end
 
 function CrossingSequence:initSequence()
-    ---@type table<Lane,LaneSettings>
+    ---@type table<Lane,boolean>
     self.lanes = {}
     for trafficLight, type in pairs(self.trafficLights) do
         if type ~= CrossingSequence.Type.PEDESTRIAN then
@@ -45,8 +45,7 @@ function CrossingSequence:initSequence()
 end
 
 ---This will calculate all trafficLights to turn red and green
----@return table<TrafficLight,TrafficLightType> table<TrafficLight,TrafficLightType>
----@param oldSequence CrossingSequence
+---@param oldSequence? CrossingSequence optional currentSequence if known
 ---@return table<TrafficLight,TrafficLightType>, table<TrafficLight,TrafficLightType>
 function CrossingSequence:trafficLightsToTurnRedAndGreen(oldSequence)
     local turnRed = {}

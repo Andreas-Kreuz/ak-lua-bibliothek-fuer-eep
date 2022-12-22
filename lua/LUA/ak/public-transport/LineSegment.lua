@@ -12,7 +12,9 @@ local LineSegment = {}
 LineSegment.debug = AkDebugLoad or false
 
 --- Creates a new Bus or Tram Station
----@param routeName table table with entry "nr" of type string
+---@param routeName string with the EEP-Route Name
+---@param line Line Line object
+---@param destination string Name of the destination stop
 ---@return LineSegment
 function LineSegment:new(routeName, line, destination)
     assert(type(self) == "table", "Call this method with ':'")
@@ -40,7 +42,7 @@ end
 
 ---Adds a stop to this line. All stops must be given in the correct order
 ---@param platform Platform Platform of the station where this route will depart
----@param timeToStation number optional time in minutes to this station
+---@param timeToStation? number optional time in minutes to this station
 function LineSegment:addStop(platform, timeToStation)
     assert(type(self) == "table" and self.type == "LineSegment", "Call this method with ':'")
     assert(type(platform) == "table", "Need 'platform' as table")
@@ -49,7 +51,7 @@ function LineSegment:addStop(platform, timeToStation)
 
     platform.roadStation:setPlatform(self, platform.platformNumber)
 
-    self.stationInfos[#self.stationInfos + 1] = {station = platform.roadStation, timeToStation = timeToStation}
+    self.stationInfos[#self.stationInfos + 1] = {station = platform.roadStation, timeToStation = timeToStation or 0}
 end
 
 ---Optionally you can add subsequent line events. - If no line segment is added, the line will start from the beginning
@@ -84,8 +86,8 @@ end
 
 ---comment
 ---@param routeName string
----@param nextStation RoadStation use this to schedule the departure at the next station
----@param currentStation RoadStation use this after train departed at the current station
+---@param nextStation? RoadStation use this to schedule the departure at the next station
+---@param currentStation? RoadStation use this after train departed at the current station
 ---@return TimeToStationEntry[]
 function LineSegment:nextStationList(routeName, nextStation, currentStation)
     assert(type(self) == "table" and self.type == "LineSegment", "Call this method with ':'")
@@ -110,8 +112,8 @@ function LineSegment:nextStationList(routeName, nextStation, currentStation)
 
             ---@class TimeToStationEntry
             ---@field station RoadStation
-            ---@field destination RoadStation
-            ---@field lineNr RoadStation
+            ---@field destination string
+            ---@field lineNr string
             ---@field timeToStation number
             ---@field totalTime number
             local info = {}
@@ -140,12 +142,12 @@ function LineSegment:nextStationList(routeName, nextStation, currentStation)
     return allStationInfos
 end
 
----@return RoadStation
+---@return RoadStation|nil
 function LineSegment:getLastStation()
     if #self.stationInfos > 0 then return self.stationInfos[#self.stationInfos].station end
 end
 
----@return RoadStation
+---@return RoadStation|nil
 function LineSegment:getFirstStation() if #self.stationInfos > 0 then return self.stationInfos[1].station end end
 
 ---Will inform the given stations about the train arrival in minutes and all sequential stations with the offset

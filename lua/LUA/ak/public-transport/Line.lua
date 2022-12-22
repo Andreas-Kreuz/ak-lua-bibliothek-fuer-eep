@@ -41,7 +41,8 @@ end
 ---@return Line
 function Line.forName(name)
     local LineRegistry = require("ak.public-transport.LineRegistry")
-    return LineRegistry.forId(name)
+    local line, _ = LineRegistry.forId(name)
+    return line
 end
 
 ---Creates a new bus or tram line

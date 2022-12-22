@@ -17,9 +17,9 @@ local AxisStructureTrafficLight = {}
 ---@param positionDefault number Grundstellung der Achse (wird eingestellt, wenn eine Stellung nicht angegeben wurde
 ---@param positionRed number Achsstellung bei rot
 ---@param positionGreen number Achsstellung bei grün
----@param positionYellow number Achsstellung bei gelb
----@param positionRedYellow number Achsstellung bei gelb
----@param positionPedestrian number Achsstellung bei FG
+---@param positionYellow number? Achsstellung bei gelb
+---@param positionRedYellow number? Achsstellung bei gelb
+---@param positionPedestrian number? Achsstellung bei FG
 --
 function AxisStructureTrafficLight:new(structureName, axisName, positionDefault, positionRed, positionGreen,
                                        positionYellow, positionRedYellow, positionPedestrian)

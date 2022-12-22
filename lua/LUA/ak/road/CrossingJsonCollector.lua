@@ -32,12 +32,12 @@ local function collect(allCrossings)
         local intersection = {
             id = intersectionIdCounter,
             name = crossing.name,
-            currentSwitching = crossing.currentSequence and crossing.currentSequence.name or nil,
-            manualSwitching = crossing.manualSequence and crossing.manualSequence.name or nil,
-            nextSwitching = crossing.nextSequence and crossing.nextSequence.name or nil,
-            ready = crossing.greenPhaseFinished,
-            timeForGreen = crossing.greenPhaseSeconds,
-            staticCams = crossing.staticCams
+            currentSwitching = crossing:getCurrentSequence() and crossing:getCurrentSequence().name or nil,
+            manualSwitching = crossing:getManualSequence() and crossing:getManualSequence().name or nil,
+            nextSwitching = crossing:getNextSequence() and crossing:getNextSequence().name or nil,
+            ready = crossing:isGreenPhaseFinished(),
+            timeForGreen = crossing:getGreenPhaseSeconds(),
+            staticCams = crossing:getStaticCams()
         }
         table.insert(intersections, intersection)
 

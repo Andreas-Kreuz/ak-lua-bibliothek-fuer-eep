@@ -5,7 +5,7 @@ local TramSwitch = {}
 -- @param switchId ID der Weiche
 ---@param structure1 string Immobilie, deren Licht bei Weichenstellung 1 leuchten soll
 ---@param structure2 string Immobilie, deren Licht bei Weichenstellung 2 leuchten soll
----@param structure3 string Immobilie, deren Licht bei Weichenstellung 3 leuchten soll
+---@param structure3? string Immobilie, deren Licht bei Weichenstellung 3 leuchten soll
 --
 function TramSwitch.new(switchId, structure1, structure2, structure3)
     EEPRegisterSwitch(switchId)

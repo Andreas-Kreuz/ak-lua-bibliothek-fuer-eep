@@ -26,12 +26,13 @@ local registeredSignals = {}
 local counter = -1
 
 ---
+---@param name string Name der Ampel
 ---@param signalId number ID der Ampel auf der Anlage (Eine Ampel von diesem Typ sollte auf der Anlage sein)
 ---@param trafficLightModel TrafficLightModel Typ der Ampel (TrafficLightModel)
----@param redStructure string Immobilie fuer Signalbild gelb (Licht an / aus)
----@param greenStructure string Immobilie fuer Signalbild gelb (Licht an / aus)
----@param yellowStructure string Immobilie fuer Signalbild gelb (Licht an / aus)
----@param requestStructure string Immobilie fuer Signalbild "A" (Licht an / aus)
+---@param redStructure? string Immobilie fuer Signalbild gelb (Licht an / aus)
+---@param greenStructure? string Immobilie fuer Signalbild gelb (Licht an / aus)
+---@param yellowStructure? string Immobilie fuer Signalbild gelb (Licht an / aus)
+---@param requestStructure? string Immobilie fuer Signalbild "A" (Licht an / aus)
 --
 function TrafficLight:new(name, signalId, trafficLightModel, redStructure, greenStructure, yellowStructure,
                           requestStructure)
@@ -93,9 +94,10 @@ end
 -- @param positionPedestrian Achsstellung bei FG
 --
 function TrafficLight:addAxisStructure(structureName, axisName, positionDefault, positionRed, positionGreen,
-                                       positionRedYellow, positionPedestrian)
+                                       positionYellow, positionRedYellow, positionPedestrian)
     local axisStructure = AxisStructureTrafficLight:new(structureName, axisName, positionDefault, positionRed,
-                                                        positionGreen, positionRedYellow, positionPedestrian)
+                                                        positionGreen, positionYellow, positionRedYellow,
+                                                        positionPedestrian)
     self.axisStructures[axisStructure] = true
     return self
 end

@@ -90,6 +90,10 @@ function Crossing:getSequences() return self.sequences end
 
 function Crossing:getCurrentSequence() return self.currentSequence end
 
+function Crossing:getNextSequence() return self.nextSequence end
+
+function Crossing:getManualSequence() return self.manualSequence end
+
 function Crossing:onSwitchedToSequence(currentSequence)
     for _, lane in pairs(self.lanes) do
         if currentSequence:getLanes()[lane] then
@@ -152,6 +156,8 @@ function Crossing:isGreenPhaseFinished() return self.greenPhaseFinished end
 function Crossing:setGreenPhaseReached(greenPhaseReached) self.greenPhaseReached = greenPhaseReached end
 
 function Crossing:isGreenPhaseReached() return self.greenPhaseReached end
+
+function Crossing:getStaticCams() return self.staticCams end
 
 function Crossing:addStaticCam(kameraName) table.insert(self.staticCams, kameraName) end
 
