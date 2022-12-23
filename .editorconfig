@@ -32,6 +32,10 @@ indent_size = 2
 indent_size = 2
 quote_type = single
 
+[*.tsx]
+indent_size = 2
+quote_type = single
+
 [*.md]
 indent_size = 2
 trim_trailing_whitespace = false
