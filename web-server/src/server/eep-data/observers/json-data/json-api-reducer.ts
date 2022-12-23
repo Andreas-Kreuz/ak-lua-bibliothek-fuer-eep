@@ -45,6 +45,20 @@ export default class JsonApiReducer {
       });
     }
 
+    // Add data information
+    dataTypes.push({
+      name: 'api-stats',
+      checksum: state.eventCounter.toString(),
+      url: urlPrefix + 'api-stats',
+      count: 1,
+      updated: true,
+    });
+    data.roomToJson['api-stats'] = JSON.stringify({
+      eepDataUpToDate: dataTypes.length > 1,
+      luaDataReceived: dataTypes.length > 1,
+      apiEntryCount: dataTypes.length + 1,
+    });
+
     // Add 'api-entries' Room
     dataTypes.push({
       name: 'api-entries',

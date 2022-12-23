@@ -1,0 +1,8 @@
+.card {
+    display: flex;
+    height: 100%;
+}
+
+.card > * {
+    width: 100%;
+}

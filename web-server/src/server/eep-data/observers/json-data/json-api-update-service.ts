@@ -56,16 +56,12 @@ export default class JsonApiUpdateService {
       this.cacheService.writeCache(currentState as undefined);
     }
     this.reducer.setLastAnnouncedData(data);
+    this.registerStatsTimeout(data);
 
-    this.announceEepData(store, oldData, data, currentState.eventCounter);
+    this.announceEepData(oldData, data, currentState.eventCounter);
   };
 
-  private announceEepData(
-    store: Readonly<EepDataStore>,
-    oldData: ServerData,
-    data: ServerData,
-    eventCounter: number
-  ): void {
+  private announceEepData(oldData: ServerData, data: ServerData, eventCounter: number): void {
     // Get those new room names from the Json Content
     const oldRooms = Object.keys(oldData.roomToJson);
     const newRooms = Object.keys(data.roomToJson);
@@ -124,5 +120,21 @@ export default class JsonApiUpdateService {
     } else {
       return '';
     }
+  }
+
+  private lastTimeOut: NodeJS.Timeout;
+
+  private registerStatsTimeout(data: ServerData) {
+    if (this.lastTimeOut) {
+      clearTimeout(this.lastTimeOut);
+    }
+    this.lastTimeOut = setTimeout(() => {
+      const roomName = 'api-stats';
+      const currentStats = JSON.parse(data.roomToJson[roomName]);
+      const newStats = { ...currentStats, eepDataUpToDate: false };
+      const newStatsJsonString = JSON.stringify(newStats);
+      data.roomToJson[roomName] = newStatsJsonString;
+      this.io.to(ApiDataRoom.roomId(roomName)).emit(ApiDataRoom.eventId(roomName), newStatsJsonString);
+    }, 1000);
   }
 }

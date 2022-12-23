@@ -1,30 +1,11 @@
 import './Client.css';
-import React, { useState, useEffect } from 'react';
-import io from 'socket.io-client';
 
-const socket = io('localhost:3000');
+import ClientMain from './ClientMain';
 
 function Client() {
-  const [isConnected, setIsConnected] = useState(socket.connected);
-
-  useEffect(() => {
-    socket.on('connect', () => {
-      setIsConnected(true);
-    });
-    socket.on('disconnect', () => {
-      setIsConnected(false);
-    });
-
-    return () => {
-      socket.off('connect');
-      socket.off('disconnect');
-    };
-  }, []);
-
   return (
     <div className="Client">
-      <h1>Client</h1>
-      <p>Connected: {'' + isConnected}</p>
+      <ClientMain />
     </div>
   );
 }

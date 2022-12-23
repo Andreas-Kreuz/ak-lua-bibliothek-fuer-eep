@@ -1,25 +1,8 @@
 import './Server.css';
-import React, { useState, useEffect } from 'react';
-import io from 'socket.io-client';
-
-const socket = io('localhost:3000');
+import { useServerStatus } from './ServerStatusEffectHook';
 
 function Server() {
-  const [isConnected, setIsConnected] = useState(socket.connected);
-
-  useEffect(() => {
-    socket.on('connect', () => {
-      setIsConnected(true);
-    });
-    socket.on('disconnect', () => {
-      setIsConnected(false);
-    });
-
-    return () => {
-      socket.off('connect');
-      socket.off('disconnect');
-    };
-  }, []);
+  const [isConnected] = useServerStatus();
 
   return (
     <div className="Server">
