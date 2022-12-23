@@ -12,7 +12,7 @@ const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: {
-    origin: ['http://localhost:4200', 'http://jens-pc:4200'],
+    origin: ['http://localhost:4200', 'http://jens-pc:4200', 'http://localhost:3001', 'http://jens-pc:3001'],
     methods: ['GET', 'POST'],
   },
 });
@@ -39,7 +39,7 @@ export class ServerMain {
       res.sendFile(path.join(appDir, '/index.html'));
     });
     httpServer.listen(this.port, () => {
-      console.log('Express server listening on port ' + app.get('port'));
+      console.log('Express server listening on port ' + app.get('port') + ' ## ' + this.serverConfigPath);
     });
     this.appEffects = new AppEffects(app, router, io, this.socketService, this.serverConfigPath);
     this.appEffects.changeEepDirectory(this.appEffects.getEepDirectory());
