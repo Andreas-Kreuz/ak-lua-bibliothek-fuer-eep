@@ -9,7 +9,6 @@ function Client() {
 
   useEffect(() => {
     socket.on('connect', () => {
-      console.log('Connected to socket!');
       setIsConnected(true);
     });
     socket.on('disconnect', () => {
