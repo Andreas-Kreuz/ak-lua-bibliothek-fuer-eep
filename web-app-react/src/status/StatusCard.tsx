@@ -4,8 +4,8 @@ import RunningWithErrorsRoundedIcon from '@mui/icons-material/RunningWithErrorsR
 import WarningRoundedIcon from '@mui/icons-material/WarningRounded';
 
 function StatusCard(props: {
-  icon: 'ok' | 'error' | 'time';
   name: string;
+  icon: 'ok' | 'error' | 'time';
   statusColor: 'success' | 'error' | 'warning';
   statusText: string;
   statusDescription: string;
