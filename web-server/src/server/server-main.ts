@@ -12,7 +12,17 @@ const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: {
-    origin: ['http://localhost:4200', 'http://jens-pc:4200', 'http://localhost:3001', 'http://jens-pc:3001'],
+    origin: [
+      'http://localhost:4200',
+      'http://localhost:3001',
+      'http://localhost:5173',
+      'http://127.0.0.1:4200',
+      'http://127.0.0.1:3001',
+      'http://127.0.0.1:5173',
+      'http://jens-pc:4200',
+      'http://jens-pc:3001',
+      'http://jens-pc:5173',
+    ],
     credentials: false,
     methods: ['GET', 'POST'],
   },
