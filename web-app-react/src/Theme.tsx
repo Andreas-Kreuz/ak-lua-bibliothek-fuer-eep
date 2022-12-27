@@ -4,7 +4,7 @@ import '@fontsource/anek-latin/400.css';
 import '@fontsource/anek-latin/500.css';
 import '@fontsource/anek-latin/700.css';
 
-import { createTheme } from '@mui/material/styles';
+import { createTheme } from '@mui/material';
 
 export const theme = createTheme({
   palette: {

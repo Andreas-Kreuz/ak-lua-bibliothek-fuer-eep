@@ -17,3 +17,14 @@ export {
   SettingsEvent,
   DataType,
 };
+
+export {
+  ApiDataRoom,
+  TrainDetailsRoom,
+  TrainListRoom,
+  PublicTransportLineListRoom,
+  PublicTransportLineDetailsRoom,
+  PublicTransportStationListRoom,
+  PublicTransportStationDetailsRoom,
+  PublicTransportSettingsRoom,
+} from './rooms/dynamic-rooms';

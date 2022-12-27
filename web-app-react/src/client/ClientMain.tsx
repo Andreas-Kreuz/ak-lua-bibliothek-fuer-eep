@@ -1,12 +1,11 @@
 import './ClientMain.css';
 import { AppBar, Card, CardContent, IconButton, Stack, Toolbar, Typography } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2'; // Grid version 2
-import WarningRoundedIcon from '@mui/icons-material/WarningRounded';
-import CheckCircleOutlineRoundedIcon from '@mui/icons-material/CheckCircleOutlineRounded';
-import RunningWithErrorsRoundedIcon from '@mui/icons-material/RunningWithErrorsRounded';
-import Container from '@mui/material/Container';
-import MenuIcon from '@mui/icons-material/Menu';
-import Box from '@mui/material/Box/Box';
+// import WarningRoundedIcon from '@mui/icons-material/WarningRounded';
+// import CheckCircleOutlineRoundedIcon from '@mui/icons-material/CheckCircleOutlineRounded';
+// import RunningWithErrorsRoundedIcon from '@mui/icons-material/RunningWithErrorsRounded';
+// import MenuIcon from '@mui/icons-material/Menu';
+import { Box, Container } from '@mui/material';
 import { useServerStatus } from '../server/ServerStatusEffectHook';
 
 function ClientMain() {
@@ -18,7 +17,7 @@ function ClientMain() {
         <AppBar>
           <Toolbar>
             <IconButton size="large" edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
-              <MenuIcon />
+              {/* <MenuIcon /> */}
             </IconButton>
             <Typography variant="h6" component="div" sx={{ flexGrow: 1, display: 'block' }}>
               Aktueller Status
@@ -40,11 +39,11 @@ function ClientMain() {
                     >
                       Web-Server
                     </Typography>
-                    {isConnected ? (
+                    {/* {isConnected ? (
                       <CheckCircleOutlineRoundedIcon color="success" sx={{ fontSize: 24 }} />
                     ) : (
                       <WarningRoundedIcon color="error" />
-                    )}
+                    )} */}
                   </Stack>
                   <Typography
                     gutterBottom
@@ -72,7 +71,7 @@ function ClientMain() {
                     >
                       LUA-Bibliothek
                     </Typography>
-                    {isConnected ? (
+                    {/* {isConnected ? (
                       luaDataReceived ? (
                         <CheckCircleOutlineRoundedIcon color="success" sx={{ fontSize: 24 }} />
                       ) : (
@@ -80,7 +79,7 @@ function ClientMain() {
                       )
                     ) : (
                       <WarningRoundedIcon color="error" />
-                    )}
+                    )} */}
                   </Stack>
                   <Typography
                     gutterBottom
@@ -116,7 +115,7 @@ function ClientMain() {
                     >
                       EEP
                     </Typography>
-                    {isConnected ? (
+                    {/* {isConnected ? (
                       eepDataUpToDate ? (
                         <CheckCircleOutlineRoundedIcon color="success" sx={{ fontSize: 24 }} />
                       ) : (
@@ -124,7 +123,7 @@ function ClientMain() {
                       )
                     ) : (
                       <WarningRoundedIcon color="error" />
-                    )}
+                    )} */}
                   </Stack>
                   <Typography
                     gutterBottom
