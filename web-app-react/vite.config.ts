@@ -10,7 +10,14 @@ export default defineConfig({
   },
   build: {
     commonjsOptions: {
-      include: ['web-shared', 'web-shared/data/model', 'web-shared/model', 'web-shared/rooms', '/node_modules/'],
+      include: [
+        'web-shared',
+        'web-shared/data/model',
+        'web-shared/model',
+        'web-shared/rooms',
+        '@mui/material',
+        '@mui/icons-material',
+      ],
     },
   },
 });
