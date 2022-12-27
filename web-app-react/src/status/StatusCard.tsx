@@ -11,8 +11,10 @@ function StatusCard(props: {
   statusDescription: string;
 }) {
   return (
-    <Card className="card" sx={{ borderRadius: 0, boxShadow: 0, border: 1, borderColor: '#dddddd' }}>
-      <Stack direction="row" alignItems="start" justifyContent="start" padding="0" margin="0">
+    <Card
+      sx={{ borderRadius: 0, boxShadow: 0, border: 1, borderColor: '#dddddd', display: 'flex', height: 1, width: 1 }}
+    >
+      <Stack sx={{ width: 1, m: 0, p: 0, flexDirection: 'row', alignItems: 'start', justifyContent: 'start' }}>
         <Box
           sx={{
             p: 2,
@@ -30,11 +32,9 @@ function StatusCard(props: {
             <RunningWithErrorsRoundedIcon sx={{ fontSize: 24 }} />
           )}
         </Box>
-        <CardContent sx={{ p: 2 }}>
-          <Typography className="cardTitleWithIcon" variant="h5" component="div">
-            {props.name}
-          </Typography>
-          <Typography gutterBottom variant="body2" color={props.statusColor + '.main'} sx={{ fontWeight: 'bold' }}>
+        <CardContent sx={{ p: 2, width: '100%' }}>
+          <Typography variant="h5">{props.name}</Typography>
+          <Typography gutterBottom variant="body2" sx={{ color: props.statusColor + '.main', fontWeight: 'bold' }}>
             {props.statusText}
           </Typography>
           <Typography variant="body2">{props.statusDescription}</Typography>

@@ -6,8 +6,8 @@ function StatusGrid() {
   const [isConnected, eepDataUpToDate, luaDataReceived, apiEntryCount] = useServerStatus();
 
   return (
-    <Grid className="card-grid" container spacing={3} margin={3}>
-      <Grid>
+    <Grid container spacing={3} sx={{ width: 'auto', m: 3 }}>
+      <Grid xs={12}>
         <StatusCard
           name="Web-Server"
           icon={isConnected ? 'ok' : 'error'}
@@ -16,7 +16,7 @@ function StatusGrid() {
           statusDescription="Diese Webseite zeigt nur aktuelle Informationen an, wenn sie den Web-Server erreicht."
         ></StatusCard>
       </Grid>
-      <Grid>
+      <Grid xs={12}>
         <StatusCard
           name="LUA-Bibliothek"
           icon={isConnected && luaDataReceived ? 'ok' : 'error'}
@@ -33,7 +33,7 @@ function StatusGrid() {
           }
         />
       </Grid>
-      <Grid>
+      <Grid xs={12}>
         <StatusCard
           name="EEP"
           icon={isConnected ? (eepDataUpToDate ? 'ok' : 'time') : 'error'}

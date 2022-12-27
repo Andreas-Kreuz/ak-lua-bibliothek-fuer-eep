@@ -1,5 +1,3 @@
-import './Client.css';
-
 import ClientMain from './ClientMain';
 
 function Client() {
