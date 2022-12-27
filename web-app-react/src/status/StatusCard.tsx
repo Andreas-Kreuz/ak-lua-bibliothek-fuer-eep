@@ -1,32 +1,45 @@
-import { Card, CardContent, Stack, Typography } from '@mui/material';
+import { Box, Card, CardContent, Stack, Typography } from '@mui/material';
+import CheckCircleOutlineRoundedIcon from '@mui/icons-material/CheckCircleOutlineRounded';
+import RunningWithErrorsRoundedIcon from '@mui/icons-material/RunningWithErrorsRounded';
+import WarningRoundedIcon from '@mui/icons-material/WarningRounded';
 
 function StatusCard(props: {
-  icon: any;
+  icon: 'ok' | 'error' | 'time';
   name: string;
-  statusColor: string;
+  statusColor: 'success' | 'error' | 'warning';
   statusText: string;
   statusDescription: string;
 }) {
   return (
-    <Card
-      className="card"
-      sx={{
-        borderLeft: 12,
-        borderColor: props.statusColor + '.light',
-      }}
-    >
-      <CardContent>
-        <Stack direction="row" alignItems="center" justifyContent="space-between">
-          <Typography className="cardTitleWithIcon" variant="h5" color={props.statusColor + '.main'} component="div">
+    <Card className="card" sx={{ borderRadius: 0, boxShadow: 0, border: 1, borderColor: '#dddddd' }}>
+      <Stack direction="row" alignItems="start" justifyContent="start" padding="0" margin="0">
+        <Box
+          sx={{
+            p: 2,
+            pt: 2.5,
+            backgroundColor: props.statusColor + '.main',
+            height: '100%',
+            color: '#ffffff',
+          }}
+        >
+          {props.icon === 'ok' ? (
+            <CheckCircleOutlineRoundedIcon sx={{ fontSize: 24 }} />
+          ) : props.icon === 'error' ? (
+            <WarningRoundedIcon sx={{ fontSize: 24 }} />
+          ) : (
+            <RunningWithErrorsRoundedIcon sx={{ fontSize: 24 }} />
+          )}
+        </Box>
+        <CardContent sx={{ p: 2 }}>
+          <Typography className="cardTitleWithIcon" variant="h5" component="div">
             {props.name}
           </Typography>
-          {props.icon}
-        </Stack>
-        <Typography gutterBottom variant="body2" color={props.statusColor + '.main'} sx={{ fontWeight: 'bold' }}>
-          {props.statusText}
-        </Typography>
-        <Typography variant="body2">{props.statusDescription}</Typography>
-      </CardContent>
+          <Typography gutterBottom variant="body2" color={props.statusColor + '.main'} sx={{ fontWeight: 'bold' }}>
+            {props.statusText}
+          </Typography>
+          <Typography variant="body2">{props.statusDescription}</Typography>
+        </CardContent>
+      </Stack>
     </Card>
   );
 }
