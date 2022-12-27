@@ -1,6 +1,11 @@
+.card-grid > * {
+    width: 100%;
+}
+
 .card {
     display: flex;
     height: 100%;
+    width: 100%;
 }
 
 .card > * {

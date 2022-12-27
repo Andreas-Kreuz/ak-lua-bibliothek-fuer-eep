@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from 'react';
 import { ApiDataRoom, RoomEvent } from 'web-shared';
-import { SocketContext } from './Socket';
+import { SocketContext } from '../app/Socket';
 
 export function useServerStatus() {
   const socket = useContext(SocketContext);
