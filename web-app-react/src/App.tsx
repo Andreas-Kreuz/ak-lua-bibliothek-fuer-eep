@@ -2,11 +2,9 @@ import React, { Suspense, lazy } from 'react';
 import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { socket, SocketContext } from './server/Socket';
-import Client from './client/Client';
-import Server from './server/Server';
 
-// const Client = lazy(() => import('./client/Client'));
-// const Server = lazy(() => import('./server/Server'));
+const Client = lazy(() => import('./client/Client'));
+const Server = lazy(() => import('./server/Server'));
 
 function App() {
   return (
