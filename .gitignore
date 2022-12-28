@@ -9,6 +9,13 @@
 /web-app/out-tsc
 /web-app/.angular
 
+/web-app-react/cypress/io/ak*
+/web-app-react/cypress/io/LUA/ak/io/exchange/ak*
+/web-app-react/cypress/io-empty/LUA/ak/io/exchange/ak*
+/web-app-react/cypress/videos
+/web-app-react/cypress/screenshots
+/web-app-react/dist
+
 # Ressources
 /web-app/cypress/fixtures/from-eep
 
