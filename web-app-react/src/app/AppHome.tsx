@@ -1,6 +1,8 @@
-import { AppBar, Box, IconButton, Toolbar, Typography } from '@mui/material';
+import { AppBar, Box, Card, CardContent, IconButton, Toolbar, Typography } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import StatusGrid from '../status/StatusGrid';
+import MainMenu from './MainMenu';
+import VersionInfo from './VersionInfo';
 
 function AppHome() {
   return (
@@ -12,11 +14,13 @@ function AppHome() {
               <MenuIcon />
             </IconButton>
             <Typography variant="h6" component="div" sx={{ flexGrow: 1, display: 'block' }}>
-              Aktueller Status
+              Web-App für EEP
             </Typography>
           </Toolbar>
         </AppBar>
         <Toolbar />
+        <MainMenu />
+        <VersionInfo />
         <StatusGrid />
       </Box>
     </div>
