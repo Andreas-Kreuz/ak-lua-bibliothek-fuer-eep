@@ -21,7 +21,7 @@ function AppHome() {
         <Toolbar />
         <MainMenu />
         <VersionInfo />
-        <StatusGrid />
+        {/* <StatusGrid /> */}
       </Box>
     </div>
   );
