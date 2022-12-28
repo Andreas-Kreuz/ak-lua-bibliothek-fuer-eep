@@ -1,14 +1,19 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, SetStateAction } from 'react';
 import { ApiDataRoom, RoomEvent } from 'web-shared';
 import { SocketContext } from '../app/Socket';
 
-export function useServerStatus() {
+export function useServerStatus(): [
+  SetStateAction<boolean>,
+  SetStateAction<boolean>,
+  SetStateAction<boolean>,
+  SetStateAction<number>
+] {
   const socket = useContext(SocketContext);
   const room = ApiDataRoom.roomId('api-stats');
   const event = ApiDataRoom.eventId('api-stats');
 
   const [isConnected, setIsConnected] = useState(socket.connected);
-  const [eepDataUpToDate, setEepDataUpToDate] = useState(false);
+  const [eepDataUpToDate, setEepDataUpToDate] = useState<boolean>(false);
   const [luaDataReceived, setLuaDataReceived] = useState(false);
   const [apiEntryCount, setApiEntryCount] = useState(0);
 
