@@ -1,10 +1,10 @@
-import App from './App';
+import RoutedApp from './RoutedApp';
 import { socket, SocketContext } from './Socket';
 
 function SocketProvidedApp() {
   return (
     <SocketContext.Provider value={socket}>
-      <App />
+      <RoutedApp />
     </SocketContext.Provider>
   );
 }

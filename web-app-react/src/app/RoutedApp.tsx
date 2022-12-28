@@ -1,11 +1,10 @@
 import React, { Suspense, lazy } from 'react';
-import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-const Client = lazy(() => import('../client/Client'));
+const Client = lazy(() => import('./AppHomeWithSnack'));
 const Server = lazy(() => import('../server/Server'));
 
-function App() {
+function RoutedApp() {
   return (
     <Router>
       <Suspense fallback={<div>Loading...</div>}>
@@ -18,4 +17,4 @@ function App() {
   );
 }
 
-export default App;
+export default RoutedApp;

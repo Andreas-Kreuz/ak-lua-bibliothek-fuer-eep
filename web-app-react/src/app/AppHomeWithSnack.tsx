@@ -1,7 +1,7 @@
 import AppHome from './AppHome';
 import StatusSnackBar from '../status/StatusSnackBar';
 
-function Client() {
+function AppHomeWithSnack() {
   return (
     <div className="Client">
       <AppHome />
@@ -10,4 +10,4 @@ function Client() {
   );
 }
 
-export default Client;
+export default AppHomeWithSnack;
