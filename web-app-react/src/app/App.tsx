@@ -10,15 +10,8 @@ function App() {
     <Router>
       <Suspense fallback={<div>Loading...</div>}>
         <Routes>
-          <Route
-            path="/"
-            element={
-              <div>
-                <Client />
-                <Server />
-              </div>
-            }
-          />
+          <Route path="/" element={<Client />} />
+          <Route path="/server" element={<Server />} />
         </Routes>
       </Suspense>
     </Router>

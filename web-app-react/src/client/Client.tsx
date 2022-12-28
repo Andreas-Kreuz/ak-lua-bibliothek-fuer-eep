@@ -1,10 +1,10 @@
-import ClientMain from './ClientMain';
+import AppHome from './AppHome';
 import StatusSnackBar from '../status/StatusSnackBar';
 
 function Client() {
   return (
     <div className="Client">
-      <ClientMain />
+      <AppHome />
       <StatusSnackBar />
     </div>
   );

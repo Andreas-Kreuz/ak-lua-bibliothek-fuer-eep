@@ -2,7 +2,7 @@ import { AppBar, Box, Container, Card, CardContent, IconButton, Stack, Toolbar, 
 import MenuIcon from '@mui/icons-material/Menu';
 import StatusGrid from '../status/StatusGrid';
 
-function ClientMain() {
+function AppHome() {
   return (
     <div className="Client">
       <Box sx={{ backgroundColor: '#f5f5f5', minHeight: '100vh' }}>
@@ -23,4 +23,4 @@ function ClientMain() {
   );
 }
 
-export default ClientMain;
+export default AppHome;
