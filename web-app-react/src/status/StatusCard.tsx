@@ -14,16 +14,8 @@ function StatusCard(props: {
     <Card
       sx={{ borderRadius: 0, boxShadow: 0, border: 1, borderColor: '#dddddd', display: 'flex', height: 1, width: 1 }}
     >
-      <Stack sx={{ width: 1, m: 0, p: 0, flexDirection: 'row', alignItems: 'start', justifyContent: 'start' }}>
-        <Box
-          sx={{
-            p: 2,
-            pt: 2.5,
-            backgroundColor: props.statusColor + '.main',
-            height: '100%',
-            color: '#ffffff',
-          }}
-        >
+      <Stack sx={{ m: 0, p: 0, width: 1, flexDirection: 'row', alignItems: 'start', justifyContent: 'start' }}>
+        <Box sx={{ backgroundColor: props.statusColor + '.main', color: '#ffffff', height: '100%', p: 2, pt: 2.5 }}>
           {props.icon === 'ok' ? (
             <CheckCircleOutlineRoundedIcon sx={{ fontSize: 24 }} />
           ) : props.icon === 'error' ? (
@@ -34,7 +26,7 @@ function StatusCard(props: {
         </Box>
         <CardContent sx={{ p: 2, width: '100%' }}>
           <Typography variant="h5">{props.name}</Typography>
-          <Typography gutterBottom variant="body2" sx={{ color: props.statusColor + '.main', fontWeight: 'bold' }}>
+          <Typography gutterBottom variant="body1" sx={{ color: props.statusColor + '.main', fontWeight: 'bold' }}>
             {props.statusText}
           </Typography>
           <Typography variant="body2">{props.statusDescription}</Typography>
