@@ -4,7 +4,7 @@ const simulator = new EepSimulator();
 const DIRECTORY = 'ANOTHER_DIRECTORY';
 
 describe('Server Tests "/server"', () => {
-  const pwd: { dir: string } = { dir: undefined };
+  const pwd: { dir: string } = { dir: '-' };
 
   before(() => {
     // Remember the old server dir otherwise the following tests will not work!
@@ -23,7 +23,7 @@ describe('Server Tests "/server"', () => {
     cy.wait(500).then(() => {
       cy.contains('api-entries');
       cy.contains('eep-version');
-      cy.contains('(2 events)');
+      cy.contains('aus 2 Events');
     });
   });
 
@@ -54,14 +54,14 @@ describe('Server Tests "/server"', () => {
     }
   });
 
-  it('has button "Verzeichnis wählen"', () => {
+  it('has button "Ordner wählen"', () => {
     cy.get('#choose-dir-button');
   });
-  it('contains "Happily Serving"', () => {
-    cy.contains('Happily Serving');
+  it('contains "Bereitgestellte Daten"', () => {
+    cy.contains('Bereitgestellte Daten');
   });
-  it('contains "(2 events)"', () => {
-    cy.contains('(2 events)');
+  it('contains "(2 Events)"', () => {
+    cy.contains('aus 2 Events');
   });
 
   describe('Changing the directory', () => {
@@ -102,11 +102,7 @@ describe('Server Tests "/server"', () => {
               .then(() => {
                 cy.get('#dir-dialog-choose').click().should('not.exist');
                 cy.wait(1000);
-                cy.contains(
-                  'Bitte gib das Verzeichnis Deiner EEP-Installation an. ' +
-                    'Die Lua-Bibliothek muss installiert sein. ' +
-                    'Der Server sucht nach dem Verzeichnis LUA/ak/io/exchange.'
-                );
+                cy.contains('Bevor es losgeht, muss Du nur noch den Ordner von EEP angeben.');
               });
           });
       });

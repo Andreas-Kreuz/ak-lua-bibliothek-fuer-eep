@@ -10,7 +10,7 @@ describe('Server Home', () => {
   it('has 1 event and api-entries after reset', () => {
     cy.visit('/server');
     cy.contains('Server');
-    cy.contains('Web App im Browser öffnen');
+    cy.contains('Web-App im Browser öffnen');
     cy.contains('Happily Serving');
     cy.contains('(1 events)');
     cy.contains('api-entries');
