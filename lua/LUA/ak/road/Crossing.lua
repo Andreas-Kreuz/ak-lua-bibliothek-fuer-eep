@@ -295,7 +295,6 @@ local function recalculateSignalInfo(crossing)
     for _, lane in pairs(crossing.lanes) do lane:checkRequests() end
 
     local trafficLights = {}
-    local tlSequences = {}
 
     -- sort the circuits
     local sortedSequences = {}
@@ -303,11 +302,7 @@ local function recalculateSignalInfo(crossing)
     table.sort(sortedSequences, function(s1, s2) return (s1.name < s2.name) end)
 
     for _, sequence in ipairs(sortedSequences) do
-        for tl, type in pairs(sequence.trafficLights) do
-            tlSequences[tl.signalId] = tlSequences[tl.signalId] or {}
-            tlSequences[tl.signalId][sequence] = type
-            trafficLights[tl] = type
-        end
+        for tl, type in pairs(sequence.trafficLights) do trafficLights[tl] = type end
     end
 
     local trafficLightsToRefresh = {}
