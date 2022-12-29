@@ -122,7 +122,7 @@ end`;
           }}
           action={
             <Link href={webAppUrl} target="_blank" rel="noreferrer" underline="none">
-              <Button id="App öffnen" variant="contained" color={'success'} onClick={handleClickOpen}>
+              <Button id="App öffnen" variant="contained" color={'success'}>
                 App öffnen
               </Button>
             </Link>
