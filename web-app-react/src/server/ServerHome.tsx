@@ -128,12 +128,18 @@ end`;
             </Link>
           }
         >
-          <Typography variant="body1">Es ist alles bereit. Du kannst die App verwenden.</Typography>
+          <Typography variant="body1">Es ist alles bereit. Du kannst die App öffnen.</Typography>
         </Alert>
       ) : (
         ''
       )}
-      <Paper elevation={0}>
+      <Paper
+        elevation={0}
+        sx={{
+          border: 1,
+          borderColor: '#aaaaaa',
+        }}
+      >
         <List>
           <ListItem>
             <Stack sx={{ width: 1 }}>
@@ -188,7 +194,9 @@ end`;
             <ListItem>
               <Stack sx={{ width: 1 }}>
                 <div>
-                  <Typography variant="subtitle1">Bereitgestellte Daten aus {eventCount} Events:</Typography>
+                  <Typography variant="subtitle1">
+                    Bereitgestellte Daten aus {eventCount.toLocaleString()} Events:
+                  </Typography>
                   <Typography variant="body2">{data.join(', ')}</Typography>
                 </div>
               </Stack>

@@ -10,7 +10,7 @@ function Server() {
 
   return (
     <div className="Server">
-      <Box sx={{ backgroundColor: '#f5f5f5', minHeight: '100vh' }}>
+      <Box sx={{ minHeight: '100vh' }}>
         <AppBar position="static">
           <Toolbar>
             <Typography variant="h6" component="div" sx={{ flexGrow: 1, display: 'block' }}>
