@@ -1,7 +1,7 @@
 import { app, BrowserWindow, shell } from 'electron';
+import * as electron from 'electron';
 import * as path from 'path';
-import electron = require('electron');
-import { ServerMain } from './server/server-main';
+import { ServerMain } from '../server/server-main';
 
 let mainWindow: Electron.BrowserWindow;
 
@@ -11,7 +11,7 @@ function createWindow() {
     width: 800,
     height: 600,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
+      preload: path.join(__dirname, '/preload/index.js'),
     },
   });
 
@@ -37,10 +37,10 @@ function createWindow() {
     mainWindow = null;
   });
 
-  mainWindow.webContents.on('new-window', (e, url) => {
-    e.preventDefault();
-    shell.openExternal(url);
-  });
+  // mainWindow.webContents.on('new-window', (e, url) => {
+  //   e.preventDefault();
+  //   shell.openExternal(url);
+  // });
 }
 
 // Create Window on Windows and on MacOS if no window is there after activate

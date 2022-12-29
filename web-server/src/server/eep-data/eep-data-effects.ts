@@ -1,4 +1,4 @@
-import express = require('express');
+import express from 'express';
 import { Server, Socket } from 'socket.io';
 
 import { RoomEvent, ServerStatusEvent } from 'web-shared';

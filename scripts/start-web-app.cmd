@@ -19,12 +19,12 @@ IF %ERRORLEVEL% NEQ 0 (
 )
 
 @REM Build EEP Web App
-cd %projectPath%\web-app
+cd %projectPath%\web-app-react
 IF %ERRORLEVEL% NEQ 0 (
    exit /b %ERRORLEVEL%
 )
 
-call npm run-script start
+call npm run-script dev
 IF %ERRORLEVEL% NEQ 0 (
    exit /b %ERRORLEVEL%
 )

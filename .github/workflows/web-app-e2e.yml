@@ -21,7 +21,7 @@ jobs:
 
       - name: Web-App Install
         run: npm install
-        working-directory: web-app
+        working-directory: web-app-react
 
       - name: Web-Server Build (includes building the Web-App)
         run: npm run-script build

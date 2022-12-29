@@ -1,4 +1,4 @@
-import express = require('express');
+import express from 'express';
 import { Server, Socket } from 'socket.io';
 import { CacheService } from '../../../eep-service/cache-service';
 import { ServerStatusEvent } from 'web-shared';

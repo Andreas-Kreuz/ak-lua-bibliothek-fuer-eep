@@ -1,7 +1,7 @@
-import cors = require('cors');
+import * as cors from 'cors';
+import * as express from 'express';
+import * as path from 'path';
 import { EventEmitter } from 'events';
-import express from 'express';
-import path from 'path';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 
@@ -13,14 +13,14 @@ const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: {
     origin: [
-      'http://localhost:4200',
       'http://localhost:3001',
+      'http://localhost:4200',
       'http://localhost:5173',
-      'http://127.0.0.1:4200',
       'http://127.0.0.1:3001',
+      'http://127.0.0.1:4200',
       'http://127.0.0.1:5173',
-      'http://jens-pc:4200',
       'http://jens-pc:3001',
+      'http://jens-pc:4200',
       'http://jens-pc:5173',
     ],
     credentials: false,
@@ -42,6 +42,7 @@ export class ServerMain {
   }
 
   public start() {
+    console.log('Starting Server with ' + this.serverConfigPath);
     const appDir = path.join(__dirname, '../public_html');
     app.use('/api/v1', router);
     app.use('/', express.static(appDir));

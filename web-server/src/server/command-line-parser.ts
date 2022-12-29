@@ -1,5 +1,5 @@
-import commandLineArgs from 'command-line-args';
-import commandLineUsage from 'command-line-usage';
+import * as commandLineArgs from 'command-line-args';
+import * as commandLineUsage from 'command-line-usage';
 
 export default class CommandLineParser {
   parseOptions(): commandLineArgs.CommandLineOptions {

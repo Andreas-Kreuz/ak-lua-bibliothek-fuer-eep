@@ -1,6 +1,6 @@
-import express = require('express');
-import fs from 'fs';
-import path from 'path';
+import * as express from 'express';
+import * as fs from 'fs';
+import * as path from 'path';
 import { performance } from 'perf_hooks';
 import { Server, Socket } from 'socket.io';
 
@@ -19,7 +19,7 @@ import CommandLineParser from '../command-line-parser';
 
 export default class AppEffects {
   private debug = false;
-  private serverConfigFile = path.resolve(this.serverConfigPath, 'settings.json');
+  private serverConfigFile: string;
   private eepDataEffects: EepDataEffects;
   private logEffects: LogEffects;
   private commandEffects: CommandEffects;
@@ -38,6 +38,8 @@ export default class AppEffects {
     private socketService: SocketService,
     private serverConfigPath: string
   ) {
+    this.serverConfigFile = path.resolve(this.serverConfigPath, 'settings.json');
+
     // Start collecting statistic data
     this.statistics = new ServerStatisticsService();
     this.statistics.start();

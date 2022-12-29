@@ -19,7 +19,7 @@ IF %ERRORLEVEL% NEQ 0 (
 )
 
 @REM Build EEP Web App
-cd %projectPath%\web-app
+cd %projectPath%\web-app-react
 IF %ERRORLEVEL% NEQ 0 (
    exit /b %ERRORLEVEL%
 )

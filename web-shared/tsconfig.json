@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
-    "sourceMap": true,
+    "module": "CommonJS",
+    "target": "ES2022",
     "outDir": "./build",
     "baseUrl": ".",
     "paths": {
@@ -9,5 +9,5 @@
     },
     "declaration": true
   },
-  "include": ["src/**/*"]
+  "include": ["src"]
 }
