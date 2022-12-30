@@ -45,6 +45,10 @@ export class ServerMain {
     console.log('Starting Server with ' + this.serverConfigPath);
     const appDir = path.join(__dirname, '../public_html');
     app.use('/api/v1', router);
+    app.use(function (req, res, next) {
+      res.setHeader('Cache-Control', 'public, max-age=86400');
+      return next();
+    });
     app.use('/', express.static(appDir));
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     app.get('/*', (req: any, res: any) => {
