@@ -37,10 +37,11 @@ function createWindow() {
     mainWindow = null;
   });
 
-  // mainWindow.webContents.on('new-window', (e, url) => {
-  //   e.preventDefault();
-  //   shell.openExternal(url);
-  // });
+  mainWindow.webContents.setWindowOpenHandler(({ url }) => {
+    // open url in a browser and prevent default
+    shell.openExternal(url);
+    return { action: 'deny' };
+  });
 }
 
 // Create Window on Windows and on MacOS if no window is there after activate
