@@ -21,7 +21,7 @@ import {
 import CheckCircleOutlineRoundedIcon from '@mui/icons-material/CheckCircleOutlineRounded';
 import WarningRoundedIcon from '@mui/icons-material/WarningRounded';
 import React, { useContext, useEffect, useState } from 'react';
-import { SocketContext } from '../app/Socket';
+import { SocketContext } from '../server-io/Socket';
 import { RoomEvent, ServerStatusEvent, SettingsEvent } from 'web-shared';
 
 function ServerHome() {

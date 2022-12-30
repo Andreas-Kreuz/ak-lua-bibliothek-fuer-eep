@@ -1,7 +1,7 @@
 import { env } from 'process';
 import { useState, useEffect, useContext, SetStateAction } from 'react';
 import { ApiDataRoom, RoomEvent } from 'web-shared';
-import { SocketContext, useSocketStatus } from '../app/Socket';
+import { SocketContext, useSocketStatus } from './Socket';
 
 export function useServerStatus(): [
   SetStateAction<boolean>,

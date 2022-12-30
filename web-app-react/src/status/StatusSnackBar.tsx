@@ -1,6 +1,6 @@
 import { Alert, Snackbar } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { useServerStatus } from './ServerStatusEffectHook';
+import { useServerStatus } from '../server-io/ServerStatusEffectHook';
 import CheckCircleOutlineRoundedIcon from '@mui/icons-material/CheckCircleOutlineRounded';
 import RunningWithErrorsRoundedIcon from '@mui/icons-material/RunningWithErrorsRounded';
 

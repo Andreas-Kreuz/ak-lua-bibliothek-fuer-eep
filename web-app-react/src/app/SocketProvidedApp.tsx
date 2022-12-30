@@ -1,5 +1,5 @@
 import RoutedApp from './RoutedApp';
-import { socket, SocketContext } from './Socket';
+import { socket, SocketContext } from '../server-io/Socket';
 
 function SocketProvidedApp() {
   return (
