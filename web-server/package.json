@@ -18,7 +18,7 @@
     "pub-mkdir:darwin:linux": "mkdir -p build/public_html",
     "pub-copy": "run-script-os",
     "pub-copy:win32": "xcopy /s /q ..\\web-app-react\\dist\\* build\\public_html\\",
-    "pub-copy:darwin:linux": "cp -r ../web-app-react/dist/ak-eep-web/* build/public_html/",
+    "pub-copy:darwin:linux": "cp -r ../web-app-react/dist/* build/public_html/",
     "build": "npm run build-shared && npm run build-app && npm run copy-web-app && tsc --build",
     "watch": "tsc -w",
     "lint": "eslint -c .eslintrc.json --ext .ts src",
