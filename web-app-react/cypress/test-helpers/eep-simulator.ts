@@ -7,7 +7,6 @@ enum FileNames {
 }
 
 export default class EepSimulator {
-  fileNames = FileNames;
   private eventCounter = 0;
 
   logEventCounter = () => cy.log('Current Counter: ' + this.eventCounter.toString());
@@ -21,7 +20,7 @@ export default class EepSimulator {
   };
 
   loadFixtures = (fixtures: string[]) => {
-    const res = [];
+    const res = <any>[];
     // could also use `res.push(f)` they should be equivalent
     fixtures.map((name, i) => cy.fixture(name).then((f) => (res[i] = f)));
     return cy.wrap(res);
