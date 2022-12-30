@@ -4,14 +4,12 @@ import {
   Autocomplete,
   Box,
   Button,
-  Card,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
   Divider,
-  Input,
   Link,
   List,
   ListItem,
@@ -19,10 +17,9 @@ import {
   Stack,
   TextField,
   Typography,
-  useMediaQuery,
-  useTheme,
 } from '@mui/material';
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import CheckCircleOutlineRoundedIcon from '@mui/icons-material/CheckCircleOutlineRounded';
+import WarningRoundedIcon from '@mui/icons-material/WarningRounded';
 import React, { useContext, useEffect, useState } from 'react';
 import { SocketContext } from '../app/Socket';
 import { RoomEvent, ServerStatusEvent, SettingsEvent } from 'web-shared';
@@ -120,6 +117,7 @@ end`;
             pr: 3,
             alignItems: 'center',
           }}
+          icon={<CheckCircleOutlineRoundedIcon />}
           action={
             <Link href={webAppUrl} target="_blank" rel="noreferrer" underline="none">
               <Button id="App öffnen" variant="contained" color={'success'}>
@@ -140,14 +138,14 @@ end`;
           borderColor: '#aaaaaa',
         }}
       >
-        <List>
+        <List sx={{ py: 0 }}>
           <ListItem>
             <Stack sx={{ width: 1 }}>
               {directoryOk ? (
                 ''
               ) : (
                 <div>
-                  <Alert severity="warning" sx={{ m: -2, mb: 2 }}>
+                  <Alert severity="warning" sx={{ m: -2, mb: 2 }} icon={<WarningRoundedIcon />}>
                     <Typography variant="body1" gutterBottom>
                       Bevor es losgeht, muss Du nur noch den Ordner von EEP angeben.
                     </Typography>
@@ -170,9 +168,10 @@ end`;
                   justifyContent: 'space-between',
                 }}
               >
+                {directoryOk ? <CheckCircleOutlineRoundedIcon sx={{ mr: 1.5, color: 'success.main' }} /> : ''}
                 <Box sx={{ flexGrow: 1 }}>
                   <div>
-                    <Typography variant="body1">EEP-Verzeichnis</Typography>
+                    <Typography variant="body1">EEP Ordner</Typography>
                     <Typography variant="body2" id="choose-dir-current-dir">
                       {directoryName}
                     </Typography>
@@ -180,7 +179,7 @@ end`;
                 </Box>
                 <Button
                   id="choose-dir-button"
-                  variant="contained"
+                  variant={directoryOk ? 'text' : 'contained'}
                   color={directoryOk ? 'primary' : 'warning'}
                   onClick={handleClickOpen}
                 >
@@ -192,7 +191,17 @@ end`;
           {directoryOk ? <Divider /> : ''}
           {data.length > 0 && directoryOk ? (
             <ListItem>
-              <Stack sx={{ width: 1 }}>
+              <Stack
+                sx={{
+                  m: 0,
+                  p: 0,
+                  width: 1,
+                  flexDirection: 'row',
+                  alignItems: 'start',
+                  justifyContent: 'space-between',
+                }}
+              >
+                <CheckCircleOutlineRoundedIcon sx={{ mt: 1.0, mr: 1.5, color: 'success.main' }} />
                 <div>
                   <Typography variant="subtitle1">
                     Bereitgestellte Daten aus {eventCount.toLocaleString()} Events:
@@ -208,7 +217,7 @@ end`;
             <ListItem>
               <Stack sx={{ width: 1 }}>
                 <div>
-                  <Alert severity="warning" sx={{ mx: -2, mb: 2 }}>
+                  <Alert severity="warning" sx={{ mx: -2, mb: 2 }} icon={<WarningRoundedIcon />}>
                     Es wurden keine Daten von EEP gesammelt.
                     <br />
                     Stelle sicher, dass Du den folgenden Lua-Code in EEP eingetragen hast.
