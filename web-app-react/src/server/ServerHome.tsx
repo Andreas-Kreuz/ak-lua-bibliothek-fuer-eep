@@ -202,12 +202,12 @@ end`;
                 }}
               >
                 <CheckCircleOutlineRoundedIcon sx={{ mt: 1.0, mr: 1.5, color: 'success.main' }} />
-                <div>
+                <Box sx={{ flexGrow: 1 }}>
                   <Typography variant="subtitle1">
                     Bereitgestellte Daten aus {eventCount.toLocaleString()} Events:
                   </Typography>
                   <Typography variant="body2">{data.join(', ')}</Typography>
-                </div>
+                </Box>
               </Stack>
             </ListItem>
           ) : (
