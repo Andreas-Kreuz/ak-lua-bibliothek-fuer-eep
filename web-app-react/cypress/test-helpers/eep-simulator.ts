@@ -8,6 +8,7 @@ enum FileNames {
 
 export default class EepSimulator {
   private eventCounter = 0;
+  fileNames = FileNames;
 
   logEventCounter = () => cy.log('Current Counter: ' + this.eventCounter.toString());
 

@@ -22,6 +22,7 @@ class ErrorBoundary extends React.Component<{ children?: any }, { hasError: bool
       return (
         <div style={{ padding: '2rem' }}>
           <h1>Something went wrong.</h1>
+          {this.state.error}
         </div>
       );
     }
