@@ -2,7 +2,7 @@ import { AppBar, Toolbar, IconButton, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import StatusGrid from '../status/StatusGrid';
 import './Server.css';
-import { useServerStatus } from '../server-io/ServerStatusEffectHook';
+import { useServerStatus } from '../status/StatusEffectHook';
 import ServerHome from './ServerHome';
 
 function Server() {

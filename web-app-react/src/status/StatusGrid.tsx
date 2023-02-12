@@ -1,6 +1,6 @@
 import { Unstable_Grid2 as Grid, Card, CardContent, Stack, Typography } from '@mui/material';
 import StatusCard from '../status/StatusCard';
-import { useServerStatus } from '../server-io/ServerStatusEffectHook';
+import { useServerStatus } from './StatusEffectHook';
 
 function StatusGrid() {
   const [isConnected, eepDataUpToDate, luaDataReceived, apiEntryCount] = useServerStatus();

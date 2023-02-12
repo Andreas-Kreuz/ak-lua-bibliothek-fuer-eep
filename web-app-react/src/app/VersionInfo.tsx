@@ -1,5 +1,5 @@
 import { Card, Chip, Paper, Stack, Typography } from '@mui/material';
-import { useVersionStatus } from '../server-io/VersionsEffectHook';
+import useVersionStatus from './VersionsEffectHook';
 
 function VersionInfo() {
   const [verApp, verEep, verLua] = useVersionStatus();
