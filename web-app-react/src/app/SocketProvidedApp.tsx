@@ -1,5 +1,10 @@
 import RoutedApp from './RoutedApp';
-import { socket, SocketContext } from '../server-io/Socket';
+import { createContext } from 'react';
+import { io } from 'socket.io-client';
+
+export const socketUrl = window.location.protocol + '//' + window.location.hostname + ':3000';
+export const socket = io(socketUrl, { autoConnect: false });
+export const SocketContext = createContext(socket);
 
 function SocketProvidedApp() {
   return (

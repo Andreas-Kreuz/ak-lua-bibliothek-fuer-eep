@@ -1,15 +1,13 @@
-import io from 'socket.io-client';
-import { createContext, useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
+import { SocketContext } from '../app/SocketProvidedApp';
 
-const socketUrl = window.location.protocol + '//' + window.location.hostname + ':3000';
-export const socket = io(socketUrl, { autoConnect: false });
-export const SocketContext = createContext(socket);
-
-export function useSocketStatus() {
+export function useSocketIsConnected() {
+  const socket = useContext(SocketContext);
   const [isConnected, setIsConnected] = useState(socket.connected);
 
   useEffect(() => {
     socket.on('connect', () => {
+      // console.log('Received "Connect": ', socket);
       setIsConnected(true);
     });
 
@@ -17,15 +15,17 @@ export function useSocketStatus() {
       setIsConnected(false);
     });
 
-    if (!socket.connected) {
-      console.log(socket);
+    if (socket.connected) {
+      // console.log('Already Connected: ', socket);
+      setIsConnected(true);
+    } else {
       socket.connect();
     }
 
     return () => {
+      setIsConnected(false);
       socket.off('connect');
       socket.off('disconnect');
-      setIsConnected(false);
     };
   }, []);
 

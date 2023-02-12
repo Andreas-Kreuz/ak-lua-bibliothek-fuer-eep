@@ -1,6 +1,7 @@
-import { AppBar, Box, Card, CardContent, IconButton, Toolbar, Typography } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
-import StatusGrid from '../status/StatusGrid';
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
 import MainMenu from './MainMenu';
 import VersionInfo from './VersionInfo';
 

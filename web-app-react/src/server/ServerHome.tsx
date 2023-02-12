@@ -1,28 +1,26 @@
 import './ServerHome.css';
-import {
-  Alert,
-  Autocomplete,
-  Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Divider,
-  Link,
-  List,
-  ListItem,
-  Paper,
-  Stack,
-  TextField,
-  Typography,
-} from '@mui/material';
+import Alert from '@mui/material/Alert';
+import Autocomplete from '@mui/material/Autocomplete';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import Divider from '@mui/material/Divider';
+import Link from '@mui/material/Link';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import Paper from '@mui/material/Paper';
+import Stack from '@mui/material/Stack';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 import CheckCircleOutlineRoundedIcon from '@mui/icons-material/CheckCircleOutlineRounded';
 import WarningRoundedIcon from '@mui/icons-material/WarningRounded';
-import React, { useContext, useEffect, useState } from 'react';
-import { SocketContext } from '../server-io/Socket';
+import { useContext, useEffect, useState } from 'react';
 import { RoomEvent, ServerStatusEvent, SettingsEvent } from 'web-shared';
+import { SocketContext } from '../app/SocketProvidedApp';
 
 function ServerHome() {
   const webAppUrl = window.location.protocol + '//' + window.location.hostname + ':3000';
@@ -31,7 +29,7 @@ function ServerHome() {
   const [directoryOk, setDirectoryOk] = useState(false);
   const [data, setData] = useState<string[]>([]);
   const [eventCount, setEventCount] = useState(0);
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
   const code = `local ModuleRegistry = require("ak.core.ModuleRegistry")
 ModuleRegistry.registerModules(require("ak.core.CoreLuaModule"))

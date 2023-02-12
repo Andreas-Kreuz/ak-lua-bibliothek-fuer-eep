@@ -1,5 +1,5 @@
 import { useState, SetStateAction } from 'react';
-import { useRoomData } from '../server-io/RoomHandlerHook';
+import { registerRoomHandler } from '../server-io/RoomHandlerHook';
 
 function cutOutLua(versionString: string) {
   if (versionString && versionString.startsWith('Lua ')) {
@@ -14,7 +14,7 @@ export default function useVersionStatus(): [SetStateAction<string>, SetStateAct
   const [verLua, setVerLua] = useState('?');
 
   // Register for the rooms data
-  useRoomData('eep-version', (data) => {
+  registerRoomHandler('eep-version', (data) => {
     setVerApp(data.versionInfo.singleVersion);
     setVerEep(data.versionInfo.eepVersion);
     setVerLua(cutOutLua(data.versionInfo.luaVersion));

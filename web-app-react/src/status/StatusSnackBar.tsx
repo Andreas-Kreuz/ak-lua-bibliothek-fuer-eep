@@ -1,8 +1,9 @@
-import { Alert, Snackbar } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useServerStatus } from './StatusEffectHook';
 import CheckCircleOutlineRoundedIcon from '@mui/icons-material/CheckCircleOutlineRounded';
 import RunningWithErrorsRoundedIcon from '@mui/icons-material/RunningWithErrorsRounded';
+import Alert from '@mui/material/Alert';
+import Snackbar from '@mui/material/Snackbar';
 
 export interface SnackbarMessage {
   message: string;
@@ -18,7 +19,7 @@ export interface State {
 
 function StatusSnackBar() {
   const [lastEepUpToDate, setLastEepUpToDate] = useState(false);
-  const [isConnected, eepDataUpToDate, luaDataReceived, apiEntryCount] = useServerStatus();
+  const [eepDataUpToDate, luaDataReceived, apiEntryCount] = useServerStatus();
   const [open, setOpen] = useState(false);
   const [messageInfo, setMessageInfo] = useState<SnackbarMessage | undefined>(undefined);
   const [snackPack, setSnackPack] = useState<readonly SnackbarMessage[]>([]);
@@ -48,7 +49,7 @@ function StatusSnackBar() {
       ]);
     }
     setLastEepUpToDate(eepDataUpToDate);
-  });
+  }, [eepDataUpToDate]);
 
   const handleClose = () => {
     setOpen(false);

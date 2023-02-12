@@ -1,4 +1,6 @@
-import { Card, Chip, Paper, Stack, Typography } from '@mui/material';
+import Chip from '@mui/material/Chip';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 import useVersionStatus from './VersionsEffectHook';
 
 function VersionInfo() {

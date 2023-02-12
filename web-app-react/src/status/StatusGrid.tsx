@@ -1,9 +1,11 @@
-import { Unstable_Grid2 as Grid, Card, CardContent, Stack, Typography } from '@mui/material';
 import StatusCard from '../status/StatusCard';
 import { useServerStatus } from './StatusEffectHook';
+import { useSocketIsConnected } from '../server-io/Socket';
+import Grid from '@mui/material/Unstable_Grid2';
 
 function StatusGrid() {
-  const [isConnected, eepDataUpToDate, luaDataReceived, apiEntryCount] = useServerStatus();
+  const isConnected = useSocketIsConnected();
+  const [eepDataUpToDate, luaDataReceived, apiEntryCount] = useServerStatus();
 
   return (
     <Grid container spacing={3} sx={{ width: 'auto', m: 3 }}>
