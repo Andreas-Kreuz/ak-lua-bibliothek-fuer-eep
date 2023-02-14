@@ -1,6 +1,6 @@
+import './index.css';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
 import ThemedApp from './base/ThemedApp';
 // import reportWebVitals from './reportWebVitals';
 

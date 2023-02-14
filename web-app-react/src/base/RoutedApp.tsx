@@ -1,13 +1,25 @@
-import React, { Suspense, lazy } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Suspense, lazy } from 'react';
+import { BrowserRouter as Router, RouterProvider, createBrowserRouter } from 'react-router-dom';
+import MainMenu from '../home/MainMenu';
 import { useSocketIsConnected } from '../io/useSocketIsConnected';
+import IntersectionOverview from '../mod/intersections/IntersectionOverview';
 import ConnectingScreen from './ConnectingScreen';
 import ErrorBoundary from './ErrorBoundary';
 
 const AppHomeWithSnack = lazy(() => import('./AppHomeWithSnack'));
 const Server = lazy(() => import('../server/Server'));
 const StatusGrid = lazy(() => import('../status/StatusGrid'));
-const IntersectionOverview = lazy(() => import('../mod/intersections/IntersectionOverview'));
+
+const childRoutes = [
+  { path: '/', element: <MainMenu /> },
+  { path: '/intersections', element: <IntersectionOverview /> },
+];
+
+export const router = createBrowserRouter([
+  { path: '/', element: <AppHomeWithSnack />, children: childRoutes },
+  { path: '/status', element: <StatusGrid /> },
+  { path: '/server', element: <Server /> },
+]);
 
 function RoutedApp() {
   const socketIsConnected = useSocketIsConnected();
@@ -16,16 +28,9 @@ function RoutedApp() {
   } else {
     return (
       <ErrorBoundary>
-        <Router>
-          <Suspense fallback={<div>Loading...</div>}>
-            <Routes>
-              <Route path="/" element={<AppHomeWithSnack />} />
-              <Route path="/status" element={<StatusGrid />} />
-              <Route path="/server" element={<Server />} />
-              <Route path="/intersections" element={<IntersectionOverview />} />
-            </Routes>
-          </Suspense>
-        </Router>
+        <Suspense fallback={<div>Loading...</div>}>
+          <RouterProvider router={router} />
+        </Suspense>
       </ErrorBoundary>
     );
   }

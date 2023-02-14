@@ -9,6 +9,8 @@ before(() => {
 describe('Intersections', () => {
   it('should contain an expand button which toggles the expansion', () => {
     cy.visit('/intersections');
-    cy.contains('Hello Intersections');
+    cy.contains('Bahnhofstr. - Hauptstr.');
+    cy.contains('Kreuzung 2');
+    cy.contains('Hilfe');
   });
 });

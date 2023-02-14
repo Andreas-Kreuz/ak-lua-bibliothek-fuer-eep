@@ -4,6 +4,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import MainMenu from '../home/MainMenu';
 import VersionInfo from '../status/VersionInfo';
+import { Outlet } from 'react-router-dom';
 
 function AppHome() {
   return (
@@ -20,8 +21,7 @@ function AppHome() {
           </Toolbar>
         </AppBar>
         <Toolbar />
-        <MainMenu />
-        <VersionInfo />
+        <Outlet />
       </Box>
     </div>
   );
