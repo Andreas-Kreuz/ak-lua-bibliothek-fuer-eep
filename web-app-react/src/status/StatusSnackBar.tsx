@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useServerStatus } from './StatusEffectHook';
+import { useServerStatus } from './useServerInfo';
 import CheckCircleOutlineRoundedIcon from '@mui/icons-material/CheckCircleOutlineRounded';
 import RunningWithErrorsRoundedIcon from '@mui/icons-material/RunningWithErrorsRounded';
 import Alert from '@mui/material/Alert';

@@ -1,6 +1,6 @@
-import StatusCard from '../status/StatusCard';
-import { useServerStatus } from './StatusEffectHook';
-import { useSocketIsConnected } from '../server-io/Socket';
+import StatusCard from './StatusCard';
+import { useServerStatus } from './useServerInfo';
+import { useSocketIsConnected } from '../io/useSocketIsConnected';
 import Grid from '@mui/material/Unstable_Grid2';
 
 function StatusGrid() {

@@ -20,7 +20,7 @@ import CheckCircleOutlineRoundedIcon from '@mui/icons-material/CheckCircleOutlin
 import WarningRoundedIcon from '@mui/icons-material/WarningRounded';
 import { useContext, useEffect, useState } from 'react';
 import { RoomEvent, ServerStatusEvent, SettingsEvent } from 'web-shared';
-import { SocketContext } from '../app/SocketProvidedApp';
+import { SocketContext } from '../base/SocketProvidedApp';
 
 function ServerHome() {
   const webAppUrl = window.location.protocol + '//' + window.location.hostname + ':3000';

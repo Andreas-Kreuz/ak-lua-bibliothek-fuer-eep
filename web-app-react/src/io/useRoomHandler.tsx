@@ -1,8 +1,8 @@
 import { useState, useEffect, useContext } from 'react';
 import { ApiDataRoom, RoomEvent } from 'web-shared';
-import { SocketContext } from '../app/SocketProvidedApp';
+import { SocketContext } from '../base/SocketProvidedApp';
 
-export function registerRoomHandler(roomName: string, handler: (...args: any[]) => any): void {
+export function useRoomHandler(roomName: string, handler: (...args: any[]) => any): void {
   const socket = useContext(SocketContext);
   const [roomJoined, setRoomJoined] = useState<boolean>(false);
 

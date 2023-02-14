@@ -1,13 +1,13 @@
 import React, { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { useSocketIsConnected } from '../server-io/Socket';
+import { useSocketIsConnected } from '../io/useSocketIsConnected';
 import ConnectingScreen from './ConnectingScreen';
 import ErrorBoundary from './ErrorBoundary';
 
 const AppHomeWithSnack = lazy(() => import('./AppHomeWithSnack'));
 const Server = lazy(() => import('../server/Server'));
 const StatusGrid = lazy(() => import('../status/StatusGrid'));
-const IntersectionOverview = lazy(() => import('../intersections/IntersectionOverview'));
+const IntersectionOverview = lazy(() => import('../mod/intersections/IntersectionOverview'));
 
 function RoutedApp() {
   const socketIsConnected = useSocketIsConnected();

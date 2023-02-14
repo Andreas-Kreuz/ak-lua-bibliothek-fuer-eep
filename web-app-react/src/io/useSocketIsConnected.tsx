@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
-import { SocketContext } from '../app/SocketProvidedApp';
+import { SocketContext } from '../base/SocketProvidedApp';
 
 export function useSocketIsConnected() {
   const socket = useContext(SocketContext);

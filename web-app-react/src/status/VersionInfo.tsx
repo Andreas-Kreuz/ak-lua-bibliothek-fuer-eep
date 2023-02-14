@@ -1,7 +1,7 @@
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import useVersionStatus from './VersionsEffectHook';
+import useVersionStatus from './useVersionInfo';
 
 function VersionInfo() {
   const [verApp, verEep, verLua] = useVersionStatus();

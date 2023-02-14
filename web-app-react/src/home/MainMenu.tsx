@@ -5,7 +5,7 @@ import CardHeader from '@mui/material/CardHeader';
 import CardMedia from '@mui/material/CardMedia';
 import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Unstable_Grid2';
-import useNavState from './NavElements';
+import useNavState from '../nav/NavElements';
 
 function MainMenu() {
   const navigation = useNavState();
