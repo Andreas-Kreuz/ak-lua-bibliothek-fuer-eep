@@ -1,11 +1,11 @@
 import Card from '@mui/material/Card';
 import CardActionArea from '@mui/material/CardActionArea';
-import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import CardMedia from '@mui/material/CardMedia';
 import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Unstable_Grid2';
 import useNavState from '../nav/NavElements';
+import { Link as RouterLink } from 'react-router-dom';
 
 function MainMenu() {
   const navigation = useNavState();
@@ -19,7 +19,7 @@ function MainMenu() {
       {trafficNav.map((card) => (
         <Grid xs={12} sm={6} lg={3} key={card.title}>
           <Card elevation={3} sx={{ borderRadius: 2 }}>
-            <CardActionArea>
+            <CardActionArea component={RouterLink} to={card.link}>
               <Stack sx={{ flexDirection: { xs: 'row', sm: 'column' } }}>
                 {card.image ? (
                   <CardMedia
