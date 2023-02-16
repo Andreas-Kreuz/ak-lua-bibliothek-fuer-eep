@@ -9,7 +9,7 @@ import { Outlet } from 'react-router-dom';
 function AppHome() {
   return (
     <div className="Client">
-      <Box sx={{ backgroundColor: '#f5f5f5', minHeight: '100vh' }}>
+      <Box sx={{ minHeight: '100vh' }}>
         <AppBar>
           <Toolbar>
             {/* <IconButton size="large" edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>

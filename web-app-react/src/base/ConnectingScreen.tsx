@@ -3,12 +3,11 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { SocketContext, socketUrl } from './SocketProvidedApp';
-import { useContext } from 'react';
+import { socketUrl } from './SocketProvidedApp';
 
 function ConnectingScreen() {
   return (
-    <Box sx={{ height: '100vh', width: '100%', display: 'flex', backgroundColor: '#ccc' }}>
+    <Box sx={{ height: '100vh', width: '100%', display: 'flex' }}>
       <Paper sx={{ m: 'auto', p: 4, borderRadius: 2 }} variant="outlined">
         <Stack sx={{ alignItems: 'center' }} spacing={1}>
           <Typography sx={{ mb: 3 }}>

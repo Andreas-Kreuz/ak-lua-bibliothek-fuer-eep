@@ -20,7 +20,7 @@ function MainMenu() {
       <Grid container sx={{ p: 2, width: '100vw' }} spacing={2}>
         {trafficNav.map((card) => (
           <Grid xs={12} sm={6} lg={3} key={card.title}>
-            <Card elevation={3} sx={{ borderRadius: 2 }}>
+            <Card>
               <CardActionArea component={RouterLink} to={card.link}>
                 <Stack sx={{ flexDirection: { xs: 'row', sm: 'column' } }}>
                   {card.image ? (
@@ -28,7 +28,7 @@ function MainMenu() {
                       component="img"
                       image={'/assets/' + card.image}
                       title={card.title}
-                      sx={{ width: { xs: '25%', sm: 1 }, borderRadius: 2 }}
+                      sx={{ width: { xs: '25%', sm: 1 } }}
                     />
                   ) : (
                     ''

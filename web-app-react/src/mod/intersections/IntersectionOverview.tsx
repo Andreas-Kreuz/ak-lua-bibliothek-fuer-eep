@@ -1,14 +1,11 @@
+import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardActionArea from '@mui/material/CardActionArea';
 import CardActions from '@mui/material/CardActions';
-import Chip from '@mui/material/Chip';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
-import useIntersections from './useIntersections';
-import HelpIcon from '@mui/icons-material/HelpOutline';
-import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
 import AppCard from '../../ui/AppCard';
+import useIntersections from './useIntersections';
 
 function IntersectionOverview() {
   const intersections = useIntersections();
@@ -24,9 +21,9 @@ function IntersectionOverview() {
       </Grid>
       <Grid container spacing={2} sx={{ pb: 2, px: 2 }}>
         <Grid xs={12} sm={6}>
-          <Card elevation={3} sx={{ borderRadius: 3 }}>
+          <Card>
             <CardActionArea sx={{ p: 2 }}>
-              <Typography variant="h4" gutterBottom>
+              <Typography variant="h5" gutterBottom>
                 Hilfe
               </Typography>
               <Typography variant="body2">Erfahre wie Du Kreuzungen mit der Lua-Bibliothek einrichtest</Typography>
