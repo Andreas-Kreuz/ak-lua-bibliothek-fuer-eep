@@ -7,6 +7,8 @@ import Grid from '@mui/material/Unstable_Grid2';
 import useNavState from '../nav/NavElements';
 import { Link as RouterLink } from 'react-router-dom';
 import VersionInfo from '../status/VersionInfo';
+import AppCardGrid from '../ui/AppCardGrid';
+import AppCardImg from '../ui/AppCardImg';
 
 function MainMenu() {
   const navigation = useNavState();
@@ -19,26 +21,9 @@ function MainMenu() {
     <>
       <Grid container sx={{ p: 2, width: '100vw' }} spacing={2}>
         {trafficNav.map((card) => (
-          <Grid xs={12} sm={6} lg={3} key={card.title}>
-            <Card>
-              <CardActionArea component={RouterLink} to={card.link}>
-                <Stack sx={{ flexDirection: { xs: 'row', sm: 'column' } }}>
-                  {card.image ? (
-                    <CardMedia
-                      component="img"
-                      image={'/assets/' + card.image}
-                      title={card.title}
-                      sx={{ width: { xs: '25%', sm: 1 } }}
-                    />
-                  ) : (
-                    ''
-                  )}
-                  <CardHeader title={card.title} subheader={card.subtitle}></CardHeader>
-                </Stack>
-                {/* <CardContent>Hallo Echo</CardContent> */}
-              </CardActionArea>
-            </Card>
-          </Grid>
+          <AppCardGrid key={card.title}>
+            <AppCardImg title={card.title} subtitle={card.subtitle} image={'/assets/' + card.image} to={card.link} />
+          </AppCardGrid>
         ))}
       </Grid>
       <VersionInfo />

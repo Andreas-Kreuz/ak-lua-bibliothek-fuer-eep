@@ -4,8 +4,9 @@ import CardActionArea from '@mui/material/CardActionArea';
 import CardActions from '@mui/material/CardActions';
 import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
-import AppCard from '../../ui/AppCard';
+import AppCardBg from '../../ui/AppCardBg';
 import useIntersections from './useIntersections';
+import AppCardGrid from '../../ui/AppCardGrid';
 
 function IntersectionOverview() {
   const intersections = useIntersections();
@@ -14,15 +15,15 @@ function IntersectionOverview() {
     <>
       <Grid container spacing={2} sx={{ m: 2 }}>
         {intersections.map((i) => (
-          <Grid xs={12} sm={6} lg={3} key={i.id}>
-            <AppCard title="Kreuzung" id={i.name} image="card-img-intersection.jpg" />
-          </Grid>
+          <AppCardGrid key={i.id}>
+            <AppCardBg title="Kreuzung" id={i.name} image="/assets/card-img-intersection.jpg" />
+          </AppCardGrid>
         ))}
       </Grid>
       <Grid container spacing={2} sx={{ mb: 2, mx: 2 }}>
-        <Grid xs={12} sm={6}>
+        <AppCardGrid>
           <Card>
-            <CardActionArea sx={{ p: 2 }}>
+            <CardActionArea sx={{ p: 2 }} disabled>
               <Typography variant="h5" gutterBottom>
                 Hilfe
               </Typography>
@@ -38,7 +39,7 @@ function IntersectionOverview() {
               </Button>
             </CardActions>
           </Card>
-        </Grid>
+        </AppCardGrid>
       </Grid>
     </>
   );
