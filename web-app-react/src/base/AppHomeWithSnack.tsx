@@ -3,7 +3,7 @@ import StatusSnackBar from '../status/StatusSnackBar';
 
 function AppHomeWithSnack() {
   return (
-    <div className="Client">
+    <div>
       <AppHome />
       <StatusSnackBar />
     </div>
