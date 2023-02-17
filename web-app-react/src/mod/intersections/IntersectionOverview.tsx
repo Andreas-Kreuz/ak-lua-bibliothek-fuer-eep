@@ -12,14 +12,14 @@ function IntersectionOverview() {
 
   return (
     <>
-      <Grid container spacing={2} sx={{ p: 2 }}>
+      <Grid container spacing={2} sx={{ m: 2 }}>
         {intersections.map((i) => (
           <Grid xs={12} sm={6} lg={3} key={i.id}>
             <AppCard title="Kreuzung" id={i.name} image="card-img-intersection.jpg" />
           </Grid>
         ))}
       </Grid>
-      <Grid container spacing={2} sx={{ pb: 2, px: 2 }}>
+      <Grid container spacing={2} sx={{ mb: 2, mx: 2 }}>
         <Grid xs={12} sm={6}>
           <Card>
             <CardActionArea sx={{ p: 2 }}>
