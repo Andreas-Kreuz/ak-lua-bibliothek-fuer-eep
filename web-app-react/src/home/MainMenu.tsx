@@ -1,13 +1,7 @@
-import Card from '@mui/material/Card';
-import CardActionArea from '@mui/material/CardActionArea';
-import CardHeader from '@mui/material/CardHeader';
-import CardMedia from '@mui/material/CardMedia';
-import Stack from '@mui/material/Stack';
-import Grid from '@mui/material/Unstable_Grid2';
 import useNavState from '../nav/NavElements';
-import { Link as RouterLink } from 'react-router-dom';
 import VersionInfo from '../status/VersionInfo';
 import AppCardGrid from '../ui/AppCardGrid';
+import AppCardGridContainer from '../ui/AppCardGridContainer';
 import AppCardImg from '../ui/AppCardImg';
 
 function MainMenu() {
@@ -19,13 +13,13 @@ function MainMenu() {
 
   return (
     <>
-      <Grid container sx={{ p: 2, width: '100vw' }} spacing={2}>
+      <AppCardGridContainer>
         {trafficNav.map((card) => (
           <AppCardGrid key={card.title}>
             <AppCardImg title={card.title} subtitle={card.subtitle} image={'/assets/' + card.image} to={card.link} />
           </AppCardGrid>
         ))}
-      </Grid>
+      </AppCardGridContainer>
       <VersionInfo />
     </>
   );
