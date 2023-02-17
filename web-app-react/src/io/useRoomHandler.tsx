@@ -5,7 +5,7 @@ import { useSocketIsConnected } from './useSocketIsConnected';
 
 export function useRoomHandler(roomName: string, handler: (data: any) => any): void {
   const socket = useContext(SocketContext);
-  useSocketIsConnected();
+  const socketIsConnected = useSocketIsConnected();
   const [roomJoined, setRoomJoined] = useState<boolean>(false);
 
   // Register for the rooms data
@@ -20,12 +20,12 @@ export function useRoomHandler(roomName: string, handler: (data: any) => any): v
     return () => {
       socket.off(eventName);
     };
-  }, [socket]);
+  }, [socket, socketIsConnected]);
 
   // Join room as soon as the socket is connected
   useEffect(() => {
     const room = ApiDataRoom.roomId(roomName);
-    if (socket.connected) {
+    if (socketIsConnected) {
       if (roomJoined) {
         // console.log('Skip joining ' + room);
       } else {
@@ -36,11 +36,11 @@ export function useRoomHandler(roomName: string, handler: (data: any) => any): v
 
     return () => {
       if (roomJoined) {
-        if (socket.connected) {
+        if (socketIsConnected) {
           socket.emit(RoomEvent.LeaveRoom, { room });
         }
         setRoomJoined(false);
       }
     };
-  }, [socket, socket.connected]);
+  }, [socket, socketIsConnected]);
 }
