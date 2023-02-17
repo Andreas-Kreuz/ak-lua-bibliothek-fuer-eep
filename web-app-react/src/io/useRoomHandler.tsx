@@ -36,7 +36,7 @@ export function useRoomHandler(roomName: string, handler: (data: any) => any): v
 
     return () => {
       if (roomJoined) {
-        if (socketIsConnected) {
+        if (socket.connected) {
           socket.emit(RoomEvent.LeaveRoom, { room });
         }
         setRoomJoined(false);
