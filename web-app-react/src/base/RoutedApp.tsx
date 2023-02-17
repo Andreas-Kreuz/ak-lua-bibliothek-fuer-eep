@@ -1,39 +1,39 @@
 import { Suspense, lazy } from 'react';
-import { BrowserRouter as Router, RouterProvider, createBrowserRouter } from 'react-router-dom';
-import MainMenu from '../home/MainMenu';
-import { useSocketIsConnected } from '../io/useSocketIsConnected';
-import IntersectionOverview from '../mod/intersections/IntersectionOverview';
-import ConnectingScreen from './ConnectingScreen';
+import { BrowserRouter as Router, RouterProvider, createBrowserRouter, Outlet } from 'react-router-dom';
 import ErrorBoundary from './ErrorBoundary';
 
-const AppHomeWithSnack = lazy(() => import('./AppHomeWithSnack'));
+const IntersectionOverview = lazy(() => import('../mod/intersections/IntersectionOverview'));
+const MainMenu = lazy(() => import('../home/MainMenu'));
 const Server = lazy(() => import('../server/Server'));
 const StatusGrid = lazy(() => import('../status/StatusGrid'));
+const ConnectionWrapper = lazy(() => import('./ConnectionWrapper'));
 
-const childRoutes = [
+const homeRoutes = [
   { path: '/', element: <MainMenu /> },
   { path: '/intersections', element: <IntersectionOverview /> },
 ];
 
 export const router = createBrowserRouter([
-  { path: '/', element: <AppHomeWithSnack />, children: childRoutes },
+  {
+    path: '/simple',
+    element: <ConnectionWrapper simple />,
+    children: homeRoutes.map((r) => {
+      return { path: '/simple' + r.path, element: r.element };
+    }),
+  },
+  { path: '/', element: <ConnectionWrapper />, children: homeRoutes },
   { path: '/status', element: <StatusGrid /> },
   { path: '/server', element: <Server /> },
 ]);
 
 function RoutedApp() {
-  const socketIsConnected = useSocketIsConnected();
-  if (!socketIsConnected) {
-    return <ConnectingScreen />;
-  } else {
-    return (
-      <ErrorBoundary>
-        <Suspense fallback={<div>Loading...</div>}>
-          <RouterProvider router={router} />
-        </Suspense>
-      </ErrorBoundary>
-    );
-  }
+  return (
+    <ErrorBoundary>
+      <Suspense fallback={<div>Loading...</div>}>
+        <RouterProvider router={router} />
+      </Suspense>
+    </ErrorBoundary>
+  );
 }
 
 export default RoutedApp;
