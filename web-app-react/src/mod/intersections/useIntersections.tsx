@@ -1,5 +1,4 @@
-import { SetStateAction, useEffect, useState } from 'react';
-import { ApiDataRoom } from 'web-shared';
+import { useState } from 'react';
 import { useRoomHandler } from '../../io/useRoomHandler';
 import Intersection from './Intersection';
 
