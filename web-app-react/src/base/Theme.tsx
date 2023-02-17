@@ -4,14 +4,14 @@ import '@fontsource/anek-latin/400.css';
 import '@fontsource/anek-latin/500.css';
 import '@fontsource/anek-latin/700.css';
 import { createTheme } from '@mui/material/styles';
-import { indigo, lime } from '@mui/material/colors';
+import { grey, indigo, lime } from '@mui/material/colors';
 
 const borderRadius = 12;
 
 export const theme = createTheme({
   palette: {
     background: {
-      default: lime[50],
+      default: grey[50],
     },
     primary: {
       main: indigo[700],
