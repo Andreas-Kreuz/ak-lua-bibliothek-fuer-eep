@@ -3,7 +3,7 @@ import { SocketContext } from '../base/SocketProvidedApp';
 
 export function useSocketIsConnected() {
   const socket = useContext(SocketContext);
-  const [isConnected, setIsConnected] = useState(socket.connected);
+  const [isConnected, setIsConnected] = useState(() => socket.connected);
 
   useEffect(() => {
     socket.on('connect', () => {
