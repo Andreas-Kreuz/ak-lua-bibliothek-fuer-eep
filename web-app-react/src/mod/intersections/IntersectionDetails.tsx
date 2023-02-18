@@ -1,4 +1,3 @@
-import AppPageHeadline from '../../ui/AppPageHeadline';
 import AppPage from '../../ui/AppPage';
 import Stack from '@mui/material/Stack';
 import Chip from '@mui/material/Chip';
@@ -10,10 +9,13 @@ import AppHeadline from '../../ui/AppHeadline';
 import AppBackButton from '../../ui/AppBackButton';
 import { useContext } from 'react';
 import { SocketContext } from '../../base/SocketProvidedApp';
-import { IntersectionEvent } from 'web-shared';
+import { CommandEvent, IntersectionEvent } from 'web-shared';
 import Divider from '@mui/material/Divider';
 import { useTheme } from '@mui/material/styles';
 import AppCaption from '../../ui/AppCaption';
+import Typography from '@mui/material/Typography/Typography';
+import Alert from '@mui/material/Alert';
+import styled from '@mui/system/styled';
 
 function IntersectionDetails() {
   const theme = useTheme();
@@ -22,6 +24,11 @@ function IntersectionDetails() {
   const id = parseInt(matches[0].params.intersectionId || '555');
   const i = useIntersection(id);
   const switchings = useIntersectionSwitching(i?.name);
+
+  const Pre = styled('pre')({
+    fontSize: 14,
+    whiteSpace: 'normal',
+  });
 
   function sendSwitchManually(intersectionName: string, switchingName: string) {
     socket.emit(IntersectionEvent.SwitchManually, {
@@ -36,24 +43,25 @@ function IntersectionDetails() {
     });
   }
 
+  function changeCam(camName: string) {
+    socket.emit(CommandEvent.ChangeCamToStatic, { staticCam: camName });
+  }
+
   return (
     <AppPage>
       {i && (
         <>
-          <AppPageHeadline>
-            <AppBackButton to="/intersections" /> Kreuzung {i.id}
-          </AppPageHeadline>
           <AppPaper
           // image="/assets/card-img-intersection.jpg"
           >
-            <AppHeadline gutterBottom>Name</AppHeadline>
+            <AppHeadline gutterBottom>
+              <AppBackButton to="/intersections" /> Kreuzung {i.id}
+            </AppHeadline>
             <Chip label={i.name} />
-
-            <Divider sx={{ my: 3 }} />
-
-            <Stack direction="row" sx={{ alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap' }}>
-              <AppHeadline>Schaltungen</AppHeadline>
-            </Stack>
+            <Stack
+              direction="row"
+              sx={{ alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap' }}
+            ></Stack>
             <AppCaption gutterTop>Modus</AppCaption>
             <Stack direction="row" spacing={1}>
               <Chip
@@ -73,6 +81,8 @@ function IntersectionDetails() {
                 }}
               />
             </Stack>
+
+            <Divider sx={{ py: 1 }} />
             <AppCaption gutterTop>Schaltung</AppCaption>
             <Stack
               direction="row"
@@ -108,7 +118,61 @@ function IntersectionDetails() {
                 );
               })}
             </Stack>
+
+            <Divider sx={{ py: 1 }} />
+            <AppCaption gutterTop>Kameras</AppCaption>
+            <Stack
+              direction="row"
+              flexWrap="wrap"
+              pt={1}
+              pb={0}
+              // sx={{ backgroundColor: theme.palette.background.default }}
+            >
+              {(i.staticCams &&
+                i.staticCams.length > 0 &&
+                i.staticCams.map((c) => {
+                  return (
+                    <Chip
+                      sx={{
+                        mr: 1,
+                        mb: 1,
+                      }}
+                      label={c}
+                      variant={'filled'}
+                      key={c}
+                      clickable
+                      onClick={() => {
+                        changeCam(c);
+                      }}
+                    ></Chip>
+                  );
+                })) ||
+                'Keine'}
+            </Stack>
           </AppPaper>
+
+          {i.staticCams && i.staticCams.length == 0 && (
+            <Alert
+              severity="info"
+              sx={{
+                border: 1,
+                borderColor: 'info.main',
+                alignItems: 'top',
+                mt: 2,
+              }}
+              icon={false}
+            >
+              <Typography variant="body2" sx={{ fontWeight: 'bolder' }} gutterBottom>
+                Tipp: Kameras hinzufügen
+              </Typography>
+              <Typography variant="body2">
+                So hast Du Deine Kreuzung angelegt:
+                <Pre>c1 = Crossing:new(...)</Pre>
+                Suche Dir nun eine statische Kamera aus und füge ihren Namen wie folgt hinzu:
+                <Pre>c1:addStaticCam('Kameraname')</Pre>
+              </Typography>
+            </Alert>
+          )}
         </>
       )}
     </AppPage>
