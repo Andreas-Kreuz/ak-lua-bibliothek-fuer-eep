@@ -26,7 +26,7 @@ function AppCardBg(props: {
           {props.subtitle}
         </Typography>
       )}
-      {props.id && <Chip label={props.id} />}
+      {props.id && <Chip label={props.id} sx={{ backgroundColor: 'rgba(255,255,255,0.8)' }} />}
       {props.children}
     </Box>
   );
