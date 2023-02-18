@@ -51,9 +51,8 @@ export const theme = createTheme({
         variant: 'outlined',
       },
       styleOverrides: {
-        root: {
-          backgroundColor: 'rgba(255, 255, 255, 0.8)',
-        },
+        root: {},
+        filled: {},
       },
     },
   },
