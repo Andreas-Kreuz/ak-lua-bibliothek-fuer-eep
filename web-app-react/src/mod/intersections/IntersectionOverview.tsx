@@ -9,13 +9,16 @@ import AppCardGrid from '../../ui/AppCardGrid';
 import AppPageHeadline from '../../ui/AppPageHeadline';
 import AppPage from '../../ui/AppPage';
 import AppCardGridContainer from '../../ui/AppCardGridContainer';
+import AppBackButton from '../../ui/AppBackButton';
 
 function IntersectionOverview() {
   const intersections = useIntersections();
 
   return (
     <AppPage>
-      <AppPageHeadline>Kreuzungen</AppPageHeadline>
+      <AppPageHeadline>
+        <AppBackButton to="/" /> Kreuzungen
+      </AppPageHeadline>
       <AppCardGridContainer>
         {intersections.map((i) => (
           <AppCardGrid key={i.id}>

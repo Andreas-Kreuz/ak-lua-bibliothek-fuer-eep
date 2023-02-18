@@ -1,42 +1,108 @@
-import AppCardBg from '../../ui/AppCardBg';
-import AppCardGrid from '../../ui/AppCardGrid';
 import AppPageHeadline from '../../ui/AppPageHeadline';
 import AppPage from '../../ui/AppPage';
-import AppCardGridContainer from '../../ui/AppCardGridContainer';
 import Stack from '@mui/material/Stack';
 import Chip from '@mui/material/Chip';
-import AppCaption from '../../ui/AppCaption';
 import useIntersection from './useIntersection';
 import useIntersectionSwitching from './useIntersectionSwitching';
 import { useMatches } from 'react-router-dom';
-import AppSingleSelectionChips from '../../ui/AppSingleSelectionChips';
+import AppPaper from '../../ui/AppPaper';
+import AppHeadline from '../../ui/AppHeadline';
+import AppBackButton from '../../ui/AppBackButton';
+import Switch from '@mui/material/Switch';
+import FormControl from '@mui/material/FormControl';
+import FormLabel from '@mui/material/FormLabel';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import { useContext } from 'react';
+import { SocketContext } from '../../base/SocketProvidedApp';
+import { IntersectionEvent } from 'web-shared';
+import Divider from '@mui/material/Divider';
 
 function IntersectionDetails() {
+  const socket = useContext(SocketContext);
   const matches = useMatches();
   const id = parseInt(matches[0].params.intersectionId || '555');
   const i = useIntersection(id);
   const switchings = useIntersectionSwitching(i?.name);
 
+  function sendSwitchManually(intersectionName: string, switchingName: string) {
+    socket.emit(IntersectionEvent.SwitchManually, {
+      intersectionName,
+      switchingName,
+    });
+  }
+
+  function sendSwitchAutomatically(intersectionName: string) {
+    socket.emit(IntersectionEvent.SwitchAutomatically, {
+      intersectionName,
+    });
+  }
+
   return (
     <AppPage>
       {i && (
         <>
-          <AppPageHeadline>Kreuzung {i.name}</AppPageHeadline>
-          <AppCardGridContainer>
-            <AppCardGrid key={1}>
-              <AppCardBg title="Kreuzung" id={i.name} image="/assets/card-img-intersection.jpg">
-                <Stack>
-                  <AppCaption gutterTop>Schaltungen</AppCaption>
-                  <AppSingleSelectionChips
-                    elements={switchings.map((s) => {
-                      return { name: s.name, action: undefined };
-                    })}
-                    activeElement={i.currentSwitching}
-                  />
+          <AppPageHeadline>
+            <AppBackButton to="/intersections" /> Kreuzung {i.id}
+          </AppPageHeadline>
+          <AppPaper
+          // image="/assets/card-img-intersection.jpg"
+          >
+            <AppHeadline gutterBottom>Name</AppHeadline>
+            <Chip label={i.name} />
+
+            <Divider sx={{ mx: -1, my: 3 }} />
+
+            <AppHeadline gutterBottom>Schaltungen</AppHeadline>
+            <FormControl component="fieldset">
+              <FormLabel component="legend">Automatik</FormLabel>
+              <FormGroup aria-label="position" row>
+                <FormControlLabel
+                  value="end"
+                  control={
+                    <Switch
+                      color="primary"
+                      checked={!i.manualSwitching}
+                      onClick={() => {
+                        if (i.manualSwitching) {
+                          sendSwitchAutomatically(i.name);
+                        } else {
+                          sendSwitchManually(i.name, i.currentSwitching);
+                        }
+                      }}
+                    />
+                  }
+                  label="Automatisch schalten"
+                  labelPlacement="end"
+                />
+              </FormGroup>
+              <FormLabel component="legend" sx={{ pt: 2, pb: 1 }}>
+                Nächste Schaltung
+              </FormLabel>
+              <FormGroup aria-label="position" row>
+                <Stack direction="row" spacing={1}>
+                  {switchings.map((s) => {
+                    const active = i.currentSwitching === s.name;
+                    const next = i.nextSwitching === s.name || i.manualSwitching === s.name;
+                    const color = active ? 'primary' : next ? 'secondary' : 'default';
+                    const clickable = i.manualSwitching ? true : false;
+                    return (
+                      <Chip
+                        label={s.name}
+                        variant={i.manualSwitching || next || active ? 'filled' : 'outlined'}
+                        key={s.name}
+                        color={color}
+                        clickable={clickable}
+                        onClick={() => {
+                          if (clickable) sendSwitchManually(i.name, s.name);
+                        }}
+                      ></Chip>
+                    );
+                  })}
                 </Stack>
-              </AppCardBg>
-            </AppCardGrid>
-          </AppCardGridContainer>
+              </FormGroup>
+            </FormControl>
+          </AppPaper>
         </>
       )}
     </AppPage>

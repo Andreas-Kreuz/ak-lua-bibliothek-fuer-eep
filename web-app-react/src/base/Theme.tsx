@@ -11,7 +11,7 @@ const borderRadius = 12;
 export const theme = createTheme({
   palette: {
     background: {
-      default: grey[50],
+      default: grey[200],
     },
     primary: {
       main: indigo[700],
@@ -38,7 +38,7 @@ export const theme = createTheme({
     MuiCard: {
       defaultProps: {
         elevation: 3,
-        // variant: 'outlined',
+        variant: 'elevation',
       },
       styleOverrides: {
         root: {
@@ -53,6 +53,11 @@ export const theme = createTheme({
       styleOverrides: {
         root: {},
         filled: {},
+      },
+    },
+    MuiPaper: {
+      defaultProps: {
+        variant: 'outlined',
       },
     },
   },

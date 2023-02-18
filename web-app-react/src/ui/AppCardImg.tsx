@@ -12,7 +12,7 @@ function AppCardImg(props: {
   subtitle?: string;
   id?: string;
   to?: string;
-  image: string;
+  image?: string;
   small?: boolean;
 }) {
   const contents = (
