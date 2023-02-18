@@ -1,5 +1,9 @@
 # Änderungen an der Software
 
+## v0.13.0
+
+- ⭐ Neu: Komplette Neuentwicklung der App mit Fokus auf Smartphone ⭐⭐⭐⭐⭐
+
 ## v0.12.0
 
 - ⭐ Neu: Verbesserte Ansicht auf dem Smartphone
