@@ -1,12 +1,14 @@
 import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
+import Card, { CardTypeMap } from '@mui/material/Card';
 import CardActionArea from '@mui/material/CardActionArea';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import { ReactNode } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 
 function AppCardBg(props: {
+  children?: ReactNode;
   title: string;
   subtitle?: string;
   id?: string;
@@ -25,6 +27,7 @@ function AppCardBg(props: {
         </Typography>
       )}
       {props.id && <Chip label={props.id} />}
+      {props.children}
     </Box>
   );
 

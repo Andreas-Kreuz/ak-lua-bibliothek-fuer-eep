@@ -19,7 +19,12 @@ function IntersectionOverview() {
       <AppCardGridContainer>
         {intersections.map((i) => (
           <AppCardGrid key={i.id}>
-            <AppCardBg title="Kreuzung" id={i.name} image="/assets/card-img-intersection.jpg" />
+            <AppCardBg
+              title="Kreuzung"
+              id={i.name}
+              image="/assets/card-img-intersection.jpg"
+              to={`/intersection/${i.id}`}
+            />
           </AppCardGrid>
         ))}
       </AppCardGridContainer>

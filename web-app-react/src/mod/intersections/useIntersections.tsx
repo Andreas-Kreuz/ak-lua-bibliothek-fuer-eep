@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useRoomHandler } from '../../io/useRoomHandler';
-import Intersection from './Intersection';
+import Intersection from './model/Intersection';
 
 function useIntersections(): Intersection[] {
   const [intersections, setIntersections] = useState<Intersection[]>([]);
