@@ -14,7 +14,8 @@ export default function useVersionInfo(): [SetStateAction<string>, SetStateActio
   const [verLua, setVerLua] = useState('?');
 
   // Register for the rooms data
-  useApiDataRoomHandler('eep-version', (data) => {
+  useApiDataRoomHandler('eep-version', (payload: string) => {
+    const data = JSON.parse(payload);
     setVerApp(data.versionInfo.singleVersion);
     setVerEep(data.versionInfo.eepVersion);
     setVerLua(cutOutLua(data.versionInfo.luaVersion));

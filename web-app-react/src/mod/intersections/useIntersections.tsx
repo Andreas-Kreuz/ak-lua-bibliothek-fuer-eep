@@ -5,7 +5,8 @@ import Intersection from './model/Intersection';
 function useIntersections(): Intersection[] {
   const [intersections, setIntersections] = useState<Intersection[]>([]);
 
-  useApiDataRoomHandler('intersections', (data: Record<string, Intersection>) => {
+  useApiDataRoomHandler('intersections', (payload: string) => {
+    const data: Record<string, Intersection> = JSON.parse(payload);
     setIntersections(Object.values(data));
   });
 

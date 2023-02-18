@@ -5,7 +5,8 @@ import IntersectionSwitching from './model/IntersectionSwitching';
 function useIntersectionSwitchings(): IntersectionSwitching[] {
   const [intersectionSwitchings, setIntersectionSwitchings] = useState<IntersectionSwitching[]>([]);
 
-  useApiDataRoomHandler('intersection-switchings', (data: Record<string, IntersectionSwitching>) => {
+  useApiDataRoomHandler('intersection-switchings', (payload: string) => {
+    const data: Record<string, IntersectionSwitching> = JSON.parse(payload);
     setIntersectionSwitchings(Object.values(data));
   });
 

@@ -7,7 +7,8 @@ export function useServerStatus(): [SetStateAction<boolean>, SetStateAction<bool
   const [apiEntryCount, setApiEntryCount] = useState(0);
 
   // Register for the rooms data
-  useApiDataRoomHandler('api-stats', (data) => {
+  useApiDataRoomHandler('api-stats', (payload: string) => {
+    const data: { eepDataUpToDate: boolean; luaDataReceived: boolean; apiEntryCount: number } = JSON.parse(payload);
     setEepDataUpToDate(data.eepDataUpToDate);
     setLuaDataReceived(data.luaDataReceived);
     setApiEntryCount(data.apiEntryCount);

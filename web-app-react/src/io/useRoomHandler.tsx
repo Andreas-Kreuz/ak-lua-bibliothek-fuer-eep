@@ -15,9 +15,7 @@ export function useRoomHandler(roomName: string, eventName: string, handler: (da
   // Register for the rooms data
   useEffect(() => {
     socket.on(eventName, (payload: string) => {
-      // console.log(payload);
-      const data = JSON.parse(payload);
-      handler(data);
+      handler(payload);
     });
 
     return () => {
