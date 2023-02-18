@@ -23,7 +23,7 @@ function IntersectionOverview() {
         {intersections.map((i) => (
           <AppCardGrid key={i.id}>
             <AppCardBg
-              title="Kreuzung"
+              title={`Kreuzung ${i.id}`}
               id={i.name}
               image="/assets/card-img-intersection.jpg"
               to={`/intersection/${i.id}`}
