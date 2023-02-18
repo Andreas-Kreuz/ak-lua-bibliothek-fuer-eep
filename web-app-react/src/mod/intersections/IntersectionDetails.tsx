@@ -17,8 +17,10 @@ import { useContext } from 'react';
 import { SocketContext } from '../../base/SocketProvidedApp';
 import { IntersectionEvent } from 'web-shared';
 import Divider from '@mui/material/Divider';
+import { useTheme } from '@mui/material/styles';
 
 function IntersectionDetails() {
+  const theme = useTheme();
   const socket = useContext(SocketContext);
   const matches = useMatches();
   const id = parseInt(matches[0].params.intersectionId || '555');
@@ -80,19 +82,25 @@ function IntersectionDetails() {
                 Nächste Schaltung
               </FormLabel>
               <FormGroup aria-label="position" row>
-                <Stack direction="row" spacing={1}>
+                <Stack direction="row" spacing={1} flexWrap="wrap">
                   {switchings.map((s) => {
                     const active = i.currentSwitching === s.name;
-                    const next = i.nextSwitching === s.name || i.manualSwitching === s.name;
-                    const color = active ? 'primary' : next ? 'secondary' : 'default';
+                    const next =
+                      (i.nextSwitching === s.name || i.manualSwitching === s.name) && i.currentSwitching !== s.name;
+                    const color = active ? 'primary' : next ? 'primary' : 'default';
                     const clickable = i.manualSwitching ? true : false;
                     return (
                       <Chip
+                        sx={{
+                          color: active || next ? theme.palette.background.default : undefined,
+                          backgroundColor: active || next ? theme.palette.primary.main : undefined,
+                        }}
                         label={s.name}
-                        variant={i.manualSwitching || next || active ? 'filled' : 'outlined'}
+                        variant={i.manualSwitching ? 'filled' : 'outlined'}
                         key={s.name}
                         color={color}
                         clickable={clickable}
+                        disabled={next}
                         onClick={() => {
                           if (clickable) sendSwitchManually(i.name, s.name);
                         }}
