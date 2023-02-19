@@ -18,7 +18,7 @@ import IntersectionEffects from '../intersection/intersection-effects';
 import CommandLineParser from '../command-line-parser';
 
 export default class AppEffects {
-  private debug = false;
+  private debug = true;
   private serverConfigFile: string;
   private eepDataEffects: EepDataEffects;
   private logEffects: LogEffects;
@@ -52,9 +52,11 @@ export default class AppEffects {
     socket.on(RoomEvent.JoinRoom, (rooms: { room: string }) => {
       if (rooms.room === SettingsEvent.Room) {
         const event = this.store.getEepDirOk() ? SettingsEvent.DirOk : SettingsEvent.DirError;
-        if (this.debug) console.log('EMIT ' + event + ' to ' + socket.id + this.getEepDirectory());
+        if (this.debug) console.log('EMIT ' + event + ' to ' + socket.id, this.getEepDirectory());
         socket.emit(SettingsEvent.Dir, this.getEepDirectory());
         socket.emit(event, this.getEepDirectory());
+        if (this.debug) console.log('EMIT ' + SettingsEvent.Host + ' to ' + socket.id, this.getHostname());
+        socket.emit(SettingsEvent.Host, this.getHostname());
       }
 
       if (rooms.room === ServerInfoEvent.Room) {
@@ -102,6 +104,10 @@ export default class AppEffects {
 
   public getEepDirectory(): string {
     return this.store.getEepDir();
+  }
+
+  public getHostname(): string {
+    return this.store.getHostname();
   }
 
   public saveEepDirectory(dir: string): void {

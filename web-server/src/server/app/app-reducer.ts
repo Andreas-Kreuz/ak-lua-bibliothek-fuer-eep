@@ -1,8 +1,10 @@
 import AppConfig from './app-config';
+import getHostName from './getHostname';
 
 export default class AppData {
   private appConfig = new AppConfig();
   private eepDirOk = false;
+  private hostName = getHostName();
 
   public setAppConfig(appConfig: AppConfig): void {
     this.appConfig = appConfig;
@@ -25,5 +27,9 @@ export default class AppData {
 
   public getEepDirOk(): boolean {
     return this.eepDirOk;
+  }
+
+  public getHostname(): string {
+    return this.hostName;
   }
 }

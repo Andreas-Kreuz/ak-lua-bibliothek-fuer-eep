@@ -7,6 +7,7 @@ import { Server } from 'socket.io';
 
 import AppEffects from './app/app-effects';
 import SocketService from './clientio/socket-service';
+import { networkInterfaces } from 'os';
 
 const app = express();
 const httpServer = createServer(app);
