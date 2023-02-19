@@ -21,7 +21,6 @@ export enum FileNames {
 export default class EepService implements CacheService {
   private dir: string;
   private lastLogFileSize: number;
-  private lastEventFileSize: number;
   private jsonFileWatcher: fs.FSWatcher;
   private logTail: Tail;
   private eventTail: Tail;
@@ -29,7 +28,6 @@ export default class EepService implements CacheService {
   private logLineAppeared: (line: string) => void;
   private eventLineAppeared: (line: string) => void;
   private logWasCleared: () => void;
-  private lastJsonUpdate: number;
 
   reInit(dir: string, callback: (err: string, dir: string) => void): void {
     this.disconnectFromFiles();
@@ -70,7 +68,7 @@ export default class EepService implements CacheService {
       console.log('Received: ' + jsonText.length + ' bytes of JSON ' + lastUpdate);
     };
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    this.eventLineAppeared = (line: string) => {
+    this.eventLineAppeared = () => {
       //console.log(line);
     };
     this.logLineAppeared = (line: string) => {
@@ -132,18 +130,17 @@ export default class EepService implements CacheService {
 
     // First start: Read the JSON file - ignore if EEP is ready
     if (!this.jsonFileWatcher) {
+      performance.mark('eep:start-wait-for-json');
       this.readJsonFile(jsonFile, jsonReadyFile);
     }
 
     // First start: Delete the EEP FINISHED file, so EEP will know we are ready
     this.deleteFileIfExists(jsonReadyFile);
-    performance.mark('eep:start-wait-for-json');
 
     // Watch in the directory, if the file is recreated
     this.jsonFileWatcher = fs.watch(this.dir, {}, (eventType: string, filename: string) => {
       // If the jsonReadyFile exists: Read the data and remove the file
       if (filename === FileNames.eepOutJsonOutFinished && fs.existsSync(jsonReadyFile)) {
-        this.lastJsonUpdate = performance.now();
         // console.log('Reading: ', jsonFile);
         this.readJsonFile(jsonFile, jsonReadyFile);
       }
