@@ -3,7 +3,7 @@ import { Key, ReactNode } from 'react';
 
 function AppCardGrid(props: { reactKey?: Key; children: ReactNode }) {
   return (
-    <Grid xs={12} md={6} xl={3} key={props.reactKey}>
+    <Grid xs={12} sm={6} md={4} lg={3} key={props.reactKey}>
       {props.children}
     </Grid>
   );
