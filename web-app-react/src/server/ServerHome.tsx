@@ -19,9 +19,9 @@ import Typography from '@mui/material/Typography';
 import CheckCircleOutlineRoundedIcon from '@mui/icons-material/CheckCircleOutlineRounded';
 import WarningRoundedIcon from '@mui/icons-material/WarningRounded';
 import QRCode from 'react-qr-code';
-import { useContext, useEffect, useState } from 'react';
-import { RoomEvent, ServerStatusEvent, SettingsEvent } from 'web-shared';
-import { SocketContext, socketUrl } from '../base/SocketProvidedApp';
+import { useContext, useState } from 'react';
+import { ServerStatusEvent, SettingsEvent } from 'web-shared';
+import { SocketContext } from '../base/SocketProvidedApp';
 import { useRoomHandler } from '../io/useRoomHandler';
 
 function ServerHome() {
