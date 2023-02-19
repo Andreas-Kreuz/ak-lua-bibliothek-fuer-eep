@@ -135,15 +135,22 @@ assert = function(v, message)
     return retval
 end
 
-local _clearlog = clearlog
---- Lösche Inhalt der log-Datei.
-function clearlog()
-    -- call the original clearlog function
+local function deleteLogFile()
+    --- Lösche Inhalt der log-Datei.
     local file = io.open(outFileNameLog, "w+")
     file:close()
     file = _assert(io.open(outFileNameLog, "a"))
     file:write("")
     file:close()
+end
+--- delete log file here!
+deleteLogFile()
+
+local _clearlog = clearlog
+function clearlog()
+    --- Lösche Inhalt der log-Datei.
+    deleteLogFile()
+    -- call the original clearlog function
     _clearlog()
 end
 
