@@ -16,7 +16,6 @@ const Li = styled('li')({
 
 function LogLinesView() {
   const log = useLog();
-  console.log(log);
 
   return (
     <Ul>
