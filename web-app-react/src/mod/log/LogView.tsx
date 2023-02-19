@@ -1,16 +1,15 @@
 import Paper from '@mui/material/Paper';
 import ArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import ArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import LogLinesView from './LogLinesView';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import Divider from '@mui/material/Divider';
+import Typography from '@mui/material/Typography';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
-import Slide from '@mui/material/Slide';
-import Divider from '@mui/material/Divider';
-import Collapse from '@mui/material/Collapse';
 import { useState } from 'react';
 import { TransitionGroup } from 'react-transition-group';
+import LogLinesView from './LogLinesView';
 
 function LogView() {
   const theme = useTheme();
@@ -55,11 +54,18 @@ function LogView() {
           <Box
             sx={{
               display: 'flex',
+              alignItems: 'center',
               justifyContent: 'flex-end',
               mr: open ? 2 : 0,
               transition: theme.transitions.create(['margin-right'], transitionOptions),
             }}
           >
+            {open && (
+              <Typography variant="body1" sx={{ px: 1, py: 0.5 }}>
+                EEP Log
+              </Typography>
+            )}
+            {open && <Box sx={{ flexGrow: 1 }} />}
             <Button
               variant="text"
               startIcon={open ? <ArrowDownIcon /> : <ArrowUpIcon />}
