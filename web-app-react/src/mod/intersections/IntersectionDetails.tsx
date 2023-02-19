@@ -3,7 +3,7 @@ import Stack from '@mui/material/Stack';
 import Chip from '@mui/material/Chip';
 import useIntersection from './useIntersection';
 import useIntersectionSwitching from './useIntersectionSwitching';
-import { useMatches } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import AppPaper from '../../ui/AppPaper';
 import AppHeadline from '../../ui/AppHeadline';
 import AppBackButton from '../../ui/AppBackButton';
@@ -20,8 +20,8 @@ import styled from '@mui/system/styled';
 function IntersectionDetails() {
   const theme = useTheme();
   const socket = useContext(SocketContext);
-  const matches = useMatches();
-  const id = parseInt(matches[0].params.intersectionId || '555');
+  const { intersectionId } = useParams();
+  const id = parseInt(intersectionId || '555');
   const i = useIntersection(id);
   const switchings = useIntersectionSwitching(i?.name);
 
