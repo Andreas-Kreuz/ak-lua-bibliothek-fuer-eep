@@ -18,6 +18,7 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import CheckCircleOutlineRoundedIcon from '@mui/icons-material/CheckCircleOutlineRounded';
 import WarningRoundedIcon from '@mui/icons-material/WarningRounded';
+import QRCode from 'react-qr-code';
 import { useContext, useEffect, useState } from 'react';
 import { RoomEvent, ServerStatusEvent, SettingsEvent } from 'web-shared';
 import { SocketContext, socketUrl } from '../base/SocketProvidedApp';
@@ -81,37 +82,62 @@ end`;
   const eepInstallations = ['C:\\Trend\\EEP17', 'C:\\Trend\\EEP16'];
 
   return (
-    <Stack spacing={3} sx={{ padding: 5 }}>
+    <Stack spacing={3} sx={{ padding: 3 }}>
       {directoryOk ? (
-        <Alert
-          severity="success"
-          sx={{
-            border: 1,
-            borderColor: 'success.main',
-            py: 1,
-            pl: 2,
-            pr: 3,
-            alignItems: 'center',
-          }}
-          icon={<CheckCircleOutlineRoundedIcon />}
-          action={
-            <Link href={webAppUrl} target="_blank" rel="noreferrer" underline="none">
-              <Button id="App öffnen" variant="contained" color={'success'}>
-                App öffnen
-              </Button>
-            </Link>
-          }
-        >
-          <Typography variant="body1">Es ist alles bereit. Du kannst die App öffnen.</Typography>
-          <Typography variant="body2">{webAppUrl}</Typography>
-        </Alert>
+        <>
+          <Alert
+            severity="success"
+            sx={{
+              border: 1,
+              borderColor: 'success.main',
+              py: 1,
+              pl: 2,
+              pr: 3,
+              alignItems: 'center',
+            }}
+            icon={<CheckCircleOutlineRoundedIcon />}
+            action={
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Link href={webAppUrl} target="_blank" rel="noreferrer" underline="none" sx={{ ml: 4 }}>
+                  <Button id="App öffnen" variant="contained" color={'success'}>
+                    App öffnen
+                  </Button>
+                </Link>
+              </Box>
+            }
+          >
+            <Typography variant="body1">Es ist alles bereit. Du kannst die App öffnen.</Typography>
+            {/* <Typography variant="body2">{webAppUrl}</Typography> */}
+          </Alert>
+          <Paper
+            elevation={0}
+            sx={{
+              border: 1,
+              borderColor: '#aaaaaa',
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'flex-start',
+              py: 1,
+              px: 2,
+              pr: 3,
+            }}
+          >
+            <CheckCircleOutlineRoundedIcon sx={{ mr: 1.5, color: 'success.main' }} />
+            <Typography variant="body1" sx={{ flexGrow: 1 }}>
+              App mit Smartphone oder Tablet öffnen.
+            </Typography>
+            <QRCode value={webAppUrl} size={64} />
+          </Paper>
+        </>
       ) : (
         ''
       )}
       <Paper
-        elevation={0}
+        variant="outlined"
         sx={{
-          border: 1,
+          p: 0,
+          borderWidth: 1,
           borderColor: '#aaaaaa',
         }}
       >
@@ -122,7 +148,7 @@ end`;
                 ''
               ) : (
                 <div>
-                  <Alert severity="warning" sx={{ m: -2, mb: 2 }} icon={<WarningRoundedIcon />}>
+                  <Alert severity="warning" sx={{ mt: 1, mb: 2 }} icon={<WarningRoundedIcon />}>
                     <Typography variant="body1" gutterBottom>
                       Bevor es losgeht, muss Du nur noch den Ordner von EEP angeben.
                     </Typography>
@@ -194,7 +220,7 @@ end`;
             <ListItem>
               <Stack sx={{ width: 1 }}>
                 <div>
-                  <Alert severity="warning" sx={{ mx: -2, mb: 2 }} icon={<WarningRoundedIcon />}>
+                  <Alert severity="warning" sx={{ mx: 0, mb: 2 }} icon={<WarningRoundedIcon />}>
                     Es wurden keine Daten von EEP gesammelt.
                     <br />
                     Stelle sicher, dass Du den folgenden Lua-Code in EEP eingetragen hast.

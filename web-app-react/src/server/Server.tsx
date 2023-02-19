@@ -9,13 +9,14 @@ function Server() {
   return (
     <div className="Server">
       <Box sx={{ minHeight: '100vh' }}>
-        <AppBar position="static">
+        <AppBar>
           <Toolbar>
             <Typography variant="h6" component="div" sx={{ flexGrow: 1, display: 'block' }}>
               Web-Server für EEP
             </Typography>
           </Toolbar>
         </AppBar>
+        <Toolbar />
         <ServerHome />
       </Box>
     </div>
