@@ -21,9 +21,7 @@ function LogLinesView() {
   return (
     <Ul>
       {log.map((l) => (
-        <Li key={l.key}>
-          {l.key.toLocaleString()} {l.line}
-        </Li>
+        <Li key={l.key}>{l.line}</Li>
       ))}
     </Ul>
   );

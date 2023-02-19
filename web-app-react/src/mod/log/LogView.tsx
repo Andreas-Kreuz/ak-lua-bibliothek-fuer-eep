@@ -48,7 +48,7 @@ function LogView() {
             m: 0,
             mr: open ? 0 : 2,
             p: 0,
-            maxHeight: open ? '50vh' : '150px',
+            maxHeight: open ? 'calc(100vh - 60px)' : '150px',
             transition: theme.transitions.create(['max-width', 'max-height', 'margin-right'], transitionOptions),
           }}
         >
