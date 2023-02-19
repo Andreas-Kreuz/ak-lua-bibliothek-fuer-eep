@@ -9,7 +9,7 @@ function createWindow() {
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 800,
-    height: 600,
+    height: 700,
     webPreferences: {
       preload: path.join(__dirname, '/preload/index.js'),
     },
@@ -21,6 +21,8 @@ function createWindow() {
   // User App Code
   const server = new ServerMain(path.resolve(electron.app.getPath('appData'), 'eep-web-server'));
   server.start();
+
+  mainWindow.webContents.session.clearCache();
 
   // and load the index.html of the app.
   // mainWindow.loadFile(path.join(__dirname, '../index.html'));
