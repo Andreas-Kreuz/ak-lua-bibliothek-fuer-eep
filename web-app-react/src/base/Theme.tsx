@@ -28,6 +28,12 @@ export const theme = createTheme({
     borderRadius: borderRadius,
   },
   components: {
+    MuiAppBar: {
+      defaultProps: {
+        variant: 'elevation',
+        elevation: 10,
+      },
+    },
     MuiCardMedia: {
       styleOverrides: {
         root: {
