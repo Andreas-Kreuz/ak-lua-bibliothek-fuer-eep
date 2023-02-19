@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { Outlet } from 'react-router-dom';
+import LogView from '../mod/log/LogView';
 
 function AppHome() {
   return (
@@ -21,6 +22,7 @@ function AppHome() {
         <Toolbar />
         <Outlet />
       </Box>
+      <LogView />
     </div>
   );
 }
