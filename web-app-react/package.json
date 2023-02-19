@@ -3,6 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "commonjs",
+  "homepage": ".",
   "scripts": {
     "dev": "npm run build --prefix ../web-shared && vite --host",
     "build": "npm run build --prefix ../web-shared && tsc && vite build",
@@ -25,6 +26,7 @@
     "@mui/material": "^5.11.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-qr-code": "^2.0.11",
     "react-router-dom": "^6.6.1",
     "socket.io-client": "^4.5.4",
     "web-shared": "file:../web-shared",
