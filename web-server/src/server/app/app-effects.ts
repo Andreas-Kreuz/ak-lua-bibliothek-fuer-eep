@@ -53,7 +53,6 @@ export default class AppEffects {
       if (rooms.room === SettingsEvent.Room) {
         const event = this.store.getEepDirOk() ? SettingsEvent.DirOk : SettingsEvent.DirError;
         if (this.debug) console.log('EMIT ' + event + ' to ' + socket.id, this.getEepDirectory());
-        socket.emit(SettingsEvent.Dir, this.getEepDirectory());
         socket.emit(event, this.getEepDirectory());
         if (this.debug) console.log('EMIT ' + SettingsEvent.Host + ' to ' + socket.id, this.getHostname());
         socket.emit(SettingsEvent.Host, this.getHostname());
@@ -136,6 +135,9 @@ export default class AppEffects {
         this.saveEepDirectory(eepDir);
         this.io.to(SettingsEvent.Room).emit(SettingsEvent.DirError, eepDir);
       }
+
+      if (this.debug) console.log('EMIT ' + SettingsEvent.Host, this.getHostname());
+      this.io.to(SettingsEvent.Room).emit(SettingsEvent.Host, this.store.getHostname());
     });
   }
 

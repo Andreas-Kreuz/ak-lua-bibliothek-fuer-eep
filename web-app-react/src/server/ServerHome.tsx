@@ -20,16 +20,20 @@ import CheckCircleOutlineRoundedIcon from '@mui/icons-material/CheckCircleOutlin
 import WarningRoundedIcon from '@mui/icons-material/WarningRounded';
 import { useContext, useEffect, useState } from 'react';
 import { RoomEvent, ServerStatusEvent, SettingsEvent } from 'web-shared';
-import { SocketContext } from '../base/SocketProvidedApp';
+import { SocketContext, socketUrl } from '../base/SocketProvidedApp';
+import { useRoomHandler } from '../io/useRoomHandler';
 
 function ServerHome() {
-  const webAppUrl = window.location.protocol + '//' + window.location.hostname + ':3000';
+  const [serverHost, setServerHost] = useState<string>();
   const [directoryName, setDirectoryName] = useState<string>('-');
   const [editedDirectoryName, setEditedDirectoryName] = useState<string>(directoryName);
   const [directoryOk, setDirectoryOk] = useState(false);
   const [data, setData] = useState<string[]>([]);
   const [eventCount, setEventCount] = useState(0);
   const [open, setOpen] = useState(false);
+
+  const webAppUrl =
+    window.location.protocol + '//' + (serverHost ? serverHost : window.location.hostname) + ':' + window.location.port;
 
   const code = `local ModuleRegistry = require("ak.core.ModuleRegistry")
 ModuleRegistry.registerModules(require("ak.core.CoreLuaModule"))
@@ -41,52 +45,26 @@ end`;
 
   const socket = useContext(SocketContext);
 
-  useEffect(() => {
-    socket.on(ServerStatusEvent.UrlsChanged, (payload: string) => {
-      const urls: string[] = JSON.parse(payload);
-      setData(urls);
-      console.log(payload);
-    });
-    socket.on(ServerStatusEvent.CounterUpdated, (payload: string) => {
-      const eventCounter: number = JSON.parse(payload);
-      setEventCount(eventCounter);
-    });
+  useRoomHandler(ServerStatusEvent.Room, ServerStatusEvent.UrlsChanged, (payload: string) => {
+    const urls: string[] = JSON.parse(payload);
+    setData(urls);
+  });
+  useRoomHandler(ServerStatusEvent.Room, ServerStatusEvent.CounterUpdated, (payload: string) => {
+    const eventCounter: number = JSON.parse(payload);
+    setEventCount(eventCounter);
+  });
 
-    const room = ServerStatusEvent.Room;
-    socket.emit(RoomEvent.JoinRoom, { room });
-
-    return () => {
-      socket.off(ServerStatusEvent.UrlsChanged);
-      socket.off(ServerStatusEvent.CounterUpdated);
-      socket.emit(RoomEvent.LeaveRoom, { room });
-    };
-  }, [socket]);
-
-  useEffect(() => {
-    socket.on(SettingsEvent.DirOk, (payload: string) => {
-      setDirectoryOk(true);
-      setDirectoryName(payload);
-      setEditedDirectoryName(payload);
-    });
-    socket.on(SettingsEvent.DirError, (payload: string) => {
-      setDirectoryOk(false);
-      setDirectoryName(payload);
-      setEditedDirectoryName(payload);
-    });
-
-    const room = SettingsEvent.Room;
-    socket.emit(RoomEvent.JoinRoom, { room });
-
-    return () => {
-      socket.off(SettingsEvent.DirOk);
-      socket.off(SettingsEvent.DirError);
-      socket.emit(RoomEvent.LeaveRoom, { room });
-    };
-  }, [socket]);
-
-  const handleChangeDirectory = (eepDir: string) => {
-    socket.emit(SettingsEvent.ChangeDir, eepDir);
-  };
+  useRoomHandler(SettingsEvent.Room, SettingsEvent.Host, (payload) => setServerHost(payload));
+  useRoomHandler(SettingsEvent.Room, SettingsEvent.DirOk, (payload: string) => {
+    setDirectoryOk(true);
+    setDirectoryName(payload);
+    setEditedDirectoryName(payload);
+  });
+  useRoomHandler(SettingsEvent.Room, SettingsEvent.DirError, (payload: string) => {
+    setDirectoryOk(false);
+    setDirectoryName(payload);
+    setEditedDirectoryName(payload);
+  });
 
   const handleClickOpen = () => {
     setEditedDirectoryName(directoryName);
@@ -125,6 +103,7 @@ end`;
           }
         >
           <Typography variant="body1">Es ist alles bereit. Du kannst die App öffnen.</Typography>
+          <Typography variant="body2">{webAppUrl}</Typography>
         </Alert>
       ) : (
         ''

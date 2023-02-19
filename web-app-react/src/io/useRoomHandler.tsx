@@ -28,9 +28,9 @@ export function useRoomHandler(roomName: string, eventName: string, handler: (da
   useEffect(() => {
     if (socketIsConnected) {
       if (roomJoined) {
-        // console.log('Join Room (skipped): ', roomName);
+        console.log('Join Room (skipped): ', roomName);
       } else {
-        // console.log('Join Room: ', roomName, 'for Event:', eventName);
+        console.log('Join Room: ', roomName, 'for Event:', eventName);
         socket.emit(RoomEvent.JoinRoom, { room: roomName });
         setRoomJoined(true);
       }
