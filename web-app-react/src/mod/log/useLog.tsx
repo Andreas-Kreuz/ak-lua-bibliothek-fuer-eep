@@ -34,6 +34,7 @@ function useLog(): { line: string; key: number }[] {
 
   useRoomHandler(LogEvent.Room, LogEvent.LinesAdded, (data: string) => {
     const fetchedLines = data.split('\n');
+    // console.log('Dispatch:', fetchedLines);
     dispatch({ type: 'added', fetchedLines });
   });
 

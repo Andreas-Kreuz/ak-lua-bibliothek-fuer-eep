@@ -15,6 +15,7 @@ export function useRoomHandler(roomName: string, eventName: string, handler: (da
   // Register for the rooms data
   useEffect(() => {
     socket.on(eventName, (payload: string) => {
+      // console.log('Handle: ', eventName, '(', roomName, '):', payload);
       handler(payload);
     });
 
@@ -27,14 +28,16 @@ export function useRoomHandler(roomName: string, eventName: string, handler: (da
   useEffect(() => {
     if (socketIsConnected) {
       if (roomJoined) {
-        // console.log('Skip joining ' + room);
+        // console.log('Join Room (skipped): ', roomName);
       } else {
+        // console.log('Join Room: ', roomName, 'for Event:', eventName);
         socket.emit(RoomEvent.JoinRoom, { room: roomName });
         setRoomJoined(true);
       }
     }
 
     return () => {
+      // console.log('Leave Room: ', roomName, 'Sockect connected: ' + socket.connected);
       if (roomJoined) {
         if (socket.connected) {
           socket.emit(RoomEvent.LeaveRoom, { room: roomName });
