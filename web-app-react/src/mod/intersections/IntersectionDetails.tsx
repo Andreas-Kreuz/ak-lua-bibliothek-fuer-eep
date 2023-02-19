@@ -6,7 +6,6 @@ import useIntersectionSwitching from './useIntersectionSwitching';
 import { useParams } from 'react-router-dom';
 import AppPaper from '../../ui/AppPaper';
 import AppHeadline from '../../ui/AppHeadline';
-import AppBackButton from '../../ui/AppBackButton';
 import { useContext } from 'react';
 import { SocketContext } from '../../base/SocketProvidedApp';
 import { CommandEvent, IntersectionEvent } from 'web-shared';
@@ -54,9 +53,7 @@ function IntersectionDetails() {
           <AppPaper
           // image="/assets/card-img-intersection.jpg"
           >
-            <AppHeadline gutterBottom>
-              <AppBackButton to="/intersections" /> Kreuzung {i.id}
-            </AppHeadline>
+            <AppHeadline gutterBottom>Kreuzung {i.id}</AppHeadline>
             <Chip label={i.name} />
             <Stack
               direction="row"
