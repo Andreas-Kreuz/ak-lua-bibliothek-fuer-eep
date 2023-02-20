@@ -123,7 +123,7 @@ end`;
             }
           >
             <Typography variant="body1">Es ist alles bereit. Du kannst die App öffnen.</Typography>
-            {/* <Typography variant="body2">{webAppUrl}</Typography> */}
+            <Typography variant="body2">{webAppUrl}</Typography>
           </Alert>
           <Paper
             elevation={0}
@@ -140,9 +140,10 @@ end`;
             }}
           >
             <CheckCircleOutlineRoundedIcon sx={{ mr: 1.5, color: 'success.main' }} />
-            <Typography variant="body1" sx={{ flexGrow: 1 }}>
-              App mit Smartphone oder Tablet öffnen.
-            </Typography>
+            <Box sx={{ flexGrow: 1 }}>
+              <Typography variant="body1">Scanne den QR-Code rechts mit Deinem Tablet oder Smartphone.</Typography>
+              <Typography variant="body2">Dein Smartphone muss dazu im selben WLAN sein.</Typography>
+            </Box>
             <QRCode value={webAppUrl} size={64} />
           </Paper>
         </>
