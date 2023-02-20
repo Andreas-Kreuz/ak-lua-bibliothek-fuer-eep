@@ -18,11 +18,10 @@ export function useRoomHandler(
   useEffect(() => {
     eventHandlers.map((h) => {
       socket.on(h.eventName, (payload: string) => {
+        console.log('HANDLING', h.eventName);
         h.handler(payload);
       });
     });
-
-    socket.emit(RoomEvent.JoinRoom, { room: roomName });
 
     return () => {
       socket.emit(RoomEvent.LeaveRoom, { room: roomName });
@@ -31,4 +30,9 @@ export function useRoomHandler(
       });
     };
   }, [socket, socketIsConnected]);
+
+  // Join the room ONCE
+  useEffect(() => {
+    socket.emit(RoomEvent.JoinRoom, { room: roomName });
+  }, [socket]);
 }

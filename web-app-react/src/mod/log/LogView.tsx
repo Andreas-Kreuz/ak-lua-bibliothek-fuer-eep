@@ -8,23 +8,36 @@ import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
-import { useContext, useState } from 'react';
+import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { LogEvent, RoomEvent } from 'web-shared';
 import { SocketContext } from '../../base/SocketProvidedApp';
 import LogLinesView from './LogLinesView';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Switch from '@mui/material/Switch';
 
 function LogView() {
   const socket = useContext(SocketContext);
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('md'));
   const [open, setOpen] = useState(true);
-  theme.transitions.create(['background-color', 'transform']);
+  const [autoScroll, setAutoScroll] = useState(true);
+  const scrollTopRef = useRef(-1);
+  const listRef = useRef<HTMLUListElement>();
+
+  const onScroll = () => {
+    const scrollY = window.scrollY;
+    // console.log(`onScroll, window.scrollY: ${scrollY} listRef.scrollTop: ${listRef.current?.scrollTop}`);
+    if (listRef.current) {
+      if (listRef.current.scrollTop < scrollTopRef.current) {
+        setAutoScroll(false);
+      }
+      scrollTopRef.current = listRef.current.scrollTop;
+    }
+  };
 
   function clearLog() {
     socket.emit(LogEvent.ClearLog);
   }
-
-  socket.emit(RoomEvent.JoinRoom, { room: LogEvent.Room });
 
   const transitionOptions = {
     easing: theme.transitions.easing.easeInOut,
@@ -71,6 +84,13 @@ function LogView() {
               </Typography>
 
               <Box sx={{ flexGrow: 1 }} />
+              <FormControlLabel
+                value="end"
+                control={<Switch color="primary" checked={autoScroll} onChange={() => setAutoScroll(!autoScroll)} />}
+                label="Log folgen"
+                labelPlacement="end"
+              />
+              <Divider orientation="vertical" variant="middle" flexItem />
               <Button
                 variant="text"
                 startIcon={<DeleteIcon />}
@@ -82,6 +102,7 @@ function LogView() {
               >
                 Log löschen
               </Button>
+              <Divider orientation="vertical" variant="middle" flexItem />
             </>
           )}
           <Button
@@ -94,17 +115,20 @@ function LogView() {
             {open ? 'Log verbergen' : 'Log anzeigen'}
           </Button>
         </Box>
+        {open && <Divider />}
         <Box
-          height={open ? '14em' : 0}
+          ref={listRef}
+          height={open ? '14.2em' : 0}
           width={open ? 'calc(100vw)' : 0}
+          onScroll={onScroll}
           sx={{
             overflow: 'auto',
+            pt: open ? 1 : 0,
             px: open ? 1 : 0,
             transition: theme.transitions.create(['width', 'height'], transitionOptions),
           }}
         >
-          {open && <Divider sx={{ mb: 1 }} />}
-          {open && <LogLinesView />}
+          {open && <LogLinesView autoScroll={autoScroll} />}
         </Box>
       </Paper>
     </Box>

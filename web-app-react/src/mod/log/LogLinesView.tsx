@@ -1,5 +1,5 @@
 import { styled } from '@mui/material/styles';
-import { useReducer } from 'react';
+import { createRef, ReactNode, useEffect, useReducer, useRef, useState } from 'react';
 import { LogEvent, RoomEvent } from 'web-shared';
 import { useRoomHandler } from '../../io/useRoomHandler';
 
@@ -31,7 +31,7 @@ const reducer = (
           newLines.push({ line: l, key: ++counter });
         }
       }
-      while (newLines.length > 10) {
+      while (newLines.length > 5000) {
         newLines.shift();
       }
       return { ...state, lines: newLines };
@@ -44,9 +44,10 @@ const reducer = (
   }
 };
 
-function LogLinesView() {
+function LogLinesView(props: { autoScroll?: boolean }) {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const roomName = LogEvent.Room;
+  const log: { line: string; key: number }[] = state.lines;
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   // Register for the rooms data
   const eventHandlers = [
@@ -65,15 +66,24 @@ function LogLinesView() {
     },
   ];
 
-  useRoomHandler(RoomEvent.JoinRoom, eventHandlers);
+  useRoomHandler(LogEvent.Room, eventHandlers);
 
-  const log: { line: string; key: number }[] = state.lines;
+  const scrollToBottom = () => {
+    if (props.autoScroll) {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [log, props.autoScroll]);
 
   return (
     <List>
       {log.map((l) => (
         <Entry key={l.key}>{l.line}</Entry>
       ))}
+      <div ref={messagesEndRef} />
     </List>
   );
 }
