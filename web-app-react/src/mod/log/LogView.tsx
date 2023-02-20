@@ -9,10 +9,9 @@ import Typography from '@mui/material/Typography';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { useContext, useState } from 'react';
-import { TransitionGroup } from 'react-transition-group';
-import LogLinesView from './LogLinesView';
-import { LogEvent } from 'web-shared';
+import { LogEvent, RoomEvent } from 'web-shared';
 import { SocketContext } from '../../base/SocketProvidedApp';
+import LogLinesView from './LogLinesView';
 
 function LogView() {
   const socket = useContext(SocketContext);
@@ -25,16 +24,14 @@ function LogView() {
     socket.emit(LogEvent.ClearLog);
   }
 
-  if (!matches) {
-    return <></>;
-  }
+  socket.emit(RoomEvent.JoinRoom, { room: LogEvent.Room });
 
   const transitionOptions = {
     easing: theme.transitions.easing.easeInOut,
     duration: theme.transitions.duration.enteringScreen,
   };
 
-  return (
+  const innerBox = (
     <Box>
       <Paper
         variant="elevation"
@@ -107,11 +104,13 @@ function LogView() {
           }}
         >
           {open && <Divider sx={{ mb: 1 }} />}
-          {open && <LogLinesView />}
+          {open && <LogLinesView id={Math.random()} />}
         </Box>
       </Paper>
     </Box>
   );
+
+  return <>{matches && innerBox}</>;
 }
 
 export default LogView;
