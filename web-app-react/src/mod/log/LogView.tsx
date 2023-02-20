@@ -104,7 +104,7 @@ function LogView() {
           }}
         >
           {open && <Divider sx={{ mb: 1 }} />}
-          {open && <LogLinesView id={Math.random()} />}
+          {open && <LogLinesView />}
         </Box>
       </Paper>
     </Box>

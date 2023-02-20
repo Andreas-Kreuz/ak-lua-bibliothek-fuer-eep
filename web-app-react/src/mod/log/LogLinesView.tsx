@@ -44,7 +44,7 @@ const reducer = (
   }
 };
 
-function LogLinesView(props: { id?: number }) {
+function LogLinesView() {
   const [state, dispatch] = useReducer(reducer, initialState);
   const roomName = LogEvent.Room;
 
