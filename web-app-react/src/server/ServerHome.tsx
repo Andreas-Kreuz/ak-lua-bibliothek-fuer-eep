@@ -46,26 +46,42 @@ end`;
 
   const socket = useContext(SocketContext);
 
-  useRoomHandler(ServerStatusEvent.Room, ServerStatusEvent.UrlsChanged, (payload: string) => {
-    const urls: string[] = JSON.parse(payload);
-    setData(urls);
-  });
-  useRoomHandler(ServerStatusEvent.Room, ServerStatusEvent.CounterUpdated, (payload: string) => {
-    const eventCounter: number = JSON.parse(payload);
-    setEventCount(eventCounter);
-  });
+  useRoomHandler(ServerStatusEvent.Room, [
+    {
+      eventName: ServerStatusEvent.UrlsChanged,
+      handler: (payload: string) => {
+        const urls: string[] = JSON.parse(payload);
+        setData(urls);
+      },
+    },
+    {
+      eventName: ServerStatusEvent.CounterUpdated,
+      handler: (payload: string) => {
+        const eventCounter: number = JSON.parse(payload);
+        setEventCount(eventCounter);
+      },
+    },
+  ]);
 
-  useRoomHandler(SettingsEvent.Room, SettingsEvent.Host, (payload) => setServerHost(payload));
-  useRoomHandler(SettingsEvent.Room, SettingsEvent.DirOk, (payload: string) => {
-    setDirectoryOk(true);
-    setDirectoryName(payload);
-    setEditedDirectoryName(payload);
-  });
-  useRoomHandler(SettingsEvent.Room, SettingsEvent.DirError, (payload: string) => {
-    setDirectoryOk(false);
-    setDirectoryName(payload);
-    setEditedDirectoryName(payload);
-  });
+  useRoomHandler(SettingsEvent.Room, [
+    { eventName: SettingsEvent.Host, handler: (payload) => setServerHost(payload) },
+    {
+      eventName: SettingsEvent.DirOk,
+      handler: (payload: string) => {
+        setDirectoryOk(true);
+        setDirectoryName(payload);
+        setEditedDirectoryName(payload);
+      },
+    },
+    {
+      eventName: SettingsEvent.DirError,
+      handler: (payload: string) => {
+        setDirectoryOk(false);
+        setDirectoryName(payload);
+        setEditedDirectoryName(payload);
+      },
+    },
+  ]);
 
   const handleClickOpen = () => {
     setEditedDirectoryName(directoryName);
