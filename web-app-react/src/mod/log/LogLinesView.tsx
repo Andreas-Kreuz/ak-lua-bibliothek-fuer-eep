@@ -1,13 +1,13 @@
 import styled from '@mui/system/styled';
 import useLog from './useLog';
 
-const Ul = styled('ul')({
+const List = styled('ul')({
   m: 0,
   p: 0,
   marginBlock: 0,
   paddingInlineStart: 0,
 });
-const Li = styled('li')({
+const Entry = styled('li')({
   fontSize: 14,
   fontFamily: 'monospace',
   listStyleType: 'none',
@@ -18,11 +18,11 @@ function LogLinesView() {
   const log = useLog();
 
   return (
-    <Ul>
+    <List>
       {log.map((l) => (
-        <Li key={l.key}>{l.line}</Li>
+        <Entry key={l.key}>{l.line}</Entry>
       ))}
-    </Ul>
+    </List>
   );
 }
 
