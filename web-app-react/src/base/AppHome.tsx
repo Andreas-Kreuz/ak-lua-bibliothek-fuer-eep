@@ -4,9 +4,9 @@ import { useTheme } from '@mui/material/styles';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { Outlet } from 'react-router-dom';
-import LogView from '../mod/log/LogView';
 import AppBackButton from '../ui/AppBackButton';
 import { Link as RouterLink } from 'react-router-dom';
+import LogMod from '../mod/log/LogMod';
 
 function AppHome() {
   const theme = useTheme();
@@ -29,7 +29,7 @@ function AppHome() {
         <Toolbar />
         <Outlet />
       </Box>
-      <LogView />
+      <LogMod />
     </div>
   );
 }
