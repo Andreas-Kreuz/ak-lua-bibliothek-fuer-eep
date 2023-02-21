@@ -8,8 +8,8 @@ import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
-import { useCallback, useContext, useEffect, useRef, useState } from 'react';
-import { LogEvent, RoomEvent } from 'web-shared';
+import { useContext, useState } from 'react';
+import { LogEvent } from 'web-shared';
 import { SocketContext } from '../../base/SocketProvidedApp';
 import LogLines from './LogLines';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -21,24 +21,12 @@ function LogPanel() {
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('md'));
   const [open, setOpen] = useState(true);
-  const autoScroll = useLog()?.autoScroll;
+  const logState = useLog();
+  const autoScroll = logState?.autoScroll;
   const logDispatch = useLogDispatch();
-  const scrollTopRef = useRef(-1);
-  const listRef = useRef<HTMLUListElement>();
 
   const setAutoScroll = (autoScroll: boolean) => {
     logDispatch && logDispatch({ type: 'setAutoScroll', autoScroll: autoScroll });
-  };
-
-  const onScroll = () => {
-    const scrollY = window.scrollY;
-    // console.log(`onScroll, window.scrollY: ${scrollY} listRef.scrollTop: ${listRef.current?.scrollTop}`);
-    if (listRef.current) {
-      if (listRef.current.scrollTop < scrollTopRef.current) {
-        setAutoScroll(false);
-      }
-      scrollTopRef.current = listRef.current.scrollTop;
-    }
   };
 
   function clearLog() {
@@ -123,14 +111,11 @@ function LogPanel() {
         </Box>
         {open && <Divider />}
         <Box
-          ref={listRef}
           height={open ? '14.2em' : 0}
           width={open ? 'calc(100vw)' : 0}
-          onScroll={onScroll}
           sx={{
-            overflow: 'auto',
-            pt: open ? 1 : 0,
-            px: open ? 1 : 0,
+            pt: 0,
+            px: 0,
             transition: theme.transitions.create(['width', 'height'], transitionOptions),
           }}
         >
