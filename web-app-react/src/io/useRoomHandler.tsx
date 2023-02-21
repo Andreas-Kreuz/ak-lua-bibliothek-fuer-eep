@@ -18,7 +18,6 @@ export function useRoomHandler(
   useEffect(() => {
     eventHandlers.map((h) => {
       socket.on(h.eventName, (payload: string) => {
-        console.log('HANDLING', h.eventName);
         h.handler(payload);
       });
     });
