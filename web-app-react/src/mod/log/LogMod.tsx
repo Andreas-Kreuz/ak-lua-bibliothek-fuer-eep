@@ -1,10 +1,10 @@
 import { LogProvider } from './LogProvider';
-import LogView from './LogView';
+import LogPanel from './LogPanel';
 
 const LogMod = () => {
   return (
     <LogProvider>
-      <LogView />
+      <LogPanel />
     </LogProvider>
   );
 };

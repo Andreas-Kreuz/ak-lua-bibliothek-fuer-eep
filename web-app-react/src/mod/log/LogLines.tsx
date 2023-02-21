@@ -16,20 +16,20 @@ const Entry = styled('li')({
   whiteSpace: 'pre',
 });
 
-function LogLinesView(props: { autoScroll?: boolean }) {
+function LogLines() {
   const log = useLog()?.lines;
-  const log2 = useLog()?.lines;
+  const autoScroll = useLog()?.autoScroll;
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   const scrollToBottom = () => {
-    if (props.autoScroll) {
+    if (autoScroll) {
       messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
   useEffect(() => {
     scrollToBottom();
-  }, [log, props.autoScroll]);
+  }, [log, autoScroll]);
 
   return (
     <List>
@@ -41,4 +41,4 @@ function LogLinesView(props: { autoScroll?: boolean }) {
   );
 }
 
-export default LogLinesView;
+export default LogLines;

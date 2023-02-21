@@ -11,18 +11,24 @@ import { useTheme } from '@mui/material/styles';
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { LogEvent, RoomEvent } from 'web-shared';
 import { SocketContext } from '../../base/SocketProvidedApp';
-import LogLinesView from './LogLinesView';
+import LogLines from './LogLines';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
+import { useLog, useLogDispatch } from './LogProvider';
 
-function LogView() {
+function LogPanel() {
   const socket = useContext(SocketContext);
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('md'));
   const [open, setOpen] = useState(true);
-  const [autoScroll, setAutoScroll] = useState(true);
+  const autoScroll = useLog()?.autoScroll;
+  const logDispatch = useLogDispatch();
   const scrollTopRef = useRef(-1);
   const listRef = useRef<HTMLUListElement>();
+
+  const setAutoScroll = (autoScroll: boolean) => {
+    logDispatch && logDispatch({ type: 'setAutoScroll', autoScroll: autoScroll });
+  };
 
   const onScroll = () => {
     const scrollY = window.scrollY;
@@ -128,7 +134,7 @@ function LogView() {
             transition: theme.transitions.create(['width', 'height'], transitionOptions),
           }}
         >
-          {open && <LogLinesView autoScroll={autoScroll} />}
+          {open && <LogLines />}
         </Box>
       </Paper>
     </Box>
@@ -137,4 +143,4 @@ function LogView() {
   return <>{matches && innerBox}</>;
 }
 
-export default LogView;
+export default LogPanel;

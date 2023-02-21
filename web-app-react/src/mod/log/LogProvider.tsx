@@ -2,11 +2,17 @@ import { createContext, Dispatch, ReactNode, useContext, useReducer } from 'reac
 import { LogEvent } from 'web-shared';
 import { useRoomHandler } from '../../io/useRoomHandler';
 
-type LogState = { lines: { line: string; key: number }[] };
+type LogState = {
+  lines: { line: string; key: number }[];
+  autoScroll: boolean;
+};
 
-type LogDispatch = { type: 'added'; fetchedLines: string[] } | { type: 'cleared' };
+type LogDispatch =
+  | { type: 'added'; fetchedLines: string[] }
+  | { type: 'cleared' }
+  | { type: 'setAutoScroll'; autoScroll: boolean };
 
-const initialState = { lines: [] };
+const initialState = { lines: [], autoScroll: true };
 
 const reducer = (state: LogState, action: LogDispatch) => {
   switch (action.type) {
@@ -25,6 +31,9 @@ const reducer = (state: LogState, action: LogDispatch) => {
     }
     case 'cleared': {
       return { ...state, lines: [] };
+    }
+    case 'setAutoScroll': {
+      return { ...state, autoScroll: action.autoScroll };
     }
     default:
       throw Error();
