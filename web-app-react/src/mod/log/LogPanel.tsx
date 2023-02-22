@@ -20,7 +20,7 @@ function LogPanel() {
   const socket = useContext(SocketContext);
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('md'));
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const logState = useLog();
   const autoScroll = logState?.autoScroll;
   const logDispatch = useLogDispatch();
