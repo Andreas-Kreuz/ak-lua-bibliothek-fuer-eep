@@ -1,7 +1,7 @@
 import StatusCard from './StatusCard';
 import { useServerStatus } from './useServerInfo';
-import { useSocketIsConnected } from '../io/useSocketIsConnected';
 import Grid from '@mui/material/Unstable_Grid2';
+import { useSocketIsConnected } from '../io/SocketProvider';
 
 function StatusGrid() {
   const isConnected = useSocketIsConnected();

@@ -6,8 +6,7 @@ import useIntersectionSwitching from './useIntersectionSwitching';
 import { useParams } from 'react-router-dom';
 import AppPaper from '../../ui/AppPaper';
 import AppHeadline from '../../ui/AppHeadline';
-import { useContext } from 'react';
-import { SocketContext } from '../../base/SocketProvidedApp';
+import { useSocket } from '../../io/SocketProvider';
 import { CommandEvent, IntersectionEvent } from 'web-shared';
 import Divider from '@mui/material/Divider';
 import { useTheme } from '@mui/material/styles';
@@ -18,7 +17,7 @@ import styled from '@mui/system/styled';
 
 function IntersectionDetails() {
   const theme = useTheme();
-  const socket = useContext(SocketContext);
+  const socket = useSocket();
   const { intersectionId } = useParams();
   const id = parseInt(intersectionId || '555');
   const i = useIntersection(id);

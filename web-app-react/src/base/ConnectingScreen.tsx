@@ -3,9 +3,11 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { socketUrl } from './SocketProvidedApp';
+import { useSocketUrl } from '../io/SocketProvider';
 
 function ConnectingScreen() {
+  const socketUrl = useSocketUrl();
+
   return (
     <Backdrop open>
       <Paper sx={{ m: 'auto', p: 4, borderRadius: 2 }} variant="outlined">

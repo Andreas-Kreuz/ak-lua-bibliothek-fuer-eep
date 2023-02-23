@@ -10,14 +10,14 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { useContext, useState } from 'react';
 import { LogEvent } from 'web-shared';
-import { SocketContext } from '../../base/SocketProvidedApp';
+import { useSocket } from '../../io/SocketProvider';
 import LogLines from './LogLines';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import { useLog, useLogDispatch } from './LogProvider';
 
 function LogPanel() {
-  const socket = useContext(SocketContext);
+  const socket = useSocket();
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('md'));
   const [open, setOpen] = useState(false);
@@ -86,6 +86,7 @@ function LogPanel() {
               />
               <Divider orientation="vertical" variant="middle" flexItem />
               <Button
+                id="delete-log"
                 variant="text"
                 startIcon={<DeleteIcon />}
                 onClick={() => {
@@ -100,6 +101,7 @@ function LogPanel() {
             </>
           )}
           <Button
+            id="open-log"
             variant="text"
             startIcon={open ? <ArrowDownIcon /> : <ArrowUpIcon />}
             onClick={() => setOpen(!open)}

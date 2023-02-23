@@ -1,13 +1,16 @@
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider } from '@mui/material/styles';
 import { theme } from './Theme';
-import SocketProvidedApp from './SocketProvidedApp';
+import SocketProvider from '../io/SocketProvider';
+import RoutedApp from './RoutedApp';
 
 function ThemedApp() {
   return (
     <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <SocketProvidedApp />
+      <SocketProvider>
+        <CssBaseline />
+        <RoutedApp />
+      </SocketProvider>
     </ThemeProvider>
   );
 }

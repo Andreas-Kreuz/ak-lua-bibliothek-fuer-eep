@@ -19,9 +19,9 @@ import Typography from '@mui/material/Typography';
 import CheckCircleOutlineRoundedIcon from '@mui/icons-material/CheckCircleOutlineRounded';
 import WarningRoundedIcon from '@mui/icons-material/WarningRounded';
 import QRCode from 'react-qr-code';
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { ServerStatusEvent, SettingsEvent } from 'web-shared';
-import { SocketContext } from '../base/SocketProvidedApp';
+import { useSocket } from '../io/SocketProvider';
 import { useRoomHandler } from '../io/useRoomHandler';
 
 function ServerHome() {
@@ -44,7 +44,7 @@ function EEPMain()
     return 1
 end`;
 
-  const socket = useContext(SocketContext);
+  const socket = useSocket();
 
   useRoomHandler(ServerStatusEvent.Room, [
     {

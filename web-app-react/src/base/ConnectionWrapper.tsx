@@ -1,7 +1,7 @@
-import { useSocketIsConnected } from '../io/useSocketIsConnected';
 import AppHome from './AppHome';
 import AppHomeWithSnack from './AppHomeWithSnack';
 import ConnectingScreen from './ConnectingScreen';
+import { useSocketIsConnected } from '../io/SocketProvider';
 
 function ConnectionWrapper(props: { simple?: boolean }) {
   const socketIsConnected = useSocketIsConnected();
