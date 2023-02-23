@@ -2,13 +2,15 @@ import { createContext, ReactNode, useEffect, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { useContext } from 'react';
 
-const SocketContext = createContext<Socket>({} as Socket);
+const socketUrl = window.location.protocol + '//' + window.location.hostname + ':3000';
+const socket = io(socketUrl, { autoConnect: false });
+
 const SocketConnectedContext = createContext<boolean>(false);
-const SocketUrlContext = createContext(window.location.protocol + '//' + window.location.hostname + ':3000');
+const SocketUrlContext = createContext(socketUrl);
+const SocketContext = createContext(socket);
 
 function SocketProvider(props: { children: ReactNode }) {
-  const socketUrl = useContext(SocketUrlContext);
-  const socket = io(socketUrl, { autoConnect: true });
+  const socket = useContext(SocketContext);
   const [isConnected, setIsConnected] = useState(() => socket.connected);
 
   useEffect(() => {
