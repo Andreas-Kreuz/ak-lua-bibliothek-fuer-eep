@@ -1,5 +1,4 @@
-import RoutedApp from '../base/RoutedApp';
-import { createContext, useEffect, useState } from 'react';
+import { createContext, ReactNode, useEffect, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { useContext } from 'react';
 
