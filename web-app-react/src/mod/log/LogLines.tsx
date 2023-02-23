@@ -50,8 +50,8 @@ function LogLines() {
         {lines?.map((l) => (
           <Entry key={l.key}>{l.line}</Entry>
         ))}
-        <div ref={messagesEndRef} />
       </List>
+      <div ref={messagesEndRef} />
     </Box>
   );
 }
