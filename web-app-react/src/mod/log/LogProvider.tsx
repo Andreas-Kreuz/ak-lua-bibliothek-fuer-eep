@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { createContext, Dispatch, ReactNode, useContext, useReducer } from 'react';
 import { LogEvent } from 'web-shared';
 import { useRoomHandler } from '../../io/useRoomHandler';
