@@ -2,7 +2,7 @@ import { Server, Socket } from 'socket.io';
 import { RoomEvent } from 'web-shared';
 
 export default class SocketService {
-  private debug = false;
+  private debug = true;
   private onSocketConnectedCallbacks: Array<(socket: Socket) => void> = [];
 
   constructor(private io: Server) {

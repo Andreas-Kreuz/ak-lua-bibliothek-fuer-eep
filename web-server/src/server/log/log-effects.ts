@@ -28,6 +28,15 @@ export default class LogEffects {
       if (rooms.room === LogEvent.Room) {
         if (this.debug) console.log('EMIT ' + LogEvent.LinesAdded + ' to ' + socket.id);
         socket.emit(LogEvent.LinesAdded, this.getCurrentLogLines());
+        console.log('JOINED LOG ROOM: ', socket.id);
+      }
+    });
+
+    socket.on(RoomEvent.LeaveRoom, (rooms: { room: string }) => {
+      if (rooms.room === LogEvent.Room) {
+        // if (this.debug) console.log('EMIT ' + LogEvent.LinesAdded + ' to ' + socket.id);
+        // socket.emit(LogEvent.LinesAdded, this.getCurrentLogLines());
+        console.log('LEFT LOG ROOM: ', socket.id);
       }
     });
 

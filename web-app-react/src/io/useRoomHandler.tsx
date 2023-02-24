@@ -1,5 +1,5 @@
-import { useEffect, useContext } from 'react';
-import { ApiDataRoom, RoomEvent } from 'web-shared';
+import { useEffect, useRef, useState } from 'react';
+import { ApiDataRoom, LogEvent, RoomEvent } from 'web-shared';
 import { useSocket } from './SocketProvider';
 
 export function useApiDataRoomHandler(apiName: string, handler: (data: any) => any): void {
@@ -8,30 +8,48 @@ export function useApiDataRoomHandler(apiName: string, handler: (data: any) => a
 
 export function useRoomHandler(
   roomName: string,
-  eventHandlers: { eventName: string; handler: (data: any) => any }[]
+  dataHandlers: { eventName: string; handler: (data: any) => any }[],
+  cleanUpHandler?: () => void
 ): void {
+  const debug = true;
   const socket = useSocket();
+  const [registered, setRegistered] = useState(false);
+  const count = useRef(0);
+  count.current = count.current + 1;
+  const myNr = count.current;
 
-  // Register for the rooms data
   useEffect(() => {
-    eventHandlers.map((h) => {
-      socket.on(h.eventName, (payload: string) => {
-        h.handler(payload);
-      });
+    if (debug) console.log(roomName, myNr, 'REGISTERING EFFECT', count);
+    dataHandlers.forEach((h) => {
+      if (debug) console.log('               |✅- On ---  ', h.eventName);
+      socket.off(h.eventName, h.handler);
+      socket.on(h.eventName, h.handler);
     });
 
-    return () => {
-      eventHandlers.map((h) => {
-        socket.off(h.eventName);
-      });
-    };
-  }, [socket]);
+    setRegistered(true);
 
-  // Join the room ONCE
-  useEffect(() => {
-    socket.emit(RoomEvent.JoinRoom, { room: roomName });
     return () => {
+      if (debug) console.log(roomName, myNr, 'LEAVE ROOM', count);
+      socket.emit(RoomEvent.LeaveRoom, { room: roomName });
+
+      if (debug) console.log(roomName, myNr, 'REMOVING EFFECT', count);
+      dataHandlers.forEach((h) => {
+        if (debug) console.log('               |❌- Off ---  ', h.eventName);
+        socket.off(h.eventName, h.handler);
+      });
+      if (cleanUpHandler) cleanUpHandler();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (registered) {
+      if (debug) console.log(roomName, myNr, 'JOIN ROOM', count);
+      socket.emit(RoomEvent.JoinRoom, { room: roomName });
+    }
+
+    return () => {
+      if (debug) console.log(roomName, myNr, 'LEAVE ROOM', count);
       socket.emit(RoomEvent.LeaveRoom, { room: roomName });
     };
-  }, [socket]);
+  }, [registered]);
 }

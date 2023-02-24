@@ -8,7 +8,7 @@ import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { LogEvent } from 'web-shared';
 import { useSocket } from '../../io/SocketProvider';
 import LogLines from './LogLines';

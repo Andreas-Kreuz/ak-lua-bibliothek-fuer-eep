@@ -3,7 +3,7 @@ import { io, Socket } from 'socket.io-client';
 import { useContext } from 'react';
 
 const socketUrl = window.location.protocol + '//' + window.location.hostname + ':3000';
-const socket = io(socketUrl, { autoConnect: false });
+const socket = io(socketUrl, { autoConnect: true });
 
 const SocketConnectedContext = createContext<boolean>(false);
 const SocketUrlContext = createContext(socketUrl);

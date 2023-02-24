@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { createContext, Dispatch, ReactNode, useContext, useReducer } from 'react';
 import { LogEvent } from 'web-shared';
 import { useRoomHandler } from '../../io/useRoomHandler';
@@ -47,25 +46,27 @@ const LogDispatchContext = createContext<Dispatch<LogDispatch> | null>(null);
 
 export const LogProvider = (props: { children: ReactNode }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const roomName = LogEvent.Room;
 
-  // Register for the rooms data
-  const eventHandlers = [
+  const dataHandlers = [
     {
       eventName: LogEvent.LinesAdded,
       handler: (data: string) => {
+        console.log('               |⚠️- FIRED -- ', data);
         const fetchedLines = data.split('\n');
         dispatch({ type: 'added', fetchedLines });
       },
     },
     {
       eventName: LogEvent.LinesCleared,
-      handler: (data: string) => {
+      handler: () => {
         dispatch({ type: 'cleared' });
       },
     },
   ];
 
-  useRoomHandler(LogEvent.Room, eventHandlers);
+  const cleanUpHandler = () => dispatch({ type: 'cleared' });
+  useRoomHandler(roomName, dataHandlers, cleanUpHandler);
 
   return (
     <LogContext.Provider value={state}>
