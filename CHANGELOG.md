@@ -1,5 +1,9 @@
 # Änderungen an der Software
 
+## v0.13.1
+
+- ⭐ Neu: Log-Anzeige für den großen Bildschirm
+
 ## v0.13.0
 
 - ⭐ Neu: Komplette Neuentwicklung der App mit Fokus auf Smartphone ⭐⭐⭐⭐⭐
