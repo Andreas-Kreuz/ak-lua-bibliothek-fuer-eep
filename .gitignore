@@ -15,6 +15,7 @@
 /web-app-react/cypress/videos
 /web-app-react/cypress/screenshots
 /web-app-react/dist
+/web-app-react/VERSION
 
 # Ressources
 /web-app/cypress/fixtures/from-eep
@@ -36,14 +37,15 @@
 /web-shared/resources/public
 
 # Project based settings
-/lua/LUA/**/AkSpeicherWerte.txt
 /lua/LUA/**/*.jar
-/lua/LUA/ak/ext
-/lua/LUA/comm_*
-/lua/LUA/ak/io/exchange/ak*
+/lua/LUA/**/AkSpeicherWerte.txt
 /lua/LUA/ModellInstallationPrivat.lua
 /lua/LUA/SlotNames_BH2.lua
 /lua/LUA/StorageUtilityValues.txt
+/lua/LUA/ak/VERSION
+/lua/LUA/ak/ext
+/lua/LUA/ak/io/exchange/ak*
+/lua/LUA/comm_*
 /lua/modell-pakete
 
 # Private files

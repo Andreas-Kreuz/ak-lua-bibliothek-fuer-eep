@@ -17,7 +17,19 @@ local os = require("os")
 
 local ServerController = {}
 ServerController.debug = AkStartWithDebug or false
-ServerController.programVersion = "0.13.1"
+
+local function readVersion()
+    local file = io.open("LUA/ak/VERSION", "r")
+    if file then
+        version = file:read()
+        file:close()
+        return version
+    else
+        return "NO VERSION IN LUA/ak/VERSION"
+    end
+end
+ServerController.programVersion = readVersion()
+
 local json
 
 -- ACHTUNG: DIE VERWENDUNG ERFOLGT AUF EIGENE GEFAHR. ES IST GUT MOEGLICH,

@@ -1,12 +1,12 @@
 {
   "name": "web-app-react",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.13.2",
   "type": "commonjs",
   "homepage": ".",
   "scripts": {
     "dev": "npm run build --prefix ../web-shared && vite --host",
-    "build": "npm run build --prefix ../web-shared && tsc && vite build",
+    "build": "npm run build --prefix ../web-shared && tsc && vite build && npm run version",
     "preview": "vite preview",
     "start-server-for-playing": "npm run start --prefix ../web-server",
     "start-playing": "concurrently -k \"npm run start-server-for-playing\" \"npm run dev\"",
@@ -16,7 +16,8 @@
     "cy-tests-run-gui": "concurrently -k \"npm run start-server-electron\" \"npm run dev\" \"cypress run --headed",
     "cy-tests-run-headless": "concurrently -k \"npm run start-server-headless\" \"cypress run --config baseUrl=http://localhost:5173\"",
     "cypress:open": "cypress open",
-    "cypress:run": "cypress run"
+    "cypress:run": "cypress run",
+    "version": "echo %npm_package_version% > VERSION"
   },
   "dependencies": {
     "@emotion/react": "^11.10.5",
