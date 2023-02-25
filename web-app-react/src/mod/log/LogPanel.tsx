@@ -58,6 +58,7 @@ function LogPanel() {
           m: 0,
           mr: open ? 0 : 2,
           p: 0,
+          maxWidth: '100%',
           maxHeight: open ? 'calc(100vh - 60px)' : '150px',
           transition: theme.transitions.create(['max-width', 'max-height', 'margin-right'], transitionOptions),
         }}
@@ -115,6 +116,7 @@ function LogPanel() {
         <Box
           height={open ? '14.2em' : 0}
           width={open ? 'calc(100vw)' : 0}
+          maxWidth="100%"
           sx={{
             pt: 0,
             px: 0,
