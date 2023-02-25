@@ -28,7 +28,7 @@ function ServerHome() {
   const [serverHost, setServerHost] = useState<string>();
   const [directoryName, setDirectoryName] = useState<string>('-');
   const [editedDirectoryName, setEditedDirectoryName] = useState<string>(directoryName);
-  const [directoryOk, setDirectoryOk] = useState(false);
+  const [directoryOk, setDirectoryOk] = useState<boolean | null>(null);
   const [data, setData] = useState<string[]>([]);
   const [eventCount, setEventCount] = useState(0);
   const [open, setOpen] = useState(false);
@@ -96,6 +96,14 @@ end`;
   };
 
   const eepInstallations = ['C:\\Trend\\EEP17', 'C:\\Trend\\EEP16'];
+
+  if (directoryOk === null) {
+    return (
+      <Box sx={{ width: '100%', height: '90vh', display: 'flex' }}>
+        <Paper sx={{ margin: 'auto', padding: 2, display: 'inline' }}>Daten werden geladen ...</Paper>
+      </Box>
+    );
+  }
 
   return (
     <Stack spacing={3} sx={{ padding: 3 }}>
