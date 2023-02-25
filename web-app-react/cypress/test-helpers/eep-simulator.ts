@@ -1,3 +1,5 @@
+import { version } from '../../package.json';
+
 enum FileNames {
   eepOutJsonOut = 'cypress/io/LUA/ak/io/exchange/ak-eep-out.json',
   eepOutJsonOutFinished = 'cypress/io/LUA/ak/io/exchange/ak-eep-out-json.isfinished',
@@ -40,11 +42,14 @@ export default class EepSimulator {
     });
   }
 
-  eepEvent(fileName: string) {
+  eepEvent(fileName: string, replacements?: any) {
     this.eventCounter++;
     const count = this.eventCounter;
     cy.fixture('eep-output/' + fileName).then((x) => {
       x.eventCounter = count;
+      if (x?.payload?.list?.versionInfo?.singleVersion) {
+        x.payload.list.versionInfo.singleVersion = version;
+      }
       cy.log(x.eventCounter, fileName, x);
       this.writeNewEepEventFile(JSON.stringify(x));
     });
