@@ -7,24 +7,7 @@ setlocal
 SET oldDir=%CD%
 SET projectPath=%~dp0..
 
-@REM Build EEP Web Shared
-cd %projectPath%\web-shared
-IF %ERRORLEVEL% NEQ 0 (
-   exit /b %ERRORLEVEL%
-)
-
-call npm run-script build
-IF %ERRORLEVEL% NEQ 0 (
-   exit /b %ERRORLEVEL%
-)
-
-@REM Build EEP Web App
-cd %projectPath%\web-app-react
-IF %ERRORLEVEL% NEQ 0 (
-   exit /b %ERRORLEVEL%
-)
-
-call npm run-script start-playing
+call yarn workspace @ak/web-app start-playing
 IF %ERRORLEVEL% NEQ 0 (
    exit /b %ERRORLEVEL%
 )

@@ -1,0 +1,9 @@
+{
+  "references": [{ "path": "./apps/web-app" }, { "path": "./apps/web-server" }, { "path": "./packages/web-shared" }],
+  "files": [],
+  "include": [],
+  "exclude": ["**/node_modules"],
+  "compilerOptions": {
+    "sourceMap": true
+  }
+}

@@ -14,6 +14,8 @@
     "esbenp.prettier-vscode",
     "sumneko.lua", // Finds Lua symbols, but cannot reformat file
     "tyriar.sort-lines" // Sort lines
+    ,
+    "arcanis.vscode-zipfs"
   ],
   // List of extensions recommended by VS Code that should not be recommended for users of this workspace.
   "unwantedRecommendations": [

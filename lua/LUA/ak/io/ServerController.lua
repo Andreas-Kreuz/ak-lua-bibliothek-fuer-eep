@@ -21,7 +21,7 @@ ServerController.debug = AkStartWithDebug or false
 local function readVersion()
     local file = io.open("LUA/ak/VERSION", "r")
     if file then
-        version = file:read()
+        local version = file:read()
         file:close()
         return version
     else

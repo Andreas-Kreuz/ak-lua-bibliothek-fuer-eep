@@ -1,0 +1,29 @@
+{
+  "name": "@ak/web-shared",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Shared code for Web Application",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "target": "ES2022",
+  "moduleResolution": "Node",
+  "lib": [
+    "DOM",
+    "ES2022"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w"
+  },
+  "keywords": [
+    "Shared",
+    "Web",
+    "App",
+    "EEP"
+  ],
+  "author": "Andreas_Kreuz",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^4.9.5"
+  }
+}

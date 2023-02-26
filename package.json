@@ -1,10 +1,25 @@
 {
-  "name": "@andreas-kreuz/root",
+  "name": "@ak/root",
   "private": true,
   "version": "0.13.2",
   "workspaces": [
     "apps/*",
     "packages/*",
     "services/*"
-  ]
+  ],
+  "scripts": {
+    "start-app": "yarn workspace @ak/web-app run dev",
+    "start-server": "yarn workspace @ak/web-server run start-headless",
+    "build": "yarn workspace @ak/web-server run build"
+  },
+  "packageManager": "yarn@3.4.1",
+  "devDependencies": {
+    "@types/eslint": "^8",
+    "@types/prettier": "^2"
+  },
+  "dependencies": {
+    "eslint": "^8.35.0",
+    "prettier": "^2.8.4",
+    "typescript": "^4.9.5"
+  }
 }

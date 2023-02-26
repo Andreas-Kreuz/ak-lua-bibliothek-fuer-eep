@@ -20,12 +20,12 @@ IF %ERRORLEVEL% NEQ 0 (
     exit /b %ERRORLEVEL%
 )
 
-xcopy /Y %projectPath%\web-app-react\VERSION %projectPath%\lua\LUA\ak
+xcopy /Y %projectPath%\apps\web-app\VERSION %projectPath%\lua\LUA\ak
 IF %ERRORLEVEL% NEQ 0 (
     exit /b %ERRORLEVEL%
 )
 
-xcopy /Y %projectPath%\web-server\dist\lua-server-for-eep.exe %projectPath%\lua\LUA\ak
+xcopy /Y %projectPath%\apps\web-server\dist\lua-server-for-eep.exe %projectPath%\lua\LUA\ak
 IF %ERRORLEVEL% NEQ 0 (
     exit /b %ERRORLEVEL%
 )

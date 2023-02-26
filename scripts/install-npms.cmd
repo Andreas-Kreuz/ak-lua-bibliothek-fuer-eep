@@ -8,34 +8,7 @@ SET oldDir=%CD%
 SET projectPath=%~dp0..
 
 @REM Build EEP Web Shared
-cd %projectPath%\web-shared
-IF %ERRORLEVEL% NEQ 0 (
-   exit /b %ERRORLEVEL%
-)
-
-call npm install
-IF %ERRORLEVEL% NEQ 0 (
-   exit /b %ERRORLEVEL%
-)
-
-@REM Build EEP Web Server
-cd %projectPath%\web-server
-IF %ERRORLEVEL% NEQ 0 (
-   exit /b %ERRORLEVEL%
-)
-
-call npm install
-IF %ERRORLEVEL% NEQ 0 (
-   exit /b %ERRORLEVEL%
-)
-
-@REM Build EEP Web App
-cd %projectPath%\web-app-react
-IF %ERRORLEVEL% NEQ 0 (
-   exit /b %ERRORLEVEL%
-)
-
-call npm install
+call yarn
 IF %ERRORLEVEL% NEQ 0 (
    exit /b %ERRORLEVEL%
 )

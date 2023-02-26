@@ -6,6 +6,32 @@
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+.pnp.*
+
+# Global yarn modules
+node_modules
+
+# @ak/web-app
+/apps/web-app/VERSION
+/apps/web-app/cypress/io-empty/LUA/ak/io/exchange/ak*
+/apps/web-app/cypress/io/LUA/ak/io/exchange/ak*
+/apps/web-app/cypress/io/ak*
+/apps/web-app/cypress/screenshots
+/apps/web-app/cypress/videos
+/apps/web-app/dist
+
+# @ak/web-server
+/apps/web-server/build
+/apps/web-server/dist
+/apps/web-server/node_modules
+/apps/web-server/target
+
+# @ak/web-shared
+/packages/web-shared/build
+/packages/web-shared/dist
+/packages/web-shared/node_modules
+/packages/web-shared/resources/public
+
 
 
 # compiled output
@@ -19,13 +45,6 @@
 /web-app/out-tsc
 /web-app/.angular
 
-/web-app-react/cypress/io/ak*
-/web-app-react/cypress/io/LUA/ak/io/exchange/ak*
-/web-app-react/cypress/io-empty/LUA/ak/io/exchange/ak*
-/web-app-react/cypress/videos
-/web-app-react/cypress/screenshots
-/web-app-react/dist
-/web-app-react/VERSION
 
 # Ressources
 /web-app/cypress/fixtures/from-eep

@@ -2,7 +2,9 @@
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.fontFamily": "'Source Code Pro', Consolas, 'Courier New', monospace",
   "editor.minimap.maxColumn": 120,
-  "editor.rulers": [120],
+  "editor.rulers": [
+    120
+  ],
   "editor.wordWrap": "bounded",
   "editor.wordWrapColumn": 120,
   "[typescript]": {
@@ -51,7 +53,9 @@
     "/web-shared/build": true,
     "/web-shared/dist": true,
     "/web-shared/node_modules": true,
-    "/web-shared/resources/public": true
+    "/web-shared/resources/public": true,
+    "**/.yarn": true,
+    "**/.pnp.*": true
   },
   "typescript.preferences.quoteStyle": "single",
   "Lua.diagnostics.globals": [
@@ -127,7 +131,9 @@
     "pending",
     "files"
   ],
-  "Lua.diagnostics.disable": ["lowercase-global"],
+  "Lua.diagnostics.disable": [
+    "lowercase-global"
+  ],
   "Lua.workspace.ignoreDir": [
     ".vscode",
     "assets",
@@ -148,9 +154,24 @@
   "Lua.runtime.version": "Lua 5.3",
   "vscode-lua-format.configPath": "lua-format.conf",
   //"eslint.nodePath": "web-app/node_modules/",
-  "eslint.probe": ["javascript", "javascriptreact", "typescript", "typescriptreact", "html", "vue", "markdown", "html"],
+  "eslint.probe": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact",
+    "html",
+    "vue",
+    "markdown",
+    "html"
+  ],
   "editor.formatOnSave": true,
   "[xml]": {
     "editor.defaultFormatter": "redhat.vscode-xml"
-  }
+  },
+  "eslint.nodePath": ".yarn/sdks",
+  "prettier.prettierPath": ".yarn/sdks/prettier/index.js",
+  "typescript.tsdk": ".yarn/sdks/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "eslint.packageManager": "yarn",
+  "npm.packageManager": "yarn"
 }

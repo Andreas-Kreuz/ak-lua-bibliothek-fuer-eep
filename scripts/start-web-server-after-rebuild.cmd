@@ -7,13 +7,7 @@ setlocal
 SET oldDir=%CD%
 SET projectPath=%~dp0..
 
-@REM Build EEP Web App
-cd %projectPath%\web-server
-IF %ERRORLEVEL% NEQ 0 (
-   exit /b %ERRORLEVEL%
-)
-
-call npm run-script start-with-app
+call yarn workspace @ak/web-server start-with-app
 IF %ERRORLEVEL% NEQ 0 (
    exit /b %ERRORLEVEL%
 )
