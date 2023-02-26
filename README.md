@@ -23,15 +23,20 @@ Du erhältst mit diesem Paket:
 1. **Lua-Bibliothek** - verschiedene Lua-Module für die Verkehrssteuerung
 2. **Server und Web-App _(optional)_** - steuere oder betrachte bestimmte Aspekte im Browser
 
+## Grundprinzipien
+
+- Für die Steuerung ist nur Lua notwendig, d.h. Web-Server und Web-App sind immer optional.
+- Die App wird in erster Linie für ein Zweitgerät entwickelt und ermöglicht die Steuerung einzelner Module von Lua.
+
 ## Ausführliche Dokumentation
 
-* Die Webseite enthält [Anleitungen und Dokumentation](http://andreas-kreuz.github.io/ak-lua-bibliothek-fuer-eep) zur Verwendung der Skript-Sammlung.
+- Die Webseite enthält [Anleitungen und Dokumentation](http://andreas-kreuz.github.io/ak-lua-bibliothek-fuer-eep) zur Verwendung der Skript-Sammlung.
 
 ## Beiträge sind Willkommen
 
-* [Fehler gefunden, Verbesserungsvorschläge?](CONTRIBUTING.md) <br>So kannst Du zum Projekt beitragen
+- [Fehler gefunden, Verbesserungsvorschläge?](CONTRIBUTING.md) <br>So kannst Du zum Projekt beitragen
 
-* So kannst Du die [Entwicklungsumgebung einrichten](scripts/README.md)
+- So kannst Du die [Entwicklungsumgebung einrichten](scripts/README.md)
 
 ## Was ist EEP
 
@@ -39,18 +44,18 @@ EEP (Eisenbahn.exe Professional) ist eine [Simulationssoftware des Trendverlags]
 
 ## Danke
 
-* [FrankBuchholz](https://github.com/FrankBuchholz)
+- [FrankBuchholz](https://github.com/FrankBuchholz)
   für Performance-Optimierungen und kleine Verbesserungen
-* [Damian-Rutkowski](https://github.com/Damian-Rutkowski)
+- [Damian-Rutkowski](https://github.com/Damian-Rutkowski)
   für die Langzeitmotivation
-* [EEP-Benny](https://github.com/EEP-Benny)
+- [EEP-Benny](https://github.com/EEP-Benny)
   für Ideen zur Umsetzung und Modularisierung
 
 ## Danksagungen an andere Projekte
 
 Teile der Webseite basieren auf folgenden anderen Projekten:
 
-* Inhaltsverzeichnis: <https://github.com/allejo/jekyll-toc>
-* Layout: <https://github.com/Sylhare/Type-on-Strap>
-* Layout: <https://github.com/twbs/bootstrap>
-* Javascript: <https://github.com/FezVrasta/popper.js>
+- Inhaltsverzeichnis: <https://github.com/allejo/jekyll-toc>
+- Layout: <https://github.com/Sylhare/Type-on-Strap>
+- Layout: <https://github.com/twbs/bootstrap>
+- Javascript: <https://github.com/FezVrasta/popper.js>

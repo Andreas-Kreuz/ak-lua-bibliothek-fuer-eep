@@ -8,5 +8,4 @@
 
 # :construction: BITTE NICHT MEHR VERWENDEN :construction:
 
-Die Web-App befindet sich nun in [`apps/web-app`](https://github.com/Andreas-Kreuz/ak-lua-bibliothek-fuer-eep/apps/web-app).
-Dieser alte Stand der Web-App wird nicht mehr gepflegt.
+Die geteilte Bibliothek wird in [`packages/`](https://github.com/Andreas-Kreuz/ak-lua-bibliothek-fuer-eep/packages/) überführt.
