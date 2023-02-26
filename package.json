@@ -1,0 +1,10 @@
+{
+  "name": "@andreas-kreuz/root",
+  "private": true,
+  "version": "0.13.2",
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "services/*"
+  ]
+}

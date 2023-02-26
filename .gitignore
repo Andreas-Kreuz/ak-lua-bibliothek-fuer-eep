@@ -1,3 +1,13 @@
+# Yarn
+.yarn/*
+!.yarn/cache
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
+
 # compiled output
 /web-app/cypress/io/ak*
 /web-app/cypress/io/LUA/ak/io/exchange/ak*
