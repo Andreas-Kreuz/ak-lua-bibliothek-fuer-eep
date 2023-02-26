@@ -1,12 +1,14 @@
-import TrainType from './train-type';
+import TrainType from './TrainType';
 
-export default interface TrainListEntry {
+export interface TrainListEntry {
   id: string;
   name: string;
   route: string;
   line: string;
   destination: string;
-  trainType: number;
+  trainType: TrainType;
   trackType: string;
   rollingStockCount: number;
 }
+
+export default TrainListEntry;

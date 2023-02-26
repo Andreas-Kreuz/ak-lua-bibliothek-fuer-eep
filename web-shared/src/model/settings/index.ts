@@ -1,5 +1,3 @@
-import LuaSetting from './lua-setting';
-import LuaSettingChangeEvent from './lua-setting-change-event';
-import LuaSettings from './lua-settings';
-
-export { LuaSetting, LuaSettingChangeEvent, LuaSettings };
+export { LuaSetting } from './LuaSetting';
+export { LuaSettingChangeEvent } from './LuaSettingChangeEvent';
+export { LuaSettings } from './LuaSettings';

@@ -1,4 +1,4 @@
-export default class LuaSetting<T> {
+export class LuaSetting<T> {
   public constructor(
     public category: string,
     public name: string,
@@ -8,3 +8,5 @@ export default class LuaSetting<T> {
     public eepFunction: string
   ) {}
 }
+
+export default LuaSetting;

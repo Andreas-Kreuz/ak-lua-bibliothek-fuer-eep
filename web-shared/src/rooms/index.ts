@@ -1,5 +1,5 @@
-import DynamicRoom from './dynamic-room';
-import {
+export { DynamicRoom } from './DynamicRoom';
+export {
   ApiDataRoom,
   TrainDetailsRoom,
   TrainListRoom,
@@ -8,15 +8,4 @@ import {
   PublicTransportStationListRoom,
   PublicTransportStationDetailsRoom,
   PublicTransportSettingsRoom,
-} from './dynamic-rooms';
-
-export { DynamicRoom };
-export { TrainDetailsRoom, TrainListRoom };
-export {
-  PublicTransportLineListRoom,
-  PublicTransportLineDetailsRoom,
-  PublicTransportStationListRoom,
-  PublicTransportStationDetailsRoom,
-  PublicTransportSettingsRoom,
-};
-export { ApiDataRoom };
+} from './DynamicRooms';

@@ -1,13 +1,13 @@
-import RollingStock from './rolling-stock';
-import TrainType from './train-type';
+import RollingStock from './RollingStock';
+import TrainType from './TrainType';
 
-export default interface Train {
+export interface Train {
   id: string;
   name: string;
   route: string;
   line: string;
   destination: string;
-  trainType: number;
+  trainType: TrainType;
   trackSystem: string;
   trackType: string;
   rollingStock: RollingStock[];
@@ -15,3 +15,5 @@ export default interface Train {
   direction: string;
   speed: number;
 }
+
+export default Train;

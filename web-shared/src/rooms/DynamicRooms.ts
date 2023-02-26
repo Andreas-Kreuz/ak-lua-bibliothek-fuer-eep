@@ -1,4 +1,4 @@
-import DynamicRoom from './dynamic-room';
+import DynamicRoom from './DynamicRoom';
 
 export const ApiDataRoom = new DynamicRoom('API Data');
 export const TrainDetailsRoom = new DynamicRoom('Train Details');

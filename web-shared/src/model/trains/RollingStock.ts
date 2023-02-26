@@ -1,4 +1,4 @@
-export default interface RollingStock {
+export interface RollingStock {
   id: string;
   name: string;
   trainName: string;
@@ -12,3 +12,5 @@ export default interface RollingStock {
   modelType: number;
   tag: string;
 }
+
+export default RollingStock;
