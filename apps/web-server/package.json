@@ -32,7 +32,7 @@
   ],
   "main": "./build/main/index.js",
   "build": {
-    "electronVersion": "23.1.1",
+    "electronVersion": "22.3.0",
     "appId": "io.github.andreas-kreuz.ak-lua-library-for-eep",
     "files": [
       "build/**/*",
