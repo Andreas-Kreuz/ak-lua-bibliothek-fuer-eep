@@ -18,7 +18,7 @@
     "cy-tests-run-headless": "concurrently -k \"yarn run start-server-headless\" \"cypress run --config baseUrl=http://localhost:5173\"",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
-    "version": "echo %npm_package_version% > VERSION"
+    "version": "echo $npm_package_version > VERSION"
   },
   "dependencies": {
     "@ak/web-shared": "workspace:*",
