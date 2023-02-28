@@ -1,8 +1,8 @@
-import { Server } from 'socket.io';
-import { TrainListRoom, TrainDetailsRoom } from '@ak/web-shared/build/rooms';
-import { TrainSelector } from './train-selector';
-import { RollingStockSelector } from './rolling-stock-selector';
 import FeatureUpdateService, { SocketDataProvider } from '../socket-data-provider';
+import { RollingStockSelector } from './rolling-stock-selector';
+import { TrainSelector } from './train-selector';
+import { TrainListRoom, TrainDetailsRoom } from '@ak/web-shared';
+import { Server } from 'socket.io';
 
 export default class TrainUpdateService implements FeatureUpdateService {
   private roomDataProviders: SocketDataProvider[] = [];

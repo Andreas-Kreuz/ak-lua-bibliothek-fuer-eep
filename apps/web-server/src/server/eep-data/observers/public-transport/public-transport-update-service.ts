@@ -1,14 +1,14 @@
 import * as fromEepData from '../../eep-data-reducer';
-import { Server } from 'socket.io';
+import FeatureUpdateService, { SocketDataProvider } from '../socket-data-provider';
+import PublicTransportSettingsSelector from './public-transport-settings-selector';
 import {
   // PublicTransportLineListRoom,
   // PublicTransportLineDetailsRoom,
   // PublicTransportStationListRoom,
   // PublicTransportStationDetailsRoom,
   PublicTransportSettingsRoom,
-} from '@ak/web-shared/build/rooms';
-import PublicTransportSettingsSelector from './public-transport-settings-selector';
-import FeatureUpdateService, { SocketDataProvider } from '../socket-data-provider';
+} from '@ak/web-shared';
+import { Server } from 'socket.io';
 
 export default class PublicTransportService implements FeatureUpdateService {
   private roomDataProviders: SocketDataProvider[] = [];

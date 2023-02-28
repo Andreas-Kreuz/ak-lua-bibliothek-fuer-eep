@@ -70,7 +70,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@ak/web-server@workspace:apps/web-server"
   dependencies:
-    "@ak/web-shared": "workspace:*"
+    "@ak/web-shared": "workspace:^"
     "@electron/typescript-definitions": ^8.10.0
     "@types/command-line-args": ^5.2.0
     "@types/command-line-usage": ^5.0.2
@@ -97,7 +97,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@ak/web-shared@workspace:*, @ak/web-shared@workspace:packages/web-shared":
+"@ak/web-shared@workspace:*, @ak/web-shared@workspace:^, @ak/web-shared@workspace:packages/web-shared":
   version: 0.0.0-use.local
   resolution: "@ak/web-shared@workspace:packages/web-shared"
   dependencies:

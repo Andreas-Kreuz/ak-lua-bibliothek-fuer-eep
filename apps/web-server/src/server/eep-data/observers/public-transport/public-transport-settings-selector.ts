@@ -1,6 +1,6 @@
-import * as fromEepData from '../../eep-data-reducer';
-import { LuaSetting, LuaSettings } from '@ak/web-shared/build/model/settings';
 import EepLuaSettingsDto from '../../../eep-model/eep-lua-settings-dto';
+import * as fromEepData from '../../eep-data-reducer';
+import { LuaSetting, LuaSettings } from '@ak/web-shared';
 
 export default class PublicTransportSettingsSelector {
   private lastState: fromEepData.State = undefined;

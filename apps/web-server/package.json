@@ -7,7 +7,7 @@
   "scripts": {
     "build-shared": "yarn workspace @ak/web-shared run build",
     "build-app": "yarn workspace @ak/web-app run build",
-    "copy-web-app": "yarn pub-del && yarn pub-mkdir && yarn pub-copy",
+    "copy-web-app": "yarn run pub-del ; yarn run pub-mkdir && yarn run pub-copy",
     "bash": "bash",
     "pub-copy": "yarn run bash -c \"cp -r ../web-app/dist/* build/public_html/\"",
     "pub-del": "yarn run bash -c \"test -d build/public_html && rm -rf build/public_html\"",
@@ -15,7 +15,7 @@
     "build": "yarn build-shared && yarn build-app && yarn copy-web-app && tsc --build",
     "watch": "tsc -w",
     "lint": "eslint -c .eslintrc.json --ext .ts src",
-    "start": "tsc && electron ./build/main/index.js",
+    "start": "yarn run build && electron ./build/main/index.js",
     "start-headless": "tsc && node ./build/headless-start.js",
     "start-with-app": "yarn build && electron ./build/main/index.js",
     "start-e2e-headless": "tsc && node ./build/headless-start.js --testmode --exchange-dir ../web-app/cypress/io",
@@ -84,7 +84,7 @@
     "typescript": "^4.9.5"
   },
   "dependencies": {
-    "@ak/web-shared": "workspace:*",
+    "@ak/web-shared": "workspace:^",
     "@electron/typescript-definitions": "^8.10.0",
     "command-line-args": "^5.1.1",
     "command-line-usage": "^6.1.0",

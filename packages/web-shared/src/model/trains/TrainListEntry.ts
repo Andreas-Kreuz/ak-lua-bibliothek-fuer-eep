@@ -1,6 +1,4 @@
-import TrainType from './TrainType';
-
-export interface TrainListEntry {
+interface TrainListEntry {
   id: string;
   name: string;
   route: string;
@@ -12,3 +10,4 @@ export interface TrainListEntry {
 }
 
 export default TrainListEntry;
+export { TrainListEntry };

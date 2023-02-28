@@ -1,4 +1,4 @@
-export enum CommandEvent {
+enum CommandEvent {
   Room = '[Command Event]',
   Send = '[Command Event] Send',
   ChangeCamToStatic = '[Command Event] Change Cam',
@@ -6,3 +6,5 @@ export enum CommandEvent {
   ChangeCamToRollingStock = '[Command Event] Change Cam to RollingStock',
   ChangeSetting = '[Command Event] Change Setting',
 }
+
+export { CommandEvent };

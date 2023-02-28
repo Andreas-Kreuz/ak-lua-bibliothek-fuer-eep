@@ -2,8 +2,6 @@
   "name": "web-shared",
   "version": "1.0.0",
   "description": "Shared code for Web Application",
-  "main": "build/index.js",
-  "types": "build/index.d.ts",
   "type": "commonjs",
   "scripts": {
     "build": "tsc",

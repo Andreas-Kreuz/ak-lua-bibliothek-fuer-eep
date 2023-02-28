@@ -1,7 +1,8 @@
-import { Server, Socket } from 'socket.io';
 import EepDataStore from '../eep-data-reducer';
-import { DynamicRoom } from '@ak/web-shared/build/rooms';
 import FeatureUpdateService, { FeatureUpdater, SocketDataProvider } from './socket-data-provider';
+import { DynamicRoom } from '@ak/web-shared';
+import { Server, Socket } from 'socket.io';
+
 export default class EepDataUpdateService {
   private debug = false;
   private updatePending = false;

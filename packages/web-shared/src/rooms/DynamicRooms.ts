@@ -1,10 +1,19 @@
 import DynamicRoom from './DynamicRoom';
 
-export const ApiDataRoom = new DynamicRoom('API Data');
-export const TrainDetailsRoom = new DynamicRoom('Train Details');
-export const TrainListRoom = new DynamicRoom('TrainList');
-export const PublicTransportLineListRoom = new DynamicRoom('PublicTransport List of Lines');
-export const PublicTransportLineDetailsRoom = new DynamicRoom('PublicTransport Details of Line');
-export const PublicTransportStationListRoom = new DynamicRoom('PublicTransport List of Stations');
-export const PublicTransportStationDetailsRoom = new DynamicRoom('PublicTransport Details of Station');
-export const PublicTransportSettingsRoom = new DynamicRoom('PublicTransport Settings');
+const ApiDataRoom = new DynamicRoom('API Data');
+const TrainDetailsRoom = new DynamicRoom('Train Details');
+const TrainListRoom = new DynamicRoom('TrainList');
+const PublicTransportLineListRoom = new DynamicRoom('PublicTransport List of Lines');
+const PublicTransportLineDetailsRoom = new DynamicRoom('PublicTransport Details of Line');
+const PublicTransportStationListRoom = new DynamicRoom('PublicTransport List of Stations');
+const PublicTransportStationDetailsRoom = new DynamicRoom('PublicTransport Details of Station');
+const PublicTransportSettingsRoom = new DynamicRoom('PublicTransport Settings');
+
+export { ApiDataRoom };
+export { TrainDetailsRoom };
+export { TrainListRoom };
+export { PublicTransportLineListRoom };
+export { PublicTransportLineDetailsRoom };
+export { PublicTransportStationListRoom };
+export { PublicTransportStationDetailsRoom };
+export { PublicTransportSettingsRoom };

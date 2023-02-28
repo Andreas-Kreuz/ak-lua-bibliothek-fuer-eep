@@ -1,4 +1,4 @@
-export interface RollingStock {
+interface RollingStock {
   id: string;
   name: string;
   trainName: string;
@@ -14,3 +14,4 @@ export interface RollingStock {
 }
 
 export default RollingStock;
+export { RollingStock };

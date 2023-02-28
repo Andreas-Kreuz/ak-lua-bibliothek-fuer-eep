@@ -5,12 +5,7 @@
   "description": "Shared code for Web Application",
   "main": "build/index.js",
   "types": "build/index.d.ts",
-  "target": "ES2022",
-  "moduleResolution": "Node",
-  "lib": [
-    "DOM",
-    "ES2022"
-  ],
+  "type": "commonjs",
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w"

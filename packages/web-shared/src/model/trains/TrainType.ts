@@ -1,4 +1,4 @@
-export enum TrainType {
+enum TrainType {
   Bike = 'bike',
   Boat = 'boat',
   Bus = 'bus',
@@ -16,3 +16,4 @@ export enum TrainType {
 }
 
 export default TrainType;
+export { TrainType };

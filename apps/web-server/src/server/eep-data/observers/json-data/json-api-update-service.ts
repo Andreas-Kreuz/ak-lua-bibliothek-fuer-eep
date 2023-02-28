@@ -1,11 +1,10 @@
-import express from 'express';
-import { Server, Socket } from 'socket.io';
 import { CacheService } from '../../../eep-service/cache-service';
-import { ServerStatusEvent } from '@ak/web-shared';
 import EepDataStore, { State } from '../../eep-data-reducer';
 import JsonApiReducer, { ServerData } from './json-api-reducer';
-
-import { ApiDataRoom } from '@ak/web-shared/build/rooms';
+import { ServerStatusEvent } from '@ak/web-shared';
+import { ApiDataRoom } from '@ak/web-shared';
+import express from 'express';
+import { Server, Socket } from 'socket.io';
 
 export default class JsonApiUpdateService {
   private debug = false;

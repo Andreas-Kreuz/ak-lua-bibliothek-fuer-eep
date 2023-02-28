@@ -1,7 +1,7 @@
-import { Train, TrainListEntry, TrainType } from '@ak/web-shared/build/model/trains';
+import EepTrainDto from '../../../eep-model/eep-train-dto';
 import * as fromJsonData from '../../eep-data-reducer';
 import { RollingStockSelector } from './rolling-stock-selector';
-import EepTrainDto from '../../../eep-model/eep-train-dto';
+import { Train, TrainListEntry, TrainType } from '@ak/web-shared';
 
 export class TrainSelector {
   private state: fromJsonData.State = undefined;

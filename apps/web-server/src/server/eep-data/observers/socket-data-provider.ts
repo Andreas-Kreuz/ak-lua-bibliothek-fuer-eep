@@ -1,5 +1,5 @@
-import { DynamicRoom } from '@ak/web-shared/build/rooms';
 import * as fromJsonData from '../eep-data-reducer';
+import { DynamicRoom } from '@ak/web-shared';
 
 export interface SocketDataProvider {
   roomType: DynamicRoom;

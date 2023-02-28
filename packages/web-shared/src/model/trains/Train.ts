@@ -1,7 +1,7 @@
 import RollingStock from './RollingStock';
 import TrainType from './TrainType';
 
-export interface Train {
+interface Train {
   id: string;
   name: string;
   route: string;
@@ -17,3 +17,4 @@ export interface Train {
 }
 
 export default Train;
+export { Train };

@@ -1,4 +1,4 @@
-export enum TrackType {
+enum TrackType {
   Auxiliary = 'auxiliary',
   Control = 'control',
   Road = 'road',
@@ -7,3 +7,4 @@ export enum TrackType {
 }
 
 export default TrackType;
+export { TrackType };

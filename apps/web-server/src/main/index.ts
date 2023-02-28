@@ -1,7 +1,7 @@
+import { ServerMain } from '../server/server-main';
 import { app, BrowserWindow, shell } from 'electron';
 import * as electron from 'electron';
 import * as path from 'path';
-import { ServerMain } from '../server/server-main';
 
 let mainWindow: Electron.BrowserWindow;
 
@@ -16,7 +16,7 @@ function createWindow() {
   });
 
   // Hide the menu
-  mainWindow.removeMenu();
+  // mainWindow.removeMenu();
 
   // User App Code
   const server = new ServerMain(path.resolve(electron.app.getPath('appData'), 'eep-web-server'));
