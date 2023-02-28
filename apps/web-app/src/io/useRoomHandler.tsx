@@ -1,6 +1,11 @@
-import { useEffect, useRef, useState } from 'react';
-import { ApiDataRoom, LogEvent, RoomEvent } from '@ak/web-shared';
 import { useSocket } from './SocketProvider';
+import { ApiDataRoom, RoomEvent } from '@ak/web-shared';
+import { DynamicRoom } from '@ak/web-shared';
+import { useEffect, useRef, useState } from 'react';
+
+export function useDynamicRoomHandler(dynRoom: DynamicRoom, element: string, handler: (data: any) => any): void {
+  return useRoomHandler(dynRoom.roomId(element), [{ eventName: dynRoom.eventId(element), handler: handler }]);
+}
 
 export function useApiDataRoomHandler(apiName: string, handler: (data: any) => any): void {
   return useRoomHandler(ApiDataRoom.roomId(apiName), [{ eventName: ApiDataRoom.eventId(apiName), handler: handler }]);

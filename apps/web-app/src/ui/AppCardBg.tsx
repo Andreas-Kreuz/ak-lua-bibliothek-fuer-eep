@@ -2,6 +2,7 @@ import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardActionArea from '@mui/material/CardActionArea';
 import Chip from '@mui/material/Chip';
+import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { ReactNode } from 'react';
@@ -27,6 +28,7 @@ function AppCardBg(props: {
         </Typography>
       )}
       {props.id && <Chip label={props.id} sx={{ backgroundColor: 'rgba(255,255,255,0.8)' }} />}
+      {props.children && <Divider sx={{ my: 1 }} />}
       {props.children}
     </Box>
   );

@@ -1,9 +1,10 @@
+import ErrorBoundary from './ErrorBoundary';
 import { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, RouterProvider, createBrowserRouter, Outlet } from 'react-router-dom';
-import ErrorBoundary from './ErrorBoundary';
 
 const IntersectionDetails = lazy(() => import('../mod/intersections/IntersectionDetails'));
 const IntersectionOverview = lazy(() => import('../mod/intersections/IntersectionOverview'));
+const Trains = lazy(() => import('../mod/trains/Trains'));
 const MainMenu = lazy(() => import('../home/MainMenu'));
 const Server = lazy(() => import('../server/Server'));
 const StatusGrid = lazy(() => import('../status/StatusGrid'));
@@ -13,6 +14,7 @@ const homeRoutes = [
   { path: '/', element: <MainMenu /> },
   { path: '/intersections', element: <IntersectionOverview /> },
   { path: '/intersection/:intersectionId', element: <IntersectionDetails /> },
+  { path: '/trains', element: <Trains /> },
 ];
 
 export const router = createBrowserRouter([
