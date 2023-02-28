@@ -16,7 +16,7 @@ function createWindow() {
   });
 
   // Hide the menu
-  // mainWindow.removeMenu();
+  mainWindow.removeMenu();
 
   // User App Code
   const server = new ServerMain(path.resolve(electron.app.getPath('appData'), 'eep-web-server'));
