@@ -1,13 +1,12 @@
+import AppEffects from './app/AppEffects';
+import SocketService from './clientio/SocketService';
 import * as cors from 'cors';
-import * as express from 'express';
-import * as path from 'path';
 import { EventEmitter } from 'events';
+import * as express from 'express';
 import { createServer } from 'http';
-import { Server } from 'socket.io';
-
-import AppEffects from './app/app-effects';
-import SocketService from './clientio/socket-service';
 import { networkInterfaces } from 'os';
+import * as path from 'path';
+import { Server } from 'socket.io';
 
 const app = express();
 const httpServer = createServer(app);

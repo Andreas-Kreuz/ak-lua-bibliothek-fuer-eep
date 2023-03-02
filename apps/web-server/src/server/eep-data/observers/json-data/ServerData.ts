@@ -1,4 +1,4 @@
-import * as fromEepStore from '../../eep-data-reducer';
+import * as fromEepStore from '../../EepDataStore';
 import { DataType } from '@ak/web-shared';
 
 export interface ServerData {

@@ -1,5 +1,5 @@
-import EepLuaSettingsDto from '../../../eep-model/eep-lua-settings-dto';
-import * as fromEepData from '../../eep-data-reducer';
+import EepLuaSettingsDto from '../../../eep-model/EepLuaSettingsDto';
+import * as fromEepData from '../../EepDataStore';
 import { LuaSetting, LuaSettings } from '@ak/web-shared';
 
 export default class PublicTransportSettingsSelector {

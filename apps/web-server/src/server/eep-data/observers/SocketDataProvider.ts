@@ -1,4 +1,4 @@
-import * as fromJsonData from '../eep-data-reducer';
+import * as fromJsonData from '../EepDataStore';
 import { DynamicRoom } from '@ak/web-shared';
 
 export interface SocketDataProvider {

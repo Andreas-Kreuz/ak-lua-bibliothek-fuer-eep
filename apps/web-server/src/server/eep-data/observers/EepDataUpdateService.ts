@@ -1,5 +1,5 @@
-import EepDataStore from '../eep-data-reducer';
-import FeatureUpdateService, { FeatureUpdater, SocketDataProvider } from './socket-data-provider';
+import EepDataStore from '../EepDataStore';
+import FeatureUpdateService, { FeatureUpdater, SocketDataProvider } from './SocketDataProvider';
 import { DynamicRoom } from '@ak/web-shared';
 import { Server, Socket } from 'socket.io';
 

@@ -1,6 +1,6 @@
-import * as fromEepData from '../../eep-data-reducer';
-import FeatureUpdateService, { SocketDataProvider } from '../socket-data-provider';
-import PublicTransportSettingsSelector from './public-transport-settings-selector';
+import * as fromEepData from '../../EepDataStore';
+import FeatureUpdateService, { SocketDataProvider } from '../SocketDataProvider';
+import PublicTransportSettingsSelector from './PublicTransportSettingsSelector';
 import {
   // PublicTransportLineListRoom,
   // PublicTransportLineDetailsRoom,

@@ -1,15 +1,14 @@
+import SocketService from '../clientio/SocketService';
+import { CacheService } from '../eep-service/CacheService';
+import EepDataEvent from './EepDataEvent';
+import EepDataReducer from './EepDataStore';
+import EepDataUpdateService from './observers/EepDataUpdateService';
+import JsonApiRoomObserver from './observers/json-data/JsonApiUpdateService';
+import PublicTransportService from './observers/public-transport/PublicTransportService';
+import TrainUpdateService from './observers/train/TrainUpdateService';
+import { RoomEvent, ServerStatusEvent } from '@ak/web-shared';
 import express from 'express';
 import { Server, Socket } from 'socket.io';
-
-import { RoomEvent, ServerStatusEvent } from '@ak/web-shared';
-import SocketService from '../clientio/socket-service';
-import EepDataReducer from './eep-data-reducer';
-import EepDataEvent from './eep-data-event';
-import { CacheService } from '../eep-service/cache-service';
-import TrainUpdateService from './observers/train/train-update-service';
-import JsonApiRoomObserver from './observers/json-data/json-api-update-service';
-import EepDataUpdateService from './observers/eep-data-update-service';
-import PublicTransportService from './observers/public-transport/public-transport-update-service';
 
 export default class EepDataEffects {
   private debug = false;

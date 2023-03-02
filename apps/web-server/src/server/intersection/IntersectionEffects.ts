@@ -1,7 +1,6 @@
-import { Server, Socket } from 'socket.io';
-
+import SocketService from '../clientio/SocketService';
 import { IntersectionEvent, RoomEvent } from '@ak/web-shared';
-import SocketService from '../clientio/socket-service';
+import { Server, Socket } from 'socket.io';
 
 export default class IntersectionEffects {
   constructor(

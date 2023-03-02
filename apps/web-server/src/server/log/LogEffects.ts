@@ -1,8 +1,7 @@
+import SocketService from '../clientio/SocketService';
+import { LogEvent, RoomEvent } from '@ak/web-shared';
 import { bufferTime, Subject } from 'rxjs';
 import { Server, Socket } from 'socket.io';
-
-import { LogEvent, RoomEvent } from '@ak/web-shared';
-import SocketService from '../clientio/socket-service';
 
 export default class LogEffects {
   constructor(

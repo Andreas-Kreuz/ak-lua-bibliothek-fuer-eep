@@ -1,6 +1,6 @@
-import EepTrainDto from '../../../eep-model/eep-train-dto';
-import * as fromJsonData from '../../eep-data-reducer';
-import { RollingStockSelector } from './rolling-stock-selector';
+import EepTrainDto from '../../../eep-model/EepTrainDto';
+import * as fromJsonData from '../../EepDataStore';
+import { RollingStockSelector } from './RollingStockSelector';
 import { Train, TrainListEntry, TrainType } from '@ak/web-shared';
 
 export class TrainSelector {

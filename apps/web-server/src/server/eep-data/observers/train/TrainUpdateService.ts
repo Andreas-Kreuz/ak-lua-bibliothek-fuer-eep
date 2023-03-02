@@ -1,6 +1,6 @@
-import FeatureUpdateService, { SocketDataProvider } from '../socket-data-provider';
-import { RollingStockSelector } from './rolling-stock-selector';
-import { TrainSelector } from './train-selector';
+import FeatureUpdateService, { SocketDataProvider } from '../SocketDataProvider';
+import { RollingStockSelector } from './RollingStockSelector';
+import { TrainSelector } from './TrainSelector';
 import { TrainListRoom, TrainDetailsRoom } from '@ak/web-shared';
 import { Server } from 'socket.io';
 

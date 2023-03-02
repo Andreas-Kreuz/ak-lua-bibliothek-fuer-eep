@@ -1,9 +1,9 @@
+import { ServerStatisticsService } from '../app/ServerStatisticsService';
+import { CacheService } from './CacheService';
 import * as fs from 'fs';
 import * as path from 'path';
 import { performance } from 'perf_hooks';
 import { Tail } from 'tail';
-import { ServerStatisticsService } from '../app/app-statistics.service';
-import { CacheService } from './cache-service';
 
 export enum FileNames {
   eepOutJsonOut = 'ak-eep-out.json',

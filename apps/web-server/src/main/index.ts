@@ -1,4 +1,4 @@
-import { ServerMain } from '../server/server-main';
+import { ServerMain } from '../server/ServerMain';
 import { app, BrowserWindow, shell } from 'electron';
 import * as electron from 'electron';
 import * as path from 'path';

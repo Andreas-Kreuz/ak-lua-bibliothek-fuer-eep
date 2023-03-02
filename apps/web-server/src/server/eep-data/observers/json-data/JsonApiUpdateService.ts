@@ -1,6 +1,6 @@
-import { CacheService } from '../../../eep-service/cache-service';
-import EepDataStore, { State } from '../../eep-data-reducer';
-import JsonApiReducer, { ServerData } from './json-api-reducer';
+import { CacheService } from '../../../eep-service/CacheService';
+import EepDataStore, { State } from '../../EepDataStore';
+import JsonApiReducer, { ServerData } from './ServerData';
 import { ServerStatusEvent } from '@ak/web-shared';
 import { ApiDataRoom } from '@ak/web-shared';
 import express from 'express';

@@ -1,5 +1,5 @@
-import EepRollingStockDto from '../../../eep-model/eep-rolling-stock-dto';
-import * as fromJsonData from '../../eep-data-reducer';
+import EepRollingStockDto from '../../../eep-model/EepRollingStockDto';
+import * as fromJsonData from '../../EepDataStore';
 import { RollingStock } from '@ak/web-shared';
 
 export class RollingStockSelector {

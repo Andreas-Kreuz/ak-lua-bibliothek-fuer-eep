@@ -1,5 +1,5 @@
-import EepDataEvent, { DataChangePayload, ListChangePayload } from './eep-data-event';
-import EepDataEffects from './eep-data-effects';
+import EepDataEffects from './EepDataEffects';
+import EepDataEvent, { DataChangePayload, ListChangePayload } from './EepDataEvent';
 
 export interface State {
   eventCounter: number;

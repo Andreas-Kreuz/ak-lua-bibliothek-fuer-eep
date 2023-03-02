@@ -1,4 +1,4 @@
-import AppConfig from './app-config';
+import AppConfig from './AppConfig';
 import getHostName from './getHostname';
 
 export default class AppData {

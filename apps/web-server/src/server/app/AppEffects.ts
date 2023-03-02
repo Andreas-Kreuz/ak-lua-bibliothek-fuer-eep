@@ -1,21 +1,20 @@
+import CommandLineParser from '../CommandLineParser';
+import SocketService from '../clientio/SocketService';
+import CommandEffects from '../command/CommandEffects';
+import EepDataEffects from '../eep-data/EepDataEffects';
+import { CacheService } from '../eep-service/CacheService';
+import EepService from '../eep-service/EepService';
+import IntersectionEffects from '../intersection/IntersectionEffects';
+import LogEffects from '../log/LogEffects';
+import AppConfig from './AppConfig';
+import AppReducer from './AppData';
+import { ServerStatisticsService } from './ServerStatisticsService';
+import { RoomEvent, ServerInfoEvent, SettingsEvent } from '@ak/web-shared';
 import * as express from 'express';
 import * as fs from 'fs';
 import * as path from 'path';
 import { performance } from 'perf_hooks';
 import { Server, Socket } from 'socket.io';
-
-import { RoomEvent, ServerInfoEvent, SettingsEvent } from '@ak/web-shared';
-import SocketService from '../clientio/socket-service';
-import CommandEffects from '../command/command-effects';
-import { CacheService } from '../eep-service/cache-service';
-import EepService from '../eep-service/eep-service';
-import EepDataEffects from '../eep-data/eep-data-effects';
-import LogEffects from '../log/log-effects';
-import AppConfig from './app-config';
-import AppReducer from './app-reducer';
-import { ServerStatisticsService } from './app-statistics.service';
-import IntersectionEffects from '../intersection/intersection-effects';
-import CommandLineParser from '../command-line-parser';
 
 export default class AppEffects {
   private debug = true;
