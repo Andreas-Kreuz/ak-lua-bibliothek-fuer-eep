@@ -11,6 +11,15 @@
 # Global yarn modules
 node_modules
 
+# Apps build and shared folders
+/apps/*/build
+/apps/*/dist
+/apps/*/node_modules
+
+/packages/*/build
+/packages/*/dist
+/packages/*/node_modules
+
 # @ak/web-app
 /apps/web-app/VERSION
 /apps/web-app/cypress/io-empty/LUA/ak/io/exchange/ak*
@@ -21,18 +30,10 @@ node_modules
 /apps/web-app/dist
 
 # @ak/web-server
-/apps/web-server/build
-/apps/web-server/dist
-/apps/web-server/node_modules
 /apps/web-server/target
 
 # @ak/web-shared
-/packages/web-shared/build
-/packages/web-shared/dist
-/packages/web-shared/node_modules
 /packages/web-shared/resources/public
-
-
 
 # compiled output
 /web-app/cypress/io/ak*
@@ -44,7 +45,6 @@ node_modules
 /web-app/tmp
 /web-app/out-tsc
 /web-app/.angular
-
 
 # Ressources
 /web-app/cypress/fixtures/from-eep
