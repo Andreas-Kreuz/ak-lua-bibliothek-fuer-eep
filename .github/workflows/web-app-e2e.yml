@@ -15,25 +15,19 @@ jobs:
           node-version: "16"
           cache: "npm"
 
-      - name: Web-Server Install
-        run: npm install
-        working-directory: web-server
-
-      - name: Web-App Install
-        run: npm install
-        working-directory: web-app-react
+      - name: Install via yarn
+        run: yarn
 
       - name: Web-Server Build (includes building the Web-App)
-        run: npm run-script build
-        working-directory: web-server
+        run: yarn workspace @ak/web-server run build
 
       # Install NPM dependencies, cache them correctly
       # and run all Cypress tests
       - name: Cypress run
         uses: cypress-io/github-action@v5
         with:
-          start: npm run-script start-server-headless
-          working-directory: web-app-react
+          start: yarn workspace @ak/web-app start-server-headless
+          working-directory: apps/web-app
           wait-on: "http://localhost:3000"
           config: baseUrl=http://localhost:3000
           record: true
