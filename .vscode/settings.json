@@ -2,9 +2,7 @@
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.fontFamily": "'Source Code Pro', Consolas, 'Courier New', monospace",
   "editor.minimap.maxColumn": 120,
-  "editor.rulers": [
-    120
-  ],
+  "editor.rulers": [120],
   "editor.wordWrap": "bounded",
   "editor.wordWrapColumn": 120,
   "[typescript]": {
@@ -16,6 +14,10 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[css]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[markdown]": {
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
@@ -131,9 +133,7 @@
     "pending",
     "files"
   ],
-  "Lua.diagnostics.disable": [
-    "lowercase-global"
-  ],
+  "Lua.diagnostics.disable": ["lowercase-global"],
   "Lua.workspace.ignoreDir": [
     ".vscode",
     "assets",
@@ -154,16 +154,7 @@
   "Lua.runtime.version": "Lua 5.3",
   "vscode-lua-format.configPath": "lua-format.conf",
   //"eslint.nodePath": "web-app/node_modules/",
-  "eslint.probe": [
-    "javascript",
-    "javascriptreact",
-    "typescript",
-    "typescriptreact",
-    "html",
-    "vue",
-    "markdown",
-    "html"
-  ],
+  "eslint.probe": ["javascript", "javascriptreact", "typescript", "typescriptreact", "html", "vue", "markdown", "html"],
   "editor.formatOnSave": true,
   "[xml]": {
     "editor.defaultFormatter": "redhat.vscode-xml"

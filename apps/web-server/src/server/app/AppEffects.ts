@@ -1,14 +1,16 @@
-import CommandLineParser from '../CommandLineParser';
 import SocketService from '../clientio/SocketService';
-import CommandEffects from '../command/CommandEffects';
-import EepDataEffects from '../eep-data/EepDataEffects';
-import { CacheService } from '../eep-service/CacheService';
-import EepService from '../eep-service/EepService';
-import IntersectionEffects from '../intersection/IntersectionEffects';
-import LogEffects from '../log/LogEffects';
-import AppConfig from './AppConfig';
-import AppReducer from './AppData';
-import { ServerStatisticsService } from './ServerStatisticsService';
+import { CacheService } from '../eep/server-data/CacheService';
+import EepDataEffects from '../eep/server-data/EepDataEffects';
+import EepService from '../eep/service/EepService';
+import { ServerStatisticsService } from '../eep/service/ServerStatisticsService';
+import { registerCommandMod } from '../mod/command/registerCommandMod';
+import { registerIntersectionMod } from '../mod/intersection/registerIntersectionMod';
+import { registerLogMod } from '../mod/log/registerLogMod';
+import PublicTransportService from '../mod/public-transport/PublicTransportService';
+import TrainUpdateService from '../mod/train/TrainUpdateService';
+import AppConfig from './config/AppConfig';
+import AppReducer from './config/AppData';
+import CommandLineParser from './config/CommandLineParser';
 import { RoomEvent, ServerInfoEvent, SettingsEvent } from '@ak/web-shared';
 import * as express from 'express';
 import * as fs from 'fs';
@@ -20,9 +22,6 @@ export default class AppEffects {
   private debug = true;
   private serverConfigFile: string;
   private eepDataEffects: EepDataEffects;
-  private logEffects: LogEffects;
-  private commandEffects: CommandEffects;
-  private intersectionEffects: IntersectionEffects;
   private store = new AppReducer();
   private TESTMODE = false;
 
@@ -125,7 +124,7 @@ export default class AppEffects {
       }
       if (dir) {
         console.log('Directory set to : ' + dir);
-        this.registerHandlers(eepService);
+        this.initServices(eepService);
         this.store.setEepDirOk(true);
         this.saveEepDirectory(eepDir);
         this.io.to(SettingsEvent.Room).emit(SettingsEvent.DirOk, eepDir);
@@ -140,19 +139,15 @@ export default class AppEffects {
     });
   }
 
-  private registerHandlers(eepService: EepService) {
-    this.eepDataEffects = new EepDataEffects(
-      this.app,
-      this.router,
-      this.io,
-      this.socketService,
-      eepService as CacheService
-    );
+  private initServices(eepService: EepService) {
+    this.eepDataEffects = new EepDataEffects(this.router, this.io, this.socketService, eepService as CacheService);
 
     // Init event handler
     eepService.setOnNewEventLine((eventLines: string) => {
       this.eepDataEffects.onNewEventLine(eventLines);
     });
+
+    this.registerMods(this.eepDataEffects, eepService);
 
     // Init JsonHandler
     eepService.setOnJsonContentChanged((jsonString: string, lastJsonUpdate: number) => {
@@ -162,22 +157,16 @@ export default class AppEffects {
       performance.measure(ServerStatisticsService.TimeForJsonParsing, 'json-parsing:before', 'json-parsing:after');
       this.statistics.setLastEepTime(lastJsonUpdate);
     });
+  }
 
-    // Init LogHandler
-    this.logEffects = new LogEffects(
-      this.app,
-      this.io,
-      this.socketService,
-      eepService.getCurrentLogLines,
-      eepService.queueCommand
-    );
-    eepService.setOnNewLogLine((logLines: string) => this.logEffects.onNewLogLine(logLines));
-    eepService.setOnLogCleared(() => this.logEffects.onLogCleared());
+  private registerMods(eepDataEffects: EepDataEffects, eepService: EepService) {
+    // register dynamic rooms services
+    eepDataEffects.registerDynamicRoom(new TrainUpdateService(this.io));
+    eepDataEffects.registerDynamicRoom(new PublicTransportService(this.io));
 
-    // Init CommandHandler
-    this.commandEffects = new CommandEffects(this.app, this.io, this.socketService, eepService.queueCommand);
-
-    // Init IntersectionHandler
-    this.intersectionEffects = new IntersectionEffects(this.app, this.io, this.socketService, eepService.queueCommand);
+    // register mods
+    registerLogMod(this.io, this.socketService, eepService, this.debug);
+    registerCommandMod(this.io, this.socketService, eepService, this.debug);
+    registerIntersectionMod(this.io, this.socketService, eepService, this.debug);
   }
 }
