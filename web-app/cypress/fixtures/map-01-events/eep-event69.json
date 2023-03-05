@@ -1,1 +1,0 @@
-{"eventCounter":69,"payload":{"keyId":"name","room":"public-transport-module-settings","list":[{"category":"Tipp-Texte für Anzeigetafeln","eepFunction":"Line.setShowDepartureTippText","type":"boolean","value":true,"description":"Zeige Abfahrten für Bus und Tram-Linien als TippText an","name":"Nächste Abfahrten"}]},"type":"ListChanged"}
