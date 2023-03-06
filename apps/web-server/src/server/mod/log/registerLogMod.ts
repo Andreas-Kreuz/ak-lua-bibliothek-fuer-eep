@@ -17,7 +17,7 @@ export const registerLogMod = (io: Server, socketService: SocketService, eepServ
   eepService.setOnNewLogLine((logLines: string) => logLinesSubject.next(logLines));
 
   eepService.setOnLogCleared(() => {
-    console.log('Clear log ');
+    if (debug) console.log('⚠️ Clear log ');
     io.to(LogEvent.Room).emit(LogEvent.LinesCleared);
   });
 
@@ -26,17 +26,16 @@ export const registerLogMod = (io: Server, socketService: SocketService, eepServ
   const socketConnected = (socket: Socket) => {
     socket.on(RoomEvent.JoinRoom, (rooms: { room: string }) => {
       if (rooms.room === LogEvent.Room) {
-        if (debug) console.log('EMIT ' + LogEvent.LinesAdded + ' to ' + socket.id);
-        socket.emit(LogEvent.LinesAdded, eepService.getCurrentLogLines());
-        console.log('JOINED LOG ROOM: ', socket.id);
+        if (debug) console.log('🟩 JOIN 📄', LogEvent.Room, 'from', socket.id);
+        const lines = eepService.getCurrentLogLines();
+        if (debug) console.log('🟨 EMIT 📄 ' + LogEvent.LinesAdded + ' to ' + socket.id, lines);
+        socket.emit(LogEvent.LinesAdded, lines);
       }
     });
 
     socket.on(RoomEvent.LeaveRoom, (rooms: { room: string }) => {
       if (rooms.room === LogEvent.Room) {
-        // if (this.debug) console.log('EMIT ' + LogEvent.LinesAdded + ' to ' + socket.id);
-        // socket.emit(LogEvent.LinesAdded, this.getCurrentLogLines());
-        console.log('LEFT LOG ROOM: ', socket.id);
+        if (debug) console.log('🟥 LEFT 📄', LogEvent.Room, ': ', socket.id);
       }
     });
 
