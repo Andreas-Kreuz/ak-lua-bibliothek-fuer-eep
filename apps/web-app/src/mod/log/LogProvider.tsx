@@ -1,6 +1,6 @@
-import { createContext, Dispatch, ReactNode, useContext, useReducer } from 'react';
-import { LogEvent } from '@ak/web-shared';
 import { useRoomHandler } from '../../io/useRoomHandler';
+import { LogEvent } from '@ak/web-shared';
+import { createContext, Dispatch, ReactNode, useContext, useReducer } from 'react';
 
 type LogState = {
   lines: { line: string; key: number }[];

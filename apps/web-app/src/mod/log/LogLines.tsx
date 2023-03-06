@@ -1,7 +1,7 @@
+import { useLog, useLogDispatch } from './LogProvider';
 import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
 import { useEffect, useRef, useState } from 'react';
-import { useLog, useLogDispatch } from './LogProvider';
 
 const List = styled('ul')({
   m: 0,
