@@ -1,5 +1,5 @@
-import { Server, Socket } from 'socket.io';
 import { RoomEvent } from '@ak/web-shared';
+import { Server, Socket } from 'socket.io';
 
 export default class SocketService {
   private debug = true;
@@ -21,12 +21,12 @@ export default class SocketService {
 
       socket.on(RoomEvent.JoinRoom, (room: { room: string }) => {
         socket.join(room.room);
-        if (this.debug) console.log('JOIN ' + room.room + ' from ' + socket.id);
+        if (this.debug) console.log('🟩 JOIN ' + room.room + ' from ' + socket.id);
       });
 
       socket.on(RoomEvent.LeaveRoom, (room: { room: string }) => {
         socket.leave(room.room);
-        if (this.debug) console.log('LEFT ' + room.room + ' by ' + socket.id);
+        if (this.debug) console.log('🟥 LEFT ' + room.room + ' by ' + socket.id);
       });
     });
   }
