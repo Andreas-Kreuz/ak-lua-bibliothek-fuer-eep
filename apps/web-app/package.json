@@ -13,9 +13,10 @@
     "start-playing": "concurrently -k \"yarn run start-server-for-playing\" \"yarn run dev\"",
     "start-server-electron": "yarn workspace @ak/web-server run start-e2e-electron",
     "start-server-headless": "yarn workspace @ak/web-server run start-e2e-headless",
-    "cy-tests": "concurrently -k \"yarn run start-server-electron\" \"yarn run dev\" \"cypress open\"",
-    "cy-tests-run-gui": "concurrently -k \"yarn run start-server-electron\" \"yarn run dev\" \"cypress run --headed\"",
-    "cy-tests-run-headless": "concurrently -k \"yarn run start-server-headless\" \"cypress run --config baseUrl=http://localhost:5173\"",
+    "cy-tests": "concurrently -k \"yarn run start-server-electron\" \"yarn run preview\" \"cypress open\"",
+    "cy-tests-run-gui": "concurrently -k \"yarn run start-server-electron\" \"yarn run preview\" \"cypress run --headed\"",
+    "cy-tests-run-log": "concurrently -k \"yarn run start-server-electron\" \"yarn run preview\" \"cypress run --headed --spec cypress/e2e/modules/log/log_spec.cy.ts\"",
+    "cy-tests-run-headless": "concurrently -k \"yarn run start-server-headless\" \"cypress run --config baseUrl=http://localhost:4173\"",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
     "version": "echo $npm_package_version > VERSION"
