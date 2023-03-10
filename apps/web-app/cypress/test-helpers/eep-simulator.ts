@@ -1,6 +1,6 @@
 import { version } from '../../package.json';
 
-enum FileNames {
+export enum FileNames {
   eepOutJsonOut = 'cypress/io/LUA/ak/io/exchange/ak-eep-out.json',
   eepOutJsonOutFinished = 'cypress/io/LUA/ak/io/exchange/ak-eep-out-json.isfinished',
   eepOutLog = 'cypress/io/LUA/ak/io/exchange/ak-eep-out.log',
@@ -16,8 +16,10 @@ export default class EepSimulator {
 
   reset = () => {
     this.eventCounter = 0;
+    cy.task('deleteEepLogFile', FileNames.eepOutLog);
+    cy.readFile(FileNames.eepOutLog).should('not.exist');
     cy.readFile(FileNames.serverWatching).should('exist');
-    cy.writeFile(FileNames.eepOutLog, '');
+    cy.writeFile(FileNames.eepOutLog, '\n');
     cy.writeFile(FileNames.serverOutCommands, '');
     this.eepEvent('reset.json');
   };
@@ -55,6 +57,7 @@ export default class EepSimulator {
     });
   }
 
+  // This will rewrite THE WHOLE LOG FILE and fire all oldLines and the new line
   writeLogLine(line: string) {
     cy.readFile(FileNames.eepOutLog, 'latin1').then((oldLines) => {
       cy.log(oldLines);

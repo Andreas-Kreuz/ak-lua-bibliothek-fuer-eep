@@ -10,6 +10,7 @@ export const registerLogMod = (io: Server, socketService: SocketService, eepServ
 
   logLinesSubject.pipe(bufferTime(500)).forEach((lines) => {
     if (lines && lines.length > 0) {
+      if (debug) console.log('🟨 EMIT ' + LogEvent.LinesAdded + ' to ' + LogEvent.Room, '\n📄' + lines.join('\n📄'));
       io.to(LogEvent.Room).emit(LogEvent.LinesAdded, lines.join('\n'));
     }
   });
@@ -17,7 +18,7 @@ export const registerLogMod = (io: Server, socketService: SocketService, eepServ
   eepService.setOnNewLogLine((logLines: string) => logLinesSubject.next(logLines));
 
   eepService.setOnLogCleared(() => {
-    if (debug) console.log('⚠️ Clear log ');
+    if (debug) console.log('⚠️ Clear log 📄');
     io.to(LogEvent.Room).emit(LogEvent.LinesCleared);
   });
 

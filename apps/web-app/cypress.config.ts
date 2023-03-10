@@ -1,4 +1,6 @@
+import { FileNames } from './cypress/test-helpers/eep-simulator';
 import { defineConfig } from 'cypress';
+import { rm } from 'fs';
 
 export default defineConfig({
   projectId: 'g5rj4e',
@@ -6,7 +8,12 @@ export default defineConfig({
     baseUrl: 'http://localhost:4173',
     testIsolation: false,
     setupNodeEvents(on, config) {
-      // implement node event listeners here
+      on('task', {
+        deleteEepLogFile(fileName) {
+          rm(fileName, () => {});
+          return null;
+        },
+      });
     },
   },
   component: {

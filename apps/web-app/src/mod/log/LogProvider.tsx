@@ -17,7 +17,8 @@ const initialState = { lines: [], autoScroll: true };
 const reducer = (state: LogState, action: LogDispatch) => {
   switch (action.type) {
     case 'added': {
-      const newLines = [...state.lines];
+      const oldLines = state.lines;
+      const newLines = [...oldLines];
       var counter = state.lines.length > 0 ? state.lines[state.lines.length - 1].key : 0;
       for (const l of action.fetchedLines) {
         if (l.length > 0) {

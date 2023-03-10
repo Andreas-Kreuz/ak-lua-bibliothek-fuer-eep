@@ -7,9 +7,17 @@ const getLogList = () => {
   return cy.get('ul');
 };
 
+before(() => {
+  simulator.reset();
+});
+
 beforeEach(() => {
   simulator.reset();
-  cy.wait(1000); // Give the web server some time to remove the previous log lines
+  cy.wait(500); // Give the web server some time to remove the previous log lines
+});
+
+afterEach(() => {
+  cy.wait(500);
 });
 
 describe('Logger', () => {
@@ -58,8 +66,7 @@ describe('Logger', () => {
     });
 
     it('displays log lines 1 to 4', () => {
-      simulator.writeLogLine('Line 1\nLine 2\nLine 3');
-      simulator.writeLogLine('Line 4');
+      simulator.writeLogLine('Line 1\nLine 2\nLine 3\nLine 4');
       cy.visit('/simple');
       cy.wait(500).then(() => {
         cy.readFile(simulator.fileNames.eepOutLog).then((a) => cy.log(a));

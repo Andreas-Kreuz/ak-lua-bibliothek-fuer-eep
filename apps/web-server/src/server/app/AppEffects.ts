@@ -117,7 +117,7 @@ export default class AppEffects {
     const completeDir = path.resolve(eepDir, 'LUA/ak/io/exchange/');
 
     // Check the directory and register handlers on success
-    const eepService = new EepService();
+    const eepService = new EepService(this.debug);
     eepService.reInit(completeDir, (err: string, dir: string) => {
       if (err) {
         console.error(err);

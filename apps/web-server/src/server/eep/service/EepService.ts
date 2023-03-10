@@ -20,6 +20,8 @@ export default class EepService implements CacheService {
   private eventLineAppeared: (line: string) => void;
   private logWasCleared: () => void;
 
+  constructor(private debug = false) {}
+
   reInit(dir: string, callback: (err: string, dir: string) => void): void {
     this.disconnectFromFiles();
 
@@ -56,17 +58,15 @@ export default class EepService implements CacheService {
       this.jsonFileWatcher.close();
     }
     this.onJsonUpdate = (jsonText: string, lastUpdate: number) => {
-      console.log('Received: ' + jsonText.length + ' bytes of JSON ' + lastUpdate);
+      if (this.debug) console.log('Received: ' + jsonText.length + ' bytes of JSON ' + lastUpdate);
     };
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    this.eventLineAppeared = () => {
-      //console.log(line);
+    this.eventLineAppeared = (line) => {
+      if (this.debug) console.log(line);
     };
-    this.logLineAppeared = (line: string) => {
-      console.log(line);
-    };
+    this.logLineAppeared = (line: string) => {};
     this.logWasCleared = () => {
-      console.log('Log was cleared');
+      if (this.debug) console.log('Log was cleared');
     };
   }
 
@@ -75,7 +75,7 @@ export default class EepService implements CacheService {
       const cacheFile = path.resolve(this.dir, FileNames.serverCache);
       const fileContents = fs.readFileSync(cacheFile);
       const cachedObject = JSON.parse(fileContents.toString());
-      console.log('CACHE FILE READ FROM: ' + FileNames.serverCache);
+      if (this.debug) console.log('CACHE FILE READ FROM: ' + FileNames.serverCache);
       return cachedObject;
     } catch (err) {
       console.log(err);
@@ -171,7 +171,10 @@ export default class EepService implements CacheService {
       tail.on('line', (line: string) => {
         const stats = fs.statSync(logFile);
         const fileSizeInBytes = stats['size'];
+        if (this.debug) console.log('NEW LINE 📄', line, ' Size: ', this.lastLogFileSize, ' / ', fileSizeInBytes);
+
         if (this.lastLogFileSize && fileSizeInBytes < this.lastLogFileSize) {
+          if (this.debug) console.log('🟦 Log file is smaller than before');
           this.logWasCleared(); // TODO: NOT WORKING; BECAUSE TAIL DOES NOT LOOK BACK
           tail.unwatch();
           this.lastLogFileSize = 0;
@@ -182,7 +185,7 @@ export default class EepService implements CacheService {
       });
 
       tail.on('error', (error: string) => {
-        console.log(error);
+        if (this.debug) console.log(error);
         tail.unwatch();
         this.lastLogFileSize = 0;
         this.attachAkEepOutLogFile();
@@ -194,7 +197,7 @@ export default class EepService implements CacheService {
 
   getCurrentLogLines = (): string => {
     try {
-      console.log('Read: ' + path.resolve(this.dir, FileNames.eepOutLog));
+      if (this.debug) console.log('Read: ' + path.resolve(this.dir, FileNames.eepOutLog));
       return fs.readFileSync(path.resolve(this.dir, FileNames.eepOutLog), { encoding: 'latin1' });
     } catch (e) {
       console.log(e);
@@ -204,13 +207,14 @@ export default class EepService implements CacheService {
 
   private onFileAppearance(expectedFile: string, callback: () => void): void {
     if (fs.existsSync(expectedFile)) {
-      console.log('[FILE] Found: ' + expectedFile);
+      if (this.debug) console.log('[FILE] Found: ' + expectedFile);
       callback();
     } else {
-      console.log('[FILE] Wait for: ' + path.basename(expectedFile) + ' in ' + path.dirname(expectedFile));
+      if (this.debug)
+        console.log('[FILE] Wait for: ' + path.basename(expectedFile) + ' in ' + path.dirname(expectedFile));
       const watcher = fs.watch(path.dirname(expectedFile), {}, (eventType: string, filename: string) => {
         if (filename === path.basename(expectedFile) && fs.existsSync(expectedFile)) {
-          console.log('[FILE] Found: ' + expectedFile);
+          if (this.debug) console.log('[FILE] Found: ' + expectedFile);
           callback();
           watcher.close();
         }
@@ -233,7 +237,7 @@ export default class EepService implements CacheService {
         if (err) {
           console.error(err);
         }
-        console.log('on(exit): ' + file + ' successfully deleted');
+        if (this.debug) console.log('on(exit): ' + file + ' successfully deleted');
       });
     });
   }
@@ -257,7 +261,7 @@ export default class EepService implements CacheService {
   queueCommand = (command: string) => {
     const file = path.resolve(this.dir, FileNames.serverOutCommands);
     try {
-      console.log('Queuing: ' + command);
+      if (this.debug) console.log('Queuing: ' + command);
       fs.appendFileSync(file, command + '\n', { encoding: 'latin1' });
     } catch (error) {
       console.log(error);
