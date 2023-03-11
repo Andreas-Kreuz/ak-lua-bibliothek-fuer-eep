@@ -44,7 +44,7 @@ export function useRoomHandler(
       });
       if (cleanUpHandler) cleanUpHandler();
     };
-  }, []);
+  }, [roomName]);
 
   useEffect(() => {
     if (registered) {
@@ -56,5 +56,5 @@ export function useRoomHandler(
       if (debug) console.log(roomName, myNr, 'LEAVE ROOM', count);
       socket.emit(RoomEvent.LeaveRoom, { room: roomName });
     };
-  }, [registered]);
+  }, [registered, roomName]);
 }

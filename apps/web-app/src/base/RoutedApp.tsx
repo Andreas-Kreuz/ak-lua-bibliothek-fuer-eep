@@ -4,7 +4,7 @@ import { BrowserRouter as Router, RouterProvider, createBrowserRouter, Outlet } 
 
 const IntersectionDetails = lazy(() => import('../mod/intersections/IntersectionDetails'));
 const IntersectionOverview = lazy(() => import('../mod/intersections/IntersectionOverview'));
-const Trains = lazy(() => import('../mod/trains/Trains'));
+const Trains = lazy(() => import('../mod/trains/TrainMod'));
 const MainMenu = lazy(() => import('../home/MainMenu'));
 const Server = lazy(() => import('../server/Server'));
 const StatusGrid = lazy(() => import('../status/StatusGrid'));
