@@ -1,17 +1,21 @@
+import AppCardBg from '../../ui/AppCardBg';
+import AppCardGrid from '../../ui/AppCardGrid';
+import AppCardGridContainer from '../../ui/AppCardGridContainer';
+import AppPage from '../../ui/AppPage';
+import AppPageHeadline from '../../ui/AppPageHeadline';
+import ModuleSettings from '../../ui/ModuleSettings';
+import ModuleSettingsButton from '../../ui/ModuleSettingsButton';
+import useIntersectionSettings from './useIntersectionSettings';
+import useIntersections from './useIntersections';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardActionArea from '@mui/material/CardActionArea';
 import CardActions from '@mui/material/CardActions';
 import Typography from '@mui/material/Typography';
-import AppCardBg from '../../ui/AppCardBg';
-import useIntersections from './useIntersections';
-import AppCardGrid from '../../ui/AppCardGrid';
-import AppPageHeadline from '../../ui/AppPageHeadline';
-import AppPage from '../../ui/AppPage';
-import AppCardGridContainer from '../../ui/AppCardGridContainer';
 
 function IntersectionOverview() {
   const intersections = useIntersections();
+  const settings = useIntersectionSettings();
 
   return (
     <AppPage>
@@ -29,8 +33,18 @@ function IntersectionOverview() {
         ))}
       </AppCardGridContainer>
 
-      <AppPageHeadline gutterTop>Hilfe</AppPageHeadline>
+      <AppPageHeadline gutterTop>Einstellungen und Hilfe</AppPageHeadline>
       <AppCardGridContainer>
+        {settings && (
+          <AppCardGrid>
+            <Card sx={{ p: 2 }}>
+              <Typography variant="h5" gutterBottom>
+                Einstellungen
+              </Typography>
+              <ModuleSettings settings={settings} />
+            </Card>
+          </AppCardGrid>
+        )}
         <AppCardGrid>
           <Card>
             <CardActionArea sx={{ p: 2 }} disabled>
