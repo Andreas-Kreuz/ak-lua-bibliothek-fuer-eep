@@ -1,18 +1,19 @@
+import { useSocket } from '../../io/SocketProvider';
+import AppCaption from '../../ui/AppCaption';
+import AppHeadline from '../../ui/AppHeadline';
 import AppPage from '../../ui/AppPage';
-import Stack from '@mui/material/Stack';
-import Chip from '@mui/material/Chip';
+import AppPaper from '../../ui/AppPaper';
 import useIntersection from './useIntersection';
 import useIntersectionSwitching from './useIntersectionSwitching';
-import { useParams } from 'react-router-dom';
-import AppPaper from '../../ui/AppPaper';
-import AppHeadline from '../../ui/AppHeadline';
-import { useSocket } from '../../io/SocketProvider';
 import { CommandEvent, IntersectionEvent } from '@ak/web-shared';
-import Divider from '@mui/material/Divider';
-import { styled, useTheme } from '@mui/material/styles';
-import AppCaption from '../../ui/AppCaption';
-import Typography from '@mui/material/Typography/Typography';
+import CamIcon from '@mui/icons-material/Videocam';
 import Alert from '@mui/material/Alert';
+import Chip from '@mui/material/Chip';
+import Divider from '@mui/material/Divider';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography/Typography';
+import { styled, useTheme } from '@mui/material/styles';
+import { useParams } from 'react-router-dom';
 
 function IntersectionDetails() {
   const theme = useTheme();
@@ -132,6 +133,7 @@ function IntersectionDetails() {
                         mr: 1,
                         mb: 1,
                       }}
+                      icon={<CamIcon />}
                       label={c}
                       variant={'filled'}
                       key={c}

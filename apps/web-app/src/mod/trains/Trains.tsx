@@ -3,6 +3,7 @@ import AppCardGrid from '../../ui/AppCardGrid';
 import AppCardGridContainer from '../../ui/AppCardGridContainer';
 import AppPageHeadline from '../../ui/AppHeadline';
 import AppPage from '../../ui/AppPage';
+import TrainCamList from './TrainCamList';
 import setTrackType from './setTrackType';
 import useTrackType from './useTrackType';
 import useTrains from './useTrains';
@@ -12,7 +13,6 @@ import Card from '@mui/material/Card';
 import CardActionArea from '@mui/material/CardActionArea';
 import CardActions from '@mui/material/CardActions';
 import Chip from '@mui/material/Chip';
-import Divider from '@mui/material/Divider';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Unstable_Grid2/Grid2';
@@ -32,11 +32,6 @@ const Trains = () => {
   const trains = useTrains();
   const trackType = useTrackType();
   const setType = setTrackType();
-
-  if (trains.length > 0) {
-    console.log(trains[0]);
-  }
-
   const getImageName = (trackType: string): string => {
     switch (trackType) {
       case 'road':
@@ -88,7 +83,12 @@ const Trains = () => {
       <AppCardGridContainer>
         {trains.map((t) => (
           <Grid xs={12} key={t.id}>
-            <AppCardBg title={`Fahrzeug`} id={t.id} image={getImageName(t.trackType)} to={`/train/${t.id}`}>
+            <AppCardBg
+              title={`Fahrzeug`}
+              id={t.id}
+              image={getImageName(t.trackType)}
+              //  to={`/train/${t.id}`}
+            >
               {/* <Chip variant="filled" label={t.destination} />
               <Chip variant="filled" label={t.id} />
               <Chip variant="filled" label={t.line} />
@@ -97,6 +97,7 @@ const Trains = () => {
               <Chip variant="filled" label={t.trackType} />
               <Chip variant="filled" label={t.trainType} />
               <Divider sx={{ my: 1 }} /> */}
+              <TrainCamList trainName={t.id} />
             </AppCardBg>
           </Grid>
         ))}
