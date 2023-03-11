@@ -1,5 +1,9 @@
 # Änderungen an der Software
 
+## v0.13.2
+
+- ⭐ Anzeige von Fahrzeugen nach Gleissystem
+
 ## v0.13.1
 
 - ⭐ Neu: Log-Anzeige für den großen Bildschirm
