@@ -4,7 +4,6 @@ import AppCardGridContainer from '../../ui/AppCardGridContainer';
 import AppPage from '../../ui/AppPage';
 import AppPageHeadline from '../../ui/AppPageHeadline';
 import ModuleSettings from '../../ui/ModuleSettings';
-import ModuleSettingsButton from '../../ui/ModuleSettingsButton';
 import useIntersectionSettings from './useIntersectionSettings';
 import useIntersections from './useIntersections';
 import Button from '@mui/material/Button';
