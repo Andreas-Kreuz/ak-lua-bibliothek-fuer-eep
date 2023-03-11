@@ -1,5 +1,6 @@
 import ModuleSetting from './ModuleSetting';
 import { LuaSettings } from '@ak/web-shared';
+import Box from '@mui/material/Box';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import Typography from '@mui/material/Typography';
@@ -28,21 +29,19 @@ const ModuleSettings = (props: { settings: LuaSettings }) => {
     };
   });
 
-  console.log(catSettings);
-
   return (
     <>
       <FormControl component="fieldset" variant="standard">
         <FormLabel component="legend">{props.settings.moduleName}</FormLabel>
         {catSettings.map((c) => (
-          <>
+          <Box key={c.category}>
             <Typography variant="h6" pt={2}>
               {c.category}
             </Typography>
             {c.settings.map((s) => (
               <ModuleSetting setting={s} key={s.description} />
             ))}
-          </>
+          </Box>
         ))}
       </FormControl>
     </>
