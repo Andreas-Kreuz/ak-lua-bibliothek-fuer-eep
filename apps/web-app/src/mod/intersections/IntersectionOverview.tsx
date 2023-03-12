@@ -3,7 +3,7 @@ import AppCardGrid from '../../ui/AppCardGrid';
 import AppCardGridContainer from '../../ui/AppCardGridContainer';
 import AppPage from '../../ui/AppPage';
 import AppPageHeadline from '../../ui/AppPageHeadline';
-import ModuleSettings from '../../ui/ModuleSettings';
+import ModuleSettingsButton from '../../ui/ModuleSettingsButton';
 import useIntersectionSettings from './useIntersectionSettings';
 import useIntersections from './useIntersections';
 import Button from '@mui/material/Button';
@@ -18,7 +18,7 @@ function IntersectionOverview() {
 
   return (
     <AppPage>
-      <AppPageHeadline>Kreuzungen</AppPageHeadline>
+      <AppPageHeadline rightSettings={<ModuleSettingsButton settings={settings} />}>Ampelkreuzungen</AppPageHeadline>
       <AppCardGridContainer>
         {intersections.map((i) => (
           <AppCardGrid key={i.id}>
@@ -32,18 +32,8 @@ function IntersectionOverview() {
         ))}
       </AppCardGridContainer>
 
-      <AppPageHeadline gutterTop>Einstellungen und Hilfe</AppPageHeadline>
+      <AppPageHeadline gutterTop>Hilfe</AppPageHeadline>
       <AppCardGridContainer>
-        {settings && (
-          <AppCardGrid>
-            <Card sx={{ p: 2 }}>
-              <Typography variant="h5" gutterBottom>
-                Einstellungen
-              </Typography>
-              <ModuleSettings settings={settings} />
-            </Card>
-          </AppCardGrid>
-        )}
         <AppCardGrid>
           <Card>
             <CardActionArea sx={{ p: 2 }} disabled>

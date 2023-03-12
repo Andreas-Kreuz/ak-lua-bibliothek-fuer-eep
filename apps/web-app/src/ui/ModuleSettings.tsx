@@ -35,7 +35,7 @@ const ModuleSettings = (props: { settings: LuaSettings }) => {
         <FormLabel component="legend">{props.settings.moduleName}</FormLabel>
         {catSettings.map((c) => (
           <Box key={c.category}>
-            <Typography variant="h6" pt={2}>
+            <Typography variant="h6" pt={5}>
               {c.category}
             </Typography>
             {c.settings.map((s) => (

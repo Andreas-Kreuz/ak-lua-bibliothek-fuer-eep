@@ -3,8 +3,8 @@ import '@fontsource/anek-latin/300.css';
 import '@fontsource/anek-latin/400.css';
 import '@fontsource/anek-latin/500.css';
 import '@fontsource/anek-latin/700.css';
-import { createTheme } from '@mui/material/styles';
 import { grey, indigo, lime, yellow } from '@mui/material/colors';
+import { createTheme } from '@mui/material/styles';
 
 const borderRadius = 12;
 
@@ -34,10 +34,10 @@ export const theme = createTheme({
         elevation: 10,
       },
     },
-    MuiCardMedia: {
+    MuiButton: {
       styleOverrides: {
         root: {
-          borderRadius: borderRadius,
+          borderRadius: 6,
         },
       },
     },
@@ -48,7 +48,14 @@ export const theme = createTheme({
       },
       styleOverrides: {
         root: {
-          // borderColor: '#aaa',
+          borderRadius: borderRadius,
+        },
+      },
+    },
+    MuiCardMedia: {
+      styleOverrides: {
+        root: {
+          borderRadius: borderRadius,
         },
       },
     },

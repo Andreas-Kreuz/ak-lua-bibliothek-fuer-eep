@@ -1,8 +1,6 @@
 import { useSocket } from '../io/SocketProvider';
 import { CommandEvent, LuaSetting } from '@ak/web-shared';
-import { FormLabel, FormGroup, FormControlLabel, Switch, FormHelperText } from '@mui/material';
-import FormControl from '@mui/material/FormControl';
-import Typography from '@mui/material/Typography';
+import { FormGroup, FormControlLabel, Switch, FormHelperText } from '@mui/material';
 import { useState } from 'react';
 
 const ModuleSetting = (props: { setting: LuaSetting<boolean> }) => {
@@ -20,7 +18,7 @@ const ModuleSetting = (props: { setting: LuaSetting<boolean> }) => {
 
   return (
     <>
-      <FormGroup>
+      <FormGroup sx={{ pt: 2 }}>
         <FormControlLabel
           control={<Switch checked={checked} onClick={handleChange} name={props.setting.name} />}
           label={props.setting.name}
