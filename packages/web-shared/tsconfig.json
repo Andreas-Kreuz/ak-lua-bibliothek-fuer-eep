@@ -5,8 +5,7 @@
     "baseUrl": ".",
     "outDir": "./build",
     "sourceMap": true,
-    "moduleResolution": "node",
-    "declaration": true
+    "moduleResolution": "node"
   },
   "include": ["src"]
 }
