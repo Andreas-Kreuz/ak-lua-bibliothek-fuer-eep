@@ -1,20 +1,20 @@
-import Paper from '@mui/material/Paper';
-import ArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import ArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { useSocket } from '../../io/SocketProvider';
+import LogLines from './LogLines';
+import { useLog, useLogDispatch } from './LogProvider';
+import { LogEvent } from '@ak/web-shared';
 import DeleteIcon from '@mui/icons-material/Delete';
+import ArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import ArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
-import Typography from '@mui/material/Typography';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import { useTheme } from '@mui/material/styles';
-import { useState } from 'react';
-import { LogEvent } from '@ak/web-shared';
-import { useSocket } from '../../io/SocketProvider';
-import LogLines from './LogLines';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import Paper from '@mui/material/Paper';
 import Switch from '@mui/material/Switch';
-import { useLog, useLogDispatch } from './LogProvider';
+import Typography from '@mui/material/Typography';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useState } from 'react';
 
 function LogPanel() {
   const socket = useSocket();
@@ -58,6 +58,7 @@ function LogPanel() {
           m: 0,
           mr: open ? 0 : 2,
           p: 0,
+          zIndex: 2,
           maxWidth: '100%',
           maxHeight: open ? 'calc(100vh - 60px)' : '150px',
           transition: theme.transitions.create(['max-width', 'max-height', 'margin-right'], transitionOptions),
