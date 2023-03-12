@@ -10,6 +10,7 @@ export default class EepTrainDto {
     public line: string,
     public destination: string,
     public direction: string,
-    public speed: number
+    public speed: number,
+    public movesForward: boolean
   ) {}
 }

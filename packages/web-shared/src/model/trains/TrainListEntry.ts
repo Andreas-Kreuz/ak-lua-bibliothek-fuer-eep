@@ -6,9 +6,13 @@ interface TrainListEntry {
   route: string;
   line: string;
   destination: string;
+  via?: string;
+  firstRollingStockName: string;
+  lastRollingStockName: string;
   trainType: TrainType;
   trackType: string;
   rollingStockCount: number;
+  movesForward: boolean;
 }
 
 export default TrainListEntry;

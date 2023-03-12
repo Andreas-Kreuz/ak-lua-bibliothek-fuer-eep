@@ -32,6 +32,9 @@ export class TrainSelector {
         trainType: trainType,
         trackType: trainDto.trackType,
         rollingStockCount: rollingStock.length,
+        movesForward: trainDto.movesForward,
+        firstRollingStockName: rollingStock[trainDto.movesForward ? 0 : rollingStock.length - 1]?.name,
+        lastRollingStockName: rollingStock[trainDto.movesForward ? rollingStock.length - 1 : 0]?.name,
       };
       this.trainListEntryMap.set(trainListEntry.id, trainListEntry);
 

@@ -13,35 +13,26 @@ function AppCardBg(props: {
   title: string;
   subtitle?: string;
   id?: string;
+  additionalChips?: ReactNode[];
   to?: string;
   icon?: string;
   image: string;
   small?: boolean;
+  expanded?: boolean;
+  setExpanded?: (expanded: boolean) => void;
 }) {
+  const handleExpand = () => {
+    if (props.setExpanded) {
+      props.setExpanded(!props.expanded);
+    }
+  };
   const contents = (
-    <Box>
-      <Typography variant="h5" gutterBottom>
-        {props.title}
-      </Typography>
-      {props.subtitle && (
-        <Typography variant="h5" gutterBottom>
-          {props.subtitle}
-        </Typography>
-      )}
-      <Stack direction="row" spacing={1}>
-        {props.icon && <img src={props.icon} height="32" />}
-        {props.id && <Chip label={props.id} sx={{ backgroundColor: 'rgba(255,255,255,0.8)' }} />}{' '}
-      </Stack>
-      {props.children && <Divider sx={{ my: 1 }} />}
-      {props.children}
-    </Box>
-  );
-
-  return (
-    <Card>
+    <Stack sx={{ flexDirection: 'column', alignItems: 'center' }}>
       <CardActionArea
         component={RouterLink}
         to={props.to || ''}
+        onClick={handleExpand}
+        disableRipple={(props.setExpanded && true) || false}
         sx={{
           p: 2,
           background:
@@ -56,10 +47,25 @@ function AppCardBg(props: {
           backgroundRepeat: 'no-repeat',
         }}
       >
-        <Stack sx={{ flexDirection: { xs: 'row' }, alignItems: 'center' }}>{contents}</Stack>
+        <Typography variant="h5" gutterBottom>
+          {props.title}
+        </Typography>
+        {props.subtitle && (
+          <Typography variant="h5" gutterBottom>
+            {props.subtitle}
+          </Typography>
+        )}
+        <Stack direction="row" spacing={1} sx={{ '& .MuiChip-outlined': { backgroundColor: 'rgba(255,255,255,0.8)' } }}>
+          {props.icon && <img src={props.icon} height="32" />}
+          {props.id && <Chip label={props.id} />}
+          {props.additionalChips && props.additionalChips.map((e) => e)}
+        </Stack>
       </CardActionArea>
-    </Card>
+      {props.children}
+    </Stack>
   );
+
+  return <Card>{contents}</Card>;
 }
 
 export default AppCardBg;

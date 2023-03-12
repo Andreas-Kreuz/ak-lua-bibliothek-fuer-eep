@@ -22,7 +22,11 @@ export const registerCommandMod = (
       queueCommand(command);
     });
 
-    socket.on(CommandEvent.ChangeCamToTrain, (action: { trainName: string; id?: number }) => {
+    socket.on(CommandEvent.ChangeCamToTrain, (action: { trainName: string; rollingStockName: string; id?: number }) => {
+      if (action.id === 8 || action.id === 9 || action.id === 10) {
+        queueCommand('EEPSetTrainActive|' + action.trainName);
+        queueCommand('EEPRollingstockSetActive|' + action.rollingStockName);
+      }
       const camId = action.id ? action.id : 9;
       const command = 'EEPSetPerspectiveCamera|' + camId + '|' + action.trainName;
       queueCommand(command);
@@ -30,7 +34,15 @@ export const registerCommandMod = (
 
     socket.on(
       CommandEvent.ChangeCamToRollingStock,
-      (action: { rollingStock: string; posX: number; posY: number; posZ: number; redH: number; redV: number }) => {
+      (action: {
+        rollingStock: string;
+        posX: number;
+        posY: number;
+        posZ: number;
+        redH: number;
+        redV: number;
+        activate: number;
+      }) => {
         queueCommand('EEPRollingstockSetActive|' + action.rollingStock);
         const command =
           'EEPRollingstockSetUserCamera|' +
@@ -44,7 +56,9 @@ export const registerCommandMod = (
           '|' +
           action.redH +
           '|' +
-          action.redV;
+          action.redV +
+          '|' +
+          action.activate;
         queueCommand(command);
       }
     );

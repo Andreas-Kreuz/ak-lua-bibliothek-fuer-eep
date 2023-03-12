@@ -45,6 +45,7 @@ function Train:new(o)
     o.rollingStockCount = rollingStockCount
     o.length = tonumber(string.format("%.2f", length or 0)) or 0
     o.speed = speed
+    o.movesForward = speed >= 0
     o.trackType = nil
     o.onTracks = {}
     o.occupiedTracks = {}
@@ -180,6 +181,9 @@ function Train:setSpeed(speed)
     self.speed = speed
     if oldSpeed ~= speed then
         self.valuesUpdated = true
+
+        if (oldSpeed < 0 and speed > 0) then self:setMovesForward(true) end
+        if (oldSpeed > 0 and speed < 0) then self:setMovesForward(false) end
         -- EventBroker.fireDataChanged("trains", "id", {id = self.name, speed = speed})
     end
 end
@@ -189,6 +193,26 @@ end
 function Train:getSpeed()
     assert(type(self) == "table" and self.type == "Train", "Call this method with ':'")
     return self.speed
+end
+
+--- Updates the trains speed in km/h
+---@param movesForward boolean indicates if the train moves forward or backward
+function Train:setMovesForward(movesForward)
+    assert(type(self) == "table" and self.type == "Train", "Call this method with ':'")
+    assert(type(movesForward) == "boolean", "Need 'movesForward' as boolean")
+    local oldMovesForward = self.movesForward
+    self.movesForward = movesForward
+    if oldMovesForward ~= movesForward then
+        self.valuesUpdated = true
+        -- EventBroker.fireDataChanged("trains", "id", {id = self.name, speed = speed})
+    end
+end
+
+--- Gets the trains speed in km/h
+---@return boolean train speed in km/h
+function Train:getMovesForward()
+    assert(type(self) == "table" and self.type == "Train", "Call this method with ':'")
+    return self.movesForward
 end
 
 --- Updates tracks of the current train
@@ -297,6 +321,7 @@ function Train:toJsonStatic()
         destination = self:getDestination(),
         direction = self:getDirection(),
         trackType = self:getTrackType(),
+        movesForward = self:getMovesForward(),
         speed = self:getSpeed(),
         occupiedTacks = self:getOnTrack()
     }
