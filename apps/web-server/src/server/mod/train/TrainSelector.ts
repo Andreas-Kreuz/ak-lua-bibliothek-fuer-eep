@@ -1,7 +1,7 @@
 import * as fromJsonData from '../../eep/server-data/EepDataStore';
 import EepTrainDto from './EepTrainDto';
 import { RollingStockSelector } from './RollingStockSelector';
-import { Train, TrainListEntry, TrainType } from '@ak/web-shared';
+import { calcTrainType, Train, TrainListEntry, TrainType } from '@ak/web-shared';
 
 export class TrainSelector {
   private state: fromJsonData.State = undefined;
@@ -22,7 +22,7 @@ export class TrainSelector {
     const trainDict: Record<string, EepTrainDto> = state.rooms['trains'] as unknown as Record<string, EepTrainDto>;
     Object.values(trainDict).forEach((trainDto: EepTrainDto) => {
       const rollingStock = this.rollingStockSelector.rollingStockListOfTrain(trainDto.id);
-      const trainType: number = this.getTrainType(state, trainDto);
+      const trainType: TrainType = this.getTrainType(trainDto);
       const trainListEntry: TrainListEntry = {
         id: trainDto.id,
         name: trainDto.name,
@@ -59,11 +59,14 @@ export class TrainSelector {
     return this.trainMap.get(trainId);
   }
 
-  getTrainType(state: fromJsonData.State, train: EepTrainDto): number {
+  getTrainType(train: EepTrainDto): TrainType {
     if (this.rollingStockSelector.rollingStockInTrain(train.id, 0)) {
-      return this.rollingStockSelector.rollingStockInTrain(train.id, 0).modelType;
+      return calcTrainType(
+        this.rollingStockSelector.rollingStockInTrain(train.id, 0).modelType,
+        train.rollingStockCount
+      );
     } else {
-      return 1;
+      return TrainType.TrainElectric;
     }
   }
 }

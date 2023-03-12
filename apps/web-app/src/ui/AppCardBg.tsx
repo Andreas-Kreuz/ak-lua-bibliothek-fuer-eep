@@ -14,6 +14,7 @@ function AppCardBg(props: {
   subtitle?: string;
   id?: string;
   to?: string;
+  icon?: string;
   image: string;
   small?: boolean;
 }) {
@@ -27,7 +28,10 @@ function AppCardBg(props: {
           {props.subtitle}
         </Typography>
       )}
-      {props.id && <Chip label={props.id} sx={{ backgroundColor: 'rgba(255,255,255,0.8)' }} />}
+      <Stack direction="row" spacing={1}>
+        {props.icon && <img src={props.icon} height="32" />}
+        {props.id && <Chip label={props.id} sx={{ backgroundColor: 'rgba(255,255,255,0.8)' }} />}{' '}
+      </Stack>
       {props.children && <Divider sx={{ my: 1 }} />}
       {props.children}
     </Box>

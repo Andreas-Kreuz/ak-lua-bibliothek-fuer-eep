@@ -4,6 +4,7 @@ import AppCardGridContainer from '../../ui/AppCardGridContainer';
 import AppPageHeadline from '../../ui/AppHeadline';
 import AppPage from '../../ui/AppPage';
 import TrainCamList from './TrainCamList';
+import TrainListEntryCard from './TrainListEntryCard';
 import setTrackType from './setTrackType';
 import useTrackType from './useTrackType';
 import useTrains from './useTrains';
@@ -32,17 +33,6 @@ const Trains = () => {
   const trains = useTrains();
   const trackType = useTrackType();
   const setType = setTrackType();
-  const getImageName = (trackType: string): string => {
-    switch (trackType) {
-      case 'road':
-        return '/assets/card-img-trains-road.jpg';
-      case 'tram':
-        return '/assets/card-img-trains-tram.jpg';
-      case 'train':
-      default:
-        return '/assets/card-img-trains-rail.jpg';
-    }
-  };
 
   const [chipData, setChipData] = useState<readonly ChipData[]>([
     { key: TrackType.Rail, label: 'Gleise' },
@@ -83,22 +73,7 @@ const Trains = () => {
       <AppCardGridContainer>
         {trains.map((t) => (
           <Grid xs={12} key={t.id}>
-            <AppCardBg
-              title={`Fahrzeug`}
-              id={t.id}
-              image={getImageName(t.trackType)}
-              //  to={`/train/${t.id}`}
-            >
-              {/* <Chip variant="filled" label={t.destination} />
-              <Chip variant="filled" label={t.id} />
-              <Chip variant="filled" label={t.line} />
-              <Chip variant="filled" label={t.name} />
-              <Chip variant="filled" label={t.route} />
-              <Chip variant="filled" label={t.trackType} />
-              <Chip variant="filled" label={t.trainType} />
-              <Divider sx={{ my: 1 }} /> */}
-              <TrainCamList trainName={t.id} />
-            </AppCardBg>
+            <TrainListEntryCard train={t} />
           </Grid>
         ))}
       </AppCardGridContainer>

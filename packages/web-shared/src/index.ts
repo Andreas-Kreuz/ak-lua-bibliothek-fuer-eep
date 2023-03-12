@@ -7,6 +7,7 @@ export { ServerStatusEvent } from './ServerStatusEvent';
 export { SettingsEvent } from './SettingsEvent';
 export { DataType } from './data/model/DataType';
 
+export { calcTrainType } from './model/trains/calcTrainType';
 export { RollingStock } from './model/trains/RollingStock';
 export { Train } from './model/trains/Train';
 export { TrainType } from './model/trains/TrainType';
