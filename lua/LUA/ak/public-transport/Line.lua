@@ -6,6 +6,7 @@ if AkDebugLoad then print("[#Start] Loading ak.public-transport.Line ...") end
 
 ---@class Line
 ---@field type string
+---@field trafficType string
 ---@field lineSegments table<string, LineSegment>
 ---@field id string
 ---@field nr string
@@ -51,8 +52,11 @@ end
 function Line:new(o)
     assert(type(o) == "table", "Need 'o' as table")
     assert(type(o.nr) == "string", "Need 'o.nr' as string")
+    assert(type(o.trafficType) == "nil" or o.trafficType == "TRAM" or o.trafficType == "BUS",
+           "Need 'o.trafficType' as 'BUS' or 'TRAM'")
     o.id = o.nr
     o.type = "Line"
+    o.trafficType = o.trafficType or "TRAM"
     o.lineSegments = {}
     self.__index = self
     setmetatable(o, self)
@@ -158,6 +162,16 @@ function Line.trainDeparted(trainName, station)
     end
 end
 
-function Line:toJsonStatic() return {id = self.id, nr = self.nr, lineSegments = self.lineSegments} end
+function Line:toJsonStatic()
+    local lineSegments = {}
+    for _, s in pairs(self.lineSegments) do table.insert(lineSegments, s:toJsonStatic()) end
+    return {id = self.id, nr = self.nr, trafficType = self.trafficType, lineSegments = lineSegments}
+end
+
+function Line.getLines()
+    local ret = {}
+    for _, line in pairs(lines) do table.insert(ret, line:toJsonStatic()) end
+    return ret
+end
 
 return Line

@@ -3,7 +3,6 @@ import TrainDetails, { getTrainChips } from './TrainDetails';
 import { trainIconFor } from './trainIconFor';
 import { TrainListEntry, TrainType } from '@ak/web-shared';
 import Box from '@mui/material/Box';
-import Chip from '@mui/material/Chip';
 import Collapse from '@mui/material/Collapse';
 import Divider from '@mui/material/Divider';
 import { useState } from 'react';

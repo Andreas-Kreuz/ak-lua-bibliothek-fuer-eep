@@ -28,12 +28,12 @@ end
 
 local function collect()
     local publicTransportStations = {}
-    local publicTransportLines = {} -- Line.lines
+    local publicTransportLines = Line.getLines()
     local publicTransportSettings = collectModuleSettings()
 
     -- TODO: Send event only with detected changes
-    -- EventBroker.fireListChange("public-transport-stations", "id", publicTransportStations)
-    -- EventBroker.fireListChange("public-transport-lines", "id", publicTransportLines)
+    EventBroker.fireListChange("public-transport-stations", "id", publicTransportStations)
+    EventBroker.fireListChange("public-transport-lines", "id", publicTransportLines)
     EventBroker.fireListChange("public-transport-module-settings", "name", publicTransportSettings)
     LineRegistry.fireChangeLinesEvent()
 

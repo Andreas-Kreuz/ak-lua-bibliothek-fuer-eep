@@ -1,3 +1,4 @@
+import PublicTransportOverview from '../mod/lines/PublicTransportOverview';
 import ErrorBoundary from './ErrorBoundary';
 import { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, RouterProvider, createBrowserRouter, Outlet } from 'react-router-dom';
@@ -12,6 +13,7 @@ const ConnectionWrapper = lazy(() => import('./ConnectionWrapper'));
 
 const homeRoutes = [
   { path: '/', element: <MainMenu /> },
+  { path: '/public-transport', element: <PublicTransportOverview /> },
   { path: '/intersections', element: <IntersectionOverview /> },
   { path: '/intersection/:intersectionId', element: <IntersectionDetails /> },
   { path: '/trains', element: <Trains /> },

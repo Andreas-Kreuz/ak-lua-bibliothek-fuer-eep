@@ -32,7 +32,7 @@ function AppCardBg(props: {
         component={RouterLink}
         to={props.to || ''}
         onClick={handleExpand}
-        disableRipple={(props.setExpanded && true) || false}
+        disableRipple={((props.setExpanded || !props.to) && true) || false}
         sx={{
           p: 2,
           background:

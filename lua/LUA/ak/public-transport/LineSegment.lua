@@ -198,7 +198,7 @@ function LineSegment:trainDeparted(train, currentStation)
 end
 
 function LineSegment:toJsonStatic()
-    return {id = self.id, stations = self.stationInfos, routeName = self.routeName, lineNr = self.line.nr}
+    return {id = self.id, destination = self.destination, routeName = self.routeName, lineNr = self.line.nr}
 end
 
 return LineSegment
