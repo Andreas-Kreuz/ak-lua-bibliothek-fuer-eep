@@ -94,25 +94,26 @@ function RoadStation:setPlatform(segment, platform)
     assert(type(platform) == "number", "Need 'platform' as number")
 
     local destKey = getDestKey(segment.line.nr, segment.destination)
-    platform = tostring(platform)
+    local platformName = tostring(platform)
 
     self.routePlatforms = self.routePlatforms or {}
     self.routePlatforms[destKey] = self.routePlatforms[destKey] or {}
-    self.routePlatforms[destKey].platform = platform
-    self:updateRoutesOnPlatform(platform)
+    self.routePlatforms[destKey].platform = platformName
+    self:updateRoutesOnPlatform(platformName)
 end
 
-function RoadStation:updateRoutesOnPlatform(platform)
+---@param platformName string
+function RoadStation:updateRoutesOnPlatform(platformName)
     local routesOfPlatform = {}
     for r, p in pairs(self.routePlatforms or {}) do
-        if p.platform == platform then table.insert(routesOfPlatform, r) end
+        if p.platform == platformName then table.insert(routesOfPlatform, r) end
     end
     table.sort(routesOfPlatform, function(a, b) return a < b end)
 
     for p, displays in pairs(self.displays or {}) do
-        if platform == p or platform == "ALL" then
+        if platformName == p or platformName == "ALL" then
             for _, display in ipairs(displays) do
-                display.model.initStation(display.structure, self.name, platform, routesOfPlatform)
+                display.model.initStation(display.structure, self.name, platformName, routesOfPlatform)
             end
         end
     end
@@ -166,7 +167,7 @@ function RoadStation:new(name, eepSaveId)
     if eepSaveId ~= -1 then StorageUtility.registerId(eepSaveId, "Lane " .. name) end
 
     ---@class PlatformAssignment
-    ---@field platform number
+    ---@field platform string
     local routePlatforms = {}
 
     local o = {
