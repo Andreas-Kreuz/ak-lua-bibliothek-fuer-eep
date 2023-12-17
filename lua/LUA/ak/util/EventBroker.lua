@@ -3,8 +3,7 @@ local EventFileWriter = require("ak.io.EventFileWriter")
 local TableUtils = require("ak.util.TableUtils")
 
 ---@class Event
----@field date string
----@field counter number
+---@field eventCounter number
 ---@field type string
 ---@field payload any
 
@@ -35,6 +34,7 @@ EventBroker.eventType = {
 
 ---@type EventListener
 EventBroker.printListener = {
+    ---@param event Event
     fireEvent = function(event)
         local t = type(event.payload)
         if t == "table" then
