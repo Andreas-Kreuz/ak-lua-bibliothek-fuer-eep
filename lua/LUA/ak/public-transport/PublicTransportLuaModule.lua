@@ -1,12 +1,11 @@
 if AkDebugLoad then print("[#Start] Loading ak.public-transport.PublicTransportLuaModul ...") end
----@class CrossingLuaModul
-PublicTransportLuaModul = {}
+---@class PublicTransportLuaModul
+local PublicTransportLuaModul = {}
 PublicTransportLuaModul.id = "83ce6b42-1bda-45e0-8b4a-e8daeed047ab"
 PublicTransportLuaModul.enabled = true
 local initialized = false
 -- Jedes Modul hat einen eindeutigen Namen
 PublicTransportLuaModul.name = "ak.public-transport.PublicTransportLuaModul"
-local Crossing = require("ak.road.Crossing")
 
 --- Diese Funktion wird einmalig durch ModuleRegistry.initTasks() aufgerufen
 -- Ist ein Modul für EEPWeb vorhanden, dann solltes in dieser Funktion aufgerufen werden
@@ -19,8 +18,6 @@ function PublicTransportLuaModul.init()
     PublicTransportWebConnector.registerJsonCollectors()
     PublicTransportWebConnector.registerFunctions()
 
-    Crossing.initSequences()
-
     initialized = true
 end
 
@@ -30,7 +27,6 @@ function PublicTransportLuaModul.run()
     if not PublicTransportLuaModul.enabled then return end
 
     -- Hier folgen die wiederkehrenden Funktionen jedes Moduls (müssen dann nicht in EEPMain aufgerufen werden)
-    Crossing.switchSequences()
 end
 
 do
