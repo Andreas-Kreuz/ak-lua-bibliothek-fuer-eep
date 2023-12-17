@@ -48,6 +48,7 @@ function TrainRegistry.forName(name)
         return allTrains[name], false
     else
         -- Initialize the train
+        ---@diagnostic disable-next-line: missing-fields
         local train = Train:new({name = name})
         allTrains[train.name] = train
         TrainRegistry.initRollingStock(train)

@@ -15,6 +15,7 @@ function RollingStockRegistry.forName(rollingStockName)
         local rs = allRollingStock[rollingStockName]
         return rs
     else
+        ---@diagnostic disable-next-line: missing-fields
         local o = RollingStock:new({rollingStockName = rollingStockName})
         allRollingStock[o.rollingStockName] = o
         RollingStockRegistry.rollingStockAppeared(o)
