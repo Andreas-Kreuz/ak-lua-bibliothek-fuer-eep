@@ -55,8 +55,8 @@ BusHSdfi_RG3.displayEntries = function(displayStructure, stationQueueEntries, st
         table.insert(text, "<br>")
     end
 
-    text = table.concat(text, "")
-    EEPChangeInfoStructure(displayStructure, text)
+    local t = table.concat(text, "")
+    EEPChangeInfoStructure(displayStructure, t)
     EEPShowInfoStructure(displayStructure, Line.showDepartureTippText)
 end
 
