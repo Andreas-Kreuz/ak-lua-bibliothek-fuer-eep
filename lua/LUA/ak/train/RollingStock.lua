@@ -45,6 +45,7 @@ local EEPRollingstockModelTypeText = {
 ---@field z integer
 ---@field model RollingStockModel
 ---@field tag string Tag text
+---@field textureText string TextureText text
 ---@field type string "RollingStock"
 local RollingStock = {}
 
@@ -78,9 +79,9 @@ function RollingStock:new(o)
     o.model = RollingStockModels.modelFor(o.id)
     o.trainName = ""
     o.positionInTrain = -1
-    o.couplingFront = couplingFront
-    o.couplingRear = couplingRear
-    o.length = tonumber(string.format("%.2f", length or -1))
+    o.couplingFront = couplingFront or 1
+    o.couplingRear = couplingRear or 1
+    o.length = tonumber(string.format("%.2f", length or -1)) or -1
     o.propelled = propelled or true
     o.modelType = modelType or -1
     o.modelTypeText = EEPRollingstockModelTypeText[modelType] or ""
@@ -88,7 +89,7 @@ function RollingStock:new(o)
     o.textureText = textureText or ""
     o.values = StorageUtility.parseTableFromString(tag)
     o.trackId = trackId or -1
-    o.trackDistance = tonumber(string.format("%.2f", trackDistance or -1))
+    o.trackDistance = tonumber(string.format("%.2f", trackDistance or -1)) or -1
     o.trackDirection = trackDirection or -1
     o.trackSystem = trackSystem or -1
     o.x = hasPos and tonumber(posX) or -1
