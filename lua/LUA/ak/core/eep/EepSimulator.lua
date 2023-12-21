@@ -16,7 +16,7 @@ local EepSimulator = {}
 EepSimulator.debug = false
 ---@type table<number,number>
 local signalsTrainCount = {}
----@type string[]
+---@type table<string>
 local signalsTrainNames = {}
 ---@type table<string,string> train name to route name
 local trainRoutes = {}
@@ -374,7 +374,7 @@ function EEPSetTrainAxis(trainName, achse, stellung) end
 --- Registriert ein Gleis fuer die Besetztabfrage.
 -- @param trackId Id des Gleises
 function EEPRegisterRailTrack(trackId)
-    if registeredRailTracks[trackId] == nil then registeredRailTracks[trackId] = false end
+    if registeredRailTracks[trackId] == nil then registeredRailTracks[trackId] = "" end
     if (trackId <= 11) then return true end
 end
 
@@ -388,18 +388,18 @@ end
 function EEPIsRailTrackReserved(trackId, returnTrainName)
     if returnTrainName then
         return (registeredRailTracks[trackId] ~= nil and true or false),
-               (registeredRailTracks[trackId] ~= false and true or false),
+               (registeredRailTracks[trackId] ~= "" and true or false),
                (returnTrainName and registeredRailTracks[trackId] or nil)
     else
         return (registeredRailTracks[trackId] ~= nil and true or false),
-               (registeredRailTracks[trackId] ~= false and true or false)
+               (registeredRailTracks[trackId] ~= "" and true or false)
     end
 end
 
 --- Registriert ein Gleis fuer die Besetztabfrage.
--- @param trackId Id des Gleises
+---@param trackId number Id des Gleises
 function EEPRegisterRoadTrack(trackId)
-    if registeredRoadTracks[trackId] == nil then registeredRoadTracks[trackId] = false end
+    if registeredRoadTracks[trackId] == nil then registeredRoadTracks[trackId] = "" end
     if (trackId <= 11) then return true end
 end
 
@@ -413,11 +413,11 @@ end
 function EEPIsRoadTrackReserved(trackId, returnTrainName)
     if returnTrainName then
         return (registeredRoadTracks[trackId] ~= nil and true or false),
-               (registeredRoadTracks[trackId] ~= false and true or false),
+               (registeredRoadTracks[trackId] ~= "" and true or false),
                (returnTrainName and registeredRoadTracks[trackId] or nil)
     else
         return (registeredRoadTracks[trackId] ~= nil and true or false),
-               (registeredRoadTracks[trackId] ~= false and true or false)
+               (registeredRoadTracks[trackId] ~= "" and true or false)
     end
 end
 
