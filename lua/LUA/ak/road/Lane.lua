@@ -15,6 +15,7 @@ local fmt = require("ak.core.eep.TippTextFormatter")
 ---@field tracksForRequests table
 ---@field firstVehiclesRoute string
 ---@field routesToCount table
+---@field firstGoodTrain string
 local Lane = {}
 Lane.debug = AkStartWithDebug or false
 
