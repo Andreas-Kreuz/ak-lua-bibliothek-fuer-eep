@@ -8,7 +8,9 @@ AkWebServerIo.debug = AkStartWithDebug or false
 --- Prüfe ob das Verzeichnis existiert und Dateien geschrieben werden können.
 -- Call this function via pcall to catch any exceptions
 local function dirExists(dir)
-    local file = io.open(dir .. "/" .. "ak-eep-version.txt", "w")
+    local fileName = dir .. "/" .. "ak-eep-version.txt"
+    local file = io.open(fileName, "w")
+    assert(file, fileName)
     file:write(string.format("%.1f", EEPVer))
     file:flush()
     file:close()
@@ -101,7 +103,7 @@ local function printToFile(...)
         -- We open the file for every write, so EEP will not keep this file open all the time
         local file = _assert(io.open(outFileNameLog, "a"))
         local time = ""
-        if os.date then time = os.date("%X ") end
+        if os.date then time = tostring(os.date("%X ")) end
         local text = "" .. time
         local args = {...}
         for _, arg in ipairs(args) do text = text .. tostring(arg):gsub("\n", "\n       . ") end
@@ -138,6 +140,7 @@ end
 local function deleteLogFile()
     --- Lösche Inhalt der log-Datei.
     local file = io.open(outFileNameLog, "w+")
+    assert(file, outFileNameLog)
     file:close()
     file = _assert(io.open(outFileNameLog, "a"))
     file:write("")
