@@ -65,9 +65,9 @@ local TrafficLight = require("ak.road.TrafficLight")
 TrafficLight.debug = false
 local Crossing = require("ak.road.Crossing")
 Crossing.debug = false
-Crossing.zeigeSignalIdsAllerSignale = false
-Crossing.zeigeAnforderungenAlsInfo = false
-Crossing.zeigeSchaltungAlsInfo = false
+Crossing.showSignalIdOnSignal = false
+Crossing.showRequestsOnSignal = false
+Crossing.showSequenceOnSignal = false
 local StorageUtility = require("ak.storage.StorageUtility")
 StorageUtility.debug = false
 
