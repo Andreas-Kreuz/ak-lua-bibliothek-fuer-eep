@@ -45,7 +45,7 @@ Crossing.initSequences()
 Crossing.debug = true
 enterLane(Zugname, c1Lane8)
 enterLane(Zugname, c1Lane8)
-assert(c1Lane8.vehicleCount == 2, c1Lane8.anzahlFahrzeuge)
+assert(c1Lane8.vehicleCount == 2, c1Lane8.vehicleCount)
 Crossing.resetVehicles()
 assert(c1Lane8.vehicleCount == 0)
 -------------------------------------------------------------------
