@@ -570,7 +570,7 @@ function EEPRollingstockGetLength(rollingStockName) return true, 5 end
 --- Argument ist der Name des Fahrzeugs.
 -- Rueckgabewert 1 ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
 -- Rueckgabewert 2 ist true, wenn das angegebene Fahrzeug einen Antrieb besitzt, sonst false.
-function EEPRollingstockGetMotor(rollingStockName) return true, 5 end
+function EEPRollingstockGetMotor(rollingStockName) return true, false end
 
 --- Argument ist der Name des Fahrzeugs.
 -- Rueckgabewert 1 ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
