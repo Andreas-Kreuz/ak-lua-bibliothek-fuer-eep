@@ -2,6 +2,6 @@ export default class AppConfig {
   eepDir: string;
 
   constructor() {
-    this.eepDir = 'C:\\Trend\\EEP17';
+    this.eepDir = 'C:\\Trend\\EEP18';
   }
 }

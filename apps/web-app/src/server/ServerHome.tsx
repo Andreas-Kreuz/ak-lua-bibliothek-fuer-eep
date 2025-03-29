@@ -1,4 +1,9 @@
+import { useSocket } from '../io/SocketProvider';
+import { useRoomHandler } from '../io/useRoomHandler';
 import './ServerHome.css';
+import { ServerStatusEvent, SettingsEvent } from '@ak/web-shared';
+import CheckCircleOutlineRoundedIcon from '@mui/icons-material/CheckCircleOutlineRounded';
+import WarningRoundedIcon from '@mui/icons-material/WarningRounded';
 import Alert from '@mui/material/Alert';
 import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
@@ -16,13 +21,8 @@ import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import CheckCircleOutlineRoundedIcon from '@mui/icons-material/CheckCircleOutlineRounded';
-import WarningRoundedIcon from '@mui/icons-material/WarningRounded';
-import QRCode from 'react-qr-code';
 import { useState } from 'react';
-import { ServerStatusEvent, SettingsEvent } from '@ak/web-shared';
-import { useSocket } from '../io/SocketProvider';
-import { useRoomHandler } from '../io/useRoomHandler';
+import QRCode from 'react-qr-code';
 
 function ServerHome() {
   const [serverHost, setServerHost] = useState<string>();
@@ -95,7 +95,7 @@ end`;
     socket.emit(SettingsEvent.ChangeDir, editedDirectoryName);
   };
 
-  const eepInstallations = ['C:\\Trend\\EEP17', 'C:\\Trend\\EEP16'];
+  const eepInstallations = ['C:\\Trend\\EEP18', 'C:\\Trend\\EEP17', 'C:\\Trend\\EEP16'];
 
   if (directoryOk === null) {
     return (
