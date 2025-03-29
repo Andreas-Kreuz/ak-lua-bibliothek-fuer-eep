@@ -37,13 +37,19 @@ Weitere Verzeichnisse sind:
 
 ### Empfohlene Werkzeuge
 
+#### Empfohlene Entwicklungswerkzeuge
+
 - [VS-Code](https://code.visualstudio.com/) - die empfohlenen Erweiterungen sind im Projektverzeichnis hinterlegt
 - [git Kommandozeile](https://git-scm.com/downloads) oder [gitHub Desktop](https://desktop.github.com/)
 
-Für das Testen werden die Lua-Werkzeuge `luacheck` und `busted` empfohlen.
+#### Empfohlen für Lua Tests
+
+Für das Testen werden die Lua-Werkzeuge [`luacheck`](https://github.com/mpeterv/luacheck) und [`busted`](https://github.com/lunarmodules/busted) empfohlen.
 
 - `luacheck --std max+busted lua/LUA`
 - `busted --verbose --coverage --`
+
+#### Empfohlen für die Webseite
 
 Für das Betrachten der Webseite _vor_ dem Upload wird [Jekyll](https://jekyllrb.com/docs/installation/windows/) empfohlen.
 
@@ -67,18 +73,8 @@ Nun kann das Verzeichnis `ak-lua-bibliothek-fuer-eep` in VS Code als Ordner geö
 Für die Entwicklung der Web-Komponenten musst Du noch die notwendigen npm Pakete installieren:
 
 ```bash
-cd web-app
-npm install
-```
-
-```bash
-cd web-server
-npm install
-```
-
-```bash
-cd web-shared
-npm install
+npm install -g corepack
+yarn
 ```
 
 Benutze danach das Skript `.\scripts\build-package.cmd` um das ganze Programm einmal zu bauen.
