@@ -1,4 +1,6 @@
 local Line = require("ak.public-transport.Line")
+local fmt = require("ak.core.eep.TippTextFormatter")
+local RoadStationTippHelper = require("ak.public-transport.models.RoadStationTippHelper")
 
 -- V15NRG35023 - DFI digitale Fahrgastinformation für 6 Linien
 BusHS_Tram_dfi_6_RG3 = {}
@@ -18,10 +20,6 @@ BusHS_Tram_dfi_6_RG3.displayEntries = function(displayStructure, stationQueueEnt
            "Need 'stationQueueEntries' as table not as " .. type(stationQueueEntries))
     assert(type(stationName) == "string", "Need 'stationName' as string")
     assert(type(platform) == "string", "Need 'platform' as string")
-
-    local text = {stationName, " (Steig ", platform, ")<br>"}
-
-    table.insert(text, "Linie / Ziel / Minuten<br>")
 
     -- Set the first entry
     local entry = stationQueueEntries[1]
@@ -65,16 +63,10 @@ BusHS_Tram_dfi_6_RG3.displayEntries = function(displayStructure, stationQueueEnt
                                (entry and entry.timeInMinutes > 0) and tostring(entry.timeInMinutes) or "")
     EEPStructureSetTextureText(displayStructure, 20, (entry and entry.timeInMinutes > 0) and "min" or "")
 
+    local text = {RoadStationTippHelper.getTitle(stationName, platform)}
     for i = 1, 6 do
         entry = stationQueueEntries[i]
-        table.insert(text, entry and entry.line or "")
-        table.insert(text, " / ")
-        table.insert(text, entry and entry.destination or "")
-        table.insert(text, " / ")
-        table.insert(text, (entry and entry.timeInMinutes > 0) and tostring(entry.timeInMinutes) or "")
-        table.insert(text, " ")
-        table.insert(text, (entry and entry.timeInMinutes > 0) and "min" or "")
-        table.insert(text, "<br>")
+        table.insert(text, RoadStationTippHelper.getEntry(entry))
     end
 
     local t = table.concat(text, "")

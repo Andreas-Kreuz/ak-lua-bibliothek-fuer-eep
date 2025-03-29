@@ -1,4 +1,6 @@
 local Line = require("ak.public-transport.Line")
+local fmt = require("ak.core.eep.TippTextFormatter")
+local RoadStationTippHelper = require("ak.public-transport.models.RoadStationTippHelper")
 
 -- V15NDL10027 - Texturierbare Zielanzeigen für Haltestellen
 local Tram_Schild_DL1 = {}
@@ -22,9 +24,7 @@ Tram_Schild_DL1.displayEntries = function(displayStructure, stationQueueEntries,
     assert(type(stationName) == "string", "Need 'stationName' as string")
     assert(type(platform) == "string", "Need 'platform' as string")
 
-    local text = {stationName, " (Steig ", platform, ")<br>"}
-
-    table.insert(text, "Linie / Ziel / Minuten<br>")
+    local text = {RoadStationTippHelper.getTitle(stationName, platform)}
 
     for i = 1, 5 do
         local offset = (i - 1) * 4
@@ -36,14 +36,7 @@ Tram_Schild_DL1.displayEntries = function(displayStructure, stationQueueEntries,
                                    (entry and entry.timeInMinutes > 0) and tostring(entry.timeInMinutes) or "")
         EEPStructureSetTextureText(displayStructure, offset + 4, (entry and entry.timeInMinutes > 0) and "min" or "")
 
-        table.insert(text, entry and entry.line or "")
-        table.insert(text, " / ")
-        table.insert(text, entry and entry.destination or "")
-        table.insert(text, " / ")
-        table.insert(text, (entry and entry.timeInMinutes > 0) and tostring(entry.timeInMinutes) or "")
-        table.insert(text, " ")
-        table.insert(text, (entry and entry.timeInMinutes > 0) and "min" or "")
-        table.insert(text, "<br>")
+        table.insert(text, RoadStationTippHelper.getEntry(entry))
     end
 
     local t = table.concat(text, "")

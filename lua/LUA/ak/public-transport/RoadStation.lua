@@ -13,6 +13,7 @@ if AkDebugLoad then print("[#Start] Loading ak.public-transport.RoadStation ..."
 ---@field routePlatforms table<string, PlatformAssignment>
 local RoadStation = {}
 RoadStation.debug = false
+---@type table<string, RoadStation>
 local allStations = {}
 
 function RoadStation.queueToText(queue)
