@@ -3,22 +3,21 @@
   // Extension identifier format: ${publisher}.${name}. Example: vscode.csharp
   // List of extensions which should be recommended for users of this workspace.
   "recommendations": [
-    "angular.ng-template", // Angular Language Support
     "bierner.github-markdown-preview", // To view github pages
     "davidanson.vscode-markdownlint", // Check markdown pages
     "dbaeumer.vscode-eslint", // ESLint
     "editorconfig.editorconfig", // Support indentations by .editorconfig file
     "github.vscode-pull-request-github", // Easy GitHub Pull Requests
-    "johnpapa.angular2", // Angular 9 Snippets
-    "koihik.vscode-lua-format", // Nice formatter
+    "koihik.vscode-lua-format", // Nice LUA formatter
     "esbenp.prettier-vscode",
     "sumneko.lua", // Finds Lua symbols, but cannot reformat file
-    "tyriar.sort-lines" // Sort lines
-    ,
+    "tyriar.sort-lines", // Sort lines
     "arcanis.vscode-zipfs"
   ],
   // List of extensions recommended by VS Code that should not be recommended for users of this workspace.
   "unwantedRecommendations": [
+    "angular.ng-template", // Angular Language Support
+    "johnpapa.angular2", // Angular 9 Snippets
     "gccfeli.vscode-lua", // Bad formatting
     "knisterpeter.vscode-github", // Deprecated
     "liwangqian.luacoderassist", // Lua Code Completion and Checking - NOT WORKING
