@@ -12,9 +12,9 @@ import Card from '@mui/material/Card';
 import CardActionArea from '@mui/material/CardActionArea';
 import CardActions from '@mui/material/CardActions';
 import Chip from '@mui/material/Chip';
+import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import Grid from '@mui/material/Unstable_Grid2/Grid2';
 import { styled } from '@mui/material/styles';
 import { useState } from 'react';
 
@@ -70,7 +70,7 @@ const Trains = () => {
       </AppPageHeadline>
       <AppCardGridContainer>
         {trains.map((t) => (
-          <Grid xs={12} key={t.id}>
+          <Grid size={{ xs: 12 }} key={t.id}>
             <TrainListEntryCard train={t} />
           </Grid>
         ))}

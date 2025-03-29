@@ -1,6 +1,6 @@
 {
   "name": "@ak/web-server",
-  "version": "0.0.1",
+  "version": "0.13.2",
   "description": "Lua Server für EEP - ein Server im Fenster",
   "type": "commonjs",
   "private": true,
@@ -32,7 +32,7 @@
   ],
   "main": "./build/main/index.js",
   "build": {
-    "electronVersion": "22.3.0",
+    "electronVersion": "35.1.2",
     "appId": "io.github.andreas-kreuz.ak-lua-library-for-eep",
     "files": [
       "build/**/*",
@@ -67,31 +67,31 @@
   "author": "Andreas-Kreuz",
   "license": "MIT",
   "devDependencies": {
-    "@types/command-line-args": "^5.2.0",
-    "@types/command-line-usage": "^5.0.2",
-    "@types/cors": "^2.8.6",
-    "@types/express": "^4.17.6",
-    "@types/node": "^13.13.4",
-    "@types/tail": "^2.0.0",
-    "@typescript-eslint/eslint-plugin": "^5.3.0",
-    "@typescript-eslint/parser": "^5.3.0",
-    "del-cli": "^4.0.1",
-    "electron": "^23.1.1",
-    "electron-builder": "^23.6.0",
-    "eslint": "^8.1.0",
+    "@types/command-line-args": "^5.2.3",
+    "@types/command-line-usage": "^5.0.4",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.1",
+    "@types/node": "^22.13.14",
+    "@types/tail": "^2.2.3",
+    "@typescript-eslint/eslint-plugin": "^8.28.0",
+    "@typescript-eslint/parser": "^8.28.0",
+    "del-cli": "^6.0.0",
+    "electron": "^35.1.2",
+    "electron-builder": "^26.0.12",
+    "eslint": "^9.23.0",
     "npm-run-all": "^4.1.5",
     "run-script-os": "^1.1.6",
-    "typescript": "^4.9.5"
+    "typescript": "^5.8.2"
   },
   "dependencies": {
     "@ak/web-shared": "workspace:^",
-    "@electron/typescript-definitions": "^8.10.0",
-    "command-line-args": "^5.1.1",
-    "command-line-usage": "^6.1.0",
+    "@electron/typescript-definitions": "^9.1.2",
+    "command-line-args": "^6.0.1",
+    "command-line-usage": "^7.0.3",
     "cors": "^2.8.5",
-    "express": "^4.17.1",
-    "rxjs": "^7.5.1",
-    "socket.io": "^4.4.0",
-    "tail": "^2.2.4"
+    "express": "^4.21.2",
+    "rxjs": "^7.8.2",
+    "socket.io": "^4.8.1",
+    "tail": "^2.2.6"
   }
 }

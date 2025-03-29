@@ -1,4 +1,4 @@
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 import { Key, ReactNode } from 'react';
 
 function AppCardGridContainer(props: { key?: Key; children: ReactNode }) {

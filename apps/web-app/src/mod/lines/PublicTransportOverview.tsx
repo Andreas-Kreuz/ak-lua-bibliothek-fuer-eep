@@ -5,7 +5,7 @@ import ModuleSettingsButton from '../../ui/ModuleSettingsButton';
 import PublicTransportLineCard from './PublicTransportLineCard';
 import useLines from './useLines';
 import usePublicTransportSettings from './usePublicTransportSettings';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 
 function PublicTransportOverview() {
   const lines = useLines();
@@ -16,7 +16,7 @@ function PublicTransportOverview() {
       <AppPageHeadline rightSettings={<ModuleSettingsButton settings={settings} />}>ÖPNV</AppPageHeadline>
       <AppCardGridContainer>
         {lines.map((i) => (
-          <Grid xs={12} key={i.id}>
+          <Grid size={{ xs: 12 }} key={i.id}>
             <PublicTransportLineCard line={i} />
           </Grid>
         ))}

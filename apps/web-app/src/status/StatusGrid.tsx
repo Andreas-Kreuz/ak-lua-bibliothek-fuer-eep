@@ -1,7 +1,7 @@
+import { useSocketIsConnected } from '../io/SocketProvider';
 import StatusCard from './StatusCard';
 import { useServerStatus } from './useServerInfo';
-import Grid from '@mui/material/Unstable_Grid2';
-import { useSocketIsConnected } from '../io/SocketProvider';
+import Grid from '@mui/material/Grid';
 
 function StatusGrid() {
   const isConnected = useSocketIsConnected();
@@ -9,7 +9,7 @@ function StatusGrid() {
 
   return (
     <Grid container spacing={3} sx={{ width: 'auto', m: 3 }}>
-      <Grid xs={12}>
+      <Grid size={{ xs: 12 }}>
         <StatusCard
           name="Web-Server"
           icon={isConnected ? 'ok' : 'error'}
@@ -18,7 +18,7 @@ function StatusGrid() {
           statusDescription="Diese Webseite zeigt nur aktuelle Informationen an, wenn sie den Web-Server erreicht."
         ></StatusCard>
       </Grid>
-      <Grid xs={12}>
+      <Grid size={{ xs: 12 }}>
         <StatusCard
           name="LUA-Bibliothek"
           icon={isConnected && luaDataReceived ? 'ok' : 'error'}
@@ -35,7 +35,7 @@ function StatusGrid() {
           }
         />
       </Grid>
-      <Grid xs={12}>
+      <Grid size={{ xs: 12 }}>
         <StatusCard
           name="EEP"
           icon={isConnected ? (eepDataUpToDate ? 'ok' : 'time') : 'error'}
