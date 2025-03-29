@@ -17,9 +17,9 @@ local TippTextFormatter = {
     bgGreen = function(text) return "<bgrgb=0,192,0>" .. text .. "<bgrgb=255,255,255>" end,
     bgBlue = function(text) return "<bgrgb=128,128,255>" .. text .. "<bgrgb=255,255,255>" end,
     bgYellow = function(text) return "<bgrgb=224,224,0>" .. text .. "<bgrgb=255,255,255>" end,
-    bgGray = function(text) return "<bgrgb=196,196,196>" .. text .. "<bgrgb=255,255,255>" end,
+    bgGrey = function(text) return "<bgrgb=196,196,196>" .. text .. "<bgrgb=255,255,255>" end,
     bgRed = function(text) return "<bgrgb=255,96,96>" .. text .. "<bgrgb=255,255,255>" end,
-    lightGray = function(text)
+    lightGrey = function(text)
         return "<bgrgb=230,230,230><fgrgb=66,66,66>" .. text .. "<bgrgb=255,255,255><fgrgb=0,0,0>"
     end,
     italic = function(text) return "<i>" .. text .. "</i>" end,

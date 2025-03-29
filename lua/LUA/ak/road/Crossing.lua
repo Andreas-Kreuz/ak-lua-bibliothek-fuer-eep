@@ -1,3 +1,5 @@
+local Lane = require "ak.road.Lane"
+local TippTextFormatter = require "ak.core.eep.TippTextFormatter"
 if AkDebugLoad then print("[#Start] Loading ak.road.Crossing ...") end
 
 local Task = require("ak.scheduler.Task")
@@ -22,6 +24,7 @@ local allCrossings = {}
 ---@field private greenPhaseSeconds number @Integer value of how long the intersection will show green light
 ---@field private staticCams table @List of static cams
 ---@field private nextSequence CrossingSequence
+---@field private tippStructure string
 local Crossing = {}
 Crossing.debug = AkStartWithDebug or false
 ---@type table<string,Crossing>
@@ -29,6 +32,7 @@ Crossing.allCrossings = {}
 Crossing.showRequestsOnSignal = false
 Crossing.showSequenceOnSignal = false
 Crossing.showSignalIdOnSignal = false
+Crossing.showLanesOnStructure = true
 
 function Crossing.loadSettingsFromSlot(eepSaveId)
     StorageUtility.registerId(eepSaveId, "Crossing settings")
@@ -36,7 +40,7 @@ function Crossing.loadSettingsFromSlot(eepSaveId)
     local data = StorageUtility.loadTable(Crossing.saveSlot, "Crossing settings")
     Crossing.showRequestsOnSignal = StorageUtility.toboolean(data["reqInfo"]) or Crossing.showRequestsOnSignal
     Crossing.showSequenceOnSignal = StorageUtility.toboolean(data["seqInfo"]) or Crossing.showSequenceOnSignal
-    Crossing.showSignalIdOnSignal = StorageUtility.toboolean(data["sigInfo"]) or Crossing.showSignalIdOnSignal
+    Crossing.showLanesOnStructure = StorageUtility.toboolean(data["laneInfo"]) or Crossing.showLanesOnStructure
 end
 
 function Crossing.saveSettings()
@@ -44,7 +48,8 @@ function Crossing.saveSettings()
         local data = {
             reqInfo = tostring(Crossing.showRequestsOnSignal),
             seqInfo = tostring(Crossing.showSequenceOnSignal),
-            sigInfo = tostring(Crossing.showSignalIdOnSignal)
+            sigInfo = tostring(Crossing.showSignalIdOnSignal),
+            laneInfo = tostring(Crossing.showLanesOnStructure)
         }
         StorageUtility.saveTable(Crossing.saveSlot, data, "Crossing settings")
     end
@@ -65,6 +70,12 @@ end
 function Crossing.setShowSignalIdOnSignal(value)
     assert(value == true or value == false)
     Crossing.showSignalIdOnSignal = value
+    Crossing.saveSettings()
+end
+
+function Crossing.setShowLanesOnStructure(value)
+    assert(value == true or value == false)
+    Crossing.showLanesOnStructure = value
     Crossing.saveSettings()
 end
 
@@ -157,6 +168,8 @@ function Crossing:setGreenPhaseReached(greenPhaseReached) self.greenPhaseReached
 
 function Crossing:isGreenPhaseReached() return self.greenPhaseReached end
 
+function Crossing:setTippStructure(tippStructure) self.tippStructure = tippStructure end
+
 function Crossing:getStaticCams() return self.staticCams end
 
 function Crossing:addStaticCam(kameraName) table.insert(self.staticCams, kameraName) end
@@ -184,6 +197,7 @@ function Crossing:new(name, greenPhaseSeconds)
         greenPhaseFinished = true,
         greenPhaseSeconds = greenPhaseSeconds or 15,
         switchInStrictOrder = false,
+        tippStructure = nil,
         staticCams = {}
     }
     self.__index = self
@@ -346,6 +360,46 @@ local function recalculateSignalInfo(crossing)
     for _, trafficLight in pairs(trafficLightsToRefresh) do trafficLight:refreshInfo() end
 end
 
+---comment
+---@param lane Lane
+---@return string
+local function getLaneRequestInfoBar(lane)
+    local text = ""
+    local max = 10
+    if lane.tracksUsedForRequest or lane.signalUsedForRequest then
+        text = text .. (lane.queue:isEmpty() and "##########" or "__________")
+    else
+        local requests = "X"
+        local vehicles = math.min(lane.vehicleCount * lane.fahrzeugMultiplikator, max - 1)
+        for _ = 1, vehicles do requests = requests .. "_" end
+        if lane.phase == TrafficLightState.RED then
+            text = text .. fmt.bgRed(requests)
+        else
+            text = text .. fmt.bgGreen(requests)
+        end
+
+        local grey = ""
+        for _ = vehicles + 1, max - 1 do grey = grey .. "_" end
+        text = text .. grey
+    end
+    return text .. "  " .. lane.name
+end
+
+---comment
+---@param self Crossing
+function Crossing:updateLaneTipText()
+    local crossing = self
+    local text = fmt.bold(crossing.name) .. "<br>" .. "__________"
+    for _, lane in pairs(self.lanes) do
+        text = TippTextFormatter.appendUpTo1023(text, "<br></j>" .. getLaneRequestInfoBar(lane))
+    end
+
+    if crossing.tippStructure then
+        EEPShowInfoStructure(crossing.tippStructure, Crossing.showLanesOnStructure)
+        EEPChangeInfoStructure(crossing.tippStructure, text)
+    end
+end
+
 local aufbauHilfeErzeugt = Crossing.showSignalIdOnSignal
 
 --- Init all crossing lanes and traffic lights according to their sequences' traffic lights
@@ -353,11 +407,12 @@ local aufbauHilfeErzeugt = Crossing.showSignalIdOnSignal
 --- Speichert die Fahrspuren und Ampeln in den einzelnen Kreuzungen --> Weniger Suche danach
 function Crossing.initSequences()
     for _, crossing in pairs(allCrossings) do
+        local myLanes = {}
         for _, sequence in ipairs(crossing.sequences) do
             sequence:initSequence()
             local laneFound = false
             for v in pairs(sequence.lanes) do
-                crossing.lanes[v.name] = v
+                myLanes[v.name] = v
                 laneFound = true
             end
             if not laneFound then
@@ -371,6 +426,9 @@ function Crossing.initSequences()
                 print(string.format(text, crossing.name, sequence.name, sequence:lanesNamesText()))
             end
         end
+
+        for _, v in pairs(myLanes) do table.insert(crossing.lanes, v) end
+        table.sort(crossing.lanes, function(a, b) return a.name < b.name end)
     end
 end
 
@@ -387,6 +445,7 @@ function Crossing.switchSequences()
     for _, crossing in pairs(allCrossings) do
         switch(crossing)
         recalculateSignalInfo(crossing)
+        crossing:updateLaneTipText()
     end
 end
 

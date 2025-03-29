@@ -310,7 +310,7 @@ function Lane:checkRequests()
         text = text .. fmt.red(self.name)
     end
 
-    text = text .. ": " .. (not self.queue:isEmpty() and fmt.lightGray("BELEGT") or fmt.lightGray("-FREI-")) .. " "
+    text = text .. ": " .. (not self.queue:isEmpty() and fmt.lightGrey("BELEGT") or fmt.lightGrey("-FREI-")) .. " "
     if self.tracksUsedForRequest then
         text = text .. "(Strasse)"
     elseif self.signalUsedForRequest then

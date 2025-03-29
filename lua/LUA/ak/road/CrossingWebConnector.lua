@@ -17,6 +17,8 @@ function CrossingWebConnector.registerFunctions()
                                                function(param) Crossing.setShowSequenceOnSignal(param == "true") end)
     ServerController.addAcceptedRemoteFunction("Crossing.setShowSignalIdOnSignal",
                                                function(param) Crossing.setShowSignalIdOnSignal(param == "true") end)
+    ServerController.addAcceptedRemoteFunction("Crossing.setShowLanesOnStructure",
+                                               function(param) Crossing.setShowLanesOnStructure(param == "true") end)
     ServerController.addAcceptedRemoteFunction("AkKreuzungSchalteAutomatisch", Crossing.switchAutomatically)
     ServerController.addAcceptedRemoteFunction("AkKreuzungSchalteManuell", Crossing.switchManuallyTo)
 end
