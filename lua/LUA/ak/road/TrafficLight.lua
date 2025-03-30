@@ -1,6 +1,6 @@
 if AkDebugLoad then print("[#Start] Loading ak.road.TrafficLight ...") end
 
-local Crossing = require("ak.road.Crossing")
+local CrossingSettings = require("ak.road.CrossingSettings")
 local AxisStructureTrafficLight = require("ak.road.AxisStructureTrafficLight")
 local LightStructureTrafficLight = require("ak.road.LightStructureTrafficLight")
 local TrafficLightState = require("ak.road.TrafficLightState")
@@ -140,9 +140,9 @@ end
 --- Stellt die vorher gesetzten Tipp-Texte dar.
 --
 function TrafficLight:refreshInfo()
-    local showSwitching = Crossing.showSequenceOnSignal
-    local showAllSignals = Crossing.showSignalIdOnSignal
-    local showRequests = Crossing.showRequestsOnSignal and self.laneInfo:len() > 0
+    local showSwitching = CrossingSettings.showSequenceOnSignal
+    local showAllSignals = CrossingSettings.showSignalIdOnSignal
+    local showRequests = CrossingSettings.showRequestsOnSignal and self.laneInfo:len() > 0
     local showInfo = showSwitching or showAllSignals or showRequests
 
     self:showInfoText(showInfo)

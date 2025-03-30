@@ -114,8 +114,8 @@ In diesem Schritt läßt Du Dir von `Crossing` alle Signal-IDs in 3D anzeigen.
 
   ```lua
   -- Hier kommt der Code
-  Crossing.showSignalIdOnSignal = true
-  Crossing.showSequenceOnSignal = true
+  CrossingSetting.showSignalIdOnSignal = true
+  CrossingSetting.showSequenceOnSignal = true
   ```
 
 - Klicke in EEP auf _"Skript neu laden"_ und wechsle in den 3D-Modus. <br>😀 **Wenn Du alles richtig gemacht hast**, siehst Du an allen Signalen Tipp-Texte mit den IDs dieser Signale.
@@ -343,8 +343,8 @@ Erinnerst Du Dich den Code, der die Tipp-Texte zu den Signalen hinzugefügt hat?
 
   ```lua
   -- Hier kommt der Code
-  Crossing.showSignalIdOnSignal = false
-  Crossing.showSequenceOnSignal = false
+  CrossingSetting.showSignalIdOnSignal = false
+  CrossingSetting.showSequenceOnSignal = false
   ```
 
 - Klicke danach auf Skript neu laden und wechsle in den 3D-Modus.<br>😀 **Wenn Du alles richtig gemacht hast**, verschwinden die Tipp-Texte von den Signalen.

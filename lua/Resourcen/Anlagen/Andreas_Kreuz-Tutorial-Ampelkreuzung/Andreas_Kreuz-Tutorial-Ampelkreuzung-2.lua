@@ -2,10 +2,10 @@
 require("ak.demo-anlagen.tutorial-ampel.Andreas_Kreuz-Tutorial-Ampelkreuzung-2-main")
 
 -- Schalte Tipp-Texte ein
-local Crossing = require("ak.road.Crossing")
-Crossing.showSignalIdOnSignal = true
-Crossing.showSequenceOnSignal = true
-Crossing.showRequestsOnSignal = true
+local CrossingSetting = require("ak.road.CrossingSetting")
+CrossingSetting.showSignalIdOnSignal = true
+CrossingSetting.showSequenceOnSignal = true
+CrossingSetting.showRequestsOnSignal = true
 
 [EEPLuaData]
 DS_100 = "f=2,p=Rot,q=#Opal Vitaro MEDIA MARKT|#Opal Vitaro MEDIA MARKT;001,w=0,"

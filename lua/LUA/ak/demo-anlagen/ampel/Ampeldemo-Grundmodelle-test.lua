@@ -7,6 +7,7 @@ local Scheduler = require("ak.scheduler.Scheduler")
 local ServerController = require("ak.io.ServerController")
 local TrafficLight = require("ak.road.TrafficLight")
 local Crossing = require("ak.road.Crossing")
+local CrossingSetting = require("ak.road.CrossingSetting")
 local StorageUtility = require("ak.storage.StorageUtility")
 -- endregion
 
@@ -27,9 +28,9 @@ require("ak.demo-anlagen.ampel.Ampeldemo-Grundmodelle-main")
 --------------------------------------------------------------------
 TrafficLight.debug = false
 Crossing.debug = false
-Crossing.showRequestsOnSignal = true
-Crossing.showSequenceOnSignal = true
-Crossing.showSignalIdOnSignal = false
+CrossingSetting.showRequestsOnSignal = true
+CrossingSetting.showSequenceOnSignal = true
+CrossingSetting.showSignalIdOnSignal = false
 Scheduler.debug = false
 StorageUtility.debug = false
 ModuleRegistry.debug = false

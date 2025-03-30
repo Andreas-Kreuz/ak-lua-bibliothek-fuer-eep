@@ -4,6 +4,7 @@ local EepSimulator = require("ak.core.eep.EepSimulator")
 local Scheduler = require("ak.scheduler.Scheduler")
 local TrafficLight = require("ak.road.TrafficLight")
 local Crossing = require("ak.road.Crossing")
+local CrossingSetting = require("ak.road.CrossingSetting")
 local StorageUtility = require("ak.storage.StorageUtility")
 
 clearlog()
@@ -37,9 +38,9 @@ Scheduler.debug = true
 StorageUtility.debug = true
 TrafficLight.debug = false
 Crossing.debug = false
-Crossing.showSignalIdOnSignal = false
-Crossing.showRequestsOnSignal = true
-Crossing.showSequenceOnSignal = true
+CrossingSetting.showSignalIdOnSignal = false
+CrossingSetting.showRequestsOnSignal = true
+CrossingSetting.showSequenceOnSignal = true
 
 --------------------------------------------------------------------
 -- Erste Hilfe - normalerweise nicht notwendig                    --

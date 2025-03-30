@@ -7,6 +7,7 @@ local enabled = true
 local initialized = false
 CrossingJsonCollector.name = "ak.data.CrossingJsonCollector"
 local Crossing = require("ak.road.Crossing")
+local CrossingSettings = require("ak.road.CrossingSettings")
 local Lane = require("ak.road.Lane")
 local TrafficLightState = require("ak.road.TrafficLightState")
 
@@ -183,29 +184,29 @@ local function collectModuleSettings()
             ["name"] = "Anforderungen einblenden",
             ["description"] = "Zeigt für alle Ampeln einen TippText mit den Anforderungen",
             ["type"] = "boolean",
-            ["value"] = Crossing.showRequestsOnSignal,
-            ["eepFunction"] = "Crossing.setShowRequestsOnSignal"
+            ["value"] = CrossingSettings.showRequestsOnSignal,
+            ["eepFunction"] = "CrossingSettings.setShowRequestsOnSignal"
         }, {
             ["category"] = "Tipp-Texte für Kreuzungen",
             ["name"] = "Schaltungen einblenden",
             ["description"] = "Zeigt für alle Ampeln einen TippText mit den Schaltungen",
             ["type"] = "boolean",
-            ["value"] = Crossing.showSequenceOnSignal,
-            ["eepFunction"] = "Crossing.setShowSequenceOnSignal"
+            ["value"] = CrossingSettings.showSequenceOnSignal,
+            ["eepFunction"] = "CrossingSettings.setShowSequenceOnSignal"
         }, {
             ["category"] = "Tipp-Texte für Kreuzungen",
             ["name"] = "Fahrspurzähler einblenden",
             ["description"] = "Zeigt die Belegung der Fahrspuren an einer Kreuzung",
             ["type"] = "boolean",
-            ["value"] = Crossing.showLanesOnStructure,
-            ["eepFunction"] = "Crossing.setShowLanesOnStructure"
+            ["value"] = CrossingSettings.showLanesOnStructure,
+            ["eepFunction"] = "CrossingSettings.setShowLanesOnStructure"
         }, {
             ["category"] = "Tipp-Texte für Signale (allgemein)",
             ["name"] = "Signal-ID einblenden",
             ["description"] = "Zeigt an jedem Signal dessen Nummer als TippText",
             ["type"] = "boolean",
-            ["value"] = Crossing.showSignalIdOnSignal,
-            ["eepFunction"] = "Crossing.setShowSignalIdOnSignal"
+            ["value"] = CrossingSettings.showSignalIdOnSignal,
+            ["eepFunction"] = "CrossingSettings.setShowSignalIdOnSignal"
         }
     }
 

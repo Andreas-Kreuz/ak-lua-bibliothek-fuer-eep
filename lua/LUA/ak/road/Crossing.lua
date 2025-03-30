@@ -3,8 +3,8 @@ if AkDebugLoad then print("[#Start] Loading ak.road.Crossing ...") end
 
 local Task = require("ak.scheduler.Task")
 local Scheduler = require("ak.scheduler.Scheduler")
-local StorageUtility = require("ak.storage.StorageUtility")
 local CrossingSequence = require("ak.road.CrossingSequence")
+local CrossingSettings = require("ak.road.CrossingSettings")
 local TrafficLightState = require("ak.road.TrafficLightState")
 local fmt = require("ak.core.eep.TippTextFormatter")
 
@@ -28,56 +28,8 @@ local Crossing = {}
 Crossing.debug = AkStartWithDebug or false
 ---@type table<string,Crossing>
 Crossing.allCrossings = {}
-Crossing.showRequestsOnSignal = false
-Crossing.showSequenceOnSignal = false
-Crossing.showSignalIdOnSignal = false
-Crossing.showLanesOnStructure = false
 
-function Crossing.loadSettingsFromSlot(eepSaveId)
-    StorageUtility.registerId(eepSaveId, "Crossing settings")
-    Crossing.saveSlot = eepSaveId
-    local data = StorageUtility.loadTable(Crossing.saveSlot, "Crossing settings")
-    Crossing.showRequestsOnSignal = StorageUtility.toboolean(data["reqInfo"]) or Crossing.showRequestsOnSignal
-    Crossing.showSequenceOnSignal = StorageUtility.toboolean(data["seqInfo"]) or Crossing.showSequenceOnSignal
-    Crossing.showSignalIdOnSignal = StorageUtility.toboolean(data["sigInfo"]) or Crossing.showSignalIdOnSignal
-    Crossing.showLanesOnStructure = StorageUtility.toboolean(data["laneInfo"]) or Crossing.showLanesOnStructure
-end
-
-function Crossing.saveSettings()
-    if Crossing.saveSlot then
-        local data = {
-            reqInfo = tostring(Crossing.showRequestsOnSignal),
-            seqInfo = tostring(Crossing.showSequenceOnSignal),
-            sigInfo = tostring(Crossing.showSignalIdOnSignal),
-            laneInfo = tostring(Crossing.showLanesOnStructure)
-        }
-        StorageUtility.saveTable(Crossing.saveSlot, data, "Crossing settings")
-    end
-end
-
-function Crossing.setShowRequestsOnSignal(value)
-    assert(value == true or value == false)
-    Crossing.showRequestsOnSignal = value
-    Crossing.saveSettings()
-end
-
-function Crossing.setShowSequenceOnSignal(value)
-    assert(value == true or value == false)
-    Crossing.showSequenceOnSignal = value
-    Crossing.saveSettings()
-end
-
-function Crossing.setShowSignalIdOnSignal(value)
-    assert(value == true or value == false)
-    Crossing.showSignalIdOnSignal = value
-    Crossing.saveSettings()
-end
-
-function Crossing.setShowLanesOnStructure(value)
-    assert(value == true or value == false)
-    Crossing.showLanesOnStructure = value
-    Crossing.saveSettings()
-end
+function Crossing.loadSettingsFromSlot(eepSaveId) return CrossingSettings.loadSettingsFromSlot(eepSaveId) end
 
 function Crossing.switchManuallyTo(crossingName, sequenceName)
     if Crossing.debug then print("[#Crossing] switchManuallyTo:" .. crossingName .. "/" .. sequenceName) end
@@ -396,12 +348,12 @@ function Crossing:updateLaneTipText()
     end
 
     if crossing.tippStructure then
-        EEPShowInfoStructure(crossing.tippStructure, Crossing.showLanesOnStructure)
+        EEPShowInfoStructure(crossing.tippStructure, CrossingSettings.showLanesOnStructure)
         EEPChangeInfoStructure(crossing.tippStructure, text)
     end
 end
 
-local aufbauHilfeErzeugt = Crossing.showSignalIdOnSignal
+local aufbauHilfeErzeugt = CrossingSettings.showSignalIdOnSignal
 
 --- Init all crossing lanes and traffic lights according to their sequences' traffic lights
 --- ----
@@ -435,11 +387,13 @@ end
 
 --- Switch all sequences according to the current crossing settings
 function Crossing.switchSequences()
-    if aufbauHilfeErzeugt ~= Crossing.showSignalIdOnSignal then
-        aufbauHilfeErzeugt = Crossing.showSignalIdOnSignal
+    if aufbauHilfeErzeugt ~= CrossingSettings.showSignalIdOnSignal then
+        aufbauHilfeErzeugt = CrossingSettings.showSignalIdOnSignal
         for signalId = 1, 1000 do
-            EEPShowInfoSignal(signalId, Crossing.showSignalIdOnSignal)
-            if Crossing.showSignalIdOnSignal then EEPChangeInfoSignal(signalId, "<j>Signal: " .. signalId) end
+            EEPShowInfoSignal(signalId, CrossingSettings.showSignalIdOnSignal)
+            if CrossingSettings.showSignalIdOnSignal then
+                EEPChangeInfoSignal(signalId, "<j>Signal: " .. signalId)
+            end
         end
     end
 
