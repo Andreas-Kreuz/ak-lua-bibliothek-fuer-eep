@@ -1,4 +1,3 @@
-local Lane = require "ak.road.Lane"
 local TippTextFormatter = require "ak.core.eep.TippTextFormatter"
 if AkDebugLoad then print("[#Start] Loading ak.road.Crossing ...") end
 

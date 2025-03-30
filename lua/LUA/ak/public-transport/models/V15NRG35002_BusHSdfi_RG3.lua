@@ -1,6 +1,5 @@
 -- V15NRG35002 - Buswartehaeuser in Dioramaqualitaet mit DFI
 local Line = require("ak.public-transport.Line")
-local fmt = require("ak.core.eep.TippTextFormatter")
 local RoadStationTippHelper = require("ak.public-transport.models.RoadStationTippHelper")
 
 local BusHSdfi_RG3 = {}

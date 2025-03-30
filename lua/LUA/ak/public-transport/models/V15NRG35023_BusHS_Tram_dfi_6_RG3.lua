@@ -1,5 +1,4 @@
 local Line = require("ak.public-transport.Line")
-local fmt = require("ak.core.eep.TippTextFormatter")
 local RoadStationTippHelper = require("ak.public-transport.models.RoadStationTippHelper")
 
 -- V15NRG35023 - DFI digitale Fahrgastinformation für 6 Linien
