@@ -853,8 +853,9 @@ local camera = {}
 -- @param RotX Kameraausrichtung (Drehung)
 -- @param RotY Kameraausrichtung (Drehung)
 -- @param RotZ Kameraausrichtung (Drehung)
+-- @param setDirectly boolean Soll die Kamera sofort gesetzt werden
 -- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
-function EEPRollingstockSetUserCamera(rollingstockName, PosX, PosY, PosZ, RotX, RotY, RotZ)
+function EEPRollingstockSetUserCamera(rollingstockName, PosX, PosY, PosZ, RotX, RotY, RotZ, setDirectly)
     camera.rollingstockName = rollingstockName
     camera.PosX = PosX
     camera.PosY = PosY
@@ -862,6 +863,7 @@ function EEPRollingstockSetUserCamera(rollingstockName, PosX, PosY, PosZ, RotX, 
     camera.RotX = RotX
     camera.RotY = RotY
     camera.RotZ = RotZ
+    camera.setDirectly = setDirectly
     return true
 end
 
