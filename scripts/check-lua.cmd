@@ -19,7 +19,8 @@ IF %ERRORLEVEL% NEQ 0 (
     exit /b %ERRORLEVEL%
 )
 
-call busted --verbose --coverage -o plainTerminal -- .
+chcp 65001
+call busted --verbose --coverage -o utfTerminal -- .
 IF %ERRORLEVEL% NEQ 0 (
     echo %ERRORLEVEL%
     exit /b %ERRORLEVEL%

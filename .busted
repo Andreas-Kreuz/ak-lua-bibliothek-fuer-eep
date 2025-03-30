@@ -1,16 +1,14 @@
 return {
   _all = {
-    directory="lua/LUA"
-  },
-  default = {
+    directory = "lua/LUA",
     verbose = true,
     loaders = { 'lua' },
-    output = 'utfTerminal',
-  },
-  apiUnit = {
-    coverage=true,
-    tags = "api",
-    ROOT = {"lua/LUA"},
-    verbose = true
+    output = 'utfTerminal'
+},
+default = {
+},
+apiUnit = {
+    coverage = true,
+    tags = "api"
   }
 }
