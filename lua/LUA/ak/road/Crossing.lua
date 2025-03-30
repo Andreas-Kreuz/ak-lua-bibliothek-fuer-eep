@@ -31,7 +31,7 @@ Crossing.allCrossings = {}
 Crossing.showRequestsOnSignal = false
 Crossing.showSequenceOnSignal = false
 Crossing.showSignalIdOnSignal = false
-Crossing.showLanesOnStructure = true
+Crossing.showLanesOnStructure = false
 
 function Crossing.loadSettingsFromSlot(eepSaveId)
     StorageUtility.registerId(eepSaveId, "Crossing settings")
@@ -39,6 +39,7 @@ function Crossing.loadSettingsFromSlot(eepSaveId)
     local data = StorageUtility.loadTable(Crossing.saveSlot, "Crossing settings")
     Crossing.showRequestsOnSignal = StorageUtility.toboolean(data["reqInfo"]) or Crossing.showRequestsOnSignal
     Crossing.showSequenceOnSignal = StorageUtility.toboolean(data["seqInfo"]) or Crossing.showSequenceOnSignal
+    Crossing.showSignalIdOnSignal = StorageUtility.toboolean(data["sigInfo"]) or Crossing.showSignalIdOnSignal
     Crossing.showLanesOnStructure = StorageUtility.toboolean(data["laneInfo"]) or Crossing.showLanesOnStructure
 end
 
@@ -131,7 +132,6 @@ function Crossing:calculateNextSequence()
         for _, sequence in ipairs(self.sequences) do table.insert(sortedTable, sequence) end
         table.sort(sortedTable, CrossingSequence.sequencePriorityComparator)
         nextSequence = sortedTable[1]
-
     end
     return nextSequence
 end
@@ -373,6 +373,8 @@ local function getLaneRequestInfoBar(lane)
         for _ = 1, vehicles do requests = requests .. "_" end
         if lane.phase == TrafficLightState.RED then
             text = text .. fmt.bgRed(requests)
+        elseif lane.phase == TrafficLightState.YELLOW then
+            text = text .. fmt.bgYellow(requests)
         else
             text = text .. fmt.bgGreen(requests)
         end
