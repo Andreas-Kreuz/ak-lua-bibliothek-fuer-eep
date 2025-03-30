@@ -24,7 +24,7 @@
   "[lua]": {
     "files.encoding": "windows1252",
     "files.autoGuessEncoding": false,
-    "editor.defaultFormatter": "Koihik.vscode-lua-format"
+    "editor.defaultFormatter": "sumneko.lua"
   },
   "files.exclude": {
     "**/.classpath": true,
@@ -148,21 +148,43 @@
     "web-server",
     "web-shared"
   ],
+  "Lua.format.defaultConfig": {
+    "align_args": "true",
+    "align_parameter": "true",
+    "align_table_field": "true",
+    "break_after_functioncall_lp": "false",
+    "break_after_functiondef_lp": "false",
+    "break_after_operator": "true",
+    "break_after_table_lb": "true",
+    "break_before_functioncall_rp": "false",
+    "break_before_functiondef_rp": "false",
+    "break_before_table_rb": "true",
+    "chop_down_kv_table": "true",
+    "chop_down_parameter": "false",
+    "chop_down_table": "false",
+    "column_limit": "117",
+    "column_table_limit": "118",
+    "continuation_indent_width": "0",
+    "double_quote_to_single_quote": "false",
+    "extra_sep_at_table_end": "false",
+    "indent_width": "4",
+    "keep_simple_control_block_one_line": "true",
+    "keep_simple_function_one_line": "true",
+    "single_quote_to_double_quote": "true",
+    "spaces_before_call": "1",
+    "tab_width": "4",
+    "table_sep": ",",
+    "use_tab": "false"
+  },
   "Lua.workspace.useGitIgnore": false,
   "lua.preferLuaCheckErrors": true,
   "lua.targetVersion": "5.3",
   "Lua.runtime.version": "Lua 5.3",
-  "vscode-lua-format.configPath": "lua-format.conf",
-  //"eslint.nodePath": "web-app/node_modules/",
   "eslint.probe": ["javascript", "javascriptreact", "typescript", "typescriptreact", "html", "vue", "markdown", "html"],
   "editor.formatOnSave": true,
-  "[xml]": {
-    "editor.defaultFormatter": "redhat.vscode-xml"
-  },
   "eslint.nodePath": ".yarn/sdks",
   "prettier.prettierPath": ".yarn/sdks/prettier/index.js",
   "typescript.tsdk": ".yarn/sdks/typescript/lib",
   "typescript.enablePromptUseWorkspaceTsdk": true,
-  "eslint.packageManager": "yarn",
   "npm.packageManager": "yarn"
 }
