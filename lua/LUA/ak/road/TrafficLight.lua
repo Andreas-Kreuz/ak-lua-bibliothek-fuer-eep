@@ -137,6 +137,30 @@ function TrafficLight:changeInfoText(infoText)
     end
 end
 
+local function getSignalFunctionsTippText(signalId, trafficLightModel)
+    if EEPGetSignalFunctions then
+        local text = {}
+        local found, signalModelName = EEPGetSignalItemName(signalId, true)
+        if not found then return trafficLightModel.name end
+        table.insert(text, trafficLightModel.name)
+        table.insert(text, "<br>")
+        table.insert(text, signalModelName)
+        local _, count = EEPGetSignalFunctions(signalId)
+        for i = 1, count do
+            local _, action = EEPGetSignalFunction(signalId, i)
+            table.insert(text, "<br>")
+            table.insert(text, EEPGetSignal(signalId) == i and "<b>" or "")
+            table.insert(text, i)
+            table.insert(text, ": ")
+            table.insert(text, trafficLightModel:phaseOf(i))
+            table.insert(text, EEPGetSignal(signalId) == i and "</b>" or "")
+        end
+        return table.concat(text, "")
+    else
+        return trafficLightModel.name
+    end
+end
+
 --- Stellt die vorher gesetzten Tipp-Texte dar.
 --
 function TrafficLight:refreshInfo()
@@ -149,7 +173,9 @@ function TrafficLight:refreshInfo()
     if showInfo then
 
         local infoText = fmt.appendUpTo1023("", "<j><b>" .. self.name .. "</b> (Signal " .. self.signalId .. ")</j>")
-        infoText = fmt.appendUpTo1023(infoText, "<br>" .. self.trafficLightModel.name)
+
+        local signalFunctionsTippText = getSignalFunctionsTippText(self.signalId, self.trafficLightModel)
+        infoText = fmt.appendUpTo1023(infoText, "<br>" .. signalFunctionsTippText)
 
         if showSwitching and self.sequenceInfo then
             local title = "<br><br><b>" .. "Schaltung: " .. "</b>"

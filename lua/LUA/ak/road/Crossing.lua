@@ -259,6 +259,7 @@ end
 local function recalculateSignalInfo(crossing)
     for _, lane in pairs(crossing.lanes) do lane:checkRequests() end
 
+    ---@type table<TrafficLight, TrafficLightModel>
     local trafficLights = {}
 
     -- sort the circuits
@@ -280,32 +281,33 @@ local function recalculateSignalInfo(crossing)
 
     for trafficLight in pairs(trafficLights) do
         trafficLightsToRefresh[trafficLight.signalId] = trafficLight
-        local text = ""
+        local text = {}
         for _, sequence in ipairs(sortedSequences) do
             local farbig = sequence == crossing:getCurrentSequence()
             local type = sequence.trafficLights[trafficLight]
             if not type then
-                text = text .. "<br><j>" ..
-                       (farbig and fmt.bgRed(sequence.name .. " (Rot)") or
-                       (sequence.name .. " " .. fmt.bgRed("(Rot)")))
+                table.insert(text, "<br><j>" ..
+                             (farbig and fmt.bgRed(sequence.name .. " (Rot)") or
+                             (sequence.name .. " " .. fmt.bgRed("(Rot)"))))
             elseif type == CrossingSequence.Type.CAR then
-                text = text .. "<br><j>" ..
-                       (farbig and fmt.bgGreen(sequence.name .. " (Gruen)") or
-                       (sequence.name .. " " .. fmt.bgGreen("(Gruen)")))
+                table.insert(text, "<br><j>" ..
+                             (farbig and fmt.bgGreen(sequence.name .. " (Gruen)") or
+                             (sequence.name .. " " .. fmt.bgGreen("(Gruen)"))))
             elseif type == CrossingSequence.Type.PEDESTRIAN then
-                text = text .. "<br><j>" ..
-                       (farbig and fmt.bgYellow(sequence.name .. " (FG)") or
-                       (sequence.name .. " " .. fmt.bgYellow("(FG)")))
+                table.insert(text, "<br><j>" ..
+                             (farbig and fmt.bgYellow(sequence.name .. " (FG)") or
+                             (sequence.name .. " " .. fmt.bgYellow("(FG)"))))
             elseif type == CrossingSequence.Type.TRAM then
-                text = text .. "<br><j>" ..
-                       (farbig and fmt.bgBlue(sequence.name .. " (Tram)") or
-                       (sequence.name .. " " .. fmt.bgBlue("(Tram)")))
+                table.insert(text, "<br><j>" ..
+                             (farbig and fmt.bgBlue(sequence.name .. " (Tram)") or
+                             (sequence.name .. " " .. fmt.bgBlue("(Tram)"))))
             else
                 -- No such type allowed here
                 assert(false, type)
             end
         end
-        trafficLight:setSequenceInfo(text)
+        table.insert(text, "<br>")
+        trafficLight:setSequenceInfo(table.concat(text, ""))
     end
 
     for _, trafficLight in pairs(trafficLightsToRefresh) do trafficLight:refreshInfo() end
