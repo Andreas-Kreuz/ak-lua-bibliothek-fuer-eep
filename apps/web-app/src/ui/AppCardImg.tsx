@@ -28,8 +28,12 @@ function AppCardImg(props: {
   );
 
   return (
-    <Card>
-      <CardActionArea component={RouterLink} to={props.to || ''}>
+    <Card sx={{ display: 'flex', alignItems: 'stretch', alignContent: 'stretch' }}>
+      <CardActionArea
+        component={RouterLink}
+        to={props.to || ''}
+        sx={{ display: 'flex', alignItems: 'stretch', alignContent: 'stretch' }}
+      >
         <Stack sx={{ flexDirection: { xs: 'row', sm: 'column' } }}>
           {props.image && (
             <CardMedia component="img" image={props.image} title={props.title} sx={{ width: { xs: '25%', sm: 1 } }} />
