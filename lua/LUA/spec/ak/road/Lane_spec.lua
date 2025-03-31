@@ -1,5 +1,4 @@
 -- Lua code for testing the lane's functions
-
 describe("Lane ...", function()
     insulate("Register traffic lights", function()
         require("ak.core.eep.EepSimulator")
@@ -23,10 +22,8 @@ describe("Lane ...", function()
         driveTrafficLight:applyToLane(lane)
 
         it("driveTrafficLight has lane", function() assert.is_true(driveTrafficLight.lanes[lane]) end)
-        it("lane has driveTrafficLight with route !ALL!", function()
-            assert.same({}, lane.trafficLightsToDriveOn[driveTrafficLight])
-        end)
-
+        it("lane has driveTrafficLight with route !ALL!",
+           function() assert.same({}, lane.trafficLightsToDriveOn[driveTrafficLight]) end)
 
         it("Lane has signal", function() assert.is_truthy(lane.trafficLightsToDriveOn) end)
         it("Lane has signal", function() assert.are.same({}, lane.trafficLightsToDriveOn[driveTrafficLight]) end)
@@ -34,7 +31,8 @@ describe("Lane ...", function()
             driveTrafficLight:switchTo(TrafficLightState.RED)
             local canDriveAtRed = laneSignal.phase
             it("SignalId is correct", function()
-                assert.equals(TrafficLightModel.Unsichtbar_2er.signalIndexRed, EEPGetSignal(driveTrafficLight.signalId))
+                assert.equals(TrafficLightModel.Unsichtbar_2er.signalIndexRed,
+                              EEPGetSignal(driveTrafficLight.signalId))
             end)
             it("canDrive()", function() assert.equals(TrafficLightState.RED, canDriveAtRed) end)
         end)
@@ -43,16 +41,15 @@ describe("Lane ...", function()
             local canDriveAtGreen = laneSignal.phase
             it("SignalId is correct", function()
                 assert.equals(TrafficLightModel.Unsichtbar_2er.signalIndexGreen,
-                EEPGetSignal(driveTrafficLight.signalId))
+                              EEPGetSignal(driveTrafficLight.signalId))
             end)
             it("SignalId is correct", function()
-                assert.equals(TrafficLightModel.Unsichtbar_2er.signalIndexGreen,
-                EEPGetSignal(laneSignal.signalId))
+                assert.equals(TrafficLightModel.Unsichtbar_2er.signalIndexGreen, EEPGetSignal(laneSignal.signalId))
             end)
             it("canDrive()", function() assert.equals(TrafficLightState.GREEN, canDriveAtGreen) end)
         end)
     end)
-    insulate("Can drive on route", function ()
+    insulate("Can drive on route", function()
         require("ak.core.eep.EepSimulator")
         local TrafficLightModel = require("ak.road.TrafficLightModel")
         local TrafficLightState = require("ak.road.TrafficLightState")
@@ -80,25 +77,23 @@ describe("Lane ...", function()
         it("Lane has signal", function() assert.is_truthy(lane.trafficLightsToDriveOn) end)
         it("Lane has signal", function() assert.are.same({}, lane.trafficLightsToDriveOn[K1]) end)
         it("Lane has signal", function()
-            assert.are.same({"Some other route", "Matching Route", "Another" }, lane.trafficLightsToDriveOn[K2])
+            assert.are.same({"Some other route", "Matching Route", "Another"}, lane.trafficLightsToDriveOn[K2])
         end)
         describe("K1 can drive at red", function()
             K1:switchTo(TrafficLightState.RED)
             local canDriveAtRed = laneSignal.phase
             local signalIndexK1 = EEPGetSignal(K1.signalId)
-            it("SignalId is correct", function()
-                assert.equals(TrafficLightModel.JS2_3er_mit_FG.signalIndexRed, signalIndexK1)
-            end)
-                it("canDrive()", function() assert.equals(TrafficLightState.RED, canDriveAtRed) end)
-                K1:switchTo(TrafficLightState.RED)
-            end)
+            it("SignalId is correct",
+               function() assert.equals(TrafficLightModel.JS2_3er_mit_FG.signalIndexRed, signalIndexK1) end)
+            it("canDrive()", function() assert.equals(TrafficLightState.RED, canDriveAtRed) end)
+            K1:switchTo(TrafficLightState.RED)
+        end)
         describe("K1 can drive at green", function()
             K1:switchTo(TrafficLightState.GREEN)
             local canDriveAtGreen = laneSignal.phase
             local signalIndexK1 = EEPGetSignal(K1.signalId)
-            it("SignalId is correct", function()
-                assert.equals(TrafficLightModel.JS2_3er_mit_FG.signalIndexGreen, signalIndexK1)
-            end)
+            it("SignalId is correct",
+               function() assert.equals(TrafficLightModel.JS2_3er_mit_FG.signalIndexGreen, signalIndexK1) end)
             it("canDrive()", function() assert.equals(TrafficLightState.GREEN, canDriveAtGreen) end)
             K1:switchTo(TrafficLightState.RED)
         end)
@@ -106,18 +101,16 @@ describe("Lane ...", function()
             K2:switchTo(TrafficLightState.RED)
             local canDriveAtRed = laneSignal.phase
             local signalIndexK2 = EEPGetSignal(K2.signalId)
-            it("SignalId is correct", function()
-                assert.equals(TrafficLightModel.JS2_3er_mit_FG.signalIndexRed, signalIndexK2)
-                end)
+            it("SignalId is correct",
+               function() assert.equals(TrafficLightModel.JS2_3er_mit_FG.signalIndexRed, signalIndexK2) end)
             it("canDrive()", function() assert.equals(TrafficLightState.RED, canDriveAtRed) end)
             K2:switchTo(TrafficLightState.RED)
         end)
         describe("K2 can drive at green", function()
             K2:switchTo(TrafficLightState.GREEN)
             local signalIndexK2 = EEPGetSignal(K2.signalId)
-            it("SignalId is correct", function()
-                assert.equals(TrafficLightModel.JS2_3er_mit_FG.signalIndexGreen, signalIndexK2)
-                end)
+            it("SignalId is correct",
+               function() assert.equals(TrafficLightModel.JS2_3er_mit_FG.signalIndexGreen, signalIndexK2) end)
 
             local canDriveNoVehicle = laneSignal.phase
             it("canDrive() noVehicle", function() assert.equals(TrafficLightState.RED, canDriveNoVehicle) end)
@@ -125,15 +118,21 @@ describe("Lane ...", function()
             lane:vehicleEntered("#Car1")
             local firstVehiclesRoute1 = lane.firstVehiclesRoute
             local canDriveAtGreen2 = laneSignal.phase
-            it("canDrive() vehicleWithRoute", function() assert.equals("Matching Route", firstVehiclesRoute1) end)
-            it("canDrive() vehicleWithRoute", function() assert.equals(TrafficLightState.GREEN, canDriveAtGreen2) end)
+            it("canDrive() vehicleWithRoute", function()
+                assert.equals("Matching Route", firstVehiclesRoute1)
+            end)
+            it("canDrive() vehicleWithRoute", function()
+                assert.equals(TrafficLightState.GREEN, canDriveAtGreen2)
+            end)
             lane:vehicleLeft("#Car1")
 
-            lane:vehicleEntered( "#Car2")
+            lane:vehicleEntered("#Car2")
             local firstVehiclesRoute2 = lane.firstVehiclesRoute
             local canDriveAtGreen3 = laneSignal.phase
             it("canDrive() vehicleWithRoute", function() assert.equals("Alle", firstVehiclesRoute2) end)
-            it("canDrive() vehicleWithRoute", function( ) assert.equals(TrafficLightState.RED, canDriveAtGreen3) end)
+            it("canDrive() vehicleWithRoute", function()
+                assert.equals(TrafficLightState.RED, canDriveAtGreen3)
+            end)
             lane:vehicleLeft("#Car2")
 
             K2:switchTo(TrafficLightState.RED)
@@ -167,19 +166,16 @@ describe("Lane ...", function()
             K1:switchTo(TrafficLightState.RED)
             local canDriveAtRed = L1.phase
             local k1SignalIndex = EEPGetSignal(K1.signalId)
-            it("SignalId is correct", function()
-                assert.equals(TrafficLightModel.JS2_3er_ohne_FG.signalIndexRed, k1SignalIndex)
-            end)
+            it("SignalId is correct",
+               function() assert.equals(TrafficLightModel.JS2_3er_ohne_FG.signalIndexRed, k1SignalIndex) end)
             it("canDrive()", function() assert.equals(TrafficLightState.RED, canDriveAtRed) end)
         end)
         describe("Can drive at green", function()
             K1:switchTo(TrafficLightState.GREEN)
             local canDriveAtGreen = L1.phase
             local k1SignalIndex = EEPGetSignal(K1.signalId)
-            it("SignalId is correct", function()
-                assert.equals(TrafficLightModel.JS2_3er_ohne_FG.signalIndexGreen,
-                k1SignalIndex)
-            end)
+            it("SignalId is correct",
+               function() assert.equals(TrafficLightModel.JS2_3er_ohne_FG.signalIndexGreen, k1SignalIndex) end)
             it("canDrive()", function() assert.equals(TrafficLightState.GREEN, canDriveAtGreen) end)
         end)
     end)
@@ -187,7 +183,7 @@ describe("Lane ...", function()
     insulate("Show requests on the correct traffic lights", function()
         require("ak.core.eep.EepSimulator")
         local TrafficLightModel = require("ak.road.TrafficLightModel")
-        --local TrafficLightState = require("ak.road.TrafficLightState")
+        -- local TrafficLightState = require("ak.road.TrafficLightState")
         local TrafficLight = require("ak.road.TrafficLight")
         local Lane = require("ak.road.Lane")
         local signalId = 55
@@ -211,12 +207,12 @@ describe("Lane ...", function()
         EEPStructureSetLight("#34_REQUEST", false)
 
         -- Traffic Light which is visible to tell the lanes traffic to drive
-        local K1 = TrafficLight:new("K1", signalId, TrafficLightModel.JS2_3er_ohne_FG,
-        "#11_RED", "#12_GREEN", "#13_YELLOW", "#14_REQUEST")
-        local K2 = TrafficLight:new("K2", signalId, TrafficLightModel.JS2_3er_ohne_FG,
-        "#21_RED", "#22_GREEN", "#23_YELLOW", "#24_REQUEST")
-        local K3 = TrafficLight:new("K3", signalId, TrafficLightModel.JS2_3er_ohne_FG,
-        "#31_RED", "#32_GREEN", "#33_YELLOW", "#34_REQUEST")
+        local K1 = TrafficLight:new("K1", signalId, TrafficLightModel.JS2_3er_ohne_FG, "#11_RED", "#12_GREEN",
+                                    "#13_YELLOW", "#14_REQUEST")
+        local K2 = TrafficLight:new("K2", signalId, TrafficLightModel.JS2_3er_ohne_FG, "#21_RED", "#22_GREEN",
+                                    "#23_YELLOW", "#24_REQUEST")
+        local K3 = TrafficLight:new("K3", signalId, TrafficLightModel.JS2_3er_ohne_FG, "#31_RED", "#32_GREEN",
+                                    "#33_YELLOW", "#34_REQUEST")
         -- EEP Signal, which is used to start and stop the lanes traffic (needs to be switched to green too)
         local L1 = TrafficLight:new("L1", 11, TrafficLightModel.Unsichtbar_2er)
 
@@ -225,10 +221,10 @@ describe("Lane ...", function()
         lane:showRequestsOn(K2, "Route A")
         lane:showRequestsOn(K3, "Route B", "Route C")
 
-        it("K1 is registered for !ALL!", function() assert.same({ K1 }, lane.requestTrafficLights["!ALL!"]) end)
-        it("K2 is registered for Route A", function() assert.same({ K2 }, lane.requestTrafficLights["Route A"]) end)
-        it("K3 is registered for Route B", function() assert.same({ K3 }, lane.requestTrafficLights["Route B"]) end)
-        it("K3 is registered for Route C", function() assert.same({ K3 }, lane.requestTrafficLights["Route C"]) end)
+        it("K1 is registered for !ALL!", function() assert.same({K1}, lane.requestTrafficLights["!ALL!"]) end)
+        it("K2 is registered for Route A", function() assert.same({K2}, lane.requestTrafficLights["Route A"]) end)
+        it("K3 is registered for Route B", function() assert.same({K3}, lane.requestTrafficLights["Route B"]) end)
+        it("K3 is registered for Route C", function() assert.same({K3}, lane.requestTrafficLights["Route C"]) end)
 
         lane:vehicleLeft("#Car4")
         local _, lightOnK1NoCar = EEPStructureGetLight("#14")
@@ -267,7 +263,7 @@ describe("Lane ...", function()
         it("  Light on K3 NoCar", function() assert.is_false(lightOnK3NoCar2) end)
     end)
 
-    describe("Legacy loading", function ()
+    describe("Legacy loading", function()
         insulate("No saved vehicles, but a counter", function()
             require("ak.core.eep.EepSimulator")
             local StorageUtility = require("ak.storage.StorageUtility")
@@ -276,27 +272,26 @@ describe("Lane ...", function()
             local Lane = require("ak.road.Lane")
             local signalId = 55
 
-            StorageUtility.saveTable(34, { f = "4" })
+            StorageUtility.saveTable(34, {f = "4"})
             local lane = Lane:new("Lane A", 34, TrafficLight:new("X", signalId, TrafficLightModel.Unsichtbar_2er))
             insulate("Vehicles have generic names", function()
                 it("Queue looks as follows", function()
-                    assert.are.same({ "train 1", "train 2", "train 3", "train 4" }, lane.queue:elements())
+                    assert.are.same({"train 1", "train 2", "train 3", "train 4"}, lane.queue:elements())
                 end)
                 it("Lane queue size is 4", function() assert.equals(4, lane.queue:size()) end)
                 it("Lane vehicle count is 4", function() assert.equals(4, lane.vehicleCount) end)
             end)
             insulate("First vehicle leaving will remove one element from queue", function()
                 lane:vehicleLeft("train 1")
-                it("Queue looks as follows", function()
-                    assert.are.same({ "train 2", "train 3", "train 4" }, lane.queue:elements())
-                end)
+                it("Queue looks as follows",
+                   function() assert.are.same({"train 2", "train 3", "train 4"}, lane.queue:elements()) end)
                 it("Lane queue size is decreased", function() assert.equals(3, lane.queue:size()) end)
                 it("Lane vehicle count is decreased", function() assert.equals(3, lane.vehicleCount) end)
             end)
             insulate("Third vehicle leaving will remove two more elements from queue", function()
                 lane:vehicleLeft("train 3")
                 it("Queue looks as follows", function()
-                    assert.are.same({ "train 4" }, lane.queue:elements())
+                    assert.are.same({"train 4"}, lane.queue:elements())
                 end)
                 it("Lane queue size is decreased", function() assert.equals(1, lane.queue:size()) end)
                 it("Lane vehicle count is decreased", function() assert.equals(1, lane.vehicleCount) end)
@@ -310,15 +305,13 @@ describe("Lane ...", function()
                 lane:vehicleEntered("train 5")
                 lane:vehicleEntered("train 6")
                 lane:vehicleLeft("no matching train")
-                it("Queue looks as follows", function()
-                    assert.are.same({ "train 5", "train 6" }, lane.queue:elements())
-                end)
+                it("Queue looks as follows",
+                   function() assert.are.same({"train 5", "train 6"}, lane.queue:elements()) end)
                 it("Lane queue size is decreased", function() assert.equals(2, lane.queue:size()) end)
                 it("Lane vehicle count is decreased", function() assert.equals(2, lane.vehicleCount) end)
             end)
         end)
     end)
-
 
     describe(":useSignalForQueue()", function()
         insulate("disabled", function()
@@ -330,7 +323,8 @@ describe("Lane ...", function()
 
             -- Set the route for train "#Car1"
             EEPSetTrainRoute("#Car1", "Some Route")
-            local lane = Lane:new("Lane A", 34, TrafficLight:new("LANE A", signalId, TrafficLightModel.Unsichtbar_2er))
+            local lane =
+            Lane:new("Lane A", 34, TrafficLight:new("LANE A", signalId, TrafficLightModel.Unsichtbar_2er))
 
             it("Traffic lights are not used", function() assert.is_false(lane.signalUsedForRequest) end)
             it("Traffic lights there is no entry in the table",
@@ -347,12 +341,15 @@ describe("Lane ...", function()
 
             -- Set the route for train "#Car1"
             EEPSetTrainRoute("#Car1", "Some Route")
-            local lane = Lane:new("Lane A", 34, TrafficLight:new("LANE A", signalId, TrafficLightModel.Unsichtbar_2er))
+            local lane =
+            Lane:new("Lane A", 34, TrafficLight:new("LANE A", signalId, TrafficLightModel.Unsichtbar_2er))
 
             lane:useSignalForQueue()
             lane:checkRequests()
 
-            it("No trains waiting on signal", function() assert.equals(0, EEPGetSignalTrainsCount(signalId)) end)
+            it("No trains waiting on signal", function()
+                assert.equals(0, EEPGetSignalTrainsCount(signalId))
+            end)
             it("Traffic lights are used", function() assert.is_true(lane.signalUsedForRequest) end)
             it("There is no request", function() assert.equals(0, lane.queue:size()) end)
         end)
@@ -374,7 +371,9 @@ describe("Lane ...", function()
             lane:useSignalForQueue()
             lane:checkRequests()
 
-            it("No trains waiting on signal", function() assert.equals(2, EEPGetSignalTrainsCount(signalId)) end)
+            it("No trains waiting on signal", function()
+                assert.equals(2, EEPGetSignalTrainsCount(signalId))
+            end)
             it("No trains waiting on signal", function()
                 assert.equals("#Car1", EEPGetSignalTrainName(signalId, 1))
                 assert.equals("#Car2", EEPGetSignalTrainName(signalId, 2))
@@ -387,7 +386,7 @@ describe("Lane ...", function()
         end)
     end)
 
-     describe(":useTrackForQueue()", function()
+    describe(":useTrackForQueue()", function()
         insulate("disabled", function()
             require("ak.core.eep.EepSimulator")
             local TrafficLightModel = require("ak.road.TrafficLightModel")
@@ -450,9 +449,8 @@ describe("Lane ...", function()
             end)
             it("- Road counting is used", function() assert.is_true(lane.tracksUsedForRequest) end)
             it("- There is a request on the road track", function() assert.equals(1, lane.queue:size()) end)
-            it("- There is a request on the road track", function()
-                assert.equals("#Car1", lane.queue:firstElement())
-            end)
+            it("- There is a request on the road track",
+               function() assert.equals("#Car1", lane.queue:firstElement()) end)
         end)
     end)
 
@@ -463,9 +461,8 @@ describe("Lane ...", function()
         local TrafficLight = require("ak.road.TrafficLight")
         local Lane = require("ak.road.Lane")
 
-        EEPSaveData(888,
-        "f=4,p=Rot,q=#Mittelklasse_PKW_blau_NP1|#Citaro_01c_LE-Ue_UK2_v7;001" ..
-         "|#Auflieger_Mobil_HB3|#Kaessbohrer Tankauflieger BP (v8),w=6,")
+        EEPSaveData(888, "f=4,p=Rot,q=#Mittelklasse_PKW_blau_NP1|#Citaro_01c_LE-Ue_UK2_v7;001" ..
+                    "|#Auflieger_Mobil_HB3|#Kaessbohrer Tankauflieger BP (v8),w=6,")
         local lane = Lane:new("Lane A", 888, TrafficLight:new("K1", 66, TrafficLightModel.Unsichtbar_2er))
 
         it("Lane loaded", function() assert.equals(4, lane.queue:size()) end)

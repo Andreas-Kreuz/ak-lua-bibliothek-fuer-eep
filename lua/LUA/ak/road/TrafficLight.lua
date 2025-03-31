@@ -152,7 +152,7 @@ local function getSignalFunctionsTippText(signalId, trafficLightModel)
             table.insert(text, EEPGetSignal(signalId) == i and "<b>" or "")
             table.insert(text, i)
             table.insert(text, ": ")
-            table.insert(text, trafficLightModel:phaseOf(i))
+            table.insert(text, trafficLightModel:phaseOf(i) or action)
             table.insert(text, EEPGetSignal(signalId) == i and "</b>" or "")
         end
         return table.concat(text, "")
