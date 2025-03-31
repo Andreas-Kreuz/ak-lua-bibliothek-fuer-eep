@@ -3,7 +3,7 @@ local fmt = require("ak.core.eep.TippTextFormatter")
 -- Simple Structure - works with any model
 local RoadStationTippHelper = {}
 
-RoadStationTippHelper.getTitle = function(stationName, platform)
+RoadStationTippHelper.getTitle = function (stationName, platform)
     assert(type(stationName) == "string", "Need 'stationName' as string")
     assert(type(platform) == "string", "Need 'platform' as string")
     local text = {
@@ -12,7 +12,7 @@ RoadStationTippHelper.getTitle = function(stationName, platform)
     return table.concat(text, "")
 end
 
-RoadStationTippHelper.getEntry = function(entry)
+RoadStationTippHelper.getEntry = function (entry)
     assert(not entry or type(entry) == "table", "Need 'stationQueueEntries' as table not as " .. type(entry))
 
     local text = {}

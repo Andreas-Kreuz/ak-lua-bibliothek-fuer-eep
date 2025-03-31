@@ -105,7 +105,7 @@ local function printToFile(...)
         local time = ""
         if os.date then time = tostring(os.date("%X ")) end
         local text = "" .. time
-        local args = {...}
+        local args = { ... }
         for _, arg in ipairs(args) do text = text .. tostring(arg):gsub("\n", "\n       . ") end
         file:write(text .. "\n")
         file:close()
@@ -115,23 +115,23 @@ end
 --- Schreibe log zusätzlich in Datei.
 function print(...)
     printToFile(...) -- print the output to the log file
-    _print(...) -- call the original print function
+    _print(...)      -- call the original print function
 end
 
 --- Schreibe Fehler zusätzlich in Datei.
-error = function(message, level)
-    printToFile(message) -- print the output to the file
+error = function (message, level)
+    printToFile(message)   -- print the output to the file
     _error(message, level) -- call the original error function
 end
 
 --- Schreibe Fehler zusätzlich in Datei.
-warn = function(message, ...)
+warn = function (message, ...)
     printToFile(message, ...) -- print the output to the file
-    _warn(message, ...) -- call the original warn function
+    _warn(message, ...)       -- call the original warn function
 end
 
 -- add traceback to assert message by default
-assert = function(v, message)
+assert = function (v, message)
     local status, retval = pcall(_assert, v, message)
     if not status then error(debug.traceback(message and message or "Assertion failed.", 2), 0) end
     return retval
@@ -165,7 +165,7 @@ local serverWasReadyLastTime = true
 local serverWasListeningLastTime = true
 --- Prüfe Status des Web Servers.
 function AkWebServerIo.checkWebServer()
-    if fileExists(watchFileNameServer) then -- file: ak-server.iswatching
+    if fileExists(watchFileNameServer) then  -- file: ak-server.iswatching
         if fileExists(watchFileNameLua) then -- file: ak-eep-out-json.isfinished
             if AkWebServerIo.debug and serverWasReadyLastTime then
                 print("[#WebServerIo] SERVER IS NOT READY")
@@ -202,7 +202,7 @@ function AkWebServerIo.updateJsonFile(jsonData)
     end
 
     if fileExists(watchFileNameServer) then -- file: ak-server.iswatching
-        writeFile(watchFileNameLua, "") -- file: ak-eep-out-json.isfinished
+        writeFile(watchFileNameLua, "")     -- file: ak-eep-out-json.isfinished
     end
 end
 

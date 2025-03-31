@@ -33,7 +33,7 @@ local trains = {}
 ---@param trainName string Name of the train
 ---param ... string Name of the rollingstock
 function EepSimulator.addTrain(trainName, ...)
-    trains[trainName] = {...}
+    trains[trainName] = { ... }
     EEPSetTrainSpeed(trainName, 0)
 end
 
@@ -388,11 +388,11 @@ end
 function EEPIsRailTrackReserved(trackId, returnTrainName)
     if returnTrainName then
         return (registeredRailTracks[trackId] ~= nil and true or false),
-               (registeredRailTracks[trackId] ~= "" and true or false),
-               (returnTrainName and registeredRailTracks[trackId] or nil)
+            (registeredRailTracks[trackId] ~= "" and true or false),
+            (returnTrainName and registeredRailTracks[trackId] or nil)
     else
         return (registeredRailTracks[trackId] ~= nil and true or false),
-               (registeredRailTracks[trackId] ~= "" and true or false)
+            (registeredRailTracks[trackId] ~= "" and true or false)
     end
 end
 
@@ -413,11 +413,11 @@ end
 function EEPIsRoadTrackReserved(trackId, returnTrainName)
     if returnTrainName then
         return (registeredRoadTracks[trackId] ~= nil and true or false),
-               (registeredRoadTracks[trackId] ~= "" and true or false),
-               (returnTrainName and registeredRoadTracks[trackId] or nil)
+            (registeredRoadTracks[trackId] ~= "" and true or false),
+            (returnTrainName and registeredRoadTracks[trackId] or nil)
     else
         return (registeredRoadTracks[trackId] ~= nil and true or false),
-               (registeredRoadTracks[trackId] ~= "" and true or false)
+            (registeredRoadTracks[trackId] ~= "" and true or false)
     end
 end
 
@@ -658,8 +658,8 @@ function EEPStructureGetModelType(name)
     end
 end
 
-local tags = {structures = {}, rollingStock = {}}
-local textureTexts = {rollingStock = {}}
+local tags = { structures = {}, rollingStock = {} }
+local textureTexts = { rollingStock = {} }
 
 --- Ändert den Tag-Text einer Immobilie. Jede Immobilie kann jetzt einen individuellen String von
 --- maximal 1024 Zeichen Laenge mitfuehren. Diese Strings werden mit der Anlage gespeichert und
@@ -704,16 +704,23 @@ end
 function EEPRollingstockGetTagText(name) return true, tags.rollingStock[name] end
 
 function EEPStructureSetTextureText(name, flaeche, text) return true end
+
 function EEPRollingstockSetTextureText(name, flaeche, text)
     textureTexts.rollingStock[name] = {}
     textureTexts.rollingStock[name][flaeche] = text
     return true
 end
+
 function EEPSignalSetTextureText(id, flaeche, text) return true end
+
 function EEPGoodsSetTextureText(name, flaeche, text) return true end
+
 function EEPRailTrackSetTextureText(id, flaeche, text) return true end
+
 function EEPRoadTrackSetTextureText(id, flaeche, text) return true end
+
 function EEPTramTrackSetTextureText(id, flaeche, text) return true end
+
 function EEPAuxiliaryTrackSetTextureText(id, flaeche, text) return true end
 
 ---------------------

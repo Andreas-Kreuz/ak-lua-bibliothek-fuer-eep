@@ -36,7 +36,7 @@ function AkModellInstaller:erzeugePaket(ausgabeverzeichnis)
         -- Dateien des Modellpakets kopieren
         for pfad, dateiname in pairs(modellPaket.modellPfade) do
             if not os.execute([[copy "]] .. pfad .. [[" "]] .. modellPaketVerzeichnis .. "\\" .. dateiname ..
-                              [[" >nul]]) then
+                    [[" >nul]]) then
                 print([[copy "]] .. pfad .. [[" "]] .. modellPaketVerzeichnis .. "\\" .. dateiname .. [["]])
                 os.execute([[copy "]] .. pfad .. [[" "]] .. modellPaketVerzeichnis .. "\\" .. dateiname .. [[" ]])
                 os.exit(1)
@@ -46,7 +46,7 @@ function AkModellInstaller:erzeugePaket(ausgabeverzeichnis)
         -- Install ini schreiben
         local installIniDatei = modellPaketVerzeichnis .. "\\install.ini"
         AkModellPacker.schreibeDatei(installIniDatei, AkModellPacker.erzeugeInstallIniInhalt(
-                                     modellPaket.installationsPfade, modellPaket.eepVersion))
+            modellPaket.installationsPfade, modellPaket.eepVersion))
     end
     local installation_eep_datei = string.format(installation_verzeichnis .. "\\Installation.eep")
     AkModellPacker.schreibeDatei(installation_eep_datei, inhalt)
@@ -54,7 +54,7 @@ function AkModellInstaller:erzeugePaket(ausgabeverzeichnis)
     if os.execute([[dir "C:\Program Files\7-Zip\7z.exe" > nul 2> nul]]) then
         os.execute([[del /F "]] .. ausgabeverzeichnis .. "\\" .. self.verzeichnisname .. [[.zip"]])
         os.execute([["C:\Program Files\7-Zip\7z.exe" a ]] .. ausgabeverzeichnis .. "\\" .. self.verzeichnisname ..
-                   [[.zip ]] .. installation_verzeichnis .. [[\*]])
+            [[.zip ]] .. installation_verzeichnis .. [[\*]])
     end
 end
 

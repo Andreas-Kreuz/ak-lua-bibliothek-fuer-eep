@@ -100,8 +100,8 @@ local function pairsByKeys(t, f)
     local a = {}
     for n in pairs(t) do table.insert(a, n) end
     table.sort(a, f)
-    local i = 0 -- iterator variable
-    local iter = function() -- iterator function
+    local i = 0              -- iterator variable
+    local iter = function () -- iterator function
         i = i + 1
         if a[i] == nil then
             return nil
@@ -133,7 +133,7 @@ function StorageUtility.saveTable(eepSaveId, table, name)
     local hresult = EEPSaveData(eepSaveId, text)
     if StorageUtility.debug then
         print("[#StorageUtility] Speichern [" .. (hresult and "OK" or "!!") .. "] - " .. eepSaveId .. " - " .. name ..
-              " gespeichert: " .. text)
+            " gespeichert: " .. text)
     end
     savedValues[eepSaveId] = text
     if StorageUtility.debug then StorageUtility.updateDebugFile() end
@@ -164,7 +164,7 @@ end
 function StorageUtility.toboolean(value) return (value and value == "true") and true or false end
 
 function StorageUtility.calcEepLuaData()
-    local ausgabeT = {"[EEPLuaData]\n"}
+    local ausgabeT = { "[EEPLuaData]\n" }
     for i = 1, 1000 do
         local t = type(savedValues[i])
         local typeValue

@@ -7,7 +7,7 @@ function TableUtils.readOnlyTable(tb)
     local proxy = {}
     local mt = { -- create metatable
         __index = tb,
-        __newindex = function(_, _, _) error("attempt to update a read-only table", 2) end
+        __newindex = function (_, _, _) error("attempt to update a read-only table", 2) end
     }
     setmetatable(proxy, mt)
     return proxy

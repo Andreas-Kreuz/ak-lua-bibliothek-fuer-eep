@@ -11,7 +11,7 @@ end
 
 function PublicTransportWebConnector.registerFunctions()
     ServerController.addAcceptedRemoteFunction("Line.setShowDepartureTippText",
-                                               function(param) Line.setShowDepartureTippText(param == "true") end)
+                                               function (param) Line.setShowDepartureTippText(param == "true") end)
 end
 
 return PublicTransportWebConnector

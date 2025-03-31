@@ -16,7 +16,7 @@ function RuntimeRegistry.storeRunTime(group, time)
         ---@field group string
         ---@field count number
         ---@field time number
-        local runTimeEntry = {id = group, count = 0, time = 0}
+        local runTimeEntry = { id = group, count = 0, time = 0 }
         runtimeData[group] = runTimeEntry
     end
     local runtime = runtimeData[group]
@@ -31,7 +31,7 @@ function RuntimeRegistry.executeAndStoreRunTime(func, group, ...)
 
     local t0 = os.clock()
 
-    local result = {func(...)}
+    local result = { func(...) }
 
     local t1 = os.clock()
     RuntimeRegistry.storeRunTime(group, t1 - t0)
@@ -39,7 +39,7 @@ function RuntimeRegistry.executeAndStoreRunTime(func, group, ...)
     return table.unpack(result)
 end
 
-function RuntimeRegistry.get(group) return runtimeData[group] or {id = group, count = 0, time = 0} end
+function RuntimeRegistry.get(group) return runtimeData[group] or { id = group, count = 0, time = 0 } end
 
 function RuntimeRegistry.getAll() return runtimeData end
 

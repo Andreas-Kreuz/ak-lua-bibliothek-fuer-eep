@@ -14,7 +14,7 @@ local Task = {}
 -- @param name Name der Aktion
 --
 function Task:new(f, name)
-    local o = {f = f, name = name, subsequentTask = {}}
+    local o = { f = f, name = name, subsequentTask = {} }
     self.__index = self
     return setmetatable(o, self)
 end

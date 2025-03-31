@@ -19,8 +19,8 @@ function TimeJsonCollector.collectData()
 
     local times = {
         {
-            id = "times", -- EEP-Web requires that data entries have an id or name tag
-            name = "times", -- EEP-Web requires that data entries have an id or name tag
+            id = "times",           -- EEP-Web requires that data entries have an id or name tag
+            name = "times",         -- EEP-Web requires that data entries have an id or name tag
             timeComplete = EEPTime, -- seconds since midnight
             timeH = EEPTimeH,
             timeM = EEPTimeM,

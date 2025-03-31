@@ -46,6 +46,7 @@ function ServerController.useDlls(enableDlls)
         json = require("ak.third-party.json")
     end
 end
+
 ServerController.useDlls(false)
 
 -- checkServerStatus:
@@ -116,16 +117,16 @@ local function initialize()
 end
 
 function ServerController.addJsonCollector(...)
-    for _, jsonCollector in ipairs({...}) do
+    for _, jsonCollector in ipairs({ ... }) do
         -- Check the jsonCollector
         assert(jsonCollector.name and type(jsonCollector.name) == "string",
-        -- "Der Name des Moduls muss gesetzt und ein String sein"
+            -- "Der Name des Moduls muss gesetzt und ein String sein"
                "The name of the module must be defined and is has to be a string")
         assert(jsonCollector.initialize and type(jsonCollector.initialize) == "function",
-        -- "Das Modul muss eine Funktion initialize() besitzen"
+            -- "Das Modul muss eine Funktion initialize() besitzen"
                string.format("jsonCollector %s must have a function initialize()", jsonCollector.name))
         assert(jsonCollector.collectData and type(jsonCollector.collectData) == "function",
-        -- "Das Modul muss eine Funktion collectData() besitzen"
+            -- "Das Modul muss eine Funktion collectData() besitzen"
                string.format("jsonCollector %s must have a function collectData()", jsonCollector.name))
 
         -- Remember the jsonCollector by it's name
@@ -182,17 +183,17 @@ function ServerController.communicateWithServer(modulus)
     local allowedTimeDiff = modulus * 0.200
     if ServerController.debug and printFirstTime or timeDiff > allowedTimeDiff then
         local format = (printFirstTime and "INITIALIZATION" or "WARNING") ..
-                       ": [#ServerController] communicateWithServer() time is %3.0f ms --- " ..
-                       "waitForServer: %.0f ms, " .. "initialize: %.0f ms, " .. "commands: %2.0f ms, " ..
-                       "collect: %3.0f ms, " .. " write: %.0f ms" .. " (allowed: %.0f ms)"
-        print(string.format(format, -- format string
-        (timeDiff) * 1000, -- communicateWithServer
-        (overallTime1 - overallTime0) * 1000, -- waitForServer
-        (overallTime2 - overallTime1) * 1000, -- initialize
-        (overallTime3 - overallTime2) * 1000, -- commands
-        (overallTime4 - overallTime3) * 1000, -- collect
-        (overallTime5 - overallTime4) * 1000, -- write
-        (allowedTimeDiff) * 1000)) -- allowed
+            ": [#ServerController] communicateWithServer() time is %3.0f ms --- " ..
+            "waitForServer: %.0f ms, " .. "initialize: %.0f ms, " .. "commands: %2.0f ms, " ..
+            "collect: %3.0f ms, " .. " write: %.0f ms" .. " (allowed: %.0f ms)"
+        print(string.format(format,                               -- format string
+                            (timeDiff) * 1000,                    -- communicateWithServer
+                            (overallTime1 - overallTime0) * 1000, -- waitForServer
+                            (overallTime2 - overallTime1) * 1000, -- initialize
+                            (overallTime3 - overallTime2) * 1000, -- commands
+                            (overallTime4 - overallTime3) * 1000, -- collect
+                            (overallTime5 - overallTime4) * 1000, -- write
+                            (allowedTimeDiff) * 1000))            -- allowed
     end
 
     if modulus == 0 or i % modulus == 0 then
@@ -209,7 +210,6 @@ function ServerController.communicateWithServer(modulus)
         RuntimeRegistry.resetAll(runTimeGroupsToKeep)
         EventBroker.printEventCounter()
     end
-
 end
 
 return ServerController

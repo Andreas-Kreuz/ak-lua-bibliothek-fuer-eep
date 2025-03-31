@@ -66,8 +66,9 @@ function RoadStation:trainArrivesIn(trainName, destination, lineNr, timeInMinute
         platform = self.routePlatforms[destKey].platform
     else
         -- if RoadStation.debug then
-        print("[#RoadStation] " .. self.name .. " NO PLATFORM FOR TRAIN: " .. trainName ..
-              (destKey and " (" .. destKey .. ")" or ""))
+        print("[#RoadStation] " .. self.name ..
+            " NO PLATFORM FOR TRAIN: " .. trainName ..
+            (destKey and " (" .. destKey .. ")" or ""))
         platform = "1"
         -- end
     end
@@ -109,7 +110,7 @@ function RoadStation:updateRoutesOnPlatform(platformName)
     for r, p in pairs(self.routePlatforms or {}) do
         if p.platform == platformName then table.insert(routesOfPlatform, r) end
     end
-    table.sort(routesOfPlatform, function(a, b) return a < b end)
+    table.sort(routesOfPlatform, function (a, b) return a < b end)
 
     for p, displays in pairs(self.displays or {}) do
         if platformName == p or platformName == "ALL" then
@@ -127,7 +128,7 @@ function RoadStation:updateDisplays()
         for _, display in ipairs(displays) do
             if RoadStation.debug then
                 print("[#RoadStation] " .. self.name .. " update display for platform " .. display.structure ..
-                      " with " .. #entries .. " entries")
+                    " with " .. #entries .. " entries")
             end
             display.model.displayEntries(display.structure, entries, self.name, platform)
         end
@@ -140,7 +141,7 @@ function RoadStation:addDisplay(structure, model, platformNr)
     assert(type(model) == "table", "Need 'model' as table")
     platformNr = platformNr and tostring(platformNr) or nil
     self.displays[platformNr or "ALL"] = self.displays[platformNr or "ALL"] or {}
-    table.insert(self.displays[platformNr or "ALL"], {structure = structure, model = model})
+    table.insert(self.displays[platformNr or "ALL"], { structure = structure, model = model })
     self:updateRoutesOnPlatform(platformNr)
 end
 

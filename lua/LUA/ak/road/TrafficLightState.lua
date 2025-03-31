@@ -14,7 +14,7 @@ TrafficLightState.UNKNOWN = "UNBEKANNT"
 
 function TrafficLightState.canDrive(phase)
     return phase == TrafficLightState.GREEN or phase == TrafficLightState.OFF or phase ==
-           TrafficLightState.OFF_BLINKING
+        TrafficLightState.OFF_BLINKING
 end
 
 return TrafficLightState

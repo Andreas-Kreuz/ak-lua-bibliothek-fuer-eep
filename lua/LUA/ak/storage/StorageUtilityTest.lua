@@ -87,7 +87,7 @@ StorageUtility.debug = false
 do
     -- Verschiedene Daten
     local anzahl_fahrzeuge = 88
-    local block = {belegt = true, zugname = "#ICE-nach-Interlaken", prio = 7}
+    local block = { belegt = true, zugname = "#ICE-nach-Interlaken", prio = 7 }
 
     -- Zum Speichern muss eine Lua Tabelle erstellt, werden, welche als Schlüssel und Werte nur Text enthält
     -- Es empfiehlt sich die Schlüssel kurz zu halten, da die Länge eines Speicherplatzes in EEP vermutlich begrenzt
@@ -102,7 +102,7 @@ do
     StorageUtility.saveTable(600, daten_zum_speichern, "Meine Daten")
 
     print("[#StorageUtilityTest] " .. "-----------------------------------------\n" ..
-          "Speicherplatzinhalt nach dem Speichern:" .. "\n-----------------------------------------")
+        "Speicherplatzinhalt nach dem Speichern:" .. "\n-----------------------------------------")
     local _, speicherplatz_inhalt = EEPLoadData(600)
     print("[#StorageUtilityTest] " .. speicherplatz_inhalt)
 end
@@ -123,11 +123,12 @@ do
     print("[#StorageUtilityTest] " .. "Nach dem Laden:")
     print("[#StorageUtilityTest] " .. "-----------------------------------------")
     print("[#StorageUtilityTest] " .. "anzahl_fahrzeuge=" .. tostring(anzahl_fahrzeuge) .. " (Typ: " ..
-          type(anzahl_fahrzeuge) .. ")")
+        type(anzahl_fahrzeuge) .. ")")
     print("[#StorageUtilityTest] " .. "block.belegt=" .. tostring(block.belegt) .. " (Typ: " .. type(block.belegt) ..
-          ")")
+        ")")
     print(
-    "[#StorageUtilityTest] " .. "block.zugname=" .. tostring(block.zugname) .. " (Typ: " .. type(block.zugname) .. ")")
+        "[#StorageUtilityTest] " ..
+        "block.zugname=" .. tostring(block.zugname) .. " (Typ: " .. type(block.zugname) .. ")")
     print("[#StorageUtilityTest] " .. "block.prio=" .. tostring(block.prio) .. " (Typ: " .. type(block.prio) .. ")")
 end
 

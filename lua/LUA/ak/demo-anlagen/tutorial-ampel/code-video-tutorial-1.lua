@@ -31,8 +31,6 @@ function EEPMain()
     return 1
 end
 
-
-
 -- Zähler kommen später hier
 
 -- Noch nicht für die Verwendung vorgesehen

@@ -24,7 +24,7 @@
   "[lua]": {
     "files.encoding": "windows1252",
     "files.autoGuessEncoding": false,
-    "editor.defaultFormatter": "Koihik.vscode-lua-format"
+    "editor.defaultFormatter": "sumneko.lua"
   },
   "files.exclude": {
     "**/.classpath": true,

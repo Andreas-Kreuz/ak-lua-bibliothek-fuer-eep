@@ -25,7 +25,7 @@ function SlotNamesParser.updateSlotNames()
     if slotTable then
         local function recursiveLookup(currentSlotTable, prefix, ...)
             for k, v in pairs(currentSlotTable) do
-                local path = ... and {table.unpack(...)} or {}
+                local path = ... and { table.unpack(...) } or {}
                 table.insert(path, k)
                 local pathString = table.concat(path, ".")
                 if type(v) == "table" then

@@ -35,7 +35,7 @@ Lane.Directions = {
     RIGHT = "RIGHT"
 }
 ---@class LaneType
-Lane.Type = {BUS = "BUS", CAR = "CAR", TRAM = "TRAM", PEDESTRIAN = "PEDESTRIAN", BICYCLE = "BICYCLE"}
+Lane.Type = { BUS = "BUS", CAR = "CAR", TRAM = "TRAM", PEDESTRIAN = "PEDESTRIAN", BICYCLE = "BICYCLE" }
 
 ---Liefert true, wenn das erste Fahrzeug fahren darf (anhand der für die Fahrspur gültigen Ampeln)
 ---Is true, if the first vehicle can drive (according to the lane's traffic lights)
@@ -135,8 +135,8 @@ local function popTrainFromQueue(lane, trainName)
         if lane.vehicleCount ~= lane.queue:size() then
             if Lane.debug and numberOfPops == 1 then
                 print(string.format(
-                      "[#Lane] AUTOCORRECT %s: New vehicle count from queue length: %d; Current count: %d", lane.name,
-                      lane.queue:size(), lane.vehicleCount))
+                    "[#Lane] AUTOCORRECT %s: New vehicle count from queue length: %d; Current count: %d", lane.name,
+                    lane.queue:size(), lane.vehicleCount))
             end
             lane.vehicleCount = lane.queue:size()
         end
@@ -248,7 +248,6 @@ function Lane.laneCanDrive(lane, trafficLights)
         -- In case, there is no couting, we need to return true
         return true
     end
-
 end
 
 --------------------
@@ -365,7 +364,7 @@ function Lane:showRequestsOn(trafficLight, ...)
     assert(self and self.getType and "function" == type(self.getType) and self.getType() == "Lane",
            "Did you use colons instead of a dot myLane:showRequestsOn(...)")
 
-    local routes = ... and {...} or {"!ALL!"}
+    local routes = ... and { ... } or { "!ALL!" }
     self.requestTrafficLights = self.requestTrafficLights or {}
     for _, route in ipairs(routes) do
         self.requestTrafficLights[route] = self.requestTrafficLights[route] or {}
@@ -450,9 +449,9 @@ function Lane:switchTrafficLightTo(phase, grund)
 end
 
 function Lane:setHighLightingTracks(...)
-    for _, track in ipairs({...}) do assert(type(track) == "number", "Provide tracks as numbers") end
+    for _, track in ipairs({ ... }) do assert(type(track) == "number", "Provide tracks as numbers") end
 
-    self.tracksForHighlighting = {...} or {}
+    self.tracksForHighlighting = { ... } or {}
     return self
 end
 
@@ -461,7 +460,7 @@ function Lane:setDirections(...)
         if not Lane.Directions[direction] then print("[#Lane] No such direction: " .. direction) end
     end
 
-    self.directions = ... or {"LEFT", "STRAIGHT", "RIGHT"}
+    self.directions = ... or { "LEFT", "STRAIGHT", "RIGHT" }
 end
 
 function Lane:setTrafficType(trafficType)
@@ -499,7 +498,7 @@ function Lane:new(name, eepSaveId, trafficLight, directions, trafficType)
         signalUsedForRequest = false,
         tracksUsedForRequest = false,
         tracksForRequests = {},
-        directions = directions or {"LEFT", "STRAIGHT", "RIGHT"},
+        directions = directions or { "LEFT", "STRAIGHT", "RIGHT" },
         trafficType = trafficType or "NORMAL",
         vehicleCount = 0,
         fahrzeugMultiplikator = 1,
@@ -527,7 +526,7 @@ function Lane:driveOn(trafficLight, ...)
             for _, route in ipairs(...) do assert(type(route) == "string", "Need 'route' as string") end
         end
         self.trafficLightsToDriveOn = self.trafficLightsToDriveOn or {}
-        self.trafficLightsToDriveOn[trafficLight] = {...}
+        self.trafficLightsToDriveOn[trafficLight] = { ... }
     end
     return self
 end
@@ -539,7 +538,7 @@ end
 function Lane:trafficLightChanged(trafficLight)
     if trafficLight ~= self.trafficLight then
         assert(self.trafficLightsToDriveOn, "There is no traffic light registered on this lane: " ..
-               trafficLight.signalId .. " / " .. self.trafficLight.signalId)
+            trafficLight.signalId .. " / " .. self.trafficLight.signalId)
         assert(self.trafficLightsToDriveOn[trafficLight],
                "This lane does not drive on the given traffic light: " .. trafficLight.signalId)
     end

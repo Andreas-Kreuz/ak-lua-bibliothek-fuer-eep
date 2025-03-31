@@ -25,7 +25,7 @@ end
 
 function Line.saveSettings()
     if Line.saveSlot then
-        local data = {["depInfo"] = tostring(Line.showDepartureTippText)}
+        local data = { ["depInfo"] = tostring(Line.showDepartureTippText) }
         StorageUtility.saveTable(Line.saveSlot, data, "Line settings")
     end
 end
@@ -165,7 +165,7 @@ end
 function Line:toJsonStatic()
     local lineSegments = {}
     for _, s in pairs(self.lineSegments) do table.insert(lineSegments, s:toJsonStatic()) end
-    return {id = self.id, nr = self.nr, trafficType = self.trafficType, lineSegments = lineSegments}
+    return { id = self.id, nr = self.nr, trafficType = self.trafficType, lineSegments = lineSegments }
 end
 
 function Line.getLines()

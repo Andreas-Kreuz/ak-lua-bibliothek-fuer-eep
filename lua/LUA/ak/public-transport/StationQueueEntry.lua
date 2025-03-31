@@ -27,6 +27,7 @@ function StationQueueEntry.keyFor(trainName, destination, line)
     assert(type(line) == "string", "Need 'line' as string")
     return line .. "&" .. destination .. "&" .. trainName
 end
+
 function StationQueueEntry:getKey()
     assert(type(self) == "table", "Need 'trainName' as string")
     return StationQueueEntry.keyFor(self.trainName, self.destination, self.line)

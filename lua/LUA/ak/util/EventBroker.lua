@@ -35,7 +35,7 @@ EventBroker.eventType = {
 ---@type EventListener
 EventBroker.printListener = {
     ---@param event Event
-    fireEvent = function(event)
+    fireEvent = function (event)
         local t = type(event.payload)
         if t == "table" then
             if event.payload.room then t = event.payload.room .. ": " .. t end
@@ -48,6 +48,7 @@ EventBroker.printListener = {
         print("[#EventCounter] " .. event.eventCounter .. ": " .. event.type .. " .. " .. t)
     end
 }
+
 local eventCounter = 0;
 function EventBroker.printEventCounter()
     if EventBroker.debug then print("[#EventCounter] " .. "value " .. eventCounter) end
@@ -59,7 +60,7 @@ end
 local function fire(eventType, payload)
     eventCounter = eventCounter + 1
     ---@type Event
-    local event = {eventCounter = eventCounter, type = eventType, payload = payload}
+    local event = { eventCounter = eventCounter, type = eventType, payload = payload }
 
     -- Fire the event
     for l in pairs(listeners) do l.fireEvent(event) end
@@ -74,7 +75,7 @@ function EventBroker.fireDataChanged(room, keyId, element)
     assert(keyId)
     assert(element)
     assert(element[keyId], "the element must contain the key")
-    fire(EventBroker.eventType.dataChanged, {room = room, keyId = keyId, element = element})
+    fire(EventBroker.eventType.dataChanged, { room = room, keyId = keyId, element = element })
 end
 
 ---Fire a data change event
@@ -86,7 +87,7 @@ function EventBroker.fireDataAdded(room, keyId, element)
     assert(keyId)
     assert(element)
     assert(element[keyId], "the element must contain the key")
-    fire(EventBroker.eventType.dataAdded, {room = room, keyId = keyId, element = element})
+    fire(EventBroker.eventType.dataAdded, { room = room, keyId = keyId, element = element })
 end
 
 ---Fire a data change event
@@ -98,7 +99,7 @@ function EventBroker.fireDataRemoved(room, keyId, element)
     assert(keyId)
     assert(element)
     assert(element[keyId], "the element must contain the key")
-    fire(EventBroker.eventType.dataRemoved, {room = room, keyId = keyId, element = element})
+    fire(EventBroker.eventType.dataRemoved, { room = room, keyId = keyId, element = element })
 end
 
 ---Fire a data change event
@@ -110,7 +111,7 @@ function EventBroker.fireListChange(room, keyId, list)
     assert(keyId)
     assert(list)
     for _, v in pairs(list) do assert(v[keyId], "each element must contain the key") end
-    fire(EventBroker.eventType.listChanged, {room = room, keyId = keyId, list = list})
+    fire(EventBroker.eventType.listChanged, { room = room, keyId = keyId, list = list })
 end
 
 ---Add another listener to the event broker
@@ -120,6 +121,6 @@ function EventBroker.addListener(listener) listeners[listener] = true end
 if EventBroker.debug then EventBroker.addListener(EventBroker.printListener) end
 
 EventBroker.addListener(EventFileWriter)
-fire(EventBroker.eventType.completeReset, {info = "-- fire a data reset on first start --"})
+fire(EventBroker.eventType.completeReset, { info = "-- fire a data reset on first start --" })
 
 return EventBroker

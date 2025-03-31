@@ -124,6 +124,7 @@ function TrafficLight:showInfoText(showInfo)
         end
     end
 end
+
 function TrafficLight:changeInfoText(infoText)
     if self.signalId > 0 then
         EEPChangeInfoSignal(self.signalId, infoText)
@@ -171,7 +172,6 @@ function TrafficLight:refreshInfo()
 
     self:showInfoText(showInfo)
     if showInfo then
-
         local infoText = fmt.appendUpTo1023("", "<j><b>" .. self.name .. "</b> (Signal " .. self.signalId .. ")</j>")
 
         local signalFunctionsTippText = getSignalFunctionsTippText(self.signalId, self.trafficLightModel)
@@ -217,8 +217,8 @@ function TrafficLight:switchTo(phase, reason)
     local sigIndex = self.trafficLightModel:signalIndexOf(self.phase)
     if (self.debug or TrafficLight.debug) then
         print(
-        string.format("[TrafficLight    ] Schalte Ampel %04d auf %s (%01d)", self.signalId, self.phase, sigIndex) ..
-        lightDbg .. axisDbg .. " - " .. reason)
+            string.format("[TrafficLight    ] Schalte Ampel %04d auf %s (%01d)", self.signalId, self.phase, sigIndex) ..
+            lightDbg .. axisDbg .. " - " .. reason)
     end
     self:switchSignal(sigIndex)
     self:changed()
@@ -235,7 +235,7 @@ function TrafficLight:switchStructureLight()
         if lightTL.yellowStructure then
             local onOff = self.phase == TrafficLightState.YELLOW or self.phase == TrafficLightState.REDYELLOW
             lightDbg = lightDbg ..
-                       string.format(", Licht in %s: %s", lightTL.yellowStructure, onOff and "an" or "aus")
+                string.format(", Licht in %s: %s", lightTL.yellowStructure, onOff and "an" or "aus")
             EEPStructureSetLight(lightTL.yellowStructure, onOff)
         end
         if lightTL.greenStructure then
@@ -255,7 +255,7 @@ function TrafficLight:switchStructureAxis()
         if axisTL.positionRedYellow and self.phase == TrafficLightState.REDYELLOW then
             position = axisTL.positionRedYellow
         elseif axisTL.positionRed and
-        (self.phase == TrafficLightState.YELLOW or self.phase == TrafficLightState.REDYELLOW) then
+            (self.phase == TrafficLightState.YELLOW or self.phase == TrafficLightState.REDYELLOW) then
             position = axisTL.positionRed
         elseif axisTL.positionRed and self.phase == TrafficLightState.RED then
             position = axisTL.positionRed
@@ -266,7 +266,7 @@ function TrafficLight:switchStructureAxis()
         end
 
         axisDbg = axisDbg ..
-                  string.format(", Achse %s in %s auf: %d", axisTL.axisName, axisTL.structureName, position)
+            string.format(", Achse %s in %s auf: %d", axisTL.axisName, axisTL.structureName, position)
         EEPStructureSetAxis(axisTL.structureName, axisTL.axisName, position)
     end
     return axisDbg
@@ -282,7 +282,7 @@ function TrafficLight:showRequestOnSignal(hasRequest)
     for lightTL in pairs(self.lightStructures) do
         if lightTL.requestStructure then
             lightDbg = lightDbg ..
-                       string.format(", Licht in %s: %s", lightTL.requestStructure, (hasRequest) and "an" or "aus")
+                string.format(", Licht in %s: %s", lightTL.requestStructure, (hasRequest) and "an" or "aus")
             EEPStructureSetLight(lightTL.requestStructure, hasRequest)
         end
     end

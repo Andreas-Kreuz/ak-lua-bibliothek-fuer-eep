@@ -8,7 +8,6 @@
     "dbaeumer.vscode-eslint", // ESLint
     "editorconfig.editorconfig", // Support indentations by .editorconfig file
     "github.vscode-pull-request-github", // Easy GitHub Pull Requests
-    "koihik.vscode-lua-format", // Nice LUA formatter
     "esbenp.prettier-vscode",
     "sumneko.lua", // Finds Lua symbols, but cannot reformat file
     "tyriar.sort-lines"  // Sort lines

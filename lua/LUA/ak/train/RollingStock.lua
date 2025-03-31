@@ -61,19 +61,19 @@ function RollingStock:new(o)
     setmetatable(o, self)
 
     local _, couplingFront = EEPRollingstockGetCouplingFront(o.id) -- EEP 11.0
-    local _, couplingRear = EEPRollingstockGetCouplingRear(o.id) -- EEP 11.0
+    local _, couplingRear = EEPRollingstockGetCouplingRear(o.id)   -- EEP 11.0
 
-    local _, length = EEPRollingstockGetLength(o.id) -- EEP 15
-    local _, propelled = EEPRollingstockGetMotor(o.id) -- EEP 14.2
-    local _, modelType = EEPRollingstockGetModelType(o.id) -- EEP 14.2
-    local _, tag = EEPRollingstockGetTagText(o.id) -- EEP 14.2
-    local _, textureText = EEPRollingstockGetTextureText(o.id, 1) -- EEP 16.3 (limited to first entry)
+    local _, length = EEPRollingstockGetLength(o.id)               -- EEP 15
+    local _, propelled = EEPRollingstockGetMotor(o.id)             -- EEP 14.2
+    local _, modelType = EEPRollingstockGetModelType(o.id)         -- EEP 14.2
+    local _, tag = EEPRollingstockGetTagText(o.id)                 -- EEP 14.2
+    local _, textureText = EEPRollingstockGetTextureText(o.id, 1)  -- EEP 16.3 (limited to first entry)
 
     local _, trackId, trackDistance, trackDirection, trackSystem = EEPRollingstockGetTrack(o.id)
     -- EEP 14.2
 
     local hasPos, posX, posY, posZ = EEPRollingstockGetPosition(o.id) -- EEP 16.1
-    local hasMileage, mileage = EEPRollingstockGetMileage(o.id) -- EEP 16.1
+    local hasMileage, mileage = EEPRollingstockGetMileage(o.id)       -- EEP 16.1
 
     o.type = "RollingStock"
     o.model = RollingStockModels.modelFor(o.id)

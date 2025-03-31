@@ -24,7 +24,7 @@ function LaneSettings:setRoutes(routes) self.routes = routes end
 function LaneSettings:new(lane, directions, routes, requestType)
     local o = {
         lane = lane,
-        directions = directions or {Lane.Directions.LEFT, Lane.Directions.STRAIGHT, Lane.Directions.RIGHT},
+        directions = directions or { Lane.Directions.LEFT, Lane.Directions.STRAIGHT, Lane.Directions.RIGHT },
         requestType = requestType or Lane.RequestType.NICHT_VERWENDET,
         routes = routes or {},
         vehicleMultiplier = 1

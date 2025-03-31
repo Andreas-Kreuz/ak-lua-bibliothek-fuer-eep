@@ -49,7 +49,7 @@ function TrainRegistry.forName(name)
     else
         -- Initialize the train
         ---@diagnostic disable-next-line: missing-fields
-        local train = Train:new({name = name})
+        local train = Train:new({ name = name })
         allTrains[train.name] = train
         TrainRegistry.initRollingStock(train)
         return train, true
@@ -71,7 +71,7 @@ end
 function TrainRegistry.trainDisappeared(trainName)
     if TrainRegistry.debug then print(string.format("[#TrainRegistry] train removed: %s", trainName)) end
     allTrains[trainName] = nil
-    EventBroker.fireDataRemoved("trains", "id", {id = trainName})
+    EventBroker.fireDataRemoved("trains", "id", { id = trainName })
 end
 
 function TrainRegistry.fireChangeTrainsEvent()

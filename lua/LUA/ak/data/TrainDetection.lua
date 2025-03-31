@@ -8,7 +8,7 @@ local TrainDetection = {}
 TrainDetection.debug = AkStartWithDebug or false
 
 -- trackCollectors will dectect trains by using their RegisteredFunctions
-local trackTypes = {"auxiliary", "control", "road", "rail", "tram"}
+local trackTypes = { "auxiliary", "control", "road", "rail", "tram" }
 ---@type table<string, TrackDetection>
 local trackCollectors = {}
 do for _, trackType in ipairs(trackTypes) do trackCollectors[trackType] = TrackDetection:new(trackType) end end
@@ -40,7 +40,7 @@ local function fillTrackInfoFromTrain(train, info)
     if trackTypeId == 3 then trackType = "road" end
     if trackTypeId == 4 then trackType = "auxiliary" end
 
-    info.tracks = {[tostring(trackId)] = trackId}
+    info.tracks = { [tostring(trackId)] = trackId }
     info.trackType = trackType
     if (TrainDetection.debug) then
         print("[#TrainDetection] TRAIN DETECTED: " .. trackType .. " -> " .. trackTypeId)
@@ -50,9 +50,9 @@ end
 ---This will register callbacks to get informed, e.g. if a train has been coupled or lost coupling
 function TrainDetection.registerForTrainDetection()
     -- React to train changes from EEP
-    local _EEPOnTrainCoupling = EEPOnTrainCoupling or function(_, _, _) -- EEP 14 Plug-In 1
+    local _EEPOnTrainCoupling = EEPOnTrainCoupling or function (_, _, _) -- EEP 14 Plug-In 1
     end
-    EEPOnTrainCoupling = function(trainA, trainB, trainNew)
+    EEPOnTrainCoupling = function (trainA, trainB, trainNew)
         -- Mark these trains as dirty, i.e. refresh their data
         dirtyTrainNames[trainA] = true
         dirtyTrainNames[trainB] = true
@@ -64,9 +64,9 @@ function TrainDetection.registerForTrainDetection()
         return _EEPOnTrainCoupling(trainA, trainB, trainNew)
     end
 
-    local _EEPOnTrainLooseCoupling = EEPOnTrainLooseCoupling or function(_, _, _) -- EEP 14 Plug-In 1
+    local _EEPOnTrainLooseCoupling = EEPOnTrainLooseCoupling or function (_, _, _) -- EEP 14 Plug-In 1
     end
-    EEPOnTrainLooseCoupling = function(trainA, trainB, trainOld)
+    EEPOnTrainLooseCoupling = function (trainA, trainB, trainOld)
         -- Mark these trains as dirty, i.e. refresh their data
         dirtyTrainNames[trainA] = true
         dirtyTrainNames[trainB] = true
@@ -78,9 +78,9 @@ function TrainDetection.registerForTrainDetection()
         return _EEPOnTrainLooseCoupling(trainA, trainB, trainOld)
     end
 
-    local _EEPOnTrainExitTrainyard = EEPOnTrainExitTrainyard or function(_, _) -- EEP 14 Plug-In 1
+    local _EEPOnTrainExitTrainyard = EEPOnTrainExitTrainyard or function (_, _) -- EEP 14 Plug-In 1
     end
-    EEPOnTrainExitTrainyard = function(depotId, trainName)
+    EEPOnTrainExitTrainyard = function (depotId, trainName)
         movedTrainNames[trainName] = true
         return _EEPOnTrainExitTrainyard(depotId, trainName)
     end
@@ -120,14 +120,14 @@ function TrainDetection.refreshTrainInfos(allKnownTrains)
                 end
                 if info.dirty or info.moved then
                     local _, trackId, trackDistance, trackDirection, trackSystem = EEPRollingstockGetTrack(
-                                                                                   rs.rollingStockName) -- EEP 14.2
+                        rs.rollingStockName) -- EEP 14.2
 
                     local rollingStockMoved = trackId ~= rs:getTrackId() or trackDistance ~= rs:getTrackDistance()
                     rs:setTrack(trackId, trackDistance, trackDirection, trackSystem)
 
                     if rollingStockMoved then
                         local hasPos, PosX, PosY, PosZ = EEPRollingstockGetPosition(rs.rollingStockName) -- EEP 16.1
-                        local hasMileage, mileage = EEPRollingstockGetMileage(rs.rollingStockName) -- EEP 16.1
+                        local hasMileage, mileage = EEPRollingstockGetMileage(rs.rollingStockName)       -- EEP 16.1
 
                         if hasPos then
                             rs:setPosition(hasPos and tonumber(PosX) or -1, hasPos and tonumber(PosY) or -1,
@@ -166,7 +166,7 @@ function TrainDetection.trainInfosForAllTrains(detected, dirtyTrains, movedTrain
             local train, created = TrainRegistry.forName(trainName)
             local dirty = created or (dirtyTrains[trainName] and true or false)
             local moved = created or dirty or train:getSpeed() ~= 0 or speed ~= 0 or
-                          (movedTrains[trainName] and true or false)
+                (movedTrains[trainName] and true or false)
 
             ---@class TrainUpdateInfo
             ---@field name string
@@ -176,7 +176,7 @@ function TrainDetection.trainInfosForAllTrains(detected, dirtyTrains, movedTrain
             ---@field dirty boolean
             ---@field created boolean
             ---@field moved boolean
-            local info = {name = trainName, speed = speed, created = created, dirty = dirty, moved = moved}
+            local info = { name = trainName, speed = speed, created = created, dirty = dirty, moved = moved }
             currentTrainInfos[trainName] = info
 
             if created then TrainRegistry.trainAppeared(train) end

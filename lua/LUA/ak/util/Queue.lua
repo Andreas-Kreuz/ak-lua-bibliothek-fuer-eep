@@ -6,7 +6,7 @@ if AkDebugLoad then print("[#Start] Loading ak.util.Queue ...") end
 ---@field list table all entries
 local Queue = {}
 function Queue:new()
-    local o = {first = 0, last = -1, list = {}}
+    local o = { first = 0, last = -1, list = {} }
     self.__index = self
     setmetatable(o, self)
     return o

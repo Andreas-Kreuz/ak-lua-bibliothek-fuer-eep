@@ -43,4 +43,5 @@ end
 -- @param fahrzeug wird von EEP automatisch gefuellt
 --
 function FAHRZEUG_INITIALISIERE(fahrzeug) Bus.initialisiere(fahrzeug) end
+
 -- luacheck: pop

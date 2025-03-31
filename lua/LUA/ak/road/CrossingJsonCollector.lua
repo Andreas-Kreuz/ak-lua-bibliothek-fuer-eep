@@ -24,7 +24,7 @@ local function collect(allCrossings)
     local intersectionIdCounter = 0
     local sortedNames = {}
     for name in pairs(allCrossings) do table.insert(sortedNames, name) end
-    table.sort(sortedNames, function(a, b) return a < b end)
+    table.sort(sortedNames, function (a, b) return a < b end)
 
     for _, name in ipairs(sortedNames) do
         ---@type Crossing
@@ -156,12 +156,12 @@ local function collect(allCrossings)
         return #dec > 0 and ("%.12f"):format(d) or ("%s%03d%s"):format(dec, #n, n)
     end
 
-    table.sort(intersectionLanes, function(o1, o2)
+    table.sort(intersectionLanes, function (o1, o2)
         local a = o1.name
         local b = o2.name
 
         return tostring(a):gsub("%.?%d+", padnum) .. ("%3d"):format(#b) < tostring(b):gsub("%.?%d+", padnum) ..
-               ("%3d"):format(#a)
+            ("%3d"):format(#a)
     end)
 
     -- TODO: Send event only with detected changes
@@ -186,21 +186,24 @@ local function collectModuleSettings()
             ["type"] = "boolean",
             ["value"] = CrossingSettings.showRequestsOnSignal,
             ["eepFunction"] = "CrossingSettings.setShowRequestsOnSignal"
-        }, {
+        },
+        {
             ["category"] = "Tipp-Texte für Kreuzungen",
             ["name"] = "Schaltungen einblenden",
             ["description"] = "Zeigt für alle Ampeln einen TippText mit den Schaltungen",
             ["type"] = "boolean",
             ["value"] = CrossingSettings.showSequenceOnSignal,
             ["eepFunction"] = "CrossingSettings.setShowSequenceOnSignal"
-        }, {
+        },
+        {
             ["category"] = "Tipp-Texte für Kreuzungen",
             ["name"] = "Fahrspurzähler einblenden",
             ["description"] = "Zeigt die Belegung der Fahrspuren an einer Kreuzung",
             ["type"] = "boolean",
             ["value"] = CrossingSettings.showLanesOnStructure,
             ["eepFunction"] = "CrossingSettings.setShowLanesOnStructure"
-        }, {
+        },
+        {
             ["category"] = "Tipp-Texte für Signale (allgemein)",
             ["name"] = "Signal-ID einblenden",
             ["description"] = "Zeigt an jedem Signal dessen Nummer als TippText",

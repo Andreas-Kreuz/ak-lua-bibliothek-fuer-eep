@@ -43,7 +43,6 @@ function TrafficLightModelJsonCollector.collectData()
     return {
         -- ["signal-type-definitions"] = trafficLightModels
     }
-
 end
 
 return TrafficLightModelJsonCollector

@@ -13,8 +13,8 @@ function VersionJsonCollector.initialize()
     local versions = {
         versionInfo = {
             -- EEP-Web expects a named entry here
-            id = "versionInfo", -- EEP-Web requires that data entries have an id or name tag
-            name = "versionInfo", -- EEP-Web requires that data entries have an id or name tag
+            id = "versionInfo",                         -- EEP-Web requires that data entries have an id or name tag
+            name = "versionInfo",                       -- EEP-Web requires that data entries have an id or name tag
             eepVersion = string.format("%.1f", EEPVer), -- show string instead of float
             luaVersion = _VERSION,
             singleVersion = ServerController.programVersion

@@ -11,7 +11,7 @@ local StorageUtility = require("ak.storage.StorageUtility")
 local lastSlots = {}
 
 local function toApiV1(id, name, data)
-    local slotV1 = {id = id, name = name, data = data}
+    local slotV1 = { id = id, name = name, data = data }
     return slotV1
 end
 

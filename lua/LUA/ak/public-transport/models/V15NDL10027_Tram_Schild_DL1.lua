@@ -7,7 +7,7 @@ local Tram_Schild_DL1 = {}
 Tram_Schild_DL1.name = "Tram_Schild_DL1"
 
 -- DL1 Model
-Tram_Schild_DL1.initStation = function(displayStructure, stationName, platform)
+Tram_Schild_DL1.initStation = function (displayStructure, stationName, platform)
     assert(type(displayStructure) == "string", "Need 'displayStructure' as string not as " .. type(displayStructure))
     assert(type(stationName) == "string", "Need 'stationName' as string")
     assert(type(platform) == "string", "Need 'platform' as string")
@@ -16,14 +16,14 @@ Tram_Schild_DL1.initStation = function(displayStructure, stationName, platform)
     EEPStructureSetTextureText(displayStructure, 24, "Steig " .. platform)
 end
 
-Tram_Schild_DL1.displayEntries = function(displayStructure, stationQueueEntries, stationName, platform)
+Tram_Schild_DL1.displayEntries = function (displayStructure, stationQueueEntries, stationName, platform)
     assert(type(displayStructure) == "string", "Need 'displayStructure' as string not as " .. type(displayStructure))
     assert(type(stationQueueEntries) == "table",
            "Need 'stationQueueEntries' as table not as " .. type(stationQueueEntries))
     assert(type(stationName) == "string", "Need 'stationName' as string")
     assert(type(platform) == "string", "Need 'platform' as string")
 
-    local text = {RoadStationTippHelper.getTitle(stationName, platform)}
+    local text = { RoadStationTippHelper.getTitle(stationName, platform) }
 
     for i = 1, 5 do
         local offset = (i - 1) * 4

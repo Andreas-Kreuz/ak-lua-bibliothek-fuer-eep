@@ -16,7 +16,7 @@ function RollingStockRegistry.forName(rollingStockName)
         return rs
     else
         ---@diagnostic disable-next-line: missing-fields
-        local o = RollingStock:new({rollingStockName = rollingStockName})
+        local o = RollingStock:new({ rollingStockName = rollingStockName })
         allRollingStock[o.rollingStockName] = o
         RollingStockRegistry.rollingStockAppeared(o)
         return o
@@ -33,7 +33,7 @@ end
 ---@param rollingStockName string
 function RollingStockRegistry.rollingStockDisappeared(rollingStockName)
     allRollingStock[rollingStockName] = nil
-    EventBroker.fireDataChanged("rolling-stocks", "id", {id = rollingStockName})
+    EventBroker.fireDataChanged("rolling-stocks", "id", { id = rollingStockName })
 end
 
 function RollingStockRegistry.fireChangeRollingStockEvent()

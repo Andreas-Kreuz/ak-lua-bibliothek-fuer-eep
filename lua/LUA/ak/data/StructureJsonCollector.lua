@@ -8,13 +8,13 @@ StructureJsonCollector.name = "ak.data.StructureJsonCollector"
 local MAX_STRUCTURES = 50000
 local structures = {}
 
-local EEPStructureGetPosition = EEPStructureGetPosition or function() end -- EEP 14.2
-local EEPStructureGetModelType = EEPStructureGetModelType or function() end -- EEP 14.2
-local EEPStructureGetTagText = EEPStructureGetTagText or function() end -- EEP 14.2
+local EEPStructureGetPosition = EEPStructureGetPosition or function () end   -- EEP 14.2
+local EEPStructureGetModelType = EEPStructureGetModelType or function () end -- EEP 14.2
+local EEPStructureGetTagText = EEPStructureGetTagText or function () end     -- EEP 14.2
 
 --- Ermittelt die Ausrichtung der Immobilie/des Landschaftselementes in Grad
 -- OK, RotX, RotY, RotZ = EEPStructureGetRotation("#aunnel")
-local EEPStructureGetRotation = EEPStructureGetRotation or function() end -- EEP 16.1
+local EEPStructureGetRotation = EEPStructureGetRotation or function () end -- EEP 16.1
 
 function StructureJsonCollector.initialize()
     if not enabled or initialized then return end
@@ -24,7 +24,7 @@ function StructureJsonCollector.initialize()
 
         local hasLight, light = EEPStructureGetLight(name) -- EEP 11.1 Plug-In 1
         local hasSmoke, smoke = EEPStructureGetSmoke(name) -- EEP 11.1 Plug-In 1
-        local hasFire, fire = EEPStructureGetFire(name) -- EEP 11.1 Plug-In 1
+        local hasFire, fire = EEPStructureGetFire(name)    -- EEP 11.1 Plug-In 1
 
         if hasLight or hasSmoke or hasFire then
             local structure = {}
@@ -78,7 +78,7 @@ function StructureJsonCollector.collectData()
 
         local _, light = EEPStructureGetLight(structure.name) -- EEP 11.1 Plug-In 1
         local _, smoke = EEPStructureGetSmoke(structure.name) -- EEP 11.1 Plug-In 1
-        local _, fire = EEPStructureGetFire(structure.name) -- EEP 11.1 Plug-In 1
+        local _, fire = EEPStructureGetFire(structure.name)   -- EEP 11.1 Plug-In 1
 
         if (light ~= structure.light or fire ~= structure.fire or smoke ~= structure.smoke) then
             structure.light = light
@@ -86,7 +86,6 @@ function StructureJsonCollector.collectData()
             structure.fire = fire
             table.insert(dirtyStructures, structure)
         end
-
     end
 
     if #dirtyStructures > 0 then

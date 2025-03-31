@@ -12,7 +12,7 @@ local registeredLuaModules = nil
 
 ---@type table<string,LuaModule>
 local knownModules = {}
-local function toApiV1(moduleName, module) return {id = module.id, name = moduleName, enabled = module.enabled} end
+local function toApiV1(moduleName, module) return { id = module.id, name = moduleName, enabled = module.enabled } end
 local function checkModule(moduleName, module)
     local newModule = toApiV1(moduleName, module)
     local oldModule = knownModules[moduleName]
@@ -39,7 +39,7 @@ function ModulesJsonCollector.collectData()
     local moduleInfo = {}
     moduleInfo.modules = {}
 
-    for _, v in pairs(registeredLuaModules) do moduleInfo[v.id] = {id = v.id, name = v.name, enabled = v.enabled} end
+    for _, v in pairs(registeredLuaModules) do moduleInfo[v.id] = { id = v.id, name = v.name, enabled = v.enabled } end
 
     return moduleInfo
 end

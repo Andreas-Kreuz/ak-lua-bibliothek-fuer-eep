@@ -12,7 +12,8 @@ local ModuleRegistry = require("ak.core.ModuleRegistry")
 -- * Core (immer benötigt)
 -- * Data (Export der Daten für EEP)
 -- * Crossing (für die Ampelsteuerung notwendig)
-ModuleRegistry.registerModules(require("ak.core.CoreLuaModule"), require("ak.data.DataLuaModule"),
+ModuleRegistry.registerModules(require("ak.core.CoreLuaModule"),
+                               require("ak.data.DataLuaModule"),
                                require("ak.road.CrossingLuaModul"))
 
 -- Die EEPMain Methode wird von EEP genutzt. Sie muss immer 1 zurückgeben.
@@ -67,18 +68,18 @@ local crossing
 Crossing.loadSettingsFromSlot(10)
 
 -- Erzeuge immer erst Deine Ampeln
-L1 = TrafficLight:new("L1", 11, TrafficLightModel.Unsichtbar_2er) -- Signal for Lane 1
-L2 = TrafficLight:new("L2", 12, TrafficLightModel.Unsichtbar_2er) -- Signal for Lane 2
-L3 = TrafficLight:new("L3", 13, TrafficLightModel.Unsichtbar_2er) -- Signal for Lane 3
-L4 = TrafficLight:new("L4", 14, TrafficLightModel.Unsichtbar_2er) -- Signal for Lane 4
-K1 = TrafficLight:new("K1", 23, TrafficLightModel.JS2_3er_mit_FG) -- NORTH STRAIGHT 1 (right)
-K2 = TrafficLight:new("K2", 24, TrafficLightModel.JS2_3er_mit_FG) -- NORTH STRAIGHT 2 (left)
-K3 = TrafficLight:new("K3", 25, TrafficLightModel.JS2_3er_mit_FG) -- EAST STRAIGHT (left)
-K5 = TrafficLight:new("K5", 27, TrafficLightModel.JS2_3er_ohne_FG) -- EAST STRAIGHT (above lane)
-K6 = TrafficLight:new("K6", 28, TrafficLightModel.JS2_3er_mit_FG) -- EAST STRAIGHT (right)
+L1 = TrafficLight:new("L1", 11, TrafficLightModel.Unsichtbar_2er)           -- Signal for Lane 1
+L2 = TrafficLight:new("L2", 12, TrafficLightModel.Unsichtbar_2er)           -- Signal for Lane 2
+L3 = TrafficLight:new("L3", 13, TrafficLightModel.Unsichtbar_2er)           -- Signal for Lane 3
+L4 = TrafficLight:new("L4", 14, TrafficLightModel.Unsichtbar_2er)           -- Signal for Lane 4
+K1 = TrafficLight:new("K1", 23, TrafficLightModel.JS2_3er_mit_FG)           -- NORTH STRAIGHT 1 (right)
+K2 = TrafficLight:new("K2", 24, TrafficLightModel.JS2_3er_mit_FG)           -- NORTH STRAIGHT 2 (left)
+K3 = TrafficLight:new("K3", 25, TrafficLightModel.JS2_3er_mit_FG)           -- EAST STRAIGHT (left)
+K5 = TrafficLight:new("K5", 27, TrafficLightModel.JS2_3er_ohne_FG)          -- EAST STRAIGHT (above lane)
+K6 = TrafficLight:new("K6", 28, TrafficLightModel.JS2_3er_mit_FG)           -- EAST STRAIGHT (right)
 K7 = TrafficLight:new("K7", 29, TrafficLightModel.JS2_2er_OFF_YELLOW_GREEN) -- EAST RIGHT ADDITIONAL (right)
-K8 = TrafficLight:new("K8", 30, TrafficLightModel.JS2_3er_mit_FG) -- SOUTH LEFT (left)
-K9 = TrafficLight:new("K9", 31, TrafficLightModel.JS2_3er_mit_FG) -- SOUTH STRAIGHT (right)
+K8 = TrafficLight:new("K8", 30, TrafficLightModel.JS2_3er_mit_FG)           -- SOUTH LEFT (left)
+K9 = TrafficLight:new("K9", 31, TrafficLightModel.JS2_3er_mit_FG)           -- SOUTH STRAIGHT (right)
 
 -- Straßenbahn-Ampeln mit Immobilien OHNE echtes Signal
 S1 = TrafficLight:new("S1", -1, TrafficLightModel.NONE, "#5528_Straba Signal Halt", "#5531_Straba Signal geradeaus",
@@ -88,10 +89,10 @@ S2 = TrafficLight:new("S2", -1, TrafficLightModel.NONE, "#5435_Straba Signal Hal
 
 -- Erzeuge Kreuzung und Fahrspuren
 crossing = Crossing:new("Dein Kreuzungsname")
-lane1 = Lane:new("Lane 1 N", 1, L1, {Lane.Directions.STRAIGHT, Lane.Directions.RIGHT})
-lane2 = Lane:new("Lane 2 E", 2, L2, {Lane.Directions.LEFT, Lane.Directions.RIGHT})
-lane3 = Lane:new("Lane 3 S", 3, L3, {Lane.Directions.LEFT})
-lane4 = Lane:new("Lane 4 S", 4, L4, {Lane.Directions.STRAIGHT})
+lane1 = Lane:new("Lane 1 N", 1, L1, { Lane.Directions.STRAIGHT, Lane.Directions.RIGHT })
+lane2 = Lane:new("Lane 2 E", 2, L2, { Lane.Directions.LEFT, Lane.Directions.RIGHT })
+lane3 = Lane:new("Lane 3 S", 3, L3, { Lane.Directions.LEFT })
+lane4 = Lane:new("Lane 4 S", 4, L4, { Lane.Directions.STRAIGHT })
 
 -- Lege fest, welche Ampeln für eine Kreuzung gelten
 K1:applyToLane(lane1)

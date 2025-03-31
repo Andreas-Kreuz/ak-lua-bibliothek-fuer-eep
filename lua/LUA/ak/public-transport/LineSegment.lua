@@ -51,7 +51,7 @@ function LineSegment:addStop(platform, timeToStation)
 
     platform.roadStation:setPlatform(self, platform.platformNumber)
 
-    self.stationInfos[#self.stationInfos + 1] = {station = platform.roadStation, timeToStation = timeToStation or 0}
+    self.stationInfos[#self.stationInfos + 1] = { station = platform.roadStation, timeToStation = timeToStation or 0 }
 end
 
 ---Optionally you can add subsequent line events. - If no line segment is added, the line will start from the beginning
@@ -59,7 +59,7 @@ end
 ---@param timeInMinutes number
 function LineSegment:setNextSection(newLineSegment, timeInMinutes)
     assert(type(self) == "table" and self.type == "LineSegment", "Call this method with ':'")
-    self.nextLineSegmentInfo = {followingSegment = newLineSegment, timeInMinutes = timeInMinutes}
+    self.nextLineSegmentInfo = { followingSegment = newLineSegment, timeInMinutes = timeInMinutes }
 end
 
 function LineSegment:getAllSegments()
@@ -73,9 +73,9 @@ function LineSegment:getAllSegments()
     -- for each segment look, if we find
     while not viewed[segment] do
         viewed[segment] = true
-        table.insert(segments, {segment = segment, timeInMinutes = timeInMinutes})
+        table.insert(segments, { segment = segment, timeInMinutes = timeInMinutes })
 
-        local segmentInfo = segment.nextLineSegmentInfo or {followingSegment = segment, timeInMinutes = 2}
+        local segmentInfo = segment.nextLineSegmentInfo or { followingSegment = segment, timeInMinutes = 2 }
         segment = segmentInfo.followingSegment
         timeInMinutes = segmentInfo.timeInMinutes
     end
@@ -135,7 +135,7 @@ function LineSegment:nextStationList(routeName, nextStation, currentStation)
         info.totalTime = total
         if LineSegment.debug then
             print("[#LineSegment] " .. info.lineNr .. "->" .. info.destination .. " " .. info.station.name .. " (" ..
-                  info.totalTime .. ") " .. info.timeToStation)
+                info.totalTime .. ") " .. info.timeToStation)
         end
     end
 
@@ -203,7 +203,7 @@ function LineSegment:toJsonStatic()
         ---@type RoadStation
         local station = s.station
         local timeToStation = s.timeToStation
-        table.insert(stations, {station = {name = station.name}, timeToStation = timeToStation})
+        table.insert(stations, { station = { name = station.name }, timeToStation = timeToStation })
     end
     return {
         id = self.id,

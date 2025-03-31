@@ -12,13 +12,13 @@ function CrossingSettings.loadSettingsFromSlot(eepSaveId)
     CrossingSettings.saveSlot = eepSaveId
     local data = StorageUtility.loadTable(CrossingSettings.saveSlot, "Crossing settings")
     CrossingSettings.showRequestsOnSignal = StorageUtility.toboolean(data["reqInfo"]) or
-                                            CrossingSettings.showRequestsOnSignal
+        CrossingSettings.showRequestsOnSignal
     CrossingSettings.showSequenceOnSignal = StorageUtility.toboolean(data["seqInfo"]) or
-                                            CrossingSettings.showSequenceOnSignal
+        CrossingSettings.showSequenceOnSignal
     CrossingSettings.showSignalIdOnSignal = StorageUtility.toboolean(data["sigInfo"]) or
-                                            CrossingSettings.showSignalIdOnSignal
+        CrossingSettings.showSignalIdOnSignal
     CrossingSettings.showLanesOnStructure = StorageUtility.toboolean(data["laneInfo"]) or
-                                            CrossingSettings.showLanesOnStructure
+        CrossingSettings.showLanesOnStructure
 end
 
 function CrossingSettings.saveSettings()

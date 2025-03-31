@@ -12,7 +12,8 @@ local ModuleRegistry = require("ak.core.ModuleRegistry")
 -- * Core (immer benötigt)
 -- * Data (Export der Daten für EEP)
 -- * Crossing (für die Ampelsteuerung notwendig)
-ModuleRegistry.registerModules(require("ak.core.CoreLuaModule"), require("ak.data.DataLuaModule"),
+ModuleRegistry.registerModules(require("ak.core.CoreLuaModule"),
+                               require("ak.data.DataLuaModule"),
                                require("ak.road.CrossingLuaModul"))
 
 -- Die EEPMain Methode wird von EEP genutzt. Sie muss immer 1 zurückgeben.
@@ -72,8 +73,8 @@ K2 = TrafficLight:new("K2", 24, TrafficLightModel.JS2_3er_mit_FG) -- NORTH STRAI
 
 -- Erzeuge Kreuzung und Fahrspuren
 crossing = Crossing:new("Dein Kreuzungsname")
-lane1 = Lane:new("Lane 1 N", 1, K1, {Lane.Directions.STRAIGHT, Lane.Directions.RIGHT})
-lane2 = Lane:new("Lane 2 S", 2, K2, {Lane.Directions.STRAIGHT, Lane.Directions.RIGHT})
+lane1 = Lane:new("Lane 1 N", 1, K1, { Lane.Directions.STRAIGHT, Lane.Directions.RIGHT })
+lane2 = Lane:new("Lane 2 S", 2, K2, { Lane.Directions.STRAIGHT, Lane.Directions.RIGHT })
 
 -- Lege die Schaltungen an und füge Ampeln für Fahrzeuge, Tram und Fußgänger hinzu
 sequenceA = crossing:newSequence("Schaltung Fahrzeuge")

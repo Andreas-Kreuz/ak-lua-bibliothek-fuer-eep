@@ -78,7 +78,7 @@ local function switchTask(tlList, tlFilter, tlState, reason)
     local TrafficLight = require("ak.road.TrafficLight")
     local toTurn = {}
     for t, type in pairs(tlList) do if type == tlFilter then toTurn[t] = true end end
-    return Task:new(function() TrafficLight.switchAll(toTurn, tlState, reason) end, reason)
+    return Task:new(function () TrafficLight.switchAll(toTurn, tlState, reason) end, reason)
 end
 
 function CrossingSequence:tasksForSwitchingFrom(oldSequence, afterRedTask)
@@ -116,7 +116,7 @@ function CrossingSequence:tasksForSwitchingFrom(oldSequence, afterRedTask)
         table.insert(taskList, { offset = 2, task = oldRedTram, precedingTask = oldYellowCars })
     else
         -- Schedule the task where all traffic lights get red
-        oldRedCars = Task:new(function() end, "clear crossing")
+        oldRedCars = Task:new(function () end, "clear crossing")
         table.insert(taskList, { offset = 4, task = oldRedCars, precedingTask = nil })
     end
 
@@ -195,7 +195,7 @@ function CrossingSequence:lanesSortedByPriority()
         prioritySum = prioritySum + lane:calculatePriority(trafficLightArray)
     end
     local averagePrio = prioritySum / laneCount
-    local sortierFunktion = function(lane1, lane2)
+    local sortierFunktion = function (lane1, lane2)
         if lane1:calculatePriority(trafficLightArray) > lane2:calculatePriority(trafficLightArray) then
             return true
         elseif lane1:calculatePriority(trafficLightArray) < lane2:calculatePriority(trafficLightArray) then
@@ -213,7 +213,7 @@ end
 function CrossingSequence:lanesSortedByName()
     local sortedLanes = {}
     for lane in pairs(self.lanes) do table.insert(sortedLanes, lane) end
-    local sortierFunktion = function(lane1, lane2) return (lane1.name < lane2.name) end
+    local sortierFunktion = function (lane1, lane2) return (lane1.name < lane2.name) end
     table.sort(sortedLanes, sortierFunktion)
     return sortedLanes
 end

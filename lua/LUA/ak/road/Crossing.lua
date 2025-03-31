@@ -155,7 +155,7 @@ function Crossing:new(name, greenPhaseSeconds)
     setmetatable(o, self)
     Crossing.allCrossings[name] = o
     allCrossings[name] = o
-    table.sort(allCrossings, function(name1, name2) return name1 < name2 end)
+    table.sort(allCrossings, function (name1, name2) return name1 < name2 end)
     return o
 end
 
@@ -219,7 +219,7 @@ local function switch(crossing)
     end
 
     -- After the sequence is ready, the current sequence is active
-    local switchedSequenceTask = Task:new(function() crossing:onSwitchedToSequence(nextSequence) end,
+    local switchedSequenceTask = Task:new(function () crossing:onSwitchedToSequence(nextSequence) end,
                                           crossing.name .. " verwendet nun Schaltung " .. nextSequence.name)
 
     -- Calculate all tasks for switching in the sequence
@@ -232,24 +232,28 @@ local function switch(crossing)
     end
 
     -- After the sequence is ready, the current sequence is active
-    local greenPhaseReachedTask = Task:new(function()
-        if Crossing.debug then
-            local msg = "[#Crossing] %s: Kreuzung ist auf grün geschaltet."
-            print(string.format(msg, crossing.name))
-        end
-        crossing.greenPhaseReached = true
-    end, crossing.name .. " ist nun auf grün geschaltet)")
+    local greenPhaseReachedTask = Task:new(function ()
+                                               if Crossing.debug then
+                                                   local msg = "[#Crossing] %s: Kreuzung ist auf grün geschaltet."
+                                                   print(string.format(msg, crossing.name))
+                                               end
+                                               crossing.greenPhaseReached = true
+                                           end, crossing.name .. " ist nun auf grün geschaltet)")
     Scheduler:scheduleTask(0, greenPhaseReachedTask, lastTask)
 
     -- Schedule the finishing task
     local greenPhaseSeconds = nextSequence.greenPhaseSeconds
-    local crossingFinishedTask = Task:new(function()
-        if Crossing.debug then
-            local msg = "[#Crossing] %s: Fahrzeuge sind gefahren, kreuzung ist dann frei."
-            print(string.format(msg, crossing.name))
-        end
-        crossing:setGreenPhaseFinished(true)
-    end, crossing.name .. " ist nun bereit zum Umschalten (war " .. greenPhaseSeconds .. "s auf grün geschaltet)")
+    local crossingFinishedTask = Task:new(function ()
+                                              if Crossing.debug then
+                                                  local msg =
+                                                  "[#Crossing] %s: Fahrzeuge sind gefahren, kreuzung ist dann frei."
+                                                  print(string.format(msg, crossing.name))
+                                              end
+                                              crossing:setGreenPhaseFinished(true)
+                                          end,
+                                          crossing.name ..
+                                          " ist nun bereit zum Umschalten (war " ..
+                                          greenPhaseSeconds .. "s auf grün geschaltet)")
     Scheduler:scheduleTask(greenPhaseSeconds, crossingFinishedTask, greenPhaseReachedTask)
 end
 
@@ -265,7 +269,7 @@ local function recalculateSignalInfo(crossing)
     -- sort the circuits
     local sortedSequences = {}
     for _, v in ipairs(crossing:getSequences()) do table.insert(sortedSequences, v) end
-    table.sort(sortedSequences, function(s1, s2) return (s1.name < s2.name) end)
+    table.sort(sortedSequences, function (s1, s2) return (s1.name < s2.name) end)
 
     for _, sequence in ipairs(sortedSequences) do
         for tl, type in pairs(sequence.trafficLights) do trafficLights[tl] = type end
@@ -287,20 +291,20 @@ local function recalculateSignalInfo(crossing)
             local type = sequence.trafficLights[trafficLight]
             if not type then
                 table.insert(text, "<br><j>" ..
-                             (farbig and fmt.bgRed(sequence.name .. " (Rot)") or
-                             (sequence.name .. " " .. fmt.bgRed("(Rot)"))))
+                    (farbig and fmt.bgRed(sequence.name .. " (Rot)") or
+                        (sequence.name .. " " .. fmt.bgRed("(Rot)"))))
             elseif type == CrossingSequence.Type.CAR then
                 table.insert(text, "<br><j>" ..
-                             (farbig and fmt.bgGreen(sequence.name .. " (Gruen)") or
-                             (sequence.name .. " " .. fmt.bgGreen("(Gruen)"))))
+                    (farbig and fmt.bgGreen(sequence.name .. " (Gruen)") or
+                        (sequence.name .. " " .. fmt.bgGreen("(Gruen)"))))
             elseif type == CrossingSequence.Type.PEDESTRIAN then
                 table.insert(text, "<br><j>" ..
-                             (farbig and fmt.bgYellow(sequence.name .. " (FG)") or
-                             (sequence.name .. " " .. fmt.bgYellow("(FG)"))))
+                    (farbig and fmt.bgYellow(sequence.name .. " (FG)") or
+                        (sequence.name .. " " .. fmt.bgYellow("(FG)"))))
             elseif type == CrossingSequence.Type.TRAM then
                 table.insert(text, "<br><j>" ..
-                             (farbig and fmt.bgBlue(sequence.name .. " (Tram)") or
-                             (sequence.name .. " " .. fmt.bgBlue("(Tram)"))))
+                    (farbig and fmt.bgBlue(sequence.name .. " (Tram)") or
+                        (sequence.name .. " " .. fmt.bgBlue("(Tram)"))))
             else
                 -- No such type allowed here
                 assert(false, type)
@@ -383,7 +387,7 @@ function Crossing.initSequences()
         end
 
         for _, v in pairs(myLanes) do table.insert(crossing.lanes, v) end
-        table.sort(crossing.lanes, function(a, b) return a.name < b.name end)
+        table.sort(crossing.lanes, function (a, b) return a.name < b.name end)
     end
 end
 

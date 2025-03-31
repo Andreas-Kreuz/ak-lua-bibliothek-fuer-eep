@@ -7,9 +7,9 @@ function AkModellPacker.schreibeDatei(dateiname, inhalt)
     io.write(inhalt)
     io.close(file)
     print("[#ModellPacker] ----- Start " .. dateiname ..
-          " --------------------------------------------------------------\n" .. inhalt ..
-          " -------------------- Ende " .. dateiname ..
-          " --------------------------------------------------------------")
+        " --------------------------------------------------------------\n" .. inhalt ..
+        " -------------------- Ende " .. dateiname ..
+        " --------------------------------------------------------------")
 end
 
 function AkModellPacker.dateienSuchen(dateiPfade, basisOrdner, unterOrdner)

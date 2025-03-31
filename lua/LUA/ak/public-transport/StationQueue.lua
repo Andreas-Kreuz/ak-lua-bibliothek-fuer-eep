@@ -9,7 +9,7 @@ local StationQueueEntry = require("ak.public-transport.StationQueueEntry")
 local StationQueue = {}
 function StationQueue:new()
     assert(type(self) == "table", "Call this method with ':'")
-    local o = {entries = {}, entriesByArrival = {}}
+    local o = { entries = {}, entriesByArrival = {} }
     o.type = "StationQueue"
     self.__index = self
     setmetatable(o, self)

@@ -16,7 +16,7 @@ local executionOrderModuleNames = {}
 local function updateModuleOrder()
     TableUtils.clearArray(executionOrderModuleNames)
     for moduleName in pairs(registeredLuaModules) do table.insert(executionOrderModuleNames, moduleName) end
-    table.sort(executionOrderModuleNames, function(n1, n2)
+    table.sort(executionOrderModuleNames, function (n1, n2)
         if n1 == "ak.scheduler.SchedulerLuaModule" then return true end
         if n2 == "ak.scheduler.SchedulerLuaModule" then return false end
         return n1 < n2
@@ -35,7 +35,7 @@ end
 function ModuleRegistry.registerModules(...)
     assert(not initialized, "All tasks must be registered before ModuleRegistry.initTasks()")
 
-    for _, module in ipairs({...}) do
+    for _, module in ipairs({ ... }) do
         -- Check the module
         assert(module.name and type(module.name) == "string", "A module must have a string name")
         assert(type(module.enabled) == "boolean", string.format("Module %s must have a boolean enabled", module.name))
@@ -58,7 +58,7 @@ end
 -- Unregisters a module
 -- @param module a module of type AkLuaControlModule
 function ModuleRegistry.unregisterModules(...)
-    for _, module in ipairs({...}) do
+    for _, module in ipairs({ ... }) do
         -- Check the module
         assert(module.name and type(module.name) == "string", "A module must have a string name")
 
@@ -148,11 +148,11 @@ function ModuleRegistry.runTasks(cycleCount)
     if ModuleRegistry.debug then
         print(string.format("[#ModuleRegistry] runTasks(%d) time: %.0f ms " ..
                             "(%.0f ms initTasks, %.0f ms runTask, %.0f ms serveData)", --
-        cycleCount, -- how often we update
-        (t4 - t1) * 1000, -- total time
-        (t2 - t1) * 1000, -- initTasks
-        (t3 - t2) * 1000, -- runTask
-        (t4 - t3) * 1000) -- serveData
+                            cycleCount,                                                -- how often we update
+                            (t4 - t1) * 1000,                                          -- total time
+                            (t2 - t1) * 1000,                                          -- initTasks
+                            (t3 - t2) * 1000,                                          -- runTask
+                            (t4 - t3) * 1000)                                          -- serveData
         )
     end
 end

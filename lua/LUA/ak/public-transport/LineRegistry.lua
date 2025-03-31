@@ -13,7 +13,7 @@ function LineRegistry.forId(id)
         return allLines[id], false
     else
         -- Initialize the line
-        local line = Line:new({nr = id})
+        local line = Line:new({ nr = id })
         allLines[line.id] = line
         return line, true
     end

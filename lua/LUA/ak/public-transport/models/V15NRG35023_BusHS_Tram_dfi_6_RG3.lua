@@ -6,14 +6,14 @@ BusHS_Tram_dfi_6_RG3 = {}
 
 BusHS_Tram_dfi_6_RG3.name = "BusHS_Tram_dfi_6_RG3"
 
-BusHS_Tram_dfi_6_RG3.initStation = function(displayStructure, stationName, platform)
+BusHS_Tram_dfi_6_RG3.initStation = function (displayStructure, stationName, platform)
     assert(type(displayStructure) == "string", "Need 'displayStructure' as string not as " .. type(displayStructure))
     assert(type(stationName) == "string", "Need 'stationName' as string")
     assert(type(platform) == "string", "Need 'platform' as string")
     for i = 1, 20 do EEPStructureSetTextureText(displayStructure, i, "") end
 end
 
-BusHS_Tram_dfi_6_RG3.displayEntries = function(displayStructure, stationQueueEntries, stationName, platform)
+BusHS_Tram_dfi_6_RG3.displayEntries = function (displayStructure, stationQueueEntries, stationName, platform)
     assert(type(displayStructure) == "string", "Need 'displayStructure' as string not as " .. type(displayStructure))
     assert(type(stationQueueEntries) == "table",
            "Need 'stationQueueEntries' as table not as " .. type(stationQueueEntries))
@@ -62,7 +62,7 @@ BusHS_Tram_dfi_6_RG3.displayEntries = function(displayStructure, stationQueueEnt
                                (entry and entry.timeInMinutes > 0) and tostring(entry.timeInMinutes) or "")
     EEPStructureSetTextureText(displayStructure, 20, (entry and entry.timeInMinutes > 0) and "min" or "")
 
-    local text = {RoadStationTippHelper.getTitle(stationName, platform)}
+    local text = { RoadStationTippHelper.getTitle(stationName, platform) }
     for i = 1, 6 do
         entry = stationQueueEntries[i]
         table.insert(text, RoadStationTippHelper.getEntry(entry))

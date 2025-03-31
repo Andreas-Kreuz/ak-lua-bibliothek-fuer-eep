@@ -43,4 +43,5 @@ function DataLuaModule.setOptions(options)
         activeCollectors = collectorsList
     end
 end
+
 return DataLuaModule
