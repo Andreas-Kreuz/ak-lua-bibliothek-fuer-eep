@@ -1,25 +1,26 @@
-import { createContext, ReactNode, useEffect, useState } from 'react';
-import { io, Socket } from 'socket.io-client';
+import { createContext, ReactNode, useEffect, useRef, useState } from 'react';
+import { io } from 'socket.io-client';
 import { useContext } from 'react';
 
 const socketUrl = window.location.protocol + '//' + window.location.hostname + ':3000';
-const socket = io(socketUrl, { autoConnect: true });
+const socket = io(socketUrl, { autoConnect: false });
 
 const SocketConnectedContext = createContext<boolean>(false);
 const SocketUrlContext = createContext(socketUrl);
 const SocketContext = createContext(socket);
 
-function SocketProvider(props: { children: ReactNode }) {
+const SocketProvider = (props: { children: ReactNode }) => {
   const socket = useContext(SocketContext);
   const [isConnected, setIsConnected] = useState(() => socket.connected);
 
   useEffect(() => {
     socket.on('connect', () => {
-      // console.log('Received "Connect": ', socket);
+      console.log('☑️  "connect" event from: ', socket.id);
       setIsConnected(true);
     });
 
     socket.on('disconnect', () => {
+      console.log('✴️  "disconnect" event from: ', socket.id);
       setIsConnected(false);
     });
 
@@ -43,7 +44,7 @@ function SocketProvider(props: { children: ReactNode }) {
       <SocketConnectedContext.Provider value={isConnected}>{props.children}</SocketConnectedContext.Provider>
     </SocketContext.Provider>
   );
-}
+};
 
 export default SocketProvider;
 

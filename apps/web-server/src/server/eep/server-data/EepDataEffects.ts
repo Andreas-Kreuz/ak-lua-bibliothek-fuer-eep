@@ -22,7 +22,7 @@ export default class EepDataEffects {
     router: express.Router,
     io: Server,
     private socketService: SocketService,
-    private cacheService: CacheService
+    private cacheService: CacheService,
   ) {
     this.store.init(this.cacheService.readCache());
     console.log('STORE INITIALIZED FROM ' + (this.store.currentState().eventCounter + 1) + ' events');
@@ -41,13 +41,12 @@ export default class EepDataEffects {
   private socketConnected(socket: Socket) {
     socket.on(RoomEvent.JoinRoom, (rooms: { room: string }) => {
       const room = rooms.room;
-      if (this.debug) console.log('EMIT ' + ServerStatusEvent.Room + ' to interested parties');
       this.jsonApiController.onJoinRoom(socket, room);
       this.stateController.onJoinRoom(socket, room);
 
       // Send JsonKeys to all JsonKey rooms
       if (room === ServerStatusEvent.Room) {
-        if (this.debug) console.log('EMIT ' + ServerStatusEvent.CounterUpdated + ' to ' + socket.id);
+        if (this.debug) console.log('🟨 EMIT to ' + socket.id + ': ' + ServerStatusEvent.CounterUpdated);
         socket.emit(ServerStatusEvent.CounterUpdated, JSON.stringify(this.store.getEventCounter()));
       }
     });
@@ -74,7 +73,7 @@ export default class EepDataEffects {
         this.refreshSettings.pending = true;
       } else if (receivedEventNr > expectedEventNr) {
         console.error(
-          'STATE OUT OF SYNC: Expected next event: ' + expectedEventNr + ' / Received Event: ' + receivedEventNr
+          'STATE OUT OF SYNC: Expected next event: ' + expectedEventNr + ' / Received Event: ' + receivedEventNr,
         );
       } else {
         if (this.debug) console.log('STATE expected: ' + expectedEventNr + ' / State received: ' + receivedEventNr);

@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import useStatistics from './useStatistics';
 import TimeDesc from './model/TimeDesc';
 
 const useStatisticsData = (updateTimes: TimeDesc[]) => {
-  const [max, setMax] = useState(100);
+  const [lastData, setLastData] = useState<TimeDesc[]>([]);
   const [list, setList] = useState<TimeDesc[][]>([]);
+  const [max, setMax] = useState(100);
   const [ids, setIds] = useState<String[]>([]);
 
   function scale(list: TimeDesc[][]) {
@@ -28,8 +28,21 @@ const useStatisticsData = (updateTimes: TimeDesc[]) => {
     }
   }
 
+  function deepEqual(a, b) {
+    if (a === b) return true;
+    if (a == null || typeof a != 'object' || b == null || typeof b != 'object') return false;
+    let keysA = Object.keys(a),
+      keysB = Object.keys(b);
+    if (keysA.length != keysB.length) return false;
+    for (let key of keysA) {
+      if (!keysB.includes(key) || !deepEqual(a[key], b[key])) return false;
+    }
+    return true;
+  }
+
   useEffect(() => {
-    if (updateTimes && updateTimes.length > 0) {
+    if (updateTimes && updateTimes.length >= 0 && !deepEqual(updateTimes, lastData)) {
+      setLastData(updateTimes);
       const newEntry = updateTimes;
       const lastList = list;
       const last9 = lastList.length > 9 ? lastList.slice(1, 10) : lastList;
@@ -39,11 +52,12 @@ const useStatisticsData = (updateTimes: TimeDesc[]) => {
       setIds((newEntry && newEntry.map((a) => a.id)) || []);
     }
 
-    return () => {
-      setList([]);
-      setMax(0);
-      setIds([]);
-    };
+    // return () => {
+    //   setList([]);
+    //   setMax(0);
+    //   setIds([]);
+    //   setLastData([]);
+    // };
   }, [updateTimes]);
 
   return { max, list, ids };

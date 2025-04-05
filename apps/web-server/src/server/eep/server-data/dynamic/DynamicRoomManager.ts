@@ -91,6 +91,7 @@ export default class DynamicRoomManager {
       if (room.matchesRoom(nameOfRoom)) {
         const eventName = room.eventId(room.idOfRoom(nameOfRoom));
         dynRoomSetting.sockets.set(socket, nameOfRoom);
+        if (this.debug) console.log('🟨 EMIT to ' + socket.id + ': ' + eventName);
         socket.emit(eventName, dynRoomSetting.jsonCreator(nameOfRoom));
         if (this.debug)
           console.log(dynRoomSetting.id, ': sending event', eventName, ' to ', nameOfRoom, ' on socket ', socket.id);

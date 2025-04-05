@@ -30,16 +30,16 @@ export function useRoomHandler(
   useEffect(() => {
     if (debug) console.log(roomName, myNr, 'REGISTERING HANDLERS', count);
     dataHandlers.forEach((h) => {
-      if (debug) console.log('               |✅- On ---  ', h.eventName);
-      socket.off(h.eventName, h.handler);
+      if (debug) console.log('               |❇️- On ---  ', h.eventName);
+      // socket.off(h.eventName, h.handler);
       socket.on(h.eventName, h.handler);
     });
 
     setRegistered(true);
 
     return () => {
-      if (debug) console.log(roomName, myNr, 'LEAVE ROOM', count);
-      socket.emit(RoomEvent.LeaveRoom, { room: roomName });
+      // if (debug) console.log('EMIT LEAVE ROOM ➖', roomName, myNr, count);
+      // socket.emit(RoomEvent.LeaveRoom, { room: roomName });
 
       if (debug) console.log(roomName, myNr, 'REMOVING HANDLERS', count);
       dataHandlers.forEach((h) => {
@@ -47,18 +47,21 @@ export function useRoomHandler(
         socket.off(h.eventName, h.handler);
       });
       if (cleanUpHandler) cleanUpHandler();
+      setRegistered(false);
     };
   }, [roomName]);
 
   useEffect(() => {
     if (registered) {
-      if (debug) console.log(roomName, myNr, 'JOIN ROOM', count);
+      if (debug) console.log('EMIT  JOIN ROOM ➕', roomName, myNr, count);
       socket.emit(RoomEvent.JoinRoom, { room: roomName });
     }
 
-    return () => {
-      if (debug) console.log(roomName, myNr, 'LEAVE ROOM', count);
-      socket.emit(RoomEvent.LeaveRoom, { room: roomName });
-    };
-  }, [registered, roomName]);
+    if (registered) {
+      return () => {
+        if (debug) console.log('EMIT LEAVE ROOM ➖', roomName, myNr, count);
+        socket.emit(RoomEvent.LeaveRoom, { room: roomName });
+      };
+    }
+  }, [registered]);
 }

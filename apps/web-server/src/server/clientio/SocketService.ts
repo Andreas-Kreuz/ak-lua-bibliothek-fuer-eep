@@ -2,7 +2,7 @@ import { RoomEvent } from '@ak/web-shared';
 import { Server, Socket } from 'socket.io';
 
 export default class SocketService {
-  private debug = false;
+  private debug = true;
   private onSocketConnectedCallbacks: Array<(socket: Socket) => void> = [];
 
   constructor(private io: Server) {
@@ -14,20 +14,24 @@ export default class SocketService {
    */
   private allowRoomJoining() {
     this.io.on('connection', (socket: Socket) => {
-      if (this.debug) console.log('CONNECT FROM ' + socket.id);
+      if (this.debug) console.log('✅ CONNECT FROM ' + socket.id);
       for (const addSocketEvents of this.onSocketConnectedCallbacks) {
         addSocketEvents(socket);
       }
 
       socket.on(RoomEvent.JoinRoom, (room: { room: string }) => {
         socket.join(room.room);
-        if (this.debug) console.log('🟩 JOIN ' + room.room + ' from ' + socket.id);
+        if (this.debug) console.log('➕ JOIN by ' + socket.id + ': ' + room.room);
       });
 
       socket.on(RoomEvent.LeaveRoom, (room: { room: string }) => {
         socket.leave(room.room);
-        if (this.debug) console.log('🟥 LEFT ' + room.room + ' by ' + socket.id);
+        if (this.debug) console.log('➖ LEFT by ' + socket.id + ': ' + room.room);
       });
+    });
+
+    this.io.on('disconnect', (socket: Socket) => {
+      if (this.debug) console.log('✴️  DISCONNECT FROM ' + socket.id);
     });
   }
 

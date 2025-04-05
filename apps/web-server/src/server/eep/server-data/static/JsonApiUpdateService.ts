@@ -10,7 +10,11 @@ export default class JsonApiUpdateService {
   private debug = false;
   private reducer = new JsonApiReducer();
 
-  constructor(private router: express.Router, private io: Server, private cacheService: CacheService) {}
+  constructor(
+    private router: express.Router,
+    private io: Server,
+    private cacheService: CacheService,
+  ) {}
 
   onJoinRoom = (socket: Socket, room: string) => {
     // Send data on join
@@ -20,14 +24,14 @@ export default class JsonApiUpdateService {
       const room = ApiDataRoom.roomId(roomName);
       if (room === room) {
         const event = ApiDataRoom.eventId(roomName);
-        if (this.debug) console.log('EMIT ' + event + ' to ' + socket.id);
+        if (this.debug) console.log('🟨 EMIT to ' + socket.id + ': ' + event);
         socket.emit(event, this.reducer.getRoomJsonString(roomName));
       }
     }
 
     // Send JsonKeys to all JsonKey rooms
     if (room === ServerStatusEvent.Room) {
-      if (this.debug) console.log('EMIT ' + ServerStatusEvent.UrlsChanged + ' to ' + socket.id);
+      if (this.debug) console.log('🟨 EMIT to ' + socket.id + ': ' + ServerStatusEvent.UrlsChanged);
       socket.emit(ServerStatusEvent.UrlsChanged, this.reducer.getUrlJson());
     }
   };
@@ -87,21 +91,24 @@ export default class JsonApiUpdateService {
   }
 
   private onRoomAdded(key: string, json: string): void {
+    if (this.debug) console.log('🟦 EMIT to all IO: ' + ApiDataRoom.roomId(key) + ' (' + ApiDataRoom.eventId(key));
     this.registerApiUrls(key);
     this.io.to(ApiDataRoom.roomId(key)).emit(ApiDataRoom.eventId(key), json);
   }
 
   private onRoomChanged(key: string, json: string): void {
+    if (this.debug) console.log('🟦 EMIT to all IO: ' + ApiDataRoom.roomId(key) + ' (' + ApiDataRoom.eventId(key));
     this.io.to(ApiDataRoom.roomId(key)).emit(ApiDataRoom.eventId(key), json);
   }
 
   private onRoomRemoved(key: string): void {
+    if (this.debug) console.log('🟦 EMIT to all IO: ' + ApiDataRoom.roomId(key) + ' (' + ApiDataRoom.eventId(key));
     this.io.to(ServerStatusEvent.Room).emit(ServerStatusEvent.UrlsChanged, this.reducer.getUrlJson());
     this.io.to(ApiDataRoom.roomId(key)).emit(ApiDataRoom.eventId(key), '{}');
   }
 
   private registerApiUrls(key: string) {
-    if (this.debug) console.log('Register: /api/v1/' + key);
+    // if (this.debug) console.log('Register: /api/v1/' + key);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     this.router.get('/' + key, (req: any, res: any) => {
       res.json(this.getCurrentApiEntry(key));

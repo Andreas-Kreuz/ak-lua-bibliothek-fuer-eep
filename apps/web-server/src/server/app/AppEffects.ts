@@ -34,7 +34,7 @@ export default class AppEffects {
     private router: express.Router,
     private io: Server,
     private socketService: SocketService,
-    private serverConfigPath: string
+    private serverConfigPath: string,
   ) {
     this.serverConfigFile = path.resolve(this.serverConfigPath, 'settings.json');
 
@@ -50,13 +50,14 @@ export default class AppEffects {
     socket.on(RoomEvent.JoinRoom, (rooms: { room: string }) => {
       if (rooms.room === SettingsEvent.Room) {
         const event = this.store.getEepDirOk() ? SettingsEvent.DirOk : SettingsEvent.DirError;
-        if (this.debug) console.log('EMIT ' + event + ' to ' + socket.id, this.getEepDirectory());
+        if (this.debug) console.log('🟨 EMIT to ' + socket.id + ': ' + event, this.getEepDirectory());
         socket.emit(event, this.getEepDirectory());
-        if (this.debug) console.log('EMIT ' + SettingsEvent.Host + ' to ' + socket.id, this.getHostname());
+        if (this.debug) console.log('🟨 EMIT to ' + socket.id + ': ' + SettingsEvent.Host, this.getHostname());
         socket.emit(SettingsEvent.Host, this.getHostname());
       }
 
       if (rooms.room === ServerInfoEvent.Room) {
+        if (this.debug) console.log('🟨 EMIT to ' + socket.id + ': ' + ServerInfoEvent.Room, this.getHostname());
         socket.emit(ServerInfoEvent.StatisticsUpdate, this.statistics);
       }
     });
@@ -134,7 +135,7 @@ export default class AppEffects {
         this.io.to(SettingsEvent.Room).emit(SettingsEvent.DirError, eepDir);
       }
 
-      if (this.debug) console.log('EMIT ' + SettingsEvent.Host, this.getHostname());
+      if (this.debug) console.log('🟦 EMIT to all IO: ' + SettingsEvent.Host, this.getHostname());
       this.io.to(SettingsEvent.Room).emit(SettingsEvent.Host, this.store.getHostname());
     });
   }

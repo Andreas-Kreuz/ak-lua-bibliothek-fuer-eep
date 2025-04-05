@@ -3,9 +3,9 @@ import { useApiDataRoomHandler } from '../../io/useRoomHandler';
 import TimeDesc from './model/TimeDesc';
 
 function useStatistics() {
-  const [updateTimes, setUpdateTimes] = useState<TimeDesc[]>([]);
-  const [initializationTimes, setIntitializationTimes] = useState<TimeDesc[]>([]);
-  const [controllerUpdateTimes, setControllerUpdateTimes] = useState<TimeDesc[]>([]);
+  const [updateTimes, setUpdateTimes] = useState<TimeDesc[]>();
+  const [initializationTimes, setIntitializationTimes] = useState<TimeDesc[]>();
+  const [controllerUpdateTimes, setControllerUpdateTimes] = useState<TimeDesc[]>();
 
   useApiDataRoomHandler(
     'runtime',

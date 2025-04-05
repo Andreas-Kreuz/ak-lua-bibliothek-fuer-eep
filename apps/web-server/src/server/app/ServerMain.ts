@@ -40,7 +40,10 @@ export class ServerMain {
   private appEffects: AppEffects;
   private socketService: SocketService;
 
-  constructor(private serverConfigPath: string, private port = 3000) {
+  constructor(
+    private serverConfigPath: string,
+    private port = 3000,
+  ) {
     // Init the server
     EventEmitter.defaultMaxListeners = 50;
     app.use(cors());
