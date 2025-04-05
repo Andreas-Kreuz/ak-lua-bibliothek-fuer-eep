@@ -7,8 +7,12 @@ export function useDynamicRoomHandler(dynRoom: DynamicRoom, element: string, han
   return useRoomHandler(dynRoom.roomId(element), [{ eventName: dynRoom.eventId(element), handler: handler }]);
 }
 
-export function useApiDataRoomHandler(apiName: string, handler: (data: any) => any): void {
-  return useRoomHandler(ApiDataRoom.roomId(apiName), [{ eventName: ApiDataRoom.eventId(apiName), handler: handler }]);
+export function useApiDataRoomHandler(apiName: string, handler: (data: any) => any, cleanUpHandler?: () => void): void {
+  return useRoomHandler(
+    ApiDataRoom.roomId(apiName),
+    [{ eventName: ApiDataRoom.eventId(apiName), handler: handler }],
+    cleanUpHandler,
+  );
 }
 
 export function useRoomHandler(

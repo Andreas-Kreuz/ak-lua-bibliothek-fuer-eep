@@ -27,7 +27,7 @@ function AppCardBg(props: {
     }
   };
   const contents = (
-    <Stack sx={{ flexDirection: 'column', alignItems: 'center' }}>
+    <Stack sx={{ flexDirection: 'column', alignItems: 'fill' }}>
       <CardActionArea
         component={RouterLink}
         to={props.to || ''}
