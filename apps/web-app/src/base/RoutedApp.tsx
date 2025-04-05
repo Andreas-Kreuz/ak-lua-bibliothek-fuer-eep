@@ -1,16 +1,16 @@
-import PublicTransportOverview from '../mod/lines/PublicTransportOverview';
 import ErrorBoundary from './ErrorBoundary';
 import { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, RouterProvider, createBrowserRouter, Outlet } from 'react-router-dom';
 
+const ConnectionWrapper = lazy(() => import('./ConnectionWrapper'));
 const IntersectionDetails = lazy(() => import('../mod/intersections/IntersectionDetails'));
 const IntersectionOverview = lazy(() => import('../mod/intersections/IntersectionOverview'));
-const Trains = lazy(() => import('../mod/trains/TrainMod'));
-const StatisticsOverview = lazy(() => import('../mod/statistics/StatisticsMod'));
 const MainMenu = lazy(() => import('../home/MainMenu'));
+const PublicTransportOverview = lazy(() => import('../mod/lines/PublicTransportOverview'));
 const Server = lazy(() => import('../server/Server'));
+const StatisticsOverview = lazy(() => import('../mod/statistics/StatisticsMod'));
 const StatusGrid = lazy(() => import('../status/StatusGrid'));
-const ConnectionWrapper = lazy(() => import('./ConnectionWrapper'));
+const Trains = lazy(() => import('../mod/trains/TrainMod'));
 
 const homeRoutes = [
   { path: '/', element: <MainMenu /> },
