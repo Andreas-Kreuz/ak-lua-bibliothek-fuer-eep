@@ -14,7 +14,7 @@ export function useApiDataRoomHandler(apiName: string, handler: (data: any) => a
 export function useRoomHandler(
   roomName: string,
   dataHandlers: { eventName: string; handler: (data: any) => any }[],
-  cleanUpHandler?: () => void
+  cleanUpHandler?: () => void,
 ): void {
   const debug = true;
   const socket = useSocket();
@@ -24,7 +24,7 @@ export function useRoomHandler(
   const myNr = count.current;
 
   useEffect(() => {
-    if (debug) console.log(roomName, myNr, 'REGISTERING EFFECT', count);
+    if (debug) console.log(roomName, myNr, 'REGISTERING HANDLERS', count);
     dataHandlers.forEach((h) => {
       if (debug) console.log('               |✅- On ---  ', h.eventName);
       socket.off(h.eventName, h.handler);
@@ -37,7 +37,7 @@ export function useRoomHandler(
       if (debug) console.log(roomName, myNr, 'LEAVE ROOM', count);
       socket.emit(RoomEvent.LeaveRoom, { room: roomName });
 
-      if (debug) console.log(roomName, myNr, 'REMOVING EFFECT', count);
+      if (debug) console.log(roomName, myNr, 'REMOVING HANDLERS', count);
       dataHandlers.forEach((h) => {
         if (debug) console.log('               |❌- Off ---  ', h.eventName);
         socket.off(h.eventName, h.handler);
