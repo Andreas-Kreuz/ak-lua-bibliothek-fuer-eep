@@ -1,6 +1,9 @@
 import { useSocket } from '../io/SocketProvider';
 import { CommandEvent, LuaSetting } from '@ak/web-shared';
-import { FormGroup, FormControlLabel, Switch, FormHelperText } from '@mui/material';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormGroup from '@mui/material/FormGroup';
+import FormHelperText from '@mui/material/FormHelperText';
+import Switch from '@mui/material/Switch';
 import { useState } from 'react';
 
 const ModuleSetting = (props: { setting: LuaSetting<boolean> }) => {
