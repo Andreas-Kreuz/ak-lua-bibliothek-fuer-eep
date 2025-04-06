@@ -1,15 +1,16 @@
 import { useEffect, useState } from 'react';
 import TimeDesc from './model/TimeDesc';
 
-const useStatisticsData = (updateTimes: TimeDesc[]) => {
+const useStatisticsData = (updateTimes: TimeDesc[], maxEntries?: number) => {
+  const [listLength, setListLength] = useState(maxEntries || 10);
   const [lastData, setLastData] = useState<TimeDesc[]>([]);
   const [list, setList] = useState<TimeDesc[][]>([]);
   const [max, setMax] = useState(100);
   const [ids, setIds] = useState<String[]>([]);
 
   function scale(list: TimeDesc[][]) {
-    const max1 = getMax(list);
-    return Math.round(max1);
+    const max = getMax(list);
+    return Math.round(max);
   }
 
   function getMax(list: TimeDesc[][]) {
@@ -45,19 +46,19 @@ const useStatisticsData = (updateTimes: TimeDesc[]) => {
       setLastData(updateTimes);
       const newEntry = updateTimes;
       const lastList = list;
-      const last9 = lastList.length > 9 ? lastList.slice(1, 10) : lastList;
+      const last9 = lastList.length > listLength - 1 ? lastList.slice(1, listLength) : lastList;
       const newList = [...last9, newEntry];
       setList(newList);
       setMax(scale(newList));
       setIds((newEntry && newEntry.map((a) => a.id)) || []);
     }
 
-    return () => {
-      setList([]);
-      setMax(0);
-      setIds([]);
-      setLastData([]);
-    };
+    // return () => {
+    //   setList([]);
+    //   setMax(0);
+    //   setIds([]);
+    //   setLastData([]);
+    // };
   }, [updateTimes]);
 
   return { max, list, ids };

@@ -5,12 +5,13 @@ import TimeDesc from './model/TimeDesc';
 import useStatisticsData from './useStatisticsData';
 import React, { useState } from 'react';
 
-const StatisticsOverview = (props: { title: string; times: TimeDesc[] }) => {
-  const { max, list, ids } = useStatisticsData(props.times);
+const StatisticsOverview = (props: { title: string; times: TimeDesc[]; maxEntries?: number }) => {
+  const [maxEntries, setMaxEntries] = useState(props.maxEntries || 10);
+  const { max, list, ids } = useStatisticsData(props.times, maxEntries);
   const [expanded, setExpanded] = useState(false);
   const title = props.title;
-  var items = Array(10)
-    .fill(0)
+  var items = Array(maxEntries)
+    .fill(30)
     .map((x, i) => i);
 
   function colorOf(index: number) {
@@ -80,13 +81,30 @@ const StatisticsOverview = (props: { title: string; times: TimeDesc[] }) => {
           .reduce((a, b) => a + b);
   }
 
+  const base = 16;
+  const fontSize = 12;
+  const graphBarHeight = base * 1.2;
+  const graphLineHeight = base * 1.6;
+  const graphSvgHeight = maxEntries * graphLineHeight - (graphLineHeight - graphBarHeight);
+
+  const legendEntryHeight = base;
+  const legendLineHeight = legendEntryHeight * 1.2;
+  const legendSvgHeight = ids.length * legendLineHeight - (legendLineHeight - legendEntryHeight);
+
   return (
     <Grid size={{ xs: 12 }}>
       <AppCardBg title={title + ' (max: ' + scale(list) + ' ms)'} image={'/assets/title-image-simulator.jpg'}>
         <Grid padding={2}>
-          <svg width="100%" height={20 * 16} style={{ backgroundColor: 'white' }}>
+          <svg width="100%" height={graphSvgHeight} style={{ backgroundColor: 'white' }}>
             {items.map((item, index) => (
-              <rect key={index} x="0" y={index * 2 * 16} width={'100%'} height={1.2 * 16} style={{ fill: '#f9f9f9' }} />
+              <rect
+                key={index}
+                x="0"
+                y={index * graphLineHeight}
+                width={'100%'}
+                height={graphBarHeight}
+                style={{ fill: '#f9f9f9' }}
+              />
             ))}
             {list.map((entries, j) => (
               <React.Fragment key={'Outer' + j}>
@@ -94,9 +112,9 @@ const StatisticsOverview = (props: { title: string; times: TimeDesc[] }) => {
                   <React.Fragment key={'Inner' + i}>
                     <rect
                       x={scaledValueOf(startXOf(i, entries)) + '%'}
-                      y={j * 2 * 16}
+                      y={j * graphLineHeight}
                       width={scaledValueOf(item.ms) + '%'}
-                      height={1.2 * 16}
+                      height={graphBarHeight}
                       style={{ fill: colorOf(i) }}
                     >
                       <title>
@@ -107,12 +125,13 @@ const StatisticsOverview = (props: { title: string; times: TimeDesc[] }) => {
                 ))}
                 <text
                   x="99%"
-                  y={(j * 2 + 1) * 16}
+                  y={j * graphLineHeight + graphBarHeight / 2}
                   style={{
-                    fontSize: '70%',
+                    fontSize: fontSize + 'px',
                     fontFamily: "source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace",
                     fill: '#cccccc',
                     textAnchor: 'end',
+                    dominantBaseline: 'middle',
                   }}
                 >
                   {maxOfSingleList(entries).toFixed(1)} ms
@@ -120,25 +139,32 @@ const StatisticsOverview = (props: { title: string; times: TimeDesc[] }) => {
               </React.Fragment>
             ))}
           </svg>
-          {expanded && (
-            <>
-              <h4 style={{ marginTop: '1rem' }}>Legende</h4>
-              <svg width="100%" height={(ids.length * 2 - 1) * 16} style={{ backgroundColor: 'white' }}>
-                {ids.map((id, j) => (
-                  <React.Fragment key={'Legend' + j}>
-                    <rect x="0" y={j * 2 * 16} width="16" height="16" style={{ fill: colorOf(j) }} />
-                    <text
-                      x={1.5 * 16}
-                      y={(j * 2 + 0.8) * 16}
-                      style={{ fontFamily: "source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace" }}
-                    >
-                      {id}
-                    </text>
-                  </React.Fragment>
-                ))}
-              </svg>
-            </>
-          )}
+          <p style={{ marginTop: '1rem', marginBottom: '0.3rem' }}>Legende</p>
+          <svg width="100%" height={legendSvgHeight} style={{ backgroundColor: 'white' }}>
+            {ids.map((id, j) => (
+              <React.Fragment key={'Legend' + j}>
+                <rect
+                  x="0"
+                  y={j * legendLineHeight}
+                  width={legendEntryHeight}
+                  height={legendEntryHeight}
+                  style={{ fill: colorOf(j) }}
+                />
+                <text
+                  x={1.5 * legendEntryHeight}
+                  y={j * legendLineHeight + legendEntryHeight / 2}
+                  style={{
+                    fontSize: fontSize + 'px',
+                    dominantBaseline: 'middle',
+                    fontFamily: "source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace",
+                    fontWeight: 'lighter',
+                  }}
+                >
+                  {id}
+                </text>
+              </React.Fragment>
+            ))}
+          </svg>
         </Grid>
       </AppCardBg>
     </Grid>
