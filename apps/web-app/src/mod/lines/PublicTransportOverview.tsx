@@ -1,11 +1,12 @@
-const AppCardGridContainer = lazy(() => import('../../ui/AppCardGridContainer'));
-const AppPage = lazy(() => import('../../ui/AppPage'));
-const AppPageHeadline = lazy(() => import('../../ui/AppPageHeadline'));
+import { lazy } from 'react';
 import ModuleSettingsButton from '../../ui/ModuleSettingsButton';
-const PublicTransportLineCard = lazy(() => import('./PublicTransportLineCard'));
 import useLines from './useLines';
 import usePublicTransportSettings from './usePublicTransportSettings';
 import Grid from '@mui/material/Grid';
+const AppCardGridContainer = lazy(() => import('../../ui/AppCardGridContainer'));
+const AppPage = lazy(() => import('../../ui/AppPage'));
+const AppPageHeadline = lazy(() => import('../../ui/AppPageHeadline'));
+const PublicTransportLineCard = lazy(() => import('./PublicTransportLineCard'));
 
 function PublicTransportOverview() {
   const lines = useLines();
