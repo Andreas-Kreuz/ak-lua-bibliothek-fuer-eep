@@ -1,3 +1,4 @@
+import useDebug from '../../io/useDebug';
 import { useApiDataRoomHandler } from '../../io/useRoomHandler';
 import Intersection from './model/Intersection';
 import { LuaSetting, LuaSettings } from '@ak/web-shared';
@@ -5,6 +6,7 @@ import { useState } from 'react';
 
 function useIntersectionSettings(): LuaSettings | undefined {
   const [settings, setSettings] = useState<LuaSettings | undefined>(undefined);
+  const debug = useDebug();
 
   useApiDataRoomHandler('intersection-module-settings', (payload: string) => {
     const data: LuaSetting<any>[] = Object.values(JSON.parse(payload));
@@ -12,7 +14,7 @@ function useIntersectionSettings(): LuaSettings | undefined {
       moduleName: 'Einstellungen für Kreuzungen',
       settings: data,
     };
-    console.log(mySettings);
+    if (debug) console.log('                 |⚠️ FIRED ---', 'API: intersection-module-settings', mySettings);
     setSettings(mySettings);
   });
 

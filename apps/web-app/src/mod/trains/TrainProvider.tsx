@@ -2,6 +2,7 @@ import { useApiDataRoomHandler, useDynamicRoomHandler, useRoomHandler } from '..
 import { RollingStock, TrackType, TrainListRoom } from '@ak/web-shared';
 import { Train, TrainListEntry, TrainType } from '@ak/web-shared';
 import { createContext, Dispatch, ReactNode, useContext, useReducer } from 'react';
+import useDebug from '../../io/useDebug';
 
 export interface State {
   trackType: TrackType;
@@ -45,10 +46,11 @@ const TrainContext = createContext<State | null>(null);
 const TrainDispatchContext = createContext<Dispatch<Action> | null>(null);
 
 export const TrainProvider = (props: { children: ReactNode }) => {
+  const debug = useDebug();
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const trainDispatcher = (payload: string) => {
-    console.log('🚂🚂🚂🚂🚂🚂🚂🚂🚂🚂🚂🚂');
+    if (debug) console.log('                 |⚠️ FIRED ---', '🚂 TRAINS UPDATED');
     const data: Record<string, TrainListEntry> = JSON.parse(payload);
     const trains = Object.values(data).sort((a, b) => (a.id < b.id ? -1 : 1));
     dispatch({ type: 'trains updated', trains: trains });
@@ -56,6 +58,7 @@ export const TrainProvider = (props: { children: ReactNode }) => {
   useDynamicRoomHandler(TrainListRoom, state.trackType, trainDispatcher);
 
   const rollingStockDispatcher = (payload: string) => {
+    if (debug) console.log('                 |⚠️ FIRED ---', '🚂 ROLLING STOCK UPDATED');
     const data: Record<string, RollingStock> = JSON.parse(payload);
     dispatch({
       type: 'rollingstock updated',

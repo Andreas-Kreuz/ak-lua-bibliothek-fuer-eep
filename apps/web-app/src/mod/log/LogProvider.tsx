@@ -1,6 +1,7 @@
 import { useRoomHandler } from '../../io/useRoomHandler';
 import { LogEvent } from '@ak/web-shared';
 import { createContext, Dispatch, ReactNode, useContext, useReducer } from 'react';
+import useDebug from '../../io/useDebug';
 
 type LogState = {
   lines: { line: string; key: number }[];
@@ -48,12 +49,13 @@ const LogDispatchContext = createContext<Dispatch<LogDispatch> | null>(null);
 export const LogProvider = (props: { children: ReactNode }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const roomName = LogEvent.Room;
+  const debug = useDebug();
 
   const dataHandlers = [
     {
       eventName: LogEvent.LinesAdded,
       handler: (data: string) => {
-        console.log('                |⚠️- FIRED --', LogEvent.LinesAdded, data);
+        if (debug) console.log('                 |⚠️ FIRED ---', LogEvent.LinesAdded, data);
         const fetchedLines = data.split('\n');
         dispatch({ type: 'added', fetchedLines });
       },

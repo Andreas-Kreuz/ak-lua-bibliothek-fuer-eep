@@ -7,6 +7,7 @@ import Chip from '@mui/material/Chip';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import { useState } from 'react';
+import useDebug from '../../io/useDebug';
 
 interface ChipData {
   key: number;
@@ -21,6 +22,7 @@ const TrainCamList = (props: { trainName: string; rollingStockName: string }) =>
   const rollingStock = useRollingStock(props.rollingStockName);
   const setRollingStockCam = useSetRollingStockCam();
   const setTrainCam = useSetTrainCam();
+  const debug = useDebug();
   const [chipData, setChipData] = useState<readonly ChipData[]>([
     { key: 3, label: 'Links oben' },
     { key: 4, label: 'Rechts oben' },
@@ -34,8 +36,7 @@ const TrainCamList = (props: { trainName: string; rollingStockName: string }) =>
     switch (key) {
       case -1:
       case -2: {
-        console.log(props.rollingStockName);
-        console.log(rollingStock);
+        if (debug) console.log('                 |📹 CAM SET-', props.rollingStockName, rollingStock);
         setRollingStockCam(rollingStock, key);
         setTrainCam(props.trainName, props.rollingStockName, 9);
         break;

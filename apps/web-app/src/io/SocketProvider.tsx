@@ -1,6 +1,7 @@
 import { createContext, ReactNode, useEffect, useRef, useState } from 'react';
 import { io } from 'socket.io-client';
 import { useContext } from 'react';
+import useDebug from './useDebug';
 
 const socketUrl = window.location.protocol + '//' + window.location.hostname + ':3000';
 const socket = io(socketUrl, { autoConnect: false });
@@ -12,15 +13,16 @@ const SocketContext = createContext(socket);
 const SocketProvider = (props: { children: ReactNode }) => {
   const socket = useContext(SocketContext);
   const [isConnected, setIsConnected] = useState(() => socket.connected);
+  const debug = useDebug();
 
   useEffect(() => {
     const connector = () => {
-      console.log('☑️  "connect" event from: ', socket.id);
+      if (debug) console.log('SOCKET CONNECT    ☑️☑️☑️☑️☑️', socket.id, "'connect' received");
       setIsConnected(true);
     };
 
     const disconnector = () => {
-      console.log('✴️  "disconnect" event from: ', socket.id);
+      if (debug) console.log('SOCKET DISCONNECT ✴️✴️✴️✴️✴️', socket.id, "'disconnect' received");
       setIsConnected(false);
     };
 
@@ -29,16 +31,17 @@ const SocketProvider = (props: { children: ReactNode }) => {
     socket.on('disconnect', disconnector);
 
     if (socket.connected) {
-      // console.log('Already Connected: ', socket);
       setIsConnected(true);
     } else {
       socket.connect();
     }
 
     return () => {
-      socket.disconnect();
-      socket.off('connect', connector);
-      socket.off('disconnect', disconnector);
+      if (socket) {
+        socket.disconnect();
+        socket.off('connect', connector);
+        socket.off('disconnect', disconnector);
+      }
       setIsConnected(false);
     };
   }, []);
