@@ -53,7 +53,7 @@ export const LogProvider = (props: { children: ReactNode }) => {
     {
       eventName: LogEvent.LinesAdded,
       handler: (data: string) => {
-        console.log('               |⚠️- FIRED -- ', data);
+        console.log('                |⚠️- FIRED --', LogEvent.LinesAdded, data);
         const fetchedLines = data.split('\n');
         dispatch({ type: 'added', fetchedLines });
       },

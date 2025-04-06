@@ -47,19 +47,22 @@ const TrainDispatchContext = createContext<Dispatch<Action> | null>(null);
 export const TrainProvider = (props: { children: ReactNode }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  useDynamicRoomHandler(TrainListRoom, state.trackType, (payload: string) => {
+  const trainDispatcher = (payload: string) => {
+    console.log('🚂🚂🚂🚂🚂🚂🚂🚂🚂🚂🚂🚂');
     const data: Record<string, TrainListEntry> = JSON.parse(payload);
     const trains = Object.values(data).sort((a, b) => (a.id < b.id ? -1 : 1));
     dispatch({ type: 'trains updated', trains: trains });
-  });
+  };
+  useDynamicRoomHandler(TrainListRoom, state.trackType, trainDispatcher);
 
-  useApiDataRoomHandler('rolling-stocks', (payload: string) => {
+  const rollingStockDispatcher = (payload: string) => {
     const data: Record<string, RollingStock> = JSON.parse(payload);
     dispatch({
       type: 'rollingstock updated',
       rollingStock: data,
     });
-  });
+  };
+  useApiDataRoomHandler('rolling-stocks', rollingStockDispatcher);
 
   return (
     <TrainContext.Provider value={state}>

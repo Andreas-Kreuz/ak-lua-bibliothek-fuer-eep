@@ -22,46 +22,31 @@ export function useRoomHandler(
 ): void {
   const debug = true;
   const socket = useSocket();
-  const [registered, setRegistered] = useState(false);
   const count = useRef(0);
   count.current = count.current + 1;
   const myNr = count.current;
 
   useEffect(() => {
-    if (debug) console.log(roomName, myNr, 'REGISTERING HANDLERS', count);
+    if (debug) console.log('REGISTER HANDLERS ❇️❇️❇️❇️❇️', roomName, myNr, 'ADD NEW HANDLERS');
     dataHandlers.forEach((h) => {
-      if (debug) console.log('               |❇️- On ---  ', h.eventName);
+      if (debug) console.log('                 |❇️ On ------', roomName, myNr, 'ADD', h.eventName);
       // socket.off(h.eventName, h.handler);
       socket.on(h.eventName, h.handler);
     });
 
-    setRegistered(true);
+    if (debug) console.log('                 |➕ JOIN ----', roomName, myNr, 'JOIN ROOM');
+    socket.emit(RoomEvent.JoinRoom, { room: roomName });
 
     return () => {
-      // if (debug) console.log('EMIT LEAVE ROOM ➖', roomName, myNr, count);
-      // socket.emit(RoomEvent.LeaveRoom, { room: roomName });
+      if (debug) console.log('REMOVE HANDLERS  |❌❌❌❌❌', roomName, myNr, 'REMOVE ALL HANDLERS');
+      if (debug) console.log('                 |➖ LEAVE ---', roomName, myNr, 'LEAVE ROOM');
+      socket.emit(RoomEvent.LeaveRoom, { room: roomName });
 
-      if (debug) console.log(roomName, myNr, 'REMOVING HANDLERS', count);
       dataHandlers.forEach((h) => {
-        if (debug) console.log('               |❌- Off ---  ', h.eventName);
+        if (debug) console.log('                 |❌ Off -----', roomName, myNr, 'REMOVE', h.eventName);
         socket.off(h.eventName, h.handler);
       });
       if (cleanUpHandler) cleanUpHandler();
-      setRegistered(false);
     };
   }, [roomName]);
-
-  useEffect(() => {
-    if (registered) {
-      if (debug) console.log('EMIT  JOIN ROOM ➕', roomName, myNr, count);
-      socket.emit(RoomEvent.JoinRoom, { room: roomName });
-    }
-
-    if (registered) {
-      return () => {
-        if (debug) console.log('EMIT LEAVE ROOM ➖', roomName, myNr, count);
-        socket.emit(RoomEvent.LeaveRoom, { room: roomName });
-      };
-    }
-  }, [registered]);
 }
