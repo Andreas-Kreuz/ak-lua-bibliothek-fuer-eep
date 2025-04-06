@@ -1,6 +1,6 @@
 import { lazy } from 'react';
-const AppHome = lazy(() => import('./AppHome'));
-const AppHomeWithSnack = lazy(() => import('./AppHomeWithSnack'));
+const ClientAppMainPage = lazy(() => import('./ClientAppMainPage'));
+const ClientAppMainPageWithSnack = lazy(() => import('./ClientAppMainPageWithSnack'));
 const ConnectingScreen = lazy(() => import('./ConnectingScreen'));
 import { useSocketIsConnected } from '../io/SocketProvider';
 
@@ -8,9 +8,9 @@ function ConnectionWrapper(props: { simple?: boolean }) {
   const socketIsConnected = useSocketIsConnected();
 
   if (props.simple) {
-    return <AppHome />;
+    return <ClientAppMainPage />;
   } else if (socketIsConnected) {
-    return <AppHomeWithSnack />;
+    return <ClientAppMainPageWithSnack />;
   } else {
     return <ConnectingScreen />;
   }

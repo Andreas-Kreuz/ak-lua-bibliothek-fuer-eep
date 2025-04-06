@@ -7,9 +7,8 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { Outlet } from 'react-router-dom';
 import { Link as RouterLink } from 'react-router-dom';
-import LogMod from '../mod/log/LogMod';
 
-function AppHome() {
+function ClientAppMainPage() {
   const theme = useTheme();
   return (
     <div className="Client">
@@ -30,9 +29,8 @@ function AppHome() {
         <Toolbar />
         <Outlet />
       </Box>
-      <LogMod />
     </div>
   );
 }
 
-export default AppHome;
+export default ClientAppMainPage;
