@@ -28,7 +28,7 @@ function AppCardImg(props: {
   );
 
   return (
-    <Card sx={{ display: 'flex', alignItems: 'stretch', alignContent: 'stretch' }}>
+    <Card sx={{ flexGrow: 1, display: 'flex', alignItems: 'stretch', alignContent: 'stretch' }}>
       <CardActionArea
         component={RouterLink}
         to={props.to || ''}

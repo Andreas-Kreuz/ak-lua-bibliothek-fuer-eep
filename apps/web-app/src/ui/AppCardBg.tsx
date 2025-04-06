@@ -63,7 +63,7 @@ function AppCardBg(props: {
     </Stack>
   );
 
-  return <Card>{contents}</Card>;
+  return <Card sx={{ flexGrow: 1 }}>{contents}</Card>;
 }
 
 export default AppCardBg;
