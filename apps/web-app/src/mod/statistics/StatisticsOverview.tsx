@@ -10,8 +10,8 @@ function StatisticsOverview() {
   return (
     <AppPage>
       <AppCardGridContainer>
-        <StatisticsCard title="Updates je Lua Modul" times={updateTimes} />
-        <StatisticsCard title="Intialisierung je Lua Modul" times={initializationTimes} maxEntries={1} />
+        <StatisticsCard title="Berechnung Lua Module" times={updateTimes} />
+        <StatisticsCard title="Initialisierung Lua Module" times={initializationTimes} maxEntries={1} />
         <StatisticsCard title="Server" times={controllerUpdateTimes} />
       </AppCardGridContainer>
     </AppPage>

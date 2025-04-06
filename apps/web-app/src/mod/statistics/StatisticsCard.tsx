@@ -93,8 +93,11 @@ const StatisticsOverview = (props: { title: string; times: TimeDesc[]; maxEntrie
 
   return (
     <Grid size={{ xs: 12 }}>
-      <AppCardBg title={title + ' (max: ' + scale(list) + ' ms)'} image={'/assets/title-image-simulator.jpg'}>
-        <Grid padding={2}>
+      <AppCardBg
+        title={title + (maxEntries > 1 ? ' (max: ' : ' (') + scale(list) + ' ms)'}
+        image={'/assets/title-image-simulator.jpg'}
+      >
+        <Grid paddingLeft={2} paddingRight={2}>
           <svg width="100%" height={graphSvgHeight} style={{ backgroundColor: 'white' }}>
             {items.map((item, index) => (
               <rect
