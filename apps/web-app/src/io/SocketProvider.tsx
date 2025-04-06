@@ -14,15 +14,19 @@ const SocketProvider = (props: { children: ReactNode }) => {
   const [isConnected, setIsConnected] = useState(() => socket.connected);
 
   useEffect(() => {
-    socket.on('connect', () => {
+    const connector = () => {
       console.log('☑️  "connect" event from: ', socket.id);
       setIsConnected(true);
-    });
+    };
 
-    socket.on('disconnect', () => {
+    const disconnector = () => {
       console.log('✴️  "disconnect" event from: ', socket.id);
       setIsConnected(false);
-    });
+    };
+
+    socket.on('connect', connector);
+
+    socket.on('disconnect', disconnector);
 
     if (socket.connected) {
       // console.log('Already Connected: ', socket);
@@ -33,8 +37,8 @@ const SocketProvider = (props: { children: ReactNode }) => {
 
     return () => {
       socket.disconnect();
-      socket.off('connect');
-      socket.off('disconnect');
+      socket.off('connect', connector);
+      socket.off('disconnect', disconnector);
       setIsConnected(false);
     };
   }, []);
