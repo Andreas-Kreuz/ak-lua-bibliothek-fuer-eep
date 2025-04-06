@@ -1,7 +1,6 @@
 import BackIcon from '@mui/icons-material/ArrowBack';
 import IconButton from '@mui/material/IconButton';
 import { SxProps } from '@mui/material/styles';
-import { useEffect } from 'react';
 import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 
 function AppBackButton(props: { to?: string; sx?: SxProps }) {
