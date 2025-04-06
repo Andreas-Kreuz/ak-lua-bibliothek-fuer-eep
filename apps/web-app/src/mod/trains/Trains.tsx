@@ -15,7 +15,7 @@ import { styled } from '@mui/material/styles';
 import { useState } from 'react';
 const AppCardGrid = lazy(() => import('../../ui/AppCardGrid'));
 const AppCardGridContainer = lazy(() => import('../../ui/AppCardGridContainer'));
-const AppPageHeadline = lazy(() => import('../../ui/AppHeadline'));
+const AppPageHeadline = lazy(() => import('../../ui/AppPageHeadline'));
 const AppPage = lazy(() => import('../../ui/AppPage'));
 const TrainListEntryCard = lazy(() => import('./TrainListEntryCard'));
 
@@ -43,7 +43,7 @@ const Trains = () => {
 
   return (
     <AppPage>
-      <AppPageHeadline gutterBottom>Gleissystem</AppPageHeadline>
+      <AppPageHeadline>Gleissystem</AppPageHeadline>
       <Paper
         sx={{
           display: 'flex',
@@ -66,9 +66,7 @@ const Trains = () => {
           </ListItem>
         ))}
       </Paper>
-      <AppPageHeadline gutterTop gutterBottom>
-        Fahrzeuge
-      </AppPageHeadline>
+      <AppPageHeadline gutterTop>Fahrzeuge</AppPageHeadline>
       <AppCardGridContainer>
         {trains.map((t) => (
           <Grid size={{ xs: 12 }} key={t.id}>
@@ -77,9 +75,7 @@ const Trains = () => {
         ))}
       </AppCardGridContainer>
 
-      <AppPageHeadline gutterTop gutterBottom>
-        Hilfe
-      </AppPageHeadline>
+      <AppPageHeadline gutterTop>Hilfe</AppPageHeadline>
       <AppCardGridContainer>
         <AppCardGrid>
           <Card>
