@@ -66,22 +66,19 @@ const Trains = () => {
           </ListItem>
         ))}
       </Paper>
-      <AppPageHeadline gutterTop>Fahrzeuge</AppPageHeadline>
       <AppCardGridContainer>
+        <AppPageHeadline gutterTop>
+          Fahrzeuge {chipData.filter((e, i) => e.key == trackType).map((e) => e.label)}
+        </AppPageHeadline>
         {trains.length === 0 ? (
           <Grid size={{ xs: 12 }}>
-            <Card>
-              <CardActionArea sx={{ p: 2 }} disabled>
-                <Typography variant="h5" gutterBottom color="primary">
-                  Keine Fahrzeuge
-                </Typography>
-                <Typography variant="body2">
-                  Es wurden keine Fahrzeuge im Gleissystem{' '}
-                  {chipData.filter((e, i) => e.key == trackType).map((e) => e.label)} gefunden. Wähle ein anderes
-                  Gleissystem oder füge Fahrzeuge in EEP hinzu.
-                </Typography>
-              </CardActionArea>
-            </Card>
+            <>
+              <Typography variant="body2">
+                Es wurden keine Fahrzeuge im Gleissystem{' '}
+                {chipData.filter((e, i) => e.key == trackType).map((e) => e.label)} gefunden. Wähle ein anderes
+                Gleissystem oder füge Fahrzeuge in EEP hinzu.
+              </Typography>
+            </>
           </Grid>
         ) : (
           <>

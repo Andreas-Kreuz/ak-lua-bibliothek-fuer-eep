@@ -5,7 +5,7 @@ import { ReactNode } from 'react';
 function AppPageHeadline(props: { children: ReactNode; gutterTop?: boolean; rightSettings?: ReactNode }) {
   return (
     <Stack direction="row" sx={{ display: 'flex', alignContent: 'center', justifyContent: 'space-between' }}>
-      <Typography variant="h4" gutterBottom color="text.secondary" sx={{ pt: props.gutterTop ? 10 : 0 }}>
+      <Typography variant="h4" gutterBottom color="text.secondary" sx={{ pt: props.gutterTop ? 5 : 0 }}>
         {props.children}
       </Typography>
       {props.rightSettings}
