@@ -1,9 +1,4 @@
 import { lazy } from 'react';
-const AppCardGrid = lazy(() => import('../../ui/AppCardGrid'));
-const AppCardGridContainer = lazy(() => import('../../ui/AppCardGridContainer'));
-const AppPageHeadline = lazy(() => import('../../ui/AppHeadline'));
-const AppPage = lazy(() => import('../../ui/AppPage'));
-const TrainListEntryCard = lazy(() => import('./TrainListEntryCard'));
 import setTrackType from './useSetTrackType';
 import useTrackType from './useTrackType';
 import useTrains from './useTrains';
@@ -18,6 +13,11 @@ import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import { useState } from 'react';
+const AppCardGrid = lazy(() => import('../../ui/AppCardGrid'));
+const AppCardGridContainer = lazy(() => import('../../ui/AppCardGridContainer'));
+const AppPageHeadline = lazy(() => import('../../ui/AppHeadline'));
+const AppPage = lazy(() => import('../../ui/AppPage'));
+const TrainListEntryCard = lazy(() => import('./TrainListEntryCard'));
 
 interface ChipData {
   key: TrackType;
