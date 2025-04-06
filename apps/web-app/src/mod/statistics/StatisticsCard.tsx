@@ -82,14 +82,14 @@ const StatisticsOverview = (props: { title: string; times: TimeDesc[]; maxEntrie
   }
 
   const base = 16;
-  const fontSize = 12;
-  const graphBarHeight = base * 1.2;
-  const graphLineHeight = base * 1.6;
-  const graphSvgHeight = maxEntries * graphLineHeight - (graphLineHeight - graphBarHeight);
+  const fontSize = base * 0.75;
+  const graphBarHeight = base * 1.125;
+  const graphLineHeight = graphBarHeight * 1.33;
+  const graphSvgHeight = Math.max(maxEntries, 1) * graphLineHeight - (graphLineHeight - graphBarHeight);
 
   const legendEntryHeight = base;
   const legendLineHeight = legendEntryHeight * 1.2;
-  const legendSvgHeight = ids.length * legendLineHeight - (legendLineHeight - legendEntryHeight);
+  const legendSvgHeight = Math.max(ids.length, 1) * legendLineHeight - (legendLineHeight - legendEntryHeight);
 
   return (
     <Grid size={{ xs: 12 }}>
