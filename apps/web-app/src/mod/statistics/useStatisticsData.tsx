@@ -52,12 +52,12 @@ const useStatisticsData = (updateTimes: TimeDesc[]) => {
       setIds((newEntry && newEntry.map((a) => a.id)) || []);
     }
 
-    // return () => {
-    //   setList([]);
-    //   setMax(0);
-    //   setIds([]);
-    //   setLastData([]);
-    // };
+    return () => {
+      setList([]);
+      setMax(0);
+      setIds([]);
+      setLastData([]);
+    };
   }, [updateTimes]);
 
   return { max, list, ids };
