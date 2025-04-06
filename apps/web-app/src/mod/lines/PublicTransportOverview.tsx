@@ -1,8 +1,8 @@
-import AppCardGridContainer from '../../ui/AppCardGridContainer';
-import AppPage from '../../ui/AppPage';
-import AppPageHeadline from '../../ui/AppPageHeadline';
+const AppCardGridContainer = lazy(() => import('../../ui/AppCardGridContainer'));
+const AppPage = lazy(() => import('../../ui/AppPage'));
+const AppPageHeadline = lazy(() => import('../../ui/AppPageHeadline'));
 import ModuleSettingsButton from '../../ui/ModuleSettingsButton';
-import PublicTransportLineCard from './PublicTransportLineCard';
+const PublicTransportLineCard = lazy(() => import('./PublicTransportLineCard'));
 import useLines from './useLines';
 import usePublicTransportSettings from './usePublicTransportSettings';
 import Grid from '@mui/material/Grid';

@@ -1,10 +1,11 @@
+import { lazy } from 'react';
+const AppBackButton = lazy(() => import('../ui/AppBackButton'));
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import { useTheme } from '@mui/material/styles';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { Outlet } from 'react-router-dom';
-import AppBackButton from '../ui/AppBackButton';
 import { Link as RouterLink } from 'react-router-dom';
 import LogMod from '../mod/log/LogMod';
 

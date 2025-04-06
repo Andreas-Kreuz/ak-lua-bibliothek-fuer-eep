@@ -1,9 +1,10 @@
+import { lazy } from 'react';
+const AppCardGrid = lazy(() => import('../ui/AppCardGrid'));
+const AppCardGridContainer = lazy(() => import('../ui/AppCardGridContainer'));
+const AppCardImg = lazy(() => import('../ui/AppCardImg'));
+const AppPage = lazy(() => import('../ui/AppPage'));
 import useNavState from '../nav/NavElements';
 import VersionInfo from '../status/VersionInfo';
-import AppCardGrid from '../ui/AppCardGrid';
-import AppCardGridContainer from '../ui/AppCardGridContainer';
-import AppCardImg from '../ui/AppCardImg';
-import AppPage from '../ui/AppPage';
 
 function MainMenu() {
   const navigation = useNavState();

@@ -1,9 +1,9 @@
 import { lazy } from 'react';
-import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider } from '@mui/material/styles';
 import { theme } from './Theme';
+import CssBaseline from '@mui/material/CssBaseline';
 const SocketProvider = lazy(() => import('../io/SocketProvider'));
-import RoutedApp from './RoutedApp';
+const RoutedApp = lazy(() => import('./RoutedApp'));
 
 function ThemedApp() {
   return (

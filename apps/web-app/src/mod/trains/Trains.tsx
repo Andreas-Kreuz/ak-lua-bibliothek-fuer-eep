@@ -1,8 +1,9 @@
-import AppCardGrid from '../../ui/AppCardGrid';
-import AppCardGridContainer from '../../ui/AppCardGridContainer';
-import AppPageHeadline from '../../ui/AppHeadline';
-import AppPage from '../../ui/AppPage';
-import TrainListEntryCard from './TrainListEntryCard';
+import { lazy } from 'react';
+const AppCardGrid = lazy(() => import('../../ui/AppCardGrid'));
+const AppCardGridContainer = lazy(() => import('../../ui/AppCardGridContainer'));
+const AppPageHeadline = lazy(() => import('../../ui/AppHeadline'));
+const AppPage = lazy(() => import('../../ui/AppPage'));
+const TrainListEntryCard = lazy(() => import('./TrainListEntryCard'));
 import setTrackType from './useSetTrackType';
 import useTrackType from './useTrackType';
 import useTrains from './useTrains';

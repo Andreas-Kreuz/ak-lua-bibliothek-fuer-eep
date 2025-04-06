@@ -1,7 +1,7 @@
-import AppCardGridContainer from '../../ui/AppCardGridContainer';
-import AppPage from '../../ui/AppPage';
+import { lazy } from 'react';
+const AppCardGridContainer = lazy(() => import('../../ui/AppCardGridContainer'));
+const AppPage = lazy(() => import('../../ui/AppPage'));
 import StatisticsCard from './StatisticsCard';
-import { Grid } from '@mui/material';
 import useStatistics from './useStatistics';
 
 function StatisticsOverview() {

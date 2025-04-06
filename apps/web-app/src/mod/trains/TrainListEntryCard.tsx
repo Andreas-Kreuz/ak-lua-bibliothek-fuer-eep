@@ -1,4 +1,5 @@
-import AppCardBg from '../../ui/AppCardBg';
+import { lazy } from 'react';
+const AppCardBg = lazy(() => import('../../ui/AppCardBg'));
 import TrainDetails, { getTrainChips } from './TrainDetails';
 import { trainIconFor } from './trainIconFor';
 import { TrainListEntry, TrainType } from '@ak/web-shared';
