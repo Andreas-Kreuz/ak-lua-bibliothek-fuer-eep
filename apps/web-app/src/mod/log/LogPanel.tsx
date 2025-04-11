@@ -38,7 +38,7 @@ function LogPanel() {
     duration: theme.transitions.duration.enteringScreen,
   };
 
-  const innerBox = (
+  const innerBox = (matches && (
     <Box>
       <Paper
         variant="elevation"
@@ -128,9 +128,9 @@ function LogPanel() {
         </Box>
       </Paper>
     </Box>
-  );
+  )) || <></>;
 
-  return <>{matches && innerBox}</>;
+  return innerBox;
 }
 
 export default LogPanel;
