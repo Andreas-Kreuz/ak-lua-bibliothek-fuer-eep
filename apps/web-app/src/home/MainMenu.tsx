@@ -1,10 +1,11 @@
 import { lazy, useMemo } from 'react';
 import useNavState from '../nav/NavElements';
 import VersionInfo from '../status/VersionInfo';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
+
 const AppCardGrid = lazy(() => import('../ui/AppCardGrid'));
 const AppCardGridContainer = lazy(() => import('../ui/AppCardGridContainer'));
 const AppCardImg = lazy(() => import('../ui/AppCardImg'));
@@ -29,9 +30,7 @@ function MainMenu() {
         <AppCardGridContainer>
           {trafficNav.map((card) => (
             <AppCardGrid key={card.title}>
-              <Link to={card.link}>
-                <AppCardImg title={card.title} subtitle={card.subtitle} image={'/assets/' + card.image} />
-              </Link>
+              <AppCardImg title={card.title} subtitle={card.subtitle} image={'/assets/' + card.image} to={card.link} />
             </AppCardGrid>
           ))}
         </AppCardGridContainer>
