@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import { ReactNode } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 
-function AppCardBg(props: {
+export interface AppCardBgProps {
   children?: ReactNode;
   title: string;
   subtitle?: string;
@@ -18,7 +18,9 @@ function AppCardBg(props: {
   small?: boolean;
   expanded?: boolean;
   setExpanded?: (expanded: boolean) => void;
-}) {
+}
+
+function AppCardBg(props: AppCardBgProps) {
   const handleExpand = () => {
     if (props.setExpanded) {
       props.setExpanded(!props.expanded);

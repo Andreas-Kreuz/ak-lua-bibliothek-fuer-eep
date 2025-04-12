@@ -5,6 +5,7 @@
     "baseUrl": ".",
     "outDir": "./build",
     "sourceMap": true,
+    "types": ["react", "react-dom"],
     "moduleResolution": "node"
   },
   "include": ["src"]

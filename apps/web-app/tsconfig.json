@@ -3,6 +3,7 @@
     "module": "CommonJS",
     "target": "ES2022",
     "lib": ["DOM", "DOM.Iterable"],
+    "jsx": "react-jsx",
     "allowJs": false,
     "skipLibCheck": true,
     "esModuleInterop": false,
@@ -13,7 +14,6 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx",
     "sourceMap": true
   },
   "include": ["src"],

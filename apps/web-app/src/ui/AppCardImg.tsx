@@ -5,16 +5,16 @@ import CardMedia from '@mui/material/CardMedia';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { Link as RouterLink } from 'react-router-dom';
 
-function AppCardImg(props: {
+export interface AppCardImgProps {
   title: string;
   subtitle?: string;
   id?: string;
-  to?: string;
   image?: string;
   small?: boolean;
-}) {
+}
+
+function AppCardImg(props: AppCardImgProps) {
   const contents = (
     <Box>
       <Typography variant="h5">{props.title}</Typography>
@@ -29,11 +29,7 @@ function AppCardImg(props: {
 
   return (
     <Card sx={{ flexGrow: 1, display: 'flex', alignItems: 'stretch', alignContent: 'stretch' }}>
-      <CardActionArea
-        component={RouterLink}
-        to={props.to || ''}
-        sx={{ display: 'flex', alignItems: 'stretch', alignContent: 'stretch' }}
-      >
+      <CardActionArea sx={{ display: 'flex', alignItems: 'stretch', alignContent: 'stretch' }}>
         <Stack sx={{ flexDirection: { xs: 'row', sm: 'column' } }}>
           {props.image && (
             <CardMedia component="img" image={props.image} title={props.title} sx={{ width: { xs: '25%', sm: 1 } }} />
