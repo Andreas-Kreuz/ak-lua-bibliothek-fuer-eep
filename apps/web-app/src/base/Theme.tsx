@@ -3,7 +3,7 @@ import '@fontsource/anek-latin/300.css';
 import '@fontsource/anek-latin/400.css';
 import '@fontsource/anek-latin/500.css';
 import '@fontsource/anek-latin/700.css';
-import { grey, indigo, lime, yellow } from '@mui/material/colors';
+import { grey, indigo, yellow } from '@mui/material/colors';
 import { createTheme } from '@mui/material/styles';
 
 const borderRadius = 12;
