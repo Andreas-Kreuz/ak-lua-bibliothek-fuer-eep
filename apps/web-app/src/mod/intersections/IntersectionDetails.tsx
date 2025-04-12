@@ -15,6 +15,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { styled, useTheme } from '@mui/material/styles';
 import { useParams } from 'react-router-dom';
+import { Tooltip } from '@mui/material';
 
 function IntersectionDetails() {
   const theme = useTheme();
@@ -115,41 +116,39 @@ function IntersectionDetails() {
                 );
               })}
             </Stack>
-
-            <Divider sx={{ py: 1 }} />
-            <AppCaption gutterTop>Kameras</AppCaption>
-            <Stack
-              direction="row"
-              flexWrap="wrap"
-              pt={1}
-              pb={0}
-              // sx={{ backgroundColor: theme.palette.background.default }}
-            >
-              {(i.staticCams &&
-                i.staticCams.length > 0 &&
-                i.staticCams.map((c) => {
-                  return (
-                    <Chip
-                      sx={{
-                        mr: 1,
-                        mb: 1,
-                      }}
-                      icon={<CamIcon />}
-                      label={c}
-                      variant={'filled'}
-                      key={c}
-                      clickable
-                      onClick={() => {
-                        changeCam(c);
-                      }}
-                    ></Chip>
-                  );
-                })) ||
-                'Keine'}
-            </Stack>
+            {i.staticCams && i.staticCams.length > 0 && (
+              <>
+                <Divider sx={{ py: 1 }} />
+                <AppCaption gutterTop>Kameras</AppCaption>
+                <Stack direction="row" pt={1} pb={0}>
+                  {i.staticCams.map((c, j) => {
+                    return (
+                      <Tooltip title={c}>
+                        <Chip
+                          sx={{
+                            mr: 1,
+                            mb: 1,
+                            justifyContent: 'flex-start',
+                          }}
+                          color={'secondary'}
+                          icon={<CamIcon />}
+                          label={(i.staticCams.length === 1 && c) || j}
+                          variant={'outlined'}
+                          key={c}
+                          clickable
+                          onClick={() => {
+                            changeCam(c);
+                          }}
+                        ></Chip>
+                      </Tooltip>
+                    );
+                  }) || 'Keine'}
+                </Stack>
+              </>
+            )}
           </AppPaper>
 
-          {i.staticCams && i.staticCams.length == 0 && (
+          {i.staticCams && i.staticCams.length === 0 && (
             <Alert
               severity="info"
               sx={{
