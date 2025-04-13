@@ -6,7 +6,7 @@ import Grid from '@mui/material/Grid';
 const AppCardGridContainer = lazy(() => import('../../ui/AppCardGridContainer'));
 const AppPage = lazy(() => import('../../ui/AppPage'));
 const AppPageHeadline = lazy(() => import('../../ui/AppPageHeadline'));
-const PublicTransportLineCard = lazy(() => import('./PublicTransportLineCard'));
+const PublicTransportLineCard = lazy(() => import('./AkPublicTransportLineCard'));
 
 function PublicTransportOverview() {
   const lines = useLines();

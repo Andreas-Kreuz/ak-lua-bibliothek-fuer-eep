@@ -1,54 +1,79 @@
 import LineSegment from './model/LineSegment';
 import PlaceIcon from '@mui/icons-material/Place';
-import Box from '@mui/material/Box';
+import TripOriginIcon from '@mui/icons-material/TripOrigin';
+import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Typography from '@mui/material/Typography';
+import { ReactNode } from 'react';
 
 const PublicTransportLineSegment = (props: { segment: LineSegment }) => {
   const segment = props.segment;
+  const MyListItem = (props: { children: ReactNode }) => (
+    <ListItem
+      sx={{
+        '& .MuiListItemText-secondary': {
+          fontSize: '0.85rem',
+        },
+        '.MuiListItemText-primary': {
+          fontWeight: '500',
+        },
+        '&:first-child .MuiListItemText-primary': {
+          fontWeight: '600',
+        },
+        '&:last-child .MuiListItemText-primary': {
+          fontWeight: '600',
+        },
+        '& .MuiSvgIcon-root': {
+          color: '#666666',
+        },
+        '&:first-child .MuiSvgIcon-root': {
+          // color: '#666666',
+        },
+        '&:last-child .MuiSvgIcon-root': {
+          // color: '#666666',
+        },
+      }}
+    >
+      {props.children}
+    </ListItem>
+  );
+
+  const lineSx = {
+    '&::after': {
+      content: '""',
+      position: 'relative',
+      top: '2.1em',
+      left: '-1.12em',
+      width: '0em',
+      height: '2.5em',
+      backgroundColor: 'black',
+      border: '1px solid #cccccc',
+    },
+  };
 
   return (
-    <Box>
-      <Typography sx={{ m: 0 }} variant="h6" component="div">
-        Richtung {segment.destination}
+    <>
+      <Typography variant="h5" pt={2} px={2}>
+        {'Richtung: ' + segment.destination}
       </Typography>
       <List dense>
         {segment.stations.map((s, index) => (
           <>
-            <ListItem
-              sx={{
-                '& .MuiListItemText-secondary': {
-                  fontSize: '0.85rem',
-                },
-                '&:first-child .MuiListItemText-primary': {
-                  fontWeight: 'bold',
-                },
-                '&:last-child .MuiListItemText-primary': {
-                  fontWeight: 'bold',
-                },
-                '& .MuiSvgIcon-root': {
-                  color: '#999999',
-                },
-                '&:first-child .MuiSvgIcon-root': {
-                  color: '#666666',
-                },
-                '&:last-child .MuiSvgIcon-root': {
-                  color: '#666666',
-                },
-              }}
-            >
-              <ListItemIcon>
-                <PlaceIcon />
-              </ListItemIcon>
+            <MyListItem>
               <ListItemText primary={s.station.name} secondary={(index === 0 ? '' : '+ ') + s.timeToStation + ' min'} />
-            </ListItem>
+              <ListItemIcon sx={(index < segment.stations.length - 1 && { ...lineSx }) || {}}>
+                {(index === 0 && <TripOriginIcon />) || (index === segment.stations.length - 1 && <PlaceIcon />) || (
+                  <RadioButtonUncheckedIcon />
+                )}
+              </ListItemIcon>
+            </MyListItem>
           </>
         ))}
       </List>
-    </Box>
+    </>
   );
 };
 
