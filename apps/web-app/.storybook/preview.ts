@@ -22,17 +22,6 @@ export const decorators = [
   }),
 ];
 
-export const parameters = {
-  actions: { argTypesRegex: '^on[A-Z].*' },
-  controls: {
-    expanded: true, // Adds the description and default columns
-    matchers: {
-      color: /(background|color)$/i,
-      date: /Date$/,
-    },
-  },
-};
-
 const preview: Preview = {
   parameters: {
     controls: {
@@ -41,6 +30,9 @@ const preview: Preview = {
         date: /Date$/i,
       },
     },
+  },
+  initialGlobals: {
+    viewport: { disabled: true },
   },
 };
 

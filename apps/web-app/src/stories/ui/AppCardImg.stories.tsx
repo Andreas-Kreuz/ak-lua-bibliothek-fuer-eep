@@ -5,7 +5,7 @@ import { AppCardImg } from './AppCardImg.component';
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 const meta = {
   title: 'Cards/AppCardImg',
-  tags: ['autodocs'],
+  // tags: ['autodocs'],
   component: AppCardImg,
 } satisfies Meta<typeof AppCardImg>;
 
@@ -19,6 +19,18 @@ export const TitleOnly: Story = {
     title: 'Title',
   },
 };
+
+export const TitleOnlyOnMobile: Story = {
+  args: {
+    label: 'Button',
+    image: '/assets/card-img-traffic.jpg',
+    title: 'Title',
+  },
+  globals: {
+    viewport: { value: 'mobile1', isRotated: false },
+  },
+};
+
 export const TitleAndSubtitle: Story = {
   args: {
     label: 'Button',
@@ -27,11 +39,36 @@ export const TitleAndSubtitle: Story = {
     subtitle: 'Subtitle',
   },
 };
+
+export const TitleAndSubtitleOnMobile: Story = {
+  args: {
+    label: 'Button',
+    image: '/assets/card-img-traffic.jpg',
+    title: 'Title',
+    subtitle: 'Subtitle',
+  },
+  globals: {
+    viewport: { value: 'mobile1', isRotated: false },
+  },
+};
+
 export const TitleAndId: Story = {
   args: {
     label: 'Button',
     image: '/assets/card-img-traffic.jpg',
     title: 'Title',
     id: 'My very long ID',
+  },
+};
+
+export const TitleAndIdOnMobile: Story = {
+  args: {
+    label: 'Button',
+    image: '/assets/card-img-traffic.jpg',
+    title: 'Title',
+    id: 'My very long ID',
+  },
+  globals: {
+    viewport: { value: 'mobile1', isRotated: false },
   },
 };

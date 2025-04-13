@@ -11,12 +11,35 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Primary: Story = {
+export const Title: Story = {
   args: {
-    label: 'Button',
     image: '/assets/card-img-traffic.jpg',
     title: 'Title',
     small: false,
     expanded: false,
+  },
+};
+
+export const TitleOnMobile: Story = {
+  args: {
+    image: '/assets/card-img-traffic.jpg',
+    title: 'Title',
+    small: false,
+    expanded: false,
+  },
+  globals: {
+    viewport: { value: 'mobile1', isRotated: false },
+  },
+};
+
+export const TitleOnMobileLong: Story = {
+  args: {
+    image: '/assets/card-img-traffic.jpg',
+    title: 'Langer Titel',
+    small: false,
+    expanded: false,
+  },
+  globals: {
+    viewport: { value: 'mobile1', isRotated: false },
   },
 };
