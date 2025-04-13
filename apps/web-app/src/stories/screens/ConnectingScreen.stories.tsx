@@ -22,4 +22,5 @@ export const OnMobileScreen: Story = {
   globals: {
     viewport: { value: 'mobile1', isRotated: false },
   },
+  tags: ['mobile'],
 };

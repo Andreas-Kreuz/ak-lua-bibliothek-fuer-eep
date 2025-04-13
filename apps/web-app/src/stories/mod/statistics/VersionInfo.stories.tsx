@@ -3,8 +3,8 @@ import { fn } from '@storybook/test';
 import VersionInfo from './VersionInfo.component';
 
 const meta = {
-  title: 'Molecules/VersionInfo',
-  // tags: ['autodocs'],
+  title: 'Module Elements/Statistics/VersionInfo',
+  tags: ['element'],
   component: VersionInfo,
 } satisfies Meta<typeof VersionInfo>;
 
@@ -18,4 +18,5 @@ export const Default: Story = {
 export const OnMobile: Story = {
   args: { appVersion: '0.13.2', eepVersion: '18.0', luaVersion: '5.3' },
   globals: { viewport: { value: 'mobile1', isRotated: false } },
+  tags: ['mobile'],
 };

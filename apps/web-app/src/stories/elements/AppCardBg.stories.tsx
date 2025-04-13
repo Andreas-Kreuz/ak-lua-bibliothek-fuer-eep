@@ -4,7 +4,7 @@ import { AppCardBg } from './AppCardBg.component';
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 const meta = {
-  title: 'Cards/AppCardBg',
+  title: 'Elements/Cards/CardBg',
   component: AppCardBg,
 } satisfies Meta<typeof AppCardBg>;
 
@@ -30,6 +30,7 @@ export const TitleOnMobile: Story = {
   globals: {
     viewport: { value: 'mobile1', isRotated: false },
   },
+  tags: ['mobile'],
 };
 
 export const TitleOnMobileLong: Story = {
@@ -42,4 +43,5 @@ export const TitleOnMobileLong: Story = {
   globals: {
     viewport: { value: 'mobile1', isRotated: false },
   },
+  tags: ['mobile'],
 };

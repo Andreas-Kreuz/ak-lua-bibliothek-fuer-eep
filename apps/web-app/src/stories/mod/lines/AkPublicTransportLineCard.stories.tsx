@@ -6,7 +6,7 @@ import StationInfo from '../../../mod/lines/model/StationInfo';
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 const meta = {
-  title: 'Cards/AkPublicTransportLineCard',
+  title: 'Module Elements/PublicTransport/AkPublicTransportLineCard',
   tags: ['autodocs'],
   component: AkPublicTransportLineCard,
 } satisfies Meta<typeof AkPublicTransportLineCard>;
@@ -88,9 +88,31 @@ export const Subway: Story = {
   },
 };
 
+export const SubwayOnMobile: Story = {
+  args: {
+    line: line4Subway,
+    expanded: false,
+  },
+  globals: {
+    viewport: { value: 'mobile1', isRotated: false },
+  },
+  tags: ['mobile'],
+};
+
 export const Expanded: Story = {
   args: {
     line: line1,
     expanded: true,
   },
+};
+
+export const ExpandedOnMobile: Story = {
+  args: {
+    line: line1,
+    expanded: true,
+  },
+  globals: {
+    viewport: { value: 'mobile1', isRotated: false },
+  },
+  tags: ['mobile'],
 };

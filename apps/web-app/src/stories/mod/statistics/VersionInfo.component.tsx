@@ -1,4 +1,4 @@
-import MyVersionInfo, { VersionInfoProps as MyVersionInfoProps } from '../../status/VersionInfo';
+import MyVersionInfo, { VersionInfoProps as MyVersionInfoProps } from '../../../status/VersionInfo';
 
 export type VersionInfoProps = Omit<MyVersionInfoProps, 'children'>;
 

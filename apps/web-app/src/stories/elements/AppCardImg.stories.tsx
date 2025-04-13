@@ -4,7 +4,7 @@ import { AppCardImg } from './AppCardImg.component';
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 const meta = {
-  title: 'Cards/AppCardImg',
+  title: 'Elements/Cards/CardImg',
   // tags: ['autodocs'],
   component: AppCardImg,
 } satisfies Meta<typeof AppCardImg>;
@@ -29,6 +29,7 @@ export const TitleOnlyOnMobile: Story = {
   globals: {
     viewport: { value: 'mobile1', isRotated: false },
   },
+  tags: ['mobile'],
 };
 
 export const TitleAndSubtitle: Story = {
@@ -50,6 +51,7 @@ export const TitleAndSubtitleOnMobile: Story = {
   globals: {
     viewport: { value: 'mobile1', isRotated: false },
   },
+  tags: ['mobile'],
 };
 
 export const TitleAndId: Story = {
@@ -71,4 +73,5 @@ export const TitleAndIdOnMobile: Story = {
   globals: {
     viewport: { value: 'mobile1', isRotated: false },
   },
+  tags: ['mobile'],
 };
