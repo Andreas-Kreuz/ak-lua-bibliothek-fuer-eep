@@ -1,6 +1,6 @@
 import MyPublicTransportLineCard, {
   PublicTransportLineCardProps as MyPublicTransportLineCardProps,
-} from '../../../mod/lines/AkPublicTransportLineCard';
+} from '../../../mod/lines/PublicTransportLineCard';
 import { Box } from '@mui/material';
 import { BrowserRouter } from 'react-router-dom';
 

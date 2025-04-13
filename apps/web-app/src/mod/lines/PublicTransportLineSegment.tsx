@@ -9,7 +9,11 @@ import ListItemText from '@mui/material/ListItemText';
 import Typography from '@mui/material/Typography';
 import { ReactNode } from 'react';
 
-const PublicTransportLineSegment = (props: { segment: LineSegment }) => {
+export interface PublicTransportLineSegmentProps {
+  segment: LineSegment;
+}
+
+const PublicTransportLineSegment = (props: PublicTransportLineSegmentProps) => {
   const segment = props.segment;
   const MyListItem = (props: { children: ReactNode }) => (
     <ListItem
@@ -41,19 +45,6 @@ const PublicTransportLineSegment = (props: { segment: LineSegment }) => {
     </ListItem>
   );
 
-  const lineSx = {
-    '&::after': {
-      content: '""',
-      position: 'relative',
-      top: '2.1em',
-      left: '-1.12em',
-      width: '0em',
-      height: '2.5em',
-      backgroundColor: 'black',
-      border: '1px solid #cccccc',
-    },
-  };
-
   return (
     <>
       <Typography variant="h5" pt={2} px={2}>
@@ -64,7 +55,12 @@ const PublicTransportLineSegment = (props: { segment: LineSegment }) => {
           <>
             <MyListItem>
               <ListItemText primary={s.station.name} secondary={(index === 0 ? '' : '+ ') + s.timeToStation + ' min'} />
-              <ListItemIcon sx={(index < segment.stations.length - 1 && { ...lineSx }) || {}}>
+              <ListItemIcon
+                sx={{
+                  minWidth: 0,
+                  textAlign: 'center',
+                }}
+              >
                 {(index === 0 && <TripOriginIcon />) || (index === segment.stations.length - 1 && <PlaceIcon />) || (
                   <RadioButtonUncheckedIcon />
                 )}

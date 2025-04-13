@@ -1,55 +1,59 @@
-import { lazy } from 'react';
-const AppCardBg = lazy(() => import('../../ui/AppCardBg'));
 import PublicTransportLineSegment from './PublicTransportLineSegment';
 import Line from './model/Line';
-import BusIcon from '@mui/icons-material/DirectionsBus';
-import TramIcon from '@mui/icons-material/Tram';
-import Chip from '@mui/material/Chip';
+
 import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 import { useState } from 'react';
+import AkCard from '../../ui/AkCard';
+import { Avatar, CardActionArea, Divider, Stack, Typography } from '@mui/material';
+import { getColor, getIcon } from './PublicTransport';
 
-const PublicTransportLineCard = (props: { line: Line }) => {
+export interface PublicTransportLineCardProps {
+  line: Line;
+  expanded?: boolean;
+}
+
+const PublicTransportLineCard = (props: PublicTransportLineCardProps) => {
+  const [expanded, setExpanded] = useState(props.expanded);
   const line = props.line;
-  const [expanded, setExpanded] = useState(false);
 
   const Pre = styled('pre')({
     fontSize: 14,
     whiteSpace: 'normal',
   });
 
+  const handleExpand = () => {
+    if (setExpanded) {
+      setExpanded(!expanded);
+    }
+  };
+
   return (
-    <AppCardBg
-      title={`Linie ${line.id}`}
-      image="/assets/card-img-traffic.jpg"
-      // to={`/public-transport/${i.id}`}
-      additionalChips={line.lineSegments.map((el) => (
-        <Chip key={el.destination} variant="outlined" label={el.destination} icon={getIcon(line.trafficType)} />
-      ))}
-      expanded={expanded}
-      setExpanded={setExpanded}
-    >
-      {expanded && (
-        <Grid container sx={{ width: 1 }}>
-          {line.lineSegments.map((ls) => (
-            <Grid size={{ xs: 6 }}>
-              <PublicTransportLineSegment segment={ls} />
+    <AkCard>
+      <CardActionArea onClick={handleExpand}>
+        <Stack direction={'row'} pt={2} px={2} spacing={1}>
+          <Avatar sx={{ bgcolor: getColor(line.trafficType) }}>{getIcon(line.trafficType)}</Avatar>
+          <Typography variant="h5" fontWeight={500} px={2} minWidth={'4rem'} align="center">
+            {line.nr}
+          </Typography>
+          <Typography variant="h5">{line.lineSegments.flatMap((el) => el.destination).join(' - ')}</Typography>
+        </Stack>
+        <Stack pb={(expanded && 0) || 2}></Stack>
+        {expanded && (
+          <>
+            <Divider />
+            <Grid container sx={{ width: 1 }}>
+              {line.lineSegments.map((ls) => (
+                <Grid size={{ xs: 12, md: 6 }}>
+                  <PublicTransportLineSegment segment={ls} />
+                </Grid>
+              ))}
             </Grid>
-          ))}
-        </Grid>
-      )}
-    </AppCardBg>
+          </>
+        )}
+      </CardActionArea>
+    </AkCard>
   );
 };
-
-function getIcon(trafficType: string) {
-  switch (trafficType) {
-    default:
-    case 'BUS':
-      return <BusIcon />;
-    case 'TRAM':
-      return <TramIcon />;
-  }
-}
 
 export default PublicTransportLineCard;

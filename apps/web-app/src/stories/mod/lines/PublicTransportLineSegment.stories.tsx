@@ -1,15 +1,15 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { fn } from '@storybook/test';
-import { PublicTransportLineCard as AkPublicTransportLineCard } from './AkPublicTransportLineCard.component';
+import { PublicTransportLineSegment as AkPublicTransportLineSegment } from './PublicTransportLineSegment.component';
 import Line from '../../../mod/lines/model/Line';
 import StationInfo from '../../../mod/lines/model/StationInfo';
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 const meta = {
-  title: 'Module Elements/PublicTransport/AkPublicTransportLineCard',
+  title: 'Module Elements/PublicTransport/AkPublicTransportLineSegment',
   tags: ['autodocs'],
-  component: AkPublicTransportLineCard,
-} satisfies Meta<typeof AkPublicTransportLineCard>;
+  component: AkPublicTransportLineSegment,
+} satisfies Meta<typeof AkPublicTransportLineSegment>;
 
 const line10HbfStations: StationInfo[] = [
   { station: { name: 'Alte Messe' }, timeToStation: 0 },
@@ -60,56 +60,15 @@ const line4Subway: Line = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Tram: Story = {
+export const Segment: Story = {
   args: {
-    line: line1,
-    expanded: false,
+    segment: line1.lineSegments[0],
   },
 };
 
-export const Bus: Story = {
+export const SegmentOnMobile: Story = {
   args: {
-    line: line2Bus,
-    expanded: false,
-  },
-};
-
-export const Rail: Story = {
-  args: {
-    line: line3Train,
-    expanded: false,
-  },
-};
-
-export const Subway: Story = {
-  args: {
-    line: line4Subway,
-    expanded: false,
-  },
-};
-
-export const SubwayOnMobile: Story = {
-  args: {
-    line: line4Subway,
-    expanded: false,
-  },
-  globals: {
-    viewport: { value: 'mobile1', isRotated: false },
-  },
-  tags: ['mobile'],
-};
-
-export const Expanded: Story = {
-  args: {
-    line: line1,
-    expanded: true,
-  },
-};
-
-export const ExpandedOnMobile: Story = {
-  args: {
-    line: line1,
-    expanded: true,
+    segment: line1.lineSegments[0],
   },
   globals: {
     viewport: { value: 'mobile1', isRotated: false },
