@@ -1,6 +1,5 @@
 import { lazy, useMemo } from 'react';
 import useNavState from '../nav/NavElements';
-import VersionInfo from '../status/VersionInfo';
 import { useNavigate } from 'react-router-dom';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import Grid from '@mui/material/Grid';
