@@ -19,8 +19,6 @@
   "author": "Andreas_Kreuz",
   "license": "MIT",
   "devDependencies": {
-    "@types/react": "latest",
-    "@types/react-dom": "latest",
     "typescript": "^5.8.2"
   }
 }

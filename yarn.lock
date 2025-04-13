@@ -116,8 +116,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@ak/web-shared@workspace:packages/web-shared"
   dependencies:
-    "@types/react": "npm:latest"
-    "@types/react-dom": "npm:latest"
     typescript: "npm:^5.8.2"
   languageName: unknown
   linkType: soft
@@ -2806,7 +2804,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-dom@npm:^19.0.4, @types/react-dom@npm:latest":
+"@types/react-dom@npm:^19.0.4":
   version: 19.1.2
   resolution: "@types/react-dom@npm:19.1.2"
   peerDependencies:
@@ -2824,7 +2822,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:^19.0.12, @types/react@npm:latest":
+"@types/react@npm:^19.0.12":
   version: 19.1.1
   resolution: "@types/react@npm:19.1.1"
   dependencies:
