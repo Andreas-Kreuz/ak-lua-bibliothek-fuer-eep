@@ -1,10 +1,10 @@
-import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import CardActionArea from '@mui/material/CardActionArea';
-import CardMedia from '@mui/material/CardMedia';
-import Chip from '@mui/material/Chip';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
+import MuiBox from '@mui/material/Box';
+import MuiCard from '@mui/material/Card';
+import MuiCardActionArea from '@mui/material/CardActionArea';
+import MuiCardMedia from '@mui/material/CardMedia';
+import MuiChip from '@mui/material/Chip';
+import MuiStack from '@mui/material/Stack';
+import MuiTypography from '@mui/material/Typography';
 import { Link as RouterLink } from 'react-router-dom';
 
 export interface AppCardImgProps {
@@ -19,37 +19,44 @@ export interface AppCardImgProps {
 function AppCardImg(props: AppCardImgProps) {
   const contents = (
     <>
-      <Typography variant="h5">{props.title}</Typography>
+      <MuiTypography variant="h5">{props.title}</MuiTypography>
       {props.subtitle && (
-        <Typography variant="body1" sx={{ color: 'text.secondary' }}>
+        <MuiTypography variant="body1" sx={{ color: 'text.secondary' }}>
           {props.subtitle}
-        </Typography>
+        </MuiTypography>
       )}
-      {props.id && <Chip label={props.id} />}
+      {props.id && <MuiChip label={props.id} />}
     </>
   );
 
   const stack = (
-    <Stack sx={{ flexDirection: { xs: 'row', sm: 'column' } }}>
+    <MuiStack sx={{ flexDirection: { xs: 'row', sm: 'column' } }}>
       {props.image && (
-        <CardMedia component="img" image={props.image} title={props.title} sx={{ width: { xs: '25%', sm: 1 } }} />
+        <MuiCardMedia
+          component="img"
+          image={props.image}
+          title={props.title}
+          sx={{
+            width: { xs: '25%', sm: 1 },
+          }}
+        />
       )}
-      <Box sx={{ p: 2 }}>{contents}</Box>
-    </Stack>
+      <MuiBox sx={{ p: 2 }}>{contents}</MuiBox>
+    </MuiStack>
   );
 
   return (
-    <Card sx={{ flexGrow: 1, display: 'flex', alignItems: 'stretch', alignContent: 'stretch' }}>
+    <MuiCard sx={{ flexGrow: 1, display: 'flex', alignItems: 'stretch', alignContent: 'stretch' }}>
       {(props.to && (
-        <CardActionArea
+        <MuiCardActionArea
           sx={{ display: 'flex', alignItems: 'stretch', alignContent: 'stretch' }}
           component={RouterLink}
           to={props.to}
         >
           {stack}
-        </CardActionArea>
-      )) || <Box sx={{ display: 'flex', alignItems: 'stretch', alignContent: 'stretch' }}>{stack}</Box>}
-    </Card>
+        </MuiCardActionArea>
+      )) || <MuiBox sx={{ display: 'flex', alignItems: 'stretch', alignContent: 'stretch' }}>{stack}</MuiBox>}
+    </MuiCard>
   );
 }
 
