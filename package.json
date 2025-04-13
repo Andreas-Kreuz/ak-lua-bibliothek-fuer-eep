@@ -13,7 +13,7 @@
     "start-server": "yarn workspace @ak/web-server run start-headless",
     "build": "yarn workspace @ak/web-server run build"
   },
-  "packageManager": "yarn@3.4.1",
+  "packageManager": "yarn@4.9.1",
   "devDependencies": {
     "@types/eslint": "^9.6.1",
     "@types/prettier": "^3.0.0"
