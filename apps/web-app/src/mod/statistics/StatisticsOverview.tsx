@@ -4,7 +4,7 @@ const AppPage = lazy(() => import('../../ui/AppPage'));
 import StatisticsCard from './StatisticsCard';
 import useStatistics from './useStatistics';
 import AppPageHeadline from '../../ui/AppPageHeadline';
-import VersionInfoWrapper from '../../status/VersionInfoWrapper';
+import VersionInfoWrapper from './VersionInfoWrapper';
 
 function StatisticsOverview() {
   const [updateTimes, initializationTimes, controllerUpdateTimes] = useStatistics();
