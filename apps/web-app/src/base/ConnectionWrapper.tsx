@@ -1,7 +1,7 @@
 import { lazy, useMemo } from 'react';
 const ClientAppMainPage = lazy(() => import('./ClientAppMainPage'));
 const ClientAppMainPageWithSnack = lazy(() => import('./ClientAppMainPageWithSnack'));
-const ConnectingScreen = lazy(() => import('./ConnectingScreen'));
+const ConnectingScreen = lazy(() => import('./ConnectingScreenWrapper'));
 import { useSocketIsConnected } from '../io/SocketProvider';
 
 function ConnectionWrapper(props: { simple?: boolean }) {
