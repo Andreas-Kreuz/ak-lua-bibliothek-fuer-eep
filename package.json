@@ -10,6 +10,7 @@
   "scripts": {
     "storybook": "yarn workspace @ak/web-app run storybook",
     "start-app": "yarn workspace @ak/web-app run dev",
+    "start-playing": "yarn workspace @ak/web-app run start-playing",
     "start-server": "yarn workspace @ak/web-server run start-headless",
     "build": "yarn workspace @ak/web-server run build"
   },
