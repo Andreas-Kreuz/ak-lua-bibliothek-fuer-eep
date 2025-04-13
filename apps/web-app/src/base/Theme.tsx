@@ -52,13 +52,6 @@ export const theme = createTheme({
         },
       },
     },
-    MuiCardMedia: {
-      styleOverrides: {
-        root: {
-          borderRadius: borderRadius,
-        },
-      },
-    },
     MuiChip: {
       defaultProps: {
         variant: 'outlined',
