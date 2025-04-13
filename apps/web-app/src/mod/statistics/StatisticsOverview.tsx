@@ -4,7 +4,7 @@ const AppPage = lazy(() => import('../../ui/AppPage'));
 import StatisticsCard from './StatisticsCard';
 import useStatistics from './useStatistics';
 import AppPageHeadline from '../../ui/AppPageHeadline';
-import VersionInfo from '../../status/VersionInfo';
+import VersionInfoWrapper from '../../status/VersionInfoWrapper';
 
 function StatisticsOverview() {
   const [updateTimes, initializationTimes, controllerUpdateTimes] = useStatistics();
@@ -12,8 +12,8 @@ function StatisticsOverview() {
   return (
     <AppPage>
       <AppPageHeadline>Statistik</AppPageHeadline>
-      <VersionInfo />
       <AppCardGridContainer>
+        <VersionInfoWrapper />
         <StatisticsCard title="Berechnung Lua Module" times={updateTimes} />
         <StatisticsCard title="Initialisierung Lua Module" times={initializationTimes} maxEntries={1} />
         <StatisticsCard title="Server" times={controllerUpdateTimes} />

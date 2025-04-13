@@ -1,18 +1,13 @@
 import { useState, SetStateAction } from 'react';
 import { useApiDataRoomHandler } from '../io/useRoomHandler';
 import VersionInfo from './VersionInfo';
+import Versions from './Versions';
 
 function cutOutLua(versionString: string) {
   if (versionString && versionString.startsWith('Lua ')) {
     return versionString.substring('Lua '.length);
   }
   return versionString;
-}
-
-export interface Versions {
-  appVersion: string;
-  eepVersion: string;
-  luaVersion: string;
 }
 
 export default function useVersionInfo(): Versions {
