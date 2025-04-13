@@ -1,5 +1,6 @@
 import { useState, SetStateAction } from 'react';
 import { useApiDataRoomHandler } from '../io/useRoomHandler';
+import VersionInfo from './VersionInfo';
 
 function cutOutLua(versionString: string) {
   if (versionString && versionString.startsWith('Lua ')) {
@@ -8,18 +9,28 @@ function cutOutLua(versionString: string) {
   return versionString;
 }
 
-export default function useVersionInfo(): [SetStateAction<string>, SetStateAction<string>, SetStateAction<string>] {
-  const [verApp, setVerApp] = useState('?');
-  const [verEep, setVerEep] = useState('?');
-  const [verLua, setVerLua] = useState('?');
+export interface Versions {
+  appVersion: string;
+  eepVersion: string;
+  luaVersion: string;
+}
+
+export default function useVersionInfo(): Versions {
+  const [versions, setVersions] = useState<Versions>({
+    appVersion: '?',
+    eepVersion: '?',
+    luaVersion: '?',
+  });
 
   // Register for the rooms data
   useApiDataRoomHandler('eep-version', (payload: string) => {
     const data = JSON.parse(payload);
-    setVerApp(data.versionInfo.singleVersion);
-    setVerEep(data.versionInfo.eepVersion);
-    setVerLua(cutOutLua(data.versionInfo.luaVersion));
+    setVersions({
+      appVersion: data.versionInfo.singleVersion,
+      eepVersion: data.versionInfo.eepVersion,
+      luaVersion: cutOutLua(data.versionInfo.luaVersion),
+    });
   });
 
-  return [verApp, verEep, verLua];
+  return versions;
 }
