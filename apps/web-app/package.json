@@ -2,7 +2,7 @@
   "name": "@ak/web-app",
   "private": true,
   "version": "0.13.2",
-  "type": "commonjs",
+  "type": "module",
   "homepage": ".",
   "scripts": {
     "build-shared": "yarn workspace @ak/web-shared run build",
