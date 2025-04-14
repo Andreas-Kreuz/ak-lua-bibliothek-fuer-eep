@@ -12,11 +12,11 @@ export interface ConnectingScreenProps {
 const ConnectingScreen = (props: ConnectingScreenProps) => {
   return (
     <MuiBackdrop open>
-      <MuiPaper sx={{ m: 'auto', p: 4, borderRadius: 2 }} variant="outlined">
+      <MuiPaper sx={{ m: { xs: 1, sm: 'auto' }, p: { xs: 2, md: 4 }, borderRadius: 2 }} variant="outlined">
         <MuiStack sx={{ alignItems: 'center' }} spacing={1}>
           <MuiTypography gutterBottom>
             Verbinde zum Server für EEP an{' '}
-            <strong style={{ fontWeight: 500, wordBreak: 'keep-all' }}>{props.url}</strong> ...
+            <strong style={{ fontWeight: 500, wordBreak: 'break-word' }}>{props.url}</strong> ...
           </MuiTypography>
           <MuiCircularProgress />
         </MuiStack>
