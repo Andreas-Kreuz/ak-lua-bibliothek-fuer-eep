@@ -310,7 +310,7 @@ function EEPStructureSetPosition(immoName, posX, posY, posZ) end
 -- @param rotX x-Position
 -- @param rotY y-Position
 -- @param rotZ z-Position
-function EEPStructureSetPosition(immoName, rotX, rotY, rotZ) end
+function EEPStructureSetRotation(immoName, rotX, rotY, rotZ) end
 
 ------------------------------
 -- Neu ab EEP 11 - Plugin 2 --
@@ -333,7 +333,7 @@ function EEPSetTrainLight(trainName, onoff) end
 --- Rauch ein oder ausschalten
 -- @param trainName Name des Zuges
 -- @param onoff true: ein, false: aus
-function EEPSetTrainSmoke(trainName, onfoff) end
+function EEPSetTrainSmoke(trainName, onoff) end
 
 --- Hupen
 -- @param trainName Name des Zuges
@@ -354,7 +354,7 @@ function EEPSetTrainCouplingRear(trainName, kupplungOn) end
 -- @param trainName Name des Zuges
 -- @param countFromFront true: von vorne zaehlen, false: von hinten zaehlen
 -- @param position Stelle, die getrennt wird
-function EEPSetTrainLooseCoupling(trainName, countFromFront, position) end
+function EEPTrainLooseCoupling(trainName, countFromFront, position) end
 
 --- Setzen des Gueterhakens an allen Wagen eines Zuges
 -- @param trainName Name des Zuges als String
@@ -459,13 +459,13 @@ function EEPIsControlTrackReserved(controlTrackId, returnTrainName) end
 -- @param camType 0: statisch, 1: dynamisch, 2: mobile Kamera
 -- @param camName Name der Kamera
 -- @return true, wenn die Kamera existiert
-function EEPSetCamera(camType, camName) end
+function EEPSetCamera(camType, camName) return true end
 
 --- Waehlen einer Kameraperspektive
 -- @param camPosition Tasten 1 - 9 fuer die Kameraposition
 -- @param trainName Name des Zuges
 -- @return true, wenn die Kamera existiert
-function EEPSetCamera(camPosition, trainName) end
+function EEPSetPerspectiveCamera(camPosition, trainName) return true end
 
 --- Zug aus Depot starten
 -- @param depotId Id des Depots (Eigenschaftenfenster)
@@ -522,7 +522,11 @@ end
 -- @param zugverband Name des Zugverbandes
 -- @param Nummer
 --
-function EEPGetRollingstockItemName(zugverband, Nummer) return trains[zugverband][Nummer + 1] end
+function EEPGetRollingstockItemName(zugverband, Nummer)
+    local rollingStocks = trains[zugverband]
+    if rollingStocks == nil then return "DUMMY" end
+    return rollingStocks[Nummer + 1] or "DUMMY"
+end
 
 --- Anzahl der Zuege, welche vom Signal Signal_ID gehalten werden
 -- @param signalId ID des Signals
@@ -661,14 +665,14 @@ end
 local tags = { structures = {}, rollingStock = {} }
 local textureTexts = { rollingStock = {} }
 
---- Ändert den Tag-Text einer Immobilie. Jede Immobilie kann jetzt einen individuellen String von
+--- Aendert den Tag-Text einer Immobilie. Jede Immobilie kann jetzt einen individuellen String von
 --- maximal 1024 Zeichen Laenge mitfuehren. Diese Strings werden mit der Anlage gespeichert und
 --- geladen.
 --- Bemerkungen * Argument 1 ist der Lua-Name der Immobilie oder des LS-Elements.
 --- Es genuegt die Nummer mit vorangestelltem #-Zeichen.
 --- * Argument 2 ist der gewuenschte Text.
 --- * Rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false
-function EEPStructureGetTagText(name, tag)
+function EEPStructureSetTagText(name, tag)
     tags.structures[name] = tag
     return true
 end
@@ -682,7 +686,7 @@ end
 --- * Rueckgabewert 2 ist der Tag-Text, welcher der Immobilie mitgegeben wurde
 function EEPStructureGetTagText(name) return true, tags.structures[name] end
 
---- Ändert den Tag-Text eines Fahrzeugs. Jedes Fahrzeug kann jetzt einen eigenen String von
+--- Aendert den Tag-Text eines Fahrzeugs. Jedes Fahrzeug kann jetzt einen eigenen String von
 --- maximal 1024 Zeichen Laenge mitfuehren. Diese Strings werden mit der Anlage gespeichert und
 --- geladen. Da die Texte individuell jedem Fahrzeug zugeordnet sind, gehen sie im Gegensatz zu
 --- Routen nicht durch Rangiermanöver etc. verloren.
@@ -706,7 +710,7 @@ function EEPRollingstockGetTagText(name) return true, tags.rollingStock[name] en
 function EEPStructureSetTextureText(name, flaeche, text) return true end
 
 function EEPRollingstockSetTextureText(name, flaeche, text)
-    textureTexts.rollingStock[name] = {}
+    textureTexts.rollingStock[name] = textureTexts.rollingStock[name] or {}
     textureTexts.rollingStock[name][flaeche] = text
     return true
 end
@@ -820,7 +824,7 @@ end
 -- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
 -- @return status Gueterhaken aus = 0, an = 1, in Betrieb = 3
 function EEPRollingstockGetHookGlue(rollingstockName)
-    return true, hookGlue[rollingstockName] and hook[rollingstockName] or 0
+    return true, hookGlue[rollingstockName] and 1 or 0
 end
 
 --- Ermittelt die zurueckgelegte Strecke des Rollmaterials (EEP 16.1)
@@ -950,27 +954,30 @@ function EEPGetWindIntensity() return true, WindIntensity or 10 end
 --- Ermittelt die Niederschlagintensitaet. (EEP 16.1)
 -- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
 -- @return intensity Niederschlagintensitaet in Prozent (%)
-function EEPGetRainIntensity() return RainIntensity or 10 end
+function EEPGetRainIntensity() return true, RainIntensity or 10 end
 
 --- Ermittelt die Schneeintensitaet (EEP 16.1)
 -- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
 -- @return intensity Schneeintensitaet in Prozent (%)
-function EEPGetSnowIntensity() return SnowIntensity or 10 end
+function EEPGetSnowIntensity() return true, SnowIntensity or 10 end
 
 --- Ermittelt die Hagelintensitaet (EEP 16.1)
 -- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
 -- @return intensity Hagelintensitaet in Prozent (%)
-function EEPGetHailIntensity() return HailIntensity or 10 end
+function EEPGetHailIntensity() return true, HailIntensity or 10 end
 
 --- Ermittelt die Nebelintensitaet (EEP 16.1)
 -- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
 -- @return intensity Nebelintensitaet in Prozent (%)
-function EEPGetFogIntensity() return FogIntensity or 10 end
+function EEPGetFogIntensity() return true, FogIntensity or 10 end
 
 --- Ermittelt der Wolkenanteil (EEP 16.1)
 -- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
 -- @return intensity Wolkenanteil in Prozent (%)
-function EEPGetCloudIntensity() return CloudIntensity or 10 end
+function EEPGetCloudsIntensity() return true, CloudIntensity or 10 end
+
+-- Rueckwaertskompatibel: alter Name.
+function EEPGetCloudIntensity() return EEPGetCloudsIntensity() end
 
 --- Definiert die Windstaerke (EEP 16.1)
 -- @param Windstaerke
@@ -1015,7 +1022,7 @@ end
 --- Veraendert den Wolkenanteil (EEP 16.1)
 -- @param Wolkenanteil
 -- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
-function EEPSetCloudIntensity(intensity)
+function EEPSetCloudsIntensity(intensity)
     CloudIntensity = intensity
     return true
 end
