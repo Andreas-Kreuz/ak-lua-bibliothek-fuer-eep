@@ -36,8 +36,12 @@ local state = {
 }
 ---@type table<string,table>
 local structures = {}
----@type table<string,table>
-local trains = {}
+local activeTrain
+local activeRollingstock
+local hook
+local hookGlue
+local tags
+local textureTexts
 
 ---@param trackType string
 ---@param trackId number
@@ -87,6 +91,7 @@ local function ensureTrainState(trainName)
     state.trains[trainName] = state.trains[trainName] or {
         speed = 0,
         route = nil,
+        rollingStock = {},
         lights = {},
         smoke = false,
         horn = false,
@@ -101,6 +106,249 @@ end
 ---@param trainName string
 ---@return table|nil
 local function getTrainState(trainName) return state.trains[trainName] end
+
+---@param rollingStock string|table
+---@return table
+local function normalizeRollingStockEntry(rollingStock)
+    if type(rollingStock) == "table" then
+        rollingStock.frontForward = rollingStock.frontForward ~= false
+        return rollingStock
+    end
+
+    return {
+        name = rollingStock,
+        frontForward = true,
+        couplingFront = nil,
+        couplingRear = nil
+    }
+end
+
+---@param train table
+---@return table[]
+local function normalizeTrainRollingStockEntries(train)
+    train.rollingStock = train.rollingStock or {}
+
+    for index, rollingStock in ipairs(train.rollingStock) do
+        train.rollingStock[index] = normalizeRollingStockEntry(rollingStock)
+    end
+
+    return train.rollingStock
+end
+
+---@param trainName string
+---@return table[]
+local function getTrainRollingStock(trainName)
+    local train = getTrainState(trainName)
+    if not train then return {} end
+    return normalizeTrainRollingStockEntries(train)
+end
+
+---@param rollingStockName string
+---@return table|nil, string|nil, number|nil, table[]|nil
+local function findRollingStockEntry(rollingStockName)
+    for trainName, train in pairs(state.trains) do
+        local rollingStocks = normalizeTrainRollingStockEntries(train)
+
+        for index, rollingStock in ipairs(rollingStocks) do
+            if rollingStock.name == rollingStockName then return rollingStock, trainName, index, rollingStocks end
+        end
+    end
+
+    return nil, nil, nil, nil
+end
+
+---@param rollingStockName string
+---@return table
+local function ensureImplicitRollingStockTrain(rollingStockName)
+    local trainName = "#" .. rollingStockName
+    local train = ensureTrainState(trainName)
+    local rollingStocks = getTrainRollingStock(trainName)
+
+    if #rollingStocks == 0 then
+        train.rollingStock = { normalizeRollingStockEntry(rollingStockName) }
+        train.onLayout = true
+        EEPSetTrainSpeed(trainName, 0)
+        rollingStocks = train.rollingStock
+    end
+
+    return rollingStocks[1]
+end
+
+---@param rollingStockName string
+---@return table|nil, table|nil, table[]|nil, number|nil
+local function getRollingStockTrainContext(rollingStockName)
+    local rollingStock, trainName, index, rollingStocks = findRollingStockEntry(rollingStockName)
+    if not rollingStock then return nil, nil, nil, nil end
+
+    return rollingStock, getTrainState(trainName), rollingStocks, index
+end
+
+---@param rollingStockName string
+---@return table
+local function getOrCreateRollingStockEntry(rollingStockName)
+    return select(1, getRollingStockTrainContext(rollingStockName)) or ensureImplicitRollingStockTrain(rollingStockName)
+end
+
+---@param oldName string
+---@param newName string
+local function renameTrainReferences(oldName, newName)
+    for _, tracksByType in pairs(state.tracks) do
+        for _, track in pairs(tracksByType) do
+            if track.trainName == oldName then track.trainName = newName end
+        end
+    end
+
+    for _, queue in pairs(signalsTrainNames) do
+        for index, queuedTrainName in ipairs(queue) do
+            if queuedTrainName == oldName then queue[index] = newName end
+        end
+    end
+
+    for _, trainyard in pairs(state.trainyards) do
+        for _, entry in ipairs(trainyard.entries) do
+            if entry.name == oldName then entry.name = newName end
+        end
+    end
+
+    if activeTrain == oldName then activeTrain = newName end
+
+    if state.camera.perspectiveByTrain[oldName] ~= nil then
+        state.camera.perspectiveByTrain[newName] = state.camera.perspectiveByTrain[oldName]
+        state.camera.perspectiveByTrain[oldName] = nil
+    end
+
+    if state.camera.perspective and state.camera.perspective.trainName == oldName then
+        state.camera.perspective.trainName = newName
+    end
+end
+
+---@param oldName string
+---@param newName string
+local function renameRollingStockReferences(oldName, newName)
+    if activeRollingstock == oldName then activeRollingstock = newName end
+
+    if tags.rollingStock[oldName] ~= nil then
+        tags.rollingStock[newName] = tags.rollingStock[oldName]
+        tags.rollingStock[oldName] = nil
+    end
+
+    if textureTexts.rollingStock[oldName] ~= nil then
+        textureTexts.rollingStock[newName] = textureTexts.rollingStock[oldName]
+        textureTexts.rollingStock[oldName] = nil
+    end
+
+    if hook[oldName] ~= nil then
+        hook[newName] = hook[oldName]
+        hook[oldName] = nil
+    end
+
+    if hookGlue[oldName] ~= nil then
+        hookGlue[newName] = hookGlue[oldName]
+        hookGlue[oldName] = nil
+    end
+
+    if state.camera.userRollingstock[oldName] ~= nil then
+        state.camera.userRollingstock[newName] = state.camera.userRollingstock[oldName]
+        state.camera.userRollingstock[oldName] = nil
+    end
+end
+
+---@param rollingStock table
+---@param train table|nil
+---@param side string
+---@param trainEndStatus number|nil
+---@return number
+local function getExposedCouplingStatus(rollingStock, train, side, trainEndStatus)
+    local explicitStatus = rollingStock[side == 'front' and 'couplingFront' or 'couplingRear']
+    if explicitStatus ~= nil then return explicitStatus end
+    if trainEndStatus == 3 or trainEndStatus == 2 then return trainEndStatus end
+    if train and trainEndStatus == 1 then return 2 end
+    return 2
+end
+
+---@param rollingStockName string
+---@param side string
+---@return boolean, number|nil
+local function getRollingStockCoupling(rollingStockName, side)
+    local rollingStock, train, rollingStocks, index = getRollingStockTrainContext(rollingStockName)
+    if not rollingStock then return false, nil end
+
+    local pointsToTrainFront = side == 'front' and rollingStock.frontForward or side == 'rear' and not rollingStock.frontForward
+    index = index or 1
+    local hasNeighbor = false
+
+    if pointsToTrainFront then
+        hasNeighbor = index > 1
+    else
+        hasNeighbor = rollingStocks ~= nil and index < #rollingStocks
+    end
+
+    if hasNeighbor then return true, 3 end
+
+    if pointsToTrainFront then
+        return true, getExposedCouplingStatus(rollingStock, train, side, train and train.couplingFront or nil)
+    end
+
+    return true, getExposedCouplingStatus(rollingStock, train, side, train and train.couplingRear or nil)
+end
+
+---@param trainName string
+---@param trainEnd string
+---@return string|nil, table|nil, string|nil
+local function getTrainEndRollingStock(trainName, trainEnd)
+    local rollingStocks = getTrainRollingStock(trainName)
+    if not rollingStocks or #rollingStocks == 0 then return nil, nil, nil end
+
+    local rollingStock = trainEnd == 'front' and rollingStocks[1] or rollingStocks[#rollingStocks]
+    local rollingStockName = rollingStock.name
+    local side = nil
+
+    if trainEnd == 'front' then
+        side = rollingStock.frontForward and 'front' or 'rear'
+    else
+        side = rollingStock.frontForward and 'rear' or 'front'
+    end
+
+    return rollingStockName, rollingStock, side
+end
+
+---@param trainName string
+---@param trainEnd string
+---@param couplingStatus number
+local function setTrainEndCoupling(trainName, trainEnd, couplingStatus)
+    local train = ensureTrainState(trainName)
+
+    if trainEnd == 'front' then
+        train.couplingFront = couplingStatus
+    else
+        train.couplingRear = couplingStatus
+    end
+
+    local _, rollingStock, side = getTrainEndRollingStock(trainName, trainEnd)
+    if not rollingStock or not side then return end
+
+    if side == 'front' then
+        rollingStock.couplingFront = couplingStatus
+    else
+        rollingStock.couplingRear = couplingStatus
+    end
+end
+
+---@param trainName string
+---@param trainEnd string
+---@return boolean, number
+local function getTrainEndCoupling(trainName, trainEnd)
+    local train = getTrainState(trainName)
+    if not train then return false, 0 end
+
+    local rollingStockName, rollingStock, side = getTrainEndRollingStock(trainName, trainEnd)
+    if rollingStockName and rollingStock and side then
+        local explicitStatus = side == 'front' and rollingStock.couplingFront or rollingStock.couplingRear
+        if explicitStatus ~= nil then return getRollingStockCoupling(rollingStockName, side) end
+    end
+
+    return true, trainEnd == 'front' and train.couplingFront or train.couplingRear
+end
 
 ---@param depotId number
 ---@return table
@@ -136,28 +384,53 @@ end
 ---@param trainName string Name of the train
 ---param ... string Name of the rollingstock
 function EepSimulator.addTrain(trainName, ...)
-    trains[trainName] = { ... }
     local train = ensureTrainState(trainName)
+    local existingRollingStock = {}
+
+    for _, rollingStock in ipairs(getTrainRollingStock(trainName)) do
+        existingRollingStock[rollingStock.name] = rollingStock
+    end
+
+    train.rollingStock = {}
+    for _, rollingStockName in ipairs({ ... }) do
+        local rollingStock = existingRollingStock[rollingStockName] or normalizeRollingStockEntry(rollingStockName)
+        table.insert(train.rollingStock, rollingStock)
+    end
+
     train.onLayout = true
     EEPSetTrainSpeed(trainName, 0)
 end
 
 function EepSimulator.splitTrain(trainName, index)
     local newName = trainName .. ";001"
-    ---@type string[]
+    local oldTrain = ensureTrainState(trainName)
+    local sourceRollingStock = getTrainRollingStock(trainName)
+    ---@type table[]
     local oldRs = {}
-    ---@type string[]
+    ---@type table[]
     local newRs = {}
 
-    for i, rollingStockName in pairs(trains[trainName]) do
-        table.insert(i <= index and oldRs or newRs, rollingStockName)
+    for i, rollingStock in pairs(sourceRollingStock) do
+        table.insert(i <= index and oldRs or newRs, rollingStock)
     end
 
-    trains[trainName] = oldRs
-    EepSimulator.addTrain(newName, table.unpack(newRs))
+    oldTrain.rollingStock = oldRs
+    local newTrain = ensureTrainState(newName)
+    newTrain.rollingStock = newRs
+    newTrain.onLayout = true
+    EEPSetTrainSpeed(newName, 0)
+
+    if oldTrain.route ~= nil then
+        newTrain.route = oldTrain.route
+    end
+
     if EepSimulator.debug then
-        print(string.format("Old Train: %s    : %s\nNew Train: %s: %s", trainName, table.concat(oldRs, ","), newName,
-                            table.concat(newRs, ",")))
+        local oldNames = {}
+        local newNames = {}
+        for _, rollingStock in ipairs(oldRs) do table.insert(oldNames, rollingStock.name) end
+        for _, rollingStock in ipairs(newRs) do table.insert(newNames, rollingStock.name) end
+        print(string.format("Old Train: %s    : %s\nNew Train: %s: %s", trainName, table.concat(oldNames, ","), newName,
+                            table.concat(newNames, ",")))
     end
     if (EEPOnTrainLooseCoupling) then EEPOnTrainLooseCoupling(trainName, newName, trainName) end
 end
@@ -216,6 +489,53 @@ end
 function EepSimulator.setzeZugAufGleis(trackId, zugname)
     ensureTrainState(zugname).onLayout = true
     setTrackOccupancy("rail", trackId, zugname)
+end
+
+---@param rollingStockName string
+---@param frontForward boolean
+function EepSimulator.setRollingStockOrientation(rollingStockName, frontForward)
+    getOrCreateRollingStockEntry(rollingStockName).frontForward = frontForward == true
+end
+
+---@param oldName string
+---@param newName string
+---@return boolean
+function EepSimulator.simulateRenameTrain(oldName, newName)
+    if oldName == newName then return getTrainState(oldName) ~= nil end
+    if getTrainState(oldName) == nil or getTrainState(newName) ~= nil then return false end
+
+    state.trains[newName] = state.trains[oldName]
+    state.trains[oldName] = nil
+    renameTrainReferences(oldName, newName)
+    return true
+end
+
+---@param oldName string
+---@param newName string
+---@return boolean
+function EepSimulator.simulateRenameRollingStock(oldName, newName)
+    if oldName == newName then return select(1, getRollingStockTrainContext(oldName)) ~= nil end
+    if select(1, getRollingStockTrainContext(oldName)) == nil or select(1, getRollingStockTrainContext(newName)) ~= nil then return false end
+
+    local rollingStock = select(1, getRollingStockTrainContext(oldName))
+    rollingStock.name = newName
+    renameRollingStockReferences(oldName, newName)
+    return true
+end
+
+---@param name string
+---@param trainName string|nil
+---@return boolean
+function EepSimulator.simulateAddRollingStock(name, trainName)
+    if select(1, getRollingStockTrainContext(name)) ~= nil then return false end
+
+    local targetTrainName = trainName or ("#" .. name)
+    local targetTrain = ensureTrainState(targetTrainName)
+    targetTrain.rollingStock = targetTrain.rollingStock or {}
+    table.insert(targetTrain.rollingStock, normalizeRollingStockEntry(name))
+    targetTrain.onLayout = true
+    EEPSetTrainSpeed(targetTrainName, 0)
+    return true
 end
 
 ---@param depotId number
@@ -287,8 +607,6 @@ EEPTimeS = 0
 -------------------
 -- Neu ab EEP 11 --
 -------------------
-local couplingFront = {}
-local couplingRear = {}
 local eepdata = {}
 local structureAxis = {}
 
@@ -312,23 +630,33 @@ end
 -- @param rsName Name des Rollmaterial,
 -- @param kupplungsStatus 1-Kupplung aktiv, 2-Kupplung inaktiv, 3-Wagen angekoppelt(nurGet),
 -- z.B.: EEPRollingstockSetCouplingRear("DB 212309", 2)
-function EEPRollingstockSetCouplingRear(rsName, kupplungsStatus) couplingRear[rsName] = kupplungsStatus end
+function EEPRollingstockSetCouplingRear(rsName, kupplungsStatus)
+    getOrCreateRollingStockEntry(rsName).couplingRear = kupplungsStatus
+    return true
+end
 
 --- Abfragen der Kupplung (hinten)
 -- @param rsName Name des Rollmaterial,
 -- @param kupplungsStatus 1-Kupplung aktiv, 2-Kupplung inaktiv, 3-Wagen angekoppelt(nurGet),
-function EEPRollingstockGetCouplingRear(rsName) return couplingRear[rsName] end
+function EEPRollingstockGetCouplingRear(rsName)
+    return getRollingStockCoupling(rsName, 'rear')
+end
 
 --- Setzen der Kupplung (vorn)
 -- @param rsName Name des Rollmaterial,
 -- @param kupplungsStatus 1-Kupplung aktiv, 2-Kupplung inaktiv, 3-Wagen angekoppelt(nurGet),
 -- z.B.: EEPRollingstockSetCouplingFront("DB212 309", 2)
-function EEPRollingstockSetCouplingFront(rsName, kupplungsStatus) couplingFront[rsName] = kupplungsStatus end
+function EEPRollingstockSetCouplingFront(rsName, kupplungsStatus)
+    getOrCreateRollingStockEntry(rsName).couplingFront = kupplungsStatus
+    return true
+end
 
 --- Abfragen der Kupplung (vorn)
 -- @param rsName Name des Rollmaterial,
 -- @param kupplungsStatus 1-Kupplung aktiv, 2-Kupplung inaktiv, 3-Wagen angekoppelt(nurGet),
-function EEPRollingstockGetCouplingFront(rsName) return couplingFront[rsName] end
+function EEPRollingstockGetCouplingFront(rsName)
+    return getRollingStockCoupling(rsName, 'front')
+end
 
 --------------------------------------------------------------------------
 -- Siehe hierzu auch Handbuch EEP 11(Achsgruppen) Setzen einer Achsgruppe,
@@ -498,28 +826,24 @@ end
 -- @param trainName Name des Zuges
 -- @param kupplungOn true: kuppeln, false: abstoßen
 function EEPSetTrainCouplingFront(trainName, kupplungOn)
-    ensureTrainState(trainName).couplingFront = kupplungOn and 1 or 2
+    setTrainEndCoupling(trainName, 'front', kupplungOn and 1 or 2)
     return true
 end
 
 function EEPGetTrainCouplingFront(trainName)
-    local train = getTrainState(trainName)
-    if not train then return false, 0 end
-    return true, train.couplingFront
+    return getTrainEndCoupling(trainName, 'front')
 end
 
 --- Kupplung hinten setzen
 -- @param trainName Name des Zuges
 -- @param kupplungOn true: kuppeln, false: abstoßen
 function EEPSetTrainCouplingRear(trainName, kupplungOn)
-    ensureTrainState(trainName).couplingRear = kupplungOn and 1 or 2
+    setTrainEndCoupling(trainName, 'rear', kupplungOn and 1 or 2)
     return true
 end
 
 function EEPGetTrainCouplingRear(trainName)
-    local train = getTrainState(trainName)
-    if not train then return false, 0 end
-    return true, train.couplingRear
+    return getTrainEndCoupling(trainName, 'rear')
 end
 
 --- Zugverband an bestimmter Stelle trennen
@@ -758,7 +1082,8 @@ function EEPChangeInfoSwitch(switchId, text) end
 -- @param zugverband Names des Zugverbandes
 --
 function EEPGetRollingstockItemsCount(zugverband)
-    return trains[zugverband] and #trains[zugverband] > 0 and #trains[zugverband] or 0
+    local rollingStocks = getTrainRollingStock(zugverband)
+    return #rollingStocks > 0 and #rollingStocks or 0
 end
 
 --- Name des Rollis Nummer im Zugverband Name
@@ -766,9 +1091,10 @@ end
 -- @param Nummer
 --
 function EEPGetRollingstockItemName(zugverband, Nummer)
-    local rollingStocks = trains[zugverband]
-    if rollingStocks == nil then return "DUMMY" end
-    return rollingStocks[Nummer + 1] or "DUMMY"
+    local rollingStocks = getTrainRollingStock(zugverband)
+    if #rollingStocks == 0 then return "DUMMY" end
+    local rollingStock = rollingStocks[Nummer + 1]
+    return rollingStock and rollingStock.name or "DUMMY"
 end
 
 --- Anzahl der Zuege, welche vom Signal Signal_ID gehalten werden
@@ -914,8 +1240,8 @@ function EEPStructureGetModelType(name)
     end
 end
 
-local tags = { structures = {}, rollingStock = {} }
-local textureTexts = { rollingStock = {} }
+tags = { structures = {}, rollingStock = {} }
+textureTexts = { rollingStock = {} }
 
 --- Aendert den Tag-Text einer Immobilie. Jede Immobilie kann jetzt einen individuellen String von
 --- maximal 1024 Zeichen Laenge mitfuehren. Diese Strings werden mit der Anlage gespeichert und
@@ -983,7 +1309,7 @@ function EEPAuxiliaryTrackSetTextureText(id, flaeche, text) return true end
 -- Neu ab EEP 15.1 --
 ---------------------
 
-local activeTrain = ""
+activeTrain = ""
 
 --- Ermittelt, welcher Zug derzeit im Steuerdialog ausgewaehlt ist. (EEP 15.1)
 -- Befindet sich der Steuerdialog im manuellen Modus, dann wird der Name des Zuges zurueckgegeben,
@@ -1006,7 +1332,7 @@ end
 ---@return integer length Laenge des Zuges in Meter
 function EEPGetTrainLength(trainName) return true, 50 end
 
-local activeRollingstock = ""
+activeRollingstock = ""
 
 --- Ermittelt, welches Fahrzeug derzeit im Steuerdialog ausgewaehlt ist. (EEP 15.1)
 -- Befindet sich der Steuerdialog im Automatikmodus, dann wird ein leerer String zurueckgegeben.
@@ -1026,7 +1352,11 @@ end
 -- @param rollingstockName Name des Rollmaterials
 -- @return ok Rueckgabewert ist true wenn der angesprochene Zug existiert, sonst false
 -- @return orientation Ausrichtung des Rollmaterials, true, wenn das Fahrzeug vorwaerts ausgerichtet ist, sonst false
-function EEPRollingstockGetOrientation(rollingstockName) return true, true end
+function EEPRollingstockGetOrientation(rollingstockName)
+    local rollingStock = select(1, getRollingStockTrainContext(rollingstockName))
+    if not rollingStock then return false, nil end
+    return true, rollingStock.frontForward == true
+end
 
 ---------------------
 -- Neu ab EEP 16.1 --
@@ -1043,7 +1373,7 @@ function EEPActivateCtrlDesk(GBSname) return true end
 -- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
 function EEPRollingstockSetHorn(rollingstockName, status) return true end
 
-local hook = {}
+hook = {}
 
 --- Schaltet bei einem bestimmten Rollmaterial den Haken an oder aus. (EEP 16.1)
 -- @param rollingstockName Name des Rollmaterials
@@ -1060,7 +1390,7 @@ end
 -- @return status Haken aus = 0, an = 1, in Betrieb = 3
 function EEPRollingstockGetHook(rollingstockName) return true, hook[rollingstockName] and 1 or 0 end
 
-local hookGlue = {}
+hookGlue = {}
 
 --- Beeinflusst das Verhalten von Guetern an einem Kranhaken eines Rollmaterials. (EEP 16.1)
 -- @param rollingstockName Name des Rollmaterials
