@@ -31,6 +31,8 @@ function SwitchJsonCollector.collectData()
     for i = 1, #switches do
         local switch = switches[i]
         switch.position = EEPGetSwitch(switch.id)
+        local _, tag = EEPSwitchGetTagText(switch.id)
+        switch.tag = tag or ""
     end
 
     -- TODO: Send event only with detected changes

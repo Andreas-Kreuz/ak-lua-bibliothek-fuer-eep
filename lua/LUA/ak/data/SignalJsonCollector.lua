@@ -37,6 +37,8 @@ function SignalJsonCollector.collectData()
     for i = 1, #signals do
         local signal = signals[i]
         signal.position = EEPGetSignal(signal.id)
+        local _, tag = EEPSignalGetTagText(signal.id)
+        signal.tag = tag or ""
         local waitingVehiclesCount = EEPGetSignalTrainsCount(signal.id) -- EEP 13.2
         signal.waitingVehiclesCount = waitingVehiclesCount or 0
 
