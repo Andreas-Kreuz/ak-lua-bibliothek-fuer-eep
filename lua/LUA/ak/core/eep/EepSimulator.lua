@@ -189,6 +189,19 @@ local function getOrCreateRollingStockEntry(rollingStockName)
     return select(1, getRollingStockTrainContext(rollingStockName)) or ensureImplicitRollingStockTrain(rollingStockName)
 end
 
+---@param rollingStockName string
+---@return string
+local function getUniqueRollingStockName(rollingStockName)
+    if not select(1, getRollingStockTrainContext(rollingStockName)) then return rollingStockName end
+
+    local suffix = 1
+    while true do
+        local candidate = string.format("%s;%03d", rollingStockName, suffix)
+        if not select(1, getRollingStockTrainContext(candidate)) then return candidate end
+        suffix = suffix + 1
+    end
+end
+
 ---@param oldName string
 ---@param newName string
 local function renameTrainReferences(oldName, newName)
@@ -527,14 +540,14 @@ end
 ---@param trainName string|nil
 ---@return boolean
 function EepSimulator.simulateAddRollingStock(name, trainName)
-    if select(1, getRollingStockTrainContext(name)) ~= nil then return false end
-
-    local targetTrainName = trainName or ("#" .. name)
+    local resolvedName = getUniqueRollingStockName(name)
+    local targetTrainName = trainName or ("#" .. resolvedName)
+    local trainAlreadyExists = getTrainState(targetTrainName) ~= nil
     local targetTrain = ensureTrainState(targetTrainName)
     targetTrain.rollingStock = targetTrain.rollingStock or {}
-    table.insert(targetTrain.rollingStock, normalizeRollingStockEntry(name))
+    table.insert(targetTrain.rollingStock, normalizeRollingStockEntry(resolvedName))
     targetTrain.onLayout = true
-    EEPSetTrainSpeed(targetTrainName, 0)
+    if not trainAlreadyExists then EEPSetTrainSpeed(targetTrainName, 0) end
     return true
 end
 
