@@ -18,8 +18,6 @@ EepSimulator.debug = false
 local signalsTrainCount = {}
 ---@type table<string>
 local signalsTrainNames = {}
----@type table<string,string> train name to route name
-local trainRoutes = {}
 ---@type table<string, table>
 local state = {
     tracks = {
@@ -28,6 +26,12 @@ local state = {
         tram = {},
         auxiliary = {},
         control = {}
+    },
+    trains = {},
+    trainyards = {},
+    camera = {
+        perspectiveByTrain = {},
+        userRollingstock = {}
     }
 }
 ---@type table<string,table>
@@ -77,11 +81,64 @@ local function setTrackOccupancy(trackType, trackId, trainName)
     track.trainName = trainName
 end
 
+---@param trainName string
+---@return table
+local function ensureTrainState(trainName)
+    state.trains[trainName] = state.trains[trainName] or {
+        speed = 0,
+        route = nil,
+        lights = {},
+        smoke = false,
+        horn = false,
+        couplingFront = 1,
+        couplingRear = 1,
+        hook = false,
+        onLayout = true
+    }
+    return state.trains[trainName]
+end
+
+---@param trainName string
+---@return table|nil
+local function getTrainState(trainName) return state.trains[trainName] end
+
+---@param depotId number
+---@return table
+local function ensureTrainyardState(depotId)
+    state.trainyards[depotId] = state.trainyards[depotId] or { entries = {} }
+    return state.trainyards[depotId]
+end
+
+---@param depotId number
+---@param trainName string|nil
+---@param position number|nil
+---@return table|nil, number|nil
+local function findTrainyardEntry(depotId, trainName, position)
+    local trainyard = state.trainyards[depotId]
+    if not trainyard then return nil, nil end
+
+    if position ~= nil then
+        local entry = trainyard.entries[position + 1]
+        if entry and (trainName == nil or trainName == "" or entry.name == trainName) then return entry, position + 1 end
+        return nil, nil
+    end
+
+    if trainName ~= nil and trainName ~= "" then
+        for index, entry in ipairs(trainyard.entries) do
+            if entry.name == trainName then return entry, index end
+        end
+    end
+
+    return nil, nil
+end
+
 ---Add a train and its rollingStock
 ---@param trainName string Name of the train
 ---param ... string Name of the rollingstock
 function EepSimulator.addTrain(trainName, ...)
     trains[trainName] = { ... }
+    local train = ensureTrainState(trainName)
+    train.onLayout = true
     EEPSetTrainSpeed(trainName, 0)
 end
 
@@ -151,9 +208,32 @@ function EepSimulator.removeAllTrainFromSignal(signalId)
     updateTrainListSize(signalId)
 end
 
-function EepSimulator.setzeZugAufStrasse(trackId, zugname) setTrackOccupancy("road", trackId, zugname) end
+function EepSimulator.setzeZugAufStrasse(trackId, zugname)
+    ensureTrainState(zugname).onLayout = true
+    setTrackOccupancy("road", trackId, zugname)
+end
 
-function EepSimulator.setzeZugAufGleis(trackId, zugname) setTrackOccupancy("rail", trackId, zugname) end
+function EepSimulator.setzeZugAufGleis(trackId, zugname)
+    ensureTrainState(zugname).onLayout = true
+    setTrackOccupancy("rail", trackId, zugname)
+end
+
+---@param depotId number
+---@param trainName string
+---@param position number|nil
+---@param status number|nil
+function EepSimulator.addTrainToTrainyard(depotId, trainName, position, status)
+    local trainyard = ensureTrainyardState(depotId)
+    local entry = { name = trainName, status = status or 1 }
+
+    if position ~= nil then
+        trainyard.entries[position + 1] = entry
+    else
+        table.insert(trainyard.entries, entry)
+    end
+
+    ensureTrainState(trainName).onLayout = entry.status ~= 1
+end
 
 local signale = {}
 local switches = {}
@@ -210,19 +290,23 @@ EEPTimeS = 0
 local couplingFront = {}
 local couplingRear = {}
 local eepdata = {}
-local trainSpeeds = {}
 local structureAxis = {}
 
 --- Geschwindigkeit aendern
 -- @param trainName Name des Zuges
 -- @param speed Geschwindigkeit
-function EEPSetTrainSpeed(trainName, speed) trainSpeeds[trainName] = speed end
+function EEPSetTrainSpeed(trainName, speed)
+    ensureTrainState(trainName).speed = speed
+end
 
 --- Geschwindigkeit lesen
 ---@param trainName string Name des Zuges
 ---@return boolean Ist der Zug vorhanden
 ---@return number Geschwindigkeit
-function EEPGetTrainSpeed(trainName) return trainSpeeds[trainName] ~= nil, trainSpeeds[trainName] or 0 end
+function EEPGetTrainSpeed(trainName)
+    local train = getTrainState(trainName)
+    return train ~= nil, train and train.speed or 0
+end
 
 --- Setzen der Kupplung (hinten)
 -- @param rsName Name des Rollmaterial,
@@ -366,54 +450,102 @@ function EEPStructureSetRotation(immoName, rotX, rotY, rotZ) end
 --- Route aendern
 ---@param trainName string Name des Zuges
 ---@param route string Name der Route
-function EEPSetTrainRoute(trainName, route) trainRoutes[trainName] = route end
+function EEPSetTrainRoute(trainName, route)
+    ensureTrainState(trainName).route = route
+    return true
+end
 
 --- Route abfragen - return ok und Name der Route
 ---@param trainName string Name des Zuges
 ---@return boolean, string
-function EEPGetTrainRoute(trainName) return true, trainRoutes[trainName] and trainRoutes[trainName] or "Alle" end
+function EEPGetTrainRoute(trainName)
+    local train = getTrainState(trainName)
+    return train ~= nil, train and train.route or "Alle"
+end
 
 --- Licht ein oder ausschalten
 -- @param trainName Name des Zuges
 -- @param onoff true: ein, false: aus
-function EEPSetTrainLight(trainName, onoff) end
+function EEPSetTrainLight(trainName, onoff, quelle)
+    local train = ensureTrainState(trainName)
+    train.lights[quelle or 0] = onoff == true
+    return true
+end
+
+function EEPGetTrainLight(trainName, quelle)
+    local train = getTrainState(trainName)
+    if not train then return false, false end
+    return true, train.lights[quelle or 0] == true
+end
 
 --- Rauch ein oder ausschalten
 -- @param trainName Name des Zuges
 -- @param onoff true: ein, false: aus
-function EEPSetTrainSmoke(trainName, onoff) end
+function EEPSetTrainSmoke(trainName, onoff)
+    ensureTrainState(trainName).smoke = onoff == true
+    return true
+end
 
 --- Hupen
 -- @param trainName Name des Zuges
 -- @param onoff true: signal starten, false: signal beenden
-function EEPSetTrainHorn(trainName, onoff) end
+function EEPSetTrainHorn(trainName, onoff)
+    ensureTrainState(trainName).horn = onoff == true
+    return true
+end
 
 --- Kupplung vorn setzen
 -- @param trainName Name des Zuges
 -- @param kupplungOn true: kuppeln, false: abstoﬂen
-function EEPSetTrainCouplingFront(trainName, kupplungOn) end
+function EEPSetTrainCouplingFront(trainName, kupplungOn)
+    ensureTrainState(trainName).couplingFront = kupplungOn and 1 or 2
+    return true
+end
+
+function EEPGetTrainCouplingFront(trainName)
+    local train = getTrainState(trainName)
+    if not train then return false, 0 end
+    return true, train.couplingFront
+end
 
 --- Kupplung hinten setzen
 -- @param trainName Name des Zuges
 -- @param kupplungOn true: kuppeln, false: abstoﬂen
-function EEPSetTrainCouplingRear(trainName, kupplungOn) end
+function EEPSetTrainCouplingRear(trainName, kupplungOn)
+    ensureTrainState(trainName).couplingRear = kupplungOn and 1 or 2
+    return true
+end
+
+function EEPGetTrainCouplingRear(trainName)
+    local train = getTrainState(trainName)
+    if not train then return false, 0 end
+    return true, train.couplingRear
+end
 
 --- Zugverband an bestimmter Stelle trennen
 -- @param trainName Name des Zuges
 -- @param countFromFront true: von vorne zaehlen, false: von hinten zaehlen
 -- @param position Stelle, die getrennt wird
-function EEPTrainLooseCoupling(trainName, countFromFront, position) end
+function EEPTrainLooseCoupling(trainName, countFromFront, position)
+    return true
+end
 
 --- Setzen des Gueterhakens an allen Wagen eines Zuges
 -- @param trainName Name des Zuges als String
 -- @param hookOn true: Haken fuer alle an
-function EEPSetTrainHook(trainName, gueteran) end
+function EEPSetTrainHook(trainName, gueteran)
+    ensureTrainState(trainName).hook = gueteran == true
+    return true
+end
 
 --- Setzen einer Achse an allen Wagen eines Zuges
 -- @param trainName Name des Zuges als String
 -- @param achse Name der Achse
 -- @param stellung 0 - 100 - Achsstellung
-function EEPSetTrainAxis(trainName, achse, stellung) end
+function EEPSetTrainAxis(trainName, achse, stellung)
+    ensureTrainState(trainName)
+    return true
+end
 
 ------------------------------
 -- Neu ab EEP 11 - Plugin 2 --
@@ -509,14 +641,81 @@ function EEPSetCamera(camType, camName) return true end
 -- @param camPosition Tasten 1 - 9 fuer die Kameraposition
 -- @param trainName Name des Zuges
 -- @return true, wenn die Kamera existiert
-function EEPSetPerspectiveCamera(camPosition, trainName) return true end
+function EEPSetPerspectiveCamera(camPosition, trainName)
+    state.camera.perspective = { position = camPosition, trainName = trainName or "" }
+    if trainName and trainName ~= "" then state.camera.perspectiveByTrain[trainName] = camPosition end
+    return true
+end
+
+function EEPGetPerspectiveCamera(trainName)
+    if trainName and trainName ~= "" then
+        local position = state.camera.perspectiveByTrain[trainName]
+        return position ~= nil, position
+    end
+
+    local perspective = state.camera.perspective
+    return perspective ~= nil, perspective and perspective.position or nil
+end
 
 --- Zug aus Depot starten
 -- @param depotId Id des Depots (Eigenschaftenfenster)
 -- @param trainName Name des Zuges
 -- @param trainNumber Wenn kein Zugname angegeben ist, dann die Nummer des Zugs im Depot
 -- @return true, wenn der Zug existiert
-function EEPGetTrainFromTrainyard(depotId, trainName, trainNumber) end
+function EEPGetTrainFromTrainyard(depotId, trainName, trainNumber)
+    local entry = nil
+
+    if trainName and trainName ~= "" then
+        entry = select(1, findTrainyardEntry(depotId, trainName, nil))
+    else
+        entry = select(1, findTrainyardEntry(depotId, nil, trainNumber))
+    end
+
+    if not entry then return false end
+
+    entry.status = 0
+    ensureTrainState(entry.name).onLayout = true
+    if EEPOnTrainExitTrainyard then EEPOnTrainExitTrainyard(depotId, entry.name) end
+    return true
+end
+
+function EEPIsTrainInTrainyard(trainName)
+    for depotId, trainyard in pairs(state.trainyards) do
+        for _, entry in ipairs(trainyard.entries) do
+            if entry.name == trainName and entry.status == 1 then return true, depotId end
+        end
+    end
+
+    return false, nil
+end
+
+function EEPPutTrainToTrainyard(depotId, trainName)
+    local targetTrainyard = ensureTrainyardState(depotId)
+    local entry = select(1, findTrainyardEntry(depotId, trainName, nil))
+
+    if not entry then
+        for currentDepotId, trainyard in pairs(state.trainyards) do
+            local index = nil
+            entry, index = findTrainyardEntry(currentDepotId, trainName, nil)
+            if entry then
+                if currentDepotId ~= depotId then table.remove(trainyard.entries, index) end
+                break
+            end
+        end
+    end
+
+    if not entry then
+        entry = { name = trainName, status = 1 }
+        table.insert(targetTrainyard.entries, entry)
+    elseif select(1, findTrainyardEntry(depotId, trainName, nil)) == nil then
+        table.insert(targetTrainyard.entries, entry)
+    end
+
+    entry.status = 1
+    ensureTrainState(trainName).onLayout = false
+    if EEPOnTrainEnterTrainyard then EEPOnTrainEnterTrainyard(depotId, trainName) end
+    return true
+end
 
 -------------------------------
 -- Neu ab EEP 13             --
@@ -591,20 +790,29 @@ end
 --- Anzahl der Zuege, welche im Depot ZugdepotId gelistet sind
 -- @param depotId ID des Zugdepots
 -- @return count Anzahl der Fahrzeugverbaende
-function EEPGetTrainyardItemsCount(depotId) return 5 end
+function EEPGetTrainyardItemsCount(depotId)
+    local trainyard = state.trainyards[depotId]
+    return trainyard and #trainyard.entries or 0
+end
 
 --- Name des Zuges am DepotPlatz im Depot depotId
 -- @param depotId ID des Zugdepots
 -- @param position Position (Zahl) des Zugverbandes im Depot
 -- @return trainName Name des Fahrzeugverbands
-function EEPGetTrainyardItemName(depotId, position) return "#trainName" end
+function EEPGetTrainyardItemName(depotId, position)
+    local entry = select(1, findTrainyardEntry(depotId, nil, position))
+    return entry and entry.name or ""
+end
 
 --- Status (wartet/auf Anlage) des Zuges Name am Platz im depotId
 -- @param depotId ID des Zugdepots
 -- @param zugverband Name des Zugverbandes
 -- @param position Position (Zahl) des Zugverbandes im Depot
 -- @return status Status des Fahrzeugverbands: 0 = in Fahrt , 1 = warten
-function EEPGetTrainyardItemStatus(depotId, zugverband, position) return 1 end
+function EEPGetTrainyardItemStatus(depotId, zugverband, position)
+    local entry = select(1, findTrainyardEntry(depotId, zugverband, position))
+    return entry and entry.status or 0
+end
 
 -------------------------------
 -- Neu ab EEP 15  --
@@ -897,7 +1105,7 @@ function EEPRollingstockGetTextureText(rollingstockName, fleache)
     return ok, textureText
 end
 
-local camera = {}
+local camera = state.camera
 
 --- Definiert die Position der Benutzer-definierten Mitfahrkamera in Relation zum Fahrzeug (EEP 16.1)
 -- Aufruf ueber Taste 9
@@ -910,16 +1118,35 @@ local camera = {}
 -- @param RotZ Kameraausrichtung (Drehung)
 -- @param setDirectly boolean Soll die Kamera sofort gesetzt werden
 -- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
-function EEPRollingstockSetUserCamera(rollingstockName, PosX, PosY, PosZ, RotX, RotY, RotZ, setDirectly)
-    camera.rollingstockName = rollingstockName
-    camera.PosX = PosX
-    camera.PosY = PosY
-    camera.PosZ = PosZ
-    camera.RotX = RotX
-    camera.RotY = RotY
-    camera.RotZ = RotZ
-    camera.setDirectly = setDirectly
+function EEPRollingstockSetUserCamera(rollingstockName, PosX, PosY, PosZ, RotH, RotV, arg7, arg8)
+    local setDirectly = arg8 ~= nil and arg8 or arg7
+    camera.userRollingstock[rollingstockName] = {
+        PosX = PosX,
+        PosY = PosY,
+        PosZ = PosZ,
+        RotH = RotH,
+        RotV = RotV,
+        setDirectly = setDirectly == true or setDirectly == 1
+    }
+
+    if camera.userRollingstock[rollingstockName].setDirectly then
+        camera.rollingstockName = rollingstockName
+        camera.PosX = PosX
+        camera.PosY = PosY
+        camera.PosZ = PosZ
+        camera.RotX = 0
+        camera.RotY = RotH
+        camera.RotZ = RotV
+        camera.setDirectly = true
+    end
+
     return true
+end
+
+function EEPRollingstockGetUserCamera(rollingstockName)
+    local userCamera = camera.userRollingstock[rollingstockName]
+    if not userCamera then return false, nil, nil, nil, nil, nil end
+    return true, userCamera.PosX, userCamera.PosY, userCamera.PosZ, userCamera.RotH, userCamera.RotV
 end
 
 --- Ermittelt die aktuelle Position der Kamera (EEP 16.1)
