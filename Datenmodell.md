@@ -199,6 +199,20 @@ Hinweis:
 
 - Der Collector nimmt nur Strukturen auf, bei denen mindestens eines von `light`, `smoke` oder `fire` verfügbar ist.
 
+Vollständige Liste `modelType` für Strukturen laut `Lua_manual.pdf` und `EEPStructureGetModelType`:
+
+| Wert | Bedeutung                                             |
+| ---- | ----------------------------------------------------- |
+| `16` | `"Gleisobjekte" Bahngleise`                           |
+| `17` | `"Gleisobjekte" Straßenbahn`                          |
+| `18` | `"Gleisobjekte" Straßen`                              |
+| `19` | `"Gleisobjekte" Wasserwege/Diverse`                   |
+| `22` | Immobilien                                            |
+| `23` | Landschaftselemente Fauna                             |
+| `24` | Landschaftselemente Flora                             |
+| `25` | Landschaftselemente Terra                             |
+| `38` | Landschaftselemente, Bodenmodelle zur 3D-Texturierung |
+
 ### `trains`
 
 Elementtyp: Zug / Fahrzeugverband
@@ -223,6 +237,16 @@ Abgeleitet aus:
 - `EEPGetRollingstockItemsCount(trainName)`
 - `EEPGetTrainLength(trainName)`
 - `EEPGetTrainSpeed(trainName)`
+
+Vollständige Liste `trackType` laut `TrainDetection` / `TrackDetection`:
+
+| Wert        | Bedeutung                                                             |
+| ----------- | --------------------------------------------------------------------- |
+| `rail`      | Bahngleise                                                            |
+| `tram`      | Straßenbahn-Gleise                                                    |
+| `road`      | Straßen                                                               |
+| `auxiliary` | sonstige Splines / Wasserwege                                         |
+| `control`   | Steuerstrecken / nicht direkt einem der vier Track-Systeme zugeordnet |
 
 ### `rolling-stocks`
 
@@ -250,7 +274,7 @@ Elementtyp: RollingStock / Fahrzeug
 | `posX`            | `number`              | Anlagenkoordinate                         | X-Position aus `EEPRollingstockGetPosition`                                                           |
 | `posY`            | `number`              | Anlagenkoordinate                         | Y-Position aus `EEPRollingstockGetPosition`                                                           |
 | `posZ`            | `number`              | Anlagenkoordinate                         | Z-Position aus `EEPRollingstockGetPosition`                                                           |
-| `mileage`         | `number`              | Meter seit Einsetzen in EEP               | aus `EEPRollingstockGetMileage`                                                                       |
+| `mileage`         | `number`              | Zahl                                      | Zurückgelegte Strecke in Metern seit Einsetzen des Modells aus `EEPRollingstockGetMileage`            |
 
 Abgeleitet aus:
 
@@ -262,6 +286,36 @@ Abgeleitet aus:
 - `EEPRollingstockGetTrack`
 - `EEPRollingstockGetPosition`
 - `EEPRollingstockGetMileage`
+
+Vollständige Liste `trackType` laut `TrainDetection` / `TrackDetection`:
+
+| Wert        | Bedeutung                                                             |
+| ----------- | --------------------------------------------------------------------- |
+| `rail`      | Bahngleise                                                            |
+| `tram`      | Straßenbahn-Gleise                                                    |
+| `road`      | Straßen                                                               |
+| `auxiliary` | sonstige Splines / Wasserwege                                         |
+| `control`   | Steuerstrecken / nicht direkt einem der vier Track-Systeme zugeordnet |
+
+Vollständige Liste `modelType` für RollingStock laut `Lua_manual.pdf` und `EEPRollingstockGetModelType`:
+
+| Wert | Bedeutung            |
+| ---- | -------------------- |
+| `1`  | Tenderlok            |
+| `2`  | Schlepptenderlok     |
+| `3`  | Tender               |
+| `4`  | Elektrolok           |
+| `5`  | Diesellok            |
+| `6`  | Triebwagen           |
+| `7`  | U- oder S-Bahn       |
+| `8`  | Straßenbahn          |
+| `9`  | Güterwaggon          |
+| `10` | Personenwaggon       |
+| `11` | Luftfahrzeug         |
+| `12` | Maschine (z.B. Kran) |
+| `13` | Wasserfahrzeug       |
+| `14` | LKW                  |
+| `15` | PKW                  |
 
 ### `signal-type-definitions`
 
@@ -342,18 +396,18 @@ Elementtyp: Ampel innerhalb einer Kreuzung
 
 Unterobjekt `lightStructures[*]`:
 
-| Name               | Typ               | Wertebereich | Beschreibung        |
-| ------------------ | ----------------- | ------------ | ------------------- |
-| `structureRed`     | `string` \| `nil` | Strukturname | Rotlicht-Struktur   |
-| `structureGreen`   | `string` \| `nil` | Strukturname | Grünlicht-Struktur  |
-| `structureYellow`  | `string` \| `nil` | Strukturname | Gelblicht-Struktur  |
-| `structureRequest` | `string` \| `nil` | Strukturname | Anforderungsanzeige |
+| Name               | Typ               | Wertebereich   | Beschreibung                               |
+| ------------------ | ----------------- | -------------- | ------------------------------------------ |
+| `structureRed`     | `string` \| `nil` | Immobilienname | Immobilienname für das Rotlicht            |
+| `structureGreen`   | `string` \| `nil` | Immobilienname | Immobilienname für das Grünlicht           |
+| `structureYellow`  | `string` \| `nil` | Immobilienname | Immobilienname für das Gelblicht           |
+| `structureRequest` | `string` \| `nil` | Immobilienname | Immobilienname für die Anforderungsanzeige |
 
 Unterobjekt `axisStructures[*]`:
 
 | Name                 | Typ             | Wertebereich    | Beschreibung                |
 | -------------------- | --------------- | --------------- | --------------------------- |
-| `structureName`      | `string`        | Strukturname    | betroffene Struktur         |
+| `structureName`      | `string`        | Immobilienname  | betroffener Immobilienname  |
 | `axisName`           | `string`        | Achsname        | betroffene Achse            |
 | `positionDefault`    | `number \| nil` | projektabhängig | Default-Position            |
 | `positionRed`        | `number \| nil` | projektabhängig | Position bei Rot            |
