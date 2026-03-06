@@ -36,8 +36,8 @@ local function fillTrackInfoFromTrain(train, info)
 
     local trackType = "control"
     if trackTypeId == 1 then trackType = "rail" end
-    if trackTypeId == 2 then trackType = "tram" end
-    if trackTypeId == 3 then trackType = "road" end
+    if trackTypeId == 2 then trackType = "road" end
+    if trackTypeId == 3 then trackType = "tram" end
     if trackTypeId == 4 then trackType = "auxiliary" end
 
     info.tracks = { [tostring(trackId)] = trackId }
