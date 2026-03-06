@@ -168,11 +168,11 @@ Abgeleitet aus:
 
 Elementtyp: freier Datenslot
 
-| Name   | Typ       | Wertebereich        | Beschreibung                  |
-| ------ | --------- | ------------------- | ----------------------------- |
-| `id`   | `integer` | `1` bis `1000`      | Slotnummer                    |
-| `name` | `nil`     | immer nicht gesetzt | bei freien Slots nicht belegt |
-| `data` | `nil`     | immer nicht gesetzt | bei freien Slots nicht belegt |
+| Name   | Typ               | Wertebereich        | Beschreibung                  |
+| ------ | ----------------- | ------------------- | ----------------------------- |
+| `id`   | `integer`         | `1` bis `1000`      | Slotnummer                    |
+| `name` | `string` \| `nil` | immer nicht gesetzt | bei freien Slots nicht belegt |
+| `data` | `string` \| `nil` | immer nicht gesetzt | bei freien Slots nicht belegt |
 
 ### `structures`
 
@@ -217,19 +217,19 @@ Vollständige Liste `modelType` für Strukturen laut `Lua_manual.pdf` und `EEPSt
 
 Elementtyp: Zug / Fahrzeugverband
 
-| Name                | Typ                     | Wertebereich                              | Beschreibung                                                                            |
-| ------------------- | ----------------------- | ----------------------------------------- | --------------------------------------------------------------------------------------- |
-| `id`                | `string`                | Zugname, typ. `#...`                      | Name des Fahrzeugverbands                                                               |
-| `route`             | `string`                | Routenname, fallback `Alle`               | Route aus `EEPGetTrainRoute`                                                            |
-| `rollingStockCount` | `integer`               | `>= 0`                                    | Anzahl Rollmaterialien aus `EEPGetRollingstockItemsCount`                               |
-| `length`            | `number`                | Meter, `>= 0`                             | Zuglänge aus `EEPGetTrainLength`                                                        |
-| `line`              | `string` \| `nil`       | freier Text                               | aus dem Tag-Modell der Bibliothek                                                       |
-| `destination`       | `string` \| `nil`       | freier Text                               | aus dem Tag-Modell der Bibliothek                                                       |
-| `direction`         | `string` \| `nil`       | freier Text                               | aus dem Tag-Modell der Bibliothek                                                       |
-| `trackType`         | `string` \| `nil`       | z. B. `rail`, `road`, `tram`, `auxiliary` | Bibliotheksklassifikation, nicht direkt EEP                                             |
-| `movesForward`      | `boolean`               | `true`, `false`                           | aus der Zuggeschwindigkeit abgeleitete Fahrtrichtung                                    |
-| `speed`             | `number`                | km/h; negativ für Rückwärtsfahrt möglich  | aktuelle Geschwindigkeit aus `EEPGetTrainSpeed`                                         |
-| `occupiedTacks`     | `table<string, number>` | Dictionary `trackId -> distance`          | durch die Bibliothek ermittelte belegte Tracks; Schreibweise ist im Code absichtlich so |
+| Name                | Typ                     | Wertebereich                                      | Beschreibung                                                                            |
+| ------------------- | ----------------------- | ------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| `id`                | `string`                | Zugname, typ. `#...`                              | Name des Fahrzeugverbands                                                               |
+| `route`             | `string`                | Routenname, fallback `Alle`                       | Route aus `EEPGetTrainRoute`                                                            |
+| `rollingStockCount` | `integer`               | `>= 0`                                            | Anzahl Rollmaterialien aus `EEPGetRollingstockItemsCount`                               |
+| `length`            | `number`                | Meter, `>= 0`                                     | Zuglänge aus `EEPGetTrainLength`                                                        |
+| `line`              | `string` \| `nil`       | freier Text                                       | aus dem Tag-Modell der Bibliothek                                                       |
+| `destination`       | `string` \| `nil`       | freier Text                                       | aus dem Tag-Modell der Bibliothek                                                       |
+| `direction`         | `string` \| `nil`       | freier Text                                       | aus dem Tag-Modell der Bibliothek                                                       |
+| `trackType`         | `string` \| `nil`       | z. B. `rail`, `road`, `tram`, `auxiliary`         | Bibliotheksklassifikation, nicht direkt EEP                                             |
+| `movesForward`      | `boolean`               | `true`, `false`                                   | aus der Zuggeschwindigkeit abgeleitete Fahrtrichtung                                    |
+| `speed`             | `number`                | km/h; negativ für Rückwärtsfahrt möglich          | aktuelle Geschwindigkeit aus `EEPGetTrainSpeed`                                         |
+| `occupiedTacks`     | `table<string, number>` | Welche Track ID und Abstand `trackId -> distance` | durch die Bibliothek ermittelte belegte Tracks; Schreibweise ist im Code absichtlich so |
 
 Abgeleitet aus:
 
