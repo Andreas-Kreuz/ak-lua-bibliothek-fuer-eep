@@ -20,14 +20,62 @@ local signalsTrainCount = {}
 local signalsTrainNames = {}
 ---@type table<string,string> train name to route name
 local trainRoutes = {}
----@type table<number,string>
-local registeredRoadTracks = {}
----@type table<number,string>
-local registeredRailTracks = {}
+---@type table<string, table>
+local state = {
+    tracks = {
+        rail = {},
+        road = {},
+        tram = {},
+        auxiliary = {},
+        control = {}
+    }
+}
 ---@type table<string,table>
 local structures = {}
 ---@type table<string,table>
 local trains = {}
+
+---@param trackType string
+---@param trackId number
+---@return table
+local function ensureTrackState(trackType, trackId)
+    state.tracks[trackType] = state.tracks[trackType] or {}
+    state.tracks[trackType][trackId] = state.tracks[trackType][trackId] or { registered = true, trainName = "" }
+    return state.tracks[trackType][trackId]
+end
+
+---@param trackType string
+---@param trackId number
+---@return boolean|nil
+local function registerTrack(trackType, trackId)
+    local track = ensureTrackState(trackType, trackId)
+    track.registered = true
+    if trackId <= 11 then return true end
+end
+
+---@param trackType string
+---@param trackId number
+---@param returnTrainName boolean|nil
+---@return boolean, boolean, string|nil
+local function isTrackReserved(trackType, trackId, returnTrainName)
+    local tracksByType = state.tracks[trackType] or {}
+    local track = tracksByType[trackId]
+    local registered = track ~= nil and track.registered == true or false
+    local occupied = registered and track.trainName ~= "" or false
+
+    if returnTrainName then return registered, occupied, registered and track.trainName or nil end
+
+    return registered, occupied
+end
+
+---@param trackType string
+---@param trackId number
+---@param trainName string
+local function setTrackOccupancy(trackType, trackId, trainName)
+    local track = ensureTrackState(trackType, trackId)
+    track.registered = true
+    track.trainName = trainName
+end
 
 ---Add a train and its rollingStock
 ---@param trainName string Name of the train
@@ -103,9 +151,9 @@ function EepSimulator.removeAllTrainFromSignal(signalId)
     updateTrainListSize(signalId)
 end
 
-function EepSimulator.setzeZugAufStrasse(trackId, zugname) registeredRoadTracks[trackId] = zugname end
+function EepSimulator.setzeZugAufStrasse(trackId, zugname) setTrackOccupancy("road", trackId, zugname) end
 
-function EepSimulator.setzeZugAufGleis(trackId, zugname) registeredRailTracks[trackId] = zugname end
+function EepSimulator.setzeZugAufGleis(trackId, zugname) setTrackOccupancy("rail", trackId, zugname) end
 
 local signale = {}
 local switches = {}
@@ -374,8 +422,7 @@ function EEPSetTrainAxis(trainName, achse, stellung) end
 --- Registriert ein Gleis fuer die Besetztabfrage.
 -- @param trackId Id des Gleises
 function EEPRegisterRailTrack(trackId)
-    if registeredRailTracks[trackId] == nil then registeredRailTracks[trackId] = "" end
-    if (trackId <= 11) then return true end
+    return registerTrack("rail", trackId)
 end
 
 --- Fragt ab, ob ein Gleis besetzt ist.
@@ -386,21 +433,13 @@ end
 -- zweiter Wert: true, wenn besetzt,
 -- dritter Wert: Name des Zuges auf dem Gleis
 function EEPIsRailTrackReserved(trackId, returnTrainName)
-    if returnTrainName then
-        return (registeredRailTracks[trackId] ~= nil and true or false),
-            (registeredRailTracks[trackId] ~= "" and true or false),
-            (returnTrainName and registeredRailTracks[trackId] or nil)
-    else
-        return (registeredRailTracks[trackId] ~= nil and true or false),
-            (registeredRailTracks[trackId] ~= "" and true or false)
-    end
+    return isTrackReserved("rail", trackId, returnTrainName)
 end
 
 --- Registriert ein Gleis fuer die Besetztabfrage.
 ---@param trackId number Id des Gleises
 function EEPRegisterRoadTrack(trackId)
-    if registeredRoadTracks[trackId] == nil then registeredRoadTracks[trackId] = "" end
-    if (trackId <= 11) then return true end
+    return registerTrack("road", trackId)
 end
 
 --- Fragt ab, ob ein Gleis besetzt ist.
@@ -411,19 +450,14 @@ end
 -- zweiter Wert: true, wenn besetzt,
 -- dritter Wert: Name des Zuges auf dem Gleis
 function EEPIsRoadTrackReserved(trackId, returnTrainName)
-    if returnTrainName then
-        return (registeredRoadTracks[trackId] ~= nil and true or false),
-            (registeredRoadTracks[trackId] ~= "" and true or false),
-            (returnTrainName and registeredRoadTracks[trackId] or nil)
-    else
-        return (registeredRoadTracks[trackId] ~= nil and true or false),
-            (registeredRoadTracks[trackId] ~= "" and true or false)
-    end
+    return isTrackReserved("road", trackId, returnTrainName)
 end
 
 --- Registriert ein Gleis fuer die Besetztabfrage.
 -- @param tramTrackId Id des Gleises
-function EEPRegisterTramTrack(tramTrackId) end
+function EEPRegisterTramTrack(tramTrackId)
+    return registerTrack("tram", tramTrackId)
+end
 
 --- Fragt ab, ob ein Gleis besetzt ist.
 -- @param tramTrackId Id des Gleises
@@ -431,11 +465,15 @@ function EEPRegisterTramTrack(tramTrackId) end
 -- @return Erster Wert: true, wenn Gleis existiert und registriert,
 -- zweiter Wert: true, wenn besetzt,
 -- dritter Wert: Name des Zuges auf dem Gleis
-function EEPIsTramTrackReserved(tramTrackId, returnTrainName) end
+function EEPIsTramTrackReserved(tramTrackId, returnTrainName)
+    return isTrackReserved("tram", tramTrackId, returnTrainName)
+end
 
 --- Registriert ein Gleis fuer die Besetztabfrage.
 -- @param auxTrackId Id des Gleises
-function EEPRegisterAuxiliaryTrack(auxTrackId) end
+function EEPRegisterAuxiliaryTrack(auxTrackId)
+    return registerTrack("auxiliary", auxTrackId)
+end
 
 --- Fragt ab, ob ein Gleis besetzt ist.
 -- @param auxTrackId Id des Gleises
@@ -443,17 +481,23 @@ function EEPRegisterAuxiliaryTrack(auxTrackId) end
 -- @return Erster Wert: true, wenn Gleis existiert und registriert,
 -- zweiter Wert: true, wenn besetzt,
 -- dritter Wert: Name des Zuges auf dem Gleis
-function EEPIsAuxiliaryTrackReserved(auxTrackId, returnTrainName) end
+function EEPIsAuxiliaryTrackReserved(auxTrackId, returnTrainName)
+    return isTrackReserved("auxiliary", auxTrackId, returnTrainName)
+end
 
 --- Registriert ein Gleis fuer die Besetztabfrage.
 -- @param controlTrackId Id des Gleises
-function EEPRegisterControlTrack(controlTrackId) end
+function EEPRegisterControlTrack(controlTrackId)
+    return registerTrack("control", controlTrackId)
+end
 
 --- Fragt ab, ob ein Gleis besetzt ist.
 -- @param controlTrackId Id des Gleises
 -- @return Erster Wert: true, wenn Gleis existiert und registriert,
 -- zweiter Wert: true, wenn besetzt
-function EEPIsControlTrackReserved(controlTrackId, returnTrainName) end
+function EEPIsControlTrackReserved(controlTrackId, returnTrainName)
+    return isTrackReserved("control", controlTrackId, returnTrainName)
+end
 
 --- Waehlen einer Kamera
 -- @param camType 0: statisch, 1: dynamisch, 2: mobile Kamera
