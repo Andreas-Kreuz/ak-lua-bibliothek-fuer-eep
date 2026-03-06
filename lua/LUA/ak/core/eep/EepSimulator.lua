@@ -29,19 +29,19 @@ local state = {
     },
     trains = {},
     trainyards = {},
+    structures = {},
+    signals = {},
+    switches = {},
+    goods = {},
     camera = {
         perspectiveByTrain = {},
         userRollingstock = {}
     }
 }
----@type table<string,table>
-local structures = {}
 local activeTrain
 local activeRollingstock
 local hook
 local hookGlue
-local tags
-local textureTexts
 
 ---@param trackType string
 ---@param trackId number
@@ -112,6 +112,7 @@ local function getTrainState(trainName) return state.trains[trainName] end
 local function normalizeRollingStockEntry(rollingStock)
     if type(rollingStock) == "table" then
         rollingStock.frontForward = rollingStock.frontForward ~= false
+        rollingStock.textureTexts = rollingStock.textureTexts or {}
         return rollingStock
     end
 
@@ -119,7 +120,9 @@ local function normalizeRollingStockEntry(rollingStock)
         name = rollingStock,
         frontForward = true,
         couplingFront = nil,
-        couplingRear = nil
+        couplingRear = nil,
+        tag = nil,
+        textureTexts = {}
     }
 end
 
@@ -240,16 +243,6 @@ end
 local function renameRollingStockReferences(oldName, newName)
     if activeRollingstock == oldName then activeRollingstock = newName end
 
-    if tags.rollingStock[oldName] ~= nil then
-        tags.rollingStock[newName] = tags.rollingStock[oldName]
-        tags.rollingStock[oldName] = nil
-    end
-
-    if textureTexts.rollingStock[oldName] ~= nil then
-        textureTexts.rollingStock[newName] = textureTexts.rollingStock[oldName]
-        textureTexts.rollingStock[oldName] = nil
-    end
-
     if hook[oldName] ~= nil then
         hook[newName] = hook[oldName]
         hook[oldName] = nil
@@ -286,17 +279,16 @@ local function getRollingStockCoupling(rollingStockName, side)
     local rollingStock, train, rollingStocks, index = getRollingStockTrainContext(rollingStockName)
     if not rollingStock then return false, nil end
 
-    local pointsToTrainFront = side == 'front' and rollingStock.frontForward or side == 'rear' and not rollingStock.frontForward
+    local pointsToTrainFront =
+        side == 'front' and rollingStock.frontForward
+        or side == 'rear' and not rollingStock.frontForward
     index = index or 1
-    local hasNeighbor = false
 
     if pointsToTrainFront then
-        hasNeighbor = index > 1
-    else
-        hasNeighbor = rollingStocks ~= nil and index < #rollingStocks
+        if index > 1 then return true, 3 end
+    elseif rollingStocks ~= nil and index < #rollingStocks then
+        return true, 3
     end
-
-    if hasNeighbor then return true, 3 end
 
     if pointsToTrainFront then
         return true, getExposedCouplingStatus(rollingStock, train, side, train and train.couplingFront or nil)
@@ -314,15 +306,12 @@ local function getTrainEndRollingStock(trainName, trainEnd)
 
     local rollingStock = trainEnd == 'front' and rollingStocks[1] or rollingStocks[#rollingStocks]
     local rollingStockName = rollingStock.name
-    local side = nil
 
     if trainEnd == 'front' then
-        side = rollingStock.frontForward and 'front' or 'rear'
-    else
-        side = rollingStock.frontForward and 'rear' or 'front'
+        return rollingStockName, rollingStock, rollingStock.frontForward and 'front' or 'rear'
     end
 
-    return rollingStockName, rollingStock, side
+    return rollingStockName, rollingStock, rollingStock.frontForward and 'rear' or 'front'
 end
 
 ---@param trainName string
@@ -380,7 +369,13 @@ local function findTrainyardEntry(depotId, trainName, position)
 
     if position ~= nil then
         local entry = trainyard.entries[position + 1]
-        if entry and (trainName == nil or trainName == "" or entry.name == trainName) then return entry, position + 1 end
+        if entry and (
+            trainName == nil
+            or trainName == ""
+            or entry.name == trainName
+        ) then
+            return entry, position + 1
+        end
         return nil, nil
     end
 
@@ -527,10 +522,16 @@ end
 ---@param newName string
 ---@return boolean
 function EepSimulator.simulateRenameRollingStock(oldName, newName)
-    if oldName == newName then return select(1, getRollingStockTrainContext(oldName)) ~= nil end
-    if select(1, getRollingStockTrainContext(oldName)) == nil or select(1, getRollingStockTrainContext(newName)) ~= nil then return false end
+    if oldName == newName then
+        return select(1, getRollingStockTrainContext(oldName)) ~= nil
+    end
 
-    local rollingStock = select(1, getRollingStockTrainContext(oldName))
+    local oldRollingStock = select(1, getRollingStockTrainContext(oldName))
+    if oldRollingStock == nil or select(1, getRollingStockTrainContext(newName)) ~= nil then
+        return false
+    end
+
+    local rollingStock = oldRollingStock
     rollingStock.name = newName
     renameRollingStockReferences(oldName, newName)
     return true
@@ -568,8 +569,8 @@ function EepSimulator.addTrainToTrainyard(depotId, trainName, position, status)
     ensureTrainState(trainName).onLayout = entry.status ~= 1
 end
 
-local signale = {}
-local switches = {}
+local signale = state.signals
+local switches = state.switches
 
 --- Setzt das Signal signalId auf die Stellung signalStellung.
 -- Der Parameter informiereEepOnSignal sollte den Wert 1 haben
@@ -578,9 +579,19 @@ local switches = {}
 -- @param informiereEepOnSignal (optional) Wenn = 1 dann aktiviere Funktion EEPOnSignal_x()
 -- @return ok 1 wenn das Signal und die gewuenschte Signalstellung existieren
 -- oder 0, wenn eins von beidem nicht existiert.
+local function ensureSignalState(signalId)
+    signale[signalId] = signale[signalId] or {}
+    return signale[signalId]
+end
+
+local function ensureSwitchState(switchId)
+    switches[switchId] = switches[switchId] or {}
+    return switches[switchId]
+end
+
 function EEPSetSignal(signalId, signalStellung, informiereEepOnSignal)
     assert(signalId > 0)
-    signale[signalId] = signalStellung
+    ensureSignalState(signalId).stellung = signalStellung
     return 1
 end
 
@@ -589,7 +600,7 @@ end
 -- @return Stellung des Signals, Wenn das abgefragte Signal nicht existiert, ist der Rueckgabewert 0.
 function EEPGetSignal(signalId)
     assert(signalId > 0)
-    return signale[signalId] and signale[signalId] or 2
+    return signale[signalId] and signale[signalId].stellung or 2
 end
 
 --- Setzt die Weiche x auf die Stellung y. Der Wert activateEEPOnSwitch sollte den Wert 1 haben.
@@ -599,12 +610,12 @@ end
 -- @return ok 1 wenn die Weiche und die gewuenschte Weichenstellung existieren
 -- oder 0, wenn eins von beidem nicht existiert.
 function EEPSetSwitch(switchId, switchPosition, activateEEPOnSwitch)
-    switches[switchId] = switchPosition
+    ensureSwitchState(switchId).stellung = switchPosition
     return 1
 end
 
 --- Liefert die aktuelle Stellung der Weiche x
-function EEPGetSwitch(switchId) return switches[switchId] and switches[switchId] or 2 end
+function EEPGetSwitch(switchId) return switches[switchId] and switches[switchId].stellung or 2 end
 
 --- Das Signal x wird intern registriert
 function EEPRegisterSignal(signalId) assert(type(signalId) == "number", "Need 'signalId' as number") end
@@ -719,21 +730,25 @@ function EEPStructureSetSmoke(immoName, onoff) end
 -- @param immoName Name der Immobilie als String.
 function EEPStructureGetSmoke(immoName) end
 
+local function ensureStructureState(name)
+    local strippedName = stripImmoName(name)
+    state.structures[strippedName] = state.structures[strippedName] or {}
+    return state.structures[strippedName], strippedName
+end
+
 --- Licht einschalten
 -- @param immoName Name der Immobilie als String.
 -- @param onoff true oder false
 function EEPStructureSetLight(name, onoff)
-    local strippedName = stripImmoName(name)
-    structures[strippedName] = structures[strippedName] or {}
-    structures[strippedName].light = onoff
+    ensureStructureState(name).light = onoff
 end
 
 --- Licht abfragen
 -- @param immoName Name der Immobilie als String.
 function EEPStructureGetLight(name)
     local strippedName = stripImmoName(name)
-    if structures[strippedName] then
-        return true, structures[strippedName].light or false
+    if state.structures[strippedName] then
+        return true, state.structures[strippedName].light or false
     else
         return false, false
     end
@@ -1000,7 +1015,7 @@ end
 -- @param trainNumber Wenn kein Zugname angegeben ist, dann die Nummer des Zugs im Depot
 -- @return true, wenn der Zug existiert
 function EEPGetTrainFromTrainyard(depotId, trainName, trainNumber)
-    local entry = nil
+    local entry
 
     if trainName and trainName ~= "" then
         entry = select(1, findTrainyardEntry(depotId, trainName, nil))
@@ -1032,7 +1047,7 @@ function EEPPutTrainToTrainyard(depotId, trainName)
 
     if not entry then
         for currentDepotId, trainyard in pairs(state.trainyards) do
-            local index = nil
+            local index
             entry, index = findTrainyardEntry(currentDepotId, trainName, nil)
             if entry then
                 if currentDepotId ~= depotId then table.remove(trainyard.entries, index) end
@@ -1050,7 +1065,8 @@ function EEPPutTrainToTrainyard(depotId, trainName)
 
     entry.status = 1
     ensureTrainState(trainName).onLayout = false
-    if EEPOnTrainEnterTrainyard then EEPOnTrainEnterTrainyard(depotId, trainName) end
+    local onTrainEnterTrainyard = rawget(_G, "EEPOnTrainEnterTrainyard")
+    if onTrainEnterTrainyard then onTrainEnterTrainyard(depotId, trainName) end
     return true
 end
 
@@ -1253,9 +1269,6 @@ function EEPStructureGetModelType(name)
     end
 end
 
-tags = { structures = {}, rollingStock = {} }
-textureTexts = { rollingStock = {} }
-
 --- Aendert den Tag-Text einer Immobilie. Jede Immobilie kann jetzt einen individuellen String von
 --- maximal 1024 Zeichen Laenge mitfuehren. Diese Strings werden mit der Anlage gespeichert und
 --- geladen.
@@ -1264,7 +1277,7 @@ textureTexts = { rollingStock = {} }
 --- * Argument 2 ist der gewuenschte Text.
 --- * Rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false
 function EEPStructureSetTagText(name, tag)
-    tags.structures[name] = tag
+    ensureStructureState(name).tag = tag
     return true
 end
 
@@ -1275,7 +1288,10 @@ end
 --- Es genuegt die Nummer mit vorangestelltem #-Zeichen.
 --- * Rueckgabewert 1 ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
 --- * Rueckgabewert 2 ist der Tag-Text, welcher der Immobilie mitgegeben wurde
-function EEPStructureGetTagText(name) return true, tags.structures[name] end
+function EEPStructureGetTagText(name)
+    local structure = state.structures[stripImmoName(name)]
+    return true, structure and structure.tag or nil
+end
 
 --- Aendert den Tag-Text eines Fahrzeugs. Jedes Fahrzeug kann jetzt einen eigenen String von
 --- maximal 1024 Zeichen Laenge mitfuehren. Diese Strings werden mit der Anlage gespeichert und
@@ -1286,7 +1302,7 @@ function EEPStructureGetTagText(name) return true, tags.structures[name] end
 --- * Argument 2 ist der gewuenschte Text.
 --- * Rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
 function EEPRollingstockSetTagText(name, tag)
-    tags.rollingStock[name] = tag
+    getOrCreateRollingStockEntry(name).tag = tag
     return true
 end
 
@@ -1296,27 +1312,102 @@ end
 --- * Argument 1 ist der Name des Fahrzeugs.
 --- * Rueckgabewert 1 ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
 --- * Rueckgabewert 2 ist der Tag-Text, welcher dem Waggon mitgegeben wurde.
-function EEPRollingstockGetTagText(name) return true, tags.rollingStock[name] end
+function EEPRollingstockGetTagText(name)
+    local rollingStock = select(1, getRollingStockTrainContext(name))
+    return rollingStock ~= nil, rollingStock and rollingStock.tag or nil
+end
 
-function EEPStructureSetTextureText(name, flaeche, text) return true end
-
-function EEPRollingstockSetTextureText(name, flaeche, text)
-    textureTexts.rollingStock[name] = textureTexts.rollingStock[name] or {}
-    textureTexts.rollingStock[name][flaeche] = text
+local function setTextureText(entry, flaeche, text)
+    entry.textureTexts = entry.textureTexts or {}
+    entry.textureTexts[flaeche] = text
     return true
 end
 
-function EEPSignalSetTextureText(id, flaeche, text) return true end
+local function getTextureText(entry, flaeche)
+    if not entry or not entry.textureTexts then return false, nil end
+    local textureText = entry.textureTexts[flaeche]
+    local ok = textureText ~= nil
+    return ok, textureText
+end
 
-function EEPGoodsSetTextureText(name, flaeche, text) return true end
+local function ensureGoodsState(goodsName)
+    state.goods[goodsName] = state.goods[goodsName] or {}
+    return state.goods[goodsName]
+end
 
-function EEPRailTrackSetTextureText(id, flaeche, text) return true end
+local function setTrackTextureText(trackType, id, flaeche, text)
+    return setTextureText(ensureTrackState(trackType, id), flaeche, text)
+end
 
-function EEPRoadTrackSetTextureText(id, flaeche, text) return true end
+local function getTrackTextureText(trackType, id, flaeche)
+    return getTextureText((state.tracks[trackType] or {})[id], flaeche)
+end
 
-function EEPTramTrackSetTextureText(id, flaeche, text) return true end
+function EEPSignalSetTagText(id, tag)
+    ensureSignalState(id).tag = tag
+    return true
+end
 
-function EEPAuxiliaryTrackSetTextureText(id, flaeche, text) return true end
+function EEPSignalGetTagText(id) return true, signale[id] and signale[id].tag or nil end
+
+function EEPSwitchSetTagText(id, tag)
+    ensureSwitchState(id).tag = tag
+    return true
+end
+
+function EEPSwitchGetTagText(id) return true, switches[id] and switches[id].tag or nil end
+
+function EEPGoodsSetTagText(name, tag)
+    ensureGoodsState(name).tag = tag
+    return true
+end
+
+function EEPGoodsGetTagText(name)
+    local goods = state.goods[name]
+    return true, goods and goods.tag or nil
+end
+
+function EEPStructureSetTextureText(name, flaeche, text)
+    return setTextureText(ensureStructureState(name), flaeche, text)
+end
+
+function EEPStructureGetTextureText(name, flaeche)
+    return getTextureText(state.structures[stripImmoName(name)], flaeche)
+end
+
+function EEPRollingstockSetTextureText(name, flaeche, text)
+    return setTextureText(getOrCreateRollingStockEntry(name), flaeche, text)
+end
+
+function EEPSignalSetTextureText(id, flaeche, text)
+    return setTextureText(ensureSignalState(id), flaeche, text)
+end
+
+function EEPSignalGetTextureText(id, flaeche) return getTextureText(signale[id], flaeche) end
+
+function EEPGoodsSetTextureText(name, flaeche, text)
+    return setTextureText(ensureGoodsState(name), flaeche, text)
+end
+
+function EEPGoodsGetTextureText(name, flaeche) return getTextureText(state.goods[name], flaeche) end
+
+function EEPRailTrackSetTextureText(id, flaeche, text) return setTrackTextureText("rail", id, flaeche, text) end
+
+function EEPRailTrackGetTextureText(id, flaeche) return getTrackTextureText("rail", id, flaeche) end
+
+function EEPRoadTrackSetTextureText(id, flaeche, text) return setTrackTextureText("road", id, flaeche, text) end
+
+function EEPRoadTrackGetTextureText(id, flaeche) return getTrackTextureText("road", id, flaeche) end
+
+function EEPTramTrackSetTextureText(id, flaeche, text) return setTrackTextureText("tram", id, flaeche, text) end
+
+function EEPTramTrackGetTextureText(id, flaeche) return getTrackTextureText("tram", id, flaeche) end
+
+function EEPAuxiliaryTrackSetTextureText(id, flaeche, text)
+    return setTrackTextureText("auxiliary", id, flaeche, text)
+end
+
+function EEPAuxiliaryTrackGetTextureText(id, flaeche) return getTrackTextureText("auxiliary", id, flaeche) end
 
 ---------------------
 -- Neu ab EEP 15.1 --
@@ -1442,10 +1533,8 @@ function EEPRollingstockGetPosition(rollingstockName) return true, 100, -50, 3 e
 -- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
 -- @return textureText
 function EEPRollingstockGetTextureText(rollingstockName, fleache)
-    local rollingStockTextureTexts = textureTexts.rollingStock[rollingstockName] or {}
-    local textureText = rollingStockTextureTexts[fleache]
-    local ok = textureText and true or false
-    return ok, textureText
+    local rollingStock = select(1, getRollingStockTrainContext(rollingstockName))
+    return getTextureText(rollingStock, fleache)
 end
 
 local camera = state.camera

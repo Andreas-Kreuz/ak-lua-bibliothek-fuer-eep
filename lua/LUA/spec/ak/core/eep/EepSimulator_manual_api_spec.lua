@@ -137,6 +137,82 @@ describe("EepSimulator manual API", function()
         end)
     end)
 
+    insulate("metadata state", function()
+        require("ak.core.eep.EepSimulator")
+
+        it("stores structure metadata", function()
+            assert.is_true(EEPStructureSetTagText("#14", "Station"))
+            assert.is_true(EEPStructureSetTextureText("#14", 1, "Nord"))
+
+            local okTag, tag = EEPStructureGetTagText("#14")
+            local okTexture, texture = EEPStructureGetTextureText("#14", 1)
+
+            assert.is_true(okTag)
+            assert.equals("Station", tag)
+            assert.is_true(okTexture)
+            assert.equals("Nord", texture)
+        end)
+
+        it("stores signal and switch tags", function()
+            assert.is_true(EEPSignalSetTagText(21, "Hp1"))
+            assert.is_true(EEPSwitchSetTagText(8, "Abzweig"))
+
+            local okSignal, signalTag = EEPSignalGetTagText(21)
+            local okSwitch, switchTag = EEPSwitchGetTagText(8)
+
+            assert.is_true(okSignal)
+            assert.equals("Hp1", signalTag)
+            assert.is_true(okSwitch)
+            assert.equals("Abzweig", switchTag)
+        end)
+
+        it("stores goods metadata", function()
+            assert.is_true(EEPGoodsSetTagText("ContainerA", "Import"))
+            assert.is_true(EEPGoodsSetTextureText("ContainerA", 2, "CARGO"))
+
+            local okTag, tag = EEPGoodsGetTagText("ContainerA")
+            local okTexture, texture = EEPGoodsGetTextureText("ContainerA", 2)
+
+            assert.is_true(okTag)
+            assert.equals("Import", tag)
+            assert.is_true(okTexture)
+            assert.equals("CARGO", texture)
+        end)
+
+        it("stores track texture text per track type", function()
+            assert.is_true(EEPRailTrackSetTextureText(4, 1, "R"))
+            assert.is_true(EEPRoadTrackSetTextureText(5, 1, "D"))
+            assert.is_true(EEPTramTrackSetTextureText(6, 1, "T"))
+            assert.is_true(EEPAuxiliaryTrackSetTextureText(7, 1, "A"))
+
+            local okRail, rail = EEPRailTrackGetTextureText(4, 1)
+            local okRoad, road = EEPRoadTrackGetTextureText(5, 1)
+            local okTram, tram = EEPTramTrackGetTextureText(6, 1)
+            local okAux, aux = EEPAuxiliaryTrackGetTextureText(7, 1)
+            local okUnknown, unknown = EEPRailTrackGetTextureText(99, 1)
+
+            assert.is_true(okRail)
+            assert.equals("R", rail)
+            assert.is_true(okRoad)
+            assert.equals("D", road)
+            assert.is_true(okTram)
+            assert.equals("T", tram)
+            assert.is_true(okAux)
+            assert.equals("A", aux)
+            assert.is_false(okUnknown)
+            assert.is_nil(unknown)
+        end)
+
+        it("stores rollingstock texture text", function()
+            assert.is_true(EEPRollingstockSetTextureText("Salonwagen", 3, "Bistro"))
+
+            local ok, texture = EEPRollingstockGetTextureText("Salonwagen", 3)
+
+            assert.is_true(ok)
+            assert.equals("Bistro", texture)
+        end)
+    end)
+
     insulate("rollingstock train state", function()
         local EepSimulator = require("ak.core.eep.EepSimulator")
 
