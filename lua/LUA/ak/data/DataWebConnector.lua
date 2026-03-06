@@ -11,22 +11,28 @@ function DataWebConnector.registerJsonCollectors(activeCollectors)
     end
 
     if all or activeCollectors["ak.data.DataSlotsJsonCollector"] then
-        ServerController.addJsonCollector(require("ak.data.DataSlotsJsonCollector"))
+        local dataSlotsJsonCollector = require("ak.data.DataSlotsJsonCollector")
+        ServerController.addJsonCollector(dataSlotsJsonCollector)
     end
     if all or activeCollectors["ak.data.SignalJsonCollector"] then
-        ServerController.addJsonCollector(require("ak.data.SignalJsonCollector"))
+        local signalJsonCollector = require("ak.data.SignalJsonCollector")
+        ServerController.addJsonCollector(signalJsonCollector)
     end
     if all or activeCollectors["ak.data.SwitchJsonCollector"] then
-        ServerController.addJsonCollector(require("ak.data.SwitchJsonCollector"))
+        local switchJsonCollector = require("ak.data.SwitchJsonCollector")
+        ServerController.addJsonCollector(switchJsonCollector)
     end
     if all or activeCollectors["ak.data.StructureJsonCollector"] then
-        ServerController.addJsonCollector(require("ak.data.StructureJsonCollector"))
+        local structureJsonCollector = require("ak.data.StructureJsonCollector")
+        ServerController.addJsonCollector(structureJsonCollector)
     end
     if all or activeCollectors["ak.data.TimeJsonCollector"] then
-        ServerController.addJsonCollector(require("ak.data.TimeJsonCollector"))
+        local timeJsonCollector = require("ak.data.TimeJsonCollector")
+        ServerController.addJsonCollector(timeJsonCollector)
     end
     if all or activeCollectors["ak.data.TrainsAndTracksJsonCollector"] then
-        ServerController.addJsonCollector(require("ak.data.TrainsAndTracksJsonCollector"))
+        local trainsAndTracksJsonCollector = require("ak.data.TrainsAndTracksJsonCollector")
+        ServerController.addJsonCollector(trainsAndTracksJsonCollector)
     end
 end
 

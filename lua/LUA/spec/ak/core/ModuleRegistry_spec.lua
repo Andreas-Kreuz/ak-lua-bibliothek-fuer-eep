@@ -1,8 +1,9 @@
 insulate("Check traffic light sequence", function ()
     require("ak.core.eep.EepSimulator")
     local ModuleRegistry = require("ak.core.ModuleRegistry")
-    ModuleRegistry.registerModules(require("ak.road.CrossingLuaModul"),
-                                   require("ak.scheduler.SchedulerLuaModule"))
+    local crossingLuaModul = require("ak.road.CrossingLuaModul")
+    local schedulerLuaModule = require("ak.scheduler.SchedulerLuaModule")
+    ModuleRegistry.registerModules(crossingLuaModul, schedulerLuaModule)
 
     local modNames = ModuleRegistry.getModuleNames()
     it("modNames size   ", function () assert.equals(3, #modNames) end)

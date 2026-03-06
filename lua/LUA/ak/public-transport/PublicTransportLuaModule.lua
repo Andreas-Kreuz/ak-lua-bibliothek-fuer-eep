@@ -33,7 +33,8 @@ do
     -- Das CrossingLuaModul benötigt das SchedulerLuaModule
     -- Dies wird beim Einlesen dieser Datei automatisch registriert
     local ModuleRegistry = require("ak.core.ModuleRegistry")
-    ModuleRegistry.registerModules(require("ak.scheduler.SchedulerLuaModule"))
+    local schedulerLuaModule = require("ak.scheduler.SchedulerLuaModule")
+    ModuleRegistry.registerModules(schedulerLuaModule)
 end
 
 return PublicTransportLuaModul

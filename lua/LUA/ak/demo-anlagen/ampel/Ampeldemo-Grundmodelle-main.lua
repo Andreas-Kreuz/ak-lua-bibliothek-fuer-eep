@@ -206,9 +206,10 @@ end
 -- endregion
 
 local ModuleRegistry = require("ak.core.ModuleRegistry")
-ModuleRegistry.registerModules(require("ak.core.CoreLuaModule"),
-                               require("ak.data.DataLuaModule"),
-                               require("ak.road.CrossingLuaModul"))
+local coreLuaModule = require("ak.core.CoreLuaModule")
+local dataLuaModule = require("ak.data.DataLuaModule")
+local crossingLuaModul = require("ak.road.CrossingLuaModul")
+ModuleRegistry.registerModules(coreLuaModule, dataLuaModule, crossingLuaModul)
 
 function EEPMain()
     -- print("[#Anlage] Speicher: " .. collectgarbage("count"))

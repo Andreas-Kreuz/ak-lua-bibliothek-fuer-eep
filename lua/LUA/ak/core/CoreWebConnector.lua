@@ -6,9 +6,10 @@ function CoreWebConnector.setRegisteredLuaModules(modules) registeredLuaModules 
 
 function CoreWebConnector.registerJsonCollectors()
     local ModulesJsonCollector = require("ak.core.ModulesJsonCollector")
+    local VersionJsonCollector = require("ak.core.VersionJsonCollector")
     ModulesJsonCollector.setRegisteredLuaModules(registeredLuaModules)
     ServerController.addJsonCollector(ModulesJsonCollector)
-    ServerController.addJsonCollector(require("ak.core.VersionJsonCollector"))
+    ServerController.addJsonCollector(VersionJsonCollector)
 end
 
 return CoreWebConnector

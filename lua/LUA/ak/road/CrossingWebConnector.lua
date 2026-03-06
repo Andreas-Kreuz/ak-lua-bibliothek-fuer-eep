@@ -7,8 +7,10 @@ local CrossingSettings = require("ak.road.CrossingSettings")
 local CrossingWebConnector = {}
 
 function CrossingWebConnector.registerJsonCollectors()
-    ServerController.addJsonCollector(require("ak.road.TrafficLightModelJsonCollector"))
-    ServerController.addJsonCollector(require("ak.road.CrossingJsonCollector"))
+    local trafficLightModelJsonCollector = require("ak.road.TrafficLightModelJsonCollector")
+    local crossingJsonCollector = require("ak.road.CrossingJsonCollector")
+    ServerController.addJsonCollector(trafficLightModelJsonCollector)
+    ServerController.addJsonCollector(crossingJsonCollector)
 end
 
 function CrossingWebConnector.registerFunctions()
