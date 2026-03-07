@@ -760,9 +760,10 @@ end
 
 function AkTrainControl.clearRoutes(trainName, ...)
     assert(trainName)
-    assert(...)
+    local routes = { ... }
+    assert(#routes > 0)
 
-    for _, route in pairs(...) do
+    for _, route in ipairs(routes) do
         if route.taken == true or route.block1.trainName == trainName then
             pdbg(dbg.fs_schaltung, "Gebe Fahrstrasse " .. route.name .. " frei.")
             route:unlockRoute(trainName)
