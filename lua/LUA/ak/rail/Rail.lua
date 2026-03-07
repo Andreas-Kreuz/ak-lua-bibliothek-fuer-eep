@@ -605,7 +605,7 @@ function AkRoute:save()
     local data = {}
     data["n"] = self.name
     data["b"] = tostring(self.taken)
-    data["z"] = tostring(self.trainName)
+    if self.trainName then data["z"] = tostring(self.trainName) end
     data["t"] = tostring(self.securedTime)
     StorageUtility.saveTable(self.eepSaveId, data, "FS " .. self.name)
 end
