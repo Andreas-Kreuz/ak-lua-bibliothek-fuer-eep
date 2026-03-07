@@ -256,6 +256,17 @@ function AkCrossing:openForRoute(trainName, route)
     return 0
 end
 
+function AkCrossing:reset()
+    self.routen = {}
+    self.currentClosingTime = -1
+    EEPSetSignal(self.signalId1, self.defaultPosition)
+    EEPSetSignal(self.signalId2, self.defaultPosition)
+    EEPShowInfoSignal(self.signalId1, false)
+    EEPShowInfoSignal(self.signalId2, false)
+    EEPChangeInfoSignal(self.signalId1, "RESET")
+    EEPChangeInfoSignal(self.signalId2, "RESET")
+end
+
 --- Ein Block (Gleisabschnitt), in dem sich nur ein Zug aufhalten kann.
 --- Der Block "weiss", welcher Zug sich in ihm befindet und in welche Richtung er will.
 --- -------------------------------------------------------------------
@@ -596,6 +607,9 @@ function AkRoute:reset()
     self.taken = false
     self.trainName = nil
     self.securedTime = -1
+    if self.crossings then
+        for _, akCrossing in ipairs(self.crossings) do akCrossing:reset() end
+    end
     for _, akSwitch in ipairs(self.switches) do akSwitch:setDefaultStand("RESET", self) end
     for _, akSignal in ipairs(self.signals) do akSignal:setDefaultPosition("RESET", self) end
     self:save()
