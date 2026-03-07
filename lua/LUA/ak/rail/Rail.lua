@@ -3,11 +3,11 @@ local StorageUtility = require("ak.storage.StorageUtility")
 local fmt = require("ak.core.eep.TippTextFormatter")
 
 dbg = {
-    anforderung = true,
+    anforderung = false,
     bahnhof = false,
     error = true,
-    fs_pruefung = true,
-    fs_schaltung = true,
+    fs_pruefung = false,
+    fs_schaltung = false,
     signal_aenderung = false,
     weiche_aenderung = false,
     ampel = false,
@@ -776,7 +776,11 @@ function AkTrainControl.clearRoutes(trainName, ...)
     local routes = { ... }
     assert(#routes > 0)
 
-    for _, route in ipairs(routes) do
+    for i, route in ipairs(routes) do
+        assert(type(route) == "table", "clearRoutes: route #" .. i .. " ist keine Tabelle")
+        assert(route.block1, "clearRoutes: route #" .. i .. " hat kein block1")
+        assert(route.block2, "clearRoutes: route #" .. i .. " hat kein block2")
+
         if route.taken == true or route.block1.trainName == trainName then
             pdbg(dbg.fs_schaltung, "Gebe Fahrstrasse " .. route.name .. " frei.")
             route:unlockRoute(trainName)
