@@ -12,6 +12,8 @@ EepFunctionWrapper.EEPGetTrainLength = EEPGetTrainLength or function (trainName)
     return length
 end
 
+EEPSwitchGetTagText = EEPSwitchGetTagText or function () end -- EEP 18.1
+
 --- Ermittelt die zurückgelegte Strecke des Rollmaterials in Meter (m)
 --  OK, Mileage = EEPRollingstockGetMileage("#Fahrzeug")
 EEPRollingstockGetMileage = EEPRollingstockGetMileage or function () end -- EEP 16.1
