@@ -15,15 +15,15 @@
 
 **Bestandteile** enthalten:
 
-- **_lua_** - enhält den Lua-Code für EEP - dieser wird direkt genutzt
-- **_scripts_** - enthält Hilfsskripte für die Entwicklung
-- **_web-app_** - das Frontend geschrieben in Angular
-- **_web-server_** - eine Electron App
-- **_web-shared_** - geteilter Code von web-app und web-server
+- **`lua`** - enthält den Lua-Code für EEP; dieser wird direkt genutzt
+- **`scripts`** - enthält Hilfsskripte für Entwicklung, Build und Tests
+- **`apps/web-app`** - das Frontend, geschrieben mit React und Vite
+- **`apps/web-server`** - eine Electron- und Node-Anwendung
+- **`packages/web-shared`** - geteilte Typen und Events von Web-App und Web-Server
 
 Weitere Verzeichnisse sind:
 
-- `.vscode` - Projektdateien für VSCode
+- `.vscode` - Projektdateien für VS Code
 - `assets` - Bilder und CSS für die generierte Webseite
 - `docs` - generierte Webseite
 
@@ -32,32 +32,32 @@ Weitere Verzeichnisse sind:
 ### Notwendige Werkzeuge
 
 - [Lua 5.3](http://luabinaries.sourceforge.net/download.html) (für Lua-Skripte)
-- [Node.js](https://nodejs.org/en/) (für EEP-Web App)
-- [7-zip](https://www.7-zip.org/) (für das Erstellen des Modellpakets als Zip)
+- [Node.js](https://nodejs.org/en/) (für Web-App und Web-Server)
+- [7-Zip](https://www.7-zip.org/) (für das Erstellen des Release-Pakets)
 
 ### Empfohlene Werkzeuge
 
 #### Empfohlene Entwicklungswerkzeuge
 
-- [VS-Code](https://code.visualstudio.com/) - die empfohlenen Erweiterungen sind im Projektverzeichnis hinterlegt
-- [git Kommandozeile](https://git-scm.com/downloads) oder [gitHub Desktop](https://desktop.github.com/)
+- [VS Code](https://code.visualstudio.com/) - die empfohlenen Erweiterungen sind im Projektverzeichnis hinterlegt
+- [git Kommandozeile](https://git-scm.com/downloads) oder [GitHub Desktop](https://desktop.github.com/)
 
-#### Empfohlen für Lua Tests
+#### Empfohlen für Lua-Tests
 
 Für das Testen werden die Lua-Werkzeuge [`luacheck`](https://github.com/mpeterv/luacheck) und [`busted`](https://github.com/lunarmodules/busted) empfohlen.
 
-- `luacheck --std max+busted lua/LUA`
-- `busted --verbose --coverage --`
+- `luacheck --config .luacheckrc lua/LUA`
+- `busted --config-file .busted --verbose --coverage --`
 
 #### Empfohlen für die Webseite
 
-Für das Betrachten der Webseite _vor_ dem Upload wird [Jekyll](https://jekyllrb.com/docs/installation/windows/) empfohlen.
+Für das Betrachten der statischen Dokumentation vor dem Upload wird [Jekyll](https://jekyllrb.com/docs/installation/windows/) empfohlen.
 
 ## Entwicklung
 
 ### Projekt klonen auf der Kommandozeile
 
-- Dieses Projekt klonen (wird in ein Unterverzeichnis ak-lua-bibliothek-fuer-eep gespeichert):
+- Dieses Projekt klonen (wird in ein Unterverzeichnis `ak-lua-bibliothek-fuer-eep` gespeichert):
 
   ```bash
   cd ein-verzeichnis-deiner-wahl
@@ -70,34 +70,43 @@ Nun kann das Verzeichnis `ak-lua-bibliothek-fuer-eep` in VS Code als Ordner geö
 
 ### Vorbereitung der Entwicklung
 
-Für die Entwicklung der Web-Komponenten musst Du noch die notwendigen npm Pakete installieren:
+Für die Entwicklung der Web-Komponenten musst Du noch die notwendigen Pakete installieren:
 
 ```bash
 npm install -g corepack
 yarn
 ```
 
-Benutze danach das Skript `.\scripts\build-package.cmd` um das ganze Programm einmal zu bauen.
+Wenn Du die Windows-Skripte verwenden willst, kannst Du alternativ `.\scripts\install-npms.cmd` benutzen.
 
-Dabei werden App, Server und Lua in eine EEP-Installationsdatei zusammengepackt.
+### Einmal komplett bauen
+
+Mit `.\scripts\build-release.cmd` wird das gesamte Projekt gebaut und ein Installationspaket für EEP erzeugt.
+
+Wenn Du nur Web-App und Web-Server gemeinsam bauen willst, ohne das Release-Paket zu erstellen, benutze `.\scripts\build-server-with-app.cmd`.
 
 ### Testmodus starten
 
-Das Skript `.\scripts\start-developing.cmd` startet den Server und die Web-App im "Testmodus".  
-Das erlaubt das automatische Ausführen von Test, während Du die App entwickelst.  
-Der Testmodus zeigt unter <http://localhost:4200/> die Daten des aktuellen Tests an. Willst Du Deine Anlage in EEP sehen, kannst Du den Spielmodus starten.
+Das Skript `.\scripts\start-developing.cmd` startet die E2E-Testumgebung für die Web-App.
+Dabei werden der Test-Server, eine Preview der Web-App und Cypress gestartet.
+Die Preview der Web-App ist typischerweise unter <http://localhost:4173/> erreichbar.
 
 #### Von Hand testen
 
 Wenn Du vor dem Upload selbst testen willst, kannst Du
 
-- Tests für Lua ausführen: `.\scripts\check-lua.cmd`
-- Web-App Tests ausführen: `.\scripts\check-web-app-e2e.cmd`
+- Lua-Tests ausführen: `.\scripts\check-lua.cmd`
+- Web-App-E2E-Tests ausführen: `.\scripts\check-web-app-e2e.cmd`
 
 ### Spielmodus starten
 
-Das Skript `.\scripts\start-playing.cmd` starten den Server und die Web-App im "Spielmodus".  
-Der Spielmodus zeigt unter <http://localhost:4200/> die aktuell in EEP geöffnete Anlage an.
+Das Skript `.\scripts\start-playing.cmd` startet den Server und die Web-App im Spielmodus.
+Die Web-App läuft dabei typischerweise unter <http://localhost:5173/>.
+
+Wenn Du Server und Web-App getrennt starten willst, benutze:
+
+- `.\scripts\start-web-server.cmd`
+- `.\scripts\start-web-app.cmd`
 
 ## Sonstiges
 
@@ -111,4 +120,4 @@ mklink /D C:\Trend\EEP15\LUA\ak C:\GitHub\ak-lua-bibliothek-fuer-eep\lua\LUA\ak
 
 ### Webseite bearbeiten
 
-Das Skript `.\scripts\start-doc-server.cmd` startet jekyll und erlaubt es Dir die generierte Webseite vor dem Upload zu betrachten.
+Das Skript `.\scripts\start-doc-server.cmd` startet Jekyll und erlaubt es Dir, die generierte Webseite vor dem Upload zu betrachten.
