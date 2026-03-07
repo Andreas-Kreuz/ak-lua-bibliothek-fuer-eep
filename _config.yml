@@ -91,9 +91,16 @@ includes_dir: docs/_includes
 sass:
     sass_dir: docs/_sass
     style: :compressed
+    quiet_deps: true
+    silence_deprecations:
+        - import
+        - global-builtin
+        - color-functions
+        - slash-div
 
 # Plugins
 plugins:
+    - jekyll-github-metadata
     - jekyll-paginate
     - jekyll-seo-tag
     - jemoji
@@ -106,6 +113,13 @@ exclude:
         "vendor/cache/",
         "vendor/gems/",
         "vendor/ruby/",
+        ".bundle/",
+        ".bundle-user/",
+        "apps/",
+        "packages/",
+        "apps/web-app",
+        "apps/web-server",
+        "packages/web-shared",
         "lua/LUA/ak/io/exchange",
         "*.lua",
         "LICENSE",

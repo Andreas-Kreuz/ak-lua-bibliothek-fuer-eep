@@ -104,6 +104,9 @@ _site
 Gemfile.lock
 .sass-cache
 .jekyll*
+.bundle/
+.bundle-user/
+/vendor/bundle/
 
 # Compiled Lua sources
 luac.out

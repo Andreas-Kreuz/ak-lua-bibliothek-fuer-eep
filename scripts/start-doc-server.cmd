@@ -7,6 +7,8 @@ setlocal
 SET oldDir=%CD%
 SET projectPath=%~dp0..
 
+cd /d %projectPath%
+
 bundle exec jekyll serve
 IF %ERRORLEVEL% NEQ 0 (
    exit /b %ERRORLEVEL%
