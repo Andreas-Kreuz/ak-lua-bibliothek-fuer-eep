@@ -137,7 +137,8 @@ function StorageUtility.saveTable(eepSaveId, table, name)
     local maxLength = StorageUtility.maxSaveDataStringLength
     local text = StorageUtility.encodeTable(table, maxLength)
     if text:len() > maxLength then
-        print("[#StorageUtility] Cannot store more than " .. maxLength .. " characters in slot " .. eepSaveId .. " - " .. name)
+        print("[#StorageUtility] Cannot store more than " ..
+            maxLength .. " characters in slot " .. eepSaveId .. " - " .. name)
     end
     assert(text:len() <= maxLength)
     local hresult = EEPSaveData(eepSaveId, text)

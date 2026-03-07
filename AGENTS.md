@@ -49,6 +49,9 @@
 - Lua prüfen, falls lokal installiert:
   - `luacheck --config .luacheckrc lua/LUA`
   - `busted --config-file .busted --verbose --coverage --`
+- Lua formatieren, falls lokal installiert:
+  - `lua-format -c lua-format.conf -i <datei.lua>`
+  - `lua-format -c lua-format.conf --check <datei.lua>`
 
 ## Testing und Verifikation
 
