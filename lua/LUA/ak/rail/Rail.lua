@@ -62,7 +62,7 @@ local function registerSignal(signalId)
             EEPChangeInfoSignal(signalId, "Signal: " .. signalId .. "\nStellung: " .. x)
             EEPShowInfoSignal(signalId, true)
         end
-        pdbg(dbg.debug, "Registered: " .. "EEPOnSignal_" .. signalId)
+        pdbg(dbg.signal_aenderung, "Registered: " .. "EEPOnSignal_" .. signalId)
         EEPRegisterSignal(signalId)
     end
 end
@@ -75,7 +75,7 @@ local function registerSwitch(switchId)
             EEPChangeInfoSwitch(switchId, "Weiche: " .. switchId .. "\nStellung: " .. x)
             EEPShowInfoSwitch(switchId, true)
         end
-        pdbg(dbg.debug, "Registered: " .. "EEPOnSwitch_" .. switchId)
+        pdbg(dbg.weiche_aenderung, "Registered: " .. "EEPOnSwitch_" .. switchId)
         EEPRegisterSwitch(switchId)
     end
 end
@@ -813,7 +813,7 @@ function AkTrainControl.calculateRoutes()
     if not timeForRouteCalculation() then return end
     local currentTime = EEPTime
 
-    pdbg(dbg.debug, "Pruefe Fahrstrassen ... " .. EEPTime)
+    pdbg(dbg.fs_pruefung, "Pruefe Fahrstrassen ... " .. EEPTime)
 
     -- Fahrstrassen sichern (crossings)
     --  a) Fahrstrassen merken, die noch nicht gesichert sind
@@ -823,7 +823,7 @@ function AkTrainControl.calculateRoutes()
             if route then
                 route:reserveRoute(blockAnforderung.trainName or "UNBEKANNT")
             else
-                pdbg(dbg.debug,
+                pdbg(dbg.fs_pruefung,
                      "Keine freie Fahrstrasse fuer " .. blockAnforderung.eepSaveId .. " (" .. blockAnforderung.name ..
                      " -> " ..
                      (blockAnforderung.trainDirection and blockAnforderung.trainDirection or "NO DIRECTION!") .. ")")
