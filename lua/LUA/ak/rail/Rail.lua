@@ -299,7 +299,7 @@ function AkBlock:getRoutesToCurrentTrainDirection()
             "\" has no direction set in \"enterReservedBlock()\"\n" .. debug.traceback())
         return {}
     end
-    return self.routes[self.trainDirection]
+    return self.routes[self.trainDirection] or {}
 end
 
 function AkBlock:findFreeRoute()
