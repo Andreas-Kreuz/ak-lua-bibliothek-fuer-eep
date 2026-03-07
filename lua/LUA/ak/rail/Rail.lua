@@ -666,7 +666,6 @@ end
 function AkStation:addInfoStructure(structure, alwaysVisible)
     assert(type(structure) == "string", "Need 'structure' as string")
     assert(type(self.infoStructures) == "table")
-    self.alwaysVisible = alwaysVisible
     self.infoStructures[structure] = alwaysVisible or false
 end
 
@@ -683,9 +682,9 @@ function AkStation:showInfo()
     for _, route in ipairs(self.tracks) do
         formattedText = formattedText .. "\n<j>" .. "- " .. route:formattedText() .. "</j><br>";
     end
-    for s in pairs(self.infoStructures) do
+    for s, alwaysVisible in pairs(self.infoStructures) do
         -- EEPChangeInfoStructure(s, "BERECHNE TEXT ...")
-        EEPShowInfoStructure(s, self.alwaysVisible or dbg.fs_schaltung)
+        EEPShowInfoStructure(s, alwaysVisible or dbg.fs_schaltung)
         EEPChangeInfoStructure(s, formattedText)
     end
 end
@@ -740,9 +739,9 @@ function AkSignalTower:showInfo()
     for _, block in ipairs(self.tracks) do
         formattedText = formattedText .. "\n<j>" .. "- " .. block:formattedText() .. "</j><br>";
     end
-    for s in pairs(self.infoStructures) do
+    for s, alwaysVisible in pairs(self.infoStructures) do
         -- EEPChangeInfoStructure(s, "BERECHNE TEXT ...")
-        EEPShowInfoStructure(s, self.alwaysVisible or dbg.fs_schaltung)
+        EEPShowInfoStructure(s, alwaysVisible or dbg.fs_schaltung)
         EEPChangeInfoStructure(s, formattedText)
     end
 end
