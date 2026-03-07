@@ -51,7 +51,7 @@ Verantwortlichkeiten:
 - Registrierung erlaubter Remote-Funktionen über `AkCommandExecutor`
 - periodisches Einsammeln der Daten aller Collector
 - Weitergabe des Exportstrings an `AkWebServerIo`
-- Sammeln und Weiterreichen von Laufzeitmetriken an `RuntimeRegistry` und `EventBroker`
+- Sammeln und Weiterreichen von Laufzeitmetriken an `RuntimeRegistry` und `DataChangeBus`
 
 Erwartetes Collector-Interface:
 
@@ -200,7 +200,7 @@ Wenn Collector neue Datentypen oder nicht serialisierbare Werte zurückgeben, sc
 
 - `ak.core`: typischer Aufruf von `communicateWithServer(...)`
 - `ak.data`, `ak.road`, `ak.public-transport`: liefern Collector und Remote-Funktionen
-- `ak.util.EventBroker`: erzeugt Events, die indirekt über `EventRecorder` exportiert werden
+- `ak.events.DataChangeBus`: erzeugt Events, die über den `EventRecorder` gesammelt werden
 - `ak.util.RuntimeRegistry`: sammelt Laufzeitmetriken des Kommunikationszyklus
 
 ## Empfehlung für KI-Agenten

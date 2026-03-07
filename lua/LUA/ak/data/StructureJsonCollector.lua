@@ -1,5 +1,5 @@
 if AkDebugLoad then print("[#Start] Loading ak.data.StructureJsonCollector ...") end
-local EventBroker = require("ak.util.EventBroker")
+local DataChangeBus = require("ak.events.DataChangeBus")
 StructureJsonCollector = {}
 local enabled = true
 local initialized = false
@@ -62,7 +62,7 @@ function StructureJsonCollector.initialize()
             table.insert(structures, structure)
         end
     end
-    EventBroker.fireListChange("structures", "id", structures)
+    DataChangeBus.fireListChange("structures", "id", structures)
 
     initialized = true
 end
@@ -90,7 +90,7 @@ function StructureJsonCollector.collectData()
 
     if #dirtyStructures > 0 then
         -- Inform the event broker about all dirty structures
-        EventBroker.fireListChange("structures", "id", dirtyStructures)
+        DataChangeBus.fireListChange("structures", "id", dirtyStructures)
     end
 
     return {}

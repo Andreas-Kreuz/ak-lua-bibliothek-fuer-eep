@@ -1,5 +1,5 @@
 if AkDebugLoad then print("[#Start] Loading ak.data.SignalJsonCollector ...") end
-local EventBroker = require("ak.util.EventBroker")
+local DataChangeBus = require("ak.events.DataChangeBus")
 local SignalJsonCollector = {}
 local enabled = true
 local initialized = false
@@ -58,8 +58,8 @@ function SignalJsonCollector.collectData()
     end
 
     -- TODO: Send event only with detected changes
-    EventBroker.fireListChange("signals", "id", signals)
-    EventBroker.fireListChange("waiting-on-signals", "id", waitingOnSignals)
+    DataChangeBus.fireListChange("signals", "id", signals)
+    DataChangeBus.fireListChange("waiting-on-signals", "id", waitingOnSignals)
 
     return {
         -- ["signals"] = signals,

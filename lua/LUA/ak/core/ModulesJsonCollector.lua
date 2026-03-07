@@ -1,5 +1,5 @@
 if AkDebugLoad then print("[#Start] Loading ak.core.ModulesJsonCollector ...") end
-local EventBroker = require("ak.util.EventBroker")
+local DataChangeBus = require("ak.events.DataChangeBus")
 local TableUtils = require("ak.util.TableUtils")
 
 ---@class JsonCollector
@@ -17,9 +17,9 @@ local function checkModule(moduleName, module)
     local newModule = toApiV1(moduleName, module)
     local oldModule = knownModules[moduleName]
     if not oldModule then
-        EventBroker.fireDataAdded("modules", "id", newModule);
+        DataChangeBus.fireDataAdded("modules", "id", newModule);
     elseif not TableUtils.sameDictEntries(oldModule, newModule) then
-        EventBroker.fireDataChanged("modules", "id", newModule);
+        DataChangeBus.fireDataChanged("modules", "id", newModule);
     end
 
     knownModules[moduleName] = module

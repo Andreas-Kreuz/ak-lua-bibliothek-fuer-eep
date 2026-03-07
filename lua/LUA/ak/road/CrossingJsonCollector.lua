@@ -1,5 +1,5 @@
 if AkDebugLoad then print("[#Start] Loading ak.road.CrossingJsonCollector ...") end
-local EventBroker = require("ak.util.EventBroker")
+local DataChangeBus = require("ak.events.DataChangeBus")
 
 ---@class CrossingJsonCollector
 CrossingJsonCollector = {}
@@ -165,10 +165,10 @@ local function collect(allCrossings)
     end)
 
     -- TODO: Send event only with detected changes
-    EventBroker.fireListChange("intersections", "id", intersections)
-    EventBroker.fireListChange("intersection-lanes", "id", intersectionLanes)
-    EventBroker.fireListChange("intersection-switchings", "id", intersectionSwitching)
-    EventBroker.fireListChange("intersection-traffic-lights", "id", intersectionTrafficLights)
+    DataChangeBus.fireListChange("intersections", "id", intersections)
+    DataChangeBus.fireListChange("intersection-lanes", "id", intersectionLanes)
+    DataChangeBus.fireListChange("intersection-switchings", "id", intersectionSwitching)
+    DataChangeBus.fireListChange("intersection-traffic-lights", "id", intersectionTrafficLights)
 
     return {
         ["intersections"] = intersections,
@@ -214,7 +214,7 @@ local function collectModuleSettings()
     }
 
     -- TODO: Send event only with detected changes
-    EventBroker.fireListChange("intersection-module-settings", "name", settings)
+    DataChangeBus.fireListChange("intersection-module-settings", "name", settings)
     return settings;
 end
 

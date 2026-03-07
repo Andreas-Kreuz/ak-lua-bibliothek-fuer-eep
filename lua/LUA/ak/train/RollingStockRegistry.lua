@@ -1,4 +1,4 @@
-local EventBroker = require("ak.util.EventBroker")
+local DataChangeBus = require("ak.events.DataChangeBus")
 local RollingStock = require("ak.train.RollingStock")
 local RollingStockRegistry = {}
 ---@type table<string,RollingStock>
@@ -26,14 +26,14 @@ end
 ---A train appeared on the map
 function RollingStockRegistry.rollingStockAppeared(_)
     -- is included in "TrainRegistry.fireChangeTrainsEvent()"
-    -- EventBroker.fireDataChanged("rolling-stocks", "id", rollingStock:toJsonStatic())
+    -- DataChangeBus.fireDataChanged("rolling-stocks", "id", rollingStock:toJsonStatic())
 end
 
 ---A train dissappeared from the map
 ---@param rollingStockName string
 function RollingStockRegistry.rollingStockDisappeared(rollingStockName)
     allRollingStock[rollingStockName] = nil
-    EventBroker.fireDataChanged("rolling-stocks", "id", { id = rollingStockName })
+    DataChangeBus.fireDataChanged("rolling-stocks", "id", { id = rollingStockName })
 end
 
 function RollingStockRegistry.fireChangeRollingStockEvent()
@@ -44,7 +44,7 @@ function RollingStockRegistry.fireChangeRollingStockEvent()
             rs.valuesUpdated = false
         end
     end
-    EventBroker.fireListChange("rolling-stocks", "id", modifiedRollingStock)
+    DataChangeBus.fireListChange("rolling-stocks", "id", modifiedRollingStock)
 end
 
 return RollingStockRegistry

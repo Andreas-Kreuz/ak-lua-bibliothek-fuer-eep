@@ -1,4 +1,4 @@
-local EventBroker = require("ak.util.EventBroker")
+local DataChangeBus = require("ak.events.DataChangeBus")
 local Line = require("ak.public-transport.Line")
 local LineRegistry = {}
 local allLines = {}
@@ -22,14 +22,14 @@ end
 ---A line appeared on the map
 function LineRegistry.lineAppeared(_)
     -- is included in "LineRegistry.fireChangeLinesEvent()"
-    -- EventBroker.fireDataAdded("lines", "id", line:toJsonStatic())
+    -- DataChangeBus.fireDataAdded("lines", "id", line:toJsonStatic())
 end
 
 ---A line dissappeared from the map
 ---@param lineName string
 function LineRegistry.lineDisappeared(lineName)
     allLines[lineName] = nil
-    -- EventBroker.fireDataRemoved("lines", "id", {id = lineName})
+    -- DataChangeBus.fireDataRemoved("lines", "id", {id = lineName})
 end
 
 function LineRegistry.fireChangeLinesEvent()
@@ -40,7 +40,7 @@ function LineRegistry.fireChangeLinesEvent()
             line.valuesUpdated = false
         end
     end
-    EventBroker.fireListChange("public-transport-line-names", "id", modifiedLines)
+    DataChangeBus.fireListChange("public-transport-line-names", "id", modifiedLines)
 end
 
 return LineRegistry

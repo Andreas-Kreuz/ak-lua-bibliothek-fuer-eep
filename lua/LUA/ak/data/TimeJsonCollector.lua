@@ -1,5 +1,5 @@
 if AkDebugLoad then print("[#Start] Loading ak.data.TimeJsonCollector ...") end
-local EventBroker = require("ak.util.EventBroker")
+local DataChangeBus = require("ak.events.DataChangeBus")
 
 TimeJsonCollector = {}
 local enabled = true
@@ -29,7 +29,7 @@ function TimeJsonCollector.collectData()
     }
 
     -- TODO: Send event only with detected changes
-    EventBroker.fireListChange("times", "id", times)
+    DataChangeBus.fireListChange("times", "id", times)
 
     return {
         -- ["times"] = times

@@ -1,6 +1,6 @@
 if AkDebugLoad then print("[#Start] Loading ak.public-transport.PublicTransportJsonCollector ...") end
 local LineRegistry = require("ak.public-transport.LineRegistry")
-local EventBroker = require("ak.util.EventBroker")
+local DataChangeBus = require("ak.events.DataChangeBus")
 
 ---@class PublicTransportJsonCollector
 PublicTransportJsonCollector = {}
@@ -22,7 +22,7 @@ local function collectModuleSettings()
     }
 
     -- TODO: Send event only with detected changes
-    EventBroker.fireListChange("public-transport-module-settings", "name", settings)
+    DataChangeBus.fireListChange("public-transport-module-settings", "name", settings)
     return settings;
 end
 
@@ -32,9 +32,9 @@ local function collect()
     local publicTransportSettings = collectModuleSettings()
 
     -- TODO: Send event only with detected changes
-    EventBroker.fireListChange("public-transport-stations", "id", publicTransportStations)
-    EventBroker.fireListChange("public-transport-lines", "id", publicTransportLines)
-    EventBroker.fireListChange("public-transport-module-settings", "name", publicTransportSettings)
+    DataChangeBus.fireListChange("public-transport-stations", "id", publicTransportStations)
+    DataChangeBus.fireListChange("public-transport-lines", "id", publicTransportLines)
+    DataChangeBus.fireListChange("public-transport-module-settings", "name", publicTransportSettings)
     LineRegistry.fireChangeLinesEvent()
 
     return {

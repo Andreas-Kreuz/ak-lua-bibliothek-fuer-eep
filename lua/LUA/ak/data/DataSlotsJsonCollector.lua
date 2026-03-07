@@ -1,6 +1,6 @@
 if AkDebugLoad then print("[#Start] Loading ak.data.DataSlotsJsonCollector ...") end
 local TableUtils = require("ak.util.TableUtils")
-local EventBroker = require("ak.util.EventBroker")
+local DataChangeBus = require("ak.events.DataChangeBus")
 
 local DataSlotsJsonCollector = {}
 DataSlotsJsonCollector.name = "ak.data.DataSlotsJsonCollector"
@@ -51,8 +51,8 @@ function DataSlotsJsonCollector.collectData()
     end
 
     -- TODO Update on changes only
-    EventBroker.fireListChange("save-slots", "id", TableUtils.valuesOfDict(filledSlots));
-    EventBroker.fireListChange("free-slots", "id", TableUtils.valuesOfDict(emptySlots));
+    DataChangeBus.fireListChange("save-slots", "id", TableUtils.valuesOfDict(filledSlots));
+    DataChangeBus.fireListChange("free-slots", "id", TableUtils.valuesOfDict(emptySlots));
 
     return {} -- {["save-slots"] = filledSlots, ["free-slots"] = emptySlots}
 end

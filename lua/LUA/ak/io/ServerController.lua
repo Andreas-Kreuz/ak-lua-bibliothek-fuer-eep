@@ -8,7 +8,7 @@ local ServerController = require("ak.io.ServerController")
 --]] -- @author Andreas Kreuz
 -- @release 0.10.2
 if AkDebugLoad then print("[#Start] Loading ak.io.ServerController ...") end
-local EventBroker = require("ak.util.EventBroker")
+local DataChangeBus = require("ak.events.DataChangeBus")
 local EventRecorder = require("ak.io.EventRecorder")
 local AkWebServerIo = require("ak.io.AkWebServerIo")
 local AkCommandExecutor = require("ak.io.AkCommandExecutor")
@@ -207,9 +207,9 @@ function ServerController.communicateWithServer(modulus)
         RuntimeRegistry.storeRunTime("ServerController.communicateWithServer-5-write", overallTime5 - overallTime4)
         RuntimeRegistry.storeRunTime("ServerController.communicateWithServer-OVERALL", timeDiff)
         local values = RuntimeRegistry.getAll()
-        if (values) then EventBroker.fireListChange("runtime", "id", values) end
+        if (values) then DataChangeBus.fireListChange("runtime", "id", values) end
         RuntimeRegistry.resetAll(runTimeGroupsToKeep)
-        EventBroker.printEventCounter()
+        DataChangeBus.printEventCounter()
     end
 end
 

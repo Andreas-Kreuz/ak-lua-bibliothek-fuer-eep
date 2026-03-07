@@ -1,5 +1,5 @@
 if AkDebugLoad then print("[#Start] Loading ak.train.Train ...") end
--- local EventBroker = require("ak.util.EventBroker")
+-- local DataChangeBus = require("ak.events.DataChangeBus")
 local TableUtils = require("ak.util.TableUtils")
 
 local RollingStockRegistry = require("ak.train.RollingStockRegistry")
@@ -140,7 +140,7 @@ function Train:setRoute(routeName)
     EEPSetTrainRoute(self.name, self.route)
     if oldRoute ~= routeName then
         self.valuesUpdated = true
-        -- EventBroker.fireDataChanged("trains", "id", {id = self.name, route = route})
+        -- DataChangeBus.fireDataChanged("trains", "id", {id = self.name, route = route})
     end
 end
 
@@ -160,7 +160,7 @@ function Train:setRollingStockCount(count)
     self.rollingStockCount = count
     if oldCount ~= count then
         self.valuesUpdated = true
-        -- EventBroker.fireDataChanged("trains", "id", {id = self.name, rollingStockCount = count})
+        -- DataChangeBus.fireDataChanged("trains", "id", {id = self.name, rollingStockCount = count})
     end
 end
 
@@ -184,7 +184,7 @@ function Train:setSpeed(speed)
 
         if (oldSpeed < 0 and speed > 0) then self:setMovesForward(true) end
         if (oldSpeed > 0 and speed < 0) then self:setMovesForward(false) end
-        -- EventBroker.fireDataChanged("trains", "id", {id = self.name, speed = speed})
+        -- DataChangeBus.fireDataChanged("trains", "id", {id = self.name, speed = speed})
     end
 end
 
@@ -204,7 +204,7 @@ function Train:setMovesForward(movesForward)
     self.movesForward = movesForward
     if oldMovesForward ~= movesForward then
         self.valuesUpdated = true
-        -- EventBroker.fireDataChanged("trains", "id", {id = self.name, speed = speed})
+        -- DataChangeBus.fireDataChanged("trains", "id", {id = self.name, speed = speed})
     end
 end
 
@@ -224,7 +224,7 @@ function Train:setOnTrack(onTracks)
     self.onTracks = onTracks
     if not TableUtils.sameDictEntries(oldOnTracks, onTracks) then
         self.valuesUpdated = true
-        -- EventBroker.fireDataChanged("trains", "id", {id = self.name, occupiedTacks = onTracks})
+        -- DataChangeBus.fireDataChanged("trains", "id", {id = self.name, occupiedTacks = onTracks})
     end
 end
 
@@ -242,7 +242,7 @@ function Train:setTrackType(trackType)
     self.trackType = trackType
     if oldTrackType ~= trackType then
         self.valuesUpdated = true
-        -- EventBroker.fireDataChanged("trains", "id", {id = self.name, trackType = trackType})
+        -- DataChangeBus.fireDataChanged("trains", "id", {id = self.name, trackType = trackType})
     end
 end
 
@@ -255,7 +255,7 @@ function Train:setDirection(direction)
     self:setValue(TagKeys.Train.direction, direction)
     if oldDirection ~= direction then
         self.valuesUpdated = true
-        -- EventBroker.fireDataChanged("trains", "id", {id = self.name, direction = direction})
+        -- DataChangeBus.fireDataChanged("trains", "id", {id = self.name, direction = direction})
     end
 end
 
@@ -267,7 +267,7 @@ function Train:setDestination(destination)
     self:setValue(TagKeys.Train.destination, destination)
     if oldDestination ~= destination then
         self.valuesUpdated = true
-        -- EventBroker.fireDataChanged("trains", "id", {id = self.name, destination = destination})
+        -- DataChangeBus.fireDataChanged("trains", "id", {id = self.name, destination = destination})
     end
 end
 
@@ -284,7 +284,7 @@ function Train:setLine(line)
     self:setValue(TagKeys.Train.line, line)
     if oldLine ~= line then
         self.valuesUpdated = true
-        -- EventBroker.fireDataChanged("trains", "id", {id = self.name, line = line})
+        -- DataChangeBus.fireDataChanged("trains", "id", {id = self.name, line = line})
     end
 end
 

@@ -1,5 +1,5 @@
 if AkDebugLoad then print("[#Start] Loading ak.core.VersionJsonCollector ...") end
-local EventBroker = require("ak.util.EventBroker")
+local DataChangeBus = require("ak.events.DataChangeBus")
 VersionJsonCollector = {}
 local ServerController = require("ak.io.ServerController")
 local enabled = true
@@ -22,7 +22,7 @@ function VersionJsonCollector.initialize()
     }
 
     -- TODO: Send event only with detected changes
-    EventBroker.fireListChange("eep-version", "id", versions)
+    DataChangeBus.fireListChange("eep-version", "id", versions)
     data = {
         -- ["eep-version"] = versions
     }
