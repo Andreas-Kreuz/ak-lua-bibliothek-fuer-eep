@@ -19,7 +19,7 @@
 --                SlotFuncs.checkMapping()
 --                local p = require("ak.data.AkSlotNamesParser")
 --                local slotName = p.getSlotName(34)
---                it("slotname 34 mÃ¼sste Slot1 sein", function()
+--                it("slotname 34 müsste Slot1 sein", function()
 --                    assert.is_true(slotName == "Slot1")
 --                end)
 --            end)

@@ -6,10 +6,10 @@ StorageUtility.debug = false
 ------------------------------------------------------------------------------------
 -- Ein Speicherplatz kann nur einmal verwendet werden
 -- Sinnvoll zu nutzen, wenn man jedem Signal oder anderen Dingen eine eindeutige ID
--- geben mÃ¶chte
+-- geben möchte
 ------------------------------------------------------------------------------------
 StorageUtility.registerId(800, "Speicherplatz 800")
--- Ein weiterer Aufruf mit dem selben Speicherplatz wÃ¼rde fehlschlagen (Test muss mit pcall erfolgen)
+-- Ein weiterer Aufruf mit dem selben Speicherplatz würde fehlschlagen (Test muss mit pcall erfolgen)
 if pcall(StorageUtility.registerId, 800, "Speicherplatz 800") then
     assert(false, "Wenn das auftritt, dann wurde Speicherplatz 800 mehrfach angefragt.")
 else
@@ -38,9 +38,9 @@ do
     print("[#StorageUtilityTest] " .. tostring(boolean1) .. " (Typ: " .. type(boolean1) .. ")")
     print("[#StorageUtilityTest] " .. tostring(boolean2) .. " (Typ: " .. type(boolean2) .. ")")
 
-    -- Die Daten werden in eine Tabelle umgewandelt, welche als Schlüssel und Wert nur Text enthÃ¤lt
+    -- Die Daten werden in eine Tabelle umgewandelt, welche als Schlüssel und Wert nur Text enthält
     -- dies am besten in eine Funktion auslagern
-    -- Es empfiehlt sich die SchlÃ¼ssel kurz zu halten, da der
+    -- Es empfiehlt sich die Schlüssel kurz zu halten, da der
     -- Speicherplatz in EEP vermutlich begrenzt ist
     local zuSpeicherndeDaten = {
         z = tostring(5),
@@ -64,7 +64,7 @@ do
 
     -- Die Daten werden gelesen und aus der Tabelle in eigene Werte gespeichert.
     -- Dabei ist die Typumwandlung wichtig
-    -- Diese Funktion muss wissen, wie die SchlÃ¼ssel in der Tabelle aussehen
+    -- Diese Funktion muss wissen, wie die Schlüssel in der Tabelle aussehen
     -- Dies am besten auch in eine Funktion auslagern
     local zahl = tonumber(geladene_daten.z)
     local text1 = geladene_daten.t1
@@ -89,8 +89,8 @@ do
     local anzahl_fahrzeuge = 88
     local block = { belegt = true, zugname = "#ICE-nach-Interlaken", prio = 7 }
 
-    -- Zum Speichern muss eine Lua Tabelle erstellt, werden, welche als SchlÃ¼ssel und Werte nur Text enthÃ¤lt
-    -- Es empfiehlt sich die SchlÃ¼ssel kurz zu halten, da die LÃ¤nge eines Speicherplatzes in EEP vermutlich begrenzt
+    -- Zum Speichern muss eine Lua Tabelle erstellt, werden, welche als Schlüssel und Werte nur Text enthält
+    -- Es empfiehlt sich die Schlüssel kurz zu halten, da die Länge eines Speicherplatzes in EEP vermutlich begrenzt
     -- ist
     local daten_zum_speichern = {
         b = tostring(block.belegt),
@@ -110,8 +110,8 @@ end
 do
     local geladene_daten = StorageUtility.loadTable(600, "Meine Daten")
 
-    -- Nach dem Laden mÃ¼ssen die Werte aus der Tabelle wieder den Variablen zugeordnet werden.
-    -- Dabei ist die RÃ¼ckumwandlung vom string zum korrekten Typ wichtig (tonumber und StorageUtility.toboolean)
+    -- Nach dem Laden müssen die Werte aus der Tabelle wieder den Variablen zugeordnet werden.
+    -- Dabei ist die Rückumwandlung vom string zum korrekten Typ wichtig (tonumber und StorageUtility.toboolean)
     local anzahl_fahrzeuge = tonumber(geladene_daten.a)
     local block = {
         belegt = StorageUtility.toboolean(true), -- StorageUtility.toboolean(x), da Lua kein toboolean(x) hat

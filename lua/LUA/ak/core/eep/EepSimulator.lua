@@ -1284,7 +1284,7 @@ function EEPStructureSetTagText(name, tag)
     return true
 end
 
---- Liest den Tag-Text einer Immobilie aus. Mittels Tag-Texten kÃ¶nnen Immobilien als permanente
+--- Liest den Tag-Text einer Immobilie aus. Mittels Tag-Texten können Immobilien als permanente
 --- Speicher fuer relevante Informationen genutzt werden.
 --- Bemerkungen
 --- * Argument 1 ist der Lua-Name der Immobilie oder des LS-Elements.
@@ -1299,7 +1299,7 @@ end
 --- Aendert den Tag-Text eines Fahrzeugs. Jedes Fahrzeug kann jetzt einen eigenen String von
 --- maximal 1024 Zeichen Laenge mitfuehren. Diese Strings werden mit der Anlage gespeichert und
 --- geladen. Da die Texte individuell jedem Fahrzeug zugeordnet sind, gehen sie im Gegensatz zu
---- Routen nicht durch RangiermanÃ¶ver etc. verloren.
+--- Routen nicht durch Rangiermanöver etc. verloren.
 --- Bemerkungen
 --- * Argument 1 ist der Name des Fahrzeugs.
 --- * Argument 2 ist der gewuenschte Text als String mit maximal 1024 Zeichen.
@@ -1309,7 +1309,7 @@ function EEPRollingstockSetTagText(name, tag)
     return true
 end
 
---- Liest den Tag-Text eines Fahrzeugs aus. Mittels Tag-Texten kÃ¶nnen Fahrzeuge jetzt kategorisiert
+--- Liest den Tag-Text eines Fahrzeugs aus. Mittels Tag-Texten können Fahrzeuge jetzt kategorisiert
 --- werden. Beispielsweise kann man dort Waggontypen speichern oder Bestimmungsorte.
 --- Bemerkungen
 --- * Argument 1 ist der Name des Fahrzeugs.
@@ -1475,7 +1475,7 @@ end
 -- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
 function EEPActivateCtrlDesk(GBSname) return true end
 
---- Laesst bei einem bestimmten Rollmaterial den Warnton (Pfeife, Hupe) ertÃ¶nen. (EEP 16.1)
+--- Laesst bei einem bestimmten Rollmaterial den Warnton (Pfeife, Hupe) ertönen. (EEP 16.1)
 -- @param rollingstockName Name des Rollmaterials
 -- @param status true = an, false = aus
 -- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false

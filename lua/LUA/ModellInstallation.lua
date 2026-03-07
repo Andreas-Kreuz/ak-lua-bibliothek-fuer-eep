@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------------
--- Erstellt Installationsverzeichnisse fÃ¼r Skripte und Demo-Anlagen in modell-pakete
+-- Erstellt Installationsverzeichnisse für Skripte und Demo-Anlagen in modell-pakete
 --------------------------------------------------------------------------------------
 local AkModellInstaller = require("ak.modellpacker.AkModellInstaller")
 local AkModellPaket = require("ak.modellpacker.AkModellPaket")
