@@ -9,7 +9,7 @@ local ServerController = require("ak.io.ServerController")
 -- @release 0.10.2
 if AkDebugLoad then print("[#Start] Loading ak.io.ServerController ...") end
 local EventBroker = require("ak.util.EventBroker")
-local EventFileWriter = require("ak.io.EventFileWriter")
+local EventRecorder = require("ak.io.EventRecorder")
 local AkWebServerIo = require("ak.io.AkWebServerIo")
 local AkCommandExecutor = require("ak.io.AkCommandExecutor")
 local RuntimeRegistry = require("ak.util.RuntimeRegistry")
@@ -153,6 +153,7 @@ function ServerController.communicateWithServer(modulus)
     i = i + 1
 
     local overallTime0 = os.clock()
+    -- we wait for the server to be ready, so we know the server can process the next data batch.
     local serverIsReady = not ServerController.checkServerStatus or AkWebServerIo.checkWebServer()
 
     -- initialization in first call
@@ -175,7 +176,7 @@ function ServerController.communicateWithServer(modulus)
         collectData(printFirstTime)
         overallTime4 = os.clock()
 
-        writeData(EventFileWriter.getAndResetEvents())
+        writeData(EventRecorder.collectAndResetEvents())
     end
 
     local overallTime5 = os.clock()

@@ -1,5 +1,5 @@
 if AkDebugLoad then print("[#Start] Loading ak.util.EventBroker ...") end
-local EventFileWriter = require("ak.io.EventFileWriter")
+local EventRecorder = require("ak.io.EventRecorder")
 local TableUtils = require("ak.util.TableUtils")
 
 ---@class Event
@@ -120,7 +120,7 @@ function EventBroker.addListener(listener) listeners[listener] = true end
 
 if EventBroker.debug then EventBroker.addListener(EventBroker.printListener) end
 
-EventBroker.addListener(EventFileWriter)
+EventBroker.addListener(EventRecorder)
 fire(EventBroker.eventType.completeReset, { info = "-- fire a data reset on first start --" })
 
 return EventBroker
