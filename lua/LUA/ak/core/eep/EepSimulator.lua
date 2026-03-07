@@ -705,14 +705,17 @@ function EEPRollingstockSetAxis(rsName, achse, stellung) end
 -- @param achse Name der Achse
 function EEPRollingstockGetAxis(rsName, achse) end
 
---- Laedt Daten aus Slot
+--- Laedt Daten aus Slot.
+--- Laut EEP-Handbuch kann Rueckgabewert 2 ein Boolean, eine Zahl, ein String oder nil sein.
 -- @param slot Slot 1 bis 1000
--- @return true (wenn gefunden), Boolean|Zahl|"String"| nil
+-- @return true (wenn gefunden), Boolean|Zahl|String|nil
 function EEPLoadData(slot) return ((eepdata[slot] or eepdata[slot] == false) and true or false), eepdata[slot] end
 
---- Speichert Daten in Slot
+--- Speichert Daten in Slot.
+--- Laut EEP-Handbuch akzeptiert EEPSaveData Boolean, Zahl, String oder nil.
+--- Falls ein String gespeichert wird, darf er dabei hoechstens 999 Zeichen lang sein.
 -- @param slot Slot 1 bis 1000
--- @param data Boolean|Zahl|"String"| nil
+-- @param data Boolean|Zahl|String|nil
 function EEPSaveData(slot, data)
     eepdata[slot] = data
     return true
@@ -1299,7 +1302,7 @@ end
 --- Routen nicht durch Rangiermanöver etc. verloren.
 --- Bemerkungen
 --- * Argument 1 ist der Name des Fahrzeugs.
---- * Argument 2 ist der gewuenschte Text.
+--- * Argument 2 ist der gewuenschte Text als String mit maximal 1024 Zeichen.
 --- * Rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
 function EEPRollingstockSetTagText(name, tag)
     getOrCreateRollingStockEntry(name).tag = tag
@@ -1311,7 +1314,8 @@ end
 --- Bemerkungen
 --- * Argument 1 ist der Name des Fahrzeugs.
 --- * Rueckgabewert 1 ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
---- * Rueckgabewert 2 ist der Tag-Text, welcher dem Waggon mitgegeben wurde.
+--- * Rueckgabewert 2 ist der Tag-Text als String mit maximal 1024 Zeichen, welcher dem Waggon
+---   mitgegeben wurde.
 function EEPRollingstockGetTagText(name)
     local rollingStock = select(1, getRollingStockTrainContext(name))
     return rollingStock ~= nil, rollingStock and rollingStock.tag or nil

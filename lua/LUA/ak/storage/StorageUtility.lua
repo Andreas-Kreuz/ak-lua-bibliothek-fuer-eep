@@ -5,6 +5,8 @@ local savedValues = {}
 local StorageUtility = {}
 StorageUtility.debugDatei = "StorageUtilityValues.txt"
 StorageUtility.debug = AkStartWithDebug or false
+StorageUtility.maxSaveDataStringLength = 999
+StorageUtility.maxRollingStockTagLength = 1024
 
 --- Prueft einen EEP-Speicherslot zwischen 1 und 1000 und markiert ihn als benutzt.
 --- Es wird ein Fehler ausgegeben, wenn der gleiche Slot noch mal registriert wird.
@@ -26,6 +28,8 @@ end
 function StorageUtility.getName(eepSaveId) return saveSlots[eepSaveId] end
 
 --- Laedt die Daten aus dem Speicherslot in eine neue Tabelle.
+--- Laut EEP-Handbuch kann EEPLoadData Boolean, Zahl, String oder nil liefern.
+--- StorageUtility erwartet hier jedoch einen zuvor als String serialisierten Tabelleninhalt.
 --- Das Speichern der Daten sollte komma-separiert erfolgen, z.B.:
 --- belegt = true, anzahl = 15
 --- Dann koennen die Daten wie folgt aus der Tabelle geladen werden:
@@ -72,6 +76,7 @@ function StorageUtility.parseTableFromString(data)
 end
 
 ---Load a table of key = value (string, string) from a rollingstock
+--- EEPRollingstockGetTagText liefert in EEP nur Strings bis maximal 1024 Zeichen oder nil.
 --- Storage should have been done in Table Syntax, e.g.:
 --- traffic = true, count = 15
 --- Then loading can be done with these functions as follows:
@@ -113,23 +118,28 @@ local function pairsByKeys(t, f)
 end
 
 --- Speichert die Daten einer Tabelle in einen EEP-Datenslot, z.B.:
+--- StorageUtility serialisiert Tabellen bewusst als String. Das ist eine Modulentscheidung
+--- fuer persistente Key-Value-Daten und nicht die allgemeine Typgrenze von EEPSaveData.
+--- Fuer EEPSaveData begrenzt StorageUtility diese Strings gemaess Handbuch auf 999 Zeichen.
 --- local t = {}
 --- t[belegt] = true
 --- t[anzahl] = 15
 --- StorageUtility.storeToTable(100, t, "Meine Kreuzung")
 --- --------------------------------------------------------
 --- Stores the data of a table into an EEP data slot
+--- The generated text is intentionally limited to 999 characters for EEPSaveData.
 -- @param eepSaveId number 1-1000 - Speicherplatz in EEP
 -- @param table table eine Lua Tabelle mit Daten und moeglichst kurzem Key und Value
 -- @param name string optional: Name des Speicherortes fuer Debug-Anzeige
 --
 function StorageUtility.saveTable(eepSaveId, table, name)
     name = name and name or "?"
-    local text = StorageUtility.encodeTable(table)
-    if text:len() > 1024 then
-        print("[#StorageUtility] Cannot store more than 1024 characters in slot " .. eepSaveId .. " - " .. name)
+    local maxLength = StorageUtility.maxSaveDataStringLength
+    local text = StorageUtility.encodeTable(table, maxLength)
+    if text:len() > maxLength then
+        print("[#StorageUtility] Cannot store more than " .. maxLength .. " characters in slot " .. eepSaveId .. " - " .. name)
     end
-    assert(text:len() <= 1024)
+    assert(text:len() <= maxLength)
     local hresult = EEPSaveData(eepSaveId, text)
     if StorageUtility.debug then
         print("[#StorageUtility] Speichern [" .. (hresult and "OK" or "!!") .. "] - " .. eepSaveId .. " - " .. name ..
@@ -139,10 +149,14 @@ function StorageUtility.saveTable(eepSaveId, table, name)
     if StorageUtility.debug then StorageUtility.updateDebugFile() end
 end
 
---- Stores the data of a table into an EEP data slot
--- @param rollingStockName string Rolling stock name in EEP
+--- Encodes a table as a comma-separated string for StorageUtility persistence.
+--- All keys and values must already be strings, because this module stores tables as text.
+--- The optional maxLength allows different EEP limits, e.g. 999 for EEPSaveData and
+--- 1024 for rolling stock tag texts.
 -- @param table table eine Lua Tabelle mit Daten und moeglichst kurzem Key und Value
-function StorageUtility.encodeTable(table)
+-- @param maxLength number optional: maximale Laenge des erzeugten Strings
+function StorageUtility.encodeTable(table, maxLength)
+    maxLength = maxLength or StorageUtility.maxRollingStockTagLength
     local text = ""
     for k, v in pairsByKeys(table) do
         assert(type(k) == "string", "Need 'k' as string")
@@ -151,8 +165,8 @@ function StorageUtility.encodeTable(table)
         assert(not string.find(v, ","))
         text = text .. k .. "=" .. v .. ","
     end
-    if text:len() > 1024 then print("[#StorageUtility] Cannot store more than 1024 characters") end
-    assert(text:len() <= 1024)
+    if text:len() > maxLength then print("[#StorageUtility] Cannot store more than " .. maxLength .. " characters") end
+    assert(text:len() <= maxLength)
     return text
 end
 
