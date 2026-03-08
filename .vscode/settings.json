@@ -138,7 +138,10 @@
   ],
   "Lua.diagnostics.disable": ["lowercase-global"],
   "Lua.workspace.ignoreDir": [
+    ".github",
     ".vscode",
+    ".yarn",
+    "apps",
     "assets",
     "docs",
     "lua/Resourcen",
@@ -146,10 +149,11 @@
     "lua/Resourcen/Anlagen/Andreas_Kreuz-Demo-Testen",
     "lua/Resourcen/Anlagen/Andreas_Kreuz-Tutorial-Ampelkreuzung",
     "lua/modell-pakete",
+    "node_modules",
+    "packages",
     "scripts",
-    "web-app",
-    "web-server",
-    "web-shared"
+    "web-shared",
+    ".pdf"
   ],
   "Lua.workspace.useGitIgnore": false,
   "lua.preferLuaCheckErrors": true,
