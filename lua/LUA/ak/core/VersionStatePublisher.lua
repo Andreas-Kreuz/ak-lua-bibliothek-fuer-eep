@@ -1,13 +1,13 @@
-if AkDebugLoad then print("[#Start] Loading ak.core.VersionJsonCollector ...") end
+if AkDebugLoad then print("[#Start] Loading ak.core.VersionStatePublisher ...") end
 local DataChangeBus = require("ak.events.DataChangeBus")
-VersionJsonCollector = {}
+VersionStatePublisher = {}
 local ServerController = require("ak.io.ServerController")
 local enabled = true
 local data = {}
 local initialized = false
-VersionJsonCollector.name = "ak.core.VersionJsonCollector"
+VersionStatePublisher.name = "ak.core.VersionStatePublisher"
 
-function VersionJsonCollector.initialize()
+function VersionStatePublisher.initialize()
     if not enabled or initialized then return end
 
     local versions = {
@@ -29,6 +29,6 @@ function VersionJsonCollector.initialize()
     initialized = true
 end
 
-function VersionJsonCollector.collectData() return data end
+function VersionStatePublisher.collectData() return data end
 
-return VersionJsonCollector
+return VersionStatePublisher

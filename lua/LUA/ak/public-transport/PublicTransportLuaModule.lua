@@ -15,7 +15,7 @@ function PublicTransportLuaModul.init()
 
     -- Hier wird der CoreWebConnector registriert, so dass die Kommunikation mit der WebApp funktioniert
     local PublicTransportWebConnector = require("ak.public-transport.PublicTransportWebConnector")
-    PublicTransportWebConnector.registerJsonCollectors()
+    PublicTransportWebConnector.registerStatePublishers()
     PublicTransportWebConnector.registerFunctions()
 
     initialized = true

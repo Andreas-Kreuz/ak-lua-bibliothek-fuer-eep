@@ -8,7 +8,7 @@ local initialized = false
 DataLuaModule.name = "ak.data.DataLuaModule"
 
 -- List of collectors which should be active (default = all)
--- Example: { ["ak.core.VersionJsonCollector"] = true, ["ak.data.TrainsAndTracksJsonCollector"] = true, }
+-- Example: { ["ak.core.VersionStatePublisher"] = true, ["ak.data.TrainsAndTracksStatePublisher"] = true, }
 local activeCollectors = {}
 
 --- Diese Funktion wird einmalig durch ModuleRegistry.initTasks() aufgerufen
@@ -19,7 +19,7 @@ function DataLuaModule.init()
 
     -- Hier wird der DataWebConnector registriert, so dass die Kommunikation mit der WebApp funktioniert
     local DataWebConnector = require("ak.data.DataWebConnector")
-    DataWebConnector.registerJsonCollectors(activeCollectors)
+    DataWebConnector.registerStatePublishers(activeCollectors)
 
     initialized = true
 end

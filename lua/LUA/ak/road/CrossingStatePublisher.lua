@@ -1,11 +1,11 @@
-if AkDebugLoad then print("[#Start] Loading ak.road.CrossingJsonCollector ...") end
+if AkDebugLoad then print("[#Start] Loading ak.road.CrossingStatePublisher ...") end
 local DataChangeBus = require("ak.events.DataChangeBus")
 
----@class CrossingJsonCollector
-CrossingJsonCollector = {}
+---@class CrossingStatePublisher
+CrossingStatePublisher = {}
 local enabled = true
 local initialized = false
-CrossingJsonCollector.name = "ak.data.CrossingJsonCollector"
+CrossingStatePublisher.name = "ak.data.CrossingStatePublisher"
 local Crossing = require("ak.road.Crossing")
 local CrossingSettings = require("ak.road.CrossingSettings")
 local Lane = require("ak.road.Lane")
@@ -218,16 +218,16 @@ local function collectModuleSettings()
     return settings;
 end
 
-function CrossingJsonCollector.initialize()
+function CrossingStatePublisher.initialize()
     if not enabled or initialized then return end
 
     initialized = true
 end
 
-function CrossingJsonCollector.collectData()
+function CrossingStatePublisher.collectData()
     if not enabled then return end
 
-    if not initialized then CrossingJsonCollector.initialize() end
+    if not initialized then CrossingStatePublisher.initialize() end
 
     -- TODO Remove data assignment
     local data = collect(Crossing.allCrossings)
@@ -237,4 +237,4 @@ function CrossingJsonCollector.collectData()
     }
 end
 
-return CrossingJsonCollector
+return CrossingStatePublisher

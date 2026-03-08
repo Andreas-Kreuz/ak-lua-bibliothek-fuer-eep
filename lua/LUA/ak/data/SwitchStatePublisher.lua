@@ -1,15 +1,15 @@
-if AkDebugLoad then print("[#Start] Loading ak.data.SwitchJsonCollector ...") end
+if AkDebugLoad then print("[#Start] Loading ak.data.SwitchStatePublisher ...") end
 local DataChangeBus = require("ak.events.DataChangeBus")
 require("ak.core.eep.EepFunctionWrapper")
-SwitchJsonCollector = {}
+SwitchStatePublisher = {}
 local enabled = true
 local initialized = false
-SwitchJsonCollector.name = "ak.data.SwitchJsonCollector"
+SwitchStatePublisher.name = "ak.data.SwitchStatePublisher"
 
 local MAX_SWITCHES = 1000
 local switches = {}
 
-function SwitchJsonCollector.initialize()
+function SwitchStatePublisher.initialize()
     if not enabled or initialized then return end
 
     for id = 1, MAX_SWITCHES do
@@ -24,10 +24,10 @@ function SwitchJsonCollector.initialize()
     initialized = true
 end
 
-function SwitchJsonCollector.collectData()
+function SwitchStatePublisher.collectData()
     if not enabled then return end
 
-    if not initialized then SwitchJsonCollector.initialize() end
+    if not initialized then SwitchStatePublisher.initialize() end
 
     for i = 1, #switches do
         local switch = switches[i]
@@ -44,4 +44,4 @@ function SwitchJsonCollector.collectData()
     }
 end
 
-return SwitchJsonCollector
+return SwitchStatePublisher

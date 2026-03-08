@@ -1,12 +1,12 @@
-if AkDebugLoad then print("[#Start] Loading ak.core.ModulesJsonCollector ...") end
+if AkDebugLoad then print("[#Start] Loading ak.core.ModulesStatePublisher ...") end
 local DataChangeBus = require("ak.events.DataChangeBus")
 local TableUtils = require("ak.util.TableUtils")
 
----@class JsonCollector
-ModulesJsonCollector = {}
+---@class StatePublisher
+ModulesStatePublisher = {}
 local enabled = true
 local initialized = false
-ModulesJsonCollector.name = "ak.core.ModulesJsonCollector"
+ModulesStatePublisher.name = "ak.core.ModulesStatePublisher"
 ---@type table<string,LuaModule>
 local registeredLuaModules = nil
 
@@ -25,9 +25,9 @@ local function checkModule(moduleName, module)
     knownModules[moduleName] = module
 end
 
-function ModulesJsonCollector.setRegisteredLuaModules(modules) registeredLuaModules = modules end
+function ModulesStatePublisher.setRegisteredLuaModules(modules) registeredLuaModules = modules end
 
-function ModulesJsonCollector.initialize()
+function ModulesStatePublisher.initialize()
     if not enabled or initialized then return end
 
     for moduleName, module in pairs(registeredLuaModules) do checkModule(moduleName, module) end
@@ -35,7 +35,7 @@ function ModulesJsonCollector.initialize()
     initialized = true
 end
 
-function ModulesJsonCollector.collectData()
+function ModulesStatePublisher.collectData()
     local moduleInfo = {}
     moduleInfo.modules = {}
 
@@ -44,4 +44,4 @@ function ModulesJsonCollector.collectData()
     return moduleInfo
 end
 
-return ModulesJsonCollector
+return ModulesStatePublisher

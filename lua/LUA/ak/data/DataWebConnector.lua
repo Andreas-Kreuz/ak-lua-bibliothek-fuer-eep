@@ -2,7 +2,7 @@ if AkDebugLoad then print("[#Start] Loading ak.data.DataWebConnector ...") end
 local ServerController = require("ak.io.ServerController")
 local DataWebConnector = {}
 
-function DataWebConnector.registerJsonCollectors(activeCollectors)
+function DataWebConnector.registerStatePublishers(activeCollectors)
     local all = true
     if activeCollectors then
         if next(activeCollectors) ~= nil then -- not empty list
@@ -10,29 +10,29 @@ function DataWebConnector.registerJsonCollectors(activeCollectors)
         end
     end
 
-    if all or activeCollectors["ak.data.DataSlotsJsonCollector"] then
-        local dataSlotsJsonCollector = require("ak.data.DataSlotsJsonCollector")
-        ServerController.addJsonCollector(dataSlotsJsonCollector)
+    if all or activeCollectors["ak.data.DataSlotsStatePublisher"] then
+        local dataSlotsStatePublisher = require("ak.data.DataSlotsStatePublisher")
+        ServerController.addStatePublisher(dataSlotsStatePublisher)
     end
-    if all or activeCollectors["ak.data.SignalJsonCollector"] then
-        local signalJsonCollector = require("ak.data.SignalJsonCollector")
-        ServerController.addJsonCollector(signalJsonCollector)
+    if all or activeCollectors["ak.data.SignalStatePublisher"] then
+        local signalStatePublisher = require("ak.data.SignalStatePublisher")
+        ServerController.addStatePublisher(signalStatePublisher)
     end
-    if all or activeCollectors["ak.data.SwitchJsonCollector"] then
-        local switchJsonCollector = require("ak.data.SwitchJsonCollector")
-        ServerController.addJsonCollector(switchJsonCollector)
+    if all or activeCollectors["ak.data.SwitchStatePublisher"] then
+        local switchStatePublisher = require("ak.data.SwitchStatePublisher")
+        ServerController.addStatePublisher(switchStatePublisher)
     end
-    if all or activeCollectors["ak.data.StructureJsonCollector"] then
-        local structureJsonCollector = require("ak.data.StructureJsonCollector")
-        ServerController.addJsonCollector(structureJsonCollector)
+    if all or activeCollectors["ak.data.StructureStatePublisher"] then
+        local structureStatePublisher = require("ak.data.StructureStatePublisher")
+        ServerController.addStatePublisher(structureStatePublisher)
     end
-    if all or activeCollectors["ak.data.TimeJsonCollector"] then
-        local timeJsonCollector = require("ak.data.TimeJsonCollector")
-        ServerController.addJsonCollector(timeJsonCollector)
+    if all or activeCollectors["ak.data.TimeStatePublisher"] then
+        local timeStatePublisher = require("ak.data.TimeStatePublisher")
+        ServerController.addStatePublisher(timeStatePublisher)
     end
-    if all or activeCollectors["ak.data.TrainsAndTracksJsonCollector"] then
-        local trainsAndTracksJsonCollector = require("ak.data.TrainsAndTracksJsonCollector")
-        ServerController.addJsonCollector(trainsAndTracksJsonCollector)
+    if all or activeCollectors["ak.data.TrainsAndTracksStatePublisher"] then
+        local trainsAndTracksStatePublisher = require("ak.data.TrainsAndTracksStatePublisher")
+        ServerController.addStatePublisher(trainsAndTracksStatePublisher)
     end
 end
 

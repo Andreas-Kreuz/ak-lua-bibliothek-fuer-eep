@@ -16,7 +16,7 @@ function CrossingLuaModul.init()
 
     -- Hier wird der CoreWebConnector registriert, so dass die Kommunikation mit der WebApp funktioniert
     local CrossingWebConnector = require("ak.road.CrossingWebConnector")
-    CrossingWebConnector.registerJsonCollectors()
+    CrossingWebConnector.registerStatePublishers()
     CrossingWebConnector.registerFunctions()
 
     Crossing.initSequences()

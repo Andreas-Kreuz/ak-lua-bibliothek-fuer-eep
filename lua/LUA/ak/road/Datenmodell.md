@@ -1,18 +1,18 @@
-﻿# Datenmodell der JSON-Collector in `ak/road`
+# Datenmodell der JSON-Collector in `ak/road`
 
 Diese Datei beschreibt das aktuell aus `lua/LUA/ak/road` erzeugte JSON-Datenmodell.
 
 Wichtige Vorbemerkungen:
 
-- Primärquellen sind `TrafficLightModelJsonCollector.lua`, `CrossingJsonCollector.lua` und die von ihnen verwendeten Modelle.
+- Primärquellen sind `TrafficLightModelStatePublisher.lua`, `CrossingStatePublisher.lua` und die von ihnen verwendeten Modelle.
 - Beide Collector erzeugen ihre Nutzdaten fachlich über `DataChangeBus.fireListChange(...)`. `collectData()` liefert aktuell selbst nur leere Tabellen zurück.
 - Der Lua-Collector sendet Listen. Der Web-Server normalisiert diese Listen danach zu Objekt-Mappings nach `keyId` und speichert sie so in `lua/LUA/ak/io/exchange/ak-eep-web-server-state.json`.
 
-## `TrafficLightModelJsonCollector`
+## `TrafficLightModelStatePublisher`
 
 | Collector                        | Raumname                  |
 | -------------------------------- | ------------------------- |
-| `TrafficLightModelJsonCollector` | `signal-type-definitions` |
+| `TrafficLightModelStatePublisher` | `signal-type-definitions` |
 
 ### Raum `signal-type-definitions`
 
@@ -33,15 +33,15 @@ Diese Signalstellungen können als `signalIndex` für `EEPSetSignal(signalId, si
 | `positions.positionOff`         | `integer >= 1` oder nicht gesetzt; Beispiel: `7`                 | Signalstellung für ausgeschaltete Ampel.                                                 |
 | `positions.positionOffBlinking` | `integer >= 1` oder nicht gesetzt; Beispiel: `8`                 | Signalstellung für gelb blinkende Ampel.                                                 |
 
-## `CrossingJsonCollector`
+## `CrossingStatePublisher`
 
 | Collector               | Raumname                       |
 | ----------------------- | ------------------------------ |
-| `CrossingJsonCollector` | `intersections`                |
-| `CrossingJsonCollector` | `intersection-switchings`      |
-| `CrossingJsonCollector` | `intersection-traffic-lights`  |
-| `CrossingJsonCollector` | `intersection-lanes`           |
-| `CrossingJsonCollector` | `intersection-module-settings` |
+| `CrossingStatePublisher` | `intersections`                |
+| `CrossingStatePublisher` | `intersection-switchings`      |
+| `CrossingStatePublisher` | `intersection-traffic-lights`  |
+| `CrossingStatePublisher` | `intersection-lanes`           |
+| `CrossingStatePublisher` | `intersection-module-settings` |
 
 ### Raum `intersections`
 
@@ -148,7 +148,7 @@ Alle derzeit verfügbaren `CrossingSettings` sind boolesche Anzeigeeinstellungen
 
 ### Tatsächlicher Transportpfad
 
-1. `TrafficLightModelJsonCollector` und `CrossingJsonCollector` rufen `DataChangeBus.fireListChange(room, keyId, list)` auf.
+1. `TrafficLightModelStatePublisher` und `CrossingStatePublisher` rufen `DataChangeBus.fireListChange(room, keyId, list)` auf.
 2. `EventRecorder` schreibt daraus JSON-Zeilen-Events.
 3. `ServerController.communicateWithServer(...)` schreibt diese Events in den Austauschkanal; der persistierte State liegt in `lua/LUA/ak/io/exchange/ak-eep-web-server-state.json`.
 4. `apps/web-server/src/server/eep/server-data/EepDataStore.ts` normalisiert `ListChanged` zu `rooms[roomName][element[keyId]] = element`.
@@ -183,12 +183,12 @@ Hinweis: Im Auftrag wird `apps/web-app/src/intersections` genannt. Im aktuellen 
 
 | Ursprung in `ak/road`                          | Eventtyp      | Raum / Schlüssel                        |
 | ---------------------------------------------- | ------------- | --------------------------------------- |
-| `TrafficLightModelJsonCollector.collectData()` | `ListChanged` | `signal-type-definitions` / `id`        |
-| `CrossingJsonCollector.collectData()`          | `ListChanged` | `intersections` / `id`                  |
-| `CrossingJsonCollector.collectData()`          | `ListChanged` | `intersection-lanes` / `id`             |
-| `CrossingJsonCollector.collectData()`          | `ListChanged` | `intersection-switchings` / `id`        |
-| `CrossingJsonCollector.collectData()`          | `ListChanged` | `intersection-traffic-lights` / `id`    |
-| `CrossingJsonCollector.collectData()`          | `ListChanged` | `intersection-module-settings` / `name` |
+| `TrafficLightModelStatePublisher.collectData()` | `ListChanged` | `signal-type-definitions` / `id`        |
+| `CrossingStatePublisher.collectData()`          | `ListChanged` | `intersections` / `id`                  |
+| `CrossingStatePublisher.collectData()`          | `ListChanged` | `intersection-lanes` / `id`             |
+| `CrossingStatePublisher.collectData()`          | `ListChanged` | `intersection-switchings` / `id`        |
+| `CrossingStatePublisher.collectData()`          | `ListChanged` | `intersection-traffic-lights` / `id`    |
+| `CrossingStatePublisher.collectData()`          | `ListChanged` | `intersection-module-settings` / `name` |
 
 ### In `ak/road` ausgewertete Eingangs-Events und Callbacks
 

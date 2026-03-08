@@ -1,9 +1,9 @@
-if AkDebugLoad then print("[#Start] Loading ak.data.StructureJsonCollector ...") end
+if AkDebugLoad then print("[#Start] Loading ak.data.StructureStatePublisher ...") end
 local DataChangeBus = require("ak.events.DataChangeBus")
-StructureJsonCollector = {}
+StructureStatePublisher = {}
 local enabled = true
 local initialized = false
-StructureJsonCollector.name = "ak.data.StructureJsonCollector"
+StructureStatePublisher.name = "ak.data.StructureStatePublisher"
 
 local MAX_STRUCTURES = 50000
 local structures = {}
@@ -16,7 +16,7 @@ local EEPStructureGetTagText = EEPStructureGetTagText or function () end     -- 
 -- OK, RotX, RotY, RotZ = EEPStructureGetRotation("#aunnel")
 local EEPStructureGetRotation = EEPStructureGetRotation or function () end -- EEP 16.1
 
-function StructureJsonCollector.initialize()
+function StructureStatePublisher.initialize()
     if not enabled or initialized then return end
 
     for i = 0, MAX_STRUCTURES do
@@ -67,10 +67,10 @@ function StructureJsonCollector.initialize()
     initialized = true
 end
 
-function StructureJsonCollector.collectData()
+function StructureStatePublisher.collectData()
     if not enabled then return end
 
-    if not initialized then StructureJsonCollector.initialize() end
+    if not initialized then StructureStatePublisher.initialize() end
 
     local dirtyStructures = {}
     for i = 1, #structures do
@@ -96,4 +96,4 @@ function StructureJsonCollector.collectData()
     return {}
 end
 
-return StructureJsonCollector
+return StructureStatePublisher

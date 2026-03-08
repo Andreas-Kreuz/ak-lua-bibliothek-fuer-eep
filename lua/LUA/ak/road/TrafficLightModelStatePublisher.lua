@@ -1,23 +1,23 @@
-if AkDebugLoad then print("[#Start] Loading ak.road.TrafficLightModelJsonCollector ...") end
+if AkDebugLoad then print("[#Start] Loading ak.road.TrafficLightModelStatePublisher ...") end
 local DataChangeBus = require("ak.events.DataChangeBus")
 
----@class TrafficLightModelJsonCollector
-TrafficLightModelJsonCollector = {}
+---@class TrafficLightModelStatePublisher
+TrafficLightModelStatePublisher = {}
 local enabled = true
 local initialized = false
-TrafficLightModelJsonCollector.name = "ak.data.TrafficLightModelJsonCollector"
+TrafficLightModelStatePublisher.name = "ak.data.TrafficLightModelStatePublisher"
 local TrafficLightModel = require("ak.road.TrafficLightModel")
 
-function TrafficLightModelJsonCollector.initialize()
+function TrafficLightModelStatePublisher.initialize()
     if not enabled or initialized then return end
 
     initialized = true
 end
 
-function TrafficLightModelJsonCollector.collectData()
+function TrafficLightModelStatePublisher.collectData()
     if not enabled then return end
 
-    if not initialized then TrafficLightModelJsonCollector.initialize() end
+    if not initialized then TrafficLightModelStatePublisher.initialize() end
 
     local trafficLightModels = {}
     for _, ampelModel in pairs(TrafficLightModel.allModels) do
@@ -45,4 +45,4 @@ function TrafficLightModelJsonCollector.collectData()
     }
 end
 
-return TrafficLightModelJsonCollector
+return TrafficLightModelStatePublisher

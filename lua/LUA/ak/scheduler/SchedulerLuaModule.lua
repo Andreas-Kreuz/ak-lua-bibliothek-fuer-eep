@@ -16,7 +16,7 @@ function SchedulerLuaModule.init()
     -- Hier wird der SchedulerWebConnector registriert, so dass die Kommunikation mit der WebApp funktioniert
     -- Not there yet
     -- local SchedulerWebConnector = require("ak.scheduler.SchedulerWebConnector")
-    -- SchedulerWebConnector.registerJsonCollectors();
+    -- SchedulerWebConnector.registerStatePublishers();
 
     initialized = true
 end

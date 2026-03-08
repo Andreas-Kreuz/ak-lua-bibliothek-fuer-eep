@@ -64,13 +64,13 @@ modules["ak.core.CoreLuaModule"].setOptions({
 
 -- Optional: Set options of DataLuaModule
 modules["ak.data.DataLuaModule"].setOptions({
-    activeCollectors = { --register JsonCollectors (default = all)
-        --  "ak.data.DataSlotsJsonCollector",
-        --  "ak.data.SignalJsonCollector",
-        --  "ak.data.SwitchJsonCollector",
-        --  "ak.data.StructureJsonCollector",
-        --  "ak.data.TimeJsonCollector",
-          "ak.data.TrainsAndTracksJsonCollector",
+    activeCollectors = { --register StatePublishers (default = all)
+        --  "ak.data.DataSlotsStatePublisher",
+        --  "ak.data.SignalStatePublisher",
+        --  "ak.data.SwitchStatePublisher",
+        --  "ak.data.StructureStatePublisher",
+        --  "ak.data.TimeStatePublisher",
+          "ak.data.TrainsAndTracksStatePublisher",
     },
 })
 

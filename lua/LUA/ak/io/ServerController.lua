@@ -3,7 +3,7 @@
 --
 --[[ Usage:
 -- Do NOT use this class manually
--- Use this class in XxxWebConnector to register JsonCollectors and commands
+-- Use this class in XxxWebConnector to register StatePublishers and commands
 local ServerController = require("ak.io.ServerController")
 --]] -- @author Andreas Kreuz
 -- @release 0.10.2
@@ -54,14 +54,14 @@ ServerController.useDlls(false)
 -- false: Update json file without checking if the EEP-Web Server is ready
 ServerController.checkServerStatus = true
 
-local registeredJsonCollectors = {}
+local registeredStatePublishers = {}
 local runTimeGroupsToKeep = {}
 local collectedData = {}
 local initialized = false
 
 function ServerController.addAcceptedRemoteFunction(fName, f) AkCommandExecutor.addAcceptedRemoteFunction(fName, f) end
 
-local function initializeJsonCollector(jsonCollector)
+local function initializeStatePublisher(jsonCollector)
     local t0 = os.clock()
     jsonCollector.initialize()
     local t1 = os.clock()
@@ -70,7 +70,7 @@ local function initializeJsonCollector(jsonCollector)
         print(string.format("[#ServerController] initialize() %4.0f ms for \"%s\"", timeDiff * 1000,
                             jsonCollector.name))
     end
-    local group = "JsonCollector." .. jsonCollector.name .. ".initialize"
+    local group = "StatePublisher." .. jsonCollector.name .. ".initialize"
     RuntimeRegistry.storeRunTime(group, timeDiff)
     runTimeGroupsToKeep[group] = true
 end
@@ -84,7 +84,7 @@ local function collectFrom(jsonCollector, printFirstTime)
         print(string.format("[#ServerController] collectData() %4.0f ms for \"%s\"", timeDiff * 1000,
                             jsonCollector.name))
     end
-    RuntimeRegistry.storeRunTime("JsonCollector." .. jsonCollector.name .. ".collectData", timeDiff)
+    RuntimeRegistry.storeRunTime("StatePublisher." .. jsonCollector.name .. ".collectData", timeDiff)
     return newData
 end
 
@@ -99,7 +99,7 @@ local function checkObjects(collectData, path)
 end
 
 local function collectData(printFirstTime)
-    for _, jsonCollector in pairs(registeredJsonCollectors) do
+    for _, jsonCollector in pairs(registeredStatePublishers) do
         local newData = collectFrom(jsonCollector, printFirstTime)
         for key, value in pairs(newData) do collectedData[key] = value end
     end
@@ -111,12 +111,12 @@ end
 -- do it once
 local function initialize()
     if ServerController.debug then print("[#ServerController] initialize()") end
-    for _, jsonCollector in pairs(registeredJsonCollectors) do initializeJsonCollector(jsonCollector) end
+    for _, jsonCollector in pairs(registeredStatePublishers) do initializeStatePublisher(jsonCollector) end
 
     initialized = true
 end
 
-function ServerController.addJsonCollector(...)
+function ServerController.addStatePublisher(...)
     for _, jsonCollector in ipairs({ ... }) do
         -- Check the jsonCollector
         assert(jsonCollector.name and type(jsonCollector.name) == "string",
@@ -131,11 +131,11 @@ function ServerController.addJsonCollector(...)
 
         -- Remember the jsonCollector by it's name
         if ServerController.debug then
-            print(string.format("[#ServerController] addJsonCollector(%s)", jsonCollector.name))
+            print(string.format("[#ServerController] addStatePublisher(%s)", jsonCollector.name))
         end
-        registeredJsonCollectors[jsonCollector.name] = jsonCollector
+        registeredStatePublishers[jsonCollector.name] = jsonCollector
 
-        if initialized then initializeJsonCollector(jsonCollector) end
+        if initialized then initializeStatePublisher(jsonCollector) end
     end
 end
 

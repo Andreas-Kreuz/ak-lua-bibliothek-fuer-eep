@@ -5,9 +5,9 @@ local Line = require("ak.public-transport.Line")
 ---@class PublicTransportWebConnector
 local PublicTransportWebConnector = {}
 
-function PublicTransportWebConnector.registerJsonCollectors()
-    local publicTransportJsonCollector = require("ak.public-transport.PublicTransportJsonCollector")
-    ServerController.addJsonCollector(publicTransportJsonCollector)
+function PublicTransportWebConnector.registerStatePublishers()
+    local publicTransportStatePublisher = require("ak.public-transport.PublicTransportStatePublisher")
+    ServerController.addStatePublisher(publicTransportStatePublisher)
 end
 
 function PublicTransportWebConnector.registerFunctions()

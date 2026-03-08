@@ -4,12 +4,12 @@ local ServerController = require("ak.io.ServerController")
 local registeredLuaModules = nil
 function CoreWebConnector.setRegisteredLuaModules(modules) registeredLuaModules = modules end
 
-function CoreWebConnector.registerJsonCollectors()
-    local ModulesJsonCollector = require("ak.core.ModulesJsonCollector")
-    local VersionJsonCollector = require("ak.core.VersionJsonCollector")
-    ModulesJsonCollector.setRegisteredLuaModules(registeredLuaModules)
-    ServerController.addJsonCollector(ModulesJsonCollector)
-    ServerController.addJsonCollector(VersionJsonCollector)
+function CoreWebConnector.registerStatePublishers()
+    local ModulesStatePublisher = require("ak.core.ModulesStatePublisher")
+    local VersionStatePublisher = require("ak.core.VersionStatePublisher")
+    ModulesStatePublisher.setRegisteredLuaModules(registeredLuaModules)
+    ServerController.addStatePublisher(ModulesStatePublisher)
+    ServerController.addStatePublisher(VersionStatePublisher)
 end
 
 return CoreWebConnector

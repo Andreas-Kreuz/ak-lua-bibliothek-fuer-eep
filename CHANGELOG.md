@@ -179,8 +179,8 @@
   - ~~`ak.strasse.AkRichtung`~~ => `ak.road.Lane` ℹ Das Konzept Richtung wurde komplett überarbeitet!
   - ~~`ak.strasse.AkStrabWeiche`~~ => `ak.road.TramSwitch`
   - ~~`ak.strasse.AkStrasse`~~ wurde entfernt
-  - ~~`ak.strasse.AmpelModellJsonCollector`~~ => `ak.road.TrafficLightModelJsonCollector`
-  - ~~`ak.strasse.KreuzungJsonCollector`~~ => `ak.road.CrossingJsonCollector`
+  - ~~`ak.strasse.AmpelModellStatePublisher`~~ => `ak.road.TrafficLightModelStatePublisher`
+  - ~~`ak.strasse.KreuzungStatePublisher`~~ => `ak.road.CrossingStatePublisher`
   - ~~`ak.strasse.KreuzungLuaModul`~~ => `ak.road.CrossingLuaModul`
   - ~~`ak.strasse.KreuzungWebConnector`~~ => `ak.road.CrossingWebConnector`
 

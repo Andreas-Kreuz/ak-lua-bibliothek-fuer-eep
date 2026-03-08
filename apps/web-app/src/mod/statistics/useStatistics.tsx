@@ -16,18 +16,18 @@ function useStatistics() {
       for (const suffix of ['.collectData', '.initialize']) {
         const times = [];
         for (const collector of [
-          'core.ModulesJsonCollector',
-          'core.VersionJsonCollector',
-          'data.CrossingJsonCollector',
-          'data.DataSlotsJsonCollector',
-          'data.SignalJsonCollector',
-          'data.StructureJsonCollector',
-          'data.SwitchJsonCollector',
-          'data.TimeJsonCollector',
-          'data.TrafficLightModelJsonCollector',
-          'data.TrainsAndTracksJsonCollector',
+          'core.ModulesStatePublisher',
+          'core.VersionStatePublisher',
+          'data.CrossingStatePublisher',
+          'data.DataSlotsStatePublisher',
+          'data.SignalStatePublisher',
+          'data.StructureStatePublisher',
+          'data.SwitchStatePublisher',
+          'data.TimeStatePublisher',
+          'data.TrafficLightModelStatePublisher',
+          'data.TrainsAndTracksStatePublisher',
         ]) {
-          const collectorName = 'JsonCollector.ak.' + collector + suffix;
+          const collectorName = 'StatePublisher.ak.' + collector + suffix;
           if (record[collectorName]) {
             times.push(new TimeDesc(collector, record[collectorName].time));
           } else {

@@ -1,21 +1,21 @@
-if AkDebugLoad then print("[#Start] Loading ak.data.TimeJsonCollector ...") end
+if AkDebugLoad then print("[#Start] Loading ak.data.TimeStatePublisher ...") end
 local DataChangeBus = require("ak.events.DataChangeBus")
 
-TimeJsonCollector = {}
+TimeStatePublisher = {}
 local enabled = true
 local initialized = false
-TimeJsonCollector.name = "ak.data.TimeJsonCollector"
+TimeStatePublisher.name = "ak.data.TimeStatePublisher"
 
-function TimeJsonCollector.initialize()
+function TimeStatePublisher.initialize()
     if not enabled or initialized then return end
 
     initialized = true
 end
 
-function TimeJsonCollector.collectData()
+function TimeStatePublisher.collectData()
     if not enabled then return end
 
-    if not initialized then TimeJsonCollector.initialize() end
+    if not initialized then TimeStatePublisher.initialize() end
 
     local times = {
         {
@@ -36,4 +36,4 @@ function TimeJsonCollector.collectData()
     }
 end
 
-return TimeJsonCollector
+return TimeStatePublisher

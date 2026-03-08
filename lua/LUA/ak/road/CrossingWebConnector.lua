@@ -6,11 +6,11 @@ local CrossingSettings = require("ak.road.CrossingSettings")
 ---@class CrossingWebConnector
 local CrossingWebConnector = {}
 
-function CrossingWebConnector.registerJsonCollectors()
-    local trafficLightModelJsonCollector = require("ak.road.TrafficLightModelJsonCollector")
-    local crossingJsonCollector = require("ak.road.CrossingJsonCollector")
-    ServerController.addJsonCollector(trafficLightModelJsonCollector)
-    ServerController.addJsonCollector(crossingJsonCollector)
+function CrossingWebConnector.registerStatePublishers()
+    local trafficLightModelStatePublisher = require("ak.road.TrafficLightModelStatePublisher")
+    local crossingStatePublisher = require("ak.road.CrossingStatePublisher")
+    ServerController.addStatePublisher(trafficLightModelStatePublisher)
+    ServerController.addStatePublisher(crossingStatePublisher)
 end
 
 function CrossingWebConnector.registerFunctions()

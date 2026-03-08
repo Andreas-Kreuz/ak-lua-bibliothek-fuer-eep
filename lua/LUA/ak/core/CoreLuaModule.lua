@@ -20,7 +20,7 @@ function CoreLuaModule.init()
     -- Hier wird der CoreWebConnector registriert, so dass die Kommunikation mit der WebApp funktioniert
     local CoreWebConnector = require("ak.core.CoreWebConnector")
     CoreWebConnector.setRegisteredLuaModules(registeredLuaModules)
-    CoreWebConnector.registerJsonCollectors();
+    CoreWebConnector.registerStatePublishers();
 
     initialized = true
 end

@@ -1,10 +1,10 @@
-# Datenmodell der `*JsonCollector.lua`
+# Datenmodell der `*StatePublisher.lua`
 
 Diese Datei dokumentiert das aktuell erzeugte Datenmodell der Lua-Collector.
 
 Grundlagen der Beschreibung:
 
-- Primärquelle ist die aktuelle Implementierung in `*JsonCollector.lua` sowie in den indirekt genutzten Modellen wie `Train`, `RollingStock`, `Line` und `LineSegment`.
+- Primärquelle ist die aktuelle Implementierung in `*StatePublisher.lua` sowie in den indirekt genutzten Modellen wie `Train`, `RollingStock`, `Line` und `LineSegment`.
 - Für Felder, die direkt aus EEP-Funktionen stammen, wurden Typ, Wertebereich und Beschreibung soweit möglich aus `Lua_manual.pdf` abgeleitet.
 - Wo das Datenmodell nicht direkt aus EEP stammt, sondern aus Bibliothekslogik, ist das in der Beschreibung vermerkt.
 
@@ -18,17 +18,17 @@ Wichtig:
 
 | Collector                        | Datei                                                          | Effektive Ausgabe                                                                |
 | -------------------------------- | -------------------------------------------------------------- | -------------------------------------------------------------------------------- |
-| `ModulesJsonCollector`           | `lua/LUA/ak/core/ModulesJsonCollector.lua`                     | direkte Rückgabe; zusätzlich `DataAdded`/`DataChanged` für `modules`             |
-| `VersionJsonCollector`           | `lua/LUA/ak/core/VersionJsonCollector.lua`                     | `ListChanged` für `eep-version`; Rückgabe leer                                   |
-| `SignalJsonCollector`            | `lua/LUA/ak/data/SignalJsonCollector.lua`                      | `ListChanged` für `signals` und `waiting-on-signals`; Rückgabe leer              |
-| `SwitchJsonCollector`            | `lua/LUA/ak/data/SwitchJsonCollector.lua`                      | `ListChanged` für `switches`; Rückgabe leer                                      |
-| `TimeJsonCollector`              | `lua/LUA/ak/data/TimeJsonCollector.lua`                        | `ListChanged` für `times`; Rückgabe leer                                         |
-| `DataSlotsJsonCollector`         | `lua/LUA/ak/data/DataSlotsJsonCollector.lua`                   | `ListChanged` für `save-slots` und `free-slots`; Rückgabe leer                   |
-| `StructureJsonCollector`         | `lua/LUA/ak/data/StructureJsonCollector.lua`                   | `ListChanged` für `structures`; Rückgabe leer                                    |
-| `TrainsAndTracksJsonCollector`   | `lua/LUA/ak/data/TrainsAndTracksJsonCollector.lua`             | indirekte Events für `trains` und `rolling-stocks`; Rückgabe leer                |
-| `TrafficLightModelJsonCollector` | `lua/LUA/ak/road/TrafficLightModelJsonCollector.lua`           | `ListChanged` für `signal-type-definitions`; Rückgabe leer                       |
-| `CrossingJsonCollector`          | `lua/LUA/ak/road/CrossingJsonCollector.lua`                    | Events für Kreuzungsdaten; internes Datenobjekt wird derzeit nicht zurückgegeben |
-| `PublicTransportJsonCollector`   | `lua/LUA/ak/public-transport/PublicTransportJsonCollector.lua` | Events für ÖPNV-Daten; internes Datenobjekt wird derzeit nicht zurückgegeben     |
+| `ModulesStatePublisher`           | `lua/LUA/ak/core/ModulesStatePublisher.lua`                     | direkte Rückgabe; zusätzlich `DataAdded`/`DataChanged` für `modules`             |
+| `VersionStatePublisher`           | `lua/LUA/ak/core/VersionStatePublisher.lua`                     | `ListChanged` für `eep-version`; Rückgabe leer                                   |
+| `SignalStatePublisher`            | `lua/LUA/ak/data/SignalStatePublisher.lua`                      | `ListChanged` für `signals` und `waiting-on-signals`; Rückgabe leer              |
+| `SwitchStatePublisher`            | `lua/LUA/ak/data/SwitchStatePublisher.lua`                      | `ListChanged` für `switches`; Rückgabe leer                                      |
+| `TimeStatePublisher`              | `lua/LUA/ak/data/TimeStatePublisher.lua`                        | `ListChanged` für `times`; Rückgabe leer                                         |
+| `DataSlotsStatePublisher`         | `lua/LUA/ak/data/DataSlotsStatePublisher.lua`                   | `ListChanged` für `save-slots` und `free-slots`; Rückgabe leer                   |
+| `StructureStatePublisher`         | `lua/LUA/ak/data/StructureStatePublisher.lua`                   | `ListChanged` für `structures`; Rückgabe leer                                    |
+| `TrainsAndTracksStatePublisher`   | `lua/LUA/ak/data/TrainsAndTracksStatePublisher.lua`             | indirekte Events für `trains` und `rolling-stocks`; Rückgabe leer                |
+| `TrafficLightModelStatePublisher` | `lua/LUA/ak/road/TrafficLightModelStatePublisher.lua`           | `ListChanged` für `signal-type-definitions`; Rückgabe leer                       |
+| `CrossingStatePublisher`          | `lua/LUA/ak/road/CrossingStatePublisher.lua`                    | Events für Kreuzungsdaten; internes Datenobjekt wird derzeit nicht zurückgegeben |
+| `PublicTransportStatePublisher`   | `lua/LUA/ak/public-transport/PublicTransportStatePublisher.lua` | Events für ÖPNV-Daten; internes Datenobjekt wird derzeit nicht zurückgegeben     |
 
 ## Transportform
 
@@ -492,17 +492,17 @@ Schema:
 
 | Collector                                      | Rückgabe heute             | Bemerkung                               |
 | ---------------------------------------------- | -------------------------- | --------------------------------------- |
-| `ModulesJsonCollector.collectData()`           | Objekt mit Modulen nach ID | einzig relevanter direkter Rückgabewert |
-| `VersionJsonCollector.collectData()`           | `{}`                       | Nutzdaten nur im Event                  |
-| `SignalJsonCollector.collectData()`            | `{}`                       | Nutzdaten nur im Event                  |
-| `SwitchJsonCollector.collectData()`            | `{}`                       | Nutzdaten nur im Event                  |
-| `TimeJsonCollector.collectData()`              | `{}`                       | Nutzdaten nur im Event                  |
-| `DataSlotsJsonCollector.collectData()`         | `{}`                       | Nutzdaten nur im Event                  |
-| `StructureJsonCollector.collectData()`         | `{}`                       | Nutzdaten nur im Event                  |
-| `TrainsAndTracksJsonCollector.collectData()`   | leeres `data`              | Nutzdaten über Registries               |
-| `TrafficLightModelJsonCollector.collectData()` | `{}`                       | Nutzdaten nur im Event                  |
-| `CrossingJsonCollector.collectData()`          | `{}`                       | internes Datenobjekt wird verworfen     |
-| `PublicTransportJsonCollector.collectData()`   | `{}`                       | internes Datenobjekt wird verworfen     |
+| `ModulesStatePublisher.collectData()`           | Objekt mit Modulen nach ID | einzig relevanter direkter Rückgabewert |
+| `VersionStatePublisher.collectData()`           | `{}`                       | Nutzdaten nur im Event                  |
+| `SignalStatePublisher.collectData()`            | `{}`                       | Nutzdaten nur im Event                  |
+| `SwitchStatePublisher.collectData()`            | `{}`                       | Nutzdaten nur im Event                  |
+| `TimeStatePublisher.collectData()`              | `{}`                       | Nutzdaten nur im Event                  |
+| `DataSlotsStatePublisher.collectData()`         | `{}`                       | Nutzdaten nur im Event                  |
+| `StructureStatePublisher.collectData()`         | `{}`                       | Nutzdaten nur im Event                  |
+| `TrainsAndTracksStatePublisher.collectData()`   | leeres `data`              | Nutzdaten über Registries               |
+| `TrafficLightModelStatePublisher.collectData()` | `{}`                       | Nutzdaten nur im Event                  |
+| `CrossingStatePublisher.collectData()`          | `{}`                       | internes Datenobjekt wird verworfen     |
+| `PublicTransportStatePublisher.collectData()`   | `{}`                       | internes Datenobjekt wird verworfen     |
 
 ## Verwendete EEP-Funktionen und Handbuchbezug
 

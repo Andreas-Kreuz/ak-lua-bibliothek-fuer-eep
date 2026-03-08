@@ -1,12 +1,12 @@
-if AkDebugLoad then print("[#Start] Loading ak.public-transport.PublicTransportJsonCollector ...") end
+if AkDebugLoad then print("[#Start] Loading ak.public-transport.PublicTransportStatePublisher ...") end
 local LineRegistry = require("ak.public-transport.LineRegistry")
 local DataChangeBus = require("ak.events.DataChangeBus")
 
----@class PublicTransportJsonCollector
-PublicTransportJsonCollector = {}
+---@class PublicTransportStatePublisher
+PublicTransportStatePublisher = {}
 local enabled = true
 local initialized = false
-PublicTransportJsonCollector.name = "ak.public-transport.data.PublicTransportJsonCollector"
+PublicTransportStatePublisher.name = "ak.public-transport.data.PublicTransportStatePublisher"
 local Line = require("ak.public-transport.Line")
 
 local function collectModuleSettings()
@@ -44,16 +44,16 @@ local function collect()
     }
 end
 
-function PublicTransportJsonCollector.initialize()
+function PublicTransportStatePublisher.initialize()
     if not enabled or initialized then return end
 
     initialized = true
 end
 
-function PublicTransportJsonCollector.collectData()
+function PublicTransportStatePublisher.collectData()
     if not enabled then return end
 
-    if not initialized then PublicTransportJsonCollector.initialize() end
+    if not initialized then PublicTransportStatePublisher.initialize() end
 
     collect()
     return {
@@ -61,4 +61,4 @@ function PublicTransportJsonCollector.collectData()
     }
 end
 
-return PublicTransportJsonCollector
+return PublicTransportStatePublisher

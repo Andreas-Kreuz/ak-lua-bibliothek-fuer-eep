@@ -140,7 +140,7 @@ Wichtig: Das aktuelle Paket behandelt die Ausgabedatei als generischen Textkanal
 
 `ServerController` hält:
 
-- registrierte JsonCollector
+- registrierte StatePublisher
 - gesammelte Exportdaten
 - Initialisierungsstatus
 - Daten für Metriken, um die Performance der Collectoren und Laufzeiten der Module zu messen

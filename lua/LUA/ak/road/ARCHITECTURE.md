@@ -22,7 +22,7 @@ Im Verzeichnis `ak/road` existieren aktuell genau diese Lua-Dateien:
 - [AxisStructureTrafficLight.lua](./AxisStructureTrafficLight.lua)
 - [Bus.lua](./Bus.lua)
 - [Crossing.lua](./Crossing.lua)
-- [CrossingJsonCollector.lua](./CrossingJsonCollector.lua)
+- [CrossingStatePublisher.lua](./CrossingStatePublisher.lua)
 - [CrossingLuaModul.lua](./CrossingLuaModul.lua)
 - [CrossingSequence.lua](./CrossingSequence.lua)
 - [CrossingSettings.lua](./CrossingSettings.lua)
@@ -32,7 +32,7 @@ Im Verzeichnis `ak/road` existieren aktuell genau diese Lua-Dateien:
 - [LightStructureTrafficLight.lua](./LightStructureTrafficLight.lua)
 - [TrafficLight.lua](./TrafficLight.lua)
 - [TrafficLightModel.lua](./TrafficLightModel.lua)
-- [TrafficLightModelJsonCollector.lua](./TrafficLightModelJsonCollector.lua)
+- [TrafficLightModelStatePublisher.lua](./TrafficLightModelStatePublisher.lua)
 - [TrafficLightState.lua](./TrafficLightState.lua)
 - [TramSwitch.lua](./TramSwitch.lua)
 
@@ -47,7 +47,7 @@ Das Paket ist bewusst in drei Schichten aufgebaut:
 
 1. Konfigurations- und Domänenschicht mit `TrafficLightModel`, `TrafficLight`, `Lane`, `CrossingSequence` und `Crossing`
 2. Laufzeit- und Integrationsschicht mit `CrossingLuaModul`, `CrossingSettings`, `TramSwitch` und `Bus`
-3. Web-Export- und Remote-Schicht mit `CrossingWebConnector`, `CrossingJsonCollector` und `TrafficLightModelJsonCollector`
+3. Web-Export- und Remote-Schicht mit `CrossingWebConnector`, `CrossingStatePublisher` und `TrafficLightModelStatePublisher`
 
 Der reguläre Daten- und Steuerfluss sieht fachlich so aus:
 
@@ -229,7 +229,7 @@ Registrierte Remote-Funktionen:
 - `AkKreuzungSchalteAutomatisch`
 - `AkKreuzungSchalteManuell`
 
-### [CrossingJsonCollector.lua](./CrossingJsonCollector.lua)
+### [CrossingStatePublisher.lua](./CrossingStatePublisher.lua)
 
 JSON-Collector für den aktuellen Kreuzungszustand.
 
@@ -250,7 +250,7 @@ Exportierte Räume:
 
 Wichtig: Der Collector berechnet die Nutzdaten und feuert Events, liefert aber aktuell absichtlich kein direktes Nutzdatenobjekt an `ServerController.collectData()` zurück.
 
-### [TrafficLightModelJsonCollector.lua](./TrafficLightModelJsonCollector.lua)
+### [TrafficLightModelStatePublisher.lua](./TrafficLightModelStatePublisher.lua)
 
 JSON-Collector für statische Ampelmodelle.
 

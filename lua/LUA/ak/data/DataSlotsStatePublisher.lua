@@ -1,9 +1,9 @@
-if AkDebugLoad then print("[#Start] Loading ak.data.DataSlotsJsonCollector ...") end
+if AkDebugLoad then print("[#Start] Loading ak.data.DataSlotsStatePublisher ...") end
 local TableUtils = require("ak.util.TableUtils")
 local DataChangeBus = require("ak.events.DataChangeBus")
 
-local DataSlotsJsonCollector = {}
-DataSlotsJsonCollector.name = "ak.data.DataSlotsJsonCollector"
+local DataSlotsStatePublisher = {}
+DataSlotsStatePublisher.name = "ak.data.DataSlotsStatePublisher"
 local enabled = true
 local initialized = false
 local AkSlotNamesParser = require("ak.data.AkSlotNamesParser")
@@ -22,15 +22,15 @@ local function updateSlot(id, name, data)
     return newSlot
 end
 
-function DataSlotsJsonCollector.initialize()
+function DataSlotsStatePublisher.initialize()
     initialized = true
     lastSlots = {}
 end
 
-function DataSlotsJsonCollector.collectData()
+function DataSlotsStatePublisher.collectData()
     -- nothing todo
     if not enabled then return end
-    if not initialized then DataSlotsJsonCollector.initialize() end
+    if not initialized then DataSlotsStatePublisher.initialize() end
 
     local filledSlots = {}
     local emptySlots = {}
@@ -57,4 +57,4 @@ function DataSlotsJsonCollector.collectData()
     return {} -- {["save-slots"] = filledSlots, ["free-slots"] = emptySlots}
 end
 
-return DataSlotsJsonCollector
+return DataSlotsStatePublisher

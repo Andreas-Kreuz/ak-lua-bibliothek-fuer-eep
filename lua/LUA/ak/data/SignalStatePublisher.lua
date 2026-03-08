@@ -1,16 +1,16 @@
-if AkDebugLoad then print("[#Start] Loading ak.data.SignalJsonCollector ...") end
+if AkDebugLoad then print("[#Start] Loading ak.data.SignalStatePublisher ...") end
 local DataChangeBus = require("ak.events.DataChangeBus")
-local SignalJsonCollector = {}
+local SignalStatePublisher = {}
 local enabled = true
 local initialized = false
-SignalJsonCollector.name = "ak.data.SignalJsonCollector"
+SignalStatePublisher.name = "ak.data.SignalStatePublisher"
 
 local MAX_SIGNALS = 1000
 local signals = {}
 
 --- Register EEP signals.
 -- do it once
-function SignalJsonCollector.initialize()
+function SignalStatePublisher.initialize()
     if not enabled or initialized then return end
 
     signals = {}
@@ -28,10 +28,10 @@ end
 
 --- Get EEP signals and store them.
 -- do it frequently
-function SignalJsonCollector.collectData()
+function SignalStatePublisher.collectData()
     if not enabled then return end
 
-    if not initialized then SignalJsonCollector.initialize() end
+    if not initialized then SignalStatePublisher.initialize() end
 
     local waitingOnSignals = {}
     for i = 1, #signals do
@@ -67,4 +67,4 @@ function SignalJsonCollector.collectData()
     }
 end
 
-return SignalJsonCollector
+return SignalStatePublisher
