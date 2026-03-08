@@ -30,24 +30,6 @@ local function readVersion()
 end
 ServerController.programVersion = readVersion()
 
-local json
-
--- ACHTUNG: DIE VERWENDUNG ERFOLGT AUF EIGENE GEFAHR. ES IST GUT MOEGLICH,
---          DASS EEP ABSTUERZT, WENN NICHT ALLE ABHAENGIGKEITEN DER BIBLIOTHEK
---          GEFUNDEN WERDEN.
-function ServerController.useDlls(enableDlls)
-    if enableDlls then
-        package.cpath = package.cpath .. ";.\\LUA\\ak\\?.dll"
-        if ServerController.debug then print("[#ServerController] " .. package.cpath) end
-        json = require("cjson")
-        -- Important: Empty tables must not be packed as objects {}, but as lists []
-        json.encode_empty_table_as_object(false)
-    else
-        json = require("ak.third-party.json")
-    end
-end
-
-ServerController.useDlls(false)
 
 -- checkServerStatus:
 -- true: Check status of EEP-Web Server before updating the json file

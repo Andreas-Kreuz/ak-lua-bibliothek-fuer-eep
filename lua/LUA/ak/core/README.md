@@ -82,18 +82,3 @@ function EEPMain()
 end
 ```
 
-## JSON Export beschleunigen
-
-Optional kann für den JSON-Export eine für Windows gebaute Bibliothek (DLL) genutzt werden. Dafür wurde die Bibliothek
-[lua-cjson2](https://luarocks.org/modules/criztianix/lua-cjson2) genutzt.
-Der Export der JSON-Dateien wird dadurch stark beschleunigt.
-
-```lua
--- ACHTUNG: DIE VERWENDUNG ERFOLGT AUF EIGENE GEFAHR. ES IST GUT MÖGLICH,
---          DASS EEP ABSTÜRZT, WENN NICHT ALLE ABHÄNGIGKEITEN DER BIBLIOTHEK
---          GEFUNDEN WERDEN.
-ModuleRegistry.useDlls(true)
-```
-
-**ACHTUNG**: DIE VERWENDUNG ERFOLGT AUF EIGENE GEFAHR. ES IST GUT MÖGLICH, DASS EEP ABSTÜRZT,
-WENN NICHT ALLE ABHÄNGIGKEITEN GEFUNDEN WERDEN.

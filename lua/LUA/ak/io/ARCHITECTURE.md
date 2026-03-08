@@ -46,10 +46,9 @@ Zentrale Orchestrierung des Pakets.
 
 Verantwortlichkeiten:
 
-- Auswahl des JSON-Encoders (`ak.third-party.json` oder optional `cjson`)
-- Registrierung und Initialisierung von Json-Collectoren
+- Registrierung und Initialisierung von StatePublishern
 - Registrierung erlaubter Remote-Funktionen über `AkCommandExecutor`
-- periodisches Einsammeln der Daten aller Collector
+- periodischer Aufruf aller StatePublisher
 - Weitergabe des Exportstrings an `AkWebServerIo`
 - Sammeln und Weiterreichen von Laufzeitmetriken an `RuntimeRegistry` und `DataChangeBus`
 

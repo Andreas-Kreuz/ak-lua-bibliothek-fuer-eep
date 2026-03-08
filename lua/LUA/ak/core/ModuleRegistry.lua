@@ -73,7 +73,7 @@ end
 --          GEFUNDEN WERDEN.
 function ModuleRegistry.useDlls(enableDlls)
     assert(enableDlls == true or enableDlls == false)
-    ServerController.useDlls(enableDlls)
+    -- NO OP
 end
 
 local function initTask(module)
