@@ -22,7 +22,7 @@ Aktuell liegen in `ak/road` diese Lua-Dateien:
 - [AxisStructureTrafficLight.lua](./AxisStructureTrafficLight.lua)
 - [Bus.lua](./Bus.lua)
 - [Crossing.lua](./Crossing.lua)
-- [CrossingLuaModul.lua](./CrossingLuaModul.lua)
+- [CrossingLuaModule.lua](./CrossingLuaModule.lua)
 - [CrossingSequence.lua](./CrossingSequence.lua)
 - [CrossingSettings.lua](./CrossingSettings.lua)
 - [CrossingStatePublisher.lua](./CrossingStatePublisher.lua)
@@ -46,15 +46,15 @@ Wichtige Einordnung:
 Das Paket besteht aktuell aus vier funktionalen Bereichen:
 
 1. Domänenmodell: `TrafficLightState`, `TrafficLightModel`, `TrafficLight`, `Lane`, `CrossingSequence`, `Crossing`
-2. Modul- und Laufzeitintegration: `CrossingLuaModul`, `CrossingSettings`
+2. Modul- und Laufzeitintegration: `CrossingLuaModule`, `CrossingSettings`
 3. Web-Anbindung: `CrossingWebConnector`, `CrossingStatePublisher`, `TrafficLightModelStatePublisher`
 4. EEP-Helfer und Wertobjekte: `AxisStructureTrafficLight`, `LightStructureTrafficLight`, `TramSwitch`, `Bus`, `LaneSettings`
 
 Der reguläre Ablauf sieht fachlich so aus:
 
 1. Anwendercode erzeugt Modelle, Ampeln, Fahrspuren, Schaltungen und Kreuzungen.
-2. `CrossingLuaModul.init()` registriert State-Publisher und Remote-Funktionen und ruft `Crossing.initSequences()` auf.
-3. `CrossingLuaModul.run()` ruft zyklisch `Crossing.switchSequences()` auf.
+2. `CrossingLuaModule.init()` registriert State-Publisher und Remote-Funktionen und ruft `Crossing.initSequences()` auf.
+3. `CrossingLuaModule.run()` ruft zyklisch `Crossing.switchSequences()` auf.
 4. `Crossing` berechnet je Kreuzung die nächste Schaltung und plant deren Ablauf über `Task` und `Scheduler`.
 5. `TrafficLight` setzt Signalstellungen, Lichtimmobilien, Achsen und Tipptexte in EEP um.
 6. Die Publisher senden Web-Zustände über `DataChangeBus`.
@@ -63,7 +63,7 @@ Wichtig: Die Web-Schicht liest den Zustand aus den Fachobjekten aus, steuert abe
 
 ## Bausteine
 
-### [CrossingLuaModul.lua](./CrossingLuaModul.lua)
+### [CrossingLuaModule.lua](./CrossingLuaModule.lua)
 
 Moduleinstieg für den regulären Betrieb in `EEPMain()`.
 
@@ -359,9 +359,9 @@ Der reguläre Ablauf für eine automatisch geschaltete Kreuzung ist aktuell:
 2. `Lane:new(...)` registriert den Save-Slot, koppelt die sichtbare Fahrspurampel an die Fahrspur und lädt gespeicherten Zustand.
 3. Zusätzliche Freigabeampeln werden optional über `Lane:driveOn(...)` oder `TrafficLight:applyToLane(...)` verdrahtet.
 4. Sequenzen registrieren ihre Ampeln über `addCarLights(...)`, `addTramLights(...)` und `addPedestrianLights(...)`.
-5. `CrossingLuaModul.init()` registriert Web-Anbindung und ruft `Crossing.initSequences()` auf.
+5. `CrossingLuaModule.init()` registriert Web-Anbindung und ruft `Crossing.initSequences()` auf.
 6. `Crossing.initSequences()` leitet aus allen Sequenzen die effektiven Fahrspuren und Ampeln je Kreuzung ab.
-7. `CrossingLuaModul.run()` ruft zyklisch `Crossing.switchSequences()` auf.
+7. `CrossingLuaModule.run()` ruft zyklisch `Crossing.switchSequences()` auf.
 8. `Crossing.switchSequences()` prüft pro Kreuzung, ob umgeschaltet werden darf, und ruft intern `switch(crossing)` auf.
 9. `Crossing:calculateNextSequence()` wählt die nächste Schaltung per manueller Vorgabe, strikter Reihenfolge oder Prioritätsvergleich.
 10. `CrossingSequence:tasksForSwitchingFrom(...)` erzeugt die Taskfolge für Gelb-, Rot-, Rot-Gelb-, Grün- und Fußgängerphasen.

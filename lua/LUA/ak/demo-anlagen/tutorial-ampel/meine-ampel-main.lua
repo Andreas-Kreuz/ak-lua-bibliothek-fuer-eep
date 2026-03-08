@@ -144,8 +144,8 @@ k1:addStaticCam("Übersicht")
 
 local ModuleRegistry = require("ak.core.ModuleRegistry")
 local coreLuaModule = require("ak.core.CoreLuaModule")
-local crossingLuaModul = require("ak.road.CrossingLuaModul")
-ModuleRegistry.registerModules(coreLuaModule, crossingLuaModul)
+local crossingLuaModule = require("ak.road.CrossingLuaModule")
+ModuleRegistry.registerModules(coreLuaModule, crossingLuaModule)
 
 function EEPMain()
     ModuleRegistry.runTasks()

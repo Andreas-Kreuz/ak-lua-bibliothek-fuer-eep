@@ -35,7 +35,7 @@ local ModuleRegistry = require("ak.core.ModuleRegistry")
 ModuleRegistry.registerModules(
     require("ak.core.CoreLuaModule"),
     require("ak.data.DataLuaModule"),
-    require("ak.road.CrossingLuaModul")
+    require("ak.road.CrossingLuaModule")
 )
 
 function EEPMain()

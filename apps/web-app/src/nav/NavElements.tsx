@@ -1,8 +1,8 @@
 import { useState } from 'react';
 
 const dataLuaModuleId = 'e538a124-3f0a-4848-98cf-02b08563bf32'; // "ak.data.DataLuaModule"
-const kreuzungLuaModuleId = 'c5a3e6d3-0f9b-4c89-a908-ed8cf8809362'; // "ak.data.KreuzungLuaModul"
-const publicTransportLuaModuleId = '83ce6b42-1bda-45e0-8b4a-e8daeed047ab'; // "ak.public-transport.PublicTransportLuaModul"
+const kreuzungLuaModuleId = 'c5a3e6d3-0f9b-4c89-a908-ed8cf8809362'; // "ak.road.CrossingLuaModule"
+const publicTransportLuaModuleId = '83ce6b42-1bda-45e0-8b4a-e8daeed047ab'; // "ak.public-transport.PublicTransportLuaModule"
 
 function useNavState(): {
   name: string;

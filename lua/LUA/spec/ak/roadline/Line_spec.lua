@@ -69,7 +69,7 @@ insulate("Line Management 4 Line segments", function()
     local DataLuaModule = require("ak.data.DataLuaModule")
 
     -- Intersections
-    local CrossingLuaModule = require("ak.road.CrossingLuaModul")
+    local CrossingLuaModule = require("ak.road.CrossingLuaModule")
     local Crossing = require("ak.road.Crossing")
 
     -- Public Transport

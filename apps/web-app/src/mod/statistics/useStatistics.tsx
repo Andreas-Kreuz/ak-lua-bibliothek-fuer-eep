@@ -46,7 +46,7 @@ function useStatistics() {
           'core.CoreLuaModule',
           'data.DataLuaModule',
           'scheduler.SchedulerLuaModule',
-          'road.CrossingLuaModul',
+          'road.CrossingLuaModule',
         ]) {
           const collectorName = 'LuaModule.ak.' + collector + suffix;
           if (record[collectorName]) {

@@ -362,8 +362,8 @@ insulate("Check traffic light sequence", function()
     Scheduler.debug = false
     Crossing.debug = false
     CrossingSequence.debug = false
-    local crossingLuaModul = require("ak.road.CrossingLuaModul")
-    ModuleRegistry.registerModules(crossingLuaModul)
+    local crossingLuaModule = require("ak.road.CrossingLuaModule")
+    ModuleRegistry.registerModules(crossingLuaModule)
 
     local U_R = 2
     local U_G = 1

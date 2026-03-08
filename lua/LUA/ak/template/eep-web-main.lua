@@ -7,13 +7,13 @@ print("[#Anlage] Willkommen...")
 local ModuleRegistry = require("ak.core.ModuleRegistry")
 local coreLuaModule = require("ak.core.CoreLuaModule")
 local dataLuaModule = require("ak.data.DataLuaModule")
-local crossingLuaModul = require("ak.road.CrossingLuaModul")
+local crossingLuaModule = require("ak.road.CrossingLuaModule")
 
 -- Diese Zeilen aktivieren die folgenden Module in der Modulverwaltung
 -- * Core (immer benötigt)
 -- * Data (Export der Daten für EEP)
 -- * Crossing (für die Ampelsteuerung notwendig)
-ModuleRegistry.registerModules(coreLuaModule, dataLuaModule, crossingLuaModul)
+ModuleRegistry.registerModules(coreLuaModule, dataLuaModule, crossingLuaModule)
 
 -- Die EEPMain Methode wird von EEP genutzt. Sie muss immer 1 zurückgeben.
 function EEPMain()

@@ -391,7 +391,7 @@ also mit einem Doppelpunkt und nicht mit einem Punkt.
   local ModuleRegistry = require("ak.core.ModuleRegistry")
   ModuleRegistry.registerModules(
       require("ak.core.CoreLuaModule"),
-      require("ak.road.CrossingLuaModul") -- Registriert das Kreuzungsmodul
+      require("ak.road.CrossingLuaModule") -- Registriert das Kreuzungsmodul
   )
 
   function EEPMain()

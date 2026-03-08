@@ -82,7 +82,7 @@ Dafür benötigst Du folgendes:
   local ModuleRegistry = require("ak.core.ModuleRegistry")
   ModuleRegistry.registerModules(
       require("ak.core.CoreLuaModule"),
-      require("ak.road.CrossingLuaModul")
+      require("ak.road.CrossingLuaModule")
   )
 
   function EEPMain()
@@ -99,7 +99,7 @@ Dafür benötigst Du folgendes:
 
 - Die ersten Zeilen `local XXX = require("ak.road.XXX")` sorgt dafür, daß die einzelnen Dateien z.B. `ak/road/Crossing.lua` einmal eingelesen wird. Nach diesem Aufruf stehen Dir alle Funktionen dieser Datei zur Verfügung.
 - Die Zeile `local ModuleRegistry = require("ak.core.ModuleRegistry")` ist für das Laden der Modulverwaltung notwendig.
-- Mit den Zeilen `ModuleRegistry.registerModules(require("ak.core.CoreLuaModule"), require("ak.road.CrossingLuaModul"))` werden das "CoreLuaModul" und das "CrossingLuaModul" in der Anwendung bekannt gemacht.
+- Mit den Zeilen `ModuleRegistry.registerModules(require("ak.core.CoreLuaModule"), require("ak.road.CrossingLuaModule"))` werden das "CoreLuaModul" und das "CrossingLuaModule" in der Anwendung bekannt gemacht.
 - Die Zeile `ModuleRegistry.runTasks()` ist für das wiederkehrende Ausführen aller Aufgaben, dadurch werden die Kreuzungsschaltungen und die geplanten Aktionen durchgeführt.
 - Wichtig ist auch, dass die Funktion EEPMain mit `return 1` beendet wird, damit sie alle 200 ms aufgerufen wird.
 

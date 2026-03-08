@@ -181,7 +181,7 @@
   - ~~`ak.strasse.AkStrasse`~~ wurde entfernt
   - ~~`ak.strasse.AmpelModellStatePublisher`~~ => `ak.road.TrafficLightModelStatePublisher`
   - ~~`ak.strasse.KreuzungStatePublisher`~~ => `ak.road.CrossingStatePublisher`
-  - ~~`ak.strasse.KreuzungLuaModul`~~ => `ak.road.CrossingLuaModul`
+  - ~~`ak.strasse.KreuzungLuaModul`~~ => `ak.road.CrossingLuaModule`
   - ~~`ak.strasse.KreuzungWebConnector`~~ => `ak.road.CrossingWebConnector`
 
 ## 0.9.0
