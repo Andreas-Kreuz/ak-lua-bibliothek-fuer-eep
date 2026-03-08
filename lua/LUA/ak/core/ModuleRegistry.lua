@@ -1,13 +1,11 @@
 if AkDebugLoad then print("[#Start] Loading ak.core.ModuleRegistry ...") end
-local ServerController = require("ak.io.ServerController")
+local MainLoopRunner = require("ak.core.MainLoopRunner")
 local TableUtils = require("ak.util.TableUtils")
-local os = require("os")
 
 local ModuleRegistry = {}
 ModuleRegistry.debug = AkStartWithDebug or false
 ModuleRegistry.pauseEepDuringInitialization = false -- Option to pause EEP during initialization
 local enableServer = true
-local initialized = false
 ---@type table<string,LuaModule>
 local registeredLuaModules = {}
 ---@type string[]
@@ -33,7 +31,7 @@ end
 -- Registers a module to be used in EEP Web
 -- @param module a module of type AkLuaControlModule
 function ModuleRegistry.registerModules(...)
-    assert(not initialized, "All tasks must be registered before ModuleRegistry.initTasks()")
+    assert(not MainLoopRunner.areModulesInitialized(), "All tasks must be registered before ModuleRegistry.initTasks()")
 
     for _, module in ipairs({ ... }) do
         -- Check the module
@@ -76,84 +74,39 @@ function ModuleRegistry.useDlls(enableDlls)
     -- NO OP
 end
 
-local function initTask(module)
-    if ModuleRegistry.debug then print(string.format("[#ModuleRegistry] Begin initTask() for \"%s\"", module.name)) end
-    local t0 = os.clock()
-    module.init()
-    local t1 = os.clock()
-    local timeDiff = t1 - t0
-    if ModuleRegistry.debug then
-        print(string.format("[ModuleRegistry] End initTask() for \"%s\" after %.3f seconds", module.name, timeDiff))
-    end
-end
-
-local function runTask(module)
-    if ModuleRegistry.debug then print(string.format("[#ModuleRegistry] Begin runTask() for \"%s\"", module.name)) end
-    local t0 = os.clock()
-    module.run()
-    local t1 = os.clock()
-    local timeDiff = t1 - t0
-    -- print(string.format('[ModuleRegistry].runTask() %.3f seconds for "%s"', timeDiff, module.name))
-    if ModuleRegistry.debug and timeDiff > 0.01 then
-        print(string.format("[#ModuleRegistry] WARNING: runTask() %.3f seconds for \"%s\"", timeDiff, module.name))
-    end
-end
-
 ---
 -- This will init all registeredLuaModules
 function ModuleRegistry.initTasks()
-    if not initialized then
-        for _, moduleName in ipairs(executionOrderModuleNames) do initTask(registeredLuaModules[moduleName]) end
-
-        initialized = true
-    end
+    MainLoopRunner.debug = ModuleRegistry.debug
+    MainLoopRunner.initModules(executionOrderModuleNames, registeredLuaModules)
 end
 
 ---
 -- This will run all registeredLuaModules
 -- @param cycleCount Repetion frequency (1: every 200 ms, 5: every second, ...)
 function ModuleRegistry.runTasks(cycleCount)
-    local t1 = os.clock()
+    local effectiveCycleCount = type(cycleCount) == "number" and cycleCount or 5
     local resumeEEP
-    if not initialized then
+    if not MainLoopRunner.areModulesInitialized() then
         -- Process option to suspend EEP during initialization
         if ModuleRegistry.pauseEepDuringInitialization then
             if ModuleRegistry.debug then print("[ModuleRegistry] Pause EEP during initialization") end
             EEPPause(1)
             resumeEEP = true
         end
-
-        ModuleRegistry.initTasks()
     end
 
-    local t2 = os.clock()
-    for _, moduleName in ipairs(executionOrderModuleNames) do runTask(registeredLuaModules[moduleName]) end
-
-    local t3 = os.clock()
-    if enableServer then
-        -- Sorgt dafuer, dass alle JsonDaten der registrieren XxxJsonColletor zum Server kommen
-        -- und dass die Befehle des Servers ausgewertet werden
-        ServerController.communicateWithServer(cycleCount)
-    end
-    local t4 = os.clock()
+    local totalTime = MainLoopRunner.runCycle(effectiveCycleCount, executionOrderModuleNames, registeredLuaModules, {
+        debug = ModuleRegistry.debug,
+        enableServer = enableServer
+    })
 
     -- resume EEP after initialization
     if resumeEEP then
         if ModuleRegistry.debug then
-            print(string.format("[ModuleRegistry] Resume EEP after initialization %3.0f ms", (t4 - t1) * 1000))
+            print(string.format("[ModuleRegistry] Resume EEP after initialization %3.0f ms", totalTime * 1000))
         end
         EEPPause(0)
-    end
-
-    if ModuleRegistry.debug then
-        print(string.format("[#ModuleRegistry] runTasks(%d) time: %.0f ms " ..
-                            "(%.0f ms initTasks, %.0f ms runTask, %.0f ms serveData)", --
-                            cycleCount,                                                -- how often we update
-                            (t4 - t1) * 1000,                                          -- total time
-                            (t2 - t1) * 1000,                                          -- initTasks
-                            (t3 - t2) * 1000,                                          -- runTask
-                            (t4 - t3) * 1000)                                          -- serveData
-        )
     end
 end
 

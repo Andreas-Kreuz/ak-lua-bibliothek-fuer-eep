@@ -1,5 +1,5 @@
 if AkDebugLoad then print("[#Start] Loading ak.data.DataWebConnector ...") end
-local ServerController = require("ak.io.ServerController")
+local StatePublisherRegistry = require("ak.core.StatePublisherRegistry")
 local DataWebConnector = {}
 
 function DataWebConnector.registerStatePublishers(activeCollectors)
@@ -12,27 +12,27 @@ function DataWebConnector.registerStatePublishers(activeCollectors)
 
     if all or activeCollectors["ak.data.DataSlotsStatePublisher"] then
         local dataSlotsStatePublisher = require("ak.data.DataSlotsStatePublisher")
-        ServerController.addStatePublisher(dataSlotsStatePublisher)
+        StatePublisherRegistry.registerStatePublishers(dataSlotsStatePublisher)
     end
     if all or activeCollectors["ak.data.SignalStatePublisher"] then
         local signalStatePublisher = require("ak.data.SignalStatePublisher")
-        ServerController.addStatePublisher(signalStatePublisher)
+        StatePublisherRegistry.registerStatePublishers(signalStatePublisher)
     end
     if all or activeCollectors["ak.data.SwitchStatePublisher"] then
         local switchStatePublisher = require("ak.data.SwitchStatePublisher")
-        ServerController.addStatePublisher(switchStatePublisher)
+        StatePublisherRegistry.registerStatePublishers(switchStatePublisher)
     end
     if all or activeCollectors["ak.data.StructureStatePublisher"] then
         local structureStatePublisher = require("ak.data.StructureStatePublisher")
-        ServerController.addStatePublisher(structureStatePublisher)
+        StatePublisherRegistry.registerStatePublishers(structureStatePublisher)
     end
     if all or activeCollectors["ak.data.TimeStatePublisher"] then
         local timeStatePublisher = require("ak.data.TimeStatePublisher")
-        ServerController.addStatePublisher(timeStatePublisher)
+        StatePublisherRegistry.registerStatePublishers(timeStatePublisher)
     end
     if all or activeCollectors["ak.data.TrainsAndTracksStatePublisher"] then
         local trainsAndTracksStatePublisher = require("ak.data.TrainsAndTracksStatePublisher")
-        ServerController.addStatePublisher(trainsAndTracksStatePublisher)
+        StatePublisherRegistry.registerStatePublishers(trainsAndTracksStatePublisher)
     end
 end
 

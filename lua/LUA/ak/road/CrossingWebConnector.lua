@@ -1,4 +1,5 @@
 if AkDebugLoad then print("[#Start] Loading ak.road.CrossingWebConnector ...") end
+local StatePublisherRegistry = require("ak.core.StatePublisherRegistry")
 local ServerController = require("ak.io.ServerController")
 local Crossing = require("ak.road.Crossing")
 local CrossingSettings = require("ak.road.CrossingSettings")
@@ -9,8 +10,7 @@ local CrossingWebConnector = {}
 function CrossingWebConnector.registerStatePublishers()
     local trafficLightModelStatePublisher = require("ak.road.TrafficLightModelStatePublisher")
     local crossingStatePublisher = require("ak.road.CrossingStatePublisher")
-    ServerController.addStatePublisher(trafficLightModelStatePublisher)
-    ServerController.addStatePublisher(crossingStatePublisher)
+    StatePublisherRegistry.registerStatePublishers(trafficLightModelStatePublisher, crossingStatePublisher)
 end
 
 function CrossingWebConnector.registerFunctions()

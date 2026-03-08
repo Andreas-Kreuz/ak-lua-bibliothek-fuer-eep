@@ -7,16 +7,19 @@ import AppPageHeadline from '../../ui/AppPageHeadline';
 import VersionInfoWrapper from './VersionInfoWrapper';
 
 function StatisticsOverview() {
-  const [updateTimes, initializationTimes, controllerUpdateTimes] = useStatistics();
+  const [publisherSyncTimes, initializationTimes, controllerUpdateTimes, moduleInitTimes, publisherInitTimes] =
+    useStatistics();
 
   return (
     <AppPage>
       <AppPageHeadline>Statistik</AppPageHeadline>
       <AppCardGridContainer>
         <VersionInfoWrapper />
-        <StatisticsCard title="Berechnung Lua Module" times={updateTimes} />
-        <StatisticsCard title="Initialisierung Lua Module" times={initializationTimes} maxEntries={1} />
+        <StatisticsCard title="Ausführung der Publisher" times={publisherSyncTimes} />
+        <StatisticsCard title="Ausführung Lua Module" times={publisherInitTimes} />
         <StatisticsCard title="Server" times={controllerUpdateTimes} />
+        <StatisticsCard title="Initialisierung Lua Module" times={moduleInitTimes} maxEntries={1} />
+        <StatisticsCard title="Initialisierung der Publisher" times={initializationTimes} maxEntries={1} />
       </AppCardGridContainer>
     </AppPage>
   );

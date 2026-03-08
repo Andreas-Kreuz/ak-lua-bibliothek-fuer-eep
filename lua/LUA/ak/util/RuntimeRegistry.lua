@@ -4,6 +4,7 @@ local RuntimeRegistry = {}
 
 ---@type RunTimeEntry[]
 local runtimeData = {}
+local groupsToKeep = {}
 
 --- Store runtime information
 -- @author Frank Buchholz
@@ -22,6 +23,11 @@ function RuntimeRegistry.storeRunTime(group, time)
     local runtime = runtimeData[group]
     runtime.count = runtime.count + 1
     runtime.time = runtime.time + time * 1000
+end
+
+function RuntimeRegistry.keepGroup(group)
+    assert(group)
+    groupsToKeep[group] = true
 end
 
 --- Indirect call of EEP function (or any other function) including time measurement
@@ -45,9 +51,11 @@ function RuntimeRegistry.getAll() return runtimeData end
 
 function RuntimeRegistry.reset(group) runtimeData[group] = nil end
 
-function RuntimeRegistry.resetAll(keepThose)
+function RuntimeRegistry.resetAll()
     local newRuntimeData = {}
-    for key in pairs(keepThose) do newRuntimeData[key] = runtimeData[key] end
+    for key, value in pairs(runtimeData) do
+        if groupsToKeep[key] then newRuntimeData[key] = value end
+    end
     runtimeData = newRuntimeData
 end
 

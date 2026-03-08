@@ -3,16 +3,14 @@
 --
 --[[ Usage:
 -- Do NOT use this class manually
--- Use this class in XxxWebConnector to register StatePublishers and commands
+-- Use this class in XxxWebConnector to register commands
 local ServerController = require("ak.io.ServerController")
 --]] -- @author Andreas Kreuz
 -- @release 0.10.2
 if AkDebugLoad then print("[#Start] Loading ak.io.ServerController ...") end
-local DataChangeBus = require("ak.events.DataChangeBus")
 local EventRecorder = require("ak.io.EventRecorder")
 local AkWebServerIo = require("ak.io.AkWebServerIo")
 local AkCommandExecutor = require("ak.io.AkCommandExecutor")
-local RuntimeRegistry = require("ak.util.RuntimeRegistry")
 local os = require("os")
 
 local ServerController = {}
@@ -30,169 +28,61 @@ local function readVersion()
 end
 ServerController.programVersion = readVersion()
 
-
 -- checkServerStatus:
 -- true: Check status of EEP-Web Server before updating the json file
 -- false: Update json file without checking if the EEP-Web Server is ready
 ServerController.checkServerStatus = true
 
-local registeredStatePublishers = {}
-local runTimeGroupsToKeep = {}
-local collectedData = {}
-local initialized = false
-
 function ServerController.addAcceptedRemoteFunction(fName, f) AkCommandExecutor.addAcceptedRemoteFunction(fName, f) end
-
-local function initializeStatePublisher(statePublisher)
-    local t0 = os.clock()
-    statePublisher.initialize()
-    local t1 = os.clock()
-    local timeDiff = t1 - t0
-    if ServerController.debug then
-        print(string.format("[#ServerController] initialize() %4.0f ms for \"%s\"", timeDiff * 1000,
-                            statePublisher.name))
-    end
-    local group = "StatePublisher." .. statePublisher.name .. ".initialize"
-    RuntimeRegistry.storeRunTime(group, timeDiff)
-    runTimeGroupsToKeep[group] = true
-end
-
-local function collectFrom(statePublisher, printFirstTime)
-    local t0 = os.clock()
-    local newData = statePublisher.syncState()
-    local t1 = os.clock()
-    local timeDiff = t1 - t0
-    if ServerController.debug and (timeDiff > 0.01 or printFirstTime) then
-        print(string.format("[#ServerController] syncState() %4.0f ms for \"%s\"", timeDiff * 1000,
-                            statePublisher.name))
-    end
-    RuntimeRegistry.storeRunTime("StatePublisher." .. statePublisher.name .. ".syncState", timeDiff)
-    return newData
-end
-
-local function checkObjects(syncState, path)
-    for key, value in pairs(syncState) do
-        if type(key) ~= "string" and type(key) ~= "number" then
-            error("Key must always be of type string " .. path .. "#" .. type(key))
-        end
-        if type(value) == "table" then checkObjects(value, path .. ">" .. key) end
-        if type(value) == "function" then error("Value must not be a function " .. path .. "#" .. type(key)) end
-    end
-end
-
-local function syncState(printFirstTime)
-    for _, statePublisher in pairs(registeredStatePublishers) do
-        local newData = collectFrom(statePublisher, printFirstTime)
-        for key, value in pairs(newData) do collectedData[key] = value end
-    end
-
-    checkObjects(collectedData, "")
-end
-
---- Initialize data.
--- do it once
-local function initialize()
-    if ServerController.debug then print("[#ServerController] initialize()") end
-    for _, statePublisher in pairs(registeredStatePublishers) do initializeStatePublisher(statePublisher) end
-
-    initialized = true
-end
-
-function ServerController.addStatePublisher(...)
-    for _, statePublisher in ipairs({ ... }) do
-        -- Check the statePublisher
-        assert(statePublisher.name and type(statePublisher.name) == "string",
-            -- "Der Name des Moduls muss gesetzt und ein String sein"
-               "The name of the module must be defined and is has to be a string")
-        assert(statePublisher.initialize and type(statePublisher.initialize) == "function",
-            -- "Das Modul muss eine Funktion initialize() besitzen"
-               string.format("statePublisher %s must have a function initialize()", statePublisher.name))
-        assert(statePublisher.syncState and type(statePublisher.syncState) == "function",
-            -- "Das Modul muss eine Funktion syncState() besitzen"
-               string.format("statePublisher %s must have a function syncState()", statePublisher.name))
-
-        -- Remember the statePublisher by it's name
-        if ServerController.debug then
-            print(string.format("[#ServerController] addStatePublisher(%s)", statePublisher.name))
-        end
-        registeredStatePublishers[statePublisher.name] = statePublisher
-
-        if initialized then initializeStatePublisher(statePublisher) end
-    end
-end
 
 local function writeData(jsonString) AkWebServerIo.updateJsonFile(jsonString) end
 
 local i = -1
 
---- Main function of this module.
--- Call this function in main loop of EEP.
--- do it frequently
--- @param modulus Repetion frequency (0: always, 1: every 200 ms, 5: every second, ...)
+--- Main function of this module. Is called by MainLoopRunner.
+-- @param modulus Repetition frequency (0: always, 1: every 200 ms, 5: every second, ...)
 function ServerController.communicateWithServer(modulus)
-    -- default value for optional parameter
     if not modulus or type(modulus) ~= "number" then modulus = 5 end
     i = i + 1
 
     local overallTime0 = os.clock()
-    -- we wait for the server to be ready, so we know the server can process the next data batch.
     local serverIsReady = not ServerController.checkServerStatus or AkWebServerIo.checkWebServer()
-
-    -- initialization in first call
     local overallTime1 = os.clock()
-    local printFirstTime = false
-    if not initialized and serverIsReady then
-        printFirstTime = true
-        initialize()
-    end
 
-    -- process commands
-    local overallTime2 = os.clock()
     AkWebServerIo.processNewCommands()
+    local overallTime2 = os.clock()
 
-    -- export data regularly
-    local overallTime3 = os.clock()
-    local overallTime4 = overallTime3
-
-    if (modulus == 0 or i % modulus == 0) and serverIsReady then
-        syncState(printFirstTime)
+    local publishRuntime = modulus == 0 or i % modulus == 0
+    local overallTime3 = overallTime2
+    local overallTime4 = overallTime2
+    if publishRuntime and serverIsReady then
+        local encodedEvents = EventRecorder.collectAndResetEvents()
+        overallTime3 = os.clock()
+        writeData(encodedEvents)
         overallTime4 = os.clock()
-
-        writeData(EventRecorder.collectAndResetEvents())
     end
 
-    local overallTime5 = os.clock()
-    local timeDiff = overallTime5 - overallTime0
-    local allowedTimeDiff = modulus * 0.200
-    if ServerController.debug and printFirstTime or timeDiff > allowedTimeDiff then
-        local format = (printFirstTime and "INITIALIZATION" or "WARNING") ..
-            ": [#ServerController] communicateWithServer() time is %3.0f ms --- " ..
-            "waitForServer: %.0f ms, " .. "initialize: %.0f ms, " .. "commands: %2.0f ms, " ..
-            "collect: %3.0f ms, " .. " write: %.0f ms" .. " (allowed: %.0f ms)"
-        print(string.format(format,                               -- format string
-                            (timeDiff) * 1000,                    -- communicateWithServer
-                            (overallTime1 - overallTime0) * 1000, -- waitForServer
-                            (overallTime2 - overallTime1) * 1000, -- initialize
-                            (overallTime3 - overallTime2) * 1000, -- commands
-                            (overallTime4 - overallTime3) * 1000, -- collect
-                            (overallTime5 - overallTime4) * 1000, -- write
-                            (allowedTimeDiff) * 1000))            -- allowed
+    local waitForServerTime = overallTime1 - overallTime0
+    local commandsTime = overallTime2 - overallTime1
+    local encodeTime = overallTime3 - overallTime2
+    local writeTime = overallTime4 - overallTime3
+    local totalTime = overallTime4 - overallTime0
+
+    if ServerController.debug then
+        print(string.format("INFO: [#ServerController] communicateWithServer() time is %3.0f ms --- " ..
+                            "waitForServer: %.0f ms, commands: %2.0f ms, encode: %.0f ms, write: %.0f ms",
+                            totalTime * 1000, waitForServerTime * 1000, commandsTime * 1000,
+                            encodeTime * 1000, writeTime * 1000))
     end
 
-    if modulus == 0 or i % modulus == 0 then
-        RuntimeRegistry.storeRunTime("ServerController.communicateWithServer-1-waitForServer",
-                                     overallTime1 - overallTime0)
-        RuntimeRegistry.storeRunTime("ServerController.communicateWithServer-2-initialize",
-                                     overallTime2 - overallTime1)
-        RuntimeRegistry.storeRunTime("ServerController.communicateWithServer-3-commands", overallTime3 - overallTime2)
-        RuntimeRegistry.storeRunTime("ServerController.communicateWithServer-4-collect", overallTime4 - overallTime3)
-        RuntimeRegistry.storeRunTime("ServerController.communicateWithServer-5-write", overallTime5 - overallTime4)
-        RuntimeRegistry.storeRunTime("ServerController.communicateWithServer-OVERALL", timeDiff)
-        local values = RuntimeRegistry.getAll()
-        if (values) then DataChangeBus.fireListChange("runtime", "id", values) end
-        RuntimeRegistry.resetAll(runTimeGroupsToKeep)
-        DataChangeBus.printEventCounter()
-    end
+    return {
+        waitForServerTime = waitForServerTime,
+        commandsTime = commandsTime,
+        encodeTime = encodeTime,
+        writeTime = writeTime,
+        totalTime = totalTime,
+        publishRuntime = publishRuntime
+    }
 end
 
 return ServerController

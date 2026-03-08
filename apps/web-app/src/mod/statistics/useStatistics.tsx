@@ -3,8 +3,10 @@ import { useApiDataRoomHandler } from '../../io/useRoomHandler';
 import TimeDesc from './model/TimeDesc';
 
 function useStatistics() {
-  const [updateTimes, setUpdateTimes] = useState<TimeDesc[]>([]);
-  const [initializationTimes, setIntitializationTimes] = useState<TimeDesc[]>([]);
+  const [publisherSyncTimes, setPublisherSyncTimes] = useState<TimeDesc[]>([]);
+  const [publisherInitTimes, setPublisherInitTimes] = useState<TimeDesc[]>([]);
+  const [moduleRunTimes, setModuleRunTimes] = useState<TimeDesc[]>([]);
+  const [moduleInitTimes, setModuleInitTimes] = useState<TimeDesc[]>([]);
   const [controllerUpdateTimes, setControllerUpdateTimes] = useState<TimeDesc[]>([]);
 
   useApiDataRoomHandler(
@@ -12,7 +14,7 @@ function useStatistics() {
     (payload: string) => {
       const record: Record<string, { id: string; count: number; time: number }> = JSON.parse(payload);
 
-      const parsedTimes: Record<string, TimeDesc[]> = {};
+      const publisherTimes: Record<string, TimeDesc[]> = {};
       for (const suffix of ['.syncState', '.initialize']) {
         const times = [];
         for (const collector of [
@@ -34,40 +36,63 @@ function useStatistics() {
             times.push(new TimeDesc(collector, 0));
           }
         }
-        parsedTimes[suffix] = times;
+        publisherTimes[suffix] = times;
       }
 
-      setUpdateTimes(parsedTimes['.syncState']);
-      setIntitializationTimes(parsedTimes['.initialize']);
+      const moduleTimes: Record<string, TimeDesc[]> = {};
+      for (const suffix of ['.run', '.init']) {
+        const times = [];
+        for (const collector of [
+          'core.CoreLuaModule',
+          'data.DataLuaModule',
+          'scheduler.SchedulerLuaModule',
+          'road.CrossingLuaModul',
+        ]) {
+          const collectorName = 'LuaModule.ak.' + collector + suffix;
+          if (record[collectorName]) {
+            times.push(new TimeDesc(collector, record[collectorName].time));
+          } else {
+            times.push(new TimeDesc(collector, 0));
+          }
+        }
+        publisherTimes[suffix] = times;
+      }
+
+      setPublisherSyncTimes(publisherTimes['.syncState']);
+      setPublisherInitTimes(publisherTimes['.initialize']);
+      setModuleRunTimes(publisherTimes['.run']);
+      setModuleInitTimes(publisherTimes['.init']);
       setControllerUpdateTimes([
         new TimeDesc(
-          'collect',
-          record['ServerController.communicateWithServer-4-collect']
-            ? record['ServerController.communicateWithServer-4-collect'].time
+          'Wait for server to be ready',
+          record['MainLoopRunner.runCycle-5-waitForServer']
+            ? record['MainLoopRunner.runCycle-5-waitForServer'].time
             : 0,
         ),
         new TimeDesc(
-          'encode',
-          record['ServerController.communicateWithServer-6-encode']
-            ? record['ServerController.communicateWithServer-6-encode'].time
-            : 0,
+          'Command execution',
+          record['MainLoopRunner.runCycle-6-commands'] ? record['MainLoopRunner.runCycle-6-commands'].time : 0,
         ),
         new TimeDesc(
-          'write',
-          record['ServerController.communicateWithServer-7-write']
-            ? record['ServerController.communicateWithServer-7-write'].time
-            : 0,
+          'Encode all data',
+          record['MainLoopRunner.runCycle-7-encode'] ? record['MainLoopRunner.runCycle-7-encode'].time : 0,
+        ),
+        new TimeDesc(
+          'Write all data',
+          record['MainLoopRunner.runCycle-8-write'] ? record['MainLoopRunner.runCycle-8-write'].time : 0,
         ),
       ]);
     },
     () => {
-      setUpdateTimes([]);
-      setIntitializationTimes([]);
+      setPublisherSyncTimes([]);
+      setPublisherInitTimes([]);
       setControllerUpdateTimes([]);
+      setModuleInitTimes([]);
+      setModuleRunTimes([]);
     },
   );
 
-  return [updateTimes, initializationTimes, controllerUpdateTimes];
+  return [publisherSyncTimes, publisherInitTimes, controllerUpdateTimes, moduleInitTimes, moduleRunTimes];
 }
 
 export default useStatistics;
