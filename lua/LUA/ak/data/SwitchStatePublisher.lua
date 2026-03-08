@@ -24,7 +24,7 @@ function SwitchStatePublisher.initialize()
     initialized = true
 end
 
-function SwitchStatePublisher.collectData()
+function SwitchStatePublisher.syncState()
     if not enabled then return end
 
     if not initialized then SwitchStatePublisher.initialize() end

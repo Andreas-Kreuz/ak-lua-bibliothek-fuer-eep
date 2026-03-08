@@ -57,7 +57,7 @@ Erwartetes Collector-Interface:
 
 - `name`
 - `initialize()`
-- `collectData()`
+- `syncState()`
 
 Der `ServerController` ist damit die einzige vorgesehene Einstiegsschicht für andere Pakete wie `ak.core`, `ak.data` oder `ak.road`.
 
@@ -169,7 +169,7 @@ Das Paket nutzt keine `StorageUtility`-Persistenz. Sein Zustand ist absichtlich 
 
 ## Wichtige Invarianten
 
-- Alle Json-Collector müssen `name`, `initialize()` und `collectData()` besitzen.
+- Alle Json-Collector müssen `name`, `initialize()` und `syncState()` besitzen.
 - Exportdaten dürfen keine Funktionen enthalten; `ServerController.checkObjects(...)` bricht sonst ab.
 - Remote-Kommandos dürfen nur über `acceptedRemoteFunctions` laufen.
 - `AkWebServerIo` muss `print` und `clearlog` erst überschreiben und danach als Remote-Funktionen registrieren.

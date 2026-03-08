@@ -29,6 +29,6 @@ function VersionStatePublisher.initialize()
     initialized = true
 end
 
-function VersionStatePublisher.collectData() return data end
+function VersionStatePublisher.syncState() return data end
 
 return VersionStatePublisher

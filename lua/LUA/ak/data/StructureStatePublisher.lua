@@ -67,7 +67,7 @@ function StructureStatePublisher.initialize()
     initialized = true
 end
 
-function StructureStatePublisher.collectData()
+function StructureStatePublisher.syncState()
     if not enabled then return end
 
     if not initialized then StructureStatePublisher.initialize() end

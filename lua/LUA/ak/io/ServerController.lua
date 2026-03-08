@@ -61,35 +61,35 @@ local initialized = false
 
 function ServerController.addAcceptedRemoteFunction(fName, f) AkCommandExecutor.addAcceptedRemoteFunction(fName, f) end
 
-local function initializeStatePublisher(jsonCollector)
+local function initializeStatePublisher(statePublisher)
     local t0 = os.clock()
-    jsonCollector.initialize()
+    statePublisher.initialize()
     local t1 = os.clock()
     local timeDiff = t1 - t0
     if ServerController.debug then
         print(string.format("[#ServerController] initialize() %4.0f ms for \"%s\"", timeDiff * 1000,
-                            jsonCollector.name))
+                            statePublisher.name))
     end
-    local group = "StatePublisher." .. jsonCollector.name .. ".initialize"
+    local group = "StatePublisher." .. statePublisher.name .. ".initialize"
     RuntimeRegistry.storeRunTime(group, timeDiff)
     runTimeGroupsToKeep[group] = true
 end
 
-local function collectFrom(jsonCollector, printFirstTime)
+local function collectFrom(statePublisher, printFirstTime)
     local t0 = os.clock()
-    local newData = jsonCollector.collectData()
+    local newData = statePublisher.syncState()
     local t1 = os.clock()
     local timeDiff = t1 - t0
     if ServerController.debug and (timeDiff > 0.01 or printFirstTime) then
-        print(string.format("[#ServerController] collectData() %4.0f ms for \"%s\"", timeDiff * 1000,
-                            jsonCollector.name))
+        print(string.format("[#ServerController] syncState() %4.0f ms for \"%s\"", timeDiff * 1000,
+                            statePublisher.name))
     end
-    RuntimeRegistry.storeRunTime("StatePublisher." .. jsonCollector.name .. ".collectData", timeDiff)
+    RuntimeRegistry.storeRunTime("StatePublisher." .. statePublisher.name .. ".syncState", timeDiff)
     return newData
 end
 
-local function checkObjects(collectData, path)
-    for key, value in pairs(collectData) do
+local function checkObjects(syncState, path)
+    for key, value in pairs(syncState) do
         if type(key) ~= "string" and type(key) ~= "number" then
             error("Key must always be of type string " .. path .. "#" .. type(key))
         end
@@ -98,9 +98,9 @@ local function checkObjects(collectData, path)
     end
 end
 
-local function collectData(printFirstTime)
-    for _, jsonCollector in pairs(registeredStatePublishers) do
-        local newData = collectFrom(jsonCollector, printFirstTime)
+local function syncState(printFirstTime)
+    for _, statePublisher in pairs(registeredStatePublishers) do
+        local newData = collectFrom(statePublisher, printFirstTime)
         for key, value in pairs(newData) do collectedData[key] = value end
     end
 
@@ -111,31 +111,31 @@ end
 -- do it once
 local function initialize()
     if ServerController.debug then print("[#ServerController] initialize()") end
-    for _, jsonCollector in pairs(registeredStatePublishers) do initializeStatePublisher(jsonCollector) end
+    for _, statePublisher in pairs(registeredStatePublishers) do initializeStatePublisher(statePublisher) end
 
     initialized = true
 end
 
 function ServerController.addStatePublisher(...)
-    for _, jsonCollector in ipairs({ ... }) do
-        -- Check the jsonCollector
-        assert(jsonCollector.name and type(jsonCollector.name) == "string",
+    for _, statePublisher in ipairs({ ... }) do
+        -- Check the statePublisher
+        assert(statePublisher.name and type(statePublisher.name) == "string",
             -- "Der Name des Moduls muss gesetzt und ein String sein"
                "The name of the module must be defined and is has to be a string")
-        assert(jsonCollector.initialize and type(jsonCollector.initialize) == "function",
+        assert(statePublisher.initialize and type(statePublisher.initialize) == "function",
             -- "Das Modul muss eine Funktion initialize() besitzen"
-               string.format("jsonCollector %s must have a function initialize()", jsonCollector.name))
-        assert(jsonCollector.collectData and type(jsonCollector.collectData) == "function",
-            -- "Das Modul muss eine Funktion collectData() besitzen"
-               string.format("jsonCollector %s must have a function collectData()", jsonCollector.name))
+               string.format("statePublisher %s must have a function initialize()", statePublisher.name))
+        assert(statePublisher.syncState and type(statePublisher.syncState) == "function",
+            -- "Das Modul muss eine Funktion syncState() besitzen"
+               string.format("statePublisher %s must have a function syncState()", statePublisher.name))
 
-        -- Remember the jsonCollector by it's name
+        -- Remember the statePublisher by it's name
         if ServerController.debug then
-            print(string.format("[#ServerController] addStatePublisher(%s)", jsonCollector.name))
+            print(string.format("[#ServerController] addStatePublisher(%s)", statePublisher.name))
         end
-        registeredStatePublishers[jsonCollector.name] = jsonCollector
+        registeredStatePublishers[statePublisher.name] = statePublisher
 
-        if initialized then initializeStatePublisher(jsonCollector) end
+        if initialized then initializeStatePublisher(statePublisher) end
     end
 end
 
@@ -173,7 +173,7 @@ function ServerController.communicateWithServer(modulus)
     local overallTime4 = overallTime3
 
     if (modulus == 0 or i % modulus == 0) and serverIsReady then
-        collectData(printFirstTime)
+        syncState(printFirstTime)
         overallTime4 = os.clock()
 
         writeData(EventRecorder.collectAndResetEvents())

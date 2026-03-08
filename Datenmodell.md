@@ -10,8 +10,8 @@ Grundlagen der Beschreibung:
 
 Wichtig:
 
-- Die meisten Collector senden Nutzdaten per `EventBroker.fireListChange(...)`; `collectData()` gibt oft `{}` zurück.
-- Die Tabellen unten beschreiben das effektive Modell der Events und, wo relevant, die aktuelle Rückgabeform von `collectData()`.
+- Die meisten Collector senden Nutzdaten per `EventBroker.fireListChange(...)`; `syncState()` gibt oft `{}` zurück.
+- Die Tabellen unten beschreiben das effektive Modell der Events und, wo relevant, die aktuelle Rückgabeform von `syncState()`.
 - Bestehende Schreibweisen im Code bleiben in der Dokumentation erhalten, z. B. `occupiedTacks`.
 
 ## Überblick
@@ -70,7 +70,7 @@ Elementtyp: Modulstatus
 
 Hinweis:
 
-- `collectData()` liefert aktuell kein Listenobjekt, sondern ein Root-Objekt mit leeren `modules = {}` plus Einträgen unter `root[module.id]`.
+- `syncState()` liefert aktuell kein Listenobjekt, sondern ein Root-Objekt mit leeren `modules = {}` plus Einträgen unter `root[module.id]`.
 
 ### `eep-version`
 
@@ -488,21 +488,21 @@ Schema:
 - identisch zu `public-transport-lines`
 - wird von `LineRegistry.fireChangeLinesEvent()` gesendet
 
-## Rückgabewerte der `collectData()`-Funktionen
+## Rückgabewerte der `syncState()`-Funktionen
 
 | Collector                                      | Rückgabe heute             | Bemerkung                               |
 | ---------------------------------------------- | -------------------------- | --------------------------------------- |
-| `ModulesStatePublisher.collectData()`           | Objekt mit Modulen nach ID | einzig relevanter direkter Rückgabewert |
-| `VersionStatePublisher.collectData()`           | `{}`                       | Nutzdaten nur im Event                  |
-| `SignalStatePublisher.collectData()`            | `{}`                       | Nutzdaten nur im Event                  |
-| `SwitchStatePublisher.collectData()`            | `{}`                       | Nutzdaten nur im Event                  |
-| `TimeStatePublisher.collectData()`              | `{}`                       | Nutzdaten nur im Event                  |
-| `DataSlotsStatePublisher.collectData()`         | `{}`                       | Nutzdaten nur im Event                  |
-| `StructureStatePublisher.collectData()`         | `{}`                       | Nutzdaten nur im Event                  |
-| `TrainsAndTracksStatePublisher.collectData()`   | leeres `data`              | Nutzdaten über Registries               |
-| `TrafficLightModelStatePublisher.collectData()` | `{}`                       | Nutzdaten nur im Event                  |
-| `CrossingStatePublisher.collectData()`          | `{}`                       | internes Datenobjekt wird verworfen     |
-| `PublicTransportStatePublisher.collectData()`   | `{}`                       | internes Datenobjekt wird verworfen     |
+| `ModulesStatePublisher.syncState()`           | Objekt mit Modulen nach ID | einzig relevanter direkter Rückgabewert |
+| `VersionStatePublisher.syncState()`           | `{}`                       | Nutzdaten nur im Event                  |
+| `SignalStatePublisher.syncState()`            | `{}`                       | Nutzdaten nur im Event                  |
+| `SwitchStatePublisher.syncState()`            | `{}`                       | Nutzdaten nur im Event                  |
+| `TimeStatePublisher.syncState()`              | `{}`                       | Nutzdaten nur im Event                  |
+| `DataSlotsStatePublisher.syncState()`         | `{}`                       | Nutzdaten nur im Event                  |
+| `StructureStatePublisher.syncState()`         | `{}`                       | Nutzdaten nur im Event                  |
+| `TrainsAndTracksStatePublisher.syncState()`   | leeres `data`              | Nutzdaten über Registries               |
+| `TrafficLightModelStatePublisher.syncState()` | `{}`                       | Nutzdaten nur im Event                  |
+| `CrossingStatePublisher.syncState()`          | `{}`                       | internes Datenobjekt wird verworfen     |
+| `PublicTransportStatePublisher.syncState()`   | `{}`                       | internes Datenobjekt wird verworfen     |
 
 ## Verwendete EEP-Funktionen und Handbuchbezug
 

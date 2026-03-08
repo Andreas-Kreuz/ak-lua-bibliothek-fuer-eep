@@ -18,7 +18,7 @@ function TrainsAndTracksStatePublisher.initialize()
     initialized = true
 end
 
-function TrainsAndTracksStatePublisher.collectData()
+function TrainsAndTracksStatePublisher.syncState()
     if not enabled then return end
 
     if not initialized then TrainsAndTracksStatePublisher.initialize() end

@@ -28,7 +28,7 @@ end
 
 --- Get EEP signals and store them.
 -- do it frequently
-function SignalStatePublisher.collectData()
+function SignalStatePublisher.syncState()
     if not enabled then return end
 
     if not initialized then SignalStatePublisher.initialize() end

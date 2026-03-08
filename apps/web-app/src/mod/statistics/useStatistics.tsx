@@ -13,7 +13,7 @@ function useStatistics() {
       const record: Record<string, { id: string; count: number; time: number }> = JSON.parse(payload);
 
       const parsedTimes: Record<string, TimeDesc[]> = {};
-      for (const suffix of ['.collectData', '.initialize']) {
+      for (const suffix of ['.syncState', '.initialize']) {
         const times = [];
         for (const collector of [
           'core.ModulesStatePublisher',
@@ -37,7 +37,7 @@ function useStatistics() {
         parsedTimes[suffix] = times;
       }
 
-      setUpdateTimes(parsedTimes['.collectData']);
+      setUpdateTimes(parsedTimes['.syncState']);
       setIntitializationTimes(parsedTimes['.initialize']);
       setControllerUpdateTimes([
         new TimeDesc(

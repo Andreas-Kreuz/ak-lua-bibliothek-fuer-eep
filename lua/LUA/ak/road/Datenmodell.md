@@ -5,7 +5,7 @@ Diese Datei beschreibt das aktuell aus `lua/LUA/ak/road` erzeugte JSON-Datenmode
 Wichtige Vorbemerkungen:
 
 - Primärquellen sind `TrafficLightModelStatePublisher.lua`, `CrossingStatePublisher.lua` und die von ihnen verwendeten Modelle.
-- Beide Collector erzeugen ihre Nutzdaten fachlich über `DataChangeBus.fireListChange(...)`. `collectData()` liefert aktuell selbst nur leere Tabellen zurück.
+- Beide Collector erzeugen ihre Nutzdaten fachlich über `DataChangeBus.fireListChange(...)`. `syncState()` liefert aktuell selbst nur leere Tabellen zurück.
 - Der Lua-Collector sendet Listen. Der Web-Server normalisiert diese Listen danach zu Objekt-Mappings nach `keyId` und speichert sie so in `lua/LUA/ak/io/exchange/ak-eep-web-server-state.json`.
 
 ## `TrafficLightModelStatePublisher`
@@ -183,12 +183,12 @@ Hinweis: Im Auftrag wird `apps/web-app/src/intersections` genannt. Im aktuellen 
 
 | Ursprung in `ak/road`                          | Eventtyp      | Raum / Schlüssel                        |
 | ---------------------------------------------- | ------------- | --------------------------------------- |
-| `TrafficLightModelStatePublisher.collectData()` | `ListChanged` | `signal-type-definitions` / `id`        |
-| `CrossingStatePublisher.collectData()`          | `ListChanged` | `intersections` / `id`                  |
-| `CrossingStatePublisher.collectData()`          | `ListChanged` | `intersection-lanes` / `id`             |
-| `CrossingStatePublisher.collectData()`          | `ListChanged` | `intersection-switchings` / `id`        |
-| `CrossingStatePublisher.collectData()`          | `ListChanged` | `intersection-traffic-lights` / `id`    |
-| `CrossingStatePublisher.collectData()`          | `ListChanged` | `intersection-module-settings` / `name` |
+| `TrafficLightModelStatePublisher.syncState()` | `ListChanged` | `signal-type-definitions` / `id`        |
+| `CrossingStatePublisher.syncState()`          | `ListChanged` | `intersections` / `id`                  |
+| `CrossingStatePublisher.syncState()`          | `ListChanged` | `intersection-lanes` / `id`             |
+| `CrossingStatePublisher.syncState()`          | `ListChanged` | `intersection-switchings` / `id`        |
+| `CrossingStatePublisher.syncState()`          | `ListChanged` | `intersection-traffic-lights` / `id`    |
+| `CrossingStatePublisher.syncState()`          | `ListChanged` | `intersection-module-settings` / `name` |
 
 ### In `ak/road` ausgewertete Eingangs-Events und Callbacks
 

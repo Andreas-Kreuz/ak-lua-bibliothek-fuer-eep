@@ -12,7 +12,7 @@ function TimeStatePublisher.initialize()
     initialized = true
 end
 
-function TimeStatePublisher.collectData()
+function TimeStatePublisher.syncState()
     if not enabled then return end
 
     if not initialized then TimeStatePublisher.initialize() end

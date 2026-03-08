@@ -35,7 +35,7 @@ function ModulesStatePublisher.initialize()
     initialized = true
 end
 
-function ModulesStatePublisher.collectData()
+function ModulesStatePublisher.syncState()
     local moduleInfo = {}
     moduleInfo.modules = {}
 

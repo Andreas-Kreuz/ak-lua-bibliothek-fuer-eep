@@ -27,7 +27,7 @@ function DataSlotsStatePublisher.initialize()
     lastSlots = {}
 end
 
-function DataSlotsStatePublisher.collectData()
+function DataSlotsStatePublisher.syncState()
     -- nothing todo
     if not enabled then return end
     if not initialized then DataSlotsStatePublisher.initialize() end

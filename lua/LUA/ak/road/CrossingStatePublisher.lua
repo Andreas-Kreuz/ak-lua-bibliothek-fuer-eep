@@ -224,7 +224,7 @@ function CrossingStatePublisher.initialize()
     initialized = true
 end
 
-function CrossingStatePublisher.collectData()
+function CrossingStatePublisher.syncState()
     if not enabled then return end
 
     if not initialized then CrossingStatePublisher.initialize() end

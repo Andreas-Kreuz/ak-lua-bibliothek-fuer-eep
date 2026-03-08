@@ -14,7 +14,7 @@ function TrafficLightModelStatePublisher.initialize()
     initialized = true
 end
 
-function TrafficLightModelStatePublisher.collectData()
+function TrafficLightModelStatePublisher.syncState()
     if not enabled then return end
 
     if not initialized then TrafficLightModelStatePublisher.initialize() end

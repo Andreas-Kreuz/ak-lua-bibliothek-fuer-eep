@@ -3,7 +3,7 @@
 Alle Klassen unter `lua/LUA/ak/**/*StatePublisher.lua` folgen demselben Grundmuster fuer den Export von Lua- und EEP-Daten in Richtung Web-/Server-Schicht:
 
 1. Gemeinsame Schnittstelle
-   - Jeder Collector exportiert genau ein Lua-Modul mit `name`, `initialize()` und `collectData()`.
+   - Jeder Collector exportiert genau ein Lua-Modul mit `name`, `initialize()` und `syncState()`.
    - Diese Form ist durch `ak.io.ServerController` vorgegeben; beim Registrieren werden genau diese Felder validiert.
 
 2. Registrierung ueber WebConnector-Module
@@ -16,7 +16,7 @@ Alle Klassen unter `lua/LUA/ak/**/*StatePublisher.lua` folgen demselben Grundmus
 
 4. Zweiphasiger Lebenszyklus
    - `initialize()` ist fuer einmalige Vorbereitung gedacht, zum Beispiel Initialsuche, Indexaufbau oder das Merken bereits bekannter Objekte.
-   - `collectData()` wird zyklisch vom `ServerController` aufgerufen und stoesst bei Bedarf eine Lazy-Initialisierung an.
+   - `syncState()` wird zyklisch vom `ServerController` aufgerufen und stoesst bei Bedarf eine Lazy-Initialisierung an.
    - Die Initialisierung ist idempotent aufgebaut, damit Mehrfachaufrufe keinen zusaetzlichen Effekt haben. Nach der Lazy-Initialisierung, wird das lokale Flag `initialized` auf `true` gesetzt.
 
 5. Adapter zwischen EEP/Fachmodulen und API-Daten
@@ -27,11 +27,11 @@ Alle Klassen unter `lua/LUA/ak/**/*StatePublisher.lua` folgen demselben Grundmus
 6. Ereignisgetriebener Export
    - Der eigentliche Datentransport laeuft primaer ueber Events.
    - Die meisten Collector senden ihre Ergebnisse ueber `ak.events.DataChangeBus`, meist als `fireListChange(...)`, teilweise auch granularer wie `fireDataAdded(...)` oder `fireDataChanged(...)`.
-   - Auch dort, wo `collectData()` nominal Daten zurueckgeben kann, ist der Event-Strom in der Praxis meist der relevante Ausgabekanal.
+   - Auch dort, wo `syncState()` nominal Daten zurueckgeben kann, ist der Event-Strom in der Praxis meist der relevante Ausgabekanal.
 
 7. Rueckgabewerte sind Nebenkanal oder Kompatibilitaetsschicht
    - Viele Collector geben bewusst `{}` oder nur kommentierte Platzhalter zurueck.
-   - Das passt zur Verwendung im `ServerController`: Rueckgabewerte werden zwar eingesammelt, die aktuellen Collector veroeffentlichen ihre Nutzdaten aber ueberwiegend schon waehrend `collectData()`.
+   - Das passt zur Verwendung im `ServerController`: Rueckgabewerte werden zwar eingesammelt, die aktuellen Collector veroeffentlichen ihre Nutzdaten aber ueberwiegend schon waehrend `syncState()`.
    - Wenn ein Collector doch Tabellen zurueckgibt, muessen sie nur serialisierbare Werte enthalten; Funktionen oder nicht-string-/nicht-number-Schluessel sind unzulaessig.
 
 8. API-orientierte Datenform

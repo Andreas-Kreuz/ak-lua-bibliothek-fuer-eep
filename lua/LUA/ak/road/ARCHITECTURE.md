@@ -248,7 +248,7 @@ Exportierte Räume:
 - `intersection-traffic-lights`
 - `intersection-module-settings`
 
-Wichtig: Der Collector berechnet die Nutzdaten und feuert Events, liefert aber aktuell absichtlich kein direktes Nutzdatenobjekt an `ServerController.collectData()` zurück.
+Wichtig: Der Collector berechnet die Nutzdaten und feuert Events, liefert aber aktuell absichtlich kein direktes Nutzdatenobjekt an `ServerController.syncState()` zurück.
 
 ### [TrafficLightModelStatePublisher.lua](./TrafficLightModelStatePublisher.lua)
 

@@ -50,7 +50,7 @@ function PublicTransportStatePublisher.initialize()
     initialized = true
 end
 
-function PublicTransportStatePublisher.collectData()
+function PublicTransportStatePublisher.syncState()
     if not enabled then return end
 
     if not initialized then PublicTransportStatePublisher.initialize() end
