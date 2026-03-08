@@ -1,7 +1,7 @@
 ---
 layout: page_with_toc
 title: Kommunikation mit dem Server
-subtitle: Die Dateien in diesem Paket dienen dazu mit EEP-Web zu kommunizieren.
+subtitle: Die Dateien in diesem Paket dienen dazu, mit dem EEP-Web-Server zu kommunizieren.
 permalink: lua/ak/io/
 feature-img: "/docs/assets/headers/SourceCode.png"
 img: "/docs/assets/headers/SourceCode.png"
@@ -9,18 +9,15 @@ img: "/docs/assets/headers/SourceCode.png"
 
 # Motivation
 
-Dieses Paket kommuniziert über Dateien (schreiben und lesen) mit dem Server, der die Daten von EEP-Web anzeigt.
+Dieses Paket kommuniziert über Dateien (schreiben und lesen) mit dem EEP-Web-Server, der die Daten aus EEP entgegennimmt und bereitstellt.
 
 ## Dateien
 
 `exchange/ak-eep-out.log`
 EEP appends the log to this file.
 
-`exchange/ak-eep-out.eventlog`
-EEP appends data change events to this file.
-
 `exchange/ak-eep-out.json`
-EEP writes it's status to this file regularly but only if the Web Server is listening and has finished reading
+EEP writes line-separated JSON events to this file, but only if the Web Server is listening and has finished reading
 the previous version of the file.
 
 `exchange/ak-server.iswatching`

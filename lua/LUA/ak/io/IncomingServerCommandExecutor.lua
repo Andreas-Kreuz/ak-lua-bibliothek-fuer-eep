@@ -1,4 +1,4 @@
-if AkDebugLoad then print("[#Start] Loading ak.io.AkCommandExecutor ...") end
+if AkDebugLoad then print("[#Start] Loading ak.io.IncomingServerCommandExecutor ...") end
 
 -- split a string
 local function split(text, delimiter)
@@ -14,33 +14,33 @@ local function split(text, delimiter)
     return result
 end
 
-local AkCommandExecutor = {}
+local IncomingServerCommandExecutor = {}
 --- List of acceptedFunctions for remote execution
 --- Parameters of these functions are separated by | in the calls
-local acceptedRemoteFunctions = {}
+local allowedCommands = {}
 
 --- Adding an accepted function
 ---NOTE: acceptedFunctions are typically added via the Modules WebConnector
 ---@param fName string @using the name of the function as called from EEP-Web
 ---@param f function
-function AkCommandExecutor.addAcceptedRemoteFunction(fName, f)
+function IncomingServerCommandExecutor.registerAllowedCommand(fName, f)
     assert(type(fName) == "string", "Need 'fName' as string")
     assert(type(f) == "function", fName)
-    acceptedRemoteFunctions[fName] = f
+    allowedCommands[fName] = f
 end
 
 -- Accept EEPPause function
-AkCommandExecutor.addAcceptedRemoteFunction("EEPPause", EEPPause)
+IncomingServerCommandExecutor.registerAllowedCommand("EEPPause", EEPPause)
 
 -- Accept all EEP*Set functions
 for name, value in pairs(_G) do
     if string.find(name, "^EEP.*Set") and type(value) == "function" then
-        -- print(string.format("[#CommandExecutor] Adding %s to acceptedRemoteFunctions", name))
-        AkCommandExecutor.addAcceptedRemoteFunction(name, value)
+        -- print(string.format("[#IncomingServerCommandExecutor] Adding %s to allowedCommands", name))
+        IncomingServerCommandExecutor.registerAllowedCommand(name, value)
     end
 end
 
-function AkCommandExecutor.callSavely(functionAndArgs)
+function IncomingServerCommandExecutor.executeCommandSafely(functionAndArgs)
     local fName = table.remove(functionAndArgs, 1)
     local args = functionAndArgs
 
@@ -48,7 +48,7 @@ function AkCommandExecutor.callSavely(functionAndArgs)
         return
     end
 
-    local f = acceptedRemoteFunctions[fName]
+    local f = allowedCommands[fName]
 
     assert(f, fName)
 
@@ -56,21 +56,21 @@ function AkCommandExecutor.callSavely(functionAndArgs)
         local status, error = pcall(f, table.unpack(args))
         if not status then print(error) end
     else
-        print("[#CommandExecutor] Aufruf von " .. fName .. " nicht erlaubt")
+        print("[#IncomingServerCommandExecutor] Aufruf von " .. fName .. " nicht erlaubt")
     end
 end
 
-function AkCommandExecutor.execute(commands)
+function IncomingServerCommandExecutor.executeIncomingCommands(commands)
     commands = split(commands, "\n")
 
     for _, command in ipairs(commands) do
         if command ~= "" then
-            -- print("[#CommandExecutor] Command: " .. command)
+            -- print("[#IncomingServerCommandExecutor] Command: " .. command)
             local functionAndArgs = split(command, "|")
 
-            AkCommandExecutor.callSavely(functionAndArgs)
+            IncomingServerCommandExecutor.executeCommandSafely(functionAndArgs)
         end
     end
 end
 
-return AkCommandExecutor
+return IncomingServerCommandExecutor

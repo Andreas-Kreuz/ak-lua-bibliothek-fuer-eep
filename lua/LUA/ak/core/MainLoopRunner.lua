@@ -1,7 +1,7 @@
 if AkDebugLoad then print("[#Start] Loading ak.core.MainLoopRunner ...") end
 
 local DataChangeBus = require("ak.events.DataChangeBus")
-local ServerBridge = require("ak.io.ServerBridge")
+local ServerExchangeCoordinator = require("ak.io.ServerExchangeCoordinator")
 local StatePublisherRegistry = require("ak.core.StatePublisherRegistry")
 local RuntimeRegistry = require("ak.util.RuntimeRegistry")
 local os = require("os")
@@ -112,7 +112,7 @@ local function runServerPhase(cycleCount, enableServer)
     }
 
     if enableServer then
-        serverResult = ServerBridge.exchangeWithServer(cycleCount) or serverResult
+        serverResult = ServerExchangeCoordinator.runServerExchangeCycle(cycleCount) or serverResult
     end
 
     return {

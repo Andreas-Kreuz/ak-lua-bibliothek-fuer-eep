@@ -1,9 +1,9 @@
-if AkDebugLoad then print("[#Start] Loading ak.io.AkWebServerIo ...") end
-local AkCommandExecutor = require("ak.io.AkCommandExecutor")
+if AkDebugLoad then print("[#Start] Loading ak.io.ServerExchangeFileIo ...") end
+local IncomingServerCommandExecutor = require("ak.io.IncomingServerCommandExecutor")
 local os = require("os")
 
-local AkWebServerIo = {}
-AkWebServerIo.debug = AkStartWithDebug or false
+local ServerExchangeFileIo = {}
+ServerExchangeFileIo.debug = AkStartWithDebug or false
 
 --- Prüfe ob das Verzeichnis existiert und Dateien geschrieben werden können.
 -- Call this function via pcall to catch any exceptions
@@ -51,7 +51,7 @@ local watchFileNameLua
 local inFileCommands
 
 --- Bestimme Dateipfade.
-function AkWebServerIo.setOutputDirectory(dirName)
+function ServerExchangeFileIo.setExchangeDirectory(dirName)
     assert(dirName, "Verzeichnis angeben!")
 
     ioDirectoryName = dirName
@@ -65,7 +65,7 @@ function AkWebServerIo.setOutputDirectory(dirName)
 
     -- EEP writes it's status to this file regularly
     -- but only if the Web Server is listening and has finished reading the previous version of the file
-    AkWebServerIo.inFileNameEventCounter = ioDirectoryName .. "/ak-eep-web-server-state.counter"
+    ServerExchangeFileIo.inFileNameEventCounter = ioDirectoryName .. "/ak-eep-web-server-state.counter"
 
     -- The Web Server creates this file at start and deletes it on exit
     -- Conclusion: The server is listening while this file exists
@@ -88,7 +88,7 @@ function AkWebServerIo.setOutputDirectory(dirName)
 end
 
 --- Bestimme Default-Dateipfade.
-AkWebServerIo.setOutputDirectory(existingDirOf({
+ServerExchangeFileIo.setExchangeDirectory(existingDirOf({
     -- default value
     "../LUA/ak/io/exchange", "./LUA/ak/io/exchange"
 }) or ".")
@@ -158,22 +158,22 @@ function clearlog()
 end
 
 -- These two functions must be registered AFTER print and clearlog are overwritten
-AkCommandExecutor.addAcceptedRemoteFunction("clearlog", clearlog)
-AkCommandExecutor.addAcceptedRemoteFunction("print", print)
+IncomingServerCommandExecutor.registerAllowedCommand("clearlog", clearlog)
+IncomingServerCommandExecutor.registerAllowedCommand("print", print)
 
 local serverWasReadyLastTime = true
 local serverWasListeningLastTime = true
 --- Prüfe Status des Web Servers.
-function AkWebServerIo.checkWebServer()
+function ServerExchangeFileIo.isServerReady()
     if fileExists(watchFileNameServer) then  -- file: ak-server.iswatching
         if fileExists(watchFileNameLua) then -- file: ak-eep-out-json.isfinished
-            if AkWebServerIo.debug and serverWasReadyLastTime then
-                print("[#WebServerIo] SERVER IS NOT READY")
+            if ServerExchangeFileIo.debug and serverWasReadyLastTime then
+                print("[#ServerExchangeFileIo] SERVER IS NOT READY")
             end
             serverWasReadyLastTime = false
             return false
         else
-            if AkWebServerIo.debug and (not serverWasReadyLastTime or not serverWasListeningLastTime) then
+            if ServerExchangeFileIo.debug and (not serverWasReadyLastTime or not serverWasListeningLastTime) then
                 print("SERVER IS READY AND LISTENING")
             end
             serverWasReadyLastTime = true
@@ -181,8 +181,8 @@ function AkWebServerIo.checkWebServer()
             return true
         end
     else
-        if AkWebServerIo.debug and serverWasListeningLastTime then
-            print("[#WebServerIo] SERVER IS NOT LISTENING")
+        if ServerExchangeFileIo.debug and serverWasListeningLastTime then
+            print("[#ServerExchangeFileIo] SERVER IS NOT LISTENING")
         end
         serverWasListeningLastTime = false
         return false
@@ -192,11 +192,11 @@ end
 local writing = false
 --- Schreibe Datei.
 ---@param jsonData string Dateiinhalt als JSON-formatierter String
-function AkWebServerIo.updateJsonFile(jsonData)
+function ServerExchangeFileIo.writeOutgoingEvents(jsonData)
     if not writing then
         writing = true
         if not pcall(writeFile, outFileNameJson, jsonData .. "\n") then -- file: ak-eep-out.json
-            print("[#WebServerIo] CANNOT WRITE TO " .. outFileNameJson)
+            print("[#ServerExchangeFileIo] CANNOT WRITE TO " .. outFileNameJson)
         end
         writing = false
     end
@@ -207,9 +207,9 @@ function AkWebServerIo.updateJsonFile(jsonData)
 end
 
 --- Lese Kommandos aus Datei und führe sie aus.
-function AkWebServerIo.processNewCommands()
+function ServerExchangeFileIo.readAndExecuteIncomingCommands()
     local commands = inFileCommands:read("*all") -- file: ak-eep-in.commands
-    if commands and commands ~= "" then AkCommandExecutor.execute(commands) end
+    if commands and commands ~= "" then IncomingServerCommandExecutor.executeIncomingCommands(commands) end
 end
 
-return AkWebServerIo
+return ServerExchangeFileIo

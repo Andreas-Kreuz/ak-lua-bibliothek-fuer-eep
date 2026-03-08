@@ -259,7 +259,7 @@ Web-Adapter des Pakets.
 Verantwortlichkeiten:
 
 - Registrierung der State-Publisher beim `StatePublisherRegistry`
-- Registrierung der erlaubten Remote-Funktionen beim `ServerBridge`
+- Registrierung der erlaubten Remote-Funktionen beim `ServerExchangeCoordinator`
 
 Registrierte Remote-Funktionen:
 

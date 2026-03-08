@@ -14,10 +14,10 @@ insulate("MainLoopRunner", function ()
         clearModule("ak.core.ModulesStatePublisher")
         clearModule("ak.core.VersionStatePublisher")
         clearModule("ak.core.VersionInfo")
-        clearModule("ak.io.ServerBridge")
-        clearModule("ak.io.AkWebServerIo")
-        clearModule("ak.io.AkCommandExecutor")
-        clearModule("ak.io.EventRecorder")
+        clearModule("ak.io.ServerExchangeCoordinator")
+        clearModule("ak.io.ServerExchangeFileIo")
+        clearModule("ak.io.IncomingServerCommandExecutor")
+        clearModule("ak.io.ServerEventBuffer")
         clearModule("ak.events.DataChangeBus")
         clearModule("ak.util.RuntimeRegistry")
     end
@@ -31,7 +31,7 @@ insulate("MainLoopRunner", function ()
         local DataChangeBus = require("ak.events.DataChangeBus")
         local ModuleRegistry = require("ak.core.ModuleRegistry")
         local StatePublisherRegistry = require("ak.core.StatePublisherRegistry")
-        local ServerBridge = require("ak.io.ServerBridge")
+        local ServerExchangeCoordinator = require("ak.io.ServerExchangeCoordinator")
         local RuntimeRegistry = require("ak.util.RuntimeRegistry")
         local communicateCalls = 0
         local moduleInitCalls = 0
@@ -71,7 +71,7 @@ insulate("MainLoopRunner", function ()
         end
         DataChangeBus.printEventCounter = function () end
 
-        ServerBridge.exchangeWithServer = function (cycleCount)
+        ServerExchangeCoordinator.runServerExchangeCycle = function (cycleCount)
             communicateCalls = communicateCalls + 1
             assert.equals(5, cycleCount)
             return {
@@ -107,10 +107,10 @@ insulate("MainLoopRunner", function ()
         assert.is_true(RuntimeRegistry.get("LuaModule.spec.TestLuaModule.init").count > 0)
     end)
 
-    it("skips exchangeWithServer while server is deactivated", function ()
+    it("skips runServerExchangeCycle while server is deactivated", function ()
         local ModuleRegistry = require("ak.core.ModuleRegistry")
         local StatePublisherRegistry = require("ak.core.StatePublisherRegistry")
-        local ServerBridge = require("ak.io.ServerBridge")
+        local ServerExchangeCoordinator = require("ak.io.ServerExchangeCoordinator")
         local RuntimeRegistry = require("ak.util.RuntimeRegistry")
         local communicateCalls = 0
         local publisherSyncCalls = 0
@@ -131,7 +131,7 @@ insulate("MainLoopRunner", function ()
             end
         }
 
-        ServerBridge.exchangeWithServer = function ()
+        ServerExchangeCoordinator.runServerExchangeCycle = function ()
             communicateCalls = communicateCalls + 1
             return {
                 waitForServerTime = 0.001,

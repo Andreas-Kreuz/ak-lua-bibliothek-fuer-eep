@@ -26,7 +26,7 @@ Das Paket ist bewusst klein gehalten:
 1. `DataChangeBus` definiert die Eventtypen
 2. `DataChangeBus` nimmt Datenänderungen aus anderen Paketen entgegen
 3. `DataChangeBus` verteilt diese Änderungen an alle registrierten Listener
-4. `EventRecorder` aus `ak.io` zeichnet die verteilten Ereignisse für den späteren Export auf
+4. `ServerEventBuffer` aus `ak.io` zeichnet die verteilten Ereignisse für den späteren Export auf
 
 Wichtig: `ak/events` enthält keine Fachdaten und keine Dateiausgabe. Es ist nur die interne Drehscheibe für Änderungsereignisse.
 
@@ -72,7 +72,7 @@ Der reguläre Ablauf für eine Datenänderung ist:
 3. `DataChangeBus` erhöht den internen `eventCounter`
 4. `DataChangeBus` erzeugt ein Eventobjekt mit Typ und Payload
 5. Alle registrierten Listener erhalten dieses Event über `fireEvent(...)`
-6. `EventRecorder` aus `ak.io` puffert das Event für den späteren Export
+6. `ServerEventBuffer` aus `ak.io` puffert das Event für den späteren Export
 
 Zusätzlich wird beim Laden des Moduls einmal ein `CompleteReset` erzeugt, damit nachgelagerte Empfänger ihren Zustand vollständig neu aufbauen können.
 
@@ -140,7 +140,7 @@ Listener werden synchron im selben Lauf aufgerufen. Ein fehlerhafter oder langsa
 
 `ak/events` arbeitet eng mit diesen Paketen zusammen:
 
-- `ak.io`: `EventRecorder` zeichnet die verteilten Ereignisse auf
+- `ak.io`: `ServerEventBuffer` zeichnet die verteilten Ereignisse auf
 - `ak.core`, `ak.data`, `ak.road`, `ak.public-transport`, `ak.train`: erzeugen Datenänderungen
 - `ak.util.TableUtils`: unterstützt die Debug-Ausgabe für Listen
 
@@ -150,6 +150,6 @@ Bei Änderungen in `ak/events` zuerst diese Fragen beantworten:
 
 1. Betrifft die Änderung nur die interne Benennung oder das externe Änderungsprotokoll?
 2. Verändert sich die Struktur eines Events oder nur die Erzeugungsstelle?
-3. Müssen Listener außerhalb des Pakets angepasst werden, insbesondere `EventRecorder` oder der Web-Server?
+3. Müssen Listener außerhalb des Pakets angepasst werden, insbesondere `ServerEventBuffer` oder der Web-Server?
 4. Bleibt das Reset-Verhalten beim Start weiterhin konsistent?
 5. Ist die Änderung wirklich im Eventsystem richtig aufgehoben oder gehört sie in einen Producer oder Listener?

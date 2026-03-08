@@ -1,6 +1,6 @@
 if AkDebugLoad then print("[#Start] Loading ak.road.CrossingWebConnector ...") end
 local StatePublisherRegistry = require("ak.core.StatePublisherRegistry")
-local ServerBridge = require("ak.io.ServerBridge")
+local ServerExchangeCoordinator = require("ak.io.ServerExchangeCoordinator")
 local Crossing = require("ak.road.Crossing")
 local CrossingSettings = require("ak.road.CrossingSettings")
 
@@ -14,20 +14,20 @@ function CrossingWebConnector.registerStatePublishers()
 end
 
 function CrossingWebConnector.registerFunctions()
-    ServerBridge.addAcceptedRemoteFunction("CrossingSettings.setShowRequestsOnSignal", function (param)
+    ServerExchangeCoordinator.registerAllowedCommand("CrossingSettings.setShowRequestsOnSignal", function (param)
         CrossingSettings.setShowRequestsOnSignal(param == "true")
     end)
-    ServerBridge.addAcceptedRemoteFunction("CrossingSettings.setShowSequenceOnSignal", function (param)
+    ServerExchangeCoordinator.registerAllowedCommand("CrossingSettings.setShowSequenceOnSignal", function (param)
         CrossingSettings.setShowSequenceOnSignal(param == "true")
     end)
-    ServerBridge.addAcceptedRemoteFunction("CrossingSettings.setShowSignalIdOnSignal", function (param)
+    ServerExchangeCoordinator.registerAllowedCommand("CrossingSettings.setShowSignalIdOnSignal", function (param)
         CrossingSettings.setShowSignalIdOnSignal(param == "true")
     end)
-    ServerBridge.addAcceptedRemoteFunction("CrossingSettings.setShowLanesOnStructure", function (param)
+    ServerExchangeCoordinator.registerAllowedCommand("CrossingSettings.setShowLanesOnStructure", function (param)
         CrossingSettings.setShowLanesOnStructure(param == "true")
     end)
-    ServerBridge.addAcceptedRemoteFunction("AkKreuzungSchalteAutomatisch", Crossing.switchAutomatically)
-    ServerBridge.addAcceptedRemoteFunction("AkKreuzungSchalteManuell", Crossing.switchManuallyTo)
+    ServerExchangeCoordinator.registerAllowedCommand("AkKreuzungSchalteAutomatisch", Crossing.switchAutomatically)
+    ServerExchangeCoordinator.registerAllowedCommand("AkKreuzungSchalteManuell", Crossing.switchManuallyTo)
 end
 
 return CrossingWebConnector
