@@ -1,5 +1,5 @@
 if AkDebugLoad then print("[#Start] Loading ak.io.ServerExchangeFileIo ...") end
-local IncomingServerCommandExecutor = require("ak.io.IncomingServerCommandExecutor")
+local IncomingCommandExecutor = require("ak.io.IncomingCommandExecutor")
 local os = require("os")
 
 local ServerExchangeFileIo = {}
@@ -158,8 +158,8 @@ function clearlog()
 end
 
 -- These two functions must be registered AFTER print and clearlog are overwritten
-IncomingServerCommandExecutor.registerAllowedCommand("clearlog", clearlog)
-IncomingServerCommandExecutor.registerAllowedCommand("print", print)
+IncomingCommandExecutor.registerAllowedCommand("clearlog", clearlog)
+IncomingCommandExecutor.registerAllowedCommand("print", print)
 
 local serverWasReadyLastTime = true
 local serverWasListeningLastTime = true
@@ -209,7 +209,7 @@ end
 --- Lese Kommandos aus Datei und führe sie aus.
 function ServerExchangeFileIo.readAndExecuteIncomingCommands()
     local commands = inFileCommands:read("*all") -- file: ak-eep-in.commands
-    if commands and commands ~= "" then IncomingServerCommandExecutor.executeIncomingCommands(commands) end
+    if commands and commands ~= "" then IncomingCommandExecutor.executeIncomingCommands(commands) end
 end
 
 return ServerExchangeFileIo

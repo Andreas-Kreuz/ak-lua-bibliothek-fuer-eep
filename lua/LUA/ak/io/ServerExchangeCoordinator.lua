@@ -11,7 +11,7 @@ if AkDebugLoad then print("[#Start] Loading ak.io.ServerExchangeCoordinator ..."
 local DataChangeBus = require("ak.events.DataChangeBus")
 local ServerEventBuffer = require("ak.io.ServerEventBuffer")
 local ServerExchangeFileIo = require("ak.io.ServerExchangeFileIo")
-local IncomingServerCommandExecutor = require("ak.io.IncomingServerCommandExecutor")
+local IncomingCommandExecutor = require("ak.io.IncomingCommandExecutor")
 local os = require("os")
 
 local ServerExchangeCoordinator = {}
@@ -25,7 +25,7 @@ local initialized = false
 ServerExchangeCoordinator.checkServerStatus = true
 
 function ServerExchangeCoordinator.registerAllowedCommand(fName, f)
-    IncomingServerCommandExecutor.registerAllowedCommand(fName, f)
+    IncomingCommandExecutor.registerAllowedCommand(fName, f)
 end
 
 function ServerExchangeCoordinator.initialize()

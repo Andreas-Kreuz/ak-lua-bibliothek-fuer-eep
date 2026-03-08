@@ -1,4 +1,4 @@
-if AkDebugLoad then print("[#Start] Loading ak.io.IncomingServerCommandExecutor ...") end
+if AkDebugLoad then print("[#Start] Loading ak.io.IncomingCommandExecutor ...") end
 
 -- split a string
 local function split(text, delimiter)
@@ -14,7 +14,7 @@ local function split(text, delimiter)
     return result
 end
 
-local IncomingServerCommandExecutor = {}
+local IncomingCommandExecutor = {}
 --- List of acceptedFunctions for remote execution
 --- Parameters of these functions are separated by | in the calls
 local allowedCommands = {}
@@ -23,24 +23,24 @@ local allowedCommands = {}
 ---NOTE: acceptedFunctions are typically added via the Modules WebConnector
 ---@param fName string @using the name of the function as called from EEP-Web
 ---@param f function
-function IncomingServerCommandExecutor.registerAllowedCommand(fName, f)
+function IncomingCommandExecutor.registerAllowedCommand(fName, f)
     assert(type(fName) == "string", "Need 'fName' as string")
     assert(type(f) == "function", fName)
     allowedCommands[fName] = f
 end
 
 -- Accept EEPPause function
-IncomingServerCommandExecutor.registerAllowedCommand("EEPPause", EEPPause)
+IncomingCommandExecutor.registerAllowedCommand("EEPPause", EEPPause)
 
 -- Accept all EEP*Set functions
 for name, value in pairs(_G) do
     if string.find(name, "^EEP.*Set") and type(value) == "function" then
-        -- print(string.format("[#IncomingServerCommandExecutor] Adding %s to allowedCommands", name))
-        IncomingServerCommandExecutor.registerAllowedCommand(name, value)
+        -- print(string.format("[#IncomingCommandExecutor] Adding %s to allowedCommands", name))
+        IncomingCommandExecutor.registerAllowedCommand(name, value)
     end
 end
 
-function IncomingServerCommandExecutor.executeCommandSafely(functionAndArgs)
+function IncomingCommandExecutor.executeCommandSafely(functionAndArgs)
     local fName = table.remove(functionAndArgs, 1)
     local args = functionAndArgs
 
@@ -56,21 +56,21 @@ function IncomingServerCommandExecutor.executeCommandSafely(functionAndArgs)
         local status, error = pcall(f, table.unpack(args))
         if not status then print(error) end
     else
-        print("[#IncomingServerCommandExecutor] Aufruf von " .. fName .. " nicht erlaubt")
+        print("[#IncomingCommandExecutor] Aufruf von " .. fName .. " nicht erlaubt")
     end
 end
 
-function IncomingServerCommandExecutor.executeIncomingCommands(commands)
+function IncomingCommandExecutor.executeIncomingCommands(commands)
     commands = split(commands, "\n")
 
     for _, command in ipairs(commands) do
         if command ~= "" then
-            -- print("[#IncomingServerCommandExecutor] Command: " .. command)
+            -- print("[#IncomingCommandExecutor] Command: " .. command)
             local functionAndArgs = split(command, "|")
 
-            IncomingServerCommandExecutor.executeCommandSafely(functionAndArgs)
+            IncomingCommandExecutor.executeCommandSafely(functionAndArgs)
         end
     end
 end
 
-return IncomingServerCommandExecutor
+return IncomingCommandExecutor

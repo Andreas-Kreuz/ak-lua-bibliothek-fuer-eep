@@ -17,7 +17,7 @@ Die Nutzungsdokumentation der Austauschdateien liegt in [README.md](./README.md)
 
 Im Verzeichnis `ak/io` existieren aktuell genau diese Lua-Dateien:
 
-- [IncomingServerCommandExecutor.lua](./IncomingServerCommandExecutor.lua)
+- [IncomingCommandExecutor.lua](./IncomingCommandExecutor.lua)
 - [ServerExchangeFileIo.lua](./ServerExchangeFileIo.lua)
 - [ServerEventBuffer.lua](./ServerEventBuffer.lua)
 - [ServerExchangeCoordinator.lua](./ServerExchangeCoordinator.lua)
@@ -34,7 +34,7 @@ Das Paket ist bewusst schichtartig aufgebaut:
 1. `MainLoopRunner` in `ak.core` steuert den Gesamtzyklus der Module, StatePublisher und der Serverphase
 2. `ServerExchangeCoordinator` wickelt innerhalb dieses Zyklus den Austausch mit dem Web-Server ab
 3. `ServerExchangeFileIo` kapselt das Dateihandling und das Handshake mit dem Web-Server
-4. `IncomingServerCommandExecutor` führt erlaubte Befehle aus der Eingabedatei aus
+4. `IncomingCommandExecutor` führt erlaubte Befehle aus der Eingabedatei aus
 5. `ServerEventBuffer` puffert Eventzeilen bis zum nächsten Schreibvorgang
 
 Wichtig: `ak/io` enthält selbst kaum Fachlogik. Die Fachdaten werden in anderen Paketen erzeugt und über Events oder registrierte Remote-Funktionen an diese Infrastruktur angebunden.
@@ -47,7 +47,7 @@ Brücke zwischen `MainLoopRunner` und der dateibasierten Server-I/O.
 
 Verantwortlichkeiten:
 
-- Registrierung erlaubter Remote-Funktionen über `IncomingServerCommandExecutor`
+- Registrierung erlaubter Remote-Funktionen über `IncomingCommandExecutor`
 - Prüfen, ob der Web-Server aktuell bereit für den nächsten Austausch ist
 - Lesen und Ausführen neuer Kommandos über `ServerExchangeFileIo.readAndExecuteIncomingCommands()`
 - Einsammeln gepufferter Events über `ServerEventBuffer.drainBufferedEvents()`
@@ -71,9 +71,9 @@ Verantwortlichkeiten:
 
 Dieses Modul ist bewusst infrastrukturell. Es kennt keine Json-Collector und keine Fachobjekte.
 
-### [IncomingServerCommandExecutor.lua](./IncomingServerCommandExecutor.lua)
+### [IncomingCommandExecutor.lua](./IncomingCommandExecutor.lua)
 
-Damit EEP auch auf Eingaben reagieren kann, ist es möglich über den EEP-Web-Server Remote-Kommandos zu hinterlegen. Diese schreibt der EEP-Web-Server in die Datei `ak-eep-in.commands`. IncomingServerCommandExecutor nimmt die Kommandos aus dieser Datei und führt sie aus, wenn sie erlaubt sind.
+Damit EEP auch auf Eingaben reagieren kann, ist es möglich über den EEP-Web-Server Remote-Kommandos zu hinterlegen. Diese schreibt der EEP-Web-Server in die Datei `ak-eep-in.commands`. IncomingCommandExecutor nimmt die Kommandos aus dieser Datei und führt sie aus, wenn sie erlaubt sind.
 
 Verantwortlichkeiten:
 
@@ -114,7 +114,7 @@ Der reguläre Ablauf pro Kommunikationszyklus ist:
 5. `ServerExchangeCoordinator.runServerExchangeCycle(modulus)` wird als Serverphase aus dem `MainLoopRunner` aufgerufen
 6. `ServerExchangeFileIo.isServerReady()` prüft das Dateihandshake
 7. `ServerExchangeFileIo.readAndExecuteIncomingCommands()` liest neue Befehle
-8. `IncomingServerCommandExecutor.executeIncomingCommands(...)` führt erlaubte Befehle aus
+8. `IncomingCommandExecutor.executeIncomingCommands(...)` führt erlaubte Befehle aus
 9. `ServerEventBuffer.drainBufferedEvents()` liefert die aktuellen Eventzeilen
 10. `ServerExchangeFileIo.writeOutgoingEvents(...)` schreibt die Ausgabedatei und markiert sie als fertig
 
@@ -141,7 +141,7 @@ Wichtig: Das aktuelle Paket behandelt die Ausgabedatei als generischen Textkanal
 - einen zyklischen Zähler zur Steuerung des Exportintervalls
 
 
-`IncomingServerCommandExecutor` hält:
+`IncomingCommandExecutor` hält:
 
 - die Tabelle der erlaubten Remote-Funktionen, damit nur bestimmte Kommandos in EEP ausgeführt werden dürfen und nicht beliebiger Lua-Code
 
@@ -179,7 +179,7 @@ Schon kleine Änderungen an Dateinamen, Markerdateien oder dem Schreibzeitpunkt 
 
 ### Zu breite Remote-Freigaben
 
-Änderungen an `IncomingServerCommandExecutor` können die Remote-Angriffsoberfläche vergrößern. Neue freigegebene Funktionen sollten bewusst und restriktiv eingetragen werden.
+Änderungen an `IncomingCommandExecutor` können die Remote-Angriffsoberfläche vergrößern. Neue freigegebene Funktionen sollten bewusst und restriktiv eingetragen werden.
 
 ### Seiteneffekte durch globale Überschreibungen
 

@@ -9,7 +9,7 @@ insulate("LuaForEEP", function ()
         clearModule("ak.core.MainLoopRunner")
         clearModule("ak.core.CoreLuaModule")
         clearModule("ak.core.eep.EepSimulator")
-        clearModule("ak.io.IncomingServerCommandExecutor")
+        clearModule("ak.io.IncomingCommandExecutor")
         require("ak.core.eep.EepSimulator")
     end)
 
