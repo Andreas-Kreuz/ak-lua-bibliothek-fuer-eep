@@ -18,7 +18,7 @@ Dieses Paket ermöglicht die Steuerung von ÖPNV-Linien in der EEP-Anlage.
 - **Linie** (`Line`): enthält eine Liste von Haltestellen.  
   Alle Haltestellen der Linie werden von einem Fahrzeug nacheinander angesteuert.  
   Die Linie ist geschlossen, d.h. nach der letzten Haltestelle kommt die erste Haltestelle.
-- **Linienabschnitt** (`LineSection`):
+- **Linienabschnitt** (`LineSegment`):
   ist eine Teilstrecke auf der Linie, für das ein bestimmtes Ziel angegeben werden kann.  
   Eine **Ringlinie** fährt und immer das selbe Ziel hat (z.B. "Innerer Ring") kann mit einem einzigen
   Linienabschnitt betrieben werden.  
