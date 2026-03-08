@@ -70,3 +70,4 @@
   - EEP-/Callback-Integration
   - Verhaltensregressionen
   - fehlende Tests
+- Gegencheck der Architekturdokumentationen in ARCHITECTURE.md wo vorhanden

@@ -217,7 +217,7 @@ Web-Adapter des Pakets.
 
 Verantwortlichkeiten:
 
-- Registrierung der JSON-Collector beim `ServerController`
+- Registrierung der JSON-Collector beim `ServerBridge`
 - Registrierung der erlaubten Remote-Funktionen für Web-App und Web-Server
 
 Registrierte Remote-Funktionen:
@@ -248,7 +248,7 @@ Exportierte Räume:
 - `intersection-traffic-lights`
 - `intersection-module-settings`
 
-Wichtig: Der Collector berechnet die Nutzdaten und feuert Events, liefert aber aktuell absichtlich kein direktes Nutzdatenobjekt an `ServerController.syncState()` zurück.
+Wichtig: Der Collector berechnet die Nutzdaten und feuert Events, liefert aber aktuell absichtlich kein direktes Nutzdatenobjekt an `ServerBridge.syncState()` zurück.
 
 ### [TrafficLightModelStatePublisher.lua](./TrafficLightModelStatePublisher.lua)
 

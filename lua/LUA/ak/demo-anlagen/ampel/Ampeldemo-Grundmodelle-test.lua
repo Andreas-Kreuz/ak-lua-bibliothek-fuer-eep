@@ -4,7 +4,7 @@ require("ak.core.eep.EepSimulator")
 
 local ModuleRegistry = require("ak.core.ModuleRegistry")
 local Scheduler = require("ak.scheduler.Scheduler")
-local ServerController = require("ak.io.ServerController")
+local ServerBridge = require("ak.io.ServerBridge")
 local TrafficLight = require("ak.road.TrafficLight")
 local Crossing = require("ak.road.Crossing")
 local CrossingSetting = require("ak.road.CrossingSetting")
@@ -34,7 +34,7 @@ CrossingSetting.showSignalIdOnSignal = false
 Scheduler.debug = false
 StorageUtility.debug = false
 ModuleRegistry.debug = false
-ServerController.debug = false
+ServerBridge.debug = false
 
 --------------------------------------------------------------------
 -- Erste Hilfe - normalerweise nicht notwendig                    --

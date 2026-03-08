@@ -20,7 +20,7 @@ Im Verzeichnis `ak/io` existieren aktuell genau diese Lua-Dateien:
 - [AkCommandExecutor.lua](./AkCommandExecutor.lua)
 - [AkWebServerIo.lua](./AkWebServerIo.lua)
 - [EventRecorder.lua](./EventRecorder.lua)
-- [ServerController.lua](./ServerController.lua)
+- [ServerBridge.lua](./ServerBridge.lua)
 
 Im Unterverzeichnis [exchange](./exchange/README.md) liegen aktuell keine weiteren Lua-Dateien.
 
@@ -31,34 +31,30 @@ Stattdessen wird neben dem Programm EEP der EEP-Web-Server gestartet. Er nimmt d
 
 Das Paket ist bewusst schichtartig aufgebaut:
 
-1. `ServerController` orchestriert den gesamten Kommunikationszyklus
-2. `AkWebServerIo` kapselt das Dateihandling und das Handshake mit dem Web-Server
-3. `AkCommandExecutor` führt erlaubte Befehle aus der Eingabedatei aus.
-4. `EventRecorder` puffert Eventzeilen bis zum nächsten Schreibvorgang
+1. `MainLoopRunner` in `ak.core` steuert den Gesamtzyklus der Module, StatePublisher und der Serverphase
+2. `ServerBridge` wickelt innerhalb dieses Zyklus den Austausch mit dem Web-Server ab
+3. `AkWebServerIo` kapselt das Dateihandling und das Handshake mit dem Web-Server
+4. `AkCommandExecutor` führt erlaubte Befehle aus der Eingabedatei aus
+5. `EventRecorder` puffert Eventzeilen bis zum nächsten Schreibvorgang
 
-Wichtig: `ak/io` enthält selbst kaum Fachlogik. Die Fachdaten kommen über registrierte Json-Collector und Remote-Funktionen aus anderen Paketen.
+Wichtig: `ak/io` enthält selbst kaum Fachlogik. Die Fachdaten werden in anderen Paketen erzeugt und über Events oder registrierte Remote-Funktionen an diese Infrastruktur angebunden.
 
 ## Bausteine
 
-### [ServerController.lua](./ServerController.lua)
+### [ServerBridge.lua](./ServerBridge.lua)
 
-Zentrale Orchestrierung des Pakets.
+Brücke zwischen `MainLoopRunner` und der dateibasierten Server-I/O.
 
 Verantwortlichkeiten:
 
-- Registrierung und Initialisierung von StatePublishern
 - Registrierung erlaubter Remote-Funktionen über `AkCommandExecutor`
-- periodischer Aufruf aller StatePublisher
+- Prüfen, ob der Web-Server aktuell bereit für den nächsten Austausch ist
+- Lesen und Ausführen neuer Kommandos über `AkWebServerIo.processNewCommands()`
+- Einsammeln gepufferter Events über `EventRecorder.collectAndResetEvents()`
 - Weitergabe des Exportstrings an `AkWebServerIo`
-- Sammeln und Weiterreichen von Laufzeitmetriken an `RuntimeRegistry` und `DataChangeBus`
+- Rückgabe von Laufzeitdaten der Serverphase an den aufrufenden `MainLoopRunner`
 
-Erwartetes Collector-Interface:
-
-- `name`
-- `initialize()`
-- `syncState()`
-
-Der `ServerController` ist damit die einzige vorgesehene Einstiegsschicht für andere Pakete wie `ak.core`, `ak.data` oder `ak.road`.
+Der `ServerBridge` verwaltet keine StatePublisher und initialisiert sie auch nicht. Diese Aufgaben liegen bei `StatePublisherRegistry` und `MainLoopRunner` im Paket `ak.core`.
 
 ### [AkWebServerIo.lua](./AkWebServerIo.lua)
 
@@ -105,21 +101,22 @@ Verantwortlichkeiten:
 - einzelne Events als JSON-Zeilen puffern
 - gepufferte Events gesammelt zurückgeben und den Puffer leeren
 
-Das Modul schreibt nicht selbst auf Platte. Es liefert nur den String an den `ServerController`, der ihn über `AkWebServerIo` ausgibt.
+Das Modul schreibt nicht selbst auf Platte. Es liefert nur den String an den `ServerBridge`, der ihn über `AkWebServerIo` ausgibt.
 
 ## Laufzeitfluss
 
 Der reguläre Ablauf pro Kommunikationszyklus ist:
 
-1. Andere Pakete registrieren Json-Collector und Remote-Funktionen beim `ServerController`
-2. `ServerController.communicateWithServer(modulus)` wird zyklisch aus `EEPMain()` oder einem Modul aufgerufen
-3. `AkWebServerIo.checkWebServer()` prüft das Dateihandshake
-4. Beim ersten erfolgreichen Lauf initialisiert `ServerController` alle Collector
-5. `AkWebServerIo.processNewCommands()` liest neue Befehle
-6. `AkCommandExecutor.execute(...)` führt erlaubte Befehle aus
-7. In Exportzyklen sammeln alle Collector ihre Daten
-8. `EventRecorder.getAndResetEvents()` liefert die aktuellen Eventzeilen
-9. `AkWebServerIo.updateJsonFile(...)` schreibt die Ausgabedatei und markiert sie als fertig
+1. Andere Pakete registrieren StatePublisher über ihre WebConnectoren beim `StatePublisherRegistry`
+2. `MainLoopRunner.runCycle(...)` initialisiert Module und noch nicht initialisierte StatePublisher
+3. `MainLoopRunner.runCycle(...)` ruft `syncState()` auf allen registrierten StatePublishern auf
+4. Die StatePublisher veröffentlichen ihre Nutzdaten überwiegend über Events auf dem `DataChangeBus`
+5. `ServerBridge.exchangeWithServer(modulus)` wird als Serverphase aus dem `MainLoopRunner` aufgerufen
+6. `AkWebServerIo.checkWebServer()` prüft das Dateihandshake
+7. `AkWebServerIo.processNewCommands()` liest neue Befehle
+8. `AkCommandExecutor.execute(...)` führt erlaubte Befehle aus
+9. `EventRecorder.collectAndResetEvents()` liefert die aktuellen Eventzeilen
+10. `AkWebServerIo.updateJsonFile(...)` schreibt die Ausgabedatei und markiert sie als fertig
 
 ## Dateibasiertes Protokoll
 
@@ -131,18 +128,18 @@ Die zentrale Infrastruktur basiert auf Dateisignalen im Austauschordner:
 - `ak-eep-out.json`: Exportkanal für Daten als Eventzeilen
 - `ak-eep-out.log`: Spiegelung von `print`, `warn`, `error`
 
-Wichtig: Das aktuelle Paket behandelt die Ausgabedatei als generischen Textkanal. Der `ServerController` übergibt den Rückgabewert von `EventRecorder.getAndResetEvents()` direkt an `AkWebServerIo.updateJsonFile(...)`. Änderungen an Format oder Dateiverwendung müssen deshalb Ende-zu-Ende betrachtet werden.
+Wichtig: Das aktuelle Paket behandelt die Ausgabedatei als generischen Textkanal. Der `ServerBridge` übergibt den Rückgabewert von `EventRecorder.collectAndResetEvents()` direkt an `AkWebServerIo.updateJsonFile(...)`. Änderungen an Format oder Dateiverwendung müssen deshalb Ende-zu-Ende betrachtet werden.
 
 ## Zustand
 
 ### Prozessweiter Zustand
 
-`ServerController` hält:
+`ServerBridge` hält:
 
-- registrierte StatePublisher
-- gesammelte Exportdaten
-- Initialisierungsstatus
-- Daten für Metriken, um die Performance der Collectoren und Laufzeiten der Module zu messen
+- das Debug-Flag des Moduls
+- die Option `checkServerStatus` für den Readiness-Check
+- einen zyklischen Zähler zur Steuerung des Exportintervalls
+
 
 `AkCommandExecutor` hält:
 
@@ -168,8 +165,7 @@ Das Paket nutzt keine `StorageUtility`-Persistenz. Sein Zustand ist absichtlich 
 
 ## Wichtige Invarianten
 
-- Alle Json-Collector müssen `name`, `initialize()` und `syncState()` besitzen.
-- Exportdaten dürfen keine Funktionen enthalten; `ServerController.checkObjects(...)` bricht sonst ab.
+- Alle StatePublisher müssen `name`, `initialize()` und `syncState()` besitzen; validiert wird das im `StatePublisherRegistry`.
 - Remote-Kommandos dürfen nur über `acceptedRemoteFunctions` laufen.
 - `AkWebServerIo` muss `print` und `clearlog` erst überschreiben und danach als Remote-Funktionen registrieren.
 - Das Dateihandshake über `ak-server.iswatching` und `ak-eep-out-json.isfinished` darf nicht still geändert werden; Web-Server und Lua-Seite müssen dasselbe Protokoll sprechen.
@@ -189,15 +185,15 @@ Schon kleine Änderungen an Dateinamen, Markerdateien oder dem Schreibzeitpunkt 
 
 `AkWebServerIo` ersetzt globale Funktionen wie `print`, `warn`, `error` und `assert`. Änderungen dort betreffen die internen Lua-Funktionen von EEP und dessen ganzes Lua-System.
 
-### Collector-Kopplung
+### Event- und Publisher-Kopplung
 
-Wenn Collector neue Datentypen oder nicht serialisierbare Werte zurückgeben, scheitert der Export erst im Orchestrator. Fehlerursache und Fehlerort liegen dann in verschiedenen Paketen.
+Wenn StatePublisher ihre Events nicht mehr wie erwartet erzeugen oder nicht serialisierbare Daten in den Event-Strom gelangen, zeigen sich Fehler oft erst spät im Exportpfad. Fehlerursache und Fehlerort liegen dann in verschiedenen Paketen.
 
 ## Relevante Nachbarn
 
 `ak/io` arbeitet eng mit diesen Paketen zusammen:
 
-- `ak.core`: typischer Aufruf von `communicateWithServer(...)`
+- `ak.core`: typischer Aufruf von `exchangeWithServer(...)`
 - `ak.data`, `ak.road`, `ak.public-transport`: liefern Collector und Remote-Funktionen
 - `ak.events.DataChangeBus`: erzeugt Events, die über den `EventRecorder` gesammelt werden
 - `ak.util.RuntimeRegistry`: sammelt Laufzeitmetriken des Kommunikationszyklus

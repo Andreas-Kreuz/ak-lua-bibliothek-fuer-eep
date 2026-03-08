@@ -150,7 +150,7 @@ Alle derzeit verfügbaren `CrossingSettings` sind boolesche Anzeigeeinstellungen
 
 1. `TrafficLightModelStatePublisher` und `CrossingStatePublisher` rufen `DataChangeBus.fireListChange(room, keyId, list)` auf.
 2. `EventRecorder` schreibt daraus JSON-Zeilen-Events.
-3. `ServerController.communicateWithServer(...)` schreibt diese Events in den Austauschkanal; der persistierte State liegt in `lua/LUA/ak/io/exchange/ak-eep-web-server-state.json`.
+3. `ServerBridge.exchangeWithServer(...)` schreibt diese Events in den Austauschkanal; der persistierte State liegt in `lua/LUA/ak/io/exchange/ak-eep-web-server-state.json`.
 4. `apps/web-server/src/server/eep/server-data/EepDataStore.ts` normalisiert `ListChanged` zu `rooms[roomName][element[keyId]] = element`.
 5. `apps/web-server/src/server/eep/server-data/static/ServerData.ts` serialisiert diese Objekt-Mappings für REST und Socket-API.
 6. Die Web-App hört mit `useApiDataRoomHandler(...)` auf den API-Datenräumen und macht daraus per `Object.values(JSON.parse(payload))` wieder Listen.

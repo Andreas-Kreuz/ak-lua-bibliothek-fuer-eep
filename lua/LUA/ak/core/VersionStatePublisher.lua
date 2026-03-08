@@ -1,7 +1,7 @@
 if AkDebugLoad then print("[#Start] Loading ak.core.VersionStatePublisher ...") end
 local DataChangeBus = require("ak.events.DataChangeBus")
 VersionStatePublisher = {}
-local ServerController = require("ak.io.ServerController")
+local ServerBridge = require("ak.io.ServerBridge")
 local enabled = true
 local data = {}
 local initialized = false
@@ -17,7 +17,7 @@ function VersionStatePublisher.initialize()
             name = "versionInfo",                       -- EEP-Web requires that data entries have an id or name tag
             eepVersion = string.format("%.1f", EEPVer), -- show string instead of float
             luaVersion = _VERSION,
-            singleVersion = ServerController.programVersion
+            singleVersion = ServerBridge.programVersion
         }
     }
 

@@ -4,17 +4,17 @@
 --[[ Usage:
 -- Do NOT use this class manually
 -- Use this class in XxxWebConnector to register commands
-local ServerController = require("ak.io.ServerController")
+local ServerBridge = require("ak.io.ServerBridge")
 --]] -- @author Andreas Kreuz
 -- @release 0.10.2
-if AkDebugLoad then print("[#Start] Loading ak.io.ServerController ...") end
+if AkDebugLoad then print("[#Start] Loading ak.io.ServerBridge ...") end
 local EventRecorder = require("ak.io.EventRecorder")
 local AkWebServerIo = require("ak.io.AkWebServerIo")
 local AkCommandExecutor = require("ak.io.AkCommandExecutor")
 local os = require("os")
 
-local ServerController = {}
-ServerController.debug = AkStartWithDebug or false
+local ServerBridge = {}
+ServerBridge.debug = AkStartWithDebug or false
 
 local function readVersion()
     local file = io.open("LUA/ak/VERSION", "r")
@@ -26,14 +26,14 @@ local function readVersion()
         return "NO VERSION IN LUA/ak/VERSION"
     end
 end
-ServerController.programVersion = readVersion()
+ServerBridge.programVersion = readVersion()
 
 -- checkServerStatus:
 -- true: Check status of EEP-Web Server before updating the json file
 -- false: Update json file without checking if the EEP-Web Server is ready
-ServerController.checkServerStatus = true
+ServerBridge.checkServerStatus = true
 
-function ServerController.addAcceptedRemoteFunction(fName, f) AkCommandExecutor.addAcceptedRemoteFunction(fName, f) end
+function ServerBridge.addAcceptedRemoteFunction(fName, f) AkCommandExecutor.addAcceptedRemoteFunction(fName, f) end
 
 local function writeData(jsonString) AkWebServerIo.updateJsonFile(jsonString) end
 
@@ -41,12 +41,12 @@ local i = -1
 
 --- Main function of this module. Is called by MainLoopRunner.
 -- @param modulus Repetition frequency (0: always, 1: every 200 ms, 5: every second, ...)
-function ServerController.communicateWithServer(modulus)
+function ServerBridge.exchangeWithServer(modulus)
     if not modulus or type(modulus) ~= "number" then modulus = 5 end
     i = i + 1
 
     local overallTime0 = os.clock()
-    local serverIsReady = not ServerController.checkServerStatus or AkWebServerIo.checkWebServer()
+    local serverIsReady = not ServerBridge.checkServerStatus or AkWebServerIo.checkWebServer()
     local overallTime1 = os.clock()
 
     AkWebServerIo.processNewCommands()
@@ -68,8 +68,8 @@ function ServerController.communicateWithServer(modulus)
     local writeTime = overallTime4 - overallTime3
     local totalTime = overallTime4 - overallTime0
 
-    if ServerController.debug then
-        print(string.format("INFO: [#ServerController] communicateWithServer() time is %3.0f ms --- " ..
+    if ServerBridge.debug then
+        print(string.format("INFO: [#ServerBridge] exchangeWithServer() time is %3.0f ms --- " ..
                             "waitForServer: %.0f ms, commands: %2.0f ms, encode: %.0f ms, write: %.0f ms",
                             totalTime * 1000, waitForServerTime * 1000, commandsTime * 1000,
                             encodeTime * 1000, writeTime * 1000))
@@ -85,4 +85,4 @@ function ServerController.communicateWithServer(modulus)
     }
 end
 
-return ServerController
+return ServerBridge

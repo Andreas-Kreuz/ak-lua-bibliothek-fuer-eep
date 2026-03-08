@@ -37,9 +37,9 @@ end
 --- Über diese Funktion kann das EEP Skript die Optionen des Moduls setzen
 -- @author Frank Buchholz
 -- @options List of options { waitForServer = true/false, }
-local ServerController = require("ak.io.ServerController")
+local ServerBridge = require("ak.io.ServerBridge")
 function CoreLuaModule.setOptions(options)
-    if options.waitForServer ~= nil then ServerController.checkServerStatus = options.waitForServer end
+    if options.waitForServer ~= nil then ServerBridge.checkServerStatus = options.waitForServer end
 end
 
 return CoreLuaModule

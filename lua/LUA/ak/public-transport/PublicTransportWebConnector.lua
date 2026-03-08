@@ -1,6 +1,6 @@
 if AkDebugLoad then print("[#Start] Loading ak.public-transport.PublicTransportWebConnector ...") end
 local StatePublisherRegistry = require("ak.core.StatePublisherRegistry")
-local ServerController = require("ak.io.ServerController")
+local ServerBridge = require("ak.io.ServerBridge")
 local Line = require("ak.public-transport.Line")
 
 ---@class PublicTransportWebConnector
@@ -12,7 +12,7 @@ function PublicTransportWebConnector.registerStatePublishers()
 end
 
 function PublicTransportWebConnector.registerFunctions()
-    ServerController.addAcceptedRemoteFunction("Line.setShowDepartureTippText",
+    ServerBridge.addAcceptedRemoteFunction("Line.setShowDepartureTippText",
                                                function (param) Line.setShowDepartureTippText(param == "true") end)
 end
 

@@ -13,7 +13,7 @@ insulate("MainLoopRunner", function ()
         clearModule("ak.core.CoreWebConnector")
         clearModule("ak.core.ModulesStatePublisher")
         clearModule("ak.core.VersionStatePublisher")
-        clearModule("ak.io.ServerController")
+        clearModule("ak.io.ServerBridge")
         clearModule("ak.io.AkWebServerIo")
         clearModule("ak.io.AkCommandExecutor")
         clearModule("ak.io.EventRecorder")
@@ -30,7 +30,7 @@ insulate("MainLoopRunner", function ()
         local DataChangeBus = require("ak.events.DataChangeBus")
         local ModuleRegistry = require("ak.core.ModuleRegistry")
         local StatePublisherRegistry = require("ak.core.StatePublisherRegistry")
-        local ServerController = require("ak.io.ServerController")
+        local ServerBridge = require("ak.io.ServerBridge")
         local RuntimeRegistry = require("ak.util.RuntimeRegistry")
         local communicateCalls = 0
         local moduleInitCalls = 0
@@ -70,7 +70,7 @@ insulate("MainLoopRunner", function ()
         end
         DataChangeBus.printEventCounter = function () end
 
-        ServerController.communicateWithServer = function (cycleCount)
+        ServerBridge.exchangeWithServer = function (cycleCount)
             communicateCalls = communicateCalls + 1
             assert.equals(5, cycleCount)
             return {
@@ -106,10 +106,10 @@ insulate("MainLoopRunner", function ()
         assert.is_true(RuntimeRegistry.get("LuaModule.spec.TestLuaModule.init").count > 0)
     end)
 
-    it("skips communicateWithServer while server is deactivated", function ()
+    it("skips exchangeWithServer while server is deactivated", function ()
         local ModuleRegistry = require("ak.core.ModuleRegistry")
         local StatePublisherRegistry = require("ak.core.StatePublisherRegistry")
-        local ServerController = require("ak.io.ServerController")
+        local ServerBridge = require("ak.io.ServerBridge")
         local RuntimeRegistry = require("ak.util.RuntimeRegistry")
         local communicateCalls = 0
         local publisherSyncCalls = 0
@@ -130,7 +130,7 @@ insulate("MainLoopRunner", function ()
             end
         }
 
-        ServerController.communicateWithServer = function ()
+        ServerBridge.exchangeWithServer = function ()
             communicateCalls = communicateCalls + 1
             return {
                 waitForServerTime = 0.001,
