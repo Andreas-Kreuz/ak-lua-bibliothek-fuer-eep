@@ -37,7 +37,7 @@ Das Modul `DataLuaModule` kann, wie im vorigen Abschnitt beschrieben, aufgerufen
 
 Es bietet zusätzliche Optionen an, mit der die Auswahl den Daten-Kollektoren eingestellt werden kann.
 
-Mit der Option `activeCollectors` wird dazu eine Liste der aktiven Kollektoren übergeben. Wenn die Option nicht gesetzt  oder eine leere Liste übergeben wird, werden alle Daten gesammelt und exportiert. Im Beispiel unten werden alle verfügbaren Kollektoren angegeben, wobei einige auskommentiert sind.
+Mit der Option `activeCollectors` wird dazu eine Liste der aktiven Kollektoren übergeben. Wenn die Option nicht gesetzt oder eine leere Liste übergeben wird, werden alle Daten gesammelt und exportiert. Im Beispiel unten werden alle verfügbaren Kollektoren angegeben, wobei einige auskommentiert sind.
 
 Mit der Option `setWaitForServer` von Modul `ak.core.CoreLuaModule` kann festgelegt werden, ob die Dateien immer aktualiert werden sollen oder ob dies nur geschehen soll wenn der EEP-Webserver aktiv und empfangsbereit ist (default).
 
@@ -81,4 +81,3 @@ function EEPMain()
     return 1
 end
 ```
-
