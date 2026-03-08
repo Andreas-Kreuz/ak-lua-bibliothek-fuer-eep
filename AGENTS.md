@@ -17,6 +17,19 @@
 - Änderungen möglichst lokal und minimal halten. In diesem Repo sind viele Module zustandsbehaftet; kleine gezielte Patches sind besser als breite Refactorings.
 - Lua-Dateien verwenden das Charset latin1, alle anderen Dateien utf-8 (vergleiche .editorconfig)
 
+## Dateikodierung
+
+- Alle Dateien mit der Endung `.lua` sind immer als `latin1` / `ISO-8859-1` zu lesen und zu schreiben.
+- Alle anderen Dateien sind als `UTF-8` zu lesen und zu schreiben.
+- Bei Shell-Kommandos zum Lesen oder Schreiben von `.lua`-Dateien immer die Kodierung explizit auf `latin1` setzen.
+- Die Kodierung bestehender Dateien muss beim Bearbeiten erhalten bleiben; `.lua`-Dateien duerfen niemals versehentlich als `UTF-8` zurueckgeschrieben werden.
+- Wenn ein Tool keine Kodierung pro Datei explizit setzen kann, fuer Aenderungen an `.lua`-Dateien lieber ein geeignetes Shell-Kommando mit `latin1` verwenden als eine Aenderung mit unklarer Kodierung vorzunehmen.
+- Fuer PowerShell gilt:
+  - `.lua` lesen: `Get-Content -Encoding Latin1`
+  - `.lua` schreiben: `Set-Content -Encoding Latin1`
+  - andere Dateien lesen: `Get-Content -Encoding UTF8`
+  - andere Dateien schreiben: `Set-Content -Encoding UTF8`
+
 ## Lua-Hinweise
 
 - Im Repository liegt der produktive Lua-Code unter `lua/LUA/`; im installierten EEP-System liegen diese Lua-Dateien standardmäßig unter `C:\Trend\EEP18\LUA` (je nach EEP-Version entsprechend z.B. `EEP17`, `EEP18`).
@@ -71,3 +84,4 @@
   - Verhaltensregressionen
   - fehlende Tests
 - Gegencheck der Architekturdokumentationen in ARCHITECTURE.md wo vorhanden
+
