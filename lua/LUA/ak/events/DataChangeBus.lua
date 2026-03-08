@@ -1,14 +1,6 @@
 if AkDebugLoad then print("[#Start] Loading ak.events.DataChangeBus ...") end
 local TableUtils = require("ak.util.TableUtils")
 
----@class Event
----@field eventCounter number
----@field type string
----@field payload any
-
----@class EventListener
----@field fireEvent fun(jsonText:string):nil
-
 ---The data change bus will receive all events via fire method and inform all listeners.
 ---It must stay generic and must not know the contents or semantics of room, keyId or element.
 ---The only event type whose payload shape is known here is CompleteReset.
@@ -33,7 +25,8 @@ DataChangeBus.eventType = {
     dataRemoved = "DataRemoved"
 }
 
----@type EventListener
+---@class EventListener
+---@field fireEvent fun(jsonText:string):nil
 DataChangeBus.printListener = {
     ---@param event Event
     fireEvent = function (event)
@@ -60,7 +53,11 @@ end
 ---@param payload table
 local function fire(eventType, payload)
     eventCounter = eventCounter + 1
-    ---@type Event
+
+    ---@class Event
+    ---@field eventCounter number
+    ---@field type string
+    ---@field payload any
     local event = { eventCounter = eventCounter, type = eventType, payload = payload }
 
     -- Fire the event
