@@ -1,5 +1,4 @@
 if AkDebugLoad then print("[#Start] Loading ak.events.DataChangeBus ...") end
-local ServerEventBuffer = require("ak.io.ServerEventBuffer")
 local TableUtils = require("ak.util.TableUtils")
 
 ---@class Event
@@ -124,9 +123,10 @@ end
 ---@param listener EventListener
 function DataChangeBus.addListener(listener) listeners[listener] = true end
 
-if DataChangeBus.debug then DataChangeBus.addListener(DataChangeBus.printListener) end
+function DataChangeBus.fireCompleteReset()
+    fire(DataChangeBus.eventType.completeReset, { info = "-- fire a data reset on first start --" })
+end
 
-DataChangeBus.addListener(ServerEventBuffer)
-fire(DataChangeBus.eventType.completeReset, { info = "-- fire a data reset on first start --" })
+if DataChangeBus.debug then DataChangeBus.addListener(DataChangeBus.printListener) end
 
 return DataChangeBus

@@ -21,6 +21,8 @@ local function runInitModulesPhase(executionOrderModuleNames, registeredLuaModul
     if modulesInitialized then return { time = 0 } end
     local t0 = os.clock()
 
+    ServerExchangeCoordinator.initialize()
+
     for _, moduleName in ipairs(executionOrderModuleNames) do
         if MainLoopRunner.debug then print(string.format("[#MainLoopRunner] Begin initTask() for \"%s\"", moduleName)) end
         local module = registeredLuaModules[moduleName]
