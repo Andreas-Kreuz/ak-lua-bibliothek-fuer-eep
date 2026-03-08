@@ -16,17 +16,6 @@ local os = require("os")
 local ServerBridge = {}
 ServerBridge.debug = AkStartWithDebug or false
 
-local function readVersion()
-    local file = io.open("LUA/ak/VERSION", "r")
-    if file then
-        local version = file:read()
-        file:close()
-        return version
-    else
-        return "NO VERSION IN LUA/ak/VERSION"
-    end
-end
-ServerBridge.programVersion = readVersion()
 
 -- checkServerStatus:
 -- true: Check status of EEP-Web Server before updating the json file
