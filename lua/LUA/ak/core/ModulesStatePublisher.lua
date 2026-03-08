@@ -2,7 +2,10 @@ if AkDebugLoad then print("[#Start] Loading ak.core.ModulesStatePublisher ...") 
 local DataChangeBus = require("ak.events.DataChangeBus")
 local TableUtils = require("ak.util.TableUtils")
 
----@class StatePublisher
+---@class ModulesStatePublisher
+---@field name string
+---@field initialize fun():nil
+---@field syncState fun():table
 ModulesStatePublisher = {}
 local enabled = true
 local initialized = false

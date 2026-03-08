@@ -4,6 +4,7 @@ local RuntimeRegistry = require("ak.util.RuntimeRegistry")
 local TrackDetection = require("ak.data.TrackDetection")
 local RollingStockRegistry = require("ak.train.RollingStockRegistry")
 
+---@class TrainDetection
 local TrainDetection = {}
 TrainDetection.debug = AkStartWithDebug or false
 

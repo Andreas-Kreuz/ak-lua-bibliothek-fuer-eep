@@ -15,7 +15,7 @@ local TableUtils = require("ak.util.TableUtils")
 ---@class DataChangeBus
 ---@field fire fun(type:string, payload:string):nil
 ---@field addListener fun(listener:EventListener):nil
----@field printListener EventListener a default listeners to print out all events to the standard-out
+---@field printListener EventListener a default listener to print out all events to the standard-out
 local DataChangeBus = {}
 local listeners = {}
 DataChangeBus.debug = AkStartWithDebug or false

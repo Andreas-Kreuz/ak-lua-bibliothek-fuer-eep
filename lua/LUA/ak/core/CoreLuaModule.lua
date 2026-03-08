@@ -1,6 +1,6 @@
 if AkDebugLoad then print("[#Start] Loading ak.core.CoreLuaModule ...") end
 
----@class LuaModule
+---@class CoreLuaModule
 CoreLuaModule = {}
 CoreLuaModule.id = "8aeef2ab-8672-4f9a-a929-d62845f5f1fc"
 CoreLuaModule.enabled = true

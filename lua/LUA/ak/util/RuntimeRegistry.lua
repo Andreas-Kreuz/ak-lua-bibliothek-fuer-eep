@@ -1,8 +1,9 @@
 if AkDebugLoad then print("[#Start] Loading ak.util.RuntimeRegistry ...") end
 
+---@class RuntimeRegistry
 local RuntimeRegistry = {}
 
----@type RunTimeEntry[]
+---@type table<string, RuntimeEntry>
 local runtimeData = {}
 local groupsToKeep = {}
 
@@ -13,7 +14,7 @@ function RuntimeRegistry.storeRunTime(group, time)
     -- collect and sum runtime date, needs rework
     if not runtimeData then runtimeData = {} end
     if not runtimeData[group] then
-        ---@class RunTimeEntry
+        ---@class RuntimeEntry
         ---@field group string
         ---@field count number
         ---@field time number
