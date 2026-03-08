@@ -1,4 +1,4 @@
--- describe("AkSlotNamesParser.lua", function()
+-- describe("DataSlotNameResolver.lua", function()
 --    describe("getSlotNamesFunction", function()
 --        describe(".getSlotNames()", function()
 --            insulate("Slot 1", function()
@@ -17,9 +17,9 @@
 --                --SlotMapping.Gleis = { 201, 202, 203, 204 }
 --
 --                SlotFuncs.checkMapping()
---                local p = require("ak.data.AkSlotNamesParser")
+--                local p = require("ak.data.DataSlotNameResolver")
 --                local slotName = p.getSlotName(34)
---                it("slotname 34 müsste Slot1 sein", function()
+--                it("slotname 34 muesste Slot1 sein", function()
 --                    assert.is_true(slotName == "Slot1")
 --                end)
 --            end)

@@ -4,12 +4,12 @@ local TrafficLightModel = require("ak.road.TrafficLightModel")
 local TrafficLight = require("ak.road.TrafficLight")
 local Lane = require("ak.road.Lane")
 local Crossing = require("ak.road.Crossing")
-local CrossingSetting = require("ak.road.CrossingSetting")
+local CrossingSettings = require("ak.road.CrossingSettings")
 local CrossingSequence = require("ak.road.CrossingSequence")
 
 -- Hier kommt der Code
-CrossingSetting.showSignalIdOnSignal = false
-CrossingSetting.showSequenceOnSignal = false
+CrossingSettings.showSignalIdOnSignal = false
+CrossingSettings.showSequenceOnSignal = false
 
 local K1 = TrafficLight:new("K1", 12, TrafficLightModel.JS2_3er_mit_FG)
 local K2 = TrafficLight:new("K2", 17, TrafficLightModel.JS2_3er_ohne_FG)

@@ -38,11 +38,11 @@ Scheduler.debug = false
 local TrafficLight = require("ak.road.TrafficLight")
 TrafficLight.debug = false
 local Crossing = require("ak.road.Crossing")
-local CrossingSetting = require("ak.road.CrossingSetting")
+local CrossingSettings = require("ak.road.CrossingSettings")
 Crossing.debug = false
-CrossingSetting.showSignalIdOnSignal = false
-CrossingSetting.showRequestsOnSignal = false
-CrossingSetting.showSequenceOnSignal = false
+CrossingSettings.showSignalIdOnSignal = false
+CrossingSettings.showRequestsOnSignal = false
+CrossingSettings.showSequenceOnSignal = false
 local StorageUtility = require("ak.storage.StorageUtility")
 StorageUtility.debug = false
 

@@ -6,7 +6,7 @@ local DataSlotsStatePublisher = {}
 DataSlotsStatePublisher.name = "ak.data.DataSlotsStatePublisher"
 local enabled = true
 local initialized = false
-local AkSlotNamesParser = require("ak.data.AkSlotNamesParser")
+local DataSlotNameResolver = require("ak.data.DataSlotNameResolver")
 local StorageUtility = require("ak.storage.StorageUtility")
 local lastSlots = {}
 
@@ -35,11 +35,11 @@ function DataSlotsStatePublisher.syncState()
     local filledSlots = {}
     local emptySlots = {}
 
-    AkSlotNamesParser.updateSlotNames()
+    DataSlotNameResolver.updateSlotNames()
     for id = 1, 1000 do
         local hResult, data = EEPLoadData(id)
         if hResult then
-            local name = AkSlotNamesParser.getSlotName(id) or StorageUtility.getName(id) or "?"
+            local name = DataSlotNameResolver.getSlotName(id) or StorageUtility.getName(id) or "?"
             local slot = updateSlot(id, name, data)
             filledSlots[id] = slot
             emptySlots[id] = nil
