@@ -14,6 +14,8 @@ local executionOrderModuleNames = {}
 local function updateModuleOrder()
     TableUtils.clearArray(executionOrderModuleNames)
     for moduleName in pairs(registeredLuaModules) do table.insert(executionOrderModuleNames, moduleName) end
+    -- sort the modules so that the SchedulerLuaModule is always at the end,
+    -- because it must run after all other modules
     table.sort(executionOrderModuleNames, function (n1, n2)
         if n1 == "ak.scheduler.SchedulerLuaModule" then return true end
         if n2 == "ak.scheduler.SchedulerLuaModule" then return false end
