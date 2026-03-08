@@ -2,30 +2,30 @@
 
 ## Zweck
 
-Dieses Paket kapselt die fachliche Logik für Ampeln, Fahrspuren und automatisch gesteuerte Kreuzungen in EEP.
+Dieses Paket kapselt die fachliche Logik für Straßenampeln, Fahrspuren und automatisch geschaltete Kreuzungen in EEP. Es ist kein reines Datenmodell, sondern kombiniert Konfiguration, zustandsbehaftete Laufzeitobjekte, Persistenz und direkte EEP-Aufrufe.
 
-Es hat sechs Kernaufgaben:
+Die Kernaufgaben sind aktuell:
 
-- Modellierung von Ampeltypen und konkreten Ampeln
-- Verwaltung von Fahrspuren, Anforderungen und Warteschlangen
-- Berechnung der nächsten Kreuzungsschaltung anhand von Prioritäten oder manueller Vorgabe
-- Ausführung des zeitlichen Schaltablaufs über den Scheduler
-- Bereitstellung von JSON-Daten für Web-Server und Web-App
-- Anbindung kleiner EEP-naher Hilfen wie Straßenbahnweichen und Bus-Callbacks
+- Modellierung von Ampeltypen und konkreten Ampelinstanzen
+- Verwaltung von Fahrspuren, Warteschlangen und Anforderungen
+- Auswahl und zeitliche Ausführung der nächsten Kreuzungsschaltung
+- Pflege von Tipptexten an Signalen und optionalen Strukturen
+- Export des Zustands für Web-Server und Web-App
+- Bereitstellung kleiner EEP-naher Hilfen wie Straßenbahnweichen und Bus-Callbacks
 
-Die Nutzungsdokumentation für den fachlichen Einsatz liegt in [README.md](./README.md). Das Datenmodell der exportierten JSON-Räume ist in [Datenmodell.md](./Datenmodell.md) beschrieben. Diese Datei beschreibt die interne Struktur und Verantwortlichkeiten.
+Die Nutzungsdokumentation für den fachlichen Einsatz liegt in [README.md](./README.md). Das Datenmodell der exportierten Web-Räume ist in [Datenmodell.md](./Datenmodell.md) beschrieben. Diese Datei beschreibt die interne Struktur und den aktuellen Ist-Zustand des Pakets.
 
-## Alle Lua-Dateien in `ak/road`
+## Dateien in `ak/road`
 
-Im Verzeichnis `ak/road` existieren aktuell genau diese Lua-Dateien:
+Aktuell liegen in `ak/road` diese Lua-Dateien:
 
 - [AxisStructureTrafficLight.lua](./AxisStructureTrafficLight.lua)
 - [Bus.lua](./Bus.lua)
 - [Crossing.lua](./Crossing.lua)
-- [CrossingStatePublisher.lua](./CrossingStatePublisher.lua)
 - [CrossingLuaModul.lua](./CrossingLuaModul.lua)
 - [CrossingSequence.lua](./CrossingSequence.lua)
 - [CrossingSettings.lua](./CrossingSettings.lua)
+- [CrossingStatePublisher.lua](./CrossingStatePublisher.lua)
 - [CrossingWebConnector.lua](./CrossingWebConnector.lua)
 - [Lane.lua](./Lane.lua)
 - [LaneSettings.lua](./LaneSettings.lua)
@@ -36,58 +36,57 @@ Im Verzeichnis `ak/road` existieren aktuell genau diese Lua-Dateien:
 - [TrafficLightState.lua](./TrafficLightState.lua)
 - [TramSwitch.lua](./TramSwitch.lua)
 
-Hinweis:
+Wichtige Einordnung:
 
-- `LaneSettings.lua` ist aktuell nur ein kleiner Hilfstyp und nicht der zentrale Laufzeitpfad des Pakets.
-- `Bus.lua` und `TramSwitch.lua` sind fachlich benachbarte EEP-Helfer, aber nicht Teil des Kernflusses einer automatisch geschalteten Kreuzung.
+- `LaneSettings.lua` ist derzeit nur ein kleiner Hilfstyp und kein zentraler Teil des regulären Laufzeitpfads.
+- `Bus.lua` und `TramSwitch.lua` sind EEP-Helfer im selben Themenfeld, aber nicht Teil des eigentlichen Kreuzungs-Schedulers.
 
-## Architekturübersicht
+## Architekturüberblick
 
-Das Paket ist bewusst in drei Schichten aufgebaut:
+Das Paket besteht aktuell aus vier funktionalen Bereichen:
 
-1. Konfigurations- und Domänenschicht mit `TrafficLightModel`, `TrafficLight`, `Lane`, `CrossingSequence` und `Crossing`
-2. Laufzeit- und Integrationsschicht mit `CrossingLuaModul`, `CrossingSettings`, `TramSwitch` und `Bus`
-3. Web-Export- und Remote-Schicht mit `CrossingWebConnector`, `CrossingStatePublisher` und `TrafficLightModelStatePublisher`
+1. Domänenmodell: `TrafficLightState`, `TrafficLightModel`, `TrafficLight`, `Lane`, `CrossingSequence`, `Crossing`
+2. Modul- und Laufzeitintegration: `CrossingLuaModul`, `CrossingSettings`
+3. Web-Anbindung: `CrossingWebConnector`, `CrossingStatePublisher`, `TrafficLightModelStatePublisher`
+4. EEP-Helfer und Wertobjekte: `AxisStructureTrafficLight`, `LightStructureTrafficLight`, `TramSwitch`, `Bus`, `LaneSettings`
 
-Der reguläre Daten- und Steuerfluss sieht fachlich so aus:
+Der reguläre Ablauf sieht fachlich so aus:
 
-1. Anwendercode legt Ampelmodelle, Ampeln, Fahrspuren, Schaltungen und Kreuzungen an
-2. `CrossingLuaModul.init()` verdrahtet Web-Connector und initialisiert die Sequenzen
-3. `CrossingLuaModul.run()` ruft zyklisch `Crossing.switchSequences()` auf
-4. `Crossing` wählt pro Kreuzung die nächste Schaltung und plant den Umschaltablauf über `Scheduler`
-5. `TrafficLight` setzt Signalstellungen, Lichtimmobilien, Achsen und Tipptexte in EEP um
-6. Die JSON-Collector exportieren den aktuellen Zustand über `DataChangeBus` an `ak.io`
+1. Anwendercode erzeugt Modelle, Ampeln, Fahrspuren, Schaltungen und Kreuzungen.
+2. `CrossingLuaModul.init()` registriert State-Publisher und Remote-Funktionen und ruft `Crossing.initSequences()` auf.
+3. `CrossingLuaModul.run()` ruft zyklisch `Crossing.switchSequences()` auf.
+4. `Crossing` berechnet je Kreuzung die nächste Schaltung und plant deren Ablauf über `Task` und `Scheduler`.
+5. `TrafficLight` setzt Signalstellungen, Lichtimmobilien, Achsen und Tipptexte in EEP um.
+6. Die Publisher senden Web-Zustände über `DataChangeBus`.
 
-Wichtig: `ak/road` ist kein reines Datenpaket. Es enthält zustandsbehaftete Fachobjekte, Persistenz von Fahrspur- und Anzeigezustand und direkte EEP-Aufrufe.
+Wichtig: Die Web-Schicht liest den Zustand aus den Fachobjekten aus, steuert aber nicht den Kernablauf. Die Umschaltlogik liegt vollständig in `Crossing`, `CrossingSequence`, `Lane` und `TrafficLight`.
 
 ## Bausteine
 
 ### [CrossingLuaModul.lua](./CrossingLuaModul.lua)
 
-Moduleinstieg für das Kreuzungspaket.
+Moduleinstieg für den regulären Betrieb in `EEPMain()`.
 
 Verantwortlichkeiten:
 
-- Registrierung des Pakets bei `ak.core.ModuleRegistry`
-- Nachziehen der Scheduler-Abhängigkeit über `ak.scheduler.SchedulerLuaModule`
-- einmalige Initialisierung des Web-Connectors
+- einmalige Initialisierung des Pakets
+- Registrierung der State-Publisher und Remote-Funktionen über `CrossingWebConnector`
 - Aufruf von `Crossing.initSequences()` nach Abschluss der Konfiguration
 - zyklischer Aufruf von `Crossing.switchSequences()`
-
-`CrossingLuaModul` ist die vorgesehene Einstiegsschicht für den regulären Betrieb in `EEPMain()`.
+- implizites Nachziehen der Scheduler-Abhängigkeit durch Registrierung von `ak.scheduler.SchedulerLuaModule` beim Laden der Datei
 
 ### [Crossing.lua](./Crossing.lua)
 
-Zentrales Fachobjekt für eine Kreuzung.
+Zentrales Fachobjekt für eine Kreuzung und Haupt-Orchestrator der Verkehrslogik.
 
 Verantwortlichkeiten:
 
 - Verwaltung aller Kreuzungen in `Crossing.allCrossings`
-- Halten der Schaltungen, Fahrspuren, Ampeln und optionalen Kameras einer Kreuzung
-- Umschalten zwischen Automatikmodus und manueller Schaltung
-- Berechnung der nächsten Schaltung anhand manueller Vorgabe, strikter Reihenfolge oder Prioritätsvergleich
-- Planung des Schaltablaufs über `Task` und `Scheduler`
-- Aktualisierung von Tooltip-Texten für Signale und Strukturen
+- Halten von Schaltungen, Fahrspuren, Ampeln, optionalen Kameras und einer optionalen Tipptext-Struktur
+- Umschalten zwischen Automatikmodus, manueller Schaltung und strikter Reihenfolge
+- Berechnung der nächsten Schaltung über manuelle Vorgabe, Rundlauf oder Prioritätsvergleich
+- Planung der zeitlichen Schaltfolge über `Task` und `Scheduler`
+- Aktualisierung von Signal- und Struktur-Tipptexten
 - Sammel-Reset aller Fahrspuren über `Crossing.resetVehicles()`
 
 Wichtige Zustandsfelder pro Kreuzung:
@@ -98,12 +97,17 @@ Wichtige Zustandsfelder pro Kreuzung:
 - `greenPhaseReached`
 - `greenPhaseFinished`
 - `greenPhaseSeconds`
+- `switchInStrictOrder`
 - `lanes`
 - `trafficLights`
 - `staticCams`
 - `tippStructure`
 
-`Crossing` ist damit die eigentliche Orchestrierung der Verkehrslogik im Paket.
+Besonderheiten:
+
+- `Crossing.initSequences()` leitet die effektiven Fahrspuren einer Kreuzung aus den registrierten Sequenzen ab.
+- `Crossing.switchSequences()` aktualisiert zusätzlich die globalen Signal-ID-Tipptexte für die Signal-IDs `1..1000`, sobald sich `CrossingSettings.showSignalIdOnSignal` ändert.
+- Neben `Crossing.allCrossings` existiert dateiintern noch eine zweite Tabelle `allCrossings`, die in einigen Schleifen ebenfalls verwendet wird.
 
 ### [CrossingSequence.lua](./CrossingSequence.lua)
 
@@ -111,18 +115,24 @@ Fachobjekt für eine Schaltung innerhalb einer Kreuzung.
 
 Verantwortlichkeiten:
 
-- Gruppierung von Ampeln nach Typ (`CAR`, `TRAM`, `PEDESTRIAN`, ...)
+- Gruppierung von Ampeln nach Typ
 - Ableitung der zugehörigen Fahrspuren aus den registrierten Ampeln
 - Vergleich alter und neuer Schaltung
-- Berechnung der Umschalt-Tasks von Rot/Gelb/Grün/Fußgängerphasen
-- Berechnung und Zwischenspeicherung der Schaltungspriorität
+- Erzeugung des zeitlichen Umschaltplans
+- Berechnung und Zwischenspeicherung der mittleren Priorität `prio`
 
 Wichtige Fachlogik:
 
-- `trafficLightsToTurnRedAndGreen(oldSequence)` bestimmt, welche Ampeln ihren Zustand ändern müssen
-- `tasksForSwitchingFrom(oldSequence, afterRedTask)` erzeugt die Taskfolge für den Scheduler
-- `lanesSortedByPriority()` bestimmt die aktuelle Priorität der Schaltung über die zugehörigen Fahrspuren
+- `trafficLightsToTurnRedAndGreen(oldSequence)` bestimmt, welche Ampeln ihren Typ oder Zustand wechseln
+- `tasksForSwitchingFrom(oldSequence, afterRedTask)` erzeugt die Taskfolge für Rot, Gelb, Rot-Gelb, Grün und Fußgängerphasen
+- `lanesSortedByPriority()` berechnet die mittlere Priorität einer Schaltung aus den zugehörigen Fahrspuren
 - `sequencePriorityComparator(...)` vergleicht zwei Schaltungen für die automatische Auswahl
+
+Aktueller Stand der Typen:
+
+- Definiert sind `BUS`, `CAR`, `TRAM`, `PEDESTRIAN` und `BICYCLE`
+- Im Kernpfad verwendet werden aktuell `CAR`, `TRAM` und `PEDESTRIAN`
+- Öffentliche Helfer zum Befüllen gibt es derzeit nur für `addCarLights(...)`, `addTramLights(...)` und `addPedestrianLights(...)`
 
 ### [Lane.lua](./Lane.lua)
 
@@ -130,18 +140,31 @@ Zustandsbehaftetes Fachobjekt für eine Fahrspur.
 
 Verantwortlichkeiten:
 
-- Verwaltung von Fahrzeugwarteschlange, Fahrzeuganzahl und Wartezyklen
+- Verwaltung von Fahrzeugwarteschlange, Fahrzeuganzahl, Wartezyklen und aktueller Fahrspurphase
 - Persistenz des Fahrspurzustands über `StorageUtility`
-- Ermittlung von Anforderungen über Kontaktpunkte, Signale oder Straßentracks
-- Berechnung von Fahrspurprioritäten für Schaltungen
-- Zuordnung zusätzlicher Anforderungsampeln über Routen
+- Ermittlung von Anforderungen über Kontaktpunkte, Signale oder reservierte Straßentracks
+- Berechnung von Fahrspurprioritäten für die Schaltungswahl
+- Zuordnung zusätzlicher Anforderungsampeln abhängig von Routen
 - Spiegelung des Fahrzustands auf das sichtbare Fahrspursignal
 
 Wichtige Betriebsarten für Anforderungen:
 
-- gezählte Fahrzeuge über `vehicleEntered(...)` / `vehicleLeft(...)`
+- gezählte Fahrzeuge über `vehicleEntered(...)` und `vehicleLeft(...)`
 - Signalabfrage über `useSignalForQueue()`
 - Track-Reservierung über `useTrackForQueue(roadId)`
+
+Wichtige Zustandsfelder:
+
+- `vehicleCount`
+- `waitCount`
+- `phase`
+- `queue`
+- `firstVehiclesRoute`
+- `requestType`
+- `trafficLightsToDriveOn`
+- `requestTrafficLights`
+- `signalUsedForRequest`
+- `tracksUsedForRequest`
 
 Persistierte Felder pro Fahrspur:
 
@@ -150,7 +173,7 @@ Persistierte Felder pro Fahrspur:
 - `p`: letzte Phase
 - `q`: Warteschlange als Pipe-getrennter String
 
-Wichtig: `StorageUtility.saveTable()` und `loadTable()` arbeiten nur mit String-Werten. Deshalb serialisiert `Lane` Zahlen und Status explizit als String.
+Wichtig: `StorageUtility.saveTable()` und `loadTable()` arbeiten nur mit String-Werten. `Lane` serialisiert Zahlen, Status und Warteschlangen deshalb explizit als Strings.
 
 ### [TrafficLight.lua](./TrafficLight.lua)
 
@@ -159,18 +182,20 @@ Fachobjekt für eine konkrete Ampelinstanz.
 Verantwortlichkeiten:
 
 - Verknüpfung einer EEP-Signal-ID mit einem `TrafficLightModel`
-- Halten der aktuellen Phase und des zugehörigen Grundes
+- Halten der aktuellen Phase
 - Schalten des EEP-Signals über `EEPSetSignal(...)`
 - Schalten zusätzlicher Lichtimmobilien über `EEPStructureSetLight(...)`
 - Schalten zusätzlicher Achsimmobilien über `EEPStructureSetAxis(...)`
-- Verteilung von Zustandsänderungen an zugeordnete Fahrspuren
+- Verteilung von Zustandsänderungen an registrierte Fahrspuren
 - Aufbau und Anzeige von Tipptexten an Signalen oder Strukturen
 
 Besonderheiten:
 
-- negative `signalId`-Werte werden für logisch verwaltete, nicht direkt in EEP schaltbare Signale verwendet
-- `lightStructures` und `axisStructures` sind additive Erweiterungen zu normalen EEP-Signalen
-- `showRequestOnSignal(...)` koppelt Fahrspuranforderungen an Zusatz-Immobilien
+- negative oder nicht nutzbare Signal-IDs werden intern auf eigene negative IDs abgebildet; diese Ampeln sind logisch verwaltet und schalten kein EEP-Signal
+- `lightStructures` und `axisStructures` ergänzen die eigentliche Signalsteuerung
+- `applyToLane(...)` koppelt eine Ampel an Fahrspuren und nutzt intern `lane:driveOn(...)`
+- `showRequestOnSignal(...)` steuert optionale Anforderungslichter an Zusatz-Immobilien
+- das Feld `reason` ist zwar als Teil des Objekts vorgesehen und wird in `refreshInfo()` abgefragt, wird im aktuellen Codepfad aber nicht aktiv gesetzt
 
 ### [TrafficLightModel.lua](./TrafficLightModel.lua)
 
@@ -181,18 +206,27 @@ Verantwortlichkeiten:
 - Zuordnung zwischen fachlichen Phasen und EEP-Signalstellungen
 - Rückabbildung von Signalstellungen auf fachliche Phasen
 - Registrierung aller Modelle in `TrafficLightModel.allModels`
-- Bereitstellung vordefinierter Standardmodelle für verbreitete EEP-Ampelsets
+- Bereitstellung vordefinierter Modelle für mehrere EEP-Ampelsets
 
-Das Modell ist absichtlich statisch und leichtgewichtig. Fachzustand liegt in `TrafficLight`, nicht in `TrafficLightModel`.
+Das Modell ist statisch und leichtgewichtig. Laufzeit- und Kreuzungszustand liegen in `TrafficLight`, `Lane`, `CrossingSequence` und `Crossing`.
 
 ### [TrafficLightState.lua](./TrafficLightState.lua)
 
-Kleine Konstanten- und Hilfsschicht für Ampelphasen.
+Konstanten- und Hilfsschicht für Ampelphasen.
 
-Verantwortlichkeiten:
+Aktuelle Phasen:
 
-- Definition der fachlichen Phasenbezeichner
-- Hilfsfunktion `canDrive(phase)` für Freigabephasen
+- `RED`
+- `REDYELLOW`
+- `YELLOW`
+- `GREEN`
+- `GREENYELLOW`
+- `PEDESTRIAN`
+- `OFF`
+- `OFF_BLINKING`
+- `UNKNOWN`
+
+Wichtig: `canDrive(phase)` behandelt aktuell `GREEN`, `OFF` und `OFF_BLINKING` als freigebende Zustände.
 
 ### [CrossingSettings.lua](./CrossingSettings.lua)
 
@@ -201,8 +235,8 @@ Paketweite Anzeige- und Diagnoseeinstellungen.
 Verantwortlichkeiten:
 
 - Laden und Speichern globaler Kreuzungseinstellungen über `StorageUtility`
-- Halten der boole'schen Flags für Signalinfos und Strukturinfos
-- Bereitstellung von Setter-Funktionen, die auch per Remote-Kommando aufrufbar sind
+- Halten der globalen Bool-Flags für Tipptext-Ausgaben
+- Bereitstellung von Setter-Funktionen für den lokalen Code und für Remote-Aufrufe
 
 Aktuelle Settings:
 
@@ -211,14 +245,21 @@ Aktuelle Settings:
 - `showSignalIdOnSignal`
 - `showLanesOnStructure`
 
+Persistenzschlüssel:
+
+- `reqInfo`
+- `seqInfo`
+- `sigInfo`
+- `laneInfo`
+
 ### [CrossingWebConnector.lua](./CrossingWebConnector.lua)
 
 Web-Adapter des Pakets.
 
 Verantwortlichkeiten:
 
-- Registrierung der JSON-Collector beim `ServerBridge`
-- Registrierung der erlaubten Remote-Funktionen für Web-App und Web-Server
+- Registrierung der State-Publisher beim `StatePublisherRegistry`
+- Registrierung der erlaubten Remote-Funktionen beim `ServerBridge`
 
 Registrierte Remote-Funktionen:
 
@@ -231,12 +272,13 @@ Registrierte Remote-Funktionen:
 
 ### [CrossingStatePublisher.lua](./CrossingStatePublisher.lua)
 
-JSON-Collector für den aktuellen Kreuzungszustand.
+State-Publisher für den aktuellen Kreuzungszustand.
 
 Verantwortlichkeiten:
 
-- Export aller Kreuzungen, Schaltungen, Fahrspuren, Ampeln und Moduleinstellungen
-- Normalisierung einiger interner Werte für die Web-API
+- Export aller Kreuzungen, Schaltungen, Fahrspuren und Ampeln
+- Export der moduleigenen Anzeigeeinstellungen
+- Normalisierung interner Werte für die Web-API
 - Sortierung der Kreuzungen und Fahrspuren für stabile Ausgaben
 - Emission der Daten über `DataChangeBus.fireListChange(...)`
 
@@ -248,16 +290,18 @@ Exportierte Räume:
 - `intersection-traffic-lights`
 - `intersection-module-settings`
 
-Wichtig: Der Collector berechnet die Nutzdaten und feuert Events, liefert aber aktuell absichtlich kein direktes Nutzdatenobjekt an `ServerBridge.syncState()` zurück.
+Wichtig: `syncState()` baut die Nutzdaten zwar intern auf, liefert derzeit aber bewusst ein leeres Tabellenobjekt zurück. Der eigentliche Datentransport erfolgt über `DataChangeBus`.
 
 ### [TrafficLightModelStatePublisher.lua](./TrafficLightModelStatePublisher.lua)
 
-JSON-Collector für statische Ampelmodelle.
+State-Publisher für statische Ampelmodelle.
 
 Verantwortlichkeiten:
 
 - Export aller registrierten `TrafficLightModel`-Definitionen
 - Emission des Raums `signal-type-definitions` über `DataChangeBus`
+
+Wie bei `CrossingStatePublisher` erfolgt der eigentliche Transport aktuell über Events, nicht über den Rückgabewert von `syncState()`.
 
 ### [AxisStructureTrafficLight.lua](./AxisStructureTrafficLight.lua)
 
@@ -265,7 +309,8 @@ Wertobjekt für Achsimmobilien einer Ampel.
 
 Verantwortlichkeiten:
 
-- Validierung der Struktur- und Achsenkonfiguration
+- Validierung von Strukturname, Achsname und Positionswerten
+- Sofortige Prüfung der referenzierten Achse über `EEPStructureGetAxis(...)`
 - Halten der Zielpositionen pro Ampelphase
 
 ### [LightStructureTrafficLight.lua](./LightStructureTrafficLight.lua)
@@ -274,7 +319,7 @@ Wertobjekt für Lichtimmobilien einer Ampel.
 
 Verantwortlichkeiten:
 
-- Validierung der Strukturkonfiguration
+- Validierung der referenzierten Lichtimmobilien über `EEPStructureGetLight(...)`
 - Halten der Strukturzuordnung für Rot, Gelb, Grün und Anforderung
 
 ### [TramSwitch.lua](./TramSwitch.lua)
@@ -283,9 +328,9 @@ Kleiner EEP-Helfer für Straßenbahnweichen.
 
 Verantwortlichkeiten:
 
-- Registrierung einer Straßenbahnweiche in EEP
+- Registrierung einer Weiche in EEP
 - Anlegen des globalen Callbacks `EEPOnSwitch_<switchId>`
-- Spiegelung der Weichenstellung auf Lichtimmobilien
+- Spiegelung der Weichenstellung auf bis zu drei Lichtimmobilien
 
 ### [Bus.lua](./Bus.lua)
 
@@ -301,38 +346,38 @@ Verantwortlichkeiten:
 
 Kleiner Hilfstyp für Fahrspureinstellungen.
 
-Verantwortlichkeiten:
+Aktuelle Rolle:
 
-- Binden einer Fahrspur an Richtungen, Routen und `requestType`
-- Halten eines `vehicleMultiplier`
-
-Hinweis: Dieses Objekt spielt im aktuellen Kernlauf des Pakets nur eine Nebenrolle und wird nicht vom Web-Export verwendet.
+- bündelt `lane`, `directions`, `routes`, `requestType` und `vehicleMultiplier`
+- wird im aktuellen Kernlauf nicht von `Crossing`, `CrossingSequence` oder dem Web-Export verwendet
 
 ## Laufzeitfluss
 
-Der reguläre Ablauf für eine automatisch geschaltete Kreuzung ist:
+Der reguläre Ablauf für eine automatisch geschaltete Kreuzung ist aktuell:
 
-1. Anwendercode erzeugt `TrafficLightModel`, `TrafficLight`, `Lane`, `CrossingSequence` und `Crossing`
-2. Fahrspuren werden über ihre Fahrspurampel mit `TrafficLight:applyToLane(...)` verdrahtet
-3. Sequenzen registrieren die betroffenen Ampeln über `addCarLights(...)`, `addTramLights(...)` oder `addPedestrianLights(...)`
-4. `CrossingLuaModul.init()` registriert Web-Collector und Remote-Funktionen
-5. `Crossing.initSequences()` leitet aus allen Sequenzen die effektiven Fahrspur- und Ampelzuordnungen der Kreuzung ab
-6. `CrossingLuaModul.run()` ruft zyklisch `Crossing.switchSequences()` auf
-7. `Crossing.switchSequences()` wählt pro Kreuzung die nächste Schaltung und ruft intern `switch(crossing)` auf
-8. `CrossingSequence:tasksForSwitchingFrom(...)` erzeugt den zeitlichen Umschaltplan
-9. `Scheduler:scheduleTask(...)` führt die Teilumschaltungen versetzt aus
-10. `TrafficLight.switchAll(...)` und `TrafficLight:switchTo(...)` setzen EEP-Signalstellungen, Lichtimmobilien und Achsen
-11. `Crossing` aktualisiert Signaltooltips, Fahrspurinfo und optionale Strukturtooltips
-12. In Exportzyklen erzeugen die JSON-Collector den Web-Zustand über `DataChangeBus`
+1. Anwendercode erzeugt `TrafficLightModel`, `TrafficLight`, `Lane`, `CrossingSequence` und `Crossing`.
+2. `Lane:new(...)` registriert den Save-Slot, koppelt die sichtbare Fahrspurampel an die Fahrspur und lädt gespeicherten Zustand.
+3. Zusätzliche Freigabeampeln werden optional über `Lane:driveOn(...)` oder `TrafficLight:applyToLane(...)` verdrahtet.
+4. Sequenzen registrieren ihre Ampeln über `addCarLights(...)`, `addTramLights(...)` und `addPedestrianLights(...)`.
+5. `CrossingLuaModul.init()` registriert Web-Anbindung und ruft `Crossing.initSequences()` auf.
+6. `Crossing.initSequences()` leitet aus allen Sequenzen die effektiven Fahrspuren und Ampeln je Kreuzung ab.
+7. `CrossingLuaModul.run()` ruft zyklisch `Crossing.switchSequences()` auf.
+8. `Crossing.switchSequences()` prüft pro Kreuzung, ob umgeschaltet werden darf, und ruft intern `switch(crossing)` auf.
+9. `Crossing:calculateNextSequence()` wählt die nächste Schaltung per manueller Vorgabe, strikter Reihenfolge oder Prioritätsvergleich.
+10. `CrossingSequence:tasksForSwitchingFrom(...)` erzeugt die Taskfolge für Gelb-, Rot-, Rot-Gelb-, Grün- und Fußgängerphasen.
+11. `Scheduler:scheduleTask(...)` plant die einzelnen Umschaltvorgänge.
+12. `TrafficLight.switchAll(...)` und `TrafficLight:switchTo(...)` setzen Signalstellungen, Lichtimmobilien und Achsen.
+13. Nach jedem Zyklus aktualisiert `Crossing` die Signal-Tipptexte und optional die Fahrspurübersicht an einer Struktur.
+14. In Exportzyklen senden die State-Publisher den Web-Zustand über `DataChangeBus`.
 
 Der reguläre Ablauf für Anforderungen in einer Fahrspur ist:
 
-1. Ein Fahrzeug wird per Kontaktpunkt, Signalabfrage oder Trackabfrage erkannt
-2. `Lane` aktualisiert Warteschlange, Fahrzeuganzahl und gegebenenfalls die erste Route
-3. `Lane:checkRequests()` baut den Anforderungstext neu auf
-4. `refreshRequests(...)` informiert alle verknüpften Anforderungsampeln
-5. `updateLaneSignal(...)` prüft, ob die Fahrspur anhand der gültigen Ampeln fahren darf
-6. Der Fahrspurzustand wird in `StorageUtility` gespeichert
+1. Ein Fahrzeug wird per Kontaktpunkt gezählt oder die Fahrspur liest ihren Zustand über Signal- oder Trackabfrage ein.
+2. `Lane` aktualisiert Warteschlange, Fahrzeuganzahl und gegebenenfalls die erste Fahrzeugroute.
+3. `Lane:checkRequests()` baut den Anforderungstext neu auf.
+4. `refreshRequests(...)` informiert verknüpfte Anforderungsampeln.
+5. `updateLaneSignal(...)` prüft anhand der freigebenden Ampeln und optionaler Routen, ob die sichtbare Fahrspurampel Grün zeigen darf.
+6. Der Fahrspurzustand wird über `StorageUtility` gespeichert.
 
 ## Zustand
 
@@ -341,35 +386,35 @@ Der reguläre Ablauf für Anforderungen in einer Fahrspur ist:
 `Crossing` hält:
 
 - alle bekannten Kreuzungen in `Crossing.allCrossings`
-- pro Kreuzung Schaltungen, Fahrspuren, Ampeln, Kameras und Tooltipstruktur
+- pro Kreuzung Sequenzen, Fahrspuren, Ampeln, Kameras und optionale Tipptext-Struktur
 - den Umschaltzustand über `currentSequence`, `nextSequence`, `manualSequence`, `greenPhaseReached` und `greenPhaseFinished`
 
 `CrossingSequence` hält:
 
 - die zugeordneten Ampeln mit Typ
-- die aus den Ampeln abgeleiteten Fahrspuren
-- die aktuelle mittlere Priorität `prio`
+- die daraus abgeleiteten Fahrspuren in `lanes`
+- die zuletzt berechnete mittlere Priorität `prio`
 
 `Lane` hält:
 
-- Fahrzeuganzahl
-- Warteschlange
+- Fahrzeuganzahl und Warteschlange
 - verpasste Grünzyklen
 - aktuelle Phase
-- Anforderungsmodus und optionale Routenfilter
-- Track- und Signalzählkonfiguration
+- Anforderungsmodus
+- optionale Routen- und Freigaberegeln
+- Signal- und Trackkonfiguration
 
 `TrafficLight` hält:
 
 - Signal-ID und Modell
-- aktuelle Phase und Begründung
+- aktuelle Phase
 - registrierte Fahrspuren
 - Licht- und Achsimmobilien
-- vorbereitete Tooltiptexte
+- vorbereitete Tooltip-Fragmente
 
 `TrafficLightModel` hält:
 
-- die statischen Signalindex-Zuordnungen je Modell
+- statische Signalindex-Zuordnungen je Modell
 - die globale Liste aller Modelle
 
 `CrossingSettings` hält:
@@ -379,54 +424,54 @@ Der reguläre Ablauf für Anforderungen in einer Fahrspur ist:
 
 ### Persistenz
 
-Das Paket nutzt zwei Persistenzformen:
+Das Paket nutzt aktuell zwei Persistenzformen:
 
-- `Lane` speichert seinen Laufzeitzustand pro Fahrspur über `StorageUtility`
+- `Lane` speichert Laufzeitzustand pro Fahrspur über `StorageUtility`
 - `CrossingSettings` speichert die globalen Anzeigeeinstellungen über `StorageUtility`
 
-Persistiert werden nur String-Werte. Deshalb werden Zahlen, Booleans und Warteschlangen vor dem Speichern serialisiert.
+Persistiert werden nur String-Werte. Deshalb serialisieren die Module Zahlen, Booleans und Warteschlangen vor dem Speichern.
 
 Nicht persistent sind insbesondere:
 
 - die Menge aller Kreuzungen
 - die Zuordnung von Sequenzen zu Kreuzungen
-- statische Kameranamen
-- die registrierten Web-Collector und Remote-Funktionen
+- die registrierten State-Publisher und Remote-Funktionen
+- statische Kameranamen und Strukturzuordnungen
+- aktuelle Scheduler-Tasks
 
 ## Wichtige Invarianten
 
 - Jede `Lane` hat genau eine sichtbare Fahrspurampel `trafficLight`.
 - Eine `CrossingSequence` darf nur `TrafficLight`-Objekte enthalten.
-- Eine Kreuzung kann fachlich nur eine aktuelle Schaltung gleichzeitig haben.
 - `Crossing.initSequences()` muss nach Abschluss der Konfiguration laufen, bevor `switchSequences()` sinnvoll arbeitet.
-- `CrossingSequence:initSequence()` erwartet, dass Ampeln bereits ihre Fahrspuren kennen.
+- `CrossingSequence:initSequence()` erwartet, dass die Ampeln ihre Fahrspuren bereits kennen.
 - `Lane` und `CrossingSettings` dürfen in `StorageUtility` nur String-Werte ablegen.
-- Negative `signalId`-Werte bedeuten logisch verwaltete Signale; `TrafficLight:switchSignal(...)` setzt in diesem Fall kein EEP-Signal.
-- `lightStructures` und `axisStructures` müssen auf existierende EEP-Strukturen bzw. Achsen verweisen; die Hilfsklassen validieren das sofort.
-- Die Remote-Kommandos für Kreuzungen dürfen nur über `CrossingWebConnector.registerFunctions()` freigegeben werden.
-- JSON-Collector müssen ihre Schlüsselfelder (`id` oder `name`) für jedes exportierte Element konsistent setzen.
+- Negative interne Signal-IDs stehen für logisch verwaltete Ampeln; `TrafficLight:switchSignal(...)` setzt in diesem Fall kein EEP-Signal.
+- `lightStructures` und `axisStructures` müssen auf existierende EEP-Strukturen beziehungsweise Achsen verweisen; die Hilfsklassen validieren das sofort.
+- Die Web-Kommandos für Kreuzungen werden ausschließlich über `CrossingWebConnector.registerFunctions()` freigegeben.
+- Die State-Publisher müssen stabile Schlüsselfelder (`id` oder `name`) je exportiertem Element setzen.
 
 ## Typische Änderungsrisiken
 
 ### Inkonsistenter Umschaltablauf
 
-Schon kleine Änderungen in `CrossingSequence:tasksForSwitchingFrom(...)` können den zeitlichen Ablauf zwischen Rot, Gelb, Rot-Gelb und Grün fachlich brechen.
+Schon kleine Änderungen in `CrossingSequence:tasksForSwitchingFrom(...)` können den zeitlichen Ablauf zwischen Rot, Gelb, Rot-Gelb, Grün und Fußgängerphasen fachlich brechen.
 
-### Verlorene Persistenz
+### Verlorene oder fehlerhafte Persistenz
 
-Änderungen an `Lane.save/load` oder `CrossingSettings.save/load` können bestehende Anlagenzustände unlesbar machen oder boolesche Werte falsch interpretieren.
+Änderungen an `Lane`-Persistenz oder `CrossingSettings.saveSettings()/loadSettingsFromSlot()` können bestehende Anlagenzustände unlesbar machen oder Bool-Werte falsch interpretieren.
 
 ### Falsche Fahrspurzuteilung
 
-Wenn `Crossing.initSequences()` oder `TrafficLight:applyToLane(...)` geändert wird, kann die Prioritätsberechnung falsche Fahrspuren einer Schaltung zuordnen.
+Wenn `Crossing.initSequences()`, `TrafficLight:applyToLane(...)` oder `Lane:driveOn(...)` geändert werden, kann die Prioritätsberechnung falsche Fahrspuren einer Schaltung zuordnen.
 
-### Nebenwirkungen in EEP
+### Sichtbare Nebenwirkungen in EEP
 
-`TrafficLight`, `TramSwitch` und `Bus` rufen direkt `EEPSetSignal`, `EEPStructureSetLight`, `EEPStructureSetAxis`, `EEPShowInfoSignal` oder `EEPSetTrainAxis` auf. Fehler wirken sich sofort sichtbar in EEP aus.
+`TrafficLight`, `TramSwitch` und `Bus` rufen direkt `EEPSetSignal`, `EEPStructureSetLight`, `EEPStructureSetAxis`, `EEPShowInfoSignal`, `EEPShowInfoStructure`, `EEPChangeInfoSignal` oder `EEPSetTrainAxis` auf. Fehler wirken sich sofort sichtbar in EEP aus.
 
 ### Web-API-Drift
 
-Änderungen an den JSON-Collectoren können den Web-Server-State und die Consumer in der Web-App brechen, insbesondere bei Raum- oder Feldnamen.
+Änderungen an den State-Publishern können Web-Server, Web-App und das Datenmodell in [Datenmodell.md](./Datenmodell.md) auseinanderlaufen lassen.
 
 ### Globale Callback-Kollisionen
 
@@ -434,22 +479,21 @@ Wenn `Crossing.initSequences()` oder `TrafficLight:applyToLane(...)` geändert w
 
 ## Relevante Nachbarn
 
-`ak/road` arbeitet eng mit diesen Paketen zusammen:
+`ak/road` arbeitet aktuell eng mit diesen Paketen zusammen:
 
-- `ak.core`: `ModuleRegistry` initialisiert und betreibt `CrossingLuaModul`
-- `ak.scheduler`: führt den zeitlichen Schaltablauf aus
-- `ak.io`: registriert JSON-Collector und Remote-Funktionen für Web-Server und Web-App
-- `ak.events`: nimmt die von den Collectoren erzeugten `ListChanged`-Events entgegen
-- `ak.storage`: speichert Fahrspur- und Einstellungszustand
-- `ak.util.Queue`: bildet die Warteschlangen der Fahrspuren ab
-- `ak.core.eep.TippTextFormatter`: baut die Tooltiptexte für Signale und Strukturen
+- `ak.core`: `ModuleRegistry` und `StatePublisherRegistry`
+- `ak.scheduler`: `Scheduler`, `Task` und `SchedulerLuaModule`
+- `ak.events`: `DataChangeBus` für Web-Zustandsänderungen
+- `ak.storage`: `StorageUtility` für Persistenz
+- `ak.util.Queue`: Warteschlangen der Fahrspuren
+- `ak.core.eep.TippTextFormatter`: Aufbau der Tipptexte
 
 ## Empfehlung für KI-Agenten
 
 Bei Änderungen in `ak/road` zuerst diese Fragen beantworten:
 
-1. Betrifft die Änderung nur einen Datenausgabe-Collector oder auch die fachliche Schaltlogik?
-2. Wird damit bestehender zustandsbehafteter Laufzeit- oder Persistenzcode verändert?
-3. Muss die Web-App oder das Datenmodell in [Datenmodell.md](./Datenmodell.md) mit angepasst werden?
-4. Greift die Änderung in EEP-nahe Aufrufe oder globale Callbacks ein?
-5. Bleibt der Schaltablauf zwischen alter und neuer Sequenz fachlich korrekt und zeitlich vollständig?
+1. Betrifft die Änderung nur einen State-Publisher oder auch die fachliche Schaltlogik?
+2. Verändert sie zustandsbehafteten Laufzeit- oder Persistenzcode?
+3. Muss die Web-Seite oder das Datenmodell in [Datenmodell.md](./Datenmodell.md) mit angepasst werden?
+4. Greift die Änderung in EEP-nahe Aufrufe, Tipptexte oder globale Callbacks ein?
+5. Bleibt der Umschaltablauf zwischen alter und neuer Sequenz fachlich korrekt und zeitlich vollständig?
