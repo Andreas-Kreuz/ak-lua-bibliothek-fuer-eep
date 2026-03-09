@@ -4,12 +4,6 @@ local StorageUtility = require("ak.storage.StorageUtility")
 local TrainRegistry = require("ak.train.TrainRegistry")
 if AkDebugLoad then print("[#Start] Loading ak.public-transport.Line ...") end
 
----@class Line
----@field type string
----@field trafficType string
----@field lineSegments table<string, LineSegment>
----@field id string
----@field nr string
 local Line = {}
 Line.debug = AkDebugLoad or false
 ---@type table<string, Line>

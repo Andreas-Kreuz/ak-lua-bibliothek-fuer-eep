@@ -1,0 +1,13 @@
+---@meta
+
+---@class Queue
+---@field first number
+---@field last number
+---@field list table<number, any>
+---@field new fun(self: Queue):Queue
+---@field isEmpty fun(self: Queue):boolean
+---@field size fun(self: Queue):number
+---@field push fun(self: Queue, value: any):nil
+---@field pop fun(self: Queue):any
+---@field firstElement fun(self: Queue):any
+---@field elements fun(self: Queue):any[]

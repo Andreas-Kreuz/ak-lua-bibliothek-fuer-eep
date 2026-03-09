@@ -1,9 +1,5 @@
 if AkDebugLoad then print("[#Start] Loading ak.util.Queue ...") end
 
----@class Queue
----@field first number index of first element
----@field last number index of last element
----@field list table all entries
 local Queue = {}
 function Queue:new()
     local o = { first = 0, last = -1, list = {} }

@@ -4,7 +4,6 @@ local RuntimeRegistry = require("ak.util.RuntimeRegistry")
 local TrackDetection = require("ak.data.TrackDetection")
 local RollingStockRegistry = require("ak.train.RollingStockRegistry")
 
----@class TrainDetection
 local TrainDetection = {}
 TrainDetection.debug = AkStartWithDebug or false
 
@@ -168,15 +167,6 @@ function TrainDetection.trainInfosForAllTrains(detected, dirtyTrains, movedTrain
             local dirty = created or (dirtyTrains[trainName] and true or false)
             local moved = created or dirty or train:getSpeed() ~= 0 or speed ~= 0 or
                 (movedTrains[trainName] and true or false)
-
-            ---@class TrainUpdateInfo
-            ---@field name string
-            ---@field trackType string
-            ---@field tracks table<string,number>
-            ---@field speed number
-            ---@field dirty boolean
-            ---@field created boolean
-            ---@field moved boolean
             local info = { name = trainName, speed = speed, created = created, dirty = dirty, moved = moved }
             currentTrainInfos[trainName] = info
 

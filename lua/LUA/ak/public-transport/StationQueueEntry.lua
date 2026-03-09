@@ -1,11 +1,5 @@
 if AkDebugLoad then print("[#Start] Loading ak.public-transport.StationQueueEntry ...") end
 
----@class StationQueueEntry
----@field trainName string
----@field line Line
----@field destination string
----@field timeInMinutes number
----@field platform string
 local StationQueueEntry = {}
 function StationQueueEntry:new(trainName, destination, line, timeInMinutes, platform)
     assert(type(self) == "table", "Call this method with ':'")

@@ -4,13 +4,6 @@ local StorageUtility = require("ak.storage.StorageUtility")
 
 if AkDebugLoad then print("[#Start] Loading ak.public-transport.RoadStation ...") end
 
----@class RoadStation
----@field type string
----@field name string
----@field displays table table of RoadStationDisplay
----@field platforms table<number,Platform> table of Platform
----@field queue StationQueue
----@field routePlatforms table<string, PlatformAssignment>
 local RoadStation = {}
 RoadStation.debug = false
 ---@type table<string, RoadStation>

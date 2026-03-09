@@ -7,14 +7,9 @@ local Task = require("ak.scheduler.Task")
 ------------------------------------------------------
 -- Klasse CrossingSequence (schaltet mehrere Ampeln)
 ------------------------------------------------------
----@class CrossingSequence
----@field type string
----@field name string
----@field trafficLights table<TrafficLight,TrafficLightType>
----@field greenPhaseSeconds number
 local CrossingSequence = {}
 CrossingSequence.debug = AkStartWithDebug or false
----@enum TrafficLightType
+---@type table<string, TrafficLightType>
 CrossingSequence.Type = { BUS = "BUS", CAR = "CAR", TRAM = "TRAM", PEDESTRIAN = "PEDESTRIAN", BICYCLE = "BICYCLE" }
 
 function CrossingSequence.getType() return "CrossingSequence" end

@@ -31,8 +31,7 @@ end
 function ServerExchangeCoordinator.initialize()
     if initialized then return end
 
-    DataChangeBus.addListener(ServerEventBuffer)
-    DataChangeBus.fireCompleteReset()
+    DataChangeBus.initialize()
     initialized = true
 end
 

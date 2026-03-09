@@ -2,10 +2,6 @@ if AkDebugLoad then print("[#Start] Loading ak.public-transport.StationQueue ...
 
 local StationQueueEntry = require("ak.public-transport.StationQueueEntry")
 
----@class StationQueue
----@field type string
----@field entries table<string, StationQueueEntry>
----@field entriesByArrival StationQueueEntry[]
 local StationQueue = {}
 function StationQueue:new()
     assert(type(self) == "table", "Call this method with ':'")

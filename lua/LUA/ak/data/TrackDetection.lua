@@ -2,11 +2,6 @@ if AkDebugLoad then print("[#Start] Loading ak.data.TrackCollector ...") end
 
 local DataChangeBus = require("ak.events.DataChangeBus")
 local RuntimeRegistry = require("ak.util.RuntimeRegistry")
----@class TrackDetection
----@field tracks table<number, Track>
----@field trackType string
----@field reservedFunction function
----@field registerFunction function
 local TrackDetection = {}
 
 local MAX_TRACKS = 50000
@@ -58,8 +53,6 @@ function TrackDetection:initialize()
     for id = 1, MAX_TRACKS do
         local exists = self.registerFunction(id)
         if exists then
-            ---@class Track
-            ---@field id number
             local track = {}
             track.id = id
             -- track.position = val

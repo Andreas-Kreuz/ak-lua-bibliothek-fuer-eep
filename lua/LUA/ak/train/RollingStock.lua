@@ -23,30 +23,6 @@ local EEPRollingstockModelTypeText = {
     [15] = "PKW"
 }
 
----@class RollingStock
----@field values table
----@field id string
----@field rollingStockName string
----@field trainName string
----@field positionInTrain integer
----@field couplingFront integer
----@field couplingRear integer
----@field modelType integer
----@field modelTypeText string
----@field propelled boolean
----@field length number
----@field mileage number
----@field trackId integer
----@field trackDistance number
----@field trackDirection integer
----@field trackSystem integer
----@field x integer
----@field y integer
----@field z integer
----@field model RollingStockModel
----@field tag string Tag text
----@field textureText string TextureText text
----@field type string "RollingStock"
 local RollingStock = {}
 
 ---Create a new RollingStock and init it

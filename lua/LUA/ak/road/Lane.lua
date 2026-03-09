@@ -6,27 +6,17 @@ local TrafficLightState = require("ak.road.TrafficLightState")
 local fmt = require("ak.core.eep.TippTextFormatter")
 
 -- Lane starts here
----@class Lane
----@field queue Queue
----@field name string
----@field private type string ("Lane")
----@field trafficLight TrafficLight
----@field tracksForHighlighting table
----@field tracksForRequests table
----@field firstVehiclesRoute string
----@field routesToCount table
----@field firstGoodTrain string
 local Lane = {}
 Lane.debug = AkStartWithDebug or false
 
----@class LaneRequestType
+---@type table<string, LaneRequestType>
 Lane.RequestType = {
     NICHT_VERWENDET = "NICHT VERWENDET",
     ANFORDERUNG = "ANFORDERUNG",
     NORMAL = "NORMAL",
     FUSSGAENGER = "FUSSGAENGER"
 }
----@enum LaneDirection
+---@type table<string, LaneDirection>
 Lane.Directions = {
     LEFT = "LEFT",
     HALF_LEFT = "HALF-LEFT",
@@ -34,7 +24,7 @@ Lane.Directions = {
     HALF_RIGHT = "HALF-RIGHT",
     RIGHT = "RIGHT"
 }
----@class LaneType
+---@type table<string, LaneType>
 Lane.Type = { BUS = "BUS", CAR = "CAR", TRAM = "TRAM", PEDESTRIAN = "PEDESTRIAN", BICYCLE = "BICYCLE" }
 
 ---Liefert true, wenn das erste Fahrzeug fahren darf (anhand der für die Fahrspur gültigen Ampeln)

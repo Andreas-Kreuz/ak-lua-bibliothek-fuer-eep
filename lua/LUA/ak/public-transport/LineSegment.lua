@@ -1,13 +1,5 @@
 if AkDebugLoad then print("[#Start] Loading ak.public-transport.LineSegment ...") end
 
----@class LineSegment
----@field id string = the routeName
----@field type string
----@field line Line
----@field destination string
----@field routeName string
----@field stationInfos StationInfo[]
----@field nextLineSegmentInfo SegmentInfo
 local LineSegment = {}
 LineSegment.debug = AkDebugLoad or false
 

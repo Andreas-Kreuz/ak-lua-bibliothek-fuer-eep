@@ -4,19 +4,12 @@ local TableUtils = require("ak.util.TableUtils")
 ---The data change bus will receive all events via fire method and inform all listeners.
 ---It must stay generic and must not know the contents or semantics of room, keyId or element.
 ---The only event type whose payload shape is known here is CompleteReset.
----@class DataChangeBus
----@field fire fun(type:string, payload:string):nil
----@field addListener fun(listener:EventListener):nil
----@field printListener EventListener a default listener to print out all events to the standard-out
 local DataChangeBus = {}
+---@type table<EventListener, boolean>
 local listeners = {}
 DataChangeBus.debug = AkStartWithDebug or false
+local initialized = false
 
----@class ChangeType
----@field dataAdded string
----@field dataRemoved string
----@field dataChanged string
----@field completeReset string
 DataChangeBus.eventType = {
     completeReset = "CompleteReset",
     dataAdded = "DataAdded",
@@ -25,10 +18,9 @@ DataChangeBus.eventType = {
     dataRemoved = "DataRemoved"
 }
 
----@class EventListener
----@field fireEvent fun(jsonText:string):nil
+---@type PrintEventListener
 DataChangeBus.printListener = {
-    ---@param event Event
+    ---@param event DataChangeEvent
     fireEvent = function (event)
         local t = type(event.payload)
         if t == "table" then
@@ -48,16 +40,26 @@ function DataChangeBus.printEventCounter()
     if DataChangeBus.debug then print("[#EventCounter] " .. "value " .. eventCounter) end
 end
 
+local function registerDefaultListeners()
+    DataChangeBus.addListener(require("ak.data.DataStore"))
+    DataChangeBus.addListener(require("ak.io.ServerEventBuffer"))
+end
+
+function DataChangeBus.initialize()
+    if initialized then return end
+
+    registerDefaultListeners()
+    initialized = true
+    DataChangeBus.fireCompleteReset()
+end
+
 ---Inform the DataChangeBus of new events, which will then be given to the EventListeners
 ---@param eventType string
 ---@param payload table
 local function fire(eventType, payload)
+    if not initialized then DataChangeBus.initialize() end
     eventCounter = eventCounter + 1
-
-    ---@class Event
-    ---@field eventCounter number
-    ---@field type string
-    ---@field payload any
+    ---@type DataChangeEvent
     local event = { eventCounter = eventCounter, type = eventType, payload = payload }
 
     -- Fire the event

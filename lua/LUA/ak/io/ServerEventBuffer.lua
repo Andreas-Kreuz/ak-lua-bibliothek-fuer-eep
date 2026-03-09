@@ -5,7 +5,7 @@ local ServerEventBuffer = {}
 local recordedEvents = {}
 
 --- All events must be fired with this function, so they are recorded in the list of recordedEvents and can be written to a file later.
----@param event table the event object string
+---@param event DataChangeEvent the event object string
 function ServerEventBuffer.fireEvent(event)
     -- Pack the event into JSON
     local jsonText = json.encode(event)

@@ -9,18 +9,6 @@ local TagKeys = require("ak.train.TagKeys")
 local EepFunctionWrapper = require("ak.core.eep.EepFunctionWrapper")
 local EEPGetTrainLength = EepFunctionWrapper.EEPGetTrainLength
 
----@class Train
----@field id string
----@field name string
----@field type string
----@field values table of all entries stored in the train
----@field route string
----@field rollingStockCount number number of cars
----@field speed number
----@field length number
----@field trackType string
----@field onTrack number
----@field occupiedTracks table
 local Train = {}
 
 ---Create a new train with the given object

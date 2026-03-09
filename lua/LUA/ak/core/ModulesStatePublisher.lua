@@ -10,7 +10,7 @@ ModulesStatePublisher = {}
 local enabled = true
 local initialized = false
 ModulesStatePublisher.name = "ak.core.ModulesStatePublisher"
----@type table<string,LuaModule>
+---@type table<string, LuaModule>|nil
 local registeredLuaModules = nil
 
 ---@type table<string,LuaModule>
@@ -28,11 +28,13 @@ local function checkModule(moduleName, module)
     knownModules[moduleName] = module
 end
 
+---@param modules table<string, LuaModule>
 function ModulesStatePublisher.setRegisteredLuaModules(modules) registeredLuaModules = modules end
 
 function ModulesStatePublisher.initialize()
     if not enabled or initialized then return end
 
+    assert(registeredLuaModules)
     for moduleName, module in pairs(registeredLuaModules) do checkModule(moduleName, module) end
 
     initialized = true
@@ -42,6 +44,7 @@ function ModulesStatePublisher.syncState()
     local moduleInfo = {}
     moduleInfo.modules = {}
 
+    assert(registeredLuaModules)
     for _, v in pairs(registeredLuaModules) do moduleInfo[v.id] = { id = v.id, name = v.name, enabled = v.enabled } end
 
     return moduleInfo

@@ -1,14 +1,16 @@
 if AkDebugLoad then print("[#Start] Loading ak.core.CoreLuaModule ...") end
 
----@class CoreLuaModule
+---@class CoreLuaModule: LuaModule
 CoreLuaModule = {}
 CoreLuaModule.id = "8aeef2ab-8672-4f9a-a929-d62845f5f1fc"
 CoreLuaModule.enabled = true
 local initialized = false
 -- Jedes Modul hat einen eindeutigen Namen
 CoreLuaModule.name = "ak.core.CoreLuaModule"
+---@type table<string, LuaModule>|nil
 local registeredLuaModules = nil
 
+---@param modules table<string, LuaModule>
 function CoreLuaModule.setRegisteredLuaModules(modules) registeredLuaModules = modules end
 
 --- Diese Funktion wird einmalig durch ModuleRegistry.initTasks() aufgerufen
@@ -19,6 +21,7 @@ function CoreLuaModule.init()
 
     -- Hier wird der CoreWebConnector registriert, so dass die Kommunikation mit der WebApp funktioniert
     local CoreWebConnector = require("ak.core.CoreWebConnector")
+    assert(registeredLuaModules)
     CoreWebConnector.setRegisteredLuaModules(registeredLuaModules)
     CoreWebConnector.registerStatePublishers();
 
