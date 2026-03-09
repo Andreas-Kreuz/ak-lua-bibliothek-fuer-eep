@@ -3,6 +3,12 @@
 ---@alias DataStoreList table<any, DataStoreElement>
 ---@alias DataStoreRoom table<string, DataStoreElement>
 ---@alias DataStoreRooms table<string, DataStoreRoom>
+---@alias TrainNameSet table<string, boolean>
+---@alias TrainTrackIds table<string, number>
+---@alias TrainTracksByTrain table<string, TrainTrackIds>
+---@alias TrainTracksByType table<string, TrainTracksByTrain>
+---@alias TrainUpdateInfos table<string, TrainUpdateInfo>
+---@alias TrainInfosFn fun(d: TrainNameSet, dt: TrainNameSet, m: TrainNameSet, tt: TrainTracksByType):TrainUpdateInfos
 ---@class DataStore: EventListener
 ---@field rooms DataStoreRooms
 ---@field reset fun():nil
@@ -56,8 +62,8 @@
 ---@class TrainDetection
 ---@field debug boolean
 ---@field registerForTrainDetection fun():nil
----@field refreshTrainInfos fun(allKnownTrains: table<string, TrainUpdateInfo>):nil
----@field trainInfosForAllTrains fun(detected: table<string, boolean>, dirtyTrains: table<string, boolean>, movedTrains: table<string, boolean>, trainTracks: table<string, table<string, table<string, number>>>):table<string, TrainUpdateInfo>
+---@field refreshTrainInfos fun(allKnownTrains: TrainUpdateInfos):nil
+---@field trainInfosForAllTrains TrainInfosFn
 ---@field initialize fun():nil
 ---@field update fun():nil
 ---@class TrainUpdateInfo
