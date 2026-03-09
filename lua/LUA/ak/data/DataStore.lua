@@ -100,29 +100,33 @@ function DataStore.fireEvent(event)
     end
 
     local payload = event.payload
-    local room = payload.room
-    local keyId = payload.keyId
 
     if event.type == "DataAdded" then
-        ensureRoom(room)[getElementKey(keyId, payload.element)] = deepCopy(payload.element)
+        ---@cast payload DataElementPayload
+        ensureRoom(payload.room)[getElementKey(payload.keyId, payload.element)] = deepCopy(payload.element)
         return
     end
 
     if event.type == "DataChanged" then
-        mergeElement(room, keyId, payload.element)
+        ---@cast payload DataElementPayload
+        mergeElement(payload.room, payload.keyId, payload.element)
         return
     end
 
     if event.type == "DataRemoved" then
-        local roomState = DataStore.getRoom(room)
+        ---@cast payload DataElementPayload
+        local roomState = DataStore.getRoom(payload.room)
         if not roomState then return end
 
-        roomState[getElementKey(keyId, payload.element)] = nil
-        removeRoomIfEmpty(room)
+        roomState[getElementKey(payload.keyId, payload.element)] = nil
+        removeRoomIfEmpty(payload.room)
         return
     end
 
-    if event.type == "ListChanged" then replaceRoom(room, keyId, payload.list) end
+    if event.type == "ListChanged" then
+        ---@cast payload DataListPayload
+        replaceRoom(payload.room, payload.keyId, payload.list)
+    end
 end
 
 return DataStore

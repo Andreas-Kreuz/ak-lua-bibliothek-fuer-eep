@@ -22,14 +22,21 @@ DataChangeBus.eventType = {
 DataChangeBus.printListener = {
     ---@param event DataChangeEvent
     fireEvent = function (event)
-        local t = type(event.payload)
+        local payload = event.payload
+        local t = type(payload)
         if t == "table" then
-            if event.payload.room then t = event.payload.room .. ": " .. t end
-            if event.payload.list and type(event.payload.list) == "table" then
-                t = t .. " with " .. TableUtils.length(event.payload.list) .. " entries"
+            if event.type == "ListChanged" then
+                ---@cast payload DataListPayload
+                t = payload.room .. ": " .. t .. " with " .. TableUtils.length(payload.list) .. " entries"
+            elseif event.type == "CompleteReset" then
+                ---@cast payload CompleteResetPayload
+                t = t .. ": " .. payload.info
+            else
+                ---@cast payload DataElementPayload
+                t = payload.room .. ": " .. t
             end
         else
-            t = t .. ": " .. tostring(event.payload)
+            t = t .. ": " .. tostring(payload)
         end
         print("[#EventCounter] " .. event.eventCounter .. ": " .. event.type .. " .. " .. t)
     end
@@ -54,8 +61,11 @@ function DataChangeBus.initialize()
 end
 
 ---Inform the DataChangeBus of new events, which will then be given to the EventListeners
----@param eventType string
----@param payload table
+---@overload fun(eventType: "CompleteReset", payload: CompleteResetPayload):nil
+---@overload fun(eventType: "DataAdded"|"DataChanged"|"DataRemoved", payload: DataElementPayload):nil
+---@overload fun(eventType: "ListChanged", payload: DataListPayload):nil
+---@param eventType "CompleteReset"|"DataAdded"|"DataChanged"|"DataRemoved"|"ListChanged"
+---@param payload CompleteResetPayload|DataElementPayload|DataListPayload
 local function fire(eventType, payload)
     if not initialized then DataChangeBus.initialize() end
     eventCounter = eventCounter + 1
