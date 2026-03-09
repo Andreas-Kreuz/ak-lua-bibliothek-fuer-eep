@@ -35,6 +35,7 @@
 - Im Repository liegt der produktive Lua-Code unter `lua/LUA/`; im installierten EEP-System liegen diese Lua-Dateien standardmäßig unter `C:\Trend\EEP18\LUA` (je nach EEP-Version entsprechend z.B. `EEP17`, `EEP18`).
 - Bestehende deutsche Bezeichner, Kommentare und Logmeldungen beibehalten, wenn du vorhandenen Lua-Code änderst.
 - Beschreibungen für Funktionen, Parameter und Return-Werte gerne aus dem Lua-Manual übernehmen.
+- `Lua_manual.pdf` wird in diesem Projekt mit `pdftotext -layout` ausgewertet. Dabei enthält Spalte 1 den Feldnamen wie `Parameter`, `Rückgabewerte`, `Voraussetzung`, `Zweck` oder `Bemerkungen`, Spalte 2 die inhaltliche Beschreibung und Spalte 3 Beispielaufrufe bzw. Beispielcode. Mindestversionen werden aus `Voraussetzung`, Parameter- und Rückgabesemantik vorrangig aus `Bemerkungen` abgeleitet.
 - Bei Änderungen an Zustandslogik in Lua immer auf Persistenz achten `StorageUtility.loadTable()` und `StorageUtility.saveTable()` akzeptieren nur String-Werte
   - Optionale Felder beim Speichern lieber weglassen als `"nil"` oder andere Platzhalter-Strings zu schreiben.
 - EEP-nahe Fehlerpfade sind oft absichtlich `fail-loud`: bestehende `print(... debug.traceback())`-Muster nicht ohne klaren Grund in stilles Fehlerhandling umwandeln.
