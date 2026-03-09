@@ -60,7 +60,7 @@
 ---@field syncState fun():table
 
 ---@class TrackDetection
----@field tracks table<number, Track>
+---@field tracks table<string, Track>
 ---@field trackType string
 ---@field reservedFunction function
 ---@field registerFunction function
