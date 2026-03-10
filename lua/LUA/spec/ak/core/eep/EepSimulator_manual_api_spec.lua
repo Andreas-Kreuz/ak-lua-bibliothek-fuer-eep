@@ -1,4 +1,25 @@
 describe("EepSimulator manual API", function()
+    insulate("time state", function()
+        require("ak.core.eep.EepSimulator")
+
+        it("stores the configured EEP time consistently", function()
+            assert.is_true(EEPSetTime(9, 15, 30))
+            assert.equals(33330, EEPTime)
+            assert.equals(9, EEPTimeH)
+            assert.equals(15, EEPTimeM)
+            assert.equals(30, EEPTimeS)
+        end)
+
+        it("keeps the previous time for invalid values", function()
+            assert.is_true(EEPSetTime(7, 5, 9))
+            assert.is_false(EEPSetTime(24, 0, 0))
+            assert.equals(25509, EEPTime)
+            assert.equals(7, EEPTimeH)
+            assert.equals(5, EEPTimeM)
+            assert.equals(9, EEPTimeS)
+        end)
+    end)
+
     insulate("train state", function()
         require("ak.core.eep.EepSimulator")
 
@@ -19,10 +40,10 @@ describe("EepSimulator manual API", function()
         it("keeps the route when a train is split", function()
             local EepSimulator = require("ak.core.eep.EepSimulator")
 
-            EepSimulator.addTrain("#SplitRouteTrain", "RouteLead", "RouteTail")
+            EepSimulator.simulateAddTrain("#SplitRouteTrain", "RouteLead", "RouteTail")
             assert.is_true(EEPSetTrainRoute("#SplitRouteTrain", "RB21"))
 
-            EepSimulator.splitTrain("#SplitRouteTrain", 1)
+            EepSimulator.simulateSplitTrain("#SplitRouteTrain", 1)
 
             local okOld, oldRoute = EEPGetTrainRoute("#SplitRouteTrain")
             local okNew, newRoute = EEPGetTrainRoute("#SplitRouteTrain;001")
@@ -62,7 +83,7 @@ describe("EepSimulator manual API", function()
     insulate("trainyard state", function()
         local EepSimulator = require("ak.core.eep.EepSimulator")
 
-        EepSimulator.addTrainToTrainyard(3, "#DepotTrain")
+        EepSimulator.simulateAddTrainToTrainyard(3, "#DepotTrain")
 
         it("lists trainyard entries", function()
             assert.equals(1, EEPGetTrainyardItemsCount(3))
@@ -216,15 +237,15 @@ describe("EepSimulator manual API", function()
     insulate("rollingstock train state", function()
         local EepSimulator = require("ak.core.eep.EepSimulator")
 
-        EepSimulator.addTrain("#RollingTrain", "Lead", "Middle", "Tail")
-        EepSimulator.addTrain("#ReverseRollingTrain", "ReverseLead", "ReverseLeadTail")
-        EepSimulator.setRollingStockOrientation("ReverseLead", false)
+        EepSimulator.simulateAddTrain("#RollingTrain", "Lead", "Middle", "Tail")
+        EepSimulator.simulateAddTrain("#ReverseRollingTrain", "ReverseLead", "ReverseLeadTail")
+        EepSimulator.simulateSetRollingStockOrientation("ReverseLead", false)
         EEPRollingstockSetCouplingRear("ReverseLead", 3)
-        EepSimulator.addTrain("#ReverseTailTrain", "ReverseTailLead", "ReverseTail")
-        EepSimulator.setRollingStockOrientation("ReverseTail", false)
-        EepSimulator.addTrain("#SplitRollingTrain", "SplitLead", "SplitMiddle", "SplitTail")
-        EepSimulator.splitTrain("#SplitRollingTrain", 1)
-        EepSimulator.setRollingStockOrientation("DetachedLead", false)
+        EepSimulator.simulateAddTrain("#ReverseTailTrain", "ReverseTailLead", "ReverseTail")
+        EepSimulator.simulateSetRollingStockOrientation("ReverseTail", false)
+        EepSimulator.simulateAddTrain("#SplitRollingTrain", "SplitLead", "SplitMiddle", "SplitTail")
+        EepSimulator.simulateSplitTrain("#SplitRollingTrain", 1)
+        EepSimulator.simulateSetRollingStockOrientation("DetachedLead", false)
         EEPRollingstockSetCouplingRear("DetachedLead", 3)
 
         it("derives couplings from train order for forward rolling stock", function()
@@ -320,8 +341,8 @@ describe("EepSimulator manual API", function()
         end)
 
         it("maps train front coupling to the exposed side of the first rollingstock", function()
-            EepSimulator.addTrain("#TrainFrontCoupling", "FrontReverseLead", "FrontReverseTail")
-            EepSimulator.setRollingStockOrientation("FrontReverseLead", false)
+            EepSimulator.simulateAddTrain("#TrainFrontCoupling", "FrontReverseLead", "FrontReverseTail")
+            EepSimulator.simulateSetRollingStockOrientation("FrontReverseLead", false)
 
             assert.is_true(EEPSetTrainCouplingFront("#TrainFrontCoupling", false))
 
@@ -338,8 +359,8 @@ describe("EepSimulator manual API", function()
         end)
 
         it("maps train rear coupling to the exposed side of the last rollingstock", function()
-            EepSimulator.addTrain("#TrainRearCoupling", "RearLead", "RearReverseTail")
-            EepSimulator.setRollingStockOrientation("RearReverseTail", false)
+            EepSimulator.simulateAddTrain("#TrainRearCoupling", "RearLead", "RearReverseTail")
+            EepSimulator.simulateSetRollingStockOrientation("RearReverseTail", false)
 
             assert.is_true(EEPSetTrainCouplingRear("#TrainRearCoupling", false))
 
@@ -356,7 +377,7 @@ describe("EepSimulator manual API", function()
         end)
 
         it("reflects rollingstock coupling overrides in the train coupling", function()
-            EepSimulator.addTrain("#TrainRollingOverride", "OverrideLead", "OverrideTail")
+            EepSimulator.simulateAddTrain("#TrainRollingOverride", "OverrideLead", "OverrideTail")
             EEPRollingstockSetCouplingFront("OverrideLead", 3)
             EEPRollingstockSetCouplingRear("OverrideTail", 3)
 

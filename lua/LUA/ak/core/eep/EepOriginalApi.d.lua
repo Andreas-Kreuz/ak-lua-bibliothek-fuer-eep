@@ -86,98 +86,133 @@ function clearlog() end
 -- -------------------------------------------------------------------------------------------------------------------
 ---Gibt das, was in den Klammern steht, im Ereignisfenster als Text aus.
 ---@param ... any Auszugebende Werte.
+---@return string text rueckgabewert ist der komplette, ausgegebene String.
 function print(...) end
 --       ==========
 -- Verfuegbar ab EEP 10.2 - Plugin 2.
 -- Beispielaufrufe:
 -- print("Text1", "Text2", Variable, "TextN")
+-- print("Es ist jetzt: ", EEPTimeH, ":", EEPTimeM, " Uhr")
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Wird zyklisch alle 200 Millisekunden, also fuenf Mal je Sekunde, von EEP aufgerufen. Geeignet fuer alle Aktionen,
 ---die regelmaessig ausgefuehrt werden sollen.
+---@return number weiterlauf funktion muss eine Zahl ungleich Null zurueck liefern. Liefert die Funktion den Wert 0
+--- zurueck, dann wird die Funktion nicht erneut aufgerufen. Alle anderen Funktionsaufrufe funktionieren weiterhin.
+--- Fehlt der Rueckgabewert oder ist er keine Zahl, dann erfolgt eine Fehlermeldung und die Verbindung zu Lua wird
+--- beendet.
 function EEPMain() end
 --       =========
 -- Verfuegbar ab EEP 10.2 - Plugin 2.
 -- Beispielaufrufe:
 -- EEPMain()
 -- function EEPMain()
+-- return 1
 -- end
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Aktiviert und deaktiviert die Pause in EEP.
----@param status any Parameter.
+---@param status number parameter bewirkt den Status der Pause: 0 bewirkt die Wiederaufnahme des Betriebs von EEP 1
+--- bewirkt, dass der EEP-Betrieb gestoppt wird. Achtung: Die Lua-Scriptunterstuetzung arbeitet weiter! 2 bewirkt,
+--- dass der EEP-Betrieb gestoppt wird und die Lua-Skriptunterstuetzung nicht mehr arbeitet. Die Wiederaufnahme des
+--- Betriebs ist danach nur durch Druecken der P-Taste moeglich.
+---@return any pause rueckgabewert ist 0, wenn die Pause beendet oder 1, wenn sie aktiviert wurde.
 function EEPPause(status) end
 --       ================
 -- Verfuegbar ab EEP 14 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPPause(Status)
 -- Status = 1
+-- Pause = EEPPause(Status)
 -- Pause = EEPPause(0)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Aendert die EEPZeit auf die gewuenschte Zeit.
----@param stunde any Parameter.
----@param minute any Parameter.
----@param sekunde any Parameter.
-function EEPSetTime(stunde, minute, sekunde) end
+---@param stunde number parameter ist fuer die Stundenangabe.
+---@param minute number parameter ist fuer die Minutenangabe.
+---@param seconds number parameter ist fuer die Sekundenangabe.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false
+function EEPSetTime(stunde, minute, seconds) end
 --       ===================================
 -- Verfuegbar ab EEP 15.
 -- Beispielaufrufe:
 -- EEPSetTime(Stunde, Minute, Sekunde)
 -- Stunde = 9
 -- Minute = 15
+-- Sekunde = 30
 -- ok = EEPSetTime(Stunde, Minute, Sekunde)
 -- ok = EEPSetTime(14, 35, 20)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Gibt die aktuelle Bildrate (fps) zurueck.
+---@return number fps rueckgabewert ist die aktuelle Bildrate (Anzahl Bilder[Frames] pro Sekunde) als Zahl.
 function EEPGetFramesPerSecond() end
 --       =======================
 -- Verfuegbar ab EEP 17.2 - Plugin 2.
 -- Beispielaufrufe:
 -- EEPGetFramesPerSecond()
+-- fps = EEPGetFramesPerSecond()
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Gibt den aktuellen Wert des Bildzaehlers seit Anlagenstart ohne die Bilder waehrend des Bearbeitungs- und
 ---Pausenmodus zurueck.
+---@return number frameNummer rueckgabewert ist der aktuelle Wert des Bildzaehlers beginnend mit dem Laden der
+--- Anlagendatei (.anl3) als Zahl, wobei allerdings die Bilder im Bearbeitungs- und Pausenmodus nicht mitgezaehlt
+--- wurden.
 function EEPGetCurrentFrame() end
 --       ====================
 -- Verfuegbar ab EEP 17.2 - Plugin 2.
+-- Beispielaufrufe:
+-- FrameNummer = EEPGetCurrentFrame()
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Gibt die Gesamtanzahl der gerenderten Bilder seit Anlagenstart zurueck und zwar inklusive der Bilder waehrend des
 ---Bearbeitungs- und Pausenmodus.
+---@return number frameNummer rueckgabewert ist der aktuelle Wert des Bildzaehlers beginnend mit dem Laden der
+--- Anlagendatei (.anl3) als Zahl, wobei die Bilder im Bearbeitungs- und Pausenmodus mitgezaehlt wurden.
 function EEPGetCurrentRenderFrame() end
 --       ==========================
 -- Verfuegbar ab EEP 17.2 - Plugin 2.
+-- Beispielaufrufe:
+-- FrameNummer = EEPGetCurrentRenderFrame()
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Gibt den aktuell in EEP eingestellten Zeitrafferfaktor zurueck.
+---@return number zeitrafferfaktor rueckgabewert ist der aktuell in EEP eingestellte Zeitrafferfaktor 1, 5 oder 10 als
+--- Zahl.
 function EEPGetTimeLapse() end
 --       =================
 -- Verfuegbar ab EEP 17.2 - Plugin 2.
 -- Beispielaufrufe:
 -- EEPGetTimeLapse()
+-- Zeitrafferfaktor = EEPGetTimeLapse()
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Diese Funktion dient nur zur voruebergehenden Einstellung der Farbparameter zum Beispiel nach einem Wechsel der
 ---Kameraaufnahme und nicht zur dauerhaften Aenderung der Programmeinstellungen.
----@param farbton any Parameter.
----@param saettigung any Parameter.
----@param helligkeit any Parameter.
----@param kontrast any Parameter.
+---@param farbton number parameter entspricht der Farbtoneinstellung in den Programmeinstellungen.
+---@param saettigung number parameter entspricht der Saettigungseinstellung in den Programmeinstellungen.
+---@param helligkeit number parameter entspricht der Helligkeitseinstellung in den Programmeinstellungen.
+---@param kontrast number parameter entspricht der Kontrasteinstellung in den Programmeinstellungen.
 function EEPSetColourFilter(farbton, saettigung, helligkeit, kontrast) end
 --       =============================================================
 -- Verfuegbar ab EEP 17.3 - Plugin 3.
 -- Beispielaufrufe:
 -- EEPSetColourFilter(Farbton, Saettigung, Helligkeit, Kontrast)
+-- EEPSetColourFilter(-3, 0.83, 1.18, 1.19)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Schaltet ein Signal
----@overload fun(signalId: number, stellung: number): nil
----@param signalId number Parameter.
----@param stellung number Parameter.
+---@overload fun(signalId: number, stellung: number): number
+---@param signalId number parameter ist die Signal-ID.
+---@param stellung number parameter ist die gewuenschte Signalstellung. Werte ab 1 aufwaerts schalten direkt die
+--- korrespondierende Signalstellung. Der Wert 0 bewirkt, dass um eine Stellung weiter geschaltet wird. Ab EEP 14.1
+--- Plugin 1 kann man mit einem negativen Wert auf die vorherige Stellung zurueckschalten. Bei Fahrstrassensignalen
+--- entspricht die Stellung 1 "Aufloesen", die Stellung 2 "Fahrt" fuer die 1. Fahrstrasse sowie entsprechend die
+--- Stellung n fuer die Fahrstrasse n-1.
 ---@param rueckruf? any Parameter.
+---@return number ergebnis rueckgabewert ist 1, wenn das Signal und die gewuenschte Signalstellung existieren oder 0,
+--- wenn eins von beidem nicht existiert.
 function EEPSetSignal(signalId, stellung, rueckruf) end
 --       ==========================================
 -- Verfuegbar ab EEP 10.2 - Plugin 2; EEP 14.1 - Plugin 1.
@@ -185,13 +220,18 @@ function EEPSetSignal(signalId, stellung, rueckruf) end
 -- EEPSetSignal(Signal-ID, Stellung [, Rueckruf])
 -- stell Signal 0023 auf 1
 -- (kann Fahrt oder Halt sein)
+-- Ergebnis = EEPSetSignal(23, 1)
 -- stell Signal 0045 auf 1 und
 -- ruf EEPOnSignal_45() auf
 -- Ergebnis = EEPSetSignal(45, 1, 1)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Gibt die Stellung eines Signals bezogen auf die herrschende Zugbeeinflussung zurueck (s. letzte Bemerkung).
----@param signalId number Parameter.
+---@param signalId number parameter ist die ID des Signals, dessen Stellung man ermitteln moechte.
+---@return number stellung rueckgabewert ist die Signalstellung. Die Nummer entspricht der Position dieser
+--- Signalstellung in der Auswahlliste unter den Signaleigenschaften. Wenn das abgefragte Signal nicht existiert, ist
+--- der Rueckgabewert 0. Bei Fahrstrassensignalen zeigen Rueckgabewerte groesser 1 an, welche (Wert - 1) vom Signal
+--- ausgehende Fahrstrasse auf "Fahrt" steht (z.B. Wert = 4: die 3. Fahrstrasse).
 function EEPGetSignal(signalId) end
 --       ======================
 -- Verfuegbar ab EEP 10.2 - Plugin 2.
@@ -199,6 +239,7 @@ function EEPGetSignal(signalId) end
 -- EEPGetSignal(Signal-ID)
 -- Stellung = EEPGetSignal(1)
 -- if Stellung == 0 then
+-- print("Signal 1 existiert nicht")
 -- elseif Stellung == 1 then
 -- print("Signal 1 steht auf Halt")
 -- elseif Stellung == 2 then
@@ -211,13 +252,16 @@ function EEPGetSignal(signalId) end
 ---Registriert ein Signal fuer die Rueckruf(Callback)-Funktion EEPOnSignal_x() Diese notwendige Registrierung soll
 ---verhindern, dass Signale die Callback-Funktion aufrufen, fuer die keine entsprechende Funktion im Skript definiert
 ---wurde.
----@param signalId number Parameter.
+---@param signalId number parameter ist die Signal-ID.
+---@return any ergebnis rueckgabewert ist 1, wenn das zu registrierende Signal existiert oder 0, wenn es nicht
+--- existiert.
 function EEPRegisterSignal(signalId) end
 --       ===========================
 -- Verfuegbar ab EEP 10.2 - Plugin 2.
 -- Beispielaufrufe:
 -- EEPRegisterSignal(Signal-ID)
 -- Ergebnis = EEPRegisterSignal(1)
+-- function EEPOnSignal_1(Stellung)
 -- print("Signal 1 auf "..Stellung.." gestellt")
 -- end
 
@@ -227,7 +271,9 @@ function EEPRegisterSignal(signalId) end
 ---und legt so fest, was bei Aenderung der Signalstellung zu tun ist. Wichtig: Wird die Stellung dieses oder eines
 ---verknuepften Signals durch die Funktion EEPSetSignal() geaendert, so wird EEPOnSignal_x() nur dann aufgerufen, wenn
 ---der 3. Parameter "Rueckruf" der Funktion EEPSetSignal() auf 1 gesetzt ist.
----@param stellung number Parameter.
+---@param stellung number parameter ist die neue Signalstellung als Zahl, entsprechend der Position dieser
+--- Signalstellung in der Auswahlliste der Signal-Eigenschaften. Eine selbst definierte Variable in den
+--- Funktionsklammern nimmt diesen Wert fuer die weitere Verwendung auf.
 function EEPOnSignal_x(stellung) end
 --       =======================
 -- Verfuegbar ab EEP 10.2 - Plugin 2.
@@ -235,135 +281,183 @@ function EEPOnSignal_x(stellung) end
 -- EEPOnSignal_x(Stellung)
 -- function EEPOnSignal_13(Stellung)
 -- if Stellung > 1 then
+-- EEPPlaySound("User/ZugFaehrtAb.wav")
 -- end
 -- EEPRegisterSignal(13) --zwingend erforderlich!
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Gibt die Anzahl "Fahrzeugverbaende" zurueck, welche vom spezifizierten Signal beeinflusst werden, d.h. vom
 ---Passieren des Vorsignals bis zur tatsaechlichen Abfahrt des Fahrzeugverbandes.
----@param signalId number Parameter.
+---@param signalId number parameter ist die Signal ID.
+---@return number count rueckgabewert ist die Anzahl vom Signal gehaltener "Fahrzeugverbaende". Als 1
+--- "Fahrzeugverband" gelten in EEP sowohl mehrere zu einer Einheit zusammengekoppelte Fahrzeuge (wie z.B. 1 Zug oder
+--- 1 LKW mit Anhaenger) aber auch 1 einzelnes Fahrzeug.
 function EEPGetSignalTrainsCount(signalId) end
 --       =================================
 -- Verfuegbar ab EEP 13.2 - Plugin 2.
 -- Beispielaufrufe:
 -- EEPGetSignalTrainsCount(Signal-ID)
+-- Anzahl = EEPGetSignalTrainsCount(3)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Gibt den Namen eines "Fahrzeugverband"s zurueck, welcher vom spezifizierten Signal beeinflusst wird, d.h. vom
 ---Passieren des Vorsignals bis zur tatsaechlichen Abfahrt des Fahrzeugverbandes.
----@param signalId number Parameter.
----@param position number Parameter.
+---@param signalId number parameter ist die Signal ID.
+---@param position number parameter ist die Positionsnummer des gewuenschten "Fahrzeugverband"es vor dem Signal. Als 1
+--- "Fahrzeugverband" gelten in EEP sowohl mehrere zu einer Einheit zusammengekoppelte Fahrzeuge (wie z.B. 1 Zug oder
+--- 1 LKW mit Anhaenger) aber auch 1 einzelnes Fahrzeug.
+---@return string name rueckgabewert ist der Name des spezifizierten "Fahrzeugverband"s.
 function EEPGetSignalTrainName(signalId, position) end
 --       =========================================
 -- Verfuegbar ab EEP 13.2 - Plugin 2.
 -- Beispielaufrufe:
 -- EEPGetSignalTrainName(Signal-ID, Position)
+-- Name = EEPGetSignalTrainName(3, 1)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Wird immer dann aufgerufen, wenn ein Fahrzeugverband an einem Signal haelt.
----@param signalId number Parameter.
----@param trainName string Parameter.
+---@param signalId number parameter ist die ID des Signals, an dem der Fahrzeugverband haelt.
+---@param trainName string parameter ist der Name des Fahrzeugverbands, der am Signal angehalten hat.
 function EEPOnTrainStoppedOnSignal(signalId, trainName) end
 --       ==============================================
 -- Verfuegbar ab EEP 17.3 - Plugin 3.
 -- Beispielaufrufe:
 -- EEPOnTrainStoppedOnSignal(Signal-ID, "Zugname")
 -- function EEPOnTrainStoppedOnSignal(sigID,zugname)
+-- print("Zug ".. zugname.." hat am Signal "..sigID.. " gehalten.")
 -- end
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Aendert den Halteabstand eines Signals
----@param signalId number Parameter.
----@param halteabstand any Parameter.
-function EEPSetSignalStopDistance(signalId, halteabstand) end
+---@param signalId number parameter ist die Signal-ID.
+---@param stopDistance number parameter ist der gewuenschte Halteabstand in Meter. Bei Eingabe eines negativen Wertes
+--- wird der Halteabstand auf null gesetzt.
+---@return boolean ok rueckgabewert ist true, wenn das Signal existiert, oder false, wenn es nicht existiert.
+function EEPSetSignalStopDistance(signalId, stopDistance) end
 --       ================================================
 -- Verfuegbar ab EEP 17.3 - Plugin 3.
 -- Beispielaufrufe:
 -- EEPSetSignalStopDistance(Signal-ID, Halteabstand)
+-- ok = EEPSetSignalStopDistance(9, 45)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Ermittelt den Halteabstand eines Signals
----@param signalId number Parameter.
-function EEPGetSignalStopDistance(signalId) end
---       ==================================
+---@param stopDistance number parameter ist die ID des Signals, dessen Halteabstand man ermitteln moechte.
+---@return boolean ok rueckgabewert ist true, wenn das angesprochene Signal existiert, oder false, wenn es nicht
+--- existiert.
+---@return number halteabstand rueckgabewert ist der Halteabstand in Meter.
+function EEPGetSignalStopDistance(stopDistance) end
+--       ======================================
 -- Verfuegbar ab EEP 17.3 - Plugin 3.
 -- Beispielaufrufe:
 -- EEPGetSignalStopDistance(Signal-ID)
 -- ok, Halteabstand = EEPGetSignalStopDistance(9)
+-- print("Signal 9 hat einen Halteabstand von ", Halteabstand, " Meter.")
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Ermittelt die Anzahl der im NOS definierten Signal-Funktionen
----@param signalId number Parameter.
+---@param signalId number parameter ist die ID des Signals.
+---@return boolean ok rueckgabewert ist true, wenn das angesprochene Signal existiert, oder false, wenn es nicht
+--- existiert.
+---@return number count rueckgabewert gibt die Anzahl der im NOS definierten Signal-Funktionen zurueck. Diese ist
+--- identisch mit der Anzahl der Signalstellungen in der Auswahlbox in den Objekteigenschaften des Signals.
 function EEPGetSignalFunctions(signalId) end
 --       ===============================
 -- Verfuegbar ab EEP 17.3 - Plugin 3.
 -- Beispielaufrufe:
 -- EEPGetSignalFunctions(Signal-ID)
+-- ok, Anzahl = EEPGetSignalFunctions(14)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Gibt die vom Konstrukteur im NOS eingetragene Funktion fuer die angegebene Position in der Auswahlbox in den
 ---Objekteigenschaften des definierten Signals zurueck
----@param signalId number Parameter.
----@param position number Parameter.
+---@param signalId number parameter ist die ID des Signals.
+---@param position number parameter ist die Position in der Auswahlbox in den Objekteigenschaften des definierten
+--- Signals, zu der die im NOS definierte Funktion ermittelt werden soll.
+---@return boolean ok rueckgabewert ist true, wenn das Signal und die gewuenschte Position existieren, oder false,
+--- wenn eines von beiden nicht existiert.
+---@return number funktion rueckgabewert ist die im NOS definierte Funktion. Hierbei bedeuten: 1 -> Fahrt 2 -> Halt
+--- sowie, wenn das Signal ueber eine Geschwindigkeitsbeeinflussung verfuegt, z.B. 1025 -> Fahrt mit 25 km/h 1040 ->
+--- Fahrt mit 40 km/h 1100 -> Fahrt mit 100 km/h je nach Konstruktion des Signals.
 function EEPGetSignalFunction(signalId, position) end
 --       ========================================
 -- Verfuegbar ab EEP 17.3 - Plugin 3.
 -- Beispielaufrufe:
 -- EEPGetSignalFunction(Signal-ID, Position)
+-- ok, Funktion = EEPGetSignalFunction(14, 3)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Gibt den Modellnamen des Signals aus der ini-Datei oder den Namen der 3dm-Datei inklusive deren Pfad zurueck.
----@overload fun(signalId: number): nil
----@param signalId number Parameter.
----@param state? boolean Parameter.
+---@overload fun(signalId: number): boolean, string
+---@param signalId number parameter ist die Signal ID.
+---@param state? boolean parameter ist optional und kann mit true oder false eingegeben werden. o Bei false oder
+--- Nichtexistenz wird im 2. Rueckgabewert der Modellname aus der ini- Datei zurueckgegeben. o Bei true wird im 2.
+--- Rueckgabewert der Pfad mit dem Namen der 3dm-Datei zurueckgegeben.
+---@return boolean ok rueckgabewert ist true, wenn das Signal existiert, oder false, wenn es nicht existiert.
+---@return string name rueckgabewert ist entweder der Modellname oder der Pfad mit dem Namen der 3dm-Datei des
+--- spezifizierten Signals abhaengig vom optionalen 2. Parameter.
 function EEPGetSignalItemName(signalId, state) end
 --       =====================================
 -- Verfuegbar ab EEP 17.3 - Plugin 3.
 -- Beispielaufrufe:
 -- EEPGetSignalItemName(Signal-ID, [false | true])
 -- ok, Name = EEPGetSignalItemName(3)
+-- ok, Name = EEPGetSignalItemName(3, false)
 -- Name => "Ks_Sig_A_Schirm (GK3)"
 -- ok, Name = EEPGetSignalItemName(3, true)
 -- Name => "Signale\Signale\KsSigASch_GK3.3dm"
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Ueberprueft, ob die Strecke einer Fahrstrasse vom Startsignal bis zum Ziel frei oder besetzt ist
----@param fahrstrassenstartsignalID number Parameter.
----@param fahrstrassenZielnummer any Parameter.
-function EEPCheckSetRoute(fahrstrassenstartsignalID, fahrstrassenZielnummer) end
---       ===================================================================
+---@param signalId number parameter ist die Signal-ID des Fahrstrassenstartsignals.
+---@param fahrstrassenZielnummer number parameter ist die Zielnummer der Fahrstrasse, wie sie in den
+--- Objekteigenschaften des Startsignals angegeben ist
+---@return boolean ok rueckgabewert ist true, wenn die Strecke frei ist und damit die Fahrstrasse geschaltet werden
+--- koennte, oder false, wenn die Strecke besetzt ist.
+function EEPCheckSetRoute(signalId, fahrstrassenZielnummer) end
+--       ==================================================
 -- Verfuegbar ab EEP 18.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPCheckSetRoute(FahrstrassenstartsignalID, Fahrstrassen-Zielnummer)
 -- ok = EEPCheckSetRoute(33, 2)
+-- if ok then
 -- EEPSetSignal(33, 3, 1)
 -- end
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Schaltet eine Weiche
----@overload fun(weichenID: number, stellung: number): nil
----@param weichenID number Parameter.
----@param stellung number Parameter.
+---@overload fun(switchId: number, stellung: number): number
+---@param switchId number parameter ist die Weichen-ID.
+---@param stellung number parameter ist die gewuenschte Weichenstellung. Werte ab 1 aufwaerts schalten direkt die
+--- korrespondierende Weichenstellung. Der Wert 0 bewirkt, dass um eine Stellung weiter geschaltet wird. Ab EEP 14.1
+--- Plugin 1 kann man mit dem Wert -1 auf die vorherige Stellung zurueckschalten.
 ---@param rueckruf? any Parameter.
-function EEPSetSwitch(weichenID, stellung, rueckruf) end
---       ===========================================
+---@return number ergebnis rueckgabewert ist 1, wenn die Weiche und die gewuenschte Weichenstellung existieren, oder
+--- 0, wenn eins von beidem nicht existiert.
+function EEPSetSwitch(switchId, stellung, rueckruf) end
+--       ==========================================
 -- Verfuegbar ab EEP 10.2 - Plugin 2; EEP 14.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPSetSwitch(Weichen-ID, Stellung [, Rueckruf])
 -- stell Weiche 0067 auf 1 (Fahrt)
+-- Ergebnis = EEPSetSwitch(67, 1)
 -- stell Weiche 0089 auf 2 (Abzweig) und ruf
 -- EEPOnSwitch_89() auf
 -- Ergebnis = EEPSetSwitch(89, 2, 1)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Ermittelt die Stellung einer Weiche
----@param weichenID number Parameter.
-function EEPGetSwitch(weichenID) end
---       =======================
+---@param switchId number parameter ist die ID der Weiche, deren Stellung man ermitteln moechte.
+---@return number weichenstellung rueckgabewert ist die Weichenstellung. Die Nummer entspricht der Position dieser
+--- Weichenstellung in der Auswahlliste unter den Eigenschaften. Wenn die abgefragte Weiche nicht existiert, ist der
+--- Rueckgabewert 0.
+function EEPGetSwitch(switchId) end
+--       ======================
 -- Verfuegbar ab EEP 10.2 - Plugin 2.
 -- Beispielaufrufe:
 -- EEPGetSwitch(Weichen-ID)
 -- Weichenstellung = EEPGetSwitch(1)
+-- if Weichenstellung == 0 then
 -- print("Weiche 1 existiert nicht")
 -- elseif Weichenstellung == 1 then
 -- print("Weiche 1 steht auf Fahrt")
@@ -375,13 +469,16 @@ function EEPGetSwitch(weichenID) end
 ---Registriert eine Weiche fuer die Rueckruf(Callback)-Funktion EEPOnSwitch_x() Diese notwendige Registrierung soll
 ---verhindern, dass Weichen die Callback-Funktion aufrufen, fuer die keine entsprechende Funktion im Skript definiert
 ---wurde.
----@param weichenID number Parameter.
-function EEPRegisterSwitch(weichenID) end
---       ============================
+---@param switchId number parameter ist die ID der Weiche.
+---@return any ergebnis rueckgabewert ist 1, wenn die zu registrierende Weiche existiert, oder 0, wenn sie nicht
+--- existiert.
+function EEPRegisterSwitch(switchId) end
+--       ===========================
 -- Verfuegbar ab EEP 10.2 - Plugin 2.
 -- Beispielaufrufe:
 -- EEPRegisterSwitch(Weichen-ID)
 -- Ergebnis = EEPRegisterSwitch(3)
+-- function EEPOnSwitch_3(Stellung)
 -- print("Weiche 3 auf "..Stellung.." gestellt")
 -- end
 
@@ -391,21 +488,26 @@ function EEPRegisterSwitch(weichenID) end
 ---und legt so fest, was bei Aenderung der Weichenstellung zu tun ist. Wichtig: Wird die Stellung dieser oder einer
 ---verknuepften Weiche durch die Funktion EEPSetSwitch() geaendert, so wird EEPOnSwitch_x() nur dann aufgerufen, wenn
 ---der 3. Parameter "Rueckruf" der Funktion EEPSetSwitch() auf 1 gesetzt ist.
----@param stellung number Parameter.
+---@param stellung number parameter ist die neue Weichenstellung als Zahl, entsprechend der Position dieser
+--- Weichenstellung in der Auswahlliste der Eigenschaften. Eine selbst definierte Variable in den Funktionsklammern
+--- nimmt diesen Wert fuer die weitere Verwendung auf.
 function EEPOnSwitch_x(stellung) end
 --       =======================
 -- Verfuegbar ab EEP 10.2 - Plugin 2.
 -- Beispielaufrufe:
 -- EEPOnSwitch_x(Stellung)
 -- function EEPOnSwitch_34(Stellung)
+-- print("Weiche 34 auf "..Stellung.." gestellt")
 -- end
 -- EEPRegisterSwitch(34) -- zwingend erforderlich!
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Speichert etwas in einem speziellen Speicherbereich ("Slot") ab. Wird automatisch zusammen mit der Anlage
 ---gespeichert und geladen
----@param speichernummer any Parameter.
----@param booleanZahlZeichenkettenil any Parameter.
+---@param speichernummer number parameter ist die Nummer des Speicherplatzes ("Slot")
+---@param booleanZahlZeichenkettenil number parameter ist der zu speichernde Inhalt. Mit nil kann der Speicher
+--- geloescht werden.
+---@return boolean ok rueckgabewert ist true bei erfolgreicher Speicherung oder false bei Misserfolg.
 function EEPSaveData(speichernummer, booleanZahlZeichenkettenil) end
 --       =======================================================
 -- Verfuegbar ab EEP 11.
@@ -413,6 +515,7 @@ function EEPSaveData(speichernummer, booleanZahlZeichenkettenil) end
 -- EEPSaveData(Speichernummer, Boolean|Zahl|"Zeichenkette"|nil)
 -- speicher "wahr" in Speicher 1
 -- ok = EEPSaveData(1 , true)
+-- speicher die Zahl 42 in Speicher 2
 -- ok = EEPSaveData(2 , 42)
 -- speicher die Zeichenkette "Ich bin Speicher 3" in
 -- ok = EEPSaveData(3 , "Ich bin Speicher 3")
@@ -422,13 +525,21 @@ function EEPSaveData(speichernummer, booleanZahlZeichenkettenil) end
 -- -------------------------------------------------------------------------------------------------------------------
 ---Laedt etwas aus einem speziellen Speicherbereich ("Slot"). Wird automatisch zusammen mit der Anlage gespeichert und
 ---geladen.
----@param speichernummer any Parameter.
+---@param speichernummer number parameter ist die Nummer des Speicherplatzes ("Slot").
+---@return boolean ok rueckgabewert ist true, wenn der betroffene Speicher einen Inhalt hat oder false, wenn er leer
+--- ist.
+---@return boolean funktion rueckgabewert ist der Inhalt des Speichers. Warnung: Wenn der Slot noch nicht existiert
+--- oder mit nil geloescht wurde, gibt die Funktion als 2. Rueckgabewert nicht (wie vielleicht zu erwarten) nil
+--- zurueck sondern die Zahl 0. Fragt man nun unter Umgehung des 1. Rueckgabewertes den 2. Rueckgabewert direkt ueber
+--- die allgemeine Lua-Funktion select() ab, kann es zu Logikproblemen kommen, denn Lua interpretiert nil (wie false)
+--- als "falsch" jedoch die Zahl 0 (wie true) als "wahr".
 function EEPLoadData(speichernummer) end
 --       ===========================
 -- Verfuegbar ab EEP 11.
 -- Beispielaufrufe:
 -- EEPLoadData(Speichernummer)
 -- ok, Inhalt = EEPLoadData(1)
+-- if ok then
 -- print("Speicher 1 enthaelt: "..Inhalt)
 -- else
 -- print("Speicher 1 ist leer")
@@ -436,12 +547,15 @@ function EEPLoadData(speichernummer) end
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Weist einem "Fahrzeugverband" (z.B. einem Zug) eine Geschwindigkeit zu.
----@overload fun(name: string, geschwindigkeit: any): nil
----@param name string Parameter.
----@param geschwindigkeit any Parameter.
+---@overload fun(name: string, speed: number): boolean
+---@param name string parameter ist der komplette Name des "Fahrzeugverbands" (mit vorangestelltem #-Zeichen) als
+--- String.
+---@param speed number parameter ist die Geschwindigkeit. Ein negativer Wert bewirkt Rueckwaertsfahrt.
 ---@param state? boolean Parameter.
-function EEPSetTrainSpeed(name, geschwindigkeit, state) end
---       ==============================================
+---@return boolean ok rueckgabewert ist entweder true, wenn der angesprochene "Fahrzeugverband" existiert oder false,
+--- wenn er nicht existiert. .
+function EEPSetTrainSpeed(name, speed, state) end
+--       ====================================
 -- Verfuegbar ab EEP 11; EEP 17.2 - Plugin 2.
 -- Beispielaufrufe:
 -- EEPSetTrainSpeed("#Name", Geschwindigkeit [, false|true])
@@ -451,46 +565,62 @@ function EEPSetTrainSpeed(name, geschwindigkeit, state) end
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Ermittelt die Geschwindigkeit eines Fahrzeugverbandes (z.B. eines Zuges).
----@overload fun(name: string): nil
+---@overload fun(name: string): boolean, any
 ---@param name string Parameter.
 ---@param state? boolean Parameter.
+---@return boolean ok rueckgabewert ist entweder true, wenn der angesprochene "Fahrzeugverband" existiert oder false,
+--- wenn er nicht existiert.
+---@return any istGeschwindigkeit rueckgabewert ist die ermittelte Geschwindigkeit.
 function EEPGetTrainSpeed(name, state) end
 --       =============================
 -- Verfuegbar ab EEP 11; EEP 17.2 - Plugin 2.
 -- Beispielaufrufe:
 -- EEPGetTrainSpeed("#Name"[, false|true])
 -- ok, IstGeschwindigkeit = EEPGetTrainSpeed("#VT98;001")
--- EEPGetTrainSpeed("#VT98;001", false)
+-- ok, IstGeschwindigkeit = EEPGetTrainSpeed("#VT98;001", false)
 -- ok, ReiseGeschwindigkeit = EEPGetTrainSpeed("#VT98;001", true)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Weist einem "Fahrzeugverband" (z.B. einem Zug) eine in EEP definierte Route zu.
----@param name string Parameter.
----@param route any Parameter.
+---@param name string parameter ist der komplette Name des "Fahrzeugverbands" (mit vorangestelltem #-Zeichen) als
+--- String.
+---@param route string parameter ist die Route als String. Bitte beachten: Die Route muss vorher in EEP definiert
+--- worden sein.
+---@return boolean ok rueckgabewert ist entweder true, wenn der angesprochene "Fahrzeugverband" und die gewuenschte
+--- Route existieren oder false, wenn eins von beidem nicht existiert.
 function EEPSetTrainRoute(name, route) end
 --       =============================
 -- Verfuegbar ab EEP 11.2 - Plugin 2.
 -- Beispielaufrufe:
 -- EEPSetTrainRoute("#Name", "Route")
+-- ok = EEPSetTrainRoute("#Personenzug", "RB20")
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Ermittelt die Route eines Fahrzeugverbandes (z.B. eines Zuges).
----@param name string Parameter.
+---@param name string parameter ist der komplette Name des "Fahrzeugverbands" (mit vorangestelltem #-Zeichen) als
+--- String.
+---@return boolean ok rueckgabewert ist true, wenn der angesprochene "Fahrzeugverband" existiert oder false, wenn er
+--- nicht existiert.
+---@return string route rueckgabewert ist die ermittelte Route. Wurde dem Fahrzeugverband keine Route zugewiesen, wird
+--- als Route "Alle" zurueckgegeben.
 function EEPGetTrainRoute(name) end
 --       ======================
 -- Verfuegbar ab EEP 11.2 - Plugin 2.
 -- Beispielaufrufe:
 -- EEPGetTrainRoute("#Name")
+-- ok, Route = EEPGetTrainRoute("#Rheingold")
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Schaltet an einem "Fahrzeugverband" (z.B. einem Zug) die Lichter sowie Blinker ein oder aus. Bitte beachten: Die
 ---Unterscheidung zwischen Licht und Blinker ist mit EEP 15 hinzugekommen. Ab EEP 16.3 Plugin 3 kann das automatische
 ---Aufleuchten der Bremsleuchten von Fahrzeugen bei einer Bremsung ein- oder ausgeschaltet werden. Die alte
 ---Schreibweise mit nur zwei Parametern ist weiterhin gueltig.
----@overload fun(name: string, state: boolean): nil
----@param name string Parameter.
+---@overload fun(name: string, state: boolean): boolean
+---@param name string parameter ist der komplette Name des "Fahrzeugverbands" (mit vorangestelltem #-Zeichen) als
+--- String.
 ---@param state boolean Parameter.
 ---@param quelle? any Parameter.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
 function EEPSetTrainLight(name, state, quelle) end
 --       =====================================
 -- Verfuegbar ab EEP 11.2 - Plugin 2; EEP 15; EEP 16.3 - Plugin 3.
@@ -498,6 +628,7 @@ function EEPSetTrainLight(name, state, quelle) end
 -- EEPSetTrainLight("#Name", true|false [, Quelle])
 -- Licht ein
 -- ok = EEPSetTrainLight("#Rheingold",true)
+-- ok = EEPSetTrainLight("#Rheingold",true,0)
 -- rechter Blinker aus
 -- ok = EEPSetTrainLight("#Ford_Transit",false,2)
 -- linker Blinker ein
@@ -509,558 +640,756 @@ function EEPSetTrainLight(name, state, quelle) end
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Ermittelt, ob bei einem "Fahrzeugverband" (z.B. einem Zug) die Lichter oder Blinker ein oder aus sind.
----@overload fun(name: string): nil
----@param name string Parameter.
+---@overload fun(name: string): boolean, boolean
+---@param name string parameter ist der komplette Name des "Fahrzeugverbands" (mit vorangestelltem #-Zeichen) als
+--- String.
 ---@param quelle? any Parameter.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
+---@return boolean brennt rueckgabewert ist true, wenn die spezifierte Lichtquelle brennt, sonst false.
 function EEPGetTrainLight(name, quelle) end
 --       ==============================
 -- Verfuegbar ab EEP 18.0.
 -- Beispielaufrufe:
 -- EEPGetTrainLight("#Name", [, Quelle])
 -- ok, brennt = EEPGetTrainLight("#Rheingold")
+-- ok, brennt = EEPGetTrainLight("#Rheingold",0)
 -- ok, brennt = EEPGetTrainLight("#Ford_Transit",2)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Schaltet an einem "Fahrzeugverband" (z.B. einem Zug) den Rauch an oder aus.
----@param name string Parameter.
----@param state boolean Parameter.
+---@param name string parameter ist der komplette Name des "Fahrzeugverbands" (mit vorangestelltem #-Zeichen) als
+--- String.
+---@param state boolean parameter schaltet den Rauch mit true an oder mit false aus.
+---@return boolean ok rueckgabewert ist true, wenn der angesprochene "Fahrzeugverband" existiert, sonst false.
 function EEPSetTrainSmoke(name, state) end
 --       =============================
 -- Verfuegbar ab EEP 11.2 - Plugin 2.
 -- Beispielaufrufe:
 -- EEPSetTrainSmoke("#Name", true|false)
+-- ok = EEPSetTrainSmoke("#Personenzug", true)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Laesst bei einem "Fahrzeugverband" (z.B. einem Zug) den Warnton (Pfeife, Hupe) ertoenen.
----@overload fun(name: string): nil
----@param name string Parameter.
----@param state? boolean Parameter.
+---@overload fun(name: string): boolean
+---@param name string parameter ist der komplette Name des "Fahrzeugverbands" als String.
+---@param state? boolean parameter ist true um den Warnton ertoenen zu lassen oder false um ihn abzustellen, bevor er
+--- verklungen ist. Da true der Default-Wert ist, ertoent der Warnton auch, wenn der 2. Parameter weggelassen wird.
+---@return boolean ok rueckgabewert ist true, wenn der angesprochene "Fahrzeugverband" existiert, sonst false.
 function EEPSetTrainHorn(name, state) end
 --       ============================
 -- Verfuegbar ab EEP 11.2 - Plugin 2.
 -- Beispielaufrufe:
 -- EEPSetTrainHorn("#Name" [,true|false])
+-- ok = EEPSetTrainHorn("#Personenzug")
 -- ok = EEPSetTrainHorn("#Personenzug", true)
 -- ok = EEPSetTrainHorn("#Personenzug", false)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Schaltet bei einem "Fahrzeugverband" (z.B. einem Zug) die vordere Kupplung auf Kuppeln oder Abstossen.
----@param name string Parameter.
----@param state boolean Parameter.
+---@param name string parameter ist der komplette Name des "Fahrzeugverbands" (mit vorangestelltem #-Zeichen) als
+--- String.
+---@param state boolean parameter schaltet die vordere Kupplung mit true auf Kuppeln oder mit false auf Abstossen.
+---@return boolean ok rueckgabewert ist true, wenn der angesprochene "Fahrzeugverband" existiert, sonst false.
 function EEPSetTrainCouplingFront(name, state) end
 --       =====================================
 -- Verfuegbar ab EEP 11.2 - Plugin 2.
 -- Beispielaufrufe:
 -- EEPSetTrainCouplingFront("#Name", true|false)
+-- ok = EEPSetTrainCouplingFront("#Gueterzug", true)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Ermittelt bei einem "Fahrzeugverband" (z.B. einem Zug), ob die vordere Kupplung auf Kuppeln oder Abstossen gestellt
 ---ist.
----@param name string Parameter.
+---@param name string parameter ist der komplette Name des "Fahrzeugverbands" (mit vorangestelltem #-Zeichen) als
+--- String.
+---@return boolean ok rueckgabewert ist true, wenn der angesprochene "Fahrzeugverband" existiert, sonst false.
+---@return number stellung rueckgabewert ist die Stellung der vorderen Kupplung: 1 = Kupplung scharf 2 = Abstossen.
 function EEPGetTrainCouplingFront(name) end
 --       ==============================
 -- Verfuegbar ab EEP 18.0.
 -- Beispielaufrufe:
 -- EEPGetTrainCouplingFront("#Name")
+-- ok, Stellung = EEPSetTrainCouplingFront("#Gueterzug")
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Schaltet bei einem "Fahrzeugverband" (z.B. einem Zug) die hintere Kupplung auf Kuppeln oder Abstossen.
----@param name string Parameter.
----@param state boolean Parameter.
+---@param name string parameter ist der komplette Name des "Fahrzeugverbands" (mit vorangestelltem #-Zeichen) als
+--- String.
+---@param state boolean parameter schaltet die hintere Kupplung mit true auf Kuppeln oder mit false auf Abstossen.
+---@return boolean ok rueckgabewert ist true, wenn der angesprochene "Fahrzeugverband" existiert, sonst false.
 function EEPSetTrainCouplingRear(name, state) end
 --       ====================================
 -- Verfuegbar ab EEP 11.2 - Plugin 2.
 -- Beispielaufrufe:
 -- EEPSetTrainCouplingRear("#Name", true|false)
+-- ok = EEPSetTrainCouplingRear("#Gueterzug", true)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Ermittelt bei einem "Fahrzeugverband" (z.B. einem Zug), ob die hintere Kupplung auf Kuppeln oder Abstossen
 ---geschaltet ist.
----@param name string Parameter.
+---@param name string parameter ist der komplette Name des "Fahrzeugverbands" (mit vorangestelltem #-Zeichen) als
+--- String.
+---@return boolean ok rueckgabewert ist true, wenn der angesprochene "Fahrzeugverband" existiert, sonst false.
+---@return number stellung rueckgabewert ist die Stellung der hinteren Kupplung: 1 = Kupplung scharf 2 = Abstossen.
 function EEPGetTrainCouplingRear(name) end
 --       =============================
 -- Verfuegbar ab EEP 18.0.
 -- Beispielaufrufe:
 -- EEPGetTrainCouplingRear("#Name")
+-- ok, Stellung = EEPGetTrainCouplingRear("#Gueterzug")
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Trennt einen "Fahrzeugverband" (z.B. einen Zug) an der angegebenen Stelle.
----@overload fun(name: string, state: boolean, count: number): nil
----@param name string Parameter.
----@param state boolean Parameter.
----@param count number Parameter.
+---@overload fun(name: string, fromFront: boolean, count: number): boolean
+---@param name string parameter ist der komplette Name des "Fahrzeugverbands" (mit vorangestelltem #-Zeichen) als
+--- String.
+---@param fromFront boolean parameter bestimmt, ob von vorne oder hinten (bezogen auf die Fahrtrichtung des Zuges)
+--- gezaehlt wird: true = vorne, false = hinten
+---@param count number parameter bestimmt die Anzahl an Rollmaterialien, die von vorne oder hinten abgekuppelt werden
+--- sollen.
 ---@param name2? any Parameter.
-function EEPTrainLooseCoupling(name, state, count, name2) end
---       ================================================
+---@return boolean ok rueckgabewert ist true, wenn der angesprochene "Fahrzeugverband" existiert, sonst false.
+function EEPTrainLooseCoupling(name, fromFront, count, name2) end
+--       ====================================================
 -- Verfuegbar ab EEP 11.2 - Plugin 2.
 -- Beispielaufrufe:
 -- EEPTrainLooseCoupling("#Name", true|false, Anzahl, "#Name2")
 -- ok = EEPTrainLooseCoupling("#Gueterzug",true,3)
--- EEPTrainLooseCoupling("#Gueterzug",false,2, "#Waggons")
+-- ok = EEPTrainLooseCoupling("#Gueterzug",false,2, "#Waggons")
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Wird immer dann aufgerufen, wenn zwei "Fahrzeugverbaende" gekoppelt werden.
----@param zug_A any Parameter.
----@param zug_B any Parameter.
----@param zug_neu any Parameter.
+---@param zug_A string parameter ist der Name des Teilverbands, der in Bewegung war und somit seine ID auf den neuen
+--- "Fahrzeugverband" uebertragen hat. Sind beide Verbandsteile in Bewegung, dann zaehlt die schnellere von beiden
+--- Bewegungen.
+---@param zug_B string parameter ist der Name des Teilverbands, der stand (oder sich langsamer bewegt hat) und somit
+--- seine ID verloren hat.
+---@param zug_neu string parameter ist der Name des neu gebildeten "Fahrzeugverbands".
 function EEPOnTrainCoupling(zug_A, zug_B, zug_neu) end
 --       =========================================
 -- Verfuegbar ab EEP 14.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPOnTrainCoupling("Zug_A", "Zug_B", "Zug_neu")
--- function EEPOnTrainCoupling(Zug_A,Zug_B,Zug_neu) " wurde "..Zug_neu)
+-- function EEPOnTrainCoupling(Zug_A,Zug_B,Zug_neu)
+-- print("Aus "..Zug_A.." und "..Zug_B.." wurde "..Zug_neu)
 -- end
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Wird immer dann aufgerufen, wenn ein "Fahrzeugverband" (z.B. ein Zug) geteilt wird.
----@param zug_A any Parameter.
----@param zug_B any Parameter.
----@param zug_alt any Parameter.
+---@param zug_A string parameter ist der Name des Teilverbands, dessen Kupplung deaktiviert wurde. Dieser Zugteil
+--- behaelt die ID des bisherigen "Fahrzeugverbands" bei.
+---@param zug_B string parameter ist der Name des Teilverbands, der abgekuppelt wurde. Dieser Verbandsteil bekommt
+--- eine neue ID.
+---@param zug_alt string parameter ist der Name des urspruenglichen "Fahrzeugverbands".
 function EEPOnTrainLooseCoupling(zug_A, zug_B, zug_alt) end
 --       ==============================================
 -- Verfuegbar ab EEP 14.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPOnTrainLooseCoupling("Zug_A", "Zug_B", "Zug_alt")
--- function EEPOnTrainLooseCoupling(Zug_A, Zug_B, Zug_alt) " und "..Zug_B)
+-- function EEPOnTrainLooseCoupling(Zug_A, Zug_B, Zug_alt)
+-- print(Zug_alt.." geteilt in "..Zug_A.." und "..Zug_B)
 -- end
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Schaltet an einem "Fahrzeugverband" (z.B. einem Zug) den Haken fuer Gueter an oder aus.
----@param name string Parameter.
----@param state boolean Parameter.
+---@param name string parameter ist der komplette Name des "Fahrzeugverbands" (mit vorangestelltem #-Zeichen) als
+--- String.
+---@param state boolean parameter schaltet den Haken mit true an oder mit false aus.
+---@return boolean ok rueckgabewert ist true, wenn der angesprochene "Fahrzeugverband" existiert, sonst false.
 function EEPSetTrainHook(name, state) end
 --       ============================
 -- Verfuegbar ab EEP 11.2 - Plugin 2.
 -- Beispielaufrufe:
 -- EEPSetTrainHook("#Name", true|false)
+-- ok = EEPSetTrainHook("#Kranzug" , true)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Beeinflusst das Verhalten von Guetern an einem Kranhaken eines "Fahrzeugverbands".
----@param name string Parameter.
----@param state boolean Parameter.
+---@param name string parameter ist der komplette Name des "Fahrzeugverbands" (mit vorangestelltem #-Zeichen) als
+--- String.
+---@param state boolean parameter bestimmt das Verhalten: false = Gueter schaukeln (geeignet fuer Haken), true =
+--- Gueter sind fixiert (geeignet fuer Greifer).
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
 function EEPSetTrainHookGlue(name, state) end
 --       ================================
 -- Verfuegbar ab EEP 11.2 - Plugin 2.
 -- Beispielaufrufe:
 -- EEPSetTrainHookGlue("#Name", true|false)
+-- ok = EEPSetTrainHookGlue("#Kranzug", true)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Animiert bei einem "Fahrzeugverband" (z.B. einem Zug) eine oder mehrere ausgewaehlte Achsen.
----@overload fun(name: string, axisName: string, position: number): nil
----@param name string Parameter.
----@param axisName string Parameter.
----@param position number Parameter.
+---@overload fun(name: string, axisName: string, position: number): boolean
+---@param name string parameter ist der komplette Name des "Fahrzeugverbands" (mit vorangestelltem #-Zeichen) als
+--- String.
+---@param axisName string parameter ist der Name der Achse als String.
+---@param position number parameter ist die Position, zu der sich die Achse bewegen soll.
 ---@param state? boolean Parameter.
+---@return boolean ok rueckgabewert ist true, wenn der angesprochene Zug und die angesprochene Achse existieren, oder
+--- false, wenn eins von beidem nicht existiert.
 function EEPSetTrainAxis(name, axisName, position, state) end
 --       ================================================
 -- Verfuegbar ab EEP 11.2 - Plugin 2; EEP 17.2.
 -- Beispielaufrufe:
 -- EEPSetTrainAxis("#Name", "Achse", Position [, true|false])
--- ok = EEPSetTrainAxis("#Kranzug", Rueckgabewerte einer "Ausleger heben/senken", 100)
+-- ok = EEPSetTrainAxis("#Kranzug", "Ausleger heben/senken", 100)
 -- ok = EEPSetTrainAxis("#Staubgutzug", "Domdeckel", 100, true)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Weist einem "Fahrzeugverband" (z.B. einem Zug) einen neuen Namen zu.
----@param alterName string Parameter.
----@param neuerName string Parameter.
-function EEPSetTrainName(alterName, neuerName) end
---       =====================================
+---@param trainName string parameter ist der bisherige Name des "Fahrzeugverbands" (mit vorangestelltem #-Zeichen) als
+--- String.
+---@param trainName2 string parameter ist der neue Name des "Fahrzeugverbands" (mit vorangestelltem #-Zeichen) als
+--- String.
+---@return boolean ok rueckgabewert ist true, wenn die Funktion erfolgreich ausgefuehrt wurde, sonst false
+function EEPSetTrainName(trainName, trainName2) end
+--       ======================================
 -- Verfuegbar ab EEP 14.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPSetTrainName("#AlterName", "#NeuerName")
+-- ok = EEPSetTrainName("#RE 1", "#RE 5")
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Ermittelt die Gesamtlaenge des angegebenen Fahrzeugverbandes (z.B. eines Zuges).
----@param name string Parameter.
+---@param name string parameter ist der komplette Name des "Fahrzeugverbands" (mit vorangestelltem #-Zeichen) als
+--- String.
+---@return boolean ok rueckgabewert ist entweder true, wenn der angegebene "Fahrzeugverband" existiert, oder false,
+--- wenn er nicht existiert.
+---@return number laenge rueckgabewert ist die Laenge des "Fahrzeugverbands" in Meter.
 function EEPGetTrainLength(name) end
 --       =======================
 -- Verfuegbar ab EEP 15.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPGetTrainLength("#Name")
+-- ok, Laenge = EEPGetTrainLength("#Gueterzug")
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Dreht die Ausrichtung und die Fahrtrichtung eines "Fahrzeugverbands" (z.B. eines Zug).
----@param name string Parameter.
+---@param name string parameter ist der komplette Name des "Fahrzeugverbands" (mit vorangestelltem #-Zeichen) als
+--- String.
+---@return boolean ok rueckgabewert ist true, wenn der angesprochene "Fahrzeugverband" existiert und die Funktion
+--- erfolgreich ausgefuehrt wurde, sonst false.
 function EEPTrainChangeOrientation(name) end
 --       ===============================
 -- Verfuegbar ab EEP 18.0.
 -- Beispielaufrufe:
 -- EEPTrainChangeOrientation("#Name")
+-- ok = EEPTrainChangeOrientation("#Gueterzug")
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Stellt die vordere Kupplung eines Rollmaterials um.
----@param rollingstockName string Parameter.
----@param kupplungszustand any Parameter.
+---@param rollingstockName string parameter ist der komplette Name des Rollmaterials als String.
+---@param kupplungszustand number parameter ist der gewuenschte Kupplungszustand: 1 = Kuppeln (kuppelt bei Kontakt,
+--- wenn die gegnerische Kupplung ebenfalls scharf ist), 2 = Abstossen.
+---@return boolean ok rueckgabewert ist entweder true, wenn das angesprochene Rollmaterial existiert oder false, wenn
+--- es nicht existiert.
 function EEPRollingstockSetCouplingFront(rollingstockName, kupplungszustand) end
 --       ===================================================================
 -- Verfuegbar ab EEP 11.0.
 -- Beispielaufrufe:
 -- EEPRollingstockSetCouplingFront("Fahrzeugname", Kupplungszustand)
--- ok = Rueckgabewerte einer EEPRollingstockSetCouplingFront("Castor 1;001",1)
+-- ok = EEPRollingstockSetCouplingFront("Castor 1;001",1)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Ermittelt die Stellung der vorderen Kupplung eines Rollmaterials.
----@param rollingstockName string Parameter.
+---@param rollingstockName string parameter ist der komplette Name des Rollmaterials als String.
+---@return boolean ok rueckgabewert ist entweder true, wenn das angesprochene Rollmaterial existiert oder false, wenn
+--- es nicht existiert.
+---@return number kupplung rueckgabewert ist die Stellung der Kupplung: 1 = Kupplung scharf 2 = Abstossen 3 =
+--- Gekuppelt
 function EEPRollingstockGetCouplingFront(rollingstockName) end
 --       =================================================
 -- Verfuegbar ab EEP 11.0.
 -- Beispielaufrufe:
 -- EEPRollingstockGetCouplingFront("Fahrzeugname")
--- EEPRollingstockGetCouplingFront("Castor 1;001")
+-- ok, Kupplung = EEPRollingstockGetCouplingFront("Castor 1;001")
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Stellt die hintere Kupplung eines Rollmaterials um.
----@param rollingstockName string Parameter.
----@param kupplungszustand any Parameter.
+---@param rollingstockName string parameter ist der komplette Name des Rollmaterials als String.
+---@param kupplungszustand number parameter ist der gewuenschte Kupplungszustand: 1 = Kuppel (kuppelt bei Kontakt,
+--- wenn die gegnerische Kupplung ebenfalls scharf ist), 2 = Abstossen.
+---@return boolean ok rueckgabewert ist entweder true, wenn das angesprochene Rollmaterial existiert oder false, wenn
+--- es nicht existiert.
 function EEPRollingstockSetCouplingRear(rollingstockName, kupplungszustand) end
 --       ==================================================================
 -- Verfuegbar ab EEP 11.0.
 -- Beispielaufrufe:
 -- EEPRollingstockSetCouplingRear("Fahrzeugname", Kupplungszustand)
--- ok = Rueckgabewerte einer EEPRollingstockSetCouplingRear("fals 175 Kalk", 1)
+-- ok = EEPRollingstockSetCouplingRear("fals 175 Kalk", 1)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Ermittelt die Stellung der hinteren Kupplung eines Rollmaterials.
----@param rollingstockName string Parameter.
+---@param rollingstockName string parameter ist der komplette Name des Rollmaterials als String.
+---@return boolean ok rueckgabewert ist entweder true, wenn das angesprochene Rollmaterial existiert oder false, wenn
+--- es nicht existiert.
+---@return number kupplung rueckgabewert ist die Stellung der Kupplung: 1 = Kupplung scharf 2 = Abstossen 3 =
+--- Gekuppelt
 function EEPRollingstockGetCouplingRear(rollingstockName) end
 --       ================================================
 -- Verfuegbar ab EEP 11.0.
 -- Beispielaufrufe:
 -- EEPRollingstockGetCouplingRear("Fahrzeugname")
--- EEPRollingstockGetCouplingRear("fals 175 Kalk")
+-- ok, Kupplung = EEPRollingstockGetCouplingRear("fals 175 Kalk")
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Bewegt die mittels Achsname benannte Achse des benannten Rollmaterials in eine gewuenschte Position.
----@overload fun(rollingstockName: string, axisName: string, position: number): nil
----@param rollingstockName string Parameter.
----@param axisName string Parameter.
----@param position number Parameter.
+---@overload fun(rollingstockName: string, axisName: string, position: number): boolean
+---@param rollingstockName string parameter ist der komplette Name des Rollmaterials als String.
+---@param axisName string parameter ist der komplette Name der zu bewegenden Achse als String. Er kann in diversen
+--- EEP-Sprachversionen unterschiedlich sein.
+---@param position number parameter ist die Position, zu der sich die Achse bewegen soll.
 ---@param state? boolean Parameter.
+---@return boolean ok rueckgabewert ist true, wenn Rollmaterial und Achse existieren oder false, falls mindestens eins
+--- von beidem nicht existiert.
 function EEPRollingstockSetAxis(rollingstockName, axisName, position, state) end
 --       ===================================================================
 -- Verfuegbar ab EEP 11.0; EEP 17.2 - Plugin 2.
 -- Beispielaufrufe:
 -- EEPRollingstockSetAxis("Fahrzeugname", "Achse", Position [, true|false])
--- ok = EEPRollingstockSetAxis("Dispolok 189-917 Rueckgabewerte einer EpVI", "Stromabnehmer DE", 100)
+-- ok = EEPRollingstockSetAxis("Dispolok 189-917 EpVI", "Stromabnehmer DE", 100)
 -- ok = EEPRollingstockSetAxis("Dispolok 189-917 EpVI", "Stromabnehmer", 0, true)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Ermittelt die aktuelle Position einer mittels Achsnamen benannten Achse des benannten Rollmaterials.
----@param rollingstockName string Parameter.
----@param axisName string Parameter.
+---@param rollingstockName string parameter ist der komplette Name des Rollmaterials als String.
+---@param axisName string parameter ist der komplette Name der Achse als String. Er kann in diversen
+--- EEP-Sprachversionen unterschiedlich sein.
+---@return boolean ok rueckgabewert ist true, wenn Rollmaterial und Achse existieren oder false, falls mindestens eins
+--- von beidem nicht existiert.
+---@return number position rueckgabewert ist die momentane Position der Achse als Zahl.
 function EEPRollingstockGetAxis(rollingstockName, axisName) end
 --       ==================================================
 -- Verfuegbar ab EEP 11.0.
 -- Beispielaufrufe:
 -- EEPRollingstockGetAxis("Fahrzeugname", "Achse")
--- Name = ("Dispolok 189-917 EpVI" Rueckgabewerte zwei Achse = "Stromabnehmer DE"
+-- Name = ("Dispolok 189-917 EpVI"
+-- Achse = "Stromabnehmer DE"
 -- ok, Position = EEPRollingstockGetAxis(Name, Achse)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Bewegt die mittels Achsnummer benannte Achse des benannten Rollmaterials in eine gewuenschte Position.
----@param rollingstockName string Parameter.
----@param achsnummer any Parameter.
----@param position number Parameter.
+---@param rollingstockName string parameter ist der komplette Name des Rollmaterials als String.
+---@param achsnummer number parameter ist die Achsnummer der zu bewegenden Achse als Zahl. Sie ist in allen
+--- EEP-Sprachversionen gleich und steht sowohl in der ini-Datei als auch im Modellkatalog bei den Achsbezeichnungen
+--- des Modells.
+---@param position number parameter ist die Position, zu der sich die Achse bewegen soll.
+---@return boolean ok rueckgabewert ist true, wenn Rollmaterial und die Achsnummer existieren oder false, falls
+--- mindestens eins von beidem nicht existiert.
 function EEPRollingstockSetAxisByNumber(rollingstockName, achsnummer, position) end
 --       ======================================================================
 -- Verfuegbar ab EEP 18.0.
 -- Beispielaufrufe:
 -- EEPRollingstockSetAxisByNumber("Fahrzeugname", Achsnummer, Position)
+-- ok = EEPRollingstockSetAxisByNumber("Dispolok 189-917 EpVI", 26, 100)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Ermittelt die aktuelle Position einer mittels Achsnummer benannten Achse des benannten Rollmaterials.
----@param rollingstockName string Parameter.
----@param achsnummer any Parameter.
+---@param rollingstockName string parameter ist der komplette Name des Rollmaterials als String.
+---@param achsnummer number parameter ist die Achsnummer der zu bewegenden Achse als Zahl. Sie ist in allen
+--- EEP-Sprachversionen gleich und steht sowohl in der ini-Datei als auch im Modellkatalog bei den Achsbezeichnungen
+--- des Modells.
+---@return boolean ok rueckgabewert ist true, wenn Rollmaterial und die Achsnummer existieren oder false, falls
+--- mindestens eins von beidem nicht existiert.
+---@return number position rueckgabewert ist die momentane Position der Achse als Zahl.
 function EEPRollingstockGetAxisByNumber(rollingstockName, achsnummer) end
 --       ============================================================
 -- Verfuegbar ab EEP 18.0.
 -- Beispielaufrufe:
 -- EEPRollingstockGetAxisByNumber("Fahrzeugname", Achsnummer)
 -- Name = "Dispolok 189-917 EpVI"
--- EEPRollingstockGetAxisByNumber(Name, 26)
+-- ok, Position = EEPRollingstockGetAxisByNumber(Name, 26)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Bewegt alle Achsen des genannten Rollmaterials zu den in der definierten Einstellungsgruppe fuer Achseinstellungen
 ---gespeicherten Positionen
----@param rollingstockName string Parameter.
----@param achsengruppe any Parameter.
+---@param rollingstockName string parameter ist der komplette Name des Rollmaterials als String.
+---@param achsengruppe number parameter ist die ID (ohne #-Zeichen) der Einstellungsgruppe, in der die gewuenschten
+--- Achsenstellungen gespeichert sind.
+---@return boolean ok rueckgabewert ist true, wenn das Rollmaterial und die Gruppennummer existieren oder false, wenn
+--- mindestens eins von beidem nicht existiert. Es wird nicht geprueft, ob in der Gruppe tatsaechlich etwas
+--- gespeichert ist.
 function EEPRollingstockSetSlot(rollingstockName, achsengruppe) end
 --       ======================================================
 -- Verfuegbar ab EEP 11.0.
 -- Beispielaufrufe:
 -- EEPRollingstockSetSlot("Fahrzeugname", Achsengruppe)
+-- ok = EEPRollingstockSetSlot("Ladekran2 Greifer", 3)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Gibt die Anzahl der Fahrzeuge in einem "Fahrzeugverband" (z.B. einem Zug) zurueck
----@param name string Parameter.
+---@param name string parameter ist der komplette Name des "Fahrzeugverbands" (mit vorangestelltem #-Zeichen) als
+--- String.
+---@return number count rueckgabewert ist die Anzahl der Fahrzeuge, aus denen der "Fahrzeugverband" besteht. Zwischen
+--- Loks, Tendern, Waggons und Spezialteilen wie zwischengekoppelten Drehgestellen wird nicht unterschieden. Wenn der
+--- genannte "Fahrzeugverband" nicht existiert, dann ist der Wert 0.
 function EEPGetRollingstockItemsCount(name) end
 --       ==================================
 -- Verfuegbar ab EEP 13.2 - Plugin 2.
 -- Beispielaufrufe:
 -- EEPGetRollingstockItemsCount("#Name")
--- EEPGetRollingstockItemsCount("#Gueterzug")
+-- Anzahl = EEPGetRollingstockItemsCount("#Gueterzug")
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Gibt den Namen eines Fahrzeugs im "Fahrzeugverband" (z.B. einem Zug) zurueck
----@param name string Parameter.
----@param nummer any Parameter.
+---@param name string parameter ist der komplette Name des "Fahrzeugverbands" (mit vorangestelltem #-Zeichen) als
+--- String.
+---@param nummer string parameter ist die Positionsnummer des Fahrzeugs im Verband, dessen Namen man erfahren moechte.
+--- Bitte beachten: Das erste Fahrzeug hat die Nummer 0
+---@return string name rueckgabewert ist der Fahrzeugname. Wenn der "Fahrzeugverband" oder das Fahrzeug im
+--- "Fahrzeugverband" nicht existieren, gibt EEP einen Leerstring zurueck.
 function EEPGetRollingstockItemName(name, nummer) end
 --       ========================================
 -- Verfuegbar ab EEP 13.2 - Plugin 2.
 -- Beispielaufrufe:
 -- EEPGetRollingstockItemName("#Name", Nummer)
+-- Name = EEPGetRollingstockItemName("#Gueterzug", 3)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Ermittelt den Namen des "Fahrzeugverbands", in dem das angegebene Fahrzeug mitgefuehrt wird.
----@param rollingstockName string Parameter.
+---@param rollingstockName string parameter ist der Name des Fahrzeugs als String.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
+---@return string name rueckgabewert ist der Name des Fahrzeugverbandes (z.B. der "Name").
 function EEPRollingstockGetTrainName(rollingstockName) end
 --       =============================================
 -- Verfuegbar ab EEP 15.
 -- Beispielaufrufe:
 -- EEPRollingstockGetTrainName("Fahrzeugname")
--- ok, Name = Rueckgabewerte zwei EEPRollingstockGetTrainName("Castor 1")
+-- ok, Name = EEPRollingstockGetTrainName("Castor 1")
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Ermittelt die Laenge des angegebenen Fahrzeugs.
----@param fahrzeugame any Parameter.
+---@param fahrzeugame string parameter ist der Name des Fahrzeugs als String.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
+---@return number laenge rueckgabewert ist die Laenge des Fahrzeugs von Kupplung zu Kupplung in Metern.
 function EEPRollingstockGetLength(fahrzeugame) end
 --       =====================================
 -- Verfuegbar ab EEP 15.
 -- Beispielaufrufe:
 -- EEPRollingstockGetLength("Fahrzeugame")
--- EEPRollingstockGetLength("Container 0100")
+-- ok, Laenge = EEPRollingstockGetLength("Container 0100")
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Ermittelt die Anzahl der Getriebegaenge des angegebenen Fahrzeugs und damit indirekt ob das Fahrzeug motorisiert
 ---ist.
----@param rollingstockName string Parameter.
+---@param rollingstockName string parameter ist der Name des Fahrzeugs als String.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
+---@return number gaenge rueckgabewert ist die Anzahl der Getriebegaenge, die das Fahrzeug besitzt. Nicht motorisierte
+--- Fahrzeuge haben 0 Gaenge.
 function EEPRollingstockGetMotor(rollingstockName) end
 --       =========================================
 -- Verfuegbar ab EEP 15.
 -- Beispielaufrufe:
 -- EEPRollingstockGetMotor("Fahrzeugname")
+-- ok, Gaenge = EEPRollingstockGetMotor("DB_360_339")
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Ermittelt die aktuelle Position des angegebenen Fahrzeugs auf der Anlage.
----@param rollingstockName string Parameter.
+---@param rollingstockName string parameter ist der Name des Fahrzeugs als String.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
+---@return number gleis_ID rueckgabewert ist die ID des Gleisstuecks, auf dem sich das Fahrzeug befindet.
+---@return number position rueckgabewert ist der Abstand (in Metern) zum Anfang des Gleisstuecks, auf dem sich das
+--- Fahrzeug befindet.
+---@return any richtung rueckgabewert ist die Ausrichtung relativ zur Fahrtrichtung des Gleisstuecks, auf dem sich das
+--- Fahrzeug befindet: 1 = in Fahrtrichtung, 0 = entgegen der Fahrtrichtung
+---@return number system rueckgabewert ist die Nummer des Gleissystems, auf dem das Fahrzeug unterwegs ist: 1 =
+--- Bahngleise, 2 = Strassen, 3 = Tramgleise, 4 = sonstige Splines/Wasserwege.
 function EEPRollingstockGetTrack(rollingstockName) end
 --       =========================================
 -- Verfuegbar ab EEP 15.
 -- Beispielaufrufe:
 -- EEPRollingstockGetTrack("Fahrzeugname")
--- EEPRollingstockGetTrack("BR 212 376-8")
+-- ok, Gleis_ID, Position, Richtung, System = EEPRollingstockGetTrack("BR 212 376-8")
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Ermittelt die Kategorie, zu welcher das genannte Fahrzeug gehoert.
----@param rollingstockName string Parameter.
+---@param rollingstockName string parameter ist der Fahrzeugname als String.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
+---@return any typ rueckgabewert ist die Kategorie, welche der Konstrukteur im Modell eingetragen hat: 1 = Tenderlok 2
+--- = Schlepptenderlok 3 = Tender 4 = Elektrolok 5 = Diesellok 6 = Triebwagen 7 = U- oder S-Bahn 8 = Strassenbahn 9 =
+--- Gueterwaggon 10= Personenwaggon 11 = Luftfahrzeug 12 = Maschine (z.B. Kran) 13 = Wasserfahrzeug 14 = LKW 15 = PKW
 function EEPRollingstockGetModelType(rollingstockName) end
 --       =============================================
 -- Verfuegbar ab EEP 15.
 -- Beispielaufrufe:
 -- EEPRollingstockGetModelType("Fahrzeugname")
--- EEPRollingstockGetModelType("Castor 1")
+-- ok, Typ = EEPRollingstockGetModelType("Castor 1")
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Dreht die Ausrichtung des angegebenen Fahrzeugs in einem "Fahrzeugverband" (z.B. einem Zug).
----@param rollingstockName string Parameter.
+---@param rollingstockName string parameter ist der komplette Name des Fahrzeugs als String.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
 function EEPRollingstockChangeOrientation(rollingstockName) end
 --       ==================================================
 -- Verfuegbar ab EEP 18.0.
 -- Beispielaufrufe:
 -- EEPRollingstockChangeOrientation("Fahrzeug- name")
--- EEPRollingstockChangeOrientation("DB Gbrs")
+-- ok, = EEPRollingstockChangeOrientation("DB Gbrs")
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Ermittelt, welche relative Ausrichtung das angegebene Fahrzeug im "Fahrzeugverband" hat.
----@param rollingstockName string Parameter.
+---@param rollingstockName string parameter ist der komplette Name des Fahrzeugs als String.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
+---@return boolean vorwaerts rueckgabewert ist true, wenn das angegebene Fahrzeug vorwaerts ausgerichtet ist, sonst
+--- false.
 function EEPRollingstockGetOrientation(rollingstockName) end
 --       ===============================================
 -- Verfuegbar ab EEP 15.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPRollingstockGetOrientation("Fahrzeugname")
--- EEPRollingstockGetOrientation("DB Gbrs")
+-- ok, vorwaerts = EEPRollingstockGetOrientation("DB Gbrs")
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Schaltet bei einem bestimmten Rollmaterial den Haken an oder aus.
----@param rollingstockName string Parameter.
----@param state boolean Parameter.
+---@param rollingstockName string parameter ist der komplette Name des Rollmaterials als String.
+---@param state boolean parameter schaltet den Haken mit true an oder mit false aus.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
 function EEPRollingstockSetHook(rollingstockName, state) end
 --       ===============================================
 -- Verfuegbar ab EEP 16.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPRollingstockSetHook("Fahrzeugname", true|false)
--- EEPRollingstockSetHook("Schienenkran DB EDK 300/5", true)
+-- ok = EEPRollingstockSetHook("Schienenkran DB EDK 300/5", true)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Ermittelt, ob der Haken eines bestimmten Rollmaterials an oder ausgeschaltet ist.
----@param rollingstockName string Parameter.
+---@param rollingstockName string parameter ist der komplette Name des Rollmaterials als String.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
+---@return any status rueckgabewert gibt den Status des Hakens an: 0 = ausgeschaltet, 1 = eingeschaltet, 3 = Ladegut
+--- am Haken.
 function EEPRollingstockGetHook(rollingstockName) end
 --       ========================================
 -- Verfuegbar ab EEP 16.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPRollingstockGetHook("Fahrzeugname")
--- EEPRollingstockGetHook("Schienenkran DB EDK 300/5")
+-- ok, Status = EEPRollingstockGetHook("Schienenkran DB EDK 300/5")
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Beeinflusst das Verhalten von Guetern an einem Kranhaken eines Rollmaterials.
----@param rollingstockName string Parameter.
----@param state boolean Parameter.
+---@param rollingstockName string parameter ist der Name des Rollmaterials als String.
+---@param state boolean parameter bestimmt das Verhalten. false = Gueter schaukeln (geeignet fuer Haken) true = Gueter
+--- sind fixiert (geeignet fuer Greifer)
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
 function EEPRollingstockSetHookGlue(rollingstockName, state) end
 --       ===================================================
 -- Verfuegbar ab EEP 16.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPRollingstockSetHookGlue("Fahrzeugname", true|false)
--- EDK 300/5", true)
+-- ok = EEPRollingstockSetHookGlue("Schienenkran DB EDK 300/5", true)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Ermittelt das Verhalten von Guetern am Kranhaken eines Rollmaterials
----@param rollingstockName string Parameter.
+---@param rollingstockName string parameter ist der komplette Name des Rollmaterials als String.
+---@return any ok rueckgabewert gibt das Verhalten der Gueter an: 0 = Gueter schaukeln 1 = Gueter sind fixiert
 function EEPRollingstockGetHookGlue(rollingstockName) end
 --       ============================================
 -- Verfuegbar ab EEP 16.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPRollingstockGetHookGlue("Fahrzeugname")
--- EDK 300/5")
+-- ok = EEPRollingstockGetHookGlue("Schienenkran DB EDK 300/5")
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Ermittelt die Position des Kranhakens des Rollmaterials im EEP-Koordinatensystem.
----@param rollingstockName string Parameter.
-function EEPRollingstockGetHookPosition(rollingstockName) end
---       ================================================
+---@overload fun(rollingstockName: string): boolean, number, number, number
+---@param rollingstockName string parameter ist der komplette Name des Rollmaterials als String.
+---@param kranhakennummer? number optionale 2. Parameter ist die Hakennummer, wenn mehrere Haken vorhanden.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
+---@return number posX rueckgabewert ist die X-Position in Metern.
+---@return number posY rueckgabewert ist die Y-Position in Metern.
+---@return number posZ rueckgabewert ist die Z-Position in Metern.
+function EEPRollingstockGetHookPosition(rollingstockName, kranhakennummer) end
+--       =================================================================
 -- Verfuegbar ab EEP 18.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPRollingstockGetHookPosition("Fahrzeugname" [, Kranhakennummer])
--- ok, PosX, PosY, PosZ = Rueckgabewerte vier EEPRollingstockGetHookPosition("Brueckenkran - Haken")
+-- ok, PosX, PosY, PosZ = EEPRollingstockGetHookPosition("Brueckenkran - Haken")
 -- ok, PosX, PosY, PosZ = EEPRollingstockGetHookPosition("Brueckenkran - 3 Haken", 2)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Schaltet den Rauch des bennanten Rollmaterials an oder aus.
----@param rollingstockName string Parameter.
----@param state boolean Parameter.
+---@param rollingstockName string parameter ist der komplette Name des Rollmaterials als String.
+---@param state boolean parameter schaltet den Rauch mit true an oder mit false aus.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
 function EEPRollingstockSetSmoke(rollingstockName, state) end
 --       ================================================
 -- Verfuegbar ab EEP 16.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPRollingstockSetSmoke("Fahrzeugname", true|false)
+-- ok = EEPRollingstockSetSmoke("DR_96020", true)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Ermittelt, ob der Rauch des benannten Rollmaterials, an- oder ausgeschaltet ist.
----@param rollingstockName string Parameter.
+---@param rollingstockName string parameter ist der komplette Name des Rollmaterials als String.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
+---@return boolean rauch rueckgabewert ist entweder true, wenn der Rauch an-, oder false, wenn er ausgeschaltet ist.
 function EEPRollingstockGetSmoke(rollingstockName) end
 --       =========================================
 -- Verfuegbar ab EEP 16.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPRollingstockGetSmoke("Fahrzeugname")
--- EEPRollingstockGetSmoke("DR_96020")
+-- ok, Rauch = EEPRollingstockGetSmoke("DR_96020")
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Laesst bei einem bestimmten Rollmaterial den Warnton (Pfeife, Hupe) ertoenen.
----@param rollingstockName string Parameter.
-function EEPRollingstockSetHorn(rollingstockName) end
---       ========================================
+---@overload fun(rollingstockName: string): boolean
+---@param rollingstockName string parameter ist der komplette Name des Rollmaterials als String.
+---@param state? boolean parameter ist optional und laesst den Warnton mit true ertoenen oder stellt ihn mit false ab,
+--- bevor er verklungen ist. Da true der Default-Wert ist, ertoent der Warnton auch, wenn der 2. Parameter weggelassen
+--- wird.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
+function EEPRollingstockSetHorn(rollingstockName, state) end
+--       ===============================================
 -- Verfuegbar ab EEP 16.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPRollingstockSetHorn("Fahrzeugname" [, true|false])
+-- ok = EEPRollingstockSetHorn("DR_96020")
 -- ok = EEPRollingstockSetHorn("DR_96020", true)
 -- ok = EEPRollingstockSetHorn("DR_96020", false)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Ermittelt die zurueckgelegte Strecke des Rollmaterials
----@param rollingstockName string Parameter.
+---@param rollingstockName string parameter ist der komplette Name des Rollmaterials als String.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
+---@return number strecke rueckgabewert ermittelt die in Metern zurueckgelegte Strecke des Rollmaterials seit dem
+--- Einsetzen in EEP
 function EEPRollingstockGetMileage(rollingstockName) end
 --       ===========================================
 -- Verfuegbar ab EEP 16.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPRollingstockGetMileage("Fahrzeugname")
--- 8")
+-- ok, Strecke = EEPRollingstockGetMileage("BR 212 376- 8")
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Ermittelt die Position des Rollmaterials im EEP-Koordinatensystem.
----@param rollingstockName string Parameter.
+---@param rollingstockName string parameter ist der komplette Name des Rollmaterials als String.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
+---@return number posX rueckgabewert ist die X-Position in Metern.
+---@return number posY rueckgabewert ist die Y-Position in Metern.
+---@return number posZ rueckgabewert ist die Z-Position in Metern.
 function EEPRollingstockGetPosition(rollingstockName) end
 --       ============================================
 -- Verfuegbar ab EEP 16.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPRollingstockGetPosition("Fahrzeugname")
--- EEPRollingstockGetPosition("BR 212 376-8")
+-- ok, PosX, PosY, PosZ = EEPRollingstockGetPosition("BR 212 376-8")
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Ermittelt die Ausrichtung des Rollmaterials im EEP-Koordinatensystem.
----@param rollingstockName string Parameter.
+---@param rollingstockName string parameter ist der komplette Name des Rollmaterials als String.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
+---@return any rotX rueckgabewert ist die Drehung um die X-Achse .
+---@return any rotY rueckgabewert ist die Drehung um die Y-Achse .
+---@return any rotZ rueckgabewert ist die Drehung um die Z-Achse .
 function EEPRollingstockGetRotation(rollingstockName) end
 --       ============================================
 -- Verfuegbar ab EEP 18.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPRollingstockGetRotation("Fahrzeugname")
--- EEPRollingstockGetRotation("DB_Sdgkms_3180409-355")
+-- ok, RotX, RotY, RotZ = EEPRollingstockGetRotation("DB_Sdgkms_3180409-355")
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Schaltet den Rauch der benannten Immobilie an oder aus.
----@param luaName string Parameter.
----@param state boolean Parameter.
+---@param luaName string parameter ist der Lua-Name der Immobilie als String. Er steht in den Objekteigenschaften und
+--- unterscheidet sich durch die vorangestellte ID vom Modellnamen. Es genuegt die Nummer mit vorangestelltem
+--- #-Zeichen als Identifikator.
+---@param state boolean parameter schaltet den Rauch mit true an oder mit false aus.
+---@return boolean ok rueckgabewert ist entweder true, wenn die Immobilie existiert und eine Rauchfunktion hat oder
+--- false, falls mindestens eins von beidem nicht zutrifft.
 function EEPStructureSetSmoke(luaName, state) end
 --       ====================================
 -- Verfuegbar ab EEP 11.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPStructureSetSmoke("#Lua-Name", true|false)
 -- Name = "#1_Abfertigung Lauscha"
+-- ok = EEPStructureSetSmoke(Name, true)
 -- ok = EEPStructureSetSmoke("#1", true)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Ermittelt, ob der Rauch der benannten Immobilie an- oder ausgeschaltet ist.
----@param luaName string Parameter.
+---@param luaName string parameter ist der Lua-Name der Immobilie als String. Er steht in den Objekteigenschaften und
+--- unterscheidet sich durch die vorangestellte ID vom Modellnamen. Es genuegt die Nummer mit vorangestelltem
+--- #-Zeichen als Identifikator.
+---@return boolean ok rueckgabewert ist entweder true, wenn die Immobilie existiert und eine Rauchfunktion hat oder
+--- false, falls mindestens eins von beidem nicht zutrifft.
+---@return boolean rauch rueckgabewert ist entweder true, wenn der Rauch an- oder false, wenn der Rauch ausgeschaltet
+--- ist.
 function EEPStructureGetSmoke(luaName) end
 --       =============================
 -- Verfuegbar ab EEP 11.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPStructureGetSmoke("#Lua-Name")
 -- Name = "#1_Abfertigung Lauscha"
+-- ok, Rauch = EEPStructureGetSmoke(Name)
 -- ok, Rauch = EEPStructureGetSmoke("#1")
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Schaltet das Licht der benannten Immobilie an oder aus.
----@param luaName string Parameter.
----@param state boolean Parameter.
+---@param luaName string parameter ist der Lua-Name der Immobilie als String. Er steht in den Objekteigenschaften und
+--- unterscheidet sich durch die vorangestellte ID vom Modellnamen. Es genuegt die Nummer mit vorangestelltem
+--- #-Zeichen als Identifikator.
+---@param state boolean parameter schaltet das Licht mit true an oder mit false aus.
+---@return boolean ok rueckgabewert ist entweder true, wenn die Immobilie existiert und eine Lichtfunktion hat oder
+--- false, falls mindestens eins von beidem nicht zutrifft.
 function EEPStructureSetLight(luaName, state) end
 --       ====================================
 -- Verfuegbar ab EEP 11.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPStructureSetLight("#Lua-Name", true|false)
 -- Name = "#13_Betriebsdienstgebaeude"
+-- ok = EEPStructureSetLight(Name, true)
 -- ok = EEPStructureSetLight("#13", true)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Plugin 1 Ermittelt, ob das Licht der benannten Immobilie an- oder ausgeschaltet ist.
----@param luaName string Parameter.
+---@param luaName string parameter ist der Lua-Name der Immobilie als String. Er steht in den Objekteigenschaften und
+--- unterscheidet sich durch die vorangestellte ID vom Modellnamen. Es genuegt die Nummer mit vorangestelltem
+--- #-Zeichen als Identifikator.
+---@return boolean ok rueckgabewert ist entweder true, wenn die Immobilie existiert und eine Lichtfunktion hat oder
+--- false, falls mindestens eins von beidem nicht zutrifft.
+---@return boolean licht rueckgabewert ist entweder true, wenn das Licht an-, oder false, wenn das Licht ausgeschaltet
+--- bzw. im "Automatik"-Modus ist.
 function EEPStructureGetLight(luaName) end
 --       =============================
 -- Verfuegbar ab EEP 11.1.
 -- Beispielaufrufe:
 -- EEPStructureGetLight("#Lua-Name")
 -- Name = "#13_Betriebsdienstgebaeude"
+-- ok, Licht = EEPStructureGetLight(Name)
 -- ok, Licht = EEPStructureGetLight("#13")
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Schaltet das Feuer der benannten Immobilie an oder aus.
----@param luaName string Parameter.
----@param state boolean Parameter.
+---@param luaName string parameter ist der Lua-Name der Immobilie als String. Er steht in den Objekteigenschaften und
+--- unterscheidet sich durch die vorangestellte ID vom Modellnamen. Es genuegt die Nummer mit vorangestelltem
+--- #-Zeichen als Identifikator..
+---@param state boolean parameter schaltet das Feuer mit true an oder false aus.
+---@return boolean ok rueckgabewert ist entweder true, wenn die Immobilie existiert und eine Brandfunktion hat oder
+--- false, falls mindestens eins von beidem nicht zutrifft.
 function EEPStructureSetFire(luaName, state) end
 --       ===================================
 -- Verfuegbar ab EEP 11.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPStructureSetFire("#Lua-Name", true|false)
 -- Name = "#15_Brandhaus_01_SB1"
+-- ok = EEPStructureSetFire(Name, true)
 -- ok = EEPStructureSetFire("#15 ", true)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Ermittelt, ob das Feuer der benannten Immobilie an- oder ausgeschaltet ist.
----@param luaName string Parameter.
+---@param luaName string parameter ist der Lua-Name der Immobilie als String. Er steht in den Objekteigenschaften und
+--- unterscheidet sich durch die vorangestellte ID vom Modellnamen. Es genuegt die Nummer mit vorangestelltem
+--- #-Zeichen als Identifikator.
+---@return boolean ok rueckgabewert ist entweder true, wenn die Immobilie existiert und eine Brandfunktion hat oder
+--- false, falls mindestens eins von beidem nicht zutrifft.
+---@return boolean feuer rueckgabewert ist entweder true, wenn das Feuer an-, oder false, wenn das Feuer ausgeschaltet
+--- ist.
 function EEPStructureGetFire(luaName) end
 --       ============================
 -- Verfuegbar ab EEP 11.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPStructureGetFire("#Lua-Name")
 -- Name = "#15_Brandhaus_01_SB1"
+-- ok, Feuer = EEPStructureGetFire(Name)
 -- ok, Feuer = EEPStructureGetFire("#15")
 
 -- -------------------------------------------------------------------------------------------------------------------
@@ -1069,26 +1398,35 @@ function EEPStructureGetFire(luaName) end
 ---den Objekteigenschaften und unterscheidet sich durch die vorangestellte ID vom Modellnamen. Es genuegt die Nummer
 ---mit vorangestelltem #-Zeichen als Identifikator.
 ---@param luaName string Parameter.
----@param axisName string Parameter.
----@param stellung number Parameter.
+---@param axisName string parameter ist der Name der Achse als String. Er kann in den diversen EEP- Sprachversionen
+--- unterschiedlich sein.
+---@param stellung number parameter ist die Stellung, zu der die Achse springen soll.
 function EEPStructureSetAxis(luaName, axisName, stellung) end
 --       ================================================
 -- Verfuegbar ab EEP 11.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPStructureSetAxis("#Lua-Name", "Achse", Stellung)
 -- Name = "#83_Drehscheibe"
+-- Achse = "Bruecke"
 -- ok = EEPStructureSetAxis("#83", "Bruecke", 50)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Ermittelt die Stellung einer mittels Achsnamen definierten Achse der benannten Immobilie oder des Gleisobjekts
----@param luaName string Parameter.
----@param axisName string Parameter.
+---@param luaName string parameter ist der Lua-Name der Immobilie oder des Gleisobjektes als String. Er steht in den
+--- Objekteigenschaften und unterscheidet sich durch die vorangestellte ID vom Modellnamen. Es genuegt die Nummer mit
+--- vorangestelltem #-Zeichen als Identifikator.
+---@param axisName string parameter ist der Name der Achse als String.Er kann in den diversen EEP- Sprachversionen
+--- unterschiedlich sein.
+---@return boolean ok rueckgabewert ist true, wenn Objekt und Achse existieren oder false, falls mindestens eins von
+--- beidem nicht existiert.
+---@return number stellung rueckgabewert ist die momentane Stellung der Achse als Zahl.
 function EEPStructureGetAxis(luaName, axisName) end
 --       ======================================
 -- Verfuegbar ab EEP 11.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPStructureGetAxis("#Lua-Name", "Achse")
 -- Name = "#83_Drehscheibe"
+-- Achse = "Bruecke"
 -- ok, Stellung = EEPStructureGetAxis("#83", "Bruecke")
 
 -- -------------------------------------------------------------------------------------------------------------------
@@ -1099,19 +1437,29 @@ function EEPStructureGetAxis(luaName, axisName) end
 ---Zahl. Sie ist
 ---@param luaName string Parameter.
 ---@param achsnummer any Parameter.
----@param stellung number Parameter.
+---@param stellung number parameter ist die Stellung, zu der die Achse springen soll.
+---@return boolean ok rueckgabewert ist true, wenn Objekt und Achsnummer existieren oder false, falls mindestens eins
+--- von beidem nicht existiert.
 function EEPStructureSetAxisByNumber(luaName, achsnummer, stellung) end
 --       ==========================================================
 -- Verfuegbar ab EEP 18.0.
 -- Beispielaufrufe:
 -- EEPStructureSetAxisByNumber("#Lua-Name", Achsnummer, Stellung)
 -- Name = "#83_Drehscheibe"
+-- ok = EEPStructureSetAxisByNumber(Name, 1, 50)
 -- ok = EEPStructureSetAxisByNumber("#83", 1, 50)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Ermittelt die Stellung einer mittels Achsnummer definierten Achse der benannten Immobilie oder des Gleisobjekts
----@param luaName string Parameter.
----@param achsnummer any Parameter.
+---@param luaName string parameter ist der Lua-Name der Immobilie oder des Gleisobjektes als String. Er steht in den
+--- Objekteigenschaften und unterscheidet sich durch die vorangestellte ID vom Modellnamen. Es genuegt die Nummer mit
+--- vorangestelltem #-Zeichen als Identifikator.
+---@param achsnummer number parameter ist die Achsnummer der zu bewegenden Achse als Zahl. Sie ist in allen
+--- EEP-Sprachversionen gleich und steht sowohl in der ini-Datei als auch im Modellkatalog bei den Achsbezeichnungen
+--- des Modells.
+---@return boolean ok rueckgabewert ist true, wenn Objekt und Achsnummer existieren oder false, falls mindestens eins
+--- von beidem nicht existiert.
+---@return number stellung rueckgabewert ist die momentane Stellung der Achse als Zahl.
 function EEPStructureGetAxisByNumber(luaName, achsnummer) end
 --       ================================================
 -- Verfuegbar ab EEP 18.0.
@@ -1119,27 +1467,37 @@ function EEPStructureGetAxisByNumber(luaName, achsnummer) end
 -- EEPStructureGetAxisByNumber("#Lua-Name", Achsnummer)
 -- Name = "#83_Drehscheibe"
 -- ok, Stellung = EEPStructureGetAxisByNumber
+-- (Name, 1)
 -- ok, Stellung = EEPStructureGetAxisByNumber("#83", 1)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Bewegt die Achse einer Immobilie oder eines Gleisobjekts.
----@overload fun(luaName: string): nil
----@param luaName string Parameter.
----@param axisName? string Parameter.
----@param stellung? number Parameter.
-function EEPStructureAnimateAxis(luaName, axisName, stellung) end
+---@param luaName string parameter ist der Lua-Name der Immobilie oder des Gleisobjekts als String. Er steht in den
+--- Objekteigenschaften und unterscheidet sich durch die vorangestellte ID vom Modellnamen. Es genuegt die Nummer mit
+--- vorangestelltem #-Zeichen als Identifikator.
+---@param axisName string parameter ist der Name der Achse als String
+---@param position number parameter ist die (positive oder negative) Schrittzahl, um welche die Achse weiterbewegt
+--- werden soll. Der Wert 1000 bzw. -1000 bewirkt eine endlose Bewegung. Der Wert 0 stoppt die Bewegung.
+---@return boolean ok rueckgabewert ist true, wenn Objekt und Achse existieren oder false, falls mindestens eins von
+--- beidem nicht existiert.
+function EEPStructureAnimateAxis(luaName, axisName, position) end
 --       ====================================================
 -- Verfuegbar ab EEP 11.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPStructureAnimateAxis("#Lua-Name", "Achse", Stellung)
--- ok = EEPStructureAnimateAxis("#17_Windmuehle", Rueckgabewerte "Muehlrad", 1000)
+-- ok = EEPStructureAnimateAxis("#17_Windmuehle", "Muehlrad", 1000)
 -- ok = EEPStructureAnimateAxis("#17", "Muehlrad", 1000)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Ermittelt, ob sich das genannte bewegliche Teil der genannten Immobilie oder des Gleisobjektes aktuell in Bewegung
 ---befindet und ob diese Bewegung endlos ist.
----@param luaName string Parameter.
----@param axisName string Parameter.
+---@param luaName string parameter ist der Lua-Name der Immobilie oder des Gleisobjektes als String. Er steht in den
+--- Objekteigenschaften und unterscheidet sich durch die vorangestellte ID vom Modellnamen. Es genuegt die Nummer mit
+--- vorangestelltem #-Zeichen als Identifikator.
+---@param axisName string parameter ist der Name des beweglichen Teils.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
+---@return number status rueckgabewert ist: 0, wenn das genannte Teil steht, 1, wenn sich das genannte Teil in einer
+--- endlosen Bewegung befindet, 2, wenn das Teil sich um eine endliche Anzahl Schritte bewegt.
 function EEPStructureIsAxisAnimate(luaName, axisName) end
 --       ============================================
 -- Verfuegbar ab EEP 15.
@@ -1152,80 +1510,122 @@ function EEPStructureIsAxisAnimate(luaName, axisName) end
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Versetzt die benannte Immobilie oder das Landschaftselement an eine neue Position.
----@param luaName string Parameter.
----@param posX number Parameter.
----@param posY number Parameter.
----@param posZ number Parameter.
+---@param luaName string parameter ist der Lua-Name der Immobilie oder des Landschaftselementes als String. Er steht
+--- in den Objekteigenschaften und unterscheidet sich durch die vorangestellte ID vom Modellnamen. Es genuegt die
+--- Nummer mit vorangestelltem #-Zeichen als Identifikator.
+---@param posX number parameter ist die Position in X-Richtung.
+---@param posY number parameter ist die Position in Y-Richtung.
+---@param posZ number parameter ist die Position in Z-Richtung.
+---@return boolean ok rueckgabewert ist true, wenn das Objekt existiert oder false, wenn nicht oder ausserhalb des
+--- Anlagenbereichs positioniert werden sollte.
 function EEPStructureSetPosition(luaName, posX, posY, posZ) end
 --       ==================================================
 -- Verfuegbar ab EEP 11.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPStructureSetPosition("#Lua-Name", PosX, PosY, PosZ)
 -- Name = "#55_Strohballen"
+-- ok = EEPStructureSetPosition(Name, 11, 17, 3)
 -- ok = EEPStructureSetPosition("#55", 11, 17, 3)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Ermittelt die aktuelle Position einer Immobilie oder eines Landschaftselements.
----@param luaName string Parameter.
+---@param luaName string parameter ist der Lua-Name der Immobilie oder des Landschaftselementes als String. Er steht
+--- in den Objekteigenschaften und unterscheidet sich durch die vorangestellte ID vom Modellnamen. Es genuegt die
+--- Nummer mit vorangestelltem #-Zeichen als Identifikator.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, ansonsten false.
+---@return any posX rueckgabewert ist die X-Position des Objekts.
+---@return any posY rueckgabewert ist die Y-Position des Objekts.
+---@return any posZ rueckgabewert ist die Z-Position des Objekts.
 function EEPStructureGetPosition(luaName) end
 --       ================================
 -- Verfuegbar ab EEP 15.
 -- Beispielaufrufe:
 -- EEPStructureGetPosition("#Lua-Name")
--- ok, Pos_X, Pos_Y, Pos_Z = Rueckgabewerte EEPStructureGetPosition("#55_Strohballen")
+-- ok, Pos_X, Pos_Y, Pos_Z = EEPStructureGetPosition("#55_Strohballen")
 -- ok, Pos_X, Pos_Y, Pos_Z = EEPStructureGetPosition("#55")
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Dreht die benannte Immobilie oder das Landschaftselement in eine neue Position.
----@param luaName string Parameter.
----@param rotX number Parameter.
----@param rotY number Parameter.
----@param rotZ number Parameter.
+---@param luaName string parameter ist der Lua-Name der Immobilie oder des Landschaftselementes als String. Er steht
+--- in den Objekteigenschaften und unterscheidet sich durch die vorangestellte ID vom Modellnamen. Es genuegt die
+--- Nummer mit vorangestelltem #-Zeichen als Identifikator.
+---@param rotX number parameter ist die Drehung um die X-Achse
+---@param rotY number parameter ist die Drehung um die Y-Achse
+---@param rotZ number parameter ist die Drehung um die Z-Achse
+---@return boolean ok rueckgabewert ist true, wenn das Objekt existiert oder false, wenn nicht.
 function EEPStructureSetRotation(luaName, rotX, rotY, rotZ) end
 --       ==================================================
 -- Verfuegbar ab EEP 11.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPStructureSetRotation("#Lua-Name", RotX, RotY, RotZ)
 -- Name = "#55_Strohballen"
+-- ok = EEPStructureSetRotation(Name, 0, 0, 25)
 -- ok = EEPStructureSetRotation("#55", 0, 0, 25)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Ermittelt die aktuelle Ausrichtung einer Immobilie oder eines Landschaftselements.
----@param luaName string Parameter.
+---@param luaName string parameter ist der Lua-Name der Immobilie oder des Landschaftselementes als String. Er steht
+--- in den Objekteigenschaften und unterscheidet sich durch die vorangestellte ID vom Modellnamen. Es genuegt die
+--- Nummer mit vorangestelltem #-Zeichen als Identifikator.
+---@return boolean ok rueckgabewert ist true, wenn das Objekt existiert oder false, wenn nicht.
+---@return any rotX rueckgabewert ist die Drehung um die X-Achse
+---@return any rotY rueckgabewert ist die Drehung um die Y-Achse
+---@return any rotZ rueckgabewert ist die Drehung um die Z-Achse
 function EEPStructureGetRotation(luaName) end
 --       ================================
 -- Verfuegbar ab EEP 11.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPStructureGetRotation("#Lua-Name")
--- ok, Rot_X, Rot_Y, Rot_Z = Rueckgabewerte EEPStructureGetRotation("#55_Strohballen")
+-- ok, Rot_X, Rot_Y, Rot_Z = EEPStructureGetRotation("#55_Strohballen")
 -- ok, Rot_X, Rot_Y, Rot_Z = EEPStructureGetRotation("#55")
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Ermittelt die Kategorie, zu welcher die genannte Immobilie oder das genannte Landschaftselement gehoert.
----@param luaName string Parameter.
+---@param luaName string parameter ist der Lua-Name der Immobilie oder des Landschaftselements. Er steht in den
+--- Objekteigenschaften und unterscheidet sich durch die vorangestellte ID vom Modellnamen. Es genuegt die Nummer mit
+--- vorangestelltem #-Zeichen als Identifikator.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
+---@return string typ rueckgabewert ist die Kategorie, welche der Konstrukteur im Modell eingetragen hat: 16 =
+--- "Gleisobjekte" Bahngleise 17 = "Gleisobjekte" Strassenbahn 18 = "Gleisobjekte" Strassen 19 = "Gleisobjekte"
+--- Wasserwege/Diverse 22 = Immobilien 23 = Landschaftselemente Fauna 24 = Landschaftselemente Flora 25 =
+--- Landschaftselemente Terra 38 = Landschaftselemente Bodenmodelle zur 3D-Texturierung
 function EEPStructureGetModelType(luaName) end
 --       =================================
 -- Verfuegbar ab EEP 15.
 -- Beispielaufrufe:
 -- EEPStructureGetModelType("#Lua-Name")
+-- ok, Typ = EEPStructureGetModelType("#23")
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Setzt alternative Beleuchtungsfarbe fuer benannte Immobilie.
-function EEPStructureSetLightningColour() end
---       ================================
+---@param name string parameter ist der Lua-Name der Immobilie als String. Er steht in den Objekteigenschaften und
+--- unterscheidet sich durch die vorangestellte ID vom Modellnamen. Es genuegt die Nummer mit vorangestelltem
+--- #-Zeichen als Identifikator.
+---@param rot number parameter 2 - 4 bestimmen die Farbe aus den Anteilen fuer rot, gruen und blau jeweils im Bereich
+--- von 0 - 255.
+---@param gruen number parameter 2 - 4 bestimmen die Farbe aus den Anteilen fuer rot, gruen und blau jeweils im
+--- Bereich von 0 - 255.
+---@param blau number parameter 2 - 4 bestimmen die Farbe aus den Anteilen fuer rot, gruen und blau jeweils im Bereich
+--- von 0 - 255.
+---@return boolean ok rueckgabewert ist entweder true, wenn die Ausfuehrung erfolgreich war, sonst false.
+function EEPStructureSetLightningColour(name, rot, gruen, blau) end
+--       ======================================================
 -- Verfuegbar ab EEP 18.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPStructureSetLightingColour() EEPStructureSetLightingColour("#Lua-Name", R, G, B)
 -- Name = "#13_Hermannsdenkmal"
--- ok = EEPStructureSetLightingColour(Name, 128, Rueckgabewerte einer 255, 128)
+-- ok = EEPStructureSetLightingColour(Name, 128, 255, 128)
 -- ok = EEPStructureSetLightingColour("#13", 128, 255, 128)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Aendert die Position eines Ladeguts auf der Anlage.
----@param luaName string Parameter.
----@param posX number Parameter.
----@param posY number Parameter.
----@param posZ number Parameter.
+---@param luaName string parameter ist der Lua-Name des Ladeguts. Er steht in den Objekteigenschaften und
+--- unterscheidet sich durch die vorangestellte ID vom Modellnamen. Es genuegt die Nummer mit vorangestelltem
+--- #-Zeichen als Identifikator.
+---@param posX number parameter ist die X-Position des Objekts.
+---@param posY number parameter ist die Y-Position des Objekts.
+---@param posZ number parameter ist die Z-Position des Objekts.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, ansonsten false.
 function EEPGoodsSetPosition(luaName, posX, posY, posZ) end
 --       ==============================================
 -- Verfuegbar ab EEP 15.
@@ -1236,7 +1636,13 @@ function EEPGoodsSetPosition(luaName, posX, posY, posZ) end
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Ermittelt die aktuelle Position eines Ladeguts auf der Anlage.
----@param luaName string Parameter.
+---@param luaName string parameter ist der Lua-Name des Ladeguts. Er steht in den Objekteigenschaften und
+--- unterscheidet sich durch die vorangestellte ID vom Modellnamen. Es genuegt die Nummer mit vorangestelltem
+--- #-Zeichen als Identifikator.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, ansonsten false.
+---@return any posX rueckgabewert ist die X-Position des Objekts.
+---@return any posY rueckgabewert ist die Y-Position des Objekts.
+---@return any posZ rueckgabewert ist die Z-Position des Objekts.
 function EEPGoodsGetPosition(luaName) end
 --       ============================
 -- Verfuegbar ab EEP 15.
@@ -1247,10 +1653,13 @@ function EEPGoodsGetPosition(luaName) end
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Aendert die Ausrichtung eines Ladeguts auf der Anlage.
----@param luaName string Parameter.
----@param rot_X any Parameter.
----@param rot_Y any Parameter.
----@param rot_Z any Parameter.
+---@param luaName string parameter ist der Lua-Name des Ladeguts. Er steht in den Objekteigenschaften und
+--- unterscheidet sich durch die vorangestellte ID vom Modellnamen. Es genuegt die Nummer mit vorangestelltem
+--- #-Zeichen als Identifikator.
+---@param rot_X number parameter ist die Drehung des Objekts um die X-Achse in Grad.
+---@param rot_Y number parameter ist die Drehung des Objekts um die Y-Achse in Grad.
+---@param rot_Z number parameter ist die Drehung des Objekts um die Z-Achse in Grad.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, ansonsten false.
 function EEPGoodsSetRotation(luaName, rot_X, rot_Y, rot_Z) end
 --       =================================================
 -- Verfuegbar ab EEP 15.
@@ -1261,7 +1670,13 @@ function EEPGoodsSetRotation(luaName, rot_X, rot_Y, rot_Z) end
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Ermittelt die aktuelle Ausrichtung eines Ladeguts auf der Anlage.
----@param luaName string Parameter.
+---@param luaName string parameter ist der Lua-Name des Ladeguts. Er steht in den Objekteigenschaften und
+--- unterscheidet sich durch die vorangestellte ID vom Modellnamen. Es genuegt die Nummer mit vorangestelltem
+--- #-Zeichen als Identifikator.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, ansonsten false.
+---@return number rot_X rueckgabewert ist die Drehung des Objekts um die X-Achse in Grad.
+---@return number rot_Y rueckgabewert ist die Drehung des Objekts um die Y-Achse in Grad.
+---@return number rot_Z rueckgabewert ist die Drehung des Objekts um die Z-Achse in Grad.
 function EEPGoodsGetRotation(luaName) end
 --       ============================
 -- Verfuegbar ab EEP 16.1 - Plugin 1.
@@ -1275,20 +1690,28 @@ function EEPGoodsGetRotation(luaName) end
 ---Parameter ist der Lua-Name des Ladegutes als String. Er steht in den Objekteigenschaften und unterscheidet sich
 ---durch die vorangestellte ID vom Modellnamen. Es genuegt die Nummer mit vorangestelltem #-Zeichen als Identifikator.
 ---@param luaName string Parameter.
----@param axisName string Parameter.
----@param stellung number Parameter.
+---@param axisName string parameter ist der Name der Achse als String. Er kann in den diversen EEP- Sprachversionen
+--- unterschiedlich sein.
+---@param stellung number parameter ist die Stellung, zu der die Achse springen soll.
 function EEPGoodsSetAxis(luaName, axisName, stellung) end
 --       ============================================
 -- Verfuegbar ab EEP 18.0.
 -- Beispielaufrufe:
 -- EEPGoodsSetAxis("#Lua-Name", "Achse", Stellung)
 -- Name = "#83_IF_ctnr_OT20_C1 (MS7)"
+-- Achse = "Ebene der Ladung"
 -- ok = EEPGoodsSetAxis("#83", "Ebene der Ladung", 50)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Ermittelt die Stellung einer mittels Achsnamen definierten Achse des benannten Ladegutes.
----@param luaName string Parameter.
----@param axisName string Parameter.
+---@param luaName string parameter ist der Lua-Name des Ladegutes als String. Er steht in den Objekteigenschaften und
+--- unterscheidet sich durch die vorangestellte ID vom Modellnamen. Es genuegt die Nummer mit vorangestelltem
+--- #-Zeichen als Identifikator.
+---@param axisName string parameter ist der Name der Achse als String.Er kann in den diversen EEP- Sprachversionen
+--- unterschiedlich sein.
+---@return boolean ok rueckgabewert ist true, wenn Objekt und Achse existieren oder false, falls mindestens eins von
+--- beidem nicht existiert.
+---@return number stellung rueckgabewert ist die momentane Stellung der Achse als Zahl.
 function EEPGoodsGetAxis(luaName, axisName) end
 --       ==================================
 -- Verfuegbar ab EEP 18.0.
@@ -1296,6 +1719,7 @@ function EEPGoodsGetAxis(luaName, axisName) end
 -- EEPGoodsGetAxis("#Lua-Name", "Achse")
 -- Name = "#83_IF_ctnr_OT20_C1 (MS7)"
 -- Achse = "Ebene der Ladung"
+-- ok, Stellung = EEPGoodsGetAxis(Name, Achse)
 -- ok, Stellung = EEPGoodsGetAxis("#83", "Ebene der Ladung")
 
 -- -------------------------------------------------------------------------------------------------------------------
@@ -1305,251 +1729,343 @@ function EEPGoodsGetAxis(luaName, axisName) end
 ---- Der 2. Parameter ist die Achsnummer der zu bewegenden Achse als Zahl. Sie ist
 ---@param luaName string Parameter.
 ---@param achsnummer any Parameter.
----@param stellung number Parameter.
+---@param stellung number parameter ist die Stellung, zu der die Achse springen soll.
+---@return boolean ok rueckgabewert ist true, wenn Objekt und Achsnummer existieren oder false, falls mindestens eins
+--- von beiden nicht existiert.
 function EEPGoodsSetAxisByNumber(luaName, achsnummer, stellung) end
 --       ======================================================
 -- Verfuegbar ab EEP 18.0.
 -- Beispielaufrufe:
 -- EEPGoodsSetAxisByNumber("#Lua-Name", Achsnummer, Stellung)
 -- Name = "#83_IF_ctnr_OT20_C1 (MS7)"
+-- ok = EEPGoodsSetAxisByNumber(Name, 1, 50)
 -- ok = EEPGoodsSetAxisByNumber("#83", 1, 50)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Ermittelt die Stellung einer mittels Achsnummer definierten Achse des benannten Ladegutes.
----@param luaName string Parameter.
----@param achsnummer any Parameter.
+---@param luaName string parameter ist der Lua-Name des Ladegutes als String. Er steht in den Objekteigenschaften und
+--- unterscheidet sich durch die vorangestellte ID vom Modellnamen. Es genuegt die Nummer mit vorangestelltem
+--- #-Zeichen als Identifikator.
+---@param achsnummer number parameter ist die Achsnummer der zu bewegenden Achse als Zahl. Sie ist in allen
+--- EEP-Sprachversionen gleich und steht sowohl in der ini-Datei als auch im Modellkatalog bei den Achsbezeichnungen
+--- des Modells.
+---@return boolean ok rueckgabewert ist true, wenn Objekt und Achsnummer existieren oder false, falls mindestens eins
+--- von beiden nicht existiert.
+---@return number stellung rueckgabewert ist die momentane Stellung der Achse als Zahl.
 function EEPGoodsGetAxisByNumber(luaName, achsnummer) end
 --       ============================================
 -- Verfuegbar ab EEP 18.0.
 -- Beispielaufrufe:
 -- EEPGoodsGetAxisByNumber("#Lua-Name", Achsnummer)
 -- Name = "#83_IF_ctnr_OT20_C1 (MS7)"
+-- ok, Stellung = EEPGoodsGetAxisByNumber(Name, 1)
 -- ok, Stellung = EEPGoodsGetAxisByNumber("#83", 1)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Ermittelt die Kategorie, zu welcher das genannte Ladegut gehoert.
----@param luaName string Parameter.
+---@param luaName string parameter ist der Lua-Name des Ladeguts. Er steht in den Objekteigenschaften und
+--- unterscheidet sich durch die vorangestellte ID vom Modellnamen. Es genuegt die Nummer mit vorangestelltem
+--- #-Zeichen als Identifikator.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
+---@return any typ rueckgabewert ist die Kategorie, welche der Konstrukteur im Modell eingetragen hat: 20 = Gueter mit
+--- kubischer Form z.B. Gitterboxen, Kisten; 21 = Gueter mit zylindrischer Form z.B. Rohre, Faesser.
 function EEPGoodsGetModelType(luaName) end
 --       =============================
 -- Verfuegbar ab EEP 15.
 -- Beispielaufrufe:
 -- EEPGoodsGetModelType("#Lua-Name")
+-- ok, Typ = EEPGoodsGetModelType("#78")
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Registriert ein Gleiselement fuer Besetztabfragen.
----@param gleisID number Parameter.
+---@param gleisID number parameter ist die ID des zu registrierenden Gleises.
+---@return boolean ok rueckgabewert ist true, wenn das Gleis existiert, andernfalls false
 function EEPRegisterRailTrack(gleisID) end
 --       =============================
 -- Verfuegbar ab EEP 11.3 - Plugin 3.
 -- Beispielaufrufe:
 -- EEPRegisterRailTrack(Gleis-ID)
+-- ok = EEPRegisterRailTrack(123)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Ermittelt, ob ein Gleiselement besetzt ist bzw. ob es mit dem x-ten Zugverband besetzt ist und gibt dann dessen
 ---Namen zurueck.
----@overload fun(gleisID: number): nil
+---@overload fun(gleisID: number): boolean, boolean
 ---@param gleisID number Parameter.
 ---@param trueZahl? any Parameter.
+---@return boolean ok rueckgabewert ist true, wenn das zu pruefende Gleis existiert und registriert ist, andernfalls
+--- false.
+---@return boolean besetzt rueckgabewert ist ohne den 2. Parameter true, wenn das Gleis besetzt ist, andernfalls
+--- false. Mit dem 2. Parameter gibt er true zurueck, wenn an der im 2. Parameter bezeichneten Stelle (wobei dort true
+--- = 1 entspricht) ein Zugverband steht, andernfalls false.
 function EEPIsRailTrackReserved(gleisID, trueZahl) end
 --       =========================================
 -- Verfuegbar ab EEP 11.3 - Plugin 3; EEP 13.2 - Plugin 2; EEP 17.2 - Plugin 2.
 -- Beispielaufrufe:
 -- EEPIsRailTrackReserved(Gleis-ID [, true|Zahl])
 -- ok, besetzt = EEPIsRailTrackReserved(123)
--- EEPIsRailTrackReserved(123, true)
+-- ok, besetzt, Zugname = EEPIsRailTrackReserved(123, true)
 -- ok, besetzt, Zugname = EEPIsRailTrackReserved(123, 2)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Registriert ein Strassenelement fuer Besetztabfragen.
----@param strassenID number Parameter.
+---@param strassenID number parameter ist die ID der zu registrierenden Strasse.
+---@return boolean ok rueckgabewert ist true, wenn die Strasse existiert, andernfalls false
 function EEPRegisterRoadTrack(strassenID) end
 --       ================================
 -- Verfuegbar ab EEP 11.3 - Plugin 3.
 -- Beispielaufrufe:
 -- EEPRegisterRoadTrack(Strassen-ID)
+-- ok = EEPRegisterRoadTrack(211)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Ermittelt, ob ein Strassenelement besetzt ist bzw. ob es mit dem x-ten Fahrzeugverband besetzt ist und gibt dann
 ---dessen Namen zurueck.
----@overload fun(strassenID: number): nil
+---@overload fun(strassenID: number): boolean, boolean
 ---@param strassenID number Parameter.
 ---@param trueZahl? any Parameter.
+---@return boolean ok rueckgabewert ist true, wenn die zu pruefende Strasse existiert und registriert ist, andernfalls
+--- false.
+---@return boolean besetzt rueckgabewert ist ohne den 2. Parameter true, wenn die Strasse besetzt ist, andernfalls
+--- false. Mit dem 2. Parameter gibt er true zurueck, wenn an der im 2. Parameter bezeichneten Stelle (wobei dort true
+--- = 1 entspricht) ein Fahrzeugverband steht, andernfalls false.
 function EEPIsRoadTrackReserved(strassenID, trueZahl) end
 --       ============================================
 -- Verfuegbar ab EEP 11.3 - Plugin 3; EEP 13.2 - Plugin 2; EEP 17.2 - Plugin 2.
 -- Beispielaufrufe:
 -- EEPIsRoadTrackReserved(Strassen-ID [, true|Zahl])
 -- ok, besetzt = EEPIsRoadTrackReserved(211)
--- EEPIsRoadTrackReserved(211, true)
+-- ok, besetzt, Name_Fahrzeugverband = EEPIsRoadTrackReserved(211, true)
 -- ok, besetzt, Name_Fahrzeugverband = EEPIsRoadTrackReserved(211, 3)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Registriert ein Strassenbahngleis fuer Besetztabfragen.
----@param strassenbahngleisID number Parameter.
+---@param strassenbahngleisID number parameter ist die ID des zu registrierenden Strassenbahngleises.
+---@return boolean ok rueckgabewert ist true, wenn das Strassenbahngleis existiert, andernfalls false
 function EEPRegisterTramTrack(strassenbahngleisID) end
 --       =========================================
 -- Verfuegbar ab EEP 11.3 - Plugin 3.
 -- Beispielaufrufe:
 -- EEPRegisterTramTrack(Strassenbahngleis-ID)
+-- ok = EEPRegisterTramTrack(187)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Ermittelt, ob ein Strassenbahngleis besetzt ist bzw. ob es mit dem x-ten Zugverband besetzt ist und gibt dann
 ---dessen Namen zurueck.
----@overload fun(strassenbahngleisID: number): nil
+---@overload fun(strassenbahngleisID: number): boolean, boolean
 ---@param strassenbahngleisID number Parameter.
 ---@param trueZahl? any Parameter.
+---@return boolean ok rueckgabewert ist true, wenn das zu pruefende Strassenbahngleis existiert und registriert ist,
+--- andernfalls false.
+---@return boolean besetzt rueckgabewert ist ohne den 2. Parameter true, wenn das Strassenbahngleis besetzt ist,
+--- andernfalls false. Mit dem 2. Parameter gibt er true zurueck, wenn an der im 2. Parameter bezeichneten Stelle
+--- (wobei dort true = 1 entspricht) ein Zugverband steht, andernfalls false.
 function EEPIsTramTrackReserved(strassenbahngleisID, trueZahl) end
 --       =====================================================
 -- Verfuegbar ab EEP 11.3 - Plugin 3; EEP 13.2 - Plugin 2; EEP 17.2 - Plugin 2.
 -- Beispielaufrufe:
 -- EEPIsTramTrackReserved(Strassenbahngleis-ID [, true|Zahl])
 -- ok, besetzt = EEPIsTramTrackReserved(187)
--- EEPIsTramTrackReserved(187, true)
+-- ok, besetzt, Name_Strassenbahnverband = EEPIsTramTrackReserved(187, true)
 -- ok, besetzt, Name_Strassenbahnverband = EEPIsTramTrackReserved(187, 2)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Registriert ein Weg-Element der Kategorie "Sonstige" fuer Besetztabfragen.
----@param wegID number Parameter.
+---@param wegID number parameter ist die ID des zu registrierenden Weges der Kategorie "Sonstige".
+---@return boolean ok rueckgabewert ist true, wenn der Weg existiert, andernfalls false
 function EEPRegisterAuxiliaryTrack(wegID) end
 --       ================================
 -- Verfuegbar ab EEP 11.3 - Plugin 3.
 -- Beispielaufrufe:
 -- EEPRegisterAuxiliaryTrack(Weg-ID)
+-- ok = EEPRegisterAuxiliaryTrack(321)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Ermittelt, ob ein Weg-Element der Kategorie "Sonstige" besetzt ist bzw. ob es mit dem x-ten Fahrzeugverband besetzt
 ---ist und gibt dann dessen Namen zurueck.
----@overload fun(wegID: number): nil
+---@overload fun(wegID: number): boolean, boolean
 ---@param wegID number Parameter.
 ---@param trueZahl? any Parameter.
+---@return boolean ok rueckgabewert ist true, wenn der zu pruefende Weg existiert und registriert ist, andernfalls
+--- false.
+---@return boolean besetzt rueckgabewert ist ohne den 2. Parameter true, wenn der Weg besetzt ist, andernfalls false.
+--- Mit dem 2. Parameter gibt er true zurueck, wenn an der im 2. Parameter bezeichneten Stelle (wobei dort true = 1
+--- entspricht) ein Fahrzeugverband steht, andernfalls false.
 function EEPIsAuxiliaryTrackReserved(wegID, trueZahl) end
 --       ============================================
 -- Verfuegbar ab EEP 11.3 - Plugin 3; EEP 13.2 - Plugin 2; EEP 17.2 - Plugin 2.
 -- Beispielaufrufe:
 -- EEPIsAuxiliaryTrackReserved(Weg-ID [, true|Zahl])
 -- ok, besetzt = EEPIsAuxiliaryTrackReserved(321)
--- EEPIsAuxiliaryTrackReserved(321,true)
+-- ok, besetzt, Name_Fahrzeugverband = EEPIsAuxiliaryTrackReserved(321,true)
 -- ok, besetzt, Name_Fahrzeugverband = EEPIsAuxiliaryTrackReserved(321,3)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Registriert ein Steuerstrecken-Element fuer Besetztabfragen.
----@param steuerstreckenID number Parameter.
+---@param steuerstreckenID number parameter ist die ID der zu registrierenden Steuerstrecke.
+---@return boolean ok rueckgabewert ist true, wenn die Steuerstrecke existiert, andernfalls false
 function EEPRegisterControlTrack(steuerstreckenID) end
 --       =========================================
 -- Verfuegbar ab EEP 11.3 - Plugin 3.
 -- Beispielaufrufe:
 -- EEPRegisterControlTrack(Steuerstrecken-ID)
+-- ok = EEPRegisterControlTrack(333)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Ermittelt, ob ein Steuerstrecken-Element besetzt ist bzw. ob es mit dem x-ten Fahrzeugverband besetzt ist und gibt
 ---dann dessen Namen zurueck.
----@overload fun(steuerstreckenID: number): nil
+---@overload fun(steuerstreckenID: number): boolean, boolean
 ---@param steuerstreckenID number Parameter.
 ---@param trueZahl? any Parameter.
+---@return boolean ok rueckgabewert ist true, wenn die zu pruefende Steuerstrecke existiert und registriert ist,
+--- andernfalls false.
+---@return boolean besetzt rueckgabewert ist ohne den 2. Parameter true, wenn die Steuerstrecke besetzt ist,
+--- andernfalls false. Mit dem 2. Parameter gibt er true zurueck, wenn an der im 2. Parameter bezeichneten Stelle
+--- (wobei dort true = 1 entspricht) ein Fahrzeugverband steht, andernfalls false.
 function EEPIsControlTrackReserved(steuerstreckenID, trueZahl) end
 --       =====================================================
 -- Verfuegbar ab EEP 11.3 - Plugin 3; EEP 13.2 - Plugin 2; EEP 17.2 - Plugin 2.
 -- Beispielaufrufe:
 -- EEPIsControlTrackReserved(Steuerstrecken-ID [, true|Zahl])
 -- ok, besetzt = EEPIsControlTrackReserved(333)
--- EEPIsControlTrackReserved(333, true)
+-- ok, besetzt, Name_Fahrzeugverband = EEPIsControlTrackReserved(333, true)
 -- ok, besetzt, Name_Fahrzeugverband = EEPIsControlTrackReserved(333, 1)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Aendert die Ebene eines Gleises mit mehreren Ebenen und damit das Aussehen der Oberflaeche des Gleises.
----@param gleisID number Parameter.
----@param ebenennummer any Parameter.
-function EEPRailTrackChangeAppearance(gleisID, ebenennummer) end
---       ===================================================
+---@param gleisID number parameter ist die ID des Gleises, dessen Ebene geaendert werden soll.
+---@param count number parameter ist die Nummer der gewuenschten Ebene. Wird eine Zahl groesser als die Anzahl der
+--- vorhandenen Ebenen angegeben, wird die Eingabe intern auf die hoechste Ebenennummer gesetzt.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
+function EEPRailTrackChangeAppearance(gleisID, count) end
+--       ============================================
 -- Verfuegbar ab EEP 18.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPRailTrackChangeAppearance(Gleis-ID, Ebenennummer)
+-- ok = EEPRailTrackChangeAppearance(97, 2)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Aendert die Ebene einer Strasse mit mehreren Ebenen und damit das Aussehen der Oberflaeche der Strasse.
----@param strassenID number Parameter.
----@param ebenennummer any Parameter.
-function EEPRoadTrackChangeAppearance(strassenID, ebenennummer) end
---       ======================================================
+---@param strassenID number parameter ist die ID der Strasse, deren Ebene geaendert werden soll.
+---@param count number parameter ist die Nummer der gewuenschten Ebene. Wird eine Zahl groesser als die Anzahl der
+--- vorhandenen Ebenen angegeben, wird die Eingabe intern auf die hoechste Ebenennummer gesetzt.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
+function EEPRoadTrackChangeAppearance(strassenID, count) end
+--       ===============================================
 -- Verfuegbar ab EEP 18.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPRoadTrackChangeAppearance(Strassen-ID, Ebenennummer)
+-- ok = EEPRoadTrackChangeAppearance(87, 3)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Aendert die Ebene eines Strassenbahngleises mit mehreren Ebenen und damit das Aussehen der Oberflaeche des
 ---Strassenbahngleises.
----@param strassenbahngleisID number Parameter.
----@param ebenennummer any Parameter.
-function EEPTramTrackChangeAppearance(strassenbahngleisID, ebenennummer) end
---       ===============================================================
+---@param strassenbahngleisID number parameter ist die ID des Strassenbahngleises, dessen Ebene geaendert werden soll.
+---@param count number parameter ist die Nummer der gewuenschten Ebene. Wird eine Zahl groesser als die Anzahl der
+--- vorhandenen Ebenen angegeben, wird die Eingabe intern auf die hoechste Ebenennummer gesetzt.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
+function EEPTramTrackChangeAppearance(strassenbahngleisID, count) end
+--       ========================================================
 -- Verfuegbar ab EEP 18.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPTramTrackChangeAppearance(Strassenbahngleis-ID, Ebenennummer)
+-- ok = EEPTramTrackChangeAppearance(87, 3)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Aendert die Ebene eines Weg-Elementes der Kategorie "Sonstige" mit mehreren Ebenen und damit die Oberflaeche des
 ---Weges.
----@param wegID number Parameter.
----@param ebenennummer any Parameter.
-function EEPAuxiliaryTrackChangeAppearance(wegID, ebenennummer) end
---       ======================================================
+---@param wegID number parameter ist die ID des Weges der Kategorie "Sonstige", dessen Ebene geaendert werden soll.
+---@param count number parameter ist die Nummer der gewuenschten Ebene. Wird eine Zahl groesser als die Anzahl der
+--- vorhandenen Ebenen angegeben, wird die Eingabe intern auf die hoechste Ebenennummer gesetzt.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
+function EEPAuxiliaryTrackChangeAppearance(wegID, count) end
+--       ===============================================
 -- Verfuegbar ab EEP 18.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPAuxiliaryTrackChangeAppearance(Weg-ID, Ebenennummer)
+-- ok = EEPAuxiliaryTrackChangeAppearance(87, 3)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Waehlt eine der gespeicherten Kameras aus der Liste.
----@param typ any Parameter.
----@param kameraname string Parameter.
+---@param typ number parameter ist der Kameratyp: 0=statisch, 1=dynamisch, 2= mobile Kamera.
+---@param kameraname string parameter ist der Name der Kamera als String
+---@return boolean ok rueckgabewert ist true, wenn die Kamera existiert, andernfalls false.
 function EEPSetCamera(typ, kameraname) end
 --       =============================
 -- Verfuegbar ab EEP 11.3 - Plugin 3.
 -- Beispielaufrufe:
 -- EEPSetCamera(Typ, "Kameraname")
+-- ok = EEPSetCamera(0, "Bahnhof")
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Definiert die Position der aktuellen Kamera
----@param posX number Parameter.
----@param posY number Parameter.
----@param posZ number Parameter.
+---@param posX number parameter definiert die Kameraposition X in Metern.
+---@param posY number parameter definiert die Kameraposition Y in Metern.
+---@param posZ number parameter definiert die Kameraposition Z in Metern.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
 function EEPSetCameraPosition(posX, posY, posZ) end
 --       ======================================
 -- Verfuegbar ab EEP 16.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPSetCameraPosition(Pos_X, Pos_Y, Pos_Z)
+-- ok = EEPSetCameraPosition(3, 4, 5)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Ermittelt die Position der aktuellen Kamera
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
+---@return number posX rueckgabewert ist die Kameraposition X in Metern.
+---@return number posY rueckgabewert ist die Kameraposition Y in Metern.
+---@return number posZ rueckgabewert ist die Kameraposition Z in Metern.
 function EEPGetCameraPosition() end
 --       ======================
 -- Verfuegbar ab EEP 16.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPGetCameraPosition()
+-- ok, Pos_X, Pos_Y, Pos_Z = EEPGetCameraPosition()
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Definiert die Ausrichtung der aktuellen Kamera
----@param rot_X any Parameter.
----@param rot_Y any Parameter.
----@param rot_Z any Parameter.
+---@param rot_X number parameter definiert die Kameraausrichtung um die X-Achse in Grad.
+---@param rot_Y number parameter definiert die Kameraausrichtung um die Y-Achse in Grad.
+---@param rot_Z number parameter definiert die Kameraausrichtung um die Z-Achse. in Grad
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
 function EEPSetCameraRotation(rot_X, rot_Y, rot_Z) end
 --       =========================================
 -- Verfuegbar ab EEP 16.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPSetCameraRotation(Rot_X, Rot_Y, Rot_Z)
+-- ok = EEPSetCameraRotation(30, 45, 25)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Ermittelt die Ausrichtung der aktuellen Kamera.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
+---@return number rot_X rueckgabewert ist die Kameraausrichtung um die X-Achse in Grad.
+---@return number rot_Y rueckgabewert ist die Kameraausrichtung um die Y-Achse in Grad.
+---@return number rot_Z rueckgabewert ist die Kameraausrichtung um die Z-Achse in Grad.
 function EEPGetCameraRotation() end
 --       ======================
 -- Verfuegbar ab EEP 16.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPGetCameraRotation()
+-- ok, Rot_X, Rot_Y, Rot_Z = EEPGetCameraRotation()
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Waehlt eine der Verfolger-Kameras fuer den angegebenen "Fahrzeugverband".
----@overload fun(kameraposition: any): nil
----@param kameraposition any Parameter.
----@param name? string Parameter.
+---@overload fun(kameraposition: number): boolean
+---@param kameraposition number parameter ist die Kameraposition - entspricht den Tasten 1 bis 9 fuer Kameraauswahl
+--- (ab EEP 16.4 Plugin 4 auch der Taste 0): 1 = direkt auf die linke Seite des Fahrzeugverbandes, 2 = direkt auf die
+--- rechte Seite des Fahrzeugverbandes, 3 = seitlich von oben auf die linke Seite des Fahrzeugverbandes, 4 = seitlich
+--- von oben auf die rechte Seite des Fahrzeugverbandes, 5 = von der Front des Fahrzeugverbandes in Fahrtrichtung, 6 =
+--- von vorn auf die Front des Fahrzeugverbandes, 7 = aktiviert diejenige automatische Kamera, die dem ausgewaehlten
+--- "Fahrzeugverband" (z.B. einem Zug) am naechsten steht, 8 = aus dem Fuehrerstand, 9 = oberhalb des
+--- Fahrzeugverbandes in oder gegen die Fahrtrichtung bzw. wenn vorhanden die vom Konstrukteur (ausserhalb des
+--- Fuehrerstands) vorgegebene Mitfahrkamera bzw. wenn definiert die letzte vom Benutzer mit
+--- EEPRollingstockSetUserCamera() definierte Kameraposition. ab EEP 16.4 Plugin 4: 10 = Perspektive der "alten
+--- Kabine" (entspricht Taste 0) (ggf. andere Perspektive als bei 8).
+---@param name? string parameter ist der Name des Fahrzeugverbandes (mit vorangestelltem #- Zeichen) als String. Ab
+--- EEP 15 kann der 2. Parameter weggelassen werden. Dann wird die Mitfahrkamera auf den aktiven "Fahrzeugverband"
+--- ausgerichtet.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, andernfalls false.
 function EEPSetPerspectiveCamera(kameraposition, name) end
 --       =============================================
 -- Verfuegbar ab EEP 11.3; EEP 15; EEP 16.4 - Plugin 4.
@@ -1563,65 +2079,96 @@ function EEPSetPerspectiveCamera(kameraposition, name) end
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Gibt an, welche Verfolger-Kamera fuer den angegebenen bzw. aktiven "Fahrzeugverband" ausgewaehlt ist.
----@param trainName? string Parameter.
+---@param trainName? string optionale Parameter ist der Name des Fahrzeugverbandes (mit vorangestelltem #-Zeichen) als
+--- String. Ohne Namensangabe wird die auf den aktiven "Fahrzeugverband" ausgerichtete Mitfahrkamera als 2.
+--- Rueckgabewert ausgewiesen.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, andernfalls false.
+---@return number richtung rueckgabewert ist die Kameraposition - entspricht den Tasten 0 bis 9 fuer Kameraauswahl: 1
+--- = direkt auf die linke Seite des Fahrzeugverbandes, 2 = direkt auf die rechte Seite des Fahrzeugverbandes, 3 =
+--- seitlich von oben auf die linke Seite des Fahrzeugverbandes, 4 = seitlich von oben auf die rechte Seite des
+--- Fahrzeugverbandes, 5 = von der Front des Fahrzeugverbandes in Fahrtrichtung, 6 = von vorn auf die Front des
+--- Fahrzeugverbandes, 7 = aktiviert diejenige automatische Kamera, die dem ausgewaehlten "Fahrzeugverband" (z.B.
+--- einem Zug) am naechsten steht, 8 = aus dem Fuehrerstand, 9 = oberhalb des Fahrzeugverbandes in oder gegen die
+--- Fahrtrichtung bzw. wenn vorhanden die vom Konstrukteur (ausserhalb des Fuehrerstands) vorgegebene Mitfahrkamera
+--- bzw. wenn definiert die letzte vom Benutzer mit EEPRollingstockSetUserCamera() definierte Kameraposition. 10 =
+--- Perspektive der "alten Kabine" (entspricht Taste 0) (ggf. andere Perspektive als bei 8)
 function EEPGetPerspectiveCamera(trainName) end
 --       ==================================
 -- Verfuegbar ab EEP 18.0.
 -- Beispielaufrufe:
 -- EEPGetPerspectiveCamera(["#Zugname")
--- ok, Kameraposition = Rueckgabewerte zwei EEPGetPerspectiveCamera("#Personenzug")
+-- ok, Kameraposition = EEPGetPerspectiveCamera("#Personenzug")
 -- ok, Kameraposition = EEPGetPerspectiveCamera()
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Definiert die Position der User-definierten Mitfahrkamera [Aufruf ueber Taste 9 oder EEPSetPerspectiveCamera(9,
 ---"#Name") bzw. EEPSetPerspectiveCamera(9). Ab EEP 17.1 Plugin 1 auch direkt durch zusaetzlichen Parameter.]
----@param rollingstockName string Parameter.
----@param posX number Parameter.
----@param posY number Parameter.
----@param posZ number Parameter.
----@param rotH number Parameter.
----@param rotV number Parameter.
+---@param rollingstockName string parameter ist der komplette Name des Rollmaterials als String.
+---@param posX number parameter ist die Kameraposition auf der X-Achse (gruen) in Meter in Relation zum Nullpunkt des
+--- Fahrzeugs (positiv nach vorne).
+---@param posY number parameter ist die Kameraposition auf der Y-Achse (rot) in Meter in Relation zum Nullpunkt des
+--- Fahrzeugs (positiv nach rechts).
+---@param posZ number parameter ist die Kameraposition auf der Z-Achse (blau) in Meter in Relation nach oben).
+---@param rotH number parameter ist die horizontale Kameraausrichtung (Drehung) um die Z- Achse (blauer Kreis) in Grad
+--- von 0 bis 359.9 (Blick nach hinten = 0.0, weiter gegen den Uhrzeigersinn).
+---@param rotV number parameter ist die vertikale Kameraausrichtung (Drehung) um die Y-Achse (roter Kreis) in Grad von
+--- 0 bis 359.9 (Blick nach unten = 0.0, weiter im Uhrzeigersinn).
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
 function EEPRollingstockSetUserCamera(rollingstockName, posX, posY, posZ, rotH, rotV) end
 --       ============================================================================
 -- Verfuegbar ab EEP 16.1 - Plugin 1; EEP 17.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPRollingstockSetUserCamera("Fahrzeugname", Pos_X, Pos_Y, Pos_Z, Rot_H, Rot_V[, 1])
--- ok = Rueckgabewerte einer EEPRollingstockSetUserCamera("Salonwagen", -4, 0, 2, 180, 90, 1) - sofortige Ausfuehrung
+-- ok = EEPRollingstockSetUserCamera("Salonwagen", -4, 0, 2, 180, 90, 1) - sofortige Ausfuehrung
 -- ok = EEPRollingstockSetUserCamera("Salonwagen", -4, 0, 2, 180, 90) - nur Definition
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Ermittelt (wenn vorhanden) die Position der vom Konstrukteur (ausserhalb des Fuehrerstands) vorgegebenen
 ---Mitfahrkamera bzw. vorrangig die vom User mit EEPRollingstockSetUserCamera() definierte Mitfahrkamera.
----@param rollingstockName string Parameter.
+---@param rollingstockName string parameter ist der komplette Name des Rollmaterials als String.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
+---@return number posX rueckgabewert ist die Kameraposition auf der X-Achse in Meter in Relation zum Nullpunkt des
+--- Fahrzeugs.
+---@return number posY rueckgabewert ist die Kameraposition auf der Y-Achse in Meter
+---@return number posZ rueckgabewert ist die Kameraposition auf der Z-Achse in Meter
+---@return number rotH rueckgabewert ist die horizontale Kameraausrichtung (Drehung) um die Z- Achse in Grad in
+--- Relation zum Fahrzeug.
+---@return any rotV rueckgabewert ist die vertikale Kameraausrichtung (Drehung) um die Y-
 function EEPRollingstockGetUserCamera(rollingstockName) end
 --       ==============================================
 -- Verfuegbar ab EEP 17.
 -- Beispielaufrufe:
 -- EEPRollingstockGetUserCamera("Fahrzeugname")
--- EEPRollingstockGetUserCamera("Salonwagen")
+-- ok, Pos_X, Pos_Y, Pos_Z, Rot_H, Rot_V = EEPRollingstockGetUserCamera("Salonwagen")
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Laedt eine Anlage aus dem Ordner "Resourcen\Anlagen" oder dem unter Programmeinstellungen eingetragenen
 ---Anlagenordner bzw. deren Unterordnern.
----@param unterordnerDateiname string Parameter.
+---@param unterordnerDateiname string parameter ist der Unterordner (wenn erforderlich) und der Dateiname
+--- einschliesslich ".anl3"-Suffix. Trennzeichen zwischen Ordner- und Dateiname ist entweder ein einfacher
+--- Schraegstrich oder ein doppelter Backslash.
+---@return boolean ok rueckgabewert ist true, wenn die Anlage existiert, andernfalls false.
 function EEPLoadProject(unterordnerDateiname) end
 --       ====================================
 -- Verfuegbar ab EEP 11.3 - Plugin 3.
 -- Beispielaufrufe:
 -- EEPLoadProject("[Unterordner /|\\ ] Dateiname")
 -- ok = EEPLoadProject("MeineAnlage.anl3")
+-- ok = EEPLoadProject("Tutorials/Tutorial_49_LUA.anl3")
 -- ok = EEPLoadProject("Tutorials\\Tutorial_54_LUA.anl3")
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---EEP ruft selbstaendig diese Funktion waehrend der Speicherung auf und liefert im selbstgewaehlten Parameter den
 ---Pfad, in dem die Anlage gespeichert wurde.
----@param anlagenpfad any Parameter.
+---@param anlagenpfad string parameter ist der Speicherpfad der Anlage einschliesslich Dateiname als String. Eine
+--- selbst definierte Variable in den Funktionsklammern nimmt diesen Wert fuer die weitere Verwendung auf.
 function EEPOnSaveAnl(anlagenpfad) end
 --       =========================
 -- Verfuegbar ab EEP 16.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPOnSaveAnl(Anlagenpfad)
--- function EEPOnSaveAnl(Anlagenpfad) " gespeichert!")
+-- function EEPOnSaveAnl(Anlagenpfad)
+-- print("Die Anlage wurde unter "..Anlagenpfad.." gespeichert!")
 -- end
 
 -- -------------------------------------------------------------------------------------------------------------------
@@ -1633,22 +2180,29 @@ function EEPOnBeforeSaveAnl() end
 -- Beispielaufrufe:
 -- EEPOnBeforeSaveAnl()
 -- function EEPOnBeforeSaveAnl()
+-- EEPSaveData(1, "Lua macht's moeglich!")
 -- end
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Liefert die EEP-Version, mit der die Anlage zuletzt gespeichert wurde.
+---@return number anlagenversion rueckgabewert ist dieVersionsnummer von EEP, in der die Anlage zuletzt gespeichert
+--- wurde. Er ist sofort nach jeder Speicherung aktuell.
 function EEPGetAnlVer() end
 --       ==============
 -- Verfuegbar ab EEP 17.
 -- Beispielaufrufe:
 -- EEPGetAnlVer()
 -- Anlagenversion = EEPGetAnlVer()
+-- print(Die Anlage wurde zuletzt vor dem Oeffnen in EEP ", Anlagenversion, " gespeichert")
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Liefert die auf Achsnamen bezogene "Anlagensprache". Diese wird mit dem ersten Einsetzen eines Modells mit Achsen
 ---von EEP vergeben und aendert sich danach nicht mehr. Solange noch kein Modell mit Achsen eingesetzt wurde,
 ---entspricht diese "Anlagensprache" der Sprache der aktuellen EEP-Version, d.h. der EEP-spezifischen Variablen
 ---EEPLng.
+---@return string anlagensprache rueckgabewert ist das Kuerzel fuer die in Bezug auf Achsnamen vergebene
+--- "Anlagensprache" (Definition siehe oben unter Zweck): GER = deutsche Version ENG = englische Version FRA =
+--- franzoesische Version
 function EEPGetAnlLng() end
 --       ==============
 -- Verfuegbar ab EEP 17.
@@ -1656,6 +2210,7 @@ function EEPGetAnlLng() end
 -- EEPGetAnlLng()
 -- Anlagensprache = EEPGetAnlLng()
 -- if Anlagensprache == "GER" then
+-- print("Die Anlagensprache in Bezug auf Achsen ist deutsch.")
 -- elseif Anlagensprache == "ENG" then
 -- print("Die Anlagensprache in Bezug auf Achsen ist englisch.")
 -- elseif Anlagensprache == "FRA" then
@@ -1664,6 +2219,7 @@ function EEPGetAnlLng() end
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Liefert den Namen mit dem die Anlage zuletzt gespeichert wurde.
+---@return string name rueckgabewert ist der Anlagenname als String.
 function EEPGetAnlName() end
 --       ===============
 -- Verfuegbar ab EEP 17.1 - Plugin 1.
@@ -1675,6 +2231,7 @@ function EEPGetAnlName() end
 -- -------------------------------------------------------------------------------------------------------------------
 ---Liefert den Speicherpfad der Anlagendatei (.anl3) ohne den Dateinamen zurueck. Hierdurch koennen z.B. im
 ---Anlagenordner gespeicherte Lua-Dateien in die Anlagen- Lua-Datei eingebunden werden.
+---@return string pfad rueckgabewert ist der Pfad der Anlagendatei (ohne dessen Name) als String.
 function EEPGetAnlPath() end
 --       ===============
 -- Verfuegbar ab EEP 18.1 - Plugin 1.
@@ -1684,16 +2241,23 @@ function EEPGetAnlPath() end
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Schickt einen ausgewaehlten "Fahrzeugverband" aus einem ausgewaehlten virtuellen Depot.
----@overload fun(depot_ID: number, name: string, listenplatz: number): nil
----@param depot_ID number Parameter.
----@param name string Parameter.
----@param listenplatz number Parameter.
+---@overload fun(depotId: number, name: string, listenplatz: string): boolean
+---@param depotId number parameter ist die ID des virtuellen Depots. Sie steht in der Kopfzeile des
+--- Eigenschaftenfensters.
+---@param name string parameter ist der Name des Fahrzeugverbandes mit vorangestelltem #- Zeichen als String. Wird ein
+--- Leerstring als Name angegeben, dann bestimmt der 3. Parameter den "Fahrzeugverband".
+---@param listenplatz string parameter ist der Listenplatz des Fahrzeugverbandes im Depot. Dieser Parameter gilt nur,
+--- wenn kein Name angegeben ist. Bei vorgegebenem Namen ist diese Zahl beliebig, aber dennoch erforderlich. In dem
+--- Fall setzt man ihn am besten auf 0.
 ---@param fahrtrichtung? any Parameter.
-function EEPGetTrainFromTrainyard(depot_ID, name, listenplatz, fahrtrichtung) end
---       ====================================================================
+---@return boolean ok rueckgabewert ist true, wenn das Depot und der angeforderte "Fahrzeugverband" existieren,
+--- andernfalls false.
+function EEPGetTrainFromTrainyard(depotId, name, listenplatz, fahrtrichtung) end
+--       ===================================================================
 -- Verfuegbar ab EEP 11.3 - Plugin 2; EEP 15.
 -- Beispielaufrufe:
 -- EEPGetTrainFromTrainyard(Depot_ID, "#Name", Listenplatz [, Fahrtrichtung])
+-- ok = EEPGetTrainFromTrainyard(1, "#Rheingold", 0)
 -- ok = EEPGetTrainFromTrainyard(2, "", 4, 1)
 
 -- -------------------------------------------------------------------------------------------------------------------
@@ -1706,6 +2270,7 @@ function EEPOnTrainExitTrainyard(depot_ID, name) end
 -- Beispielaufrufe:
 -- EEPOnTrainExitTrainyard(Depot_ID, Name)
 -- function EEPOnTrainExitTrainyard(Depot_ID, Name)
+-- print(Name.." hat Depot "..Depot_ID.." verlassen")
 -- end
 
 -- -------------------------------------------------------------------------------------------------------------------
@@ -1718,38 +2283,54 @@ function EEPOnTrainEnterTrainyard(depotID, name) end
 -- Beispielaufrufe:
 -- EEPOnTrainEnterTrainyard(DepotID, Name)
 -- function EEPOnTrainEnterTrainyard(DepotID, Name)
+-- print(Name.." ist in Depot "..DepotID.." eingefahren")
 -- end
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Liefert die Anzahl der im virtuellen Depot gefuehrten "Fahrzeugverbaende"
----@param depotID number Parameter.
-function EEPGetTrainyardItemsCount(depotID) end
+---@param depotId number parameter ist die ID des virtuellen Depots. Sie steht in der Kopfzeile des
+--- Eigenschaftenfensters.
+---@return number count rueckgabewert ist die Anzahl der gemeldeten "Fahrzeugverbaende" im Depot. Achtung: Dies
+--- entspricht nicht der Anzahl wartender (anwesender) "Fahrzeugverbaende". Diese muss mit Hilfe der Funktion
+--- EEPGetTrainyardItemStatus() ermittelt werden.
+function EEPGetTrainyardItemsCount(depotId) end
 --       ==================================
 -- Verfuegbar ab EEP 13.2 - Plugin 2.
 -- Beispielaufrufe:
 -- EEPGetTrainyardItemsCount(Depot-ID)
+-- Anzahl = EEPGetTrainyardItemsCount(2)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Liefert den Namen eines "Fahrzeugverbands" im virtuellen Depot
----@param depotID number Parameter.
----@param listenplatz number Parameter.
-function EEPGetTrainyardItemName(depotID, listenplatz) end
+---@param depotId number parameter ist die ID des virtuellen Depots. Sie steht in der Kopfzeile des
+--- Eigenschaftenfensters.
+---@param listenplatz number parameter ist die Position in der Depotliste.
+---@return string name rueckgabewert ist der Name des "Fahrzeugverbands" an der angegebenen Position.
+function EEPGetTrainyardItemName(depotId, listenplatz) end
 --       =============================================
 -- Verfuegbar ab EEP 13.2 - Plugin 2.
 -- Beispielaufrufe:
 -- EEPGetTrainyardItemName(Depot-ID, Listenplatz)
+-- Name = EEPGetTrainyardItemName(3, 5)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---endif Liefert den Status eines "Fahrzeugverbands" im virtuellen Depot
----@param depotID number Parameter.
----@param name string Parameter.
----@param listenplatz number Parameter.
-function EEPGetTrainyardItemStatus(depotID, name, listenplatz) end
+---@param depotId number parameter ist die ID des virtuellen Depots. Sie steht in der Kopfzeile des
+--- Eigenschaftenfensters.
+---@param name string parameter ist der Name des "Fahrzeugverbands" (mit vorangestelltem #- Zeichen) als String. Wenn
+--- er vorgegeben wird, dann ignoriert EEP die Listennummer.
+---@param listenplatz string parameter ist die Position in der Depotliste. Wenn an zweiter Stelle ein Leerstring als
+--- Name angegeben wird, dann zaehlt der Listenplatz. Aber er ist auch dann Pflicht, wenn ein Name mitgegeben wird. In
+--- dem Fall setzt man ihn am besten auf 0.
+---@return any status rueckgabewert ist der Status des "Fahrzeugverbands": 0 = in Fahrt (d.h. nicht im Depot anwesend,
+--- nur gemeldet), 1 = im Depot wartend (anwesend).
+function EEPGetTrainyardItemStatus(depotId, name, listenplatz) end
 --       =====================================================
 -- Verfuegbar ab EEP 13.2 - Plugin 2.
 -- Beispielaufrufe:
 -- EEPGetTrainyardItemStatus(Depot-ID, "#Name", Listenplatz)
 -- Status = EEPGetTrainyardItemStatus(1, "#Gueterzug",0)
+-- Status = EEPGetTrainyardItemStatus(1, "", 3)
 -- if EEPGetTrainyardItemStatus(3, "#Rheingold", 0)
 -- then
 -- print("Der Zug wartet im Depot!")
@@ -1759,17 +2340,28 @@ function EEPGetTrainyardItemStatus(depotID, name, listenplatz) end
 -- -------------------------------------------------------------------------------------------------------------------
 ---Gibt die Nummer des virtuellen Depots zurueck, in dem sich der "Fahrzeugverband" befindet, oder die Zahl Null, wenn
 ---er sich in der Anlage befindet.
----@param name string Parameter.
+---@param name string parameter ist der Name des " Fahrzeugverbandes", dessen Aufenthaltsort ermittelt werden soll.
+---@return boolean ok rueckgabewert ist true, wenn der "Fahrzeugverband" existiert, oder false, wenn nicht.
+---@return number depotID rueckgabewert ist die Nummer des virtuellen Depots in dem sich der "Fahrzeugverband"
+--- befindet oder 0, wenn er sich in der Anlage befindet. Ein Rueckgabewert von -1 bedeutet, dass der
+--- "Fahrzeugverband" auf der Anlage existiert, aber in keinem Depot registriert ist.
 function EEPIsTrainInTrainyard(name) end
 --       ===========================
 -- Verfuegbar ab EEP 18.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPIsTrainInTrainyard(Name)
+-- ok, DepotID = EEPIsTrainInTrainyard("#Rheingold")
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Verschiebt einen "Fahrzeugverband" oder alle dort registrierten in ein virtuelles Depot.
-function EEPPutTrainToTrainyard() end
---       ========================
+---@param depotId number parameter ist die ID des virtuellen Depots. Sie steht in der Kopfzeile des
+--- Eigenschaftenfensters.
+---@param trainName string parameter ist der Name des "Fahrzeugverbands", der in das ausgewaehlte Depot verschoben
+--- werden soll. (Wichtig: Der "Fahrzeugverband" muss dort zuvor registriert sein.) Bei Eingabe eines Leerstrings ("")
+--- werden alle dort registrierten "Fahrzeugverbaende" zurueck ins spezifizierte virtuelle Depot verschoben.
+---@return boolean ok rueckgabewert ist true, wenn die Funktion erfolgreich war, andernfalls false.
+function EEPPutTrainToTrainyard(depotId, trainName) end
+--       ==========================================
 -- Verfuegbar ab EEP 18.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPPutTrainToTrainyard (DepotID, Name)
@@ -1778,81 +2370,100 @@ function EEPPutTrainToTrainyard() end
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Weist dem Tipp-Text einer Immobilie oder eines Landschaftselements einen neuen Text zu
----@param luaName string Parameter.
----@param text string Parameter.
+---@param luaName string parameter ist der Lua-Name der Immobilie bzw. des Landschaftselements als String. Er steht in
+--- den Objekteigenschaften und unterscheidet sich durch die vorangestellte ID vom Modellnamen. Es genuegt die Nummer
+--- mit vorangestelltem #-Zeichen als Identifikator.
+---@param text string parameter ist der gewuenschte Text. Zeilenumbruch mit \n
+---@return boolean ok rueckgabewert ist true, wenn die Immobilie bzw. das Landschaftselement existiert, sonst false.
 function EEPChangeInfoStructure(luaName, text) end
 --       =====================================
 -- Verfuegbar ab EEP 13.
 -- Beispielaufrufe:
 -- EEPChangeInfoStructure("#Lua-Name", "Text")
+-- ok = EEPChangeInfoStructure("#23", "Lokleitung")
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Schaltet den Tipp-Text einer Immobilie oder eines Landschaftselements ein oder aus
----@param luaName string Parameter.
----@param state boolean Parameter.
+---@param luaName string parameter ist der Lua-Name der Immobilie bzw. des Landschaftselements als String. Er steht in
+--- den Objekteigenschaften und unterscheidet sich durch die vorangestellte ID vom Modellnamen. Es genuegt die Nummer
+--- mit vorangestelltem #-Zeichen als Identifikator.
+---@param state boolean parameter schaltet den Tipp-Text mit true ein oder mit false aus.
+---@return boolean ok rueckgabewert ist true, wenn die Immobilie bzw. das Landschaftselement existiert, sonst false.
 function EEPShowInfoStructure(luaName, state) end
 --       ====================================
 -- Verfuegbar ab EEP 13.
 -- Beispielaufrufe:
 -- EEPShowInfoStructure("#Lua-Name", true|false)
+-- ok = EEPShowInfoStructure("#23", true)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Weist dem Tipp-Text eines Signals einen neuen Text zu
----@param signalId number Parameter.
----@param text string Parameter.
+---@param signalId number parameter ist die Signal-ID.
+---@param text string parameter ist der gewuenschte Text. Zeilenumbruch mit \n
+---@return boolean ok rueckgabewert ist true, wenn das spezifizierte Signal existiert, sonst false.
 function EEPChangeInfoSignal(signalId, text) end
 --       ===================================
 -- Verfuegbar ab EEP 13.
 -- Beispielaufrufe:
 -- EEPChangeInfoSignal(Signal-ID, "Text")
+-- ok = EEPChangeInfoSignal(74, "Ausfahrsignal Gleis 2")
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Schaltet den Tipp-Text eines Signals ein oder aus
----@param signalId number Parameter.
----@param state boolean Parameter.
+---@param signalId number parameter ist die Signal-ID
+---@param state boolean parameter schaltet den Tipp-Text mit true ein oder mit false aus.
+---@return boolean ok rueckgabewert ist true, wenn das spezifizierte Signal existiert, sonst false.
 function EEPShowInfoSignal(signalId, state) end
 --       ==================================
 -- Verfuegbar ab EEP 13.
 -- Beispielaufrufe:
 -- EEPShowInfoSignal(Signal-ID, true|false)
+-- ok = EEPShowInfoSignal(74, true)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Weist dem Tipp-Text einer Weiche einen neuen Text zu
----@param weichenID number Parameter.
----@param text string Parameter.
-function EEPChangeInfoSwitch(weichenID, text) end
---       ====================================
+---@param switchId number parameter ist die Weichen-ID.
+---@param text string parameter ist der gewuenschte Text. Zeilenumbruch mit \n
+---@return boolean ok rueckgabewert ist true, wenn die spezifizierte Weiche existiert, sonst false.
+function EEPChangeInfoSwitch(switchId, text) end
+--       ===================================
 -- Verfuegbar ab EEP 13.
 -- Beispielaufrufe:
 -- EEPChangeInfoSwitch(Weichen-ID, "Text")
+-- Text = "Abzweig nach\nHintertupfingen"
 -- ok = EEPChangeInfoSwitch(63, Text)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Schaltet den Tipp-Text einer Weiche ein oder aus
----@param weichenID number Parameter.
----@param state boolean Parameter.
-function EEPShowInfoSwitch(weichenID, state) end
---       ===================================
+---@param switchId number parameter ist die Weichen-ID
+---@param state boolean parameter schaltet den Tipp-Text mit true ein oder mit false aus.
+---@return boolean ok rueckgabewert ist true, wenn die spezifizierte Weiche existiert, sonst false.
+function EEPShowInfoSwitch(switchId, state) end
+--       ==================================
 -- Verfuegbar ab EEP 13.
 -- Beispielaufrufe:
 -- EEPShowInfoSwitch(Weichen-ID, true|false)
+-- ok = EEPShowInfoSwitch(63, true)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Erzeugt einen Infotext am oberen Bildrand des 3D-Fensters
 ---@param r any Parameter.
 ---@param g any Parameter.
 ---@param b any Parameter.
----@param sz any Parameter.
----@param t any Parameter.
----@param j any Parameter.
----@param text string Parameter.
-function EEPShowInfoTextTop(r, g, b, sz, t, j, text) end
---       ===========================================
+---@param sz string parameter bestimmt die Textgroesse (von 0.5 bis 2-fach).
+---@param seconds number parameter bestimmt die Anzeigedauer in Sekunden. Minimum 5 Sekunden.
+---@param j string parameter bestimmt die Textausrichtung: 0 = Blocksatz, 1 = zentriert, 2 = linksbuendig, 3 =
+--- rechtsbuendig.
+---@param text string parameter ist der anzuzeigende Text. Zeilenumbruch mit \n.
+---@return boolean ok rueckgabewert ist true, wenn die Funktion erfolgreich ausgefuehrt wurde, sonst false.
+function EEPShowInfoTextTop(r, g, b, sz, seconds, j, text) end
+--       =================================================
 -- Verfuegbar ab EEP 13.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPShowInfoTextTop(r, g, b, sz, t, j, "Text")
 -- r = 1 -- Rot
 -- g = 1 -- Gruen
+-- b = 1 -- Blau
 -- S = 1 -- Schriftgroesse
 -- Z = 10 -- Zeit
 -- A = 1 -- Ausrichtung
@@ -1864,17 +2475,20 @@ function EEPShowInfoTextTop(r, g, b, sz, t, j, text) end
 ---@param r any Parameter.
 ---@param g any Parameter.
 ---@param b any Parameter.
----@param sz any Parameter.
----@param t any Parameter.
----@param j any Parameter.
----@param text string Parameter.
-function EEPShowInfoTextBottom(r, g, b, sz, t, j, text) end
---       ==============================================
+---@param sz string parameter bestimmt die Textgroesse (von 0.5 bis 2-fach).
+---@param seconds number parameter bestimmt die Anzeigedauer in Sekunden. Minimum 5 Sekunden.
+---@param j string parameter bestimmt die Textausrichtung: 0 = Blocksatz, 1 = zentriert, 2 = linksbuendig, 3 =
+--- rechtsbuendig.
+---@param text string parameter ist der anzuzeigende Text. Zeilenumbruch mit \n.
+---@return boolean ok rueckgabewert ist true, wenn die Funktion erfolgreich ausgefuehrt wurde, sonst false.
+function EEPShowInfoTextBottom(r, g, b, sz, seconds, j, text) end
+--       ====================================================
 -- Verfuegbar ab EEP 13.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPShowInfoTextBottom(r, g, b, sz, t, j, "Text")
 -- r = 1 -- Rot
 -- g = 1 -- Gruen
+-- b = 0 -- Blau
 -- S = 0.75 -- Schriftgroesse
 -- Z = 15 -- Zeit
 -- A = 2 -- Ausrichtung
@@ -1884,13 +2498,24 @@ function EEPShowInfoTextBottom(r, g, b, sz, t, j, text) end
 -- -------------------------------------------------------------------------------------------------------------------
 ---Sekunden" ok = EEPShowScrollInfoTextTop(r,g,b,S,Z,A,G,Text) Erzeugt einen durchlaufenden Infotext am oberen
 ---Bildrand des 3D-Fensters
-function EEPShowScrollInfoTextTop() end
---       ==========================
+---@param r any Parameter.
+---@param g any Parameter.
+---@param b any Parameter.
+---@param sz string parameter bestimmt die Textgroesse (von 0.5 bis 2-fach).
+---@param seconds number parameter bestimmt die Anzeigedauer in Sekunden. Minimum 5 Sekunden.
+---@param j string parameter (fuer die Textausrichtung) ist ohne Wirkung, aber erforderlich. Bitte hier eine Zahl
+--- (z.B. 0) eintragen.
+---@param speed number parameter bestimmt die Laufgeschwindigkeit.
+---@param text string parameter ist der anzuzeigende Text.
+---@return boolean ok rueckgabewert ist true, wenn die Funktion erfolgreich ausgefuehrt wurde, sonst false.
+function EEPShowScrollInfoTextTop(r, g, b, sz, seconds, j, speed, text) end
+--       ==============================================================
 -- Verfuegbar ab EEP 13.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPShowScrollInfoTextTop(r, g, b, sz, t, j, "Text")
 -- acht r = 0 -- Rot
 -- g = 1 -- Gruen
+-- b = 0.7 -- Blau
 -- S = 1.2 -- Schriftgroesse
 -- Z = 20 -- Zeit
 -- A = 0 -- Ausrichtung
@@ -1899,13 +2524,24 @@ function EEPShowScrollInfoTextTop() end
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Erzeugt einen durchlaufenden Infotext am unteren Bildrand des 3D-Fensters
-function EEPShowScrollInfoTextBottom() end
---       =============================
+---@param r any Parameter.
+---@param g any Parameter.
+---@param b any Parameter.
+---@param sz string parameter bestimmt die Textgroesse (von 0.5 bis 2-fach).
+---@param seconds number parameter bestimmt die Anzeigedauer in Sekunden. Minimum 5 Sekunden.
+---@param j string parameter (fuer die Textausrichtung) ist ohne Wirkung, aber erforderlich. Bitte hier eine Zahl
+--- (z.B. 0) eintragen.
+---@param speed number parameter bestimmt die Laufgeschwindigkeit.
+---@param text string parameter ist der anzuzeigende Text.
+---@return boolean ok rueckgabewert ist true, wenn die Funktion erfolgreich ausgefuehrt wurde, sonst false.
+function EEPShowScrollInfoTextBottom(r, g, b, sz, seconds, j, speed, text) end
+--       =================================================================
 -- Verfuegbar ab EEP 13.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPShowScrollInfoTextBottom(r, g, b, sz, t, j, "Text")
 -- acht r = 1 -- Rot
 -- g = 0 -- Gruen
+-- b = 1 -- Blau
 -- S = 0.6 -- Schriftgroesse
 -- Z = 10 -- Zeit
 -- A = 0 -- Ausrichtung
@@ -1915,642 +2551,880 @@ function EEPShowScrollInfoTextBottom() end
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Blendet den Infotext am oberen Bildrand aus.
+---@return boolean ok rueckgabewert ist true, wenn die Funktion erfolgreich ausgefuehrt wurde, sonst false.
 function EEPHideInfoTextTop() end
 --       ====================
 -- Verfuegbar ab EEP 13.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPHideInfoTextTop()
+-- ok = EEPHideInfoTextTop()
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Blendet den Infotext am unteren Bildrand aus.
+---@return boolean ok rueckgabewert ist true, wenn die Funktion erfolgreich ausgefuehrt wurde, sonst false.
 function EEPHideInfoTextBottom() end
 --       =======================
 -- Verfuegbar ab EEP 13.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPHideInfoTextBottom()
+-- ok = EEPHideInfoTextBottom()
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Spielt ortsunabhaengig eine Sounddatei ab.
----@param pfadPfadDateiname string Parameter.
+---@param pfadPfadDateiname string parameter ist der Pfad (relativ zum Ordner Resourcen/Sounds) und der Dateiname
+--- einer geeigneten Mono-Wav-Datei als String. Trennzeichen zwischen Ordner- und Dateiname ist entweder ein einfacher
+--- Schraegstrich oder ein doppelter Backslash.
+---@return boolean ok rueckgabewert ist true, wenn die Funktion erfolgreich ausgefuehrt wurde, sonst false.
 function EEPPlaySound(pfadPfadDateiname) end
 --       ===============================
 -- Verfuegbar ab EEP 13 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPPlaySound(["Pfad/|Pfad\\]Dateiname")
 -- ok = EEPPlaySound("siren_polizei.wav")
+-- ok = EEPPlaySound("User/Bimmel.wav")
 -- ok = EEPPlaySound("EEXP\\Route1.wav")
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Schaltet den Ton eines Soundmodells aus der Kategorie Landschaftselemente / Klaenge ein oder aus.
----@param luaName string Parameter.
----@param state boolean Parameter.
+---@param luaName string parameter ist der Lua Name des Soundmodells als String. Er steht in den Objekteigenschaften
+--- und unterscheidet sich durch die vorangestellte ID vom Modellnamen. Es genuegt die Nummer mit vorangestelltem
+--- #-Zeichen als Identifikator.
+---@param state boolean parameter schaltet mit true den Ton ein oder mit false aus.
+---@return boolean ok rueckgabewert ist true, wenn die Funktion erfolgreich ausgefuehrt wurde, sonst false.
 function EEPStructurePlaySound(luaName, state) end
 --       =====================================
 -- Verfuegbar ab EEP 13 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPStructurePlaySound("#Lua-Name", true|false)
+-- ok = EEPStructurePlaySound("#33", true)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Weist einer beschreibbaren Flaeche einer Immobilie oder eines Landschaftselements einen neuen Text zu.
----@param luaName string Parameter.
----@param flaechennummer any Parameter.
----@param text string Parameter.
+---@param luaName string parameter ist der Lua-Name der Immobilie oder des Landschaftselements als String. Er steht in
+--- den Objekteigenschaften und unterscheidet sich durch die vorangestellte ID vom Modellnamen. Es genuegt die Nummer
+--- mit vorangestelltem #- Zeichen als Identifikator.
+---@param flaechennummer string parameter ist die Nummer der Flaeche, welche den Text erhalten soll. Manche Modelle
+--- haben mehrere, individuell beschreibbare Flaechen.
+---@param text string parameter ist der gewuenschte Text. Zeilenumbruch mit \n.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false
 function EEPStructureSetTextureText(luaName, flaechennummer, text) end
 --       =========================================================
 -- Verfuegbar ab EEP 15.
 -- Beispielaufrufe:
 -- EEPStructureSetTextureText("#Lua-Name", Flaechennummer,"Text")
--- ok = Rueckgabewerte einer EEPStructureSetTextureText("#147", 1, "Neustadt")
+-- ok = EEPStructureSetTextureText("#147", 1, "Neustadt")
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Liest den Text einer beschreibbaren Flaeche einer Immobilie oder eines Landschaftselements aus.
----@param luaName string Parameter.
----@param flaechennummer any Parameter.
+---@param luaName string parameter ist der Lua-Name der Immobilie oder des Landschaftselements als String. Er steht in
+--- den Objekteigenschaften und unterscheidet sich durch die vorangestellte ID vom Modellnamen. Es genuegt die Nummer
+--- mit vorangestelltem #- Zeichen als Identifikator.
+---@param flaechennummer string parameter ist die Nummer der Flaeche, dessen Text ausgelesen werden soll. Manche
+--- Modelle haben mehrere, individuell beschreibbare Flaechen.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
+---@return string text rueckgabewert ist der Text, mit dem die ausgewaehlte Flaeche beschriftet ist.
 function EEPStructureGetTextureText(luaName, flaechennummer) end
 --       ===================================================
 -- Verfuegbar ab EEP 17.2 - Plugin 2.
 -- Beispielaufrufe:
 -- EEPStructureGetTextureText("#Lua-Name", Flaechennummer)
+-- ok, Text = EEPStructureGetTextureText("#147", 1)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Weist einer beschreibbaren Flaeche eines Rollmaterials einen neuen Text zu.
----@param rollingstockName string Parameter.
----@param flaechennummer any Parameter.
----@param text string Parameter.
+---@param rollingstockName string parameter ist der Name des Fahrzeugs als String.
+---@param flaechennummer string parameter ist die Nummer der Flaeche, welche den Text erhalten soll. Manche Modelle
+--- haben mehrere, individuell beschreibbare Flaechen.
+---@param text string parameter ist der gewuenschte Text. Zeilenumbruch mit \n.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false
 function EEPRollingstockSetTextureText(rollingstockName, flaechennummer, text) end
 --       =====================================================================
 -- Verfuegbar ab EEP 15.
 -- Beispielaufrufe:
 -- EEPRollingstockSetTextureText("Fahrzeugname", Flaechennummer,"Text")
--- ok = Rueckgabewerte einer EEPRollingstockSetTextureText("BR481",1,"Dienstf ahrt")
+-- ok = EEPRollingstockSetTextureText("BR481",1,"Dienstf ahrt")
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Liest den Text einer beschreibbaren Flaeche eines Rollmaterials aus.
----@param rollingstockName string Parameter.
----@param flaechennummer any Parameter.
+---@param rollingstockName string parameter ist der Name des Fahrzeugs als String.
+---@param flaechennummer string parameter ist die Nummer der Flaeche, dessen Text ausgelesen werden soll. Manche
+--- Modelle haben mehrere, individuell beschreibbare Flaechen.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
+---@return string text rueckgabewert ist der Text, mit dem die ausgewaehlte Flaeche beschriftet ist.
 function EEPRollingstockGetTextureText(rollingstockName, flaechennummer) end
 --       ===============================================================
 -- Verfuegbar ab EEP 16.3 - Plugin 3.
 -- Beispielaufrufe:
 -- EEPRollingstockGetTextureText("Fahrzeugname", Flaechennummer)
--- EEPRollingstockGetTextureText("BR481", 1)
+-- ok, Text = EEPRollingstockGetTextureText("BR481", 1)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Weist einer beschreibbaren Flaeche eines Signals einen neuen Text zu.
----@param signalId number Parameter.
----@param flaechennummer any Parameter.
----@param text string Parameter.
+---@param signalId number parameter ist die ID des Signals.
+---@param flaechennummer string parameter ist die Nummer der Flaeche, welche den Text erhalten soll. Manche Modelle
+--- haben mehrere, individuell beschreibbare Flaechen.
+---@param text string parameter ist der gewuenschte Text. Zeilenumbruch mit \n.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false
 function EEPSignalSetTextureText(signalId, flaechennummer, text) end
 --       =======================================================
 -- Verfuegbar ab EEP 15.
 -- Beispielaufrufe:
 -- EEPSignalSetTextureText(Signal-ID, Flaechennummer, "Text")
--- ok = Rueckgabewerte einer EEPSignalSetTextureText(88, 1, "Feuerwehr Ausfahrt")
+-- ok = EEPSignalSetTextureText(88, 1, "Feuerwehr Ausfahrt")
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Liest den Text einer beschreibbaren Flaeche eines Signals aus.
----@param signalId number Parameter.
----@param flaechennummer any Parameter.
+---@param signalId number parameter ist die ID des Signals
+---@param flaechennummer string parameter ist die Nummer der Flaeche, dessen Text ausgelesen werden soll. Manche
+--- Modelle haben mehrere, individuell beschreibbare Flaechen.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
+---@return string text rueckgabewert ist der Text, mit dem die ausgewaehlte Flaeche beschriftet ist.
 function EEPSignalGetTextureText(signalId, flaechennummer) end
 --       =================================================
 -- Verfuegbar ab EEP 17.2 - Plugin 2.
 -- Beispielaufrufe:
 -- EEPSignalGetTextureText(Signal-ID, Flaechennummer)
+-- ok, Text = EEPSignalGetTextureText(88, 1)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Weist einer beschreibbaren Flaeche eines Ladeguts einen neuen Text zu.
----@param luaName string Parameter.
----@param flaechennummer any Parameter.
----@param text string Parameter.
+---@param luaName string parameter ist der Lua-Name des Ladeguts als String. Er steht in den Objekteigenschaften und
+--- unterscheidet sich durch die vorangestellte ID vom Modellnamen. Es genuegt die Nummer mit vorangestelltem
+--- #-Zeichen als Identifikator.
+---@param flaechennummer string parameter ist die Nummer der Flaeche, welche den Text erhalten soll. Manche Modelle
+--- haben mehrere, individuell beschreibbare Flaechen.
+---@param text string parameter ist der gewuenschte Text. Zeilenumbruch mit \n.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false
 function EEPGoodsSetTextureText(luaName, flaechennummer, text) end
 --       =====================================================
 -- Verfuegbar ab EEP 15.
 -- Beispielaufrufe:
 -- EEPGoodsSetTextureText("#Lua-Name", Flaechennummer,"Text")
--- ok = Rueckgabewerte einer EEPGoodsSetTextureText("#137", 2, "Lua Logistik")
+-- ok = EEPGoodsSetTextureText("#137", 2, "Lua Logistik")
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Liest den Text einer beschreibbaren Flaeche eines Ladegutes aus.
----@param luaName string Parameter.
----@param flaechennummer any Parameter.
+---@param luaName string parameter ist der Lua-Name des Ladeguts als String. Er steht in den Objekteigenschaften und
+--- unterscheidet sich durch die vorangestellte ID vom Modellnamen. Es genuegt die Nummer mit vorangestelltem
+--- #-Zeichen als Identifikator.
+---@param flaechennummer string parameter ist die Nummer der Flaeche, dessen Text ausgelesen werden soll. Manche
+--- Modelle haben mehrere, individuell beschreibbare Flaechen.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
+---@return string text rueckgabewert ist der Text, mit dem die ausgewaehlte Flaeche beschriftet ist.
 function EEPGoodsGetTextureText(luaName, flaechennummer) end
 --       ===============================================
 -- Verfuegbar ab EEP 17.2 - Plugin 2.
 -- Beispielaufrufe:
 -- EEPGoodsGetTextureText("#Lua-Name", Flaechennummer)
+-- ok, Text = EEPGoodsGetTextureText("#137", 1)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Weist einer beschreibbaren Flaeche eines Gleisstuecks einen neuen Text zu.
----@param gleisID number Parameter.
----@param flaechennummer any Parameter.
----@param text string Parameter.
+---@param gleisID number parameter ist die ID des Gleisstuecks.
+---@param flaechennummer string parameter ist die Nummer der Flaeche, welche den Text erhalten soll. Manche Modelle
+--- haben mehrere, individuell beschreibbare Flaechen.
+---@param text string parameter ist der gewuenschte Text. Zeilenumbruch mit \n.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false
 function EEPRailTrackSetTextureText(gleisID, flaechennummer, text) end
 --       =========================================================
 -- Verfuegbar ab EEP 15.
 -- Beispielaufrufe:
 -- EEPRailTrackSetTextureText(Gleis-ID, Flaechennummer, "Text")
+-- ok = EEPRailTrackSetTextureText(67, 1, "Schiene")
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Liest den Text einer beschreibbaren Flaeche eines Gleisstuecks aus.
----@param gleisID number Parameter.
----@param flaechennummer any Parameter.
+---@param gleisID number parameter ist die ID des Gleisstuecks
+---@param flaechennummer string parameter ist die Nummer der Flaeche, dessen Text ausgelesen werden soll. Manche
+--- Modelle haben mehrere, individuell beschreibbare Flaechen.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
+---@return string text rueckgabewert ist der Text, mit dem die ausgewaehlte Flaeche beschriftet ist.
 function EEPRailTrackGetTextureText(gleisID, flaechennummer) end
 --       ===================================================
 -- Verfuegbar ab EEP 17.2 - Plugin 2.
 -- Beispielaufrufe:
 -- EEPRailTrackGetTextureText(Gleis-ID, Flaechennummer)
+-- ok, Text = EEPRailTrackGetTextureText(67, 1)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Weist einer beschreibbaren Flaeche eines Strassenstuecks einen neuen Text zu.
----@param strassenID number Parameter.
----@param flaechennummer any Parameter.
----@param text string Parameter.
+---@param strassenID number parameter ist die ID des Strassenstuecks.
+---@param flaechennummer string parameter ist die Nummer der Flaeche, welche den Text erhalten soll. Manche Modelle
+--- haben mehrere, individuell beschreibbare Flaechen.
+---@param text string parameter ist der gewuenschte Text. Zeilenumbruch mit \n.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false
 function EEPRoadTrackSetTextureText(strassenID, flaechennummer, text) end
 --       ============================================================
 -- Verfuegbar ab EEP 15.
 -- Beispielaufrufe:
 -- EEPRoadTrackSetTextureText(Strassen-ID, Flaechennummer, "Text")
+-- ok = EEPRoadTrackSetTextureText(128, 1, "Strasse")
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Liest den Text einer beschreibbaren Flaeche eines Strassenstuecks aus.
----@param strassenID number Parameter.
----@param flaechennummer any Parameter.
+---@param strassenID number parameter ist die ID des Strassenstuecks
+---@param flaechennummer string parameter ist die Nummer der Flaeche, dessen Text ausgelesen werden soll. Manche
+--- Modelle haben mehrere, individuell beschreibbare Flaechen.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
+---@return string text rueckgabewert ist der Text, mit dem die ausgewaehlte Flaeche beschriftet ist.
 function EEPRoadTrackGetTextureText(strassenID, flaechennummer) end
 --       ======================================================
 -- Verfuegbar ab EEP 17.2 - Plugin 2.
 -- Beispielaufrufe:
 -- EEPRoadTrackGetTextureText(Strassen-ID, Flaechennummer)
+-- ok, Text = EEPRoadTrackGetTextureText(128, 1)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Weist einer beschreibbaren Flaeche eines Strassenbahngleisstuecks einen neuen Text zu.
----@param strassenbahngleisID number Parameter.
----@param flaechennummer any Parameter.
----@param textStrassenbahngleis any Parameter.
-function EEPTramTrackSetTextureText(strassenbahngleisID, flaechennummer, textStrassenbahngleis) end
---       ======================================================================================
+---@param strassenbahngleisID number parameter ist die ID des Strassenbahngleisstuecks.
+---@param flaechennummer string parameter ist die Nummer der Flaeche, welche den Text erhalten soll. Manche Modelle
+--- haben mehrere, individuell beschreibbare Flaechen.
+---@param text string parameter ist der gewuenschte Text. Zeilenumbruch mit \n.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false
+function EEPTramTrackSetTextureText(strassenbahngleisID, flaechennummer, text) end
+--       =====================================================================
 -- Verfuegbar ab EEP 15.
 -- Beispielaufrufe:
--- EEPTramTrackSetTextureText(Strassenbahngleis-ID, Flaechennummer, "Text") "Strassenbahngleis")
+-- EEPTramTrackSetTextureText(Strassenbahngleis-ID, Flaechennummer, "Text")
+-- ok = EEPTramTrackSetTextureText(213, 1, "Strassenbahngleis")
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Liest den Text einer beschreibbaren Flaeche eines Strassenbahngleisstuecks aus.
----@param strassenbahngleisID number Parameter.
----@param flaechennummer any Parameter.
+---@param strassenbahngleisID number parameter ist die ID des Strassenbahngleisstuecks
+---@param flaechennummer string parameter ist die Nummer der Flaeche, dessen Text ausgelesen werden soll. Manche
+--- Modelle haben mehrere, individuell beschreibbare Flaechen.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
+---@return string text rueckgabewert ist der Text, mit dem die ausgewaehlte Flaeche beschriftet ist.
 function EEPTramTrackGetTextureText(strassenbahngleisID, flaechennummer) end
 --       ===============================================================
 -- Verfuegbar ab EEP 17.2 - Plugin 2.
 -- Beispielaufrufe:
 -- EEPTramTrackGetTextureText(Strassenbahngleis-ID, Flaechennummer)
+-- ok, Text = EEPTramTrackGetTextureText(213, 1)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Weist einer beschreibbaren Flaeche eines Weg-Elementes der Kategorie "Sonstige" einen neuen Text zu.
----@param splineID number Parameter.
----@param flaechennummer any Parameter.
----@param textBauzaun any Parameter.
-function EEPAuxiliaryTrackSetTextureText(splineID, flaechennummer, textBauzaun) end
---       ======================================================================
+---@param splineID number parameter ist die ID des Weg-Elements der Kategorie "Sonstige".
+---@param flaechennummer string parameter ist die Nummer der Flaeche, welche den Text erhalten soll. Manche Modelle
+--- haben mehrere, individuell beschreibbare Flaechen.
+---@param text string parameter ist der gewuenschte Text.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false
+function EEPAuxiliaryTrackSetTextureText(splineID, flaechennummer, text) end
+--       ===============================================================
 -- Verfuegbar ab EEP 15.
 -- Beispielaufrufe:
--- EEPAuxiliaryTrackSetTextureText(Spline-ID, Flaechennummer, "Text") "Bauzaun")
+-- EEPAuxiliaryTrackSetTextureText(Spline-ID, Flaechennummer, "Text")
+-- ok = EEPAuxiliaryTrackSetTextureText(197, 1, "Bauzaun")
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Liest den Text einer beschreibbaren Flaeche eines Weg-Elementes der Kategorie "Sonstige" aus.
----@param splineID number Parameter.
----@param flaechennummer any Parameter.
+---@param splineID number parameter ist die ID des Weg-Elements der Kategorie "Sonstige".
+---@param flaechennummer string parameter ist die Nummer der Flaeche, dessen Text ausgelesen werden soll. Manche
+--- Modelle haben mehrere, individuell beschreibbare Flaechen.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
+---@return string text rueckgabewert ist der Text, mit dem die ausgewaehlte Flaeche beschriftet ist.
 function EEPAuxiliaryTrackGetTextureText(splineID, flaechennummer) end
 --       =========================================================
 -- Verfuegbar ab EEP 17.2 - Plugin 2.
 -- Beispielaufrufe:
 -- EEPAuxiliaryTrackGetTextureText(Spline-ID, Flaechennummer)
--- EEPAuxiliaryTrackGetTextureText(197, 1)
+-- ok, Text = EEPAuxiliaryTrackGetTextureText(197, 1)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Aendert den Tag-Text einer Immobilie oder eines Landschaftselementes. Jede Immobilie bzw. jedes Landschaftselement
 ---kann einen individuellen String von maximal 1024 Zeichen Laenge mitfuehren. Diese Strings werden mit der Anlage
 ---gespeichert und geladen.
----@param luaName string Parameter.
----@param text string Parameter.
+---@param luaName string parameter ist der Lua-Name der Immobilie oder des Landschaftselements als String. Er steht in
+--- den Objekteigenschaften und unterscheidet sich durch die vorangestellte ID vom Modellnamen. Es genuegt die Nummer
+--- mit vorangestelltem #-Zeichen als Identifikator.
+---@param text string parameter ist der gewuenschte Text.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false. Hinweis: Ab EEP 18
+--- kann einer Immobilie oder einem Landschaftselement auch ein Tag-Text ueber dessen Objekteigenschaften zugewiesen
+--- bzw. dies veraendert werden.
 function EEPStructureSetTagText(luaName, text) end
 --       =====================================
 -- Verfuegbar ab EEP 15.
 -- Beispielaufrufe:
 -- EEPStructureSetTagText("#Lua-Name","Text")
+-- ok = EEPStructureSetTagText("#112","besetzt:2,3,5,8")
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Liest den Tag-Text einer Immobilie oder eines Landschaftselementes aus. Mittels Tag-Texten koennen Immobilien bzw.
 ---Landschaftselemente als permanente Speicher fuer relevante Informationen genutzt werden.
----@param luaName string Parameter.
+---@param luaName string parameter ist der Lua-Name der Immobilie oder des Landschaftselements als String. Er steht in
+--- den Objekteigenschaften und unterscheidet sich durch die vorangestellte ID vom Modellnamen. Es genuegt die Nummer
+--- mit vorangestelltem #-Zeichen als Identifikator.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
+---@return string text rueckgabewert ist der Tag-Text, welcher der Immobilie oder dem Landschaftselement mitgegeben
+--- wurde. Nach EEPStructureSetTagText() liefert EEPStructureGetTagText() noch im selben Zyklus der EEPMain() den
+--- neuen, geaenderten TagText. Hinweis: Ab EEP 18 kann bei einer Immobilie oder einem Landschaftselement auch ein
+--- eingetragener Tag-Text ueber dessen Objekteigenschaften ausgelesen werden.
 function EEPStructureGetTagText(luaName) end
 --       ===============================
 -- Verfuegbar ab EEP 15.
 -- Beispielaufrufe:
 -- EEPStructureGetTagText("#Lua-Name")
+-- ok, Text = EEPStructureGetTagText("#112")
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Aendert den Tag-Text eines Fahrzeugs. Jedes Fahrzeug kann einen eigenen String von maximal 1024 Zeichen Laenge
 ---mitfuehren. Diese Strings werden mit der Anlage gespeichert und geladen. Da die Texte individuell jedem Fahrzeug
 ---zugeordnet sind, gehen sie im Gegensatz zu Routen nicht durch Rangiermanoever etc. verloren.
----@param rollingstockName string Parameter.
----@param textTankwagen any Parameter.
-function EEPRollingstockSetTagText(rollingstockName, textTankwagen) end
---       ==========================================================
+---@param rollingstockName string parameter ist der Name des Fahrzeugs als String.
+---@param text string parameter ist der gewuenschte Text.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
+function EEPRollingstockSetTagText(rollingstockName, text) end
+--       =================================================
 -- Verfuegbar ab EEP 15.
 -- Beispielaufrufe:
--- EEPRollingstockSetTagText("Fahrzeugname","Text") "Tankwagen")
+-- EEPRollingstockSetTagText("Fahrzeugname","Text")
+-- ok = EEPRollingstockSetTagText("DB Zcs-Eva" , "Tankwagen")
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Liest den Tag-Text eines Fahrzeugs aus. Mittels Tag-Texten koennen Fahrzeuge jetzt kategorisiert werden.
 ---Beispielsweise kann man dort Waggontypen speichern oder Bestimmungsorte.
----@param rollingstockName string Parameter.
+---@param rollingstockName string parameter ist der Name des Fahrzeugs als String.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
+---@return string text rueckgabewert ist der Tag-Text, welcher dem Fahrzeug mitgegeben wurde. Nach
+--- EEPRollingstockSetTagText() liefert EEPRollingstockGetTagText() noch im selben Zyklus der EEPMain() den neuen,
+--- geaenderten TagText.
 function EEPRollingstockGetTagText(rollingstockName) end
 --       ===========================================
 -- Verfuegbar ab EEP 15.
 -- Beispielaufrufe:
 -- EEPRollingstockGetTagText("Fahrzeugname")
+-- ok, Text = EEPRollingstockGetTagText("DB Zcs-Eva")
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Aendert den Tag-Text eines Signals. Jedes Signal kann einen eigenen String von maximal 1024 Zeichen Laenge
 ---mitfuehren. Diese Strings werden mit der Anlage gespeichert und geladen. Da die Texte individuell jedem Signal
 ---zugeordnet sind, gehen sie nicht verloren.
----@param signalId number Parameter.
----@param text string Parameter.
+---@param signalId number parameter ist die Signal-ID.
+---@param text string parameter ist der gewuenschte Text.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
 function EEPSignalSetTagText(signalId, text) end
 --       ===================================
 -- Verfuegbar ab EEP 17.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPSignalSetTagText(Signal-ID,"Text")
+-- ok = EEPSignalSetTagText(87 , "Route_C")
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Liest den Tag-Text eines Signals aus. Mittels Tag-Texten koennen z.B. Informationen zu Fahrstrassenschaltungen oder
 ---Bahnuebergaengen direkt in den Signalen anstatt in Datenslots gespeichert werden.
----@param signalId number Parameter.
+---@param signalId number parameter ist die Signal-ID.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
+---@return string text rueckgabewert ist der Tag-Text, welcher dem Signal mitgegeben wurde. Nach EEPSignalSetTagText()
+--- liefert EEPSignalGetTagText() noch im selben Zyklus der EEPMain() den neuen, geaenderten TagText.
 function EEPSignalGetTagText(signalId) end
 --       =============================
 -- Verfuegbar ab EEP 17.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPSignalGetTagText(Signal-ID)
+-- ok, Text = EEPSignalGetTagText(87)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Aendert den Tag-Text eines Ladegutes. Jedes Ladegut kann einen eigenen String von maximal 1024 Zeichen Laenge
 ---mitfuehren. Diese Strings werden mit der Anlage gespeichert und geladen. Da die Texte individuell jedem Ladegut
 ---zugeordnet sind, gehen sie nicht verloren.
----@param luaName string Parameter.
----@param text string Parameter.
+---@param luaName string parameter ist der Lua-Name des Ladeguts. Er steht in den Objekteigenschaften und
+--- unterscheidet sich durch die vorangestellte ID vom Modellnamen. Es genuegt die Nummer mit vorangestelltem
+--- #-Zeichen als Identifikator.
+---@param text string parameter ist der gewuenschte Text.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
 function EEPGoodsSetTagText(luaName, text) end
 --       =================================
 -- Verfuegbar ab EEP 18.0.
 -- Beispielaufrufe:
 -- EEPGoodsSetTagText("#Lua-Name","Text")
+-- ok = EEPGoodsSetTagText("#44" , "DB Schenker")
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Liest den Tag-Text eines Ladegutes aus. Mittels Tag-Texten koennen z.B. Informationen zu Verladezielen direkt in
 ---den Ladeguetern gespeichert werden.
----@param luaName string Parameter.
+---@param luaName string parameter ist der Lua-Name des Ladeguts. Er steht in den Objekteigenschaften und
+--- unterscheidet sich durch die vorangestellte ID vom Modellnamen. Es genuegt die Nummer mit vorangestelltem
+--- #-Zeichen als Identifikator.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
+---@return string text rueckgabewert ist der Tag-Text, welcher dem Ladegut mitgegeben wurde. Nach EEPGoodsSetTagText()
+--- liefert EEPGoodsGetTagText() noch im selben Zyklus der EEPMain() den neuen, geaenderten TagText.
 function EEPGoodsGetTagText(luaName) end
 --       ===========================
 -- Verfuegbar ab EEP 18.0.
 -- Beispielaufrufe:
 -- EEPGoodsGetTagText("#Lua-Name")
+-- ok, Text = EEPGoodsGetTagText("#44")
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Aendert den Tag-Text einer Weiche. Jede Weiche kann einen eigenen String von maximal 1024 Zeichen Laenge
 ---mitfuehren. Diese Strings werden mit der Anlage gespeichert und geladen. Da die Texte individuell jeder Weiche
 ---zugeordnet sind, gehen sie nicht verloren.
----@param weichenID number Parameter.
----@param text string Parameter.
-function EEPSwitchSetTagText(weichenID, text) end
---       ====================================
+---@param switchId number parameter ist die Weichen-ID.
+---@param text string parameter ist der gewuenschte Text.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
+function EEPSwitchSetTagText(switchId, text) end
+--       ===================================
 -- Verfuegbar ab EEP 18.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPSwitchSetTagText(WeichenID,"Text")
+-- ok = EEPSwitchSetTagText(87, "besetzt")
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Liest den Tag-Text einer Weiche aus. Mittels Tag-Texten koennen auch Weichen als permanente Speicher fuer relevante
 ---Informationen genutzt werden.
----@param weichenID number Parameter.
-function EEPSwitchGetTagText(weichenID) end
---       ==============================
+---@param switchId number parameter ist die Weichen-ID.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
+---@return boolean text rueckgabewert ist der Tag-Text, welcher der Weiche mitgegeben wurde. Wenn der 1. Rueckgabewert
+--- false ist, ist der 2. Rueckgabewert nil. Nach EEPSwitchSetTagText() liefert EEPSwitchGetTagText() noch im selben
+--- Zyklus der EEPMain() den neuen, geaenderten TagText.
+function EEPSwitchGetTagText(switchId) end
+--       =============================
 -- Verfuegbar ab EEP 18.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPSwitchGetTagText(WeichenID)
+-- ok, Text = EEPSwitchGetTagText(87)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Waehlt das angegebene Fahrzeug im Steuerdialog aus und stellt den Steuerdialog auf manuellen Modus um
----@param rollingstockName string Parameter.
+---@param rollingstockName string parameter ist der komplette Name des Rollmaterials als String.
+---@return boolean ok rueckgabewert ist true wenn die Aktion erfolgreich war, sonst false.
 function EEPRollingstockSetActive(rollingstockName) end
 --       ==========================================
 -- Verfuegbar ab EEP 15.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPRollingstockSetActive("Fahrzeugname")
+-- ok = EEPRollingstockSetActive("BR 212 376-8")
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---- Plug in 1 Ermittelt, welches Fahrzeug derzeit im Steuerdialog ausgewaehlt ist.
+---@return string rollingstockName rueckgabewert ist der Name des im Steuerdialog ausgewaehlten Fahrzeugs. Befindet
+--- sich der Steuerdialog im Automatikmodus, dann wird ein leerer String zurueckgegeben.
 function EEPRollingstockGetActive() end
 --       ==========================
 -- Verfuegbar ab EEP 15.1.
 -- Beispielaufrufe:
 -- EEPRollingstockGetActive()
+-- Fahrzeugname = EEPRollingstockGetActive()
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Waehlt den angegebenen "Fahrzeugverband" im Steuerdialog aus und stellt den Steuerdialog auf Automatik-Modus um.
----@param name string Parameter.
+---@param name string parameter ist der komplette Name des "Fahrzeugverbands" (mit vorangestelltem #-Zeichen) als
+--- String.
+---@return boolean ok rueckgabewert ist true wenn die Aktion erfolgreich war, sonst false.
 function EEPSetTrainActive(name) end
 --       =======================
 -- Verfuegbar ab EEP 15.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPSetTrainActive("#Name")
+-- ok = EEPSetTrainActive("#Gueterzug")
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Ermittelt, welcher "Fahrzeugverband" derzeit im Steuerdialog ausgewaehlt ist
+---@return string name rueckgabewert ist der Name des im Steuerdialog ausgewaehlten Fahrzeugverbandes ("Name").
+--- Befindet sich der Steuerdialog im manuellen Modus, dann wird der Name des Fahrzeugverbandes zurueckgegeben,
+--- welcher das im Steuerdialog ausgewaehlte Fahrzeug enthaelt.
 function EEPGetTrainActive() end
 --       ===================
 -- Verfuegbar ab EEP 15 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPGetTrainActive()
+-- Name = EEPGetTrainActive()
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Schaltet global (ausserhalb eventueller Wetterzonen) auf ein Wolkenbild mit "blauem" Himmel und veraendert den
 ---Wolkenanteil zwischen 10 % und 100 % (entsprechend dem Bereich unter "Einstellung der Umwelt").
----@param wolkenanteil any Parameter.
+---@param wolkenanteil number parameter ist der Wolkenanteil in Prozent. Bei Eingabe eines Wertes unter 10 % wird der
+--- Wolkenanteil auf NULL gesetzt. Der neue Wert wird sofort gesetzt, aber das Wolkenbild aendert sich schleichend.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
 function EEPSetCloudsIntensity(wolkenanteil) end
 --       ===================================
 -- Verfuegbar ab EEP 16.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPSetCloudsIntensity(Wolkenanteil)
+-- ok = EEPSetCloudsIntensity(75)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Schaltet global (ausserhalb eventueller Wetterzonen) auf ein Wolkenbild mit "grauem" Himmel und veraendert den
 ---Wolkenanteil zwischen 10 % und 100 % (entsprechend dem Bereich unter "Einstellung der Umwelt").
----@param wolkenanteil any Parameter.
+---@param wolkenanteil number parameter ist der Wolkenanteil in Prozent. Bei Eingabe eines Wertes unter 10 % wird der
+--- Wolkenanteil auf NULL gesetzt. Der neue Wert wird sofort gesetzt, aber das Wolkenbild aendert sich schleichend.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
 function EEPSetDarkCloudsIntensity(wolkenanteil) end
 --       =======================================
 -- Verfuegbar ab EEP 16.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPSetDarkCloudsIntensity(Wolkenanteil)
+-- ok = EEPSetDarkCloudsIntensity(10)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Ermittelt den globalen Wolkenanteil (ausserhalb eventueller Wetterzonen).
+---@return number funktion rueckgabewert ist der Wolkenanteil in Prozent unabhaengig davon, wie der Wolkenanteil
+--- vorher gesetzt wurde, ob unter "Einstellung der Umwelt" oder mit den Lua- Funktionen EEPSetCloudsIntensity() bzw.
+--- EEPSetDarkCloudsIntensity().
 function EEPGetCloudsIntensity() end
 --       =======================
 -- Verfuegbar ab EEP 16.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPGetCloudsIntensity()
+-- Wolkenanteil = EEPGetCloudsIntensity()
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Ermittelt, ob global (ausserhalb eventueller Wetterzonen) Wolken am Himmel sind und welcher Art sie sind.
+---@return any modus rueckgabewert gibt den Wolken-Modus an: 0 = keine Wolken, 1 = Wolken, 2 = dunkle Wolken.
 function EEPGetCloudsMode() end
 --       ==================
 -- Verfuegbar ab EEP 17.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPGetCloudsMode()
+-- Modus = EEPGetCloudsMode()
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Veraendert die globale Windstaerke (ausserhalb eventueller Wetterzonen) zwischen 10 % und 100 % (entsprechend dem
 ---Bereich unter "Einstellung der Umwelt").
----@param windstaerke any Parameter.
+---@param windstaerke number parameter ist die Windstaerke in Prozent. Bei Eingabe eines Wertes unter 10 % wird die
+--- Windstaerke auf NULL gesetzt. Die Einstellung wird sofort uebernommen.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
 function EEPSetWindIntensity(windstaerke) end
 --       ================================
 -- Verfuegbar ab EEP 16.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPSetWindIntensity(Windstaerke)
+-- ok = EEPSetWindIntensity(60)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Ermittelt die globale Windstaerke (ausserhalb eventueller Wetterzonen).
+---@return any windstaerke rueckgabewert ist die Windstaerke in Prozent.
 function EEPGetWindIntensity() end
 --       =====================
 -- Verfuegbar ab EEP 16.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPGetWindIntensity()
+-- Windstaerke = EEPGetWindIntensity()
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Veraendert die globale Regenstaerke (ausserhalb eventueller Wetterzonen) zwischen 10 % und 100 % (entsprechend dem
 ---Bereich unter "Einstellung der Umwelt").
----@param regenstaerke any Parameter.
+---@param regenstaerke number parameter ist die Regenstaerke in Prozent. Bei Eingabe eines Wertes unter 10 % wird die
+--- Regenstaerke auf NULL gesetzt. Die Einstellung veraendert sich allmaehlich innerhalb von ca. 20 Sekunden.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
 function EEPSetRainIntensity(regenstaerke) end
 --       =================================
 -- Verfuegbar ab EEP 16.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPSetRainIntensity(Regenstaerke)
+-- ok = EEPSetRainIntensity(50)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Ermittelt die globale Regenstaerke (ausserhalb eventueller Wetterzonen).
+---@return any regenstaerke rueckgabewert ist die Regenstaerke in Prozent. Waehrend einer Uebergangsphase werden auch
+--- Werte unter 10 % angezeigt.
 function EEPGetRainIntensity() end
 --       =====================
 -- Verfuegbar ab EEP 16.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPGetRainIntensity()
+-- Regenstaerke = EEPGetRainIntensity()
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Veraendert die globale Schneefallstaerke (ausserhalb eventueller Wetterzonen) zwischen 10 % und 100 % (entsprechend
 ---dem Bereich unter "Einstellung der Umwelt")
----@param schneefallstaerke any Parameter.
+---@param schneefallstaerke number parameter ist die Schneefallstaerke in Prozent. Bei Eingabe eines Wertes unter 10 %
+--- wird die Schneefallstaerke auf NULL gesetzt. Die Einstellung veraendert sich allmaehlich innerhalb von ca. 20
+--- Sekunden.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
 function EEPSetSnowIntensity(schneefallstaerke) end
 --       ======================================
 -- Verfuegbar ab EEP 16.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPSetSnowIntensity(Schneefallstaerke)
+-- ok = EEPGetSnowIntensity(35)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Ermittelt die globale Schneeintensitaet (ausserhalb eventueller Wetterzonen)
+---@return any schneefallstaerke rueckgabewert ist die Schneefallstaerke in Prozent. Waehrend einer Uebergangsphase
+--- werden auch Werte unter 10 % angezeigt.
 function EEPGetSnowIntensity() end
 --       =====================
 -- Verfuegbar ab EEP 16.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPGetSnowIntensity()
+-- Schneefallstaerke = EEPGetSnowIntensity()
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Veraendert die globale Hagelstaerke (ausserhalb eventueller Wetterzonen) zwischen 10 % und 100 % (entsprechend dem
 ---Bereich unter "Einstellung der Umwelt").
----@param hagelstaerke any Parameter.
+---@param hagelstaerke number parameter ist die Hagelstaerke in Prozent. Bei Eingabe eines Wertes unter 10 % wird die
+--- Hagelstaerke auf NULL gesetzt. Die Einstellung veraendert sich allmaehlich innerhalb von ca. 20 Sekunden.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
 function EEPSetHailIntensity(hagelstaerke) end
 --       =================================
 -- Verfuegbar ab EEP 16.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPSetHailIntensity(Hagelstaerke)
+-- ok = EEPSetHailIntensity(55)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Ermittelt die globale Hagelstaerke (ausserhalb eventueller Wetterzonen).
+---@return any hagelstaerke rueckgabewert ist die Hagelstaerke in Prozent. Waehrend einer Uebergangsphase werden auch
+--- Werte unter 10 % angezeigt.
 function EEPGetHailIntensity() end
 --       =====================
 -- Verfuegbar ab EEP 16.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPGetHailIntensity()
+-- Hagelstaerke = EEPGetHailIntensity()
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Veraendert die globale Nebeldichte (ausserhalb eventueller Wetterzonen) zwischen 10 % und 100 % (entsprechend dem
 ---Bereich unter "Einstellung der Umwelt")
----@param nebeldichte any Parameter.
+---@param nebeldichte number parameter ist die Nebeldichte in Prozent. Bei Eingabe eines Wertes unter 10 % wird die
+--- Nebeldichte auf NULL gesetzt. Die Einstellung wird sofort uebernommen.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
 function EEPSetFogIntensity(nebeldichte) end
 --       ===============================
 -- Verfuegbar ab EEP 16.1.
 -- Beispielaufrufe:
 -- EEPSetFogIntensity(Nebeldichte)
+-- ok = EEPSetFogIntensity(40)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Ermittelt die globale Nebeldichte (ausserhalb eventueller Wetterzonen).
+---@return any nebeldichte rueckgabewert ist die Nebeldichte in Prozent.
 function EEPGetFogIntensity() end
 --       ====================
 -- Verfuegbar ab EEP 16.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPGetFogIntensity()
+-- Nebeldichte = EEPGetFogIntensity()
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Versetzt die benannte Wetterzone an eine neue Position und/oder veraendert ihren Radius.
----@param zonennummer any Parameter.
----@param posX number Parameter.
----@param posY number Parameter.
----@param posZ number Parameter.
----@param radius number Parameter.
-function EEPSetZonePos(zonennummer, posX, posY, posZ, radius) end
---       ====================================================
+---@param zoneId number parameter ist die Nummer der bestehenden Wetterzone als numerische Zahl. Sie steht in der
+--- obersten Zeile ihrer Objekteigenschaften
+---@param posX number parameter ist die Position des Zonenmittelpunktes in X-Richtung.
+---@param posY number parameter ist die Position des Zonenmittelpunktes in Y-Richtung.
+---@param posZ number parameter ist die Position des Zonenmittelpunktes in Z-Richtung.
+---@param radius number parameter ist der Radius der Wetterzone.
+---@return boolean ok rueckgabewert ist true, wenn die Zone existiert oder false, wenn nicht.
+function EEPSetZonePos(zoneId, posX, posY, posZ, radius) end
+--       ===============================================
 -- Verfuegbar ab EEP 17.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPSetZonePos(Zonennummer, PosX, PosY, PosZ, Radius)
+-- ok = EEPSetZonePos(3, 250, -160, 0, 300)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Ermittelt die aktuelle Position einer Wetterzone und ihren Radius.
-function EEPGetZonePos() end
---       ===============
+---@param zoneId number parameter ist die Nummer der Wetterzone als numerische Zahl. Sie steht in der obersten Zeile
+--- ihrer Objekteigenschaften.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, ansonsten false.
+---@return any posX rueckgabewert ist die X-Position des Zonenmittelpunktes.
+---@return any posY rueckgabewert ist die Y-Position des Zonenmittelpunktes.
+---@return any posZ rueckgabewert ist die Z-Position des Zonenmittelpunktes.
+---@return any radius rueckgabewert ist der Radius der Zone.
+function EEPGetZonePos(zoneId) end
+--       =====================
 -- Verfuegbar ab EEP 17.1 - Plugin 1.
+-- Beispielaufrufe:
+-- ok, Pos_X, Pos_Y, Pos_Z, Radius = EEPGetZonePos(3)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Veraendert die Windstaerke in einer Wetterzone zwischen 10 % und 100 % (entsprechend dem Bereich in den
 ---Objekteigenschaften der Wetterzone).
----@param zonennummer any Parameter.
----@param windstaerke any Parameter.
-function EEPSetZoneWindIntensity(zonennummer, windstaerke) end
---       =================================================
+---@param zoneId number parameter ist die Nummer der Wetterzone als numerische Zahl. Sie steht in der obersten Zeile
+--- ihrer Objekteigenschaften.
+---@param windstaerke number parameter ist die Windstaerke in Prozent. Bei Eingabe eines Wertes unter 10 % wird die
+--- Windstaerke auf NULL gesetzt. Die Einstellung wird sofort uebernommen.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
+function EEPSetZoneWindIntensity(zoneId, windstaerke) end
+--       ============================================
 -- Verfuegbar ab EEP 17.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPSetZoneWindIntensity(Zonennummer, Windstaerke)
+-- ok = EEPSetZoneWindIntensity(2, 60)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Ermittelt die Windstaerke in einer Wetterzone.
----@param zonennummer any Parameter.
-function EEPGetZoneWindIntensity(zonennummer) end
---       ====================================
+---@param zoneId number parameter ist die Nummer der Wetterzone als numerische Zahl. Sie steht in der obersten Zeile
+--- ihrer Objekteigenschaften.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, ansonsten false.
+---@return any windstaerke rueckgabewert ist die Windstaerke in Prozent.
+function EEPGetZoneWindIntensity(zoneId) end
+--       ===============================
 -- Verfuegbar ab EEP 17.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPGetZoneWindIntensity(Zonennummer)
+-- ok, Windstaerke = EEPGetZoneWindIntensity(2)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Veraendert die Regenstaerke in einer Wetterzone zwischen 10 % und 100 % (entsprechend dem Bereich in den
 ---Objekteigenschaften der Wetterzone).
----@param zonennummer any Parameter.
----@param regenstaerke any Parameter.
-function EEPSetZoneRainIntensity(zonennummer, regenstaerke) end
---       ==================================================
+---@param zoneId number parameter ist die Nummer der Wetterzone als numerische Zahl. Sie steht in der obersten Zeile
+--- ihrer Objekteigenschaften.
+---@param regenstaerke number parameter ist die Regenstaerke in Prozent. Bei Eingabe eines Wertes unter 10 % wird die
+--- Regenstaerke auf NULL gesetzt. Der neue Wert wird sofort gesetzt, aber Regen und Wolken aendern sich schleichend.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
+function EEPSetZoneRainIntensity(zoneId, regenstaerke) end
+--       =============================================
 -- Verfuegbar ab EEP 17.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPSetZoneRainIntensity(Zonennummer, Regenstaerke)
+-- ok, = EEPSetZoneRainIntensity(1, 50)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Ermittelt die Regenstaerke in einer Wetterzone.
----@param zonennummer any Parameter.
-function EEPGetZoneRainIntensity(zonennummer) end
---       ====================================
+---@param zoneId number parameter ist die Nummer der Wetterzone als numerische Zahl. Sie steht in der obersten Zeile
+--- ihrer Objekteigenschaften.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, ansonsten false.
+---@return any regenstaerke rueckgabewert ist die Regenstaerke in Prozent.
+function EEPGetZoneRainIntensity(zoneId) end
+--       ===============================
 -- Verfuegbar ab EEP 17.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPGetZoneRainIntensity(Zonennummer)
+-- ok, Regenstaerke = EEPGetZoneRainIntensity(1)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Veraendert die Schneefallstaerke in einer Wetterzone zwischen 10 % und 100 % (entsprechend dem Bereich in den
 ---Objekteigenschaften der Wetterzone)
----@param zonennummer any Parameter.
----@param schneefallstaerke any Parameter.
-function EEPSetZoneSnowIntensity(zonennummer, schneefallstaerke) end
---       =======================================================
+---@param zoneId number parameter ist die Nummer der Wetterzone als numerische Zahl. Sie steht in der obersten Zeile
+--- ihrer Objekteigenschaften.
+---@param schneefallstaerke number parameter ist die Schneefallstaerke in Prozent. Bei Eingabe eines Wertes unter 10 %
+--- wird die Schneefallstaerke auf NULL gesetzt. Der neue Wert wird sofort gesetzt, aber Schneefall und Wolken aendern
+--- sich schleichend.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
+function EEPSetZoneSnowIntensity(zoneId, schneefallstaerke) end
+--       ==================================================
 -- Verfuegbar ab EEP 17.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPSetZoneSnowIntensity(Zonennummer, Schneefallstaerke)
+-- ok = EEPGetZoneSnowIntensity(3, 35)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Ermittelt die Schneefallstaerke in einer Wetterzone
----@param zonennummer any Parameter.
-function EEPGetZoneSnowIntensity(zonennummer) end
---       ====================================
+---@param zoneId number parameter ist die Nummer der Wetterzone als numerische Zahl. Sie steht in der obersten Zeile
+--- ihrer Objekteigenschaften.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, ansonsten false.
+---@return any schneefallstaerke rueckgabewert ist die Schneefallstaerke in Prozent.
+function EEPGetZoneSnowIntensity(zoneId) end
+--       ===============================
 -- Verfuegbar ab EEP 17.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPGetZoneSnowIntensity(Zonennummer)
+-- ok, Schneefallstaerke = EEPGetZoneSnowIntensity(3)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Veraendert die Hagel-/Graupelstaerke in einer Wetterzone zwischen 10 % und 100 % (entsprechend dem Bereich in den
 ---Objekteigenschaften der Wetterzone).
----@param zonennummer any Parameter.
----@param hagelstaerke any Parameter.
-function EEPSetZoneHailIntensity(zonennummer, hagelstaerke) end
---       ==================================================
+---@param zoneId number parameter ist die Nummer der Wetterzone als numerische Zahl. Sie steht in der obersten Zeile
+--- ihrer Objekteigenschaften.
+---@param hagelstaerke number parameter ist die Hagel-/Graupelstaerke in Prozent. Bei Eingabe eines Wertes unter 10 %
+--- wird die Hagel/-Graupelstaerke auf NULL gesetzt. Der neue Wert wird sofort gesetzt, aber Hagel/Graupel und Wolken
+--- aendern sich schleichend,
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
+function EEPSetZoneHailIntensity(zoneId, hagelstaerke) end
+--       =============================================
 -- Verfuegbar ab EEP 17.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPSetZoneHailIntensity(Zonennummer, Hagelstaerke)
+-- ok, = EEPSetZoneHailIntensity(4, 55)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Ermittelt die Hagel-/Graupelstaerke in einer Wetterzone
----@param zonennummer any Parameter.
-function EEPGetZoneHailIntensity(zonennummer) end
---       ====================================
+---@param zoneId number parameter ist die Nummer der Wetterzone als numerische Zahl. Sie steht in der obersten Zeile
+--- ihrer Objekteigenschaften.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, ansonsten false.
+---@return any hagelstaerke rueckgabewert ist die Hagel-/Graupelstaerke in Prozent.
+function EEPGetZoneHailIntensity(zoneId) end
+--       ===============================
 -- Verfuegbar ab EEP 17.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPGetZoneHailIntensity(Zonennummer)
+-- ok, Hagelstaerke = EEPGetZoneHailIntensity(4)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Veraendert die Nebeldichte in einer Wetterzone zwischen 10 % und 100 % (entsprechend dem Bereich in den
 ---Objekteigenschaften der Wetterzone)
 ---@param zonennummer any Parameter.
----@param nebeldichte any Parameter.
+---@param nebeldichte number parameter ist die Nebeldichte in Prozent. Bei Eingabe eines Wertes unter 10 % wird die
+--- Nebeldichte auf NULL gesetzt. Die Einstellung wird sofort uebernommen.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
 function EEPSetZoneFogIntensity(zonennummer, nebeldichte) end
 --       ================================================
 -- Verfuegbar ab EEP 17.1.
 -- Beispielaufrufe:
 -- EEPSetZoneFogIntensity(Zonennummer, Nebeldichte)
+-- ok = EEPSetZoneFogIntensity(2, 40)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Ermittelt die Nebeldichte in einer Wetterzone.
----@param zonennummer any Parameter.
-function EEPGetZoneFogIntensity(zonennummer) end
---       ===================================
+---@param zoneId number parameter ist die Nummer der Wetterzone als numerische Zahl. Sie steht in der obersten Zeile
+--- ihrer Objekteigenschaften.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, ansonsten false.
+---@return any nebeldichte rueckgabewert ist die Nebeldichte in Prozent.
+function EEPGetZoneFogIntensity(zoneId) end
+--       ==============================
 -- Verfuegbar ab EEP 17.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPGetZoneFogIntensity(Zonennummer)
+-- ok, Nebeldichte = EEPGetZoneFogIntensity(2)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Bestimmt, ob in einer Wetterzone Wolken am Himmel sind und welcher Art sie sind.
-function EEPSetZoneClouds() end
---       ==================
+---@param zoneId number parameter ist die Nummer der Wetterzone als numerische Zahl. Sie steht in der obersten Zeile
+--- ihrer Objekteigenschaften.
+---@param mode number parameter bestimmt den Wolken-Modus: 0 = keine Wolken 1 = Wolken 2 = dunkle Wolken.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
+function EEPSetZoneClouds(zoneId, mode) end
+--       ==============================
 -- Verfuegbar ab EEP 17.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPSetZoneClouds (Zonennummer, Modus)
+-- ok = EEPSetZoneClouds(2, 0)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Ermittelt, ob in einer Wetterzone Wolken am Himmel sind und welcher Art sie sind.
----@param zonennummer any Parameter.
-function EEPGetZoneClouds(zonennummer) end
---       =============================
+---@param zoneId number parameter ist die Nummer der Wetterzone als numerische Zahl. Sie steht in der obersten Zeile
+--- ihrer Objekteigenschaften.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
+---@return any modus rueckgabewert gibt den Wolken-Modus an: 0 = keine Wolken, 1 = Wolken, 2 = dunkle Wolken.
+function EEPGetZoneClouds(zoneId) end
+--       ========================
 -- Verfuegbar ab EEP 17.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPGetZoneClouds(Zonennummer)
+-- ok, Modus = EEPGetZoneClouds(3)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Veraendert die Einstellung der Jahreszeit in der Anlage.
-function EEPSetSeason() end
---       ==============
+---@param season number parameter ist die in der Anlage einzustellend Jahreszeit als Zahl: 1 = Fruehling 2 = Sommer 3
+--- = Herbst 4 = Winter.
+function EEPSetSeason(season) end
+--       ====================
 -- Verfuegbar ab EEP 18.0.
 -- Beispielaufrufe:
 -- EEPSetSeason()
+-- EEPSetSeason(3)
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Ermittelt die in der Anlage eingestellte Jahreszeit.
+---@return number jahreszeit rueckgabewert ist die in der Anlage eingestellte Jahreszeit als Zahl: 1 = Fruehling, 2 =
+--- Sommer, 3 = Herbst, 4 = Winter.
 function EEPGetSeason() end
 --       ==============
 -- Verfuegbar ab EEP 17.2 - Plugin 2.
 -- Beispielaufrufe:
 -- EEPGetSeason()
+-- Jahreszeit = EEPGetSeason()
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Ruft ein Gleisbildstellpult (GBS) im Radarfenster auf.
----@param stellpultName string Parameter.
+---@param stellpultName string parameter ist der "Stellpult-Name" des GBS als String. (Nicht dessen Lua- Name!) Der
+--- "Stellpult-Name" ist in den Objekteigenschaften des Stellpults in dem gleichnamigen Feld eingetragen.
+---@return boolean ok rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
 function EEPActivateCtrlDesk(stellpultName) end
 --       ==================================
 -- Verfuegbar ab EEP 16.1 - Plugin 1.
 -- Beispielaufrufe:
 -- EEPActivateCtrlDesk("Stellpult-Name")
+-- ok = EEPActivateCtrlDesk("Wildungen")

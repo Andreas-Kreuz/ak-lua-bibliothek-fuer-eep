@@ -5,13 +5,13 @@ describe("EepSimulator track state", function()
                 name = "rail",
                 register = EEPRegisterRailTrack,
                 reserved = EEPIsRailTrackReserved,
-                occupy = function(trackId, trainName) EepSimulator.setzeZugAufGleis(trackId, trainName) end
+                occupy = function(trackId, trainName) EepSimulator.simulatePlaceTrainOnRailTrack(trackId, trainName) end
             },
             {
                 name = "road",
                 register = EEPRegisterRoadTrack,
                 reserved = EEPIsRoadTrackReserved,
-                occupy = function(trackId, trainName) EepSimulator.setzeZugAufStrasse(trackId, trainName) end
+                occupy = function(trackId, trainName) EepSimulator.simulatePlaceTrainOnRoadTrack(trackId, trainName) end
             },
             {
                 name = "tram",
@@ -81,8 +81,8 @@ describe("EepSimulator track state", function()
     insulate("keeps occupancy behavior for road and rail", function()
         local EepSimulator = require("ak.core.eep.EepSimulator")
 
-        EepSimulator.setzeZugAufGleis(301, "#RailTrain")
-        EepSimulator.setzeZugAufStrasse(302, "#RoadTrain")
+        EepSimulator.simulatePlaceTrainOnRailTrack(301, "#RailTrain")
+        EepSimulator.simulatePlaceTrainOnRoadTrack(302, "#RoadTrain")
 
         it("marks rail tracks as occupied and returns the train name", function()
             local registered, occupied, trainName = EEPIsRailTrackReserved(301, true)

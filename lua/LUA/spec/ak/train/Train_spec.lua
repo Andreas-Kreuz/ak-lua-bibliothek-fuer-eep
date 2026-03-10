@@ -1,6 +1,6 @@
 describe("ak.train.Train", function()
     local EepSimulator = require("ak.core.eep.EepSimulator")
-    EepSimulator.addTrain("#EepTrain1", "RollingStock 1", "RollingStock 2")
+    EepSimulator.simulateAddTrain("#EepTrain1", "RollingStock 1", "RollingStock 2")
 
     insulate("new Train is empty", function()
         local TrainRegistry = require "ak.train.TrainRegistry"
@@ -15,7 +15,7 @@ end)
 
 describe("ak.train.Train", function()
     local EepSimulator = require("ak.core.eep.EepSimulator")
-    EepSimulator.addTrain("#EepTrain1", "RollingStock 1", "RollingStock 2")
+    EepSimulator.simulateAddTrain("#EepTrain1", "RollingStock 1", "RollingStock 2")
 
     insulate("Destination is set", function()
         local TrainRegistry = require "ak.train.TrainRegistry"
@@ -29,7 +29,7 @@ end)
 
 describe("ak.train.Train", function()
     local EepSimulator = require("ak.core.eep.EepSimulator")
-    EepSimulator.addTrain("#EepTrain1", "RollingStock 1", "RollingStock 2")
+    EepSimulator.simulateAddTrain("#EepTrain1", "RollingStock 1", "RollingStock 2")
 
     insulate("Line is set", function()
         local TrainRegistry = require "ak.train.TrainRegistry"
@@ -43,7 +43,7 @@ end)
 
 describe("ak.train.Train", function()
     local EepSimulator = require("ak.core.eep.EepSimulator")
-    EepSimulator.addTrain("#EepTrain1", "RollingStock 1", "RollingStock 2")
+    EepSimulator.simulateAddTrain("#EepTrain1", "RollingStock 1", "RollingStock 2")
 
     insulate("Line is string", function()
         local TrainRegistry = require "ak.train.TrainRegistry"

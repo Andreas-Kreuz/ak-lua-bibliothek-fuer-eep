@@ -53,7 +53,7 @@ local function run()
     EEPMain()
 end
 
--- EepSimulator.queueTrainOnSignal(14, "#Zug1")
+-- EepSimulator.simulateQueueTrainOnSignal(14, "#Zug1")
 -- EEPSetTrainRoute("#Zug1", "Meine Route 1")
 
 -- assert(true == os.signalUsedForRequest)

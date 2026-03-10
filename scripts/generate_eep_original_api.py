@@ -16,9 +16,9 @@ OUTPUT = ROOT / "lua" / "LUA" / "ak" / "core" / "eep" / "EepOriginalApi.d.lua"
 WRAP_WIDTH = 118
 
 ENTRY_NAME_RE = re.compile(r"^(EEP[A-Za-z0-9_]+|clearlog|print)(\s*\(\s*\))?$")
-FIELD_LABELS = ("Parameter", "Rückgabewerte", "Voraussetzung", "Zweck", "Bemerkungen")
+FIELD_LABELS = ("Parameter", "Rueckgabewerte", "Voraussetzung", "Zweck", "Bemerkungen")
 FIELD_SET = set(FIELD_LABELS)
-RETURN_BULLET_RE = re.compile(r"^Der\s+(?:\d+\.\s+)?Rückgabewert\b", re.IGNORECASE)
+RETURN_BULLET_RE = re.compile(r"^Der\s+(?:\d+\.\s+)?Rueckgabewert\b", re.IGNORECASE)
 PARAM_BULLET_RE = re.compile(r"^(?:Der|Im|Als)\s+(?:optionale\s+)?(?:\d+\.\s+)?Parameter\b", re.IGNORECASE)
 PARAM_RANGE_RE = re.compile(r"^Die\s+Parameter\s+(\d+)\s*[–-]\s*(\d+)\b", re.IGNORECASE)
 COUNT_WORD_MAP = {
@@ -461,7 +461,7 @@ def parse_variable_block(block: list[str]) -> Entry:
 
 
 def parse_function_field_line(entry: Entry, label: str, parts: list[str]) -> None:
-    if label in {"Parameter", "Rückgabewerte"}:
+    if label in {"Parameter", "Rueckgabewerte"}:
         if parts and looks_like_count_fragment(parts[0]):
             entry.add_field(label, parts[0])
             example = join_example_parts(parts[1:])
@@ -516,16 +516,16 @@ def parse_function_block(block: list[str]) -> Entry:
             parse_function_field_line(entry, current_field, parts[1:])
             continue
 
-        if current_field in {"Parameter", "Rückgabewerte", "Voraussetzung"} and looks_like_version_piece(parts[0]):
+        if current_field in {"Parameter", "Rueckgabewerte", "Voraussetzung"} and looks_like_version_piece(parts[0]):
             entry.add_field("Voraussetzung", parts[0])
             example = join_example_parts(parts[1:])
             if example:
                 entry.add_example(example)
             continue
 
-        if current_field in {"Parameter", "Rückgabewerte", "Voraussetzung"}:
+        if current_field in {"Parameter", "Rueckgabewerte", "Voraussetzung"}:
             example = join_example_parts(parts)
-            if current_field in {"Parameter", "Rückgabewerte"} and looks_like_count_fragment(cleaned):
+            if current_field in {"Parameter", "Rueckgabewerte"} and looks_like_count_fragment(cleaned):
                 entry.append_field_fragment(current_field, cleaned)
                 continue
             if example and (
@@ -539,7 +539,7 @@ def parse_function_block(block: list[str]) -> Entry:
                 current_field = "Zweck"
                 entry.add_field("Zweck", cleaned)
                 continue
-            if current_field in {"Parameter", "Rückgabewerte"} and not is_count_word(cleaned):
+            if current_field in {"Parameter", "Rueckgabewerte"} and not is_count_word(cleaned):
                 entry.add_field("Bemerkungen", cleaned)
             continue
 
@@ -558,7 +558,7 @@ def parse_function_block(block: list[str]) -> Entry:
 
 
 def parse_block(block: list[str]) -> Entry:
-    callable_block = any(clean_text(line).startswith(("Parameter", "Rückgabewerte")) for line in block[1:])
+    callable_block = any(clean_text(line).startswith(("Parameter", "Rueckgabewerte")) for line in block[1:])
     if callable_block:
         return parse_function_block(block)
     return parse_variable_block(block)
@@ -580,7 +580,7 @@ def collect_bullets(lines: list[str]) -> list[str]:
         text = clean_text(line)
         if not text:
             continue
-        if text.startswith("·"):
+        if text.startswith(("-", "·")):
             if current:
                 bullets.append(current)
             current = text[1:].strip()
@@ -668,6 +668,8 @@ def infer_return_name(desc: str, index: int) -> str:
     lower = desc.lower()
     if index == 1 and "true" in lower and "false" in lower:
         return "ok"
+    if "ungleich null" in lower and "funktion" in lower:
+        return "weiterlauf"
     if "ausgegebene string" in lower or "ausgegebene zeichenkette" in lower:
         return "text"
     if "anzahl" in lower:
@@ -1068,9 +1070,9 @@ def parse_returns(entry: Entry) -> list[dict[str, str]]:
     returns: list[dict[str, str]] = []
     for bullet in bullets:
         lower = bullet.lower()
-        if "keinen rückgabewert" in lower:
+        if "keinen rueckgabewert" in lower:
             return []
-        if "rückgabewert" not in lower:
+        if "rueckgabewert" not in lower:
             continue
         if not RETURN_BULLET_RE.match(bullet):
             continue
@@ -1082,6 +1084,26 @@ def parse_returns(entry: Entry) -> list[dict[str, str]]:
                 "desc": short_desc(bullet),
             }
         )
+    if not returns:
+        count_candidates = parse_count_candidates(entry.fields.get("Rueckgabewerte", []))
+        expected_count = max(count_candidates) if count_candidates else 0
+        if expected_count > 0:
+            fallback_lines = []
+            for bullet in bullets:
+                lower = bullet.lower()
+                if "keinen rueckgabewert" in lower:
+                    return []
+                if "zurueck" in lower or "rueckgabewert" in lower:
+                    fallback_lines.append(bullet)
+            if fallback_lines:
+                desc = short_desc(" ".join(fallback_lines))
+                returns.append(
+                    {
+                        "name": infer_return_name(desc, 1),
+                        "type": infer_type(desc),
+                        "desc": desc,
+                    }
+                )
     apply_return_hints_from_examples(returns, entry)
     return returns
 

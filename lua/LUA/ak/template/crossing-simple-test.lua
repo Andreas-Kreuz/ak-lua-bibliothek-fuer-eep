@@ -19,12 +19,12 @@ AkStartWithDebug = false
 local EepSimulator = require("ak.core.eep.EepSimulator")
 
 -- Zum Test setzen wir ein paar Züge, Autos und Trams auf Gleise und Straßen
-EepSimulator.setzeZugAufGleis(5, "Tuff Tuff Zug")
-EepSimulator.setzeZugAufGleis(7, "Zoom Zoom Zug")
-EepSimulator.setzeZugAufStrasse(3, "Feuerwehr")
-EepSimulator.setzeZugAufStrasse(4, "Tram")
-EepSimulator.setzeZugAufStrasse(5, "Tram")
-EepSimulator.setzeZugAufStrasse(6, "Tram")
+EepSimulator.simulatePlaceTrainOnRailTrack(5, "Tuff Tuff Zug")
+EepSimulator.simulatePlaceTrainOnRailTrack(7, "Zoom Zoom Zug")
+EepSimulator.simulatePlaceTrainOnRoadTrack(3, "Feuerwehr")
+EepSimulator.simulatePlaceTrainOnRoadTrack(4, "Tram")
+EepSimulator.simulatePlaceTrainOnRoadTrack(5, "Tram")
+EepSimulator.simulatePlaceTrainOnRoadTrack(6, "Tram")
 
 ------------------------------------------------------------------------------------
 -- Es folge der Import der Anlage, die getestet werden soll.

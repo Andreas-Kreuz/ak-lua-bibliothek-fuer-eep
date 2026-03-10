@@ -1,9 +1,9 @@
 insulate("Line Management Ring Line", function()
     local EepSimulator = require("ak.core.eep.EepSimulator")
 
-    EepSimulator.addTrain("train1", "RollingStock 1a", "RollingStock 2b")
-    EepSimulator.addTrain("train2", "RollingStock 2a", "RollingStock 2b")
-    EepSimulator.addTrain("train3", "RollingStock 3a", "RollingStock 3b")
+    EepSimulator.simulateAddTrain("train1", "RollingStock 1a", "RollingStock 2b")
+    EepSimulator.simulateAddTrain("train2", "RollingStock 2a", "RollingStock 2b")
+    EepSimulator.simulateAddTrain("train3", "RollingStock 3a", "RollingStock 3b")
     it("EEPLoadData exists", function() assert.is_truthy(_G.EEPLoadData) end)
 
     local Line = require("ak.public-transport.Line")
@@ -58,9 +58,9 @@ end)
 insulate("Line Management 4 Line segments", function()
     local EepSimulator = require("ak.core.eep.EepSimulator")
 
-    EepSimulator.addTrain("train1", "RollingStock 1a", "RollingStock 2b")
-    EepSimulator.addTrain("train2", "RollingStock 2a", "RollingStock 2b")
-    EepSimulator.addTrain("train3", "RollingStock 3a", "RollingStock 3b")
+    EepSimulator.simulateAddTrain("train1", "RollingStock 1a", "RollingStock 2b")
+    EepSimulator.simulateAddTrain("train2", "RollingStock 2a", "RollingStock 2b")
+    EepSimulator.simulateAddTrain("train3", "RollingStock 3a", "RollingStock 3b")
     it("EEPLoadData exists", function() assert.is_truthy(_G.EEPLoadData) end)
 
     -- Core Stuff
@@ -154,7 +154,7 @@ insulate("Line Management 4 Line segments", function()
         end)
 
         insulate("nextStations", function()
-            EepSimulator.addTrain("train4", "RollingStock 4a", "RollingStock 4b")
+            EepSimulator.simulateAddTrain("train4", "RollingStock 4a", "RollingStock 4b")
             local train4 = TrainRegistry.forName("train4")
             train4:setRoute(linie10Messe.routeName)
             train4:changeDestination(linie10Messe.destination, linie10Messe.line.nr)
@@ -211,7 +211,7 @@ insulate("Line Management", function()
     local RoadStation = require("ak.public-transport.RoadStation")
 
     local testTrain = "#Train 1"
-    EepSimulator.addTrain(testTrain, "RollingStock 1", "RollingStock 2")
+    EepSimulator.simulateAddTrain(testTrain, "RollingStock 1", "RollingStock 2")
 
     -- Station definition
     local sMesseDresden = RoadStation:new("Messe Dresden", -1)

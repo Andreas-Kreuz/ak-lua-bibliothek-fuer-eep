@@ -3,7 +3,7 @@ describe("TrainDetection", function()
 
     local EepSimulator = require("ak.core.eep.EepSimulator")
     EepSimulator.debug = debug
-    EepSimulator.addTrain("#EepTrain1", "RollingStock 1", "RollingStock 2")
+    EepSimulator.simulateAddTrain("#EepTrain1", "RollingStock 1", "RollingStock 2")
 
     insulate("with #EepTrain1:", function()
         local TrainDetection = require("ak.data.TrainDetection")
@@ -17,7 +17,7 @@ describe("TrainDetection", function()
         local haveTrainInitially = TrainRegistry.getAllTrainNames()["#EepTrain1"]
         it("have no train first", function() assert.is_falsy(haveTrainInitially) end)
 
-        EepSimulator.setzeZugAufGleis(1, "#EepTrain1")
+        EepSimulator.simulatePlaceTrainOnRailTrack(1, "#EepTrain1")
         TrainDetection.update();
 
         local haveTrain1AfterInserting = TrainRegistry.getAllTrainNames()["#EepTrain1"]
@@ -31,7 +31,7 @@ describe("TrainDetection", function()
             assert.is_false(created)
         end)
 
-        EepSimulator.splitTrain("#EepTrain1", 1)
+        EepSimulator.simulateSplitTrain("#EepTrain1", 1)
         TrainDetection.update();
         local haveTrain1AfterSplitting = TrainRegistry.getAllTrainNames()["#EepTrain1"]
         local haveTrain2AfterSplitting = TrainRegistry.getAllTrainNames()["#EepTrain1;001"]
