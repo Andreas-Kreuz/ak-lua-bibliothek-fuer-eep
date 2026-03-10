@@ -11,6 +11,9 @@
 # Global yarn modules
 node_modules
 
+# Python cache files
+__pycache__
+
 # Apps build and shared folders
 /apps/*/build
 /apps/*/dist

@@ -35,7 +35,37 @@
 - Im Repository liegt der produktive Lua-Code unter `lua/LUA/`; im installierten EEP-System liegen diese Lua-Dateien standardmäßig unter `C:\Trend\EEP18\LUA` (je nach EEP-Version entsprechend z.B. `EEP17`, `EEP18`).
 - Bestehende deutsche Bezeichner, Kommentare und Logmeldungen beibehalten, wenn du vorhandenen Lua-Code änderst.
 - Beschreibungen für Funktionen, Parameter und Return-Werte gerne aus dem Lua-Manual übernehmen.
-- `Lua_manual.pdf` wird in diesem Projekt mit `pdftotext -layout` ausgewertet. Dabei enthält Spalte 1 den Feldnamen wie `Parameter`, `Rückgabewerte`, `Voraussetzung`, `Zweck` oder `Bemerkungen`, Spalte 2 die inhaltliche Beschreibung und Spalte 3 Beispielaufrufe bzw. Beispielcode. Mindestversionen werden aus `Voraussetzung`, Parameter- und Rückgabesemantik vorrangig aus `Bemerkungen` abgeleitet.
+- `Lua_manual.pdf` wird für `EepOriginalApi.d.lua` in diesem Projekt mit `pdftotext -table` ausgewertet. Der Parser arbeitet blockweise als Tabellenparser und nicht mehr als freier Fließtext-Parser.
+- `lua/LUA/ak/core/eep/EepOriginalApi.d.lua` ist die typsichere Soll-Schnittstelle des originalen Programms EEP. Sie wird aus `Lua_manual.pdf` abgeleitet und nicht aus `EepSimulator.lua`.
+- Der einzig gueltige Generator fuer diese Datei ist `python scripts/generate_eep_original_api.py`. Aeltere Generatorvarianten und Vergleichsausgaben werden nicht mehr verwendet.
+- Für `EepOriginalApi.d.lua` gilt bei der Auswertung des Handbuchs:
+  - Es gibt zwei Blocktypen:
+    - Variablenblock
+    - Funktions- oder Callback-Block
+  - Variablenblock:
+    - Kopfzeile mit Variablennamen links und wiederholtem Variablennamen bzw. Beispiel rechts
+    - `Voraussetzung`
+    - `Zweck`
+  - Funktions- oder Callback-Block:
+    - Kopfzeile mit `EEPFunktion()` links und Signatur-/Aufrufbeispiel rechts
+    - `Parameter`
+    - `Rückgabewerte`
+    - `Voraussetzung`
+    - `Zweck`
+    - `Bemerkungen`
+  - Die rechte Spalte enthält Beispielaufrufe bzw. Beispielcode.
+  - `Zweck` und `Bemerkungen` werden aus der linken und mittleren Tabellenhälfte abgeleitet, nicht aus der Beispielspalte.
+  - Mindestversionen werden aus `Voraussetzung` übernommen
+  - Parameter- und Rückgabesemantik wird vorrangig aus `Bemerkungen` abgeleitet
+- `EepOriginalApi.d.lua` enthält nur Definitionen: globale Variablen als `---@type` mit Platzhalterwert, Callbacks und Funktionen als leere Funktionsrümpfe. Keine Simulatorlogik in diese Datei schreiben.
+- Wertebereiche aus den Bemerkungen nach Möglichkeit als `---@alias` modellieren. Aliase möglichst direkt über der ersten Funktion platzieren, die sie verwendet. Wenn ein Alias die Details enthält, bleiben Parametertexte kurz.
+- Nach jeder Funktion und jedem Callback die Handbuchbeispiele als Kommentarblock im Format `-- Beispielaufrufe:` übernehmen.
+- Wenn `Lua_manual.pdf` erweitert wird, `python scripts/generate_eep_original_api.py` erneut ausfuehren und anschliessend nur `lua/LUA/ak/core/eep/EepOriginalApi.d.lua` verifizieren mit:
+  - `lua -e "assert(loadfile('lua/LUA/ak/core/eep/EepOriginalApi.d.lua')); print('OK')"`
+  - einem Konsistenzabgleich zwischen extrahierten Blöcken und der erzeugten Datei:
+    - jede Funktion und jeder Callback muss eine Versionszeile und einen Block `-- Beispielaufrufe:` haben
+    - die Anzahl der Parameter und Rückgabewerte muss innerhalb des im Handbuch angegebenen Bereichs liegen
+    - es dürfen keine Platzhalternamen wie `paramN`, `valueN` oder numerische Parameternamen im Ergebnis verbleiben
 - Bei Änderungen an Zustandslogik in Lua immer auf Persistenz achten `StorageUtility.loadTable()` und `StorageUtility.saveTable()` akzeptieren nur String-Werte
   - Optionale Felder beim Speichern lieber weglassen als `"nil"` oder andere Platzhalter-Strings zu schreiben.
 - EEP-nahe Fehlerpfade sind oft absichtlich `fail-loud`: bestehende `print(... debug.traceback())`-Muster nicht ohne klaren Grund in stilles Fehlerhandling umwandeln.
@@ -85,4 +115,3 @@
   - Verhaltensregressionen
   - fehlende Tests
 - Gegencheck der Architekturdokumentationen in ARCHITECTURE.md wo vorhanden
-
