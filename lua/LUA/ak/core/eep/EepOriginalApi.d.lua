@@ -1,5 +1,7 @@
 ---@meta
 
+-- Automatisch erzeugt mit scripts/generate_eep_original_api.py
+
 -- -------------------------------------------------------------------------------------------------------------------
 ---Liefert die Versionsnummer der installierten EEP-Version.
 ---@type number
@@ -747,7 +749,9 @@ function EEPGetTrainCouplingRear(name) end
 --- gezaehlt wird: true = vorne, false = hinten
 ---@param count number parameter bestimmt die Anzahl an Rollmaterialien, die von vorne oder hinten abgekuppelt werden
 --- sollen.
----@param name2? any Parameter.
+---@param name2? string ueber den optionalen 4. Parameter kann diesem abgekoppelten Teil ein neuer Name (String mit
+--- vorangestelltem #-Zeichen) gegeben werden. Tipp: Es empfiehlt sich also zuerst zu ueberlegen, welchem spaeteren
+--- Zugteil man einen neuen Namen geben will und dann diesen mit den Parametern 2 und 3 zu definieren.
 ---@return boolean ok rueckgabewert ist true, wenn der angesprochene "Fahrzeugverband" existiert, sonst false.
 function EEPTrainLooseCoupling(name, fromFront, count, name2) end
 --       ====================================================

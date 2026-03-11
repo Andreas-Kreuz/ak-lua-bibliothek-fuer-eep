@@ -19,7 +19,10 @@ ENTRY_NAME_RE = re.compile(r"^(EEP[A-Za-z0-9_]+|clearlog|print)(\s*\(\s*\))?$")
 FIELD_LABELS = ("Parameter", "Rueckgabewerte", "Voraussetzung", "Zweck", "Bemerkungen")
 FIELD_SET = set(FIELD_LABELS)
 RETURN_BULLET_RE = re.compile(r"^Der\s+(?:\d+\.\s+)?Rueckgabewert\b", re.IGNORECASE)
-PARAM_BULLET_RE = re.compile(r"^(?:Der|Im|Als)\s+(?:optionale\s+)?(?:\d+\.\s+)?Parameter\b", re.IGNORECASE)
+PARAM_BULLET_RE = re.compile(
+    r"^(?:Der|Im|Als|Ueber\s+den)\s+(?:optionale[nr]?\s+)?(?:\d+\.\s+)?Parameter\b",
+    re.IGNORECASE,
+)
 PARAM_RANGE_RE = re.compile(r"^Die\s+Parameter\s+(\d+)\s*[–-]\s*(\d+)\b", re.IGNORECASE)
 COUNT_WORD_MAP = {
     "keine": 0,
@@ -1196,7 +1199,12 @@ def main() -> int:
     blocks = collect_blocks(lines)
     entries = [parse_block(block) for block in blocks]
 
-    output: list[str] = ["---@meta", ""]
+    output: list[str] = [
+        "---@meta",
+        "",
+        "-- Automatisch erzeugt mit scripts/generate_eep_original_api.py",
+        "",
+    ]
     for entry in entries:
         output.append("-- " + ("-" * (WRAP_WIDTH - 3)))
         output.extend(render_entry(entry))

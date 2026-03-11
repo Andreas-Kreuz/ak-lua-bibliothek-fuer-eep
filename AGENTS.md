@@ -19,7 +19,7 @@
 
 ## Dateikodierung
 
-- Alle Dateien mit der Endung `.lua` sind immer als `latin1` / `ISO-8859-1` zu lesen und zu schreiben.
+- Alle Dateien mit der Endung `.lua` sind immer als `latin1` / `ISO-8859-1` zu lesen und zu schreiben (für Powershell besser ISO-8859-1).
 - Alle anderen Dateien sind als `UTF-8` zu lesen und zu schreiben.
 - Bei Shell-Kommandos zum Lesen oder Schreiben von `.lua`-Dateien immer die Kodierung explizit auf `latin1` setzen.
 - Die Kodierung bestehender Dateien muss beim Bearbeiten erhalten bleiben; `.lua`-Dateien duerfen niemals versehentlich als `UTF-8` zurueckgeschrieben werden.
