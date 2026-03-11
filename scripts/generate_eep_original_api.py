@@ -19,7 +19,7 @@ ENTRY_NAME_RE = re.compile(r"^(EEP[A-Za-z0-9_]+|clearlog|print)(\s*\(\s*\))?$")
 FIELD_LABELS = ("Parameter", "Rueckgabewerte", "Voraussetzung", "Zweck", "Bemerkungen")
 FIELD_SET = set(FIELD_LABELS)
 RETURN_BULLET_RE = re.compile(
-    r"^Der\s+(?:(?:\(\d+\.\)|\d+\.)\s+)?(?:\([^)]+\)\s+)?Rueckgabewert\b",
+    r"^(?:Der\s+)?(?:(?:\(\d+\.\)|\d+\.)\s+)?(?:\([^)]+\)\s+)?Rueckgabewert\b",
     re.IGNORECASE,
 )
 PARAM_BULLET_RE = re.compile(
@@ -39,6 +39,12 @@ COUNT_WORD_MAP = {
     "fuenf": 5,
     "sechs": 6,
     "sieben": 7,
+}
+
+KNOWN_COUNT_OVERRIDES: dict[tuple[str, str], list[int]] = {
+    ("EEPRollingstockGetHookPosition", "Parameter"): [2],
+    ("EEPRollingstockSetHorn", "Parameter"): [2],
+    ("EEPGetFogIntensity", "Rueckgabewerte"): [1],
 }
 
 ASCII_TRANSLATION = str.maketrans(
@@ -143,6 +149,13 @@ def parse_count_candidates(values: list[str]) -> list[int]:
     words = re.findall(r"[a-z]+", text)
     candidates = [COUNT_WORD_MAP[word] for word in words if word in COUNT_WORD_MAP]
     return sorted(set(candidates))
+
+
+def count_candidates_for_entry(entry: Entry, field_name: str) -> list[int]:
+    override = KNOWN_COUNT_OVERRIDES.get((entry.name, field_name))
+    if override is not None:
+        return override
+    return parse_count_candidates(entry.fields.get(field_name, []))
 
 
 def looks_like_complete_version(value: str) -> bool:
@@ -492,7 +505,11 @@ def parse_function_field_line(entry: Entry, label: str, parts: list[str]) -> Non
         return
 
     if label in {"Zweck", "Bemerkungen"}:
-        entry.add_field(label, join_parts(parts))
+        cleaned = join_parts(parts)
+        if cleaned.startswith("-"):
+            entry.add_field("Bemerkungen", cleaned)
+            return
+        entry.add_field(label, cleaned)
 
 
 def parse_function_block(block: list[str]) -> Entry:
@@ -550,7 +567,11 @@ def parse_function_block(block: list[str]) -> Entry:
             continue
 
         if current_field in {"Zweck", "Bemerkungen"}:
-            entry.add_field(current_field, cleaned)
+            if cleaned.startswith("-"):
+                current_field = "Bemerkungen"
+                entry.add_field("Bemerkungen", cleaned)
+            else:
+                entry.add_field(current_field, cleaned)
             continue
 
         if entry.examples and previous_example_is_open(entry.examples[-1]):
@@ -591,6 +612,11 @@ def collect_bullets(lines: list[str]) -> list[str]:
                 bullets.append(current)
             current = text[1:].strip()
             continue
+        if re.match(r"^[oO]\s+", text):
+            if current:
+                bullets.append(current)
+            current = text.strip()
+            continue
         if current:
             current = f"{current} {text}".strip()
     if current:
@@ -598,14 +624,57 @@ def collect_bullets(lines: list[str]) -> list[str]:
     return bullets
 
 
+def strip_sub_bullet_prefix(text: str) -> str:
+    return re.sub(r"^[oO]\s+", "", clean_text(text))
+
+
+def is_sub_bullet(text: str) -> bool:
+    return bool(re.match(r"^[oO]\s+", clean_text(text)))
+
+
+def strip_leading_version_prefix(text: str) -> str:
+    normalized = clean_text(text)
+    return re.sub(
+        r"^Ab\s+EEP\b.*?\b(?=(?:Der|In|Ueber|kann|Eine|Die)\b)",
+        "",
+        normalized,
+        flags=re.IGNORECASE,
+    ).strip()
+
+
+def count_from_token(token: str) -> int | None:
+    text = clean_text(token).lower().strip(";,")
+    if re.fullmatch(r"\d+", text):
+        return int(text)
+    return COUNT_WORD_MAP.get(text)
+
+
+def extract_param_range(bullet: str) -> tuple[int, int] | None:
+    normalized = clean_text(bullet)
+    match = PARAM_RANGE_RE.match(normalized)
+    if match:
+        return int(match.group(1)), int(match.group(2))
+    first_n_match = re.match(r"^Die\s+ersten\s+([A-Za-z0-9]+)\s+Parameter\b", normalized, re.IGNORECASE)
+    if first_n_match:
+        count = count_from_token(first_n_match.group(1))
+        if count is not None:
+            return 1, count
+    return None
+
+
 def is_param_bullet(text: str) -> bool:
-    prefix = clean_text(text)[:96]
+    prefix = strip_leading_version_prefix(strip_sub_bullet_prefix(text))[:96]
     return bool(
         re.search(
-            r"(?:Der\s+(?:optionale[nr]?\s+)?Parameter\b|"
+            r"^(?:Der\s+(?:optionale[nr]?\s+)?Parameter\b|"
+            r"Der\s+optionale[nr]?\s+\d+\.\s*Parameter\b|"
+            r"Ueber\s+den\s+optionale[nr]?\s+\d+\.\s*Parameter\b|"
+            r"In\s+den\s+\d+\.\s*Parameter\b|"
             r"Der\s+\(\d+\.\)\s+Parameter\b|"
-            r"Der\s+\d+\.\s+(?:\([^)]+\)\s+)?Parameter\b|"
-            r"optional(?:e[nr]?|er|en)?\s+\d+\.\s+Parameter\b)",
+            r"Der\s+\d+\.\s*(?:\([^)]+\)\s+)?Parameter\b|"
+            r"kann\s+ein\s+(?:optionale[nr]?\s+)?\d+\.\s*(?:\([^)]+\)\s+)?Parameter\b|"
+            r"optional(?:e[nr]?|er|en)?\s+\d+\.\s*Parameter\b|"
+            r"Eine\s+\d+\s+als\s+\d+\.\s*(?:\([^)]+\)\s+)?Parameter\b)",
             prefix,
             re.IGNORECASE,
         )
@@ -754,10 +823,12 @@ def infer_return_name(desc: str, index: int) -> str:
 
 
 def short_desc(text: str) -> str:
-    text = clean_text(text)
+    text = strip_leading_version_prefix(strip_sub_bullet_prefix(text))
     text = re.sub(r"^Der\s+\d+\.\s+\([^)]+\)\s*", "", text)
     text = re.sub(r"^Der\s+\((\d+\.)\)\s*", "", text)
     text = re.sub(r"^Der\s+\d+\.\s*", "", text)
+    text = re.sub(r"^Der\s+\d+\.\s*(?=Parameter\b)", "", text)
+    text = re.sub(r"^In\s+den\s+\d+\.\s*Parameter\s+", "", text)
     text = re.sub(r"^Der\s+", "", text)
     text = re.sub(r"^Die\s+", "", text)
     return text[:1].lower() + text[1:] if text else ""
@@ -849,10 +920,17 @@ def infer_type_from_hint(name: str) -> str:
 
 
 def extract_param_index(bullet: str, fallback: int) -> int:
+    bullet = strip_leading_version_prefix(strip_sub_bullet_prefix(bullet))
     patterns = (
+        r"Ueber\s+den\s+optionale[nr]?\s+(\d+)\.\s*Parameter\b",
+        r"Der\s+optionale[nr]?\s+(\d+)\.\s*Parameter\b",
+        r"In\s+den\s+(\d+)\.\s*Parameter\b",
         r"\((\d+)\.\)\s+Parameter\b",
-        r"(\d+)\.\s+\([^)]+\)\s+Parameter\b",
-        r"(\d+)\.\s+Parameter\b",
+        r"(\d+)\.\s*\([^)]+\)\s+Parameter\b",
+        r"(\d+)\.\s*Parameter\b",
+        r"ein\s+optionale[nr]?\s+(\d+)\.\s*(?:\([^)]+\)\s+)?Parameter\b",
+        r"ein\s+(\d+)\.\s*(?:\([^)]+\)\s+)?Parameter\b",
+        r"als\s+(\d+)\.\s*(?:\([^)]+\)\s+)?Parameter\b",
     )
     for pattern in patterns:
         match = re.search(pattern, bullet, re.IGNORECASE)
@@ -864,8 +942,8 @@ def extract_param_index(bullet: str, fallback: int) -> int:
 def extract_return_index(bullet: str, fallback: int) -> int:
     patterns = (
         r"\((\d+)\.\)\s+Rueckgabewert\b",
-        r"(\d+)\.\s+\([^)]+\)\s+Rueckgabewert\b",
-        r"(\d+)\.\s+Rueckgabewert\b",
+        r"(\d+)\.\s*\([^)]+\)\s+Rueckgabewert\b",
+        r"(\d+)\.\s*Rueckgabewert\b",
     )
     for pattern in patterns:
         match = re.search(pattern, bullet, re.IGNORECASE)
@@ -1072,40 +1150,53 @@ def parse_params(entry: Entry) -> list[dict[str, object]]:
     bullets = collect_bullets(entry.fields.get("Bemerkungen", []))
     params_by_index: dict[int, dict[str, object]] = {}
     next_index = 1
+    last_param_index: int | None = None
     hints = extract_signature_hints(entry)
     for bullet in bullets:
-        lower = bullet.lower()
+        normalized_bullet = strip_sub_bullet_prefix(bullet)
+        lower = normalized_bullet.lower()
         if "parameter" not in lower or "parameternamen" in lower:
+            if last_param_index is not None and is_sub_bullet(bullet):
+                params_by_index[last_param_index]["desc"] = clean_text(
+                    f"{params_by_index[last_param_index]['desc']} {short_desc(normalized_bullet)}"
+                )
             continue
-        range_match = PARAM_RANGE_RE.match(bullet)
+        range_match = extract_param_range(normalized_bullet)
         if range_match:
-            start = int(range_match.group(1))
-            end = int(range_match.group(2))
-            group_names = infer_group_param_names(bullet, start, end)
+            start, end = range_match
+            group_names = infer_group_param_names(normalized_bullet, start, end)
+            group_desc = clean_text(normalized_bullet)
+            group_desc = group_desc[:1].lower() + group_desc[1:] if group_desc else "Parameter."
             for offset, index in enumerate(range(start, end + 1)):
                 hint_name = hints[index - 1] if index - 1 < len(hints) else ""
                 name = hint_name or group_names[offset]
                 params_by_index[index] = {
                     "name": name,
-                    "type": infer_type(bullet),
+                    "type": infer_type(normalized_bullet),
                     "optional": False,
-                    "desc": short_desc(bullet),
+                    "desc": group_desc,
                 }
+                last_param_index = index
             next_index = max(next_index, end + 1)
             continue
-        if not is_param_bullet(bullet):
+        if not is_param_bullet(normalized_bullet):
+            if last_param_index is not None and is_sub_bullet(bullet):
+                params_by_index[last_param_index]["desc"] = clean_text(
+                    f"{params_by_index[last_param_index]['desc']} {short_desc(normalized_bullet)}"
+                )
             continue
-        index = extract_param_index(bullet, next_index)
+        index = extract_param_index(normalized_bullet, next_index)
         next_index = max(next_index, index + 1)
         params_by_index[index] = {
-            "name": infer_param_name(bullet, index),
-            "type": infer_type(bullet),
+            "name": infer_param_name(normalized_bullet, index),
+            "type": infer_type(normalized_bullet),
             "optional": "optional" in lower or "weggelassen" in lower,
-            "desc": short_desc(bullet),
+            "desc": short_desc(normalized_bullet),
         }
+        last_param_index = index
     if entry.name == "print":
         return [{"name": "...", "type": "any", "optional": False, "desc": "Auszugebende Werte."}]
-    count_candidates = parse_count_candidates(entry.fields.get("Parameter", []))
+    count_candidates = count_candidates_for_entry(entry, "Parameter")
     required_count = min(count_candidates) if count_candidates else len(params_by_index)
     expected_count = max(count_candidates) if count_candidates else max(params_by_index.keys(), default=0)
     for index, hint in enumerate(hints, start=1):
@@ -1134,13 +1225,22 @@ def parse_returns(entry: Entry) -> list[dict[str, str]]:
 
     bullets = collect_bullets(entry.fields.get("Bemerkungen", []))
     returns: list[dict[str, str]] = []
+    last_return_index: int | None = None
     for bullet in bullets:
         lower = bullet.lower()
         if "keinen rueckgabewert" in lower:
             return []
         if "rueckgabewert" not in lower:
+            if last_return_index is not None and is_sub_bullet(bullet):
+                returns[last_return_index - 1]["desc"] = clean_text(
+                    f"{returns[last_return_index - 1]['desc']} {short_desc(bullet)}"
+                )
             continue
         if not RETURN_BULLET_RE.match(bullet):
+            if last_return_index is not None and is_sub_bullet(bullet):
+                returns[last_return_index - 1]["desc"] = clean_text(
+                    f"{returns[last_return_index - 1]['desc']} {short_desc(bullet)}"
+                )
             continue
         index = extract_return_index(bullet, len(returns) + 1)
         returns.append(
@@ -1150,8 +1250,9 @@ def parse_returns(entry: Entry) -> list[dict[str, str]]:
                 "desc": short_desc(bullet),
             }
         )
+        last_return_index = index
     if not returns:
-        count_candidates = parse_count_candidates(entry.fields.get("Rueckgabewerte", []))
+        count_candidates = count_candidates_for_entry(entry, "Rueckgabewerte")
         expected_count = max(count_candidates) if count_candidates else 0
         if expected_count > 0:
             fallback_lines = []
@@ -1176,12 +1277,18 @@ def parse_returns(entry: Entry) -> list[dict[str, str]]:
 
 def parse_notes(entry: Entry) -> list[str]:
     notes: list[str] = []
+    previous_consumed = False
     for bullet in collect_bullets(entry.fields.get("Bemerkungen", [])):
         lower = bullet.lower()
-        if "parameter" in lower and is_param_bullet(bullet):
+        if "parameter" in lower and (is_param_bullet(bullet) or extract_param_range(bullet) is not None):
+            previous_consumed = True
             continue
         if "rueckgabewert" in lower and RETURN_BULLET_RE.match(bullet):
+            previous_consumed = True
             continue
+        if previous_consumed and is_sub_bullet(bullet):
+            continue
+        previous_consumed = False
         notes.append(clean_text(bullet))
     return notes
 
@@ -1240,7 +1347,7 @@ def render_entry(entry: Entry) -> list[str]:
         required = [p for p in params if not p["optional"]]
         if params and len(required) != len(params):
             overload_params = ", ".join(f"{p['name']}: {p['type']}" for p in required if p["name"] != "...")
-            return_count_candidates = parse_count_candidates(entry.fields.get("Rueckgabewerte", []))
+            return_count_candidates = count_candidates_for_entry(entry, "Rueckgabewerte")
             overload_return_items = returns
             if return_count_candidates and returns:
                 overload_return_items = returns[: min(return_count_candidates)]
