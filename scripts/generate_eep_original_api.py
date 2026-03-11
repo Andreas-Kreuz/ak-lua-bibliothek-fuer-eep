@@ -18,7 +18,10 @@ WRAP_WIDTH = 118
 ENTRY_NAME_RE = re.compile(r"^(EEP[A-Za-z0-9_]+|clearlog|print)(\s*\(\s*\))?$")
 FIELD_LABELS = ("Parameter", "Rueckgabewerte", "Voraussetzung", "Zweck", "Bemerkungen")
 FIELD_SET = set(FIELD_LABELS)
-RETURN_BULLET_RE = re.compile(r"^Der\s+(?:\d+\.\s+)?Rueckgabewert\b", re.IGNORECASE)
+RETURN_BULLET_RE = re.compile(
+    r"^Der\s+(?:(?:\(\d+\.\)|\d+\.)\s+)?(?:\([^)]+\)\s+)?Rueckgabewert\b",
+    re.IGNORECASE,
+)
 PARAM_BULLET_RE = re.compile(
     r"^(?:Der|Im|Als|Ueber\s+den)\s+(?:optionale[nr]?\s+)?(?:\d+\.\s+)?Parameter\b",
     re.IGNORECASE,
@@ -595,9 +598,25 @@ def collect_bullets(lines: list[str]) -> list[str]:
     return bullets
 
 
+def is_param_bullet(text: str) -> bool:
+    prefix = clean_text(text)[:96]
+    return bool(
+        re.search(
+            r"(?:Der\s+(?:optionale[nr]?\s+)?Parameter\b|"
+            r"Der\s+\(\d+\.\)\s+Parameter\b|"
+            r"Der\s+\d+\.\s+(?:\([^)]+\)\s+)?Parameter\b|"
+            r"optional(?:e[nr]?|er|en)?\s+\d+\.\s+Parameter\b)",
+            prefix,
+            re.IGNORECASE,
+        )
+    )
+
+
 def infer_type(desc: str) -> str:
     lower = desc.lower()
     if "route" in lower:
+        return "string"
+    if "zeichenkette" in lower or re.search(r"\bstring\b", lower):
         return "string"
     if "true" in lower or "false" in lower or "boolean" in lower:
         return "boolean"
@@ -736,6 +755,7 @@ def infer_return_name(desc: str, index: int) -> str:
 
 def short_desc(text: str) -> str:
     text = clean_text(text)
+    text = re.sub(r"^Der\s+\d+\.\s+\([^)]+\)\s*", "", text)
     text = re.sub(r"^Der\s+\((\d+\.)\)\s*", "", text)
     text = re.sub(r"^Der\s+\d+\.\s*", "", text)
     text = re.sub(r"^Der\s+", "", text)
@@ -785,11 +805,16 @@ def sanitize_hint_name(text: str) -> str:
 
 def infer_type_from_hint(name: str) -> str:
     lower = name.lower()
+    if lower == "truezahl":
+        return "boolean|number"
     if lower in {"state", "fromfront", "vorwaerts", "brennt", "besetzt"}:
         return "boolean"
     if (
         lower.endswith("id")
         or lower in {
+            "r",
+            "g",
+            "b",
             "position",
             "speed",
             "count",
@@ -805,9 +830,14 @@ def infer_type_from_hint(name: str) -> str:
             "radius",
             "season",
             "zoneid",
+            "zonennummer",
             "depotid",
             "mode",
             "stellung",
+            "quelle",
+            "achsnummer",
+            "fahrtrichtung",
+            "rueckruf",
             "listenplatz",
             "kranhakennummer",
         }
@@ -819,9 +849,28 @@ def infer_type_from_hint(name: str) -> str:
 
 
 def extract_param_index(bullet: str, fallback: int) -> int:
-    match = re.search(r"(\d+)\.\s+Parameter\b", bullet, re.IGNORECASE)
-    if match:
-        return int(match.group(1))
+    patterns = (
+        r"\((\d+)\.\)\s+Parameter\b",
+        r"(\d+)\.\s+\([^)]+\)\s+Parameter\b",
+        r"(\d+)\.\s+Parameter\b",
+    )
+    for pattern in patterns:
+        match = re.search(pattern, bullet, re.IGNORECASE)
+        if match:
+            return int(match.group(1))
+    return fallback
+
+
+def extract_return_index(bullet: str, fallback: int) -> int:
+    patterns = (
+        r"\((\d+)\.\)\s+Rueckgabewert\b",
+        r"(\d+)\.\s+\([^)]+\)\s+Rueckgabewert\b",
+        r"(\d+)\.\s+Rueckgabewert\b",
+    )
+    for pattern in patterns:
+        match = re.search(pattern, bullet, re.IGNORECASE)
+        if match:
+            return int(match.group(1))
     return fallback
 
 
@@ -971,10 +1020,20 @@ def apply_param_hints_from_examples(params: list[dict[str, object]], entry: Entr
         current_name = str(param["name"])
         if hint and (
             current_name.startswith("param")
-            or current_name in {"stellung", "name"}
+            or current_name in {"stellung", "name", "state", "mode"}
             or (current_name.endswith("Name") and not hint.endswith("Name"))
         ):
             param["name"] = hint
+
+
+def apply_param_type_hints_from_names(params: list[dict[str, object]]) -> None:
+    for param in params:
+        name = str(param["name"])
+        hinted_type = infer_type_from_hint(name)
+        if hinted_type == "any":
+            continue
+        if str(param["type"]) == "any" or name == "trueZahl":
+            param["type"] = hinted_type
 
 
 def apply_return_hints_from_examples(returns: list[dict[str, str]], entry: Entry) -> None:
@@ -1034,7 +1093,7 @@ def parse_params(entry: Entry) -> list[dict[str, object]]:
                 }
             next_index = max(next_index, end + 1)
             continue
-        if not PARAM_BULLET_RE.match(bullet):
+        if not is_param_bullet(bullet):
             continue
         index = extract_param_index(bullet, next_index)
         next_index = max(next_index, index + 1)
@@ -1065,10 +1124,14 @@ def parse_params(entry: Entry) -> list[dict[str, object]]:
         }
     params = [params_by_index[index] for index in sorted(params_by_index)]
     apply_param_hints_from_examples(params, entry)
+    apply_param_type_hints_from_names(params)
     return uniquify_params(params)
 
 
 def parse_returns(entry: Entry) -> list[dict[str, str]]:
+    if entry.name == "print":
+        return [{"name": "text", "type": "any", "desc": "rueckgabewert ist der komplette, ausgegebene String."}]
+
     bullets = collect_bullets(entry.fields.get("Bemerkungen", []))
     returns: list[dict[str, str]] = []
     for bullet in bullets:
@@ -1079,7 +1142,7 @@ def parse_returns(entry: Entry) -> list[dict[str, str]]:
             continue
         if not RETURN_BULLET_RE.match(bullet):
             continue
-        index = len(returns) + 1
+        index = extract_return_index(bullet, len(returns) + 1)
         returns.append(
             {
                 "name": infer_return_name(bullet, index),
@@ -1109,6 +1172,18 @@ def parse_returns(entry: Entry) -> list[dict[str, str]]:
                 )
     apply_return_hints_from_examples(returns, entry)
     return returns
+
+
+def parse_notes(entry: Entry) -> list[str]:
+    notes: list[str] = []
+    for bullet in collect_bullets(entry.fields.get("Bemerkungen", [])):
+        lower = bullet.lower()
+        if "parameter" in lower and is_param_bullet(bullet):
+            continue
+        if "rueckgabewert" in lower and RETURN_BULLET_RE.match(bullet):
+            continue
+        notes.append(clean_text(bullet))
+    return notes
 
 
 def infer_variable_type(entry: Entry) -> str:
@@ -1161,10 +1236,15 @@ def render_entry(entry: Entry) -> list[str]:
     if entry.callable:
         params = parse_params(entry)
         returns = parse_returns(entry)
+        notes = parse_notes(entry)
         required = [p for p in params if not p["optional"]]
         if params and len(required) != len(params):
             overload_params = ", ".join(f"{p['name']}: {p['type']}" for p in required if p["name"] != "...")
-            overload_returns = ", ".join(r["type"] for r in returns) or "nil"
+            return_count_candidates = parse_count_candidates(entry.fields.get("Rueckgabewerte", []))
+            overload_return_items = returns
+            if return_count_candidates and returns:
+                overload_return_items = returns[: min(return_count_candidates)]
+            overload_returns = ", ".join(r["type"] for r in overload_return_items) or "nil"
             if overload_params:
                 lines.append(f"---@overload fun({overload_params}): {overload_returns}")
         for param in params:
@@ -1184,6 +1264,10 @@ def render_entry(entry: Entry) -> list[str]:
 
     if version:
         lines.extend(wrap_comment(f"Verfügbar ab {version}."))
+    if entry.callable and notes:
+        lines.append("-- Bemerkungen:")
+        for note in notes:
+            lines.extend(wrap_comment(note))
     if examples:
         lines.append("-- Beispielaufrufe:")
         for example in examples:
