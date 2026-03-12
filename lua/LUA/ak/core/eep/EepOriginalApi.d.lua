@@ -638,16 +638,16 @@ function EEPLoadData(speichernummer) end
 ---@param trainName string parameter ist der komplette Name des "Fahrzeugverbands" (mit vorangestelltem #-Zeichen) als
 --- String.
 ---@param speed number parameter ist die Geschwindigkeit. Ein negativer Wert bewirkt Rueckwaertsfahrt.
----@param state? boolean kann ein optionaler 3. Parameter mit true oder false bzw. 1 oder 0 eingegeben werden. bei
---- false oder 0 oder Nichtexistenz wird - wie auch vorher - eine neue Sollgeschwindigkeit zugewiesen, wobei eine
---- eventuelle Signalbeeinflussung aufgehoben wird (d.h. ein "Fahrzeugverband", der gegenwaertig durch ein Signal
---- aufgehalten wird, faehrt los). bei true oder 1 wird dem "Fahrzeugverband" eine "Reise"geschwindigkeit zugewiesen,
---- wobei eine Signalbeeinflussung bestehen bleibt (d.h. ein "Fahrzeugverband", der gegenwaertig durch ein Signal
---- aufgehalten wird, bleibt weiterhin stehen.)
+---@param useTargetSpeed? boolean kann ein optionaler 3. Parameter mit true oder false bzw. 1 oder 0 eingegeben
+--- werden. bei false oder 0 oder Nichtexistenz wird - wie auch vorher - eine neue Sollgeschwindigkeit zugewiesen,
+--- wobei eine eventuelle Signalbeeinflussung aufgehoben wird (d.h. ein "Fahrzeugverband", der gegenwaertig durch ein
+--- Signal aufgehalten wird, faehrt los). bei true oder 1 wird dem "Fahrzeugverband" eine "Reise"geschwindigkeit
+--- zugewiesen, wobei eine Signalbeeinflussung bestehen bleibt (d.h. ein "Fahrzeugverband", der gegenwaertig durch ein
+--- Signal aufgehalten wird, bleibt weiterhin stehen.)
 ---@return boolean ok rueckgabewert ist entweder true, wenn der angesprochene "Fahrzeugverband" existiert oder false,
 --- wenn er nicht existiert. .
-function EEPSetTrainSpeed(trainName, speed, state) end
---       =========================================
+function EEPSetTrainSpeed(trainName, speed, useTargetSpeed) end
+--       ==================================================
 -- Verfuegbar ab EEP 11; EEP 17.2 - Plugin 2.
 -- Beispielaufrufe:
 -- EEPSetTrainSpeed("#Name", Geschwindigkeit [, false|true])
@@ -660,15 +660,15 @@ function EEPSetTrainSpeed(trainName, speed, state) end
 ---@overload fun(trainName: string): boolean, any
 ---@param trainName string parameter ist der komplette Name des "Fahrzeugverbands" (mit vorangestelltem #-Zeichen) als
 --- String.
----@param state? boolean kann ein optionaler 2. Parameter mit true oder false bzw. 1 oder. 0 eingegeben werden. bei
---- false oder 0 oder Nichtexistenz wird - wie auch vorher - die augenblickliche Ist-Geschwindigkeit zurueckgegeben.
---- bei true oder 1 wird die "Reise"geschwindigkeit zurueckgegeben, auch wenn er vor einem Signal wartet! Aber WICHTIG
---- zu wissen: Nach einem "Sanften Ankuppeln" betraegt auch die Reisegeschwindigkeit 0 km/h.
+---@param useTargetSpeed? boolean kann ein optionaler 2. Parameter mit true oder false bzw. 1 oder. 0 eingegeben
+--- werden. bei false oder 0 oder Nichtexistenz wird - wie auch vorher - die augenblickliche Ist-Geschwindigkeit
+--- zurueckgegeben. bei true oder 1 wird die "Reise"geschwindigkeit zurueckgegeben, auch wenn er vor einem Signal
+--- wartet! Aber WICHTIG zu wissen: Nach einem "Sanften Ankuppeln" betraegt auch die Reisegeschwindigkeit 0 km/h.
 ---@return boolean ok rueckgabewert ist entweder true, wenn der angesprochene "Fahrzeugverband" existiert oder false,
 --- wenn er nicht existiert.
 ---@return any istGeschwindigkeit rueckgabewert ist die ermittelte Geschwindigkeit.
-function EEPGetTrainSpeed(trainName, state) end
---       ==================================
+function EEPGetTrainSpeed(trainName, useTargetSpeed) end
+--       ===========================================
 -- Verfuegbar ab EEP 11; EEP 17.2 - Plugin 2.
 -- Bemerkungen:
 -- Achtung: Nach EEPSetTrainSpeed() liefert EEPGetTrainSpeed() fruehestens im naechsten Zyklus der EEPMain() den neuen

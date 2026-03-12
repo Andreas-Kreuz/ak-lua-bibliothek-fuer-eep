@@ -232,13 +232,17 @@ end
 --- Geschwindigkeit aendern
 -- @param trainName Name des Zuges
 -- @param speed Geschwindigkeit
-function EEPSetTrainSpeed(trainName, speed) return Runtime.callEEPSetTrainSpeed(trainName, speed) end
+-- @param useTargetSpeed true = Wunschgeschwindigkeit, false/nil = aktuelle Geschwindigkeit
+function EEPSetTrainSpeed(trainName, speed, useTargetSpeed)
+    return Runtime.callEEPSetTrainSpeed(trainName, speed, useTargetSpeed)
+end
 
 --- Geschwindigkeit lesen
 ---@param trainName string Name des Zuges
+---@param useTargetSpeed? boolean true = Wunschgeschwindigkeit, false/nil = aktuelle Geschwindigkeit
 ---@return boolean Ist der Zug vorhanden
 ---@return number Geschwindigkeit
-function EEPGetTrainSpeed(trainName) return Runtime.callEEPGetTrainSpeed(trainName) end
+function EEPGetTrainSpeed(trainName, useTargetSpeed) return Runtime.callEEPGetTrainSpeed(trainName, useTargetSpeed) end
 
 --- Setzen der Kupplung (hinten)
 -- @param rsName Name des Rollmaterial,

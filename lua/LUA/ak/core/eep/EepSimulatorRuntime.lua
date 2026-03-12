@@ -10,7 +10,8 @@ end
 
 local function createTrainState()
     return {
-        speed = 0,
+        currentSpeed = 0,
+        targetSpeed = 0,
         route = nil,
         rollingStock = {},
         lights = {},
@@ -417,6 +418,42 @@ local function updateTrainListSize(signalId)
     signalsTrainCount[signalId] = count
 end
 
+---@param train table
+local function ensureTrainSpeedState(train)
+    if train.currentSpeed == nil then
+        train.currentSpeed = train.speed or 0
+    end
+    if train.targetSpeed == nil then
+        train.targetSpeed = train.speed or train.currentSpeed
+    end
+    train.speed = nil
+end
+
+---@param trainName string
+---@return boolean
+local function isTrainQueuedOnSignal(trainName)
+    for _, queue in pairs(signalsTrainNames) do
+        for _, queuedTrainName in ipairs(queue) do
+            if queuedTrainName == trainName then return true end
+        end
+    end
+    return false
+end
+
+---@param trainName string
+local function removeTrainFromAllSignals(trainName)
+    for signalId, queue in pairs(signalsTrainNames) do
+        local removed = false
+        for index = #queue, 1, -1 do
+            if queue[index] == trainName then
+                table.remove(queue, index)
+                removed = true
+            end
+        end
+        if removed then updateTrainListSize(signalId) end
+    end
+end
+
 --- This will add a train to the signals queue
 ---@param signalId number
 ---@param trainName string
@@ -708,17 +745,36 @@ function Runtime.callEEPSetColourFilter(farbton, saettigung, helligkeit, kontras
 --- Geschwindigkeit aendern
 -- @param trainName Name des Zuges
 -- @param speed Geschwindigkeit
-function Runtime.callEEPSetTrainSpeed(trainName, speed)
-    Store.ensurePath(state, { "trains", trainName }, createTrainState).speed = speed
+-- @param useTargetSpeed true = Wunschgeschwindigkeit, false/nil = aktuelle Geschwindigkeit
+function Runtime.callEEPSetTrainSpeed(trainName, speed, useTargetSpeed)
+    local train = Store.ensurePath(state, { "trains", trainName }, createTrainState)
+    local setTargetSpeedOnly = useTargetSpeed == true or useTargetSpeed == 1
+    ensureTrainSpeedState(train)
+
+    if setTargetSpeedOnly then
+        train.targetSpeed = speed
+        if not isTrainQueuedOnSignal(trainName) then
+            train.currentSpeed = speed
+        end
+        return
+    end
+
+    train.currentSpeed = speed
+    train.targetSpeed = speed
+    removeTrainFromAllSignals(trainName)
 end
 
 --- Geschwindigkeit lesen
 ---@param trainName string Name des Zuges
+---@param useTargetSpeed? boolean true = Wunschgeschwindigkeit, false/nil = aktuelle Geschwindigkeit
 ---@return boolean Ist der Zug vorhanden
 ---@return number Geschwindigkeit
-function Runtime.callEEPGetTrainSpeed(trainName)
+function Runtime.callEEPGetTrainSpeed(trainName, useTargetSpeed)
     local train = getTrainState(trainName)
-    return train ~= nil, train and train.speed or 0
+    local readTargetSpeed = useTargetSpeed == true or useTargetSpeed == 1
+    if not train then return false, 0 end
+    ensureTrainSpeedState(train)
+    return true, readTargetSpeed and train.targetSpeed or train.currentSpeed
 end
 
 --- Setzen der Kupplung (hinten)

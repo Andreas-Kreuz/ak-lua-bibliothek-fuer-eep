@@ -2306,6 +2306,19 @@ def uniquify_params(params: list[dict[str, object]]) -> list[dict[str, object]]:
     return params
 
 
+def apply_param_name_overrides(params: list[dict[str, object]], entry: Entry) -> None:
+    overrides = {
+        "EEPSetTrainSpeed": {3: "useTargetSpeed"},
+        "EEPGetTrainSpeed": {2: "useTargetSpeed"},
+    }
+    entry_overrides = overrides.get(entry.name)
+    if not entry_overrides:
+        return
+    for index, name in entry_overrides.items():
+        if 1 <= index <= len(params):
+            params[index - 1]["name"] = name
+
+
 def parse_params(entry: Entry) -> list[dict[str, object]]:
     bullets = collect_bullets(entry.fields.get("Bemerkungen", []))
     params_by_index: dict[int, dict[str, object]] = {}
@@ -2375,6 +2388,7 @@ def parse_params(entry: Entry) -> list[dict[str, object]]:
         }
     params = [params_by_index[index] for index in sorted(params_by_index)]
     apply_param_hints_from_examples(params, entry)
+    apply_param_name_overrides(params, entry)
     apply_param_type_hints_from_names(params)
     return uniquify_params(params)
 
