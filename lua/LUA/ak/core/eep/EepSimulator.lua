@@ -152,9 +152,9 @@ function EepSimulator.emitOnTrainStoppedOnSignal(signalId, trainName)
                                               trainName)
 end
 
-function EEPSetSignal(signalId, signalStellung, informiereEepOnSignal)
+function EEPSetSignal(signalId, signalState, invokeCallback)
     return Runtime.callEEPSetSignal(signalId,
-                                    signalStellung, informiereEepOnSignal)
+                                    signalState, invokeCallback)
 end
 
 --- Liefert die aktuelle Stellung des Signal x
@@ -224,9 +224,9 @@ function EEPGetTimeLapse() return Runtime.callEEPGetTimeLapse() end
 ---@param saettigung number Saettigung
 ---@param helligkeit number Helligkeit
 ---@param kontrast number Kontrast
-function EEPSetColourFilter(farbton, saettigung, helligkeit, kontrast)
-    return Runtime.callEEPSetColourFilter(farbton,
-                                          saettigung, helligkeit, kontrast)
+function EEPSetColourFilter(hue, saturation, brightness, contrast)
+    return Runtime.callEEPSetColourFilter(hue,
+                                          saturation, brightness, contrast)
 end
 
 --- Geschwindigkeit aendern
@@ -256,10 +256,10 @@ end
 --- Abfragen der Kupplung (hinten)
 -- @param rsName Name des Rollmaterial,
 -- @param kupplungsStatus 1-Kupplung aktiv, 2-Kupplung inaktiv, 3-Wagen angekoppelt(nurGet),
-function EEPRollingstockGetCouplingRear(rsName) return Runtime.callEEPRollingstockGetCouplingRear(rsName) end
+function EEPRollingstockGetCouplingRear(rollingstockName) return Runtime.callEEPRollingstockGetCouplingRear(rollingstockName) end
 
 --- Setzen der Kupplung (vorn)
--- @param rsName Name des Rollmaterial,
+-- @param rollingstockName Name des Rollmaterial,
 -- @param kupplungsStatus 1-Kupplung aktiv, 2-Kupplung inaktiv, 3-Wagen angekoppelt(nurGet),
 -- z.B.: EEPRollingstockSetCouplingFront("DB212 309", 2)
 function EEPRollingstockSetCouplingFront(rsName, kupplungsStatus)
@@ -270,12 +270,12 @@ end
 --- Abfragen der Kupplung (vorn)
 -- @param rsName Name des Rollmaterial,
 -- @param kupplungsStatus 1-Kupplung aktiv, 2-Kupplung inaktiv, 3-Wagen angekoppelt(nurGet),
-function EEPRollingstockGetCouplingFront(rsName) return Runtime.callEEPRollingstockGetCouplingFront(rsName) end
+function EEPRollingstockGetCouplingFront(rollingstockName) return Runtime.callEEPRollingstockGetCouplingFront(rollingstockName) end
 
 --------------------------------------------------------------------------
 -- Siehe hierzu auch Handbuch EEP 11(Achsgruppen) Setzen einer Achsgruppe,
 -- z.B.: EEPRollingstockSetSlot("Loadingkran2Greifer", 1)
--- @param rsName Name des Rollmaterials als String
+-- @param rollingstockName Name des Rollmaterials als String
 -- @param slot Slot mit der Achsstellung
 --------------------------------------------------------------------------
 function EEPRollingstockSetSlot(rsName, slot) return Runtime.callEEPRollingstockSetSlot(rsName, slot) end
@@ -287,16 +287,16 @@ function EEPRollingstockSetSlot(rsName, slot) return Runtime.callEEPRollingstock
 -- @param achse Name der Achse
 -- @param stellung 0 - 100 - Achsstellung
 --------------------------------------------------------------------------
-function EEPRollingstockSetAxis(rsName, achse, stellung)
-    return Runtime.callEEPRollingstockSetAxis(rsName, achse,
-                                              stellung)
+function EEPRollingstockSetAxis(rollingstockName, axisName, axisPosition, useNameFilter)
+    return Runtime.callEEPRollingstockSetAxis(rollingstockName, axisName,
+                                                 axisPosition, useNameFilter)
 end
 
 --- Gibt die Stellung der Achse am Rollmaterial zurueck
 -- z.B.: EEPRollingstockSetAxis("Bekohlungskranbr?cke 1", "Drehung links", 50)
 -- @param rsName Name des Rollmaterials als String
 -- @param achse Name der Achse
-function EEPRollingstockGetAxis(rsName, achse) return Runtime.callEEPRollingstockGetAxis(rsName, achse) end
+function EEPRollingstockGetAxis(rollingstockName, axisName) return Runtime.callEEPRollingstockGetAxis(rollingstockName, axisName) end
 
 --- Laedt Daten aus Slot.
 --- Laut EEP-Handbuch kann Rueckgabewert 2 ein Boolean, eine Zahl, ein String oder nil sein.
@@ -309,7 +309,7 @@ function EEPLoadData(slot) return Runtime.callEEPLoadData(slot) end
 --- Falls ein String gespeichert wird, darf er dabei hoechstens 999 Zeichen lang sein.
 -- @param slot Slot 1 bis 1000
 -- @param data Boolean|Zahl|String|nil
-function EEPSaveData(slot, data) return Runtime.callEEPSaveData(slot, data) end
+function EEPSaveData(storageSlot, value) return Runtime.callEEPSaveData(storageSlot, value) end
 
 ------------------------------
 -- Neu ab EEP 11 - Plugin 1 --
@@ -321,16 +321,16 @@ function EEPStructureSetSmoke(immoName, onoff) return Runtime.callEEPStructureSe
 
 --- Rauch abfreagen
 -- @param immoName Name der Immobilie als String.
-function EEPStructureGetSmoke(immoName) return Runtime.callEEPStructureGetSmoke(immoName) end
+function EEPStructureGetSmoke(luaName) return Runtime.callEEPStructureGetSmoke(luaName) end
 
 --- Licht einschalten
--- @param immoName Name der Immobilie als String.
+-- @param luaName Name der Immobilie als String.
 -- @param onoff true oder false
 function EEPStructureSetLight(name, onoff) return Runtime.callEEPStructureSetLight(name, onoff) end
 
 --- Licht abfragen
 -- @param immoName Name der Immobilie als String.
-function EEPStructureGetLight(name) return Runtime.callEEPStructureGetLight(name) end
+function EEPStructureGetLight(luaName) return Runtime.callEEPStructureGetLight(luaName) end
 
 --- Feuer einschalten
 -- @param immoName Name der Immobilie als String.
@@ -339,10 +339,10 @@ function EEPStructureSetFire(immoName, onoff) return Runtime.callEEPStructureSet
 
 --- Feuer abfragen
 -- @param immoName Name der Immobilie als String.
-function EEPStructureGetFire(immoName) return Runtime.callEEPStructureGetFire(immoName) end
+function EEPStructureGetFire(luaName) return Runtime.callEEPStructureGetFire(luaName) end
 
 --- Setzen einer Achse einer Immobilie.
--- @param immoName Name der Immobilie als String.
+-- @param luaName Name der Immobilie als String.
 -- @param achse Name der Achse
 -- @param schritte 1000 bzw. -1000: endlos, 0: Stopp, sonst Schritte
 function EEPStructureAnimateAxis(immoName, achse, schritte)
@@ -354,12 +354,12 @@ end
 -- @param immoName Name der Immobilie als String.
 -- @param achse Name der Achse
 -- @param stellung position der Achse
-function EEPStructureSetAxis(immoName, achse, stellung) return Runtime.callEEPStructureSetAxis(immoName, achse, stellung) end
+function EEPStructureSetAxis(luaName, axisName, axisPosition) return Runtime.callEEPStructureSetAxis(luaName, axisName, axisPosition) end
 
 --- Gibt die Stellung der Achse am Rollmaterial zurueck.
 -- z.B.: EEPRollingstockSetAxis("Bekohlungskranbruecke 1", "Drehung links", 50)
--- @param immoName Name der Immobilie als String.
--- @param achse Name der Achse
+-- @param luaName Name der Immobilie als String.
+-- @param axisName Name der Achse
 function EEPStructureGetAxis(immoName, achse) return Runtime.callEEPStructureGetAxis(immoName, achse) end
 
 --- Setzen der Position einer Immobilie
@@ -367,8 +367,8 @@ function EEPStructureGetAxis(immoName, achse) return Runtime.callEEPStructureGet
 -- @param posX x-Position
 -- @param posY y-Position
 -- @param posZ z-Position
-function EEPStructureSetPosition(immoName, posX, posY, posZ)
-    return Runtime.callEEPStructureSetPosition(immoName, posX,
+function EEPStructureSetPosition(luaName, posX, posY, posZ)
+    return Runtime.callEEPStructureSetPosition(luaName, posX,
                                                posY, posZ)
 end
 
@@ -377,8 +377,8 @@ end
 -- @param rotX x-Position
 -- @param rotY y-Position
 -- @param rotZ z-Position
-function EEPStructureSetRotation(immoName, rotX, rotY, rotZ)
-    return Runtime.callEEPStructureSetRotation(immoName, rotX,
+function EEPStructureSetRotation(luaName, rotX, rotY, rotZ)
+    return Runtime.callEEPStructureSetRotation(luaName, rotX,
                                                rotY, rotZ)
 end
 
@@ -388,7 +388,7 @@ end
 --- Route aendern
 ---@param trainName string Name des Zuges
 ---@param route string Name der Route
-function EEPSetTrainRoute(trainName, route) return Runtime.callEEPSetTrainRoute(trainName, route) end
+function EEPSetTrainRoute(trainName, routeName) return Runtime.callEEPSetTrainRoute(trainName, routeName) end
 
 --- Route abfragen - return ok und Name der Route
 ---@param trainName string Name des Zuges
@@ -398,26 +398,26 @@ function EEPGetTrainRoute(trainName) return Runtime.callEEPGetTrainRoute(trainNa
 --- Licht ein oder ausschalten
 -- @param trainName Name des Zuges
 -- @param onoff true: ein, false: aus
-function EEPSetTrainLight(trainName, onoff, quelle) return Runtime.callEEPSetTrainLight(trainName, onoff, quelle) end
+function EEPSetTrainLight(trainName, enabled, lightSource) return Runtime.callEEPSetTrainLight(trainName, enabled, lightSource) end
 
 function EEPGetTrainLight(trainName, quelle) return Runtime.callEEPGetTrainLight(trainName, quelle) end
 
 --- Rauch ein oder ausschalten
 -- @param trainName Name des Zuges
 -- @param onoff true: ein, false: aus
-function EEPSetTrainSmoke(trainName, onoff) return Runtime.callEEPSetTrainSmoke(trainName, onoff) end
+function EEPSetTrainSmoke(trainName, enabled) return Runtime.callEEPSetTrainSmoke(trainName, enabled) end
 
 --- Hupen
 -- @param trainName Name des Zuges
--- @param onoff true: signal starten, false: signal beenden
+-- @param enabled true: signal starten, false: signal beenden
 function EEPSetTrainHorn(trainName, onoff) return Runtime.callEEPSetTrainHorn(trainName, onoff) end
 
 --- Kupplung vorn setzen
 -- @param trainName Name des Zuges
 -- @param kupplungOn true: kuppeln, false: abstoßen
-function EEPSetTrainCouplingFront(trainName, kupplungOn)
+function EEPSetTrainCouplingFront(trainName, couple)
     return Runtime.callEEPSetTrainCouplingFront(trainName,
-                                                kupplungOn)
+                                                couple)
 end
 
 function EEPGetTrainCouplingFront(trainName) return Runtime.callEEPGetTrainCouplingFront(trainName) end
@@ -441,7 +441,7 @@ end
 --- Setzen des Gueterhakens an allen Wagen eines Zuges
 -- @param trainName Name des Zuges als String
 -- @param hookOn true: Haken fuer alle an
-function EEPSetTrainHook(trainName, gueteran) return Runtime.callEEPSetTrainHook(trainName, gueteran) end
+function EEPSetTrainHook(trainName, enabled) return Runtime.callEEPSetTrainHook(trainName, enabled) end
 
 --- Setzen einer Achse an allen Wagen eines Zuges
 -- @param trainName Name des Zuges als String
@@ -455,10 +455,10 @@ function EEPSetTrainAxis(trainName, achse, stellung) return Runtime.callEEPSetTr
 
 --- Registriert ein Gleis fuer die Besetztabfrage.
 -- @param trackId Id des Gleises
-function EEPRegisterRailTrack(trackId) return Runtime.callEEPRegisterRailTrack(trackId) end
+function EEPRegisterRailTrack(railTrackId) return Runtime.callEEPRegisterRailTrack(railTrackId) end
 
 --- Fragt ab, ob ein Gleis besetzt ist.
--- @param trackId Id des Gleises
+-- @param railTrackId Id des Gleises
 -- @param returnTrainName wenn true, wird als dritter Wert der Zugname
 -- zurueckgegeben
 -- @return Erster Wert: true, wenn Gleis existiert und registriert,
@@ -471,10 +471,10 @@ end
 
 --- Registriert ein Gleis fuer die Besetztabfrage.
 ---@param trackId number Id des Gleises
-function EEPRegisterRoadTrack(trackId) return Runtime.callEEPRegisterRoadTrack(trackId) end
+function EEPRegisterRoadTrack(roadTrackId) return Runtime.callEEPRegisterRoadTrack(roadTrackId) end
 
 --- Fragt ab, ob ein Gleis besetzt ist.
----@param trackId number Id des Gleises
+---@param roadTrackId number Id des Gleises
 ---@param returnTrainName boolean wenn true, wird als dritter Wert der Zugname
 -- @return boolean, boolean, string
 -- Erster Wert: true, wenn Gleis existiert und registriert,
@@ -502,10 +502,10 @@ end
 
 --- Registriert ein Gleis fuer die Besetztabfrage.
 -- @param auxTrackId Id des Gleises
-function EEPRegisterAuxiliaryTrack(auxTrackId) return Runtime.callEEPRegisterAuxiliaryTrack(auxTrackId) end
+function EEPRegisterAuxiliaryTrack(auxiliaryTrackId) return Runtime.callEEPRegisterAuxiliaryTrack(auxiliaryTrackId) end
 
 --- Fragt ab, ob ein Gleis besetzt ist.
--- @param auxTrackId Id des Gleises
+-- @param auxiliaryTrackId Id des Gleises
 -- @param returnTrainName wenn true, wird als dritter Wert der Zugname
 -- @return Erster Wert: true, wenn Gleis existiert und registriert,
 -- zweiter Wert: true, wenn besetzt,
@@ -532,7 +532,7 @@ end
 -- @param camType 0: statisch, 1: dynamisch, 2: mobile Kamera
 -- @param camName Name der Kamera
 -- @return true, wenn die Kamera existiert
-function EEPSetCamera(camType, camName) return Runtime.callEEPSetCamera(camType, camName) end
+function EEPSetCamera(cameraType, cameraName) return Runtime.callEEPSetCamera(cameraType, cameraName) end
 
 --- Waehlen einer Kameraperspektive
 -- @param camPosition Tasten 1 - 9 fuer die Kameraposition
@@ -566,17 +566,17 @@ function EEPPutTrainToTrainyard(depotId, trainName) return Runtime.callEEPPutTra
 --- Zeigen / Verstecken des Tipp-Textes einer Immobilie
 -- @param immoName Name der Immobilie als String.
 -- @param onOff true: einschalten
-function EEPShowInfoStructure(immoName, onOff) return Runtime.callEEPShowInfoStructure(immoName, onOff) end
+function EEPShowInfoStructure(luaName, visible) return Runtime.callEEPShowInfoStructure(luaName, visible) end
 
 --- Setzen des Tipp-Textes einer Immobilie
--- @param immoName Name der Immobilie als String.
+-- @param luaName Name der Immobilie als String.
 -- @param text Text fuer die Anzeige
 function EEPChangeInfoStructure(immoName, text) return Runtime.callEEPChangeInfoStructure(immoName, text) end
 
 --- Zeigen / Verstecken des Tipp-Textes einer Immobilie
 -- @param switchId Name der Immobilie als String.
 -- @param onOff true: einschalten
-function EEPShowInfoSignal(signalId, onOff) return Runtime.callEEPShowInfoSignal(signalId, onOff) end
+function EEPShowInfoSignal(signalId, visible) return Runtime.callEEPShowInfoSignal(signalId, visible) end
 
 --- Setzen des Tipp-Textes einer Immobilie
 -- @param switchId Name der Immobilie als String.
@@ -586,7 +586,7 @@ function EEPChangeInfoSignal(signalId, text) return Runtime.callEEPChangeInfoSig
 --- Zeigen / Verstecken des Tipp-Textes einer Weiche
 -- @param switchId Name der Weiche als String.
 -- @param onOff true: einschalten
-function EEPShowInfoSwitch(switchId, onOff) return Runtime.callEEPShowInfoSwitch(switchId, onOff) end
+function EEPShowInfoSwitch(switchId, visible) return Runtime.callEEPShowInfoSwitch(switchId, visible) end
 
 --- Setzen des Tipp-Textes einer Weiche
 -- @param switchId Name der Weiche als String.
@@ -600,10 +600,10 @@ function EEPChangeInfoSwitch(switchId, text) return Runtime.callEEPChangeInfoSwi
 --- Anzahl der Fahrzeuge im Zugverband Name
 -- @param zugverband Names des Zugverbandes
 --
-function EEPGetRollingstockItemsCount(zugverband) return Runtime.callEEPGetRollingstockItemsCount(zugverband) end
+function EEPGetRollingstockItemsCount(trainName) return Runtime.callEEPGetRollingstockItemsCount(trainName) end
 
 --- Name des Rollis Nummer im Zugverband Name
--- @param zugverband Name des Zugverbandes
+-- @param trainName Name des Zugverbandes
 -- @param Nummer
 --
 function EEPGetRollingstockItemName(zugverband, Nummer) return Runtime.callEEPGetRollingstockItemName(zugverband, Nummer) end
@@ -635,9 +635,9 @@ function EEPGetTrainyardItemName(depotId, position) return Runtime.callEEPGetTra
 -- @param zugverband Name des Zugverbandes
 -- @param position Position (Zahl) des Zugverbandes im Depot
 -- @return status Status des Fahrzeugverbands: 0 = in Fahrt , 1 = warten
-function EEPGetTrainyardItemStatus(depotId, zugverband, position)
+function EEPGetTrainyardItemStatus(depotId, trainName, depotSlot)
     return Runtime.callEEPGetTrainyardItemStatus(depotId,
-                                                 zugverband, position)
+                                                 trainName, depotSlot)
 end
 
 -------------------------------
@@ -647,7 +647,7 @@ end
 --- Argument ist der Name des Fahrzeugs.
 -- Rueckgabewert 1 ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
 -- Rueckgabewert 2 ist die Laenge des Fahrzeugs von Kupplung zu Kupplung in Metern.
-function EEPRollingstockGetLength(rollingStockName) return Runtime.callEEPRollingstockGetLength(rollingStockName) end
+function EEPRollingstockGetLength(rollingstockName) return Runtime.callEEPRollingstockGetLength(rollingstockName) end
 
 --- Argument ist der Name des Fahrzeugs.
 -- Rueckgabewert 1 ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
@@ -666,7 +666,7 @@ function EEPRollingstockGetMotor(rollingStockName) return Runtime.callEEPRolling
 -- 2 = Straßen
 -- 3 = Tramgleise
 -- 4 = sonstige Splines/Wasserwege
-function EEPRollingstockGetTrack(rollingStockName) return Runtime.callEEPRollingstockGetTrack(rollingStockName) end
+function EEPRollingstockGetTrack(rollingstockName) return Runtime.callEEPRollingstockGetTrack(rollingstockName) end
 
 --- Argument ist der Fahrzeugname.
 -- Rueckgabewert 1 ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
@@ -695,7 +695,7 @@ function EEPRollingstockGetModelType(rollingStockName) return Runtime.callEEPRol
 -- Rueckgabewert 2 ist die X-Position des Objekts.
 -- Rueckgabewert 3 ist die Y-Position des Objekts.
 -- Rueckgabewert 4 ist die Z-Position des Objekts.
-function EEPStructureGetPosition(name) return Runtime.callEEPStructureGetPosition(name) end
+function EEPStructureGetPosition(luaName) return Runtime.callEEPStructureGetPosition(luaName) end
 
 --- Argument ist der Lua-Name der Immobilie oder des LS-Elements.
 -- Es genuegt die Nummer mit vorangestelltem #-Zeichen.
@@ -717,7 +717,7 @@ function EEPStructureGetModelType(name) return Runtime.callEEPStructureGetModelT
 --- Es genuegt die Nummer mit vorangestelltem #-Zeichen.
 --- * Argument 2 ist der gewuenschte Text.
 --- * Rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false
-function EEPStructureSetTagText(name, tag) return Runtime.callEEPStructureSetTagText(name, tag) end
+function EEPStructureSetTagText(luaName, text) return Runtime.callEEPStructureSetTagText(luaName, text) end
 
 --- Liest den Tag-Text einer Immobilie aus. Mittels Tag-Texten können Immobilien als permanente
 --- Speicher fuer relevante Informationen genutzt werden.
@@ -736,7 +736,7 @@ function EEPStructureGetTagText(name) return Runtime.callEEPStructureGetTagText(
 --- * Argument 1 ist der Name des Fahrzeugs.
 --- * Argument 2 ist der gewuenschte Text als String mit maximal 1024 Zeichen.
 --- * Rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
-function EEPRollingstockSetTagText(name, tag) return Runtime.callEEPRollingstockSetTagText(name, tag) end
+function EEPRollingstockSetTagText(rollingstockName, text) return Runtime.callEEPRollingstockSetTagText(rollingstockName, text) end
 
 --- Liest den Tag-Text eines Fahrzeugs aus. Mittels Tag-Texten können Fahrzeuge jetzt kategorisiert
 --- werden. Beispielsweise kann man dort Waggontypen speichern oder Bestimmungsorte.
@@ -747,56 +747,56 @@ function EEPRollingstockSetTagText(name, tag) return Runtime.callEEPRollingstock
 ---   mitgegeben wurde.
 function EEPRollingstockGetTagText(name) return Runtime.callEEPRollingstockGetTagText(name) end
 
-function EEPSignalSetTagText(id, tag) return Runtime.callEEPSignalSetTagText(id, tag) end
+function EEPSignalSetTagText(signalId, text) return Runtime.callEEPSignalSetTagText(signalId, text) end
 
 function EEPSignalGetTagText(id) return Runtime.callEEPSignalGetTagText(id) end
 
-function EEPSwitchSetTagText(id, tag) return Runtime.callEEPSwitchSetTagText(id, tag) end
+function EEPSwitchSetTagText(switchId, text) return Runtime.callEEPSwitchSetTagText(switchId, text) end
 
 function EEPSwitchGetTagText(id) return Runtime.callEEPSwitchGetTagText(id) end
 
-function EEPGoodsSetTagText(name, tag) return Runtime.callEEPGoodsSetTagText(name, tag) end
+function EEPGoodsSetTagText(luaName, text) return Runtime.callEEPGoodsSetTagText(luaName, text) end
 
 function EEPGoodsGetTagText(name) return Runtime.callEEPGoodsGetTagText(name) end
 
-function EEPStructureSetTextureText(name, flaeche, text)
-    return Runtime.callEEPStructureSetTextureText(name, flaeche,
+function EEPStructureSetTextureText(luaName, surfaceNumber, text)
+    return Runtime.callEEPStructureSetTextureText(luaName, surfaceNumber,
                                                   text)
 end
 
-function EEPStructureGetTextureText(name, flaeche) return Runtime.callEEPStructureGetTextureText(name, flaeche) end
+function EEPStructureGetTextureText(luaName, surfaceNumber) return Runtime.callEEPStructureGetTextureText(luaName, surfaceNumber) end
 
 function EEPRollingstockSetTextureText(name, flaeche, text)
     return Runtime.callEEPRollingstockSetTextureText(name,
                                                      flaeche, text)
 end
 
-function EEPSignalSetTextureText(id, flaeche, text) return Runtime.callEEPSignalSetTextureText(id, flaeche, text) end
+function EEPSignalSetTextureText(signalId, surfaceNumber, text) return Runtime.callEEPSignalSetTextureText(signalId, surfaceNumber, text) end
 
 function EEPSignalGetTextureText(id, flaeche) return Runtime.callEEPSignalGetTextureText(id, flaeche) end
 
-function EEPGoodsSetTextureText(name, flaeche, text) return Runtime.callEEPGoodsSetTextureText(name, flaeche, text) end
+function EEPGoodsSetTextureText(luaName, surfaceNumber, text) return Runtime.callEEPGoodsSetTextureText(luaName, surfaceNumber, text) end
 
 function EEPGoodsGetTextureText(name, flaeche) return Runtime.callEEPGoodsGetTextureText(name, flaeche) end
 
-function EEPRailTrackSetTextureText(id, flaeche, text) return Runtime.callEEPRailTrackSetTextureText(id, flaeche, text) end
+function EEPRailTrackSetTextureText(railTrackId, surfaceNumber, text) return Runtime.callEEPRailTrackSetTextureText(railTrackId, surfaceNumber, text) end
 
 function EEPRailTrackGetTextureText(id, flaeche) return Runtime.callEEPRailTrackGetTextureText(id, flaeche) end
 
-function EEPRoadTrackSetTextureText(id, flaeche, text) return Runtime.callEEPRoadTrackSetTextureText(id, flaeche, text) end
+function EEPRoadTrackSetTextureText(roadTrackId, surfaceNumber, text) return Runtime.callEEPRoadTrackSetTextureText(roadTrackId, surfaceNumber, text) end
 
 function EEPRoadTrackGetTextureText(id, flaeche) return Runtime.callEEPRoadTrackGetTextureText(id, flaeche) end
 
-function EEPTramTrackSetTextureText(id, flaeche, text) return Runtime.callEEPTramTrackSetTextureText(id, flaeche, text) end
+function EEPTramTrackSetTextureText(tramTrackId, surfaceNumber, text) return Runtime.callEEPTramTrackSetTextureText(tramTrackId, surfaceNumber, text) end
 
 function EEPTramTrackGetTextureText(id, flaeche) return Runtime.callEEPTramTrackGetTextureText(id, flaeche) end
 
-function EEPAuxiliaryTrackSetTextureText(id, flaeche, text)
-    return Runtime.callEEPAuxiliaryTrackSetTextureText(id,
-                                                       flaeche, text)
+function EEPAuxiliaryTrackSetTextureText(auxiliaryTrackId, surfaceNumber, text)
+    return Runtime.callEEPAuxiliaryTrackSetTextureText(auxiliaryTrackId,
+                                                       surfaceNumber, text)
 end
 
-function EEPAuxiliaryTrackGetTextureText(id, flaeche) return Runtime.callEEPAuxiliaryTrackGetTextureText(id, flaeche) end
+function EEPAuxiliaryTrackGetTextureText(auxiliaryTrackId, surfaceNumber) return Runtime.callEEPAuxiliaryTrackGetTextureText(auxiliaryTrackId, surfaceNumber) end
 
 --- Ermittelt, welcher Zug derzeit im Steuerdialog ausgewaehlt ist. (EEP 15.1)
 -- Befindet sich der Steuerdialog im manuellen Modus, dann wird der Name des Zuges zurueckgegeben,
@@ -843,7 +843,7 @@ end
 --- Ruft das Stellpult im Radarfenster auf. (EEP 16.1)
 -- @param GBSname
 -- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
-function EEPActivateCtrlDesk(GBSname) return Runtime.callEEPActivateCtrlDesk(GBSname) end
+function EEPActivateCtrlDesk(ctrlDeskName) return Runtime.callEEPActivateCtrlDesk(ctrlDeskName) end
 
 --- Laesst bei einem bestimmten Rollmaterial den Warnton (Pfeife, Hupe) ertönen. (EEP 16.1)
 -- @param rollingstockName Name des Rollmaterials
@@ -858,9 +858,9 @@ end
 -- @param rollingstockName Name des Rollmaterials
 -- @param status true = an, false = aus
 -- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
-function EEPRollingstockSetHook(rollingstockName, status)
+function EEPRollingstockSetHook(rollingstockName, enabled)
     return Runtime.callEEPRollingstockSetHook(rollingstockName,
-                                              status)
+                                              enabled)
 end
 
 --- Ermittelt, ob der Haken eines bestimmten Rollmaterials an oder ausgeschaltet ist (EEP 16.1)
@@ -919,9 +919,8 @@ end
 -- @param RotZ Kameraausrichtung (Drehung)
 -- @param setDirectly boolean Soll die Kamera sofort gesetzt werden
 -- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
-function EEPRollingstockSetUserCamera(rollingstockName, PosX, PosY, PosZ, RotH, RotV, arg7, arg8)
-    return Runtime
-        .callEEPRollingstockSetUserCamera(rollingstockName, PosX, PosY, PosZ, RotH, RotV, arg7, arg8)
+function EEPRollingstockSetUserCamera(rollingstockName, posX, posY, posZ, rotH, rotV)
+    return Runtime.callEEPRollingstockSetUserCamera(rollingstockName, posX, posY, posZ, rotH, rotV)
 end
 
 function EEPRollingstockGetUserCamera(rollingstockName) return Runtime.callEEPRollingstockGetUserCamera(rollingstockName) end
@@ -952,7 +951,7 @@ function EEPSetCameraPosition(PosX, PosY, PosZ) return Runtime.callEEPSetCameraP
 -- @param RotY Kameraausrichtung (Drehung)
 -- @param RotZ Kameraausrichtung (Drehung)
 -- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
-function EEPSetCameraRotation(RotX, RotY, RotZ) return Runtime.callEEPSetCameraRotation(RotX, RotY, RotZ) end
+function EEPSetCameraRotation(rotX, rotY, rotZ) return Runtime.callEEPSetCameraRotation(rotX, rotY, rotZ) end
 
 --- Ermittelt, ob der Rauch des benannten Rollmaterials, an- oder ausgeschaltet ist. (EEP 16.1)
 -- @param rollingstockName Name des Rollmaterials
@@ -964,9 +963,9 @@ function EEPRollingstockGetSmoke(rollingstockName) return Runtime.callEEPRolling
 -- @param rollingstockName Name des Rollmaterials
 -- @param status Rauch an = true oder aus = false
 -- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
-function EEPRollingstockSetSmoke(rollingstockName, status)
+function EEPRollingstockSetSmoke(rollingstockName, enabled)
     return Runtime.callEEPRollingstockSetSmoke(rollingstockName,
-                                               status)
+                                               enabled)
 end
 
 --- Ermittelt die Ausrichtung des Ladegutes. (EEP 16.1)
@@ -975,7 +974,7 @@ end
 -- @return RotX Ausrichtung (Drehung)
 -- @return RotY Ausrichtung (Drehung)
 -- @return RotZ Ausrichtung (Drehung)
-function EEPGoodsGetRotation(goodsName) return Runtime.callEEPGoodsGetRotation(goodsName) end
+function EEPGoodsGetRotation(luaName) return Runtime.callEEPGoodsGetRotation(luaName) end
 
 --- Ermittelt die Ausrichtung der Immobilie/des Landschaftselementes. (EEP 16.1)
 -- 0 @param immobilieName Name der Immobilie/des Landschaftselementes.

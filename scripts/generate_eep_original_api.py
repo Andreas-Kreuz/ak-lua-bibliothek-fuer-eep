@@ -30,7 +30,7 @@ from statistics import median
 ROOT = Path(__file__).resolve().parents[1]
 MANUAL = ROOT / "Lua_manual.pdf"
 OUTPUT = ROOT / "lua" / "LUA" / "ak" / "core" / "eep" / "EepOriginalApi.d.lua"
-WRAP_WIDTH = 118
+LUA_FORMAT_CONFIG = ROOT / "lua-format.conf"
 PDFMINER_ROW_TOLERANCE = 4.0
 HEADER_BAND_Y_TOLERANCE = 3.0
 
@@ -59,6 +59,18 @@ COUNT_WORD_MAP = {
     "sechs": 6,
     "sieben": 7,
 }
+
+
+def read_wrap_width() -> int:
+    try:
+        config_text = LUA_FORMAT_CONFIG.read_text(encoding="utf-8")
+    except OSError:
+        return 118
+    match = re.search(r"(?m)^column_limit:\s*(\d+)\s*$", config_text)
+    return int(match.group(1)) if match else 118
+
+
+WRAP_WIDTH = read_wrap_width()
 
 KNOWN_COUNT_OVERRIDES: dict[tuple[str, str], list[int]] = {
     ("EEPRollingstockGetHookPosition", "Parameter"): [2],
@@ -1758,6 +1770,14 @@ def infer_param_name(desc: str, index: int) -> str:
         return "status"
     if "stundenangabe" in lower:
         return "stunde"
+    if "farbtoneinstellung" in lower:
+        return "hue"
+    if "saettigungseinstellung" in lower:
+        return "saturation"
+    if "helligkeitseinstellung" in lower:
+        return "brightness"
+    if "kontrasteinstellung" in lower:
+        return "contrast"
     if "minutenangabe" in lower:
         return "minute"
     if "sekundenangabe" in lower:
@@ -1792,6 +1812,8 @@ def infer_param_name(desc: str, index: int) -> str:
         return "index"
     if "position in der auswahlbox" in lower:
         return "listenplatz"
+    if "zielnummer der fahrstrasse" in lower:
+        return "fahrstrassenZielnummer"
     if "neuer name" in lower:
         return "name2"
     if "wetterzone" in lower and ("nummer" in lower or "zonennummer" in lower):
@@ -1808,6 +1830,12 @@ def infer_param_name(desc: str, index: int) -> str:
         return "cameraType"
     if "name der kamera" in lower:
         return "cameraName"
+    if "textgroesse" in lower:
+        return "textSize"
+    if "textausrichtung" in lower:
+        return "alignment"
+    if "laufgeschwindigkeit" in lower:
+        return "scrollSpeed"
     if "position in x-richtung" in lower or "x-position" in lower:
         return "posX"
     if "position in y-richtung" in lower or "y-position" in lower:
@@ -1846,12 +1874,18 @@ def infer_param_name(desc: str, index: int) -> str:
         return "text"
     if "eeponsignal_" in lower or "eeponswitch_" in lower or "aufgerufen wird" in lower:
         return "rueckruf"
+    if "flaeche" in lower and "nummer" in lower:
+        return "surfaceNumber"
     if "wolkenanteil" in lower or "regenstaerke" in lower or "hagel" in lower or "graupel" in lower:
         return "intensity"
     if "dateiname einschliesslich" in lower or "unterordner" in lower:
         return "projectPath"
+    if "speicherpfad der anlage" in lower:
+        return "projectPath"
     if "pfad" in lower and "wav-datei" in lower:
         return "soundFile"
+    if "lua name des soundmodells" in lower:
+        return "luaName"
     if '"stellpult-name"' in lower:
         return "ctrlDeskName"
     if "geschwindigkeit" in lower:
@@ -1860,6 +1894,8 @@ def infer_param_name(desc: str, index: int) -> str:
         return "mode"
     if "lichtquelle" in lower or "quelle" in lower:
         return "quelle"
+    if "achsgruppe" in lower:
+        return "achsengruppe"
     if "stellung" in lower:
         return "stellung"
     if "von vorne oder hinten" in lower:
@@ -1872,6 +1908,14 @@ def infer_param_name(desc: str, index: int) -> str:
         return "stopDistance"
     if "jahreszeit" in lower:
         return "season"
+    if "windstaerke" in lower:
+        return "windstaerke"
+    if "schneefallstaerke" in lower:
+        return "schneefallstaerke"
+    if "nebeldichte" in lower:
+        return "nebeldichte"
+    if "kranhaken" in lower and "nummer" in lower:
+        return "kranhakennummer"
     if "lua-name" in lower or "name der immobilie" in lower or "name des ladeguts" in lower:
         return "luaName"
     if "sekunden" in lower:
@@ -2101,7 +2145,7 @@ def infer_group_param_names(bullet: str, start: int, end: int) -> list[str]:
     lower = bullet.lower()
     size = end - start + 1
     if size == 3 and all(token in lower for token in ("rot", "gruen", "blau")):
-        return ["rot", "gruen", "blau"]
+        return ["red", "green", "blue"]
     if size == 3 and all(token in lower for token in ("x", "y", "z")):
         return ["posX", "posY", "posZ"]
     if size == 3 and "rot" in lower and "vertikal" in lower and "horizontal" in lower:
@@ -2306,6 +2350,430 @@ def uniquify_params(params: list[dict[str, object]]) -> list[dict[str, object]]:
     return params
 
 
+ALIAS_DEFINITIONS: dict[str, list[str]] = {
+    "EEPPauseStatus": [
+        "---@alias EEPPauseStatus",
+        "---| 0 # Betrieb weiter",
+        "---| 1 # Betrieb gestoppt, Lua laeuft weiter",
+        "---| 2 # Betrieb und Lua gestoppt",
+    ],
+    "EEPTrainLightSource": [
+        "---@alias EEPTrainLightSource",
+        "---| 0 # Fahrlicht und Innenraumbeleuchtung",
+        "---| 1 # Linker Blinker",
+        "---| 2 # Rechter Blinker",
+        "---| 3 # Bremslicht-Automatik",
+    ],
+    "EEPCouplingState": [
+        "---@alias EEPCouplingState",
+        "---| 1 # Kupplung scharf",
+        "---| 2 # Abstossen",
+    ],
+    "EEPRollingstockCouplingStatus": [
+        "---@alias EEPRollingstockCouplingStatus",
+        "---| 1 # Kupplung scharf",
+        "---| 2 # Abstossen",
+        "---| 3 # Gekuppelt",
+    ],
+    "EEPRollingstockTrackDirection": [
+        "---@alias EEPRollingstockTrackDirection",
+        "---| 1 # In Fahrtrichtung",
+        "---| 0 # Entgegen der Fahrtrichtung",
+    ],
+    "EEPTrackSystem": [
+        "---@alias EEPTrackSystem",
+        "---| 1 # Bahngleise",
+        "---| 2 # Strassen",
+        "---| 3 # Tramgleise",
+        "---| 4 # Sonstige Splines oder Wasserwege",
+    ],
+    "EEPRollingstockModelType": [
+        "---@alias EEPRollingstockModelType",
+        "---| 1 # Tenderlok",
+        "---| 2 # Schlepptenderlok",
+        "---| 3 # Tender",
+        "---| 4 # Elektrolok",
+        "---| 5 # Diesellok",
+        "---| 6 # Triebwagen",
+        "---| 7 # U- oder S-Bahn",
+        "---| 8 # Strassenbahn",
+        "---| 9 # Gueterwaggon",
+        "---| 10 # Personenwaggon",
+        "---| 11 # Luftfahrzeug",
+        "---| 12 # Maschine",
+        "---| 13 # Wasserfahrzeug",
+        "---| 14 # LKW",
+        "---| 15 # PKW",
+    ],
+    "EEPStructureModelType": [
+        "---@alias EEPStructureModelType",
+        "---| 16 # Gleisobjekte Bahngleise",
+        "---| 17 # Gleisobjekte Strassenbahn",
+        "---| 18 # Gleisobjekte Strassen",
+        "---| 19 # Gleisobjekte Wasserwege oder Diverse",
+        "---| 22 # Immobilien",
+        "---| 23 # Landschaftselemente Fauna",
+        "---| 24 # Landschaftselemente Flora",
+        "---| 25 # Landschaftselemente Terra",
+        "---| 38 # Landschaftselemente Bodenmodelle zur 3D-Texturierung",
+    ],
+    "EEPGoodsModelType": [
+        "---@alias EEPGoodsModelType",
+        "---| 20 # Gueter mit kubischer Form",
+        "---| 21 # Gueter mit zylindrischer Form",
+    ],
+    "EEPRollingstockHookStatus": [
+        "---@alias EEPRollingstockHookStatus",
+        "---| 0 # Ausgeschaltet",
+        "---| 1 # Eingeschaltet",
+        "---| 3 # Ladegut am Haken",
+    ],
+    "EEPHookGlueMode": [
+        "---@alias EEPHookGlueMode",
+        "---| 0 # Gueter schaukeln",
+        "---| 1 # Gueter sind fixiert",
+    ],
+    "EEPCameraType": [
+        "---@alias EEPCameraType",
+        "---| 0 # Statisch",
+        "---| 1 # Dynamisch",
+        "---| 2 # Mobile Kamera",
+    ],
+    "EEPPerspectiveCameraPosition": [
+        "---@alias EEPPerspectiveCameraPosition",
+        "---| 1 # Direkt auf die linke Seite des Fahrzeugverbandes",
+        "---| 2 # Direkt auf die rechte Seite des Fahrzeugverbandes",
+        "---| 3 # Seitlich von oben auf die linke Seite des Fahrzeugverbandes",
+        "---| 4 # Seitlich von oben auf die rechte Seite des Fahrzeugverbandes",
+        "---| 5 # Von der Front des Fahrzeugverbandes in Fahrtrichtung",
+        "---| 6 # Von vorn auf die Front des Fahrzeugverbandes",
+        "---| 7 # Automatische Kamera am naechsten zum Fahrzeugverband",
+        "---| 8 # Aus dem Fuehrerstand",
+        "---| 9 # Oberhalb des Fahrzeugverbandes oder User-Kamera",
+        "---| 10 # Perspektive der alten Kabine",
+    ],
+    "EEPTrainyardDepartureOrientation": [
+        "---@alias EEPTrainyardDepartureOrientation",
+        "---| 0 # Wie im Depot vorgegeben",
+        "---| 1 # Vorwaerts",
+        "---| 2 # Rueckwaerts",
+        "---| 3 # Entgegengesetzt zur Depotvorgabe",
+    ],
+    "EEPTrainyardItemStatus": [
+        "---@alias EEPTrainyardItemStatus",
+        "---| 0 # In Fahrt",
+        "---| 1 # Im Depot wartend",
+    ],
+    "EEPInfoTextAlignment": [
+        "---@alias EEPInfoTextAlignment",
+        "---| 0 # Blocksatz",
+        "---| 1 # Zentriert",
+        "---| 2 # Linksbuendig",
+        "---| 3 # Rechtsbuendig",
+    ],
+    "EEPCloudMode": [
+        "---@alias EEPCloudMode",
+        "---| 0 # Keine Wolken",
+        "---| 1 # Wolken",
+        "---| 2 # Dunkle Wolken",
+    ],
+    "EEPSeason": [
+        "---@alias EEPSeason",
+        "---| 1 # Fruehling",
+        "---| 2 # Sommer",
+        "---| 3 # Herbst",
+        "---| 4 # Winter",
+    ],
+}
+
+
+ENTRY_TYPE_OVERRIDES: dict[str, dict[str, dict[int, dict[str, object]]]] = {
+    "EEPPause": {
+        "params": {
+            1: {"type": "EEPPauseStatus", "desc": "parameter bestimmt den Status der Pause."},
+        }
+    },
+    "EEPSetTrainLight": {
+        "params": {
+            3: {"type": "EEPTrainLightSource", "desc": "optionaler Parameter definiert die Lichtquelle."},
+        }
+    },
+    "EEPGetTrainLight": {
+        "params": {
+            2: {"type": "EEPTrainLightSource", "desc": "optionaler Parameter definiert die Lichtquelle."},
+        }
+    },
+    "EEPGetTrainCouplingFront": {
+        "returns": {
+            2: {"type": "EEPCouplingState", "desc": "rueckgabewert ist die Stellung der vorderen Kupplung."},
+        }
+    },
+    "EEPGetTrainCouplingRear": {
+        "returns": {
+            2: {"type": "EEPCouplingState", "desc": "rueckgabewert ist die Stellung der hinteren Kupplung."},
+        }
+    },
+    "EEPRollingstockSetCouplingFront": {
+        "params": {
+            2: {"type": "EEPCouplingState", "desc": "parameter ist der gewuenschte Kupplungszustand."},
+        }
+    },
+    "EEPRollingstockSetCouplingRear": {
+        "params": {
+            2: {"type": "EEPCouplingState", "desc": "parameter ist der gewuenschte Kupplungszustand."},
+        }
+    },
+    "EEPRollingstockGetCouplingFront": {
+        "returns": {
+            2: {"type": "EEPRollingstockCouplingStatus", "desc": "rueckgabewert ist die Stellung der Kupplung."},
+        }
+    },
+    "EEPRollingstockGetCouplingRear": {
+        "returns": {
+            2: {"type": "EEPRollingstockCouplingStatus", "desc": "rueckgabewert ist die Stellung der Kupplung."},
+        }
+    },
+    "EEPRollingstockGetTrack": {
+        "returns": {
+            4: {
+                "type": "EEPRollingstockTrackDirection",
+                "desc": "rueckgabewert ist die Ausrichtung relativ zur Fahrtrichtung des Gleisstuecks.",
+            },
+            5: {"type": "EEPTrackSystem", "desc": "rueckgabewert ist die Nummer des Gleissystems."},
+        }
+    },
+    "EEPRollingstockGetModelType": {
+        "returns": {
+            2: {"type": "EEPRollingstockModelType", "desc": "rueckgabewert ist die Modellkategorie."},
+        }
+    },
+    "EEPStructureGetModelType": {
+        "returns": {
+            2: {"type": "EEPStructureModelType", "desc": "rueckgabewert ist die Modellkategorie."},
+        }
+    },
+    "EEPGoodsGetModelType": {
+        "returns": {
+            2: {"type": "EEPGoodsModelType", "desc": "rueckgabewert ist die Modellkategorie."},
+        }
+    },
+    "EEPRollingstockGetHook": {
+        "returns": {
+            2: {"type": "EEPRollingstockHookStatus", "desc": "rueckgabewert gibt den Status des Hakens an."},
+        }
+    },
+    "EEPRollingstockGetHookGlue": {
+        "returns": {
+            1: {"type": "EEPHookGlueMode", "desc": "rueckgabewert gibt das Verhalten der Gueter an."},
+        }
+    },
+    "EEPSetCamera": {
+        "params": {
+            1: {"type": "EEPCameraType", "desc": "parameter ist der Kameratyp."},
+        }
+    },
+    "EEPGetPerspectiveCamera": {
+        "returns": {
+            2: {"type": "EEPPerspectiveCameraPosition", "desc": "rueckgabewert ist die Kameraposition."},
+        }
+    },
+    "EEPGetTrainFromTrainyard": {
+        "params": {
+            4: {
+                "type": "EEPTrainyardDepartureOrientation",
+                "desc": "optionale 4. Parameter bestimmt die Ausrichtung des Zuges beim Ausfahren aus dem Depot.",
+            },
+        }
+    },
+    "EEPGetTrainyardItemStatus": {
+        "returns": {
+            1: {"type": "EEPTrainyardItemStatus", "desc": 'rueckgabewert ist der Status des "Fahrzeugverbands".'},
+        }
+    },
+    "EEPShowInfoTextTop": {
+        "params": {
+            6: {"type": "EEPInfoTextAlignment", "desc": "parameter bestimmt die Textausrichtung."},
+        }
+    },
+    "EEPShowInfoTextBottom": {
+        "params": {
+            6: {"type": "EEPInfoTextAlignment", "desc": "parameter bestimmt die Textausrichtung."},
+        }
+    },
+    "EEPGetCloudsMode": {
+        "returns": {
+            1: {"type": "EEPCloudMode", "desc": "rueckgabewert gibt den Wolken-Modus an."},
+        }
+    },
+    "EEPSetZoneClouds": {
+        "params": {
+            2: {"type": "EEPCloudMode", "desc": "parameter bestimmt den Wolken-Modus."},
+        }
+    },
+    "EEPGetZoneClouds": {
+        "returns": {
+            2: {"type": "EEPCloudMode", "desc": "rueckgabewert gibt den Wolken-Modus an."},
+        }
+    },
+    "EEPSetSeason": {
+        "params": {
+            1: {"type": "EEPSeason", "desc": "parameter ist die in der Anlage einzustellende Jahreszeit."},
+        }
+    },
+    "EEPGetSeason": {
+        "returns": {
+            1: {"type": "EEPSeason", "desc": "rueckgabewert ist die in der Anlage eingestellte Jahreszeit."},
+        }
+    },
+}
+
+
+GENERIC_ENGLISH_PARAM_NAMES: dict[str, str] = {
+    "stunde": "hour",
+    "speichernummer": "storageSlot",
+    "gleisID": "railTrackId",
+    "strassenID": "roadTrackId",
+    "strassenbahngleisID": "tramTrackId",
+    "wegID": "auxiliaryTrackId",
+    "steuerstreckenID": "controlTrackId",
+    "splineID": "auxiliaryTrackId",
+    "flaechennummer": "surfaceNumber",
+    "achsnummer": "axisNumber",
+    "achsengruppe": "axisGroup",
+    "kranhakennummer": "hookNumber",
+    "rueckruf": "invokeCallback",
+    "quelle": "lightSource",
+    "kupplungszustand": "couplingState",
+    "zug_A": "trainNameA",
+    "zug_B": "trainNameB",
+    "zug_neu": "newTrainName",
+    "zug_alt": "previousTrainName",
+    "rot": "red",
+    "gruen": "green",
+    "blau": "blue",
+    "rot_X": "rotX",
+    "rot_Y": "rotY",
+    "rot_Z": "rotZ",
+    "kameraposition": "cameraPosition",
+    "anlagenpfad": "projectPath",
+    "booleanZahlZeichenkettenil": "value",
+    "modus": "cloudMode",
+    "windstaerke": "windIntensity",
+    "schneefallstaerke": "snowIntensity",
+    "nebeldichte": "fogIntensity",
+    "name2": "newTrainName",
+    "trainName2": "newTrainName",
+}
+
+
+ENTRY_PARAM_NAME_OVERRIDES: dict[str, dict[int, str]] = {
+    "EEPPause": {1: "pauseStatus"},
+    "EEPSetSignal": {2: "signalState", 3: "invokeCallback"},
+    "EEPOnSignal_x": {1: "signalState"},
+    "EEPGetSignalTrainName": {2: "trainIndex"},
+    "EEPGetSignalFunction": {2: "selectionIndex"},
+    "EEPGetSignalItemName": {2: "includeModelPath"},
+    "EEPCheckSetRoute": {2: "routeTargetIndex"},
+    "EEPSetSwitch": {2: "switchState", 3: "invokeCallback"},
+    "EEPOnSwitch_x": {1: "switchState"},
+    "EEPSetTrainRoute": {2: "routeName"},
+    "EEPSetTrainLight": {2: "enabled", 3: "lightSource"},
+    "EEPGetTrainLight": {2: "lightSource"},
+    "EEPSetTrainSmoke": {2: "enabled"},
+    "EEPSetTrainHorn": {2: "enabled"},
+    "EEPSetTrainCouplingFront": {2: "couple"},
+    "EEPSetTrainCouplingRear": {2: "couple"},
+    "EEPTrainLooseCoupling": {3: "rollingstockCount", 4: "detachedTrainName"},
+    "EEPOnTrainCoupling": {1: "movingTrainName", 2: "standingTrainName", 3: "combinedTrainName"},
+    "EEPOnTrainLooseCoupling": {1: "retainedTrainName", 2: "detachedTrainName", 3: "originalTrainName"},
+    "EEPSetTrainHook": {2: "enabled"},
+    "EEPSetTrainHookGlue": {2: "fixedLoad"},
+    "EEPSetTrainAxis": {3: "axisPosition", 4: "useNameFilter"},
+    "EEPRollingstockSetAxis": {3: "axisPosition", 4: "useNameFilter"},
+    "EEPRollingstockSetAxisByNumber": {2: "axisNumber", 3: "axisPosition"},
+    "EEPRollingstockGetAxisByNumber": {2: "axisNumber"},
+    "EEPRollingstockSetSlot": {2: "axisGroup"},
+    "EEPGetRollingstockItemName": {2: "vehicleIndex"},
+    "EEPRollingstockSetHook": {2: "enabled"},
+    "EEPRollingstockSetHookGlue": {2: "fixedLoad"},
+    "EEPRollingstockGetHookPosition": {2: "hookNumber"},
+    "EEPRollingstockSetSmoke": {2: "enabled"},
+    "EEPRollingstockSetHorn": {2: "enabled"},
+    "EEPStructureGetSmoke": {1: "luaName"},
+    "EEPStructureSetSmoke": {2: "enabled"},
+    "EEPStructureGetLight": {1: "luaName"},
+    "EEPStructureSetLight": {2: "enabled"},
+    "EEPStructureGetFire": {1: "luaName"},
+    "EEPStructureSetFire": {2: "enabled"},
+    "EEPStructureSetAxis": {3: "axisPosition"},
+    "EEPStructureSetAxisByNumber": {2: "axisNumber", 3: "axisPosition"},
+    "EEPStructureGetAxisByNumber": {2: "axisNumber"},
+    "EEPStructureAnimateAxis": {3: "stepDelta"},
+    "EEPStructureSetLightningColour": {2: "red", 3: "green", 4: "blue"},
+    "EEPGoodsSetAxis": {3: "axisPosition"},
+    "EEPGoodsSetAxisByNumber": {2: "axisNumber", 3: "axisPosition"},
+    "EEPGoodsGetAxisByNumber": {2: "axisNumber"},
+    "EEPRegisterRailTrack": {1: "railTrackId"},
+    "EEPIsRailTrackReserved": {1: "railTrackId", 2: "occupiedIndex"},
+    "EEPRegisterRoadTrack": {1: "roadTrackId"},
+    "EEPIsRoadTrackReserved": {1: "roadTrackId", 2: "occupiedIndex"},
+    "EEPRegisterTramTrack": {1: "tramTrackId"},
+    "EEPIsTramTrackReserved": {1: "tramTrackId", 2: "occupiedIndex"},
+    "EEPRegisterAuxiliaryTrack": {1: "auxiliaryTrackId"},
+    "EEPIsAuxiliaryTrackReserved": {1: "auxiliaryTrackId", 2: "occupiedIndex"},
+    "EEPRegisterControlTrack": {1: "controlTrackId"},
+    "EEPIsControlTrackReserved": {1: "controlTrackId", 2: "occupiedIndex"},
+    "EEPRailTrackChangeAppearance": {1: "railTrackId", 2: "appearanceLevel"},
+    "EEPRoadTrackChangeAppearance": {1: "roadTrackId", 2: "appearanceLevel"},
+    "EEPTramTrackChangeAppearance": {1: "tramTrackId", 2: "appearanceLevel"},
+    "EEPAuxiliaryTrackChangeAppearance": {1: "auxiliaryTrackId", 2: "appearanceLevel"},
+    "EEPOnSaveAnl": {1: "projectPath"},
+    "EEPGetTrainyardItemName": {2: "depotSlot"},
+    "EEPGetTrainyardItemStatus": {3: "depotSlot"},
+    "EEPShowInfoStructure": {2: "visible"},
+    "EEPShowInfoSignal": {2: "visible"},
+    "EEPShowInfoSwitch": {2: "visible"},
+    "EEPShowInfoTextTop": {1: "red", 2: "green", 3: "blue", 4: "textSize", 6: "alignment"},
+    "EEPShowInfoTextBottom": {1: "red", 2: "green", 3: "blue", 4: "textSize", 6: "alignment"},
+    "EEPShowScrollInfoTextTop": {1: "red", 2: "green", 3: "blue", 4: "textSize", 6: "alignment", 7: "scrollSpeed"},
+    "EEPShowScrollInfoTextBottom": {
+        1: "red",
+        2: "green",
+        3: "blue",
+        4: "textSize",
+        6: "alignment",
+        7: "scrollSpeed",
+    },
+    "EEPStructurePlaySound": {1: "luaName", 2: "enabled"},
+    "EEPSetWindIntensity": {1: "windIntensity"},
+    "EEPSetSnowIntensity": {1: "snowIntensity"},
+    "EEPSetFogIntensity": {1: "fogIntensity"},
+    "EEPSetZoneWindIntensity": {2: "windIntensity"},
+    "EEPSetZoneSnowIntensity": {2: "snowIntensity"},
+    "EEPSetZoneFogIntensity": {2: "fogIntensity"},
+    "EEPSetZoneClouds": {2: "cloudMode"},
+    "EEPSetTrainName": {2: "newTrainName"},
+    "EEPSetPerspectiveCamera": {1: "cameraPosition"},
+}
+
+
+def apply_english_param_names(params: list[dict[str, object]], entry: Entry) -> None:
+    entry_overrides = ENTRY_PARAM_NAME_OVERRIDES.get(entry.name, {})
+    for index, param in enumerate(params, start=1):
+        override = entry_overrides.get(index)
+        if override:
+            param["name"] = override
+            continue
+        name = str(param["name"])
+        desc = str(param["desc"]).lower()
+        if name == "name" and ("lua-name" in desc or "objekteigenschaften" in desc):
+            param["name"] = "luaName"
+            continue
+        renamed = GENERIC_ENGLISH_PARAM_NAMES.get(name)
+        if renamed:
+            param["name"] = renamed
+
+
 def apply_param_overrides(params: list[dict[str, object]], entry: Entry) -> None:
     overrides = {
         "EEPSetTrainSpeed": {
@@ -2318,31 +2786,50 @@ def apply_param_overrides(params: list[dict[str, object]], entry: Entry) -> None
             3: {"name": "depotSlot", "type": "number"},
             4: {
                 "name": "departureOrientation",
-                "type": "EEPTrainyardDepartureOrientation",
-                "desc": "optionale 4. Parameter bestimmt die Ausrichtung des Zuges beim Ausfahren aus dem Depot.",
             },
         },
     }
     entry_overrides = overrides.get(entry.name)
-    if not entry_overrides:
-        return
-    for index, fields in entry_overrides.items():
+    if entry_overrides:
+        for index, fields in entry_overrides.items():
+            if 1 <= index <= len(params):
+                param = params[index - 1]
+                for key, value in fields.items():
+                    param[key] = value
+    alias_overrides = ENTRY_TYPE_OVERRIDES.get(entry.name, {}).get("params", {})
+    for index, fields in alias_overrides.items():
         if 1 <= index <= len(params):
             param = params[index - 1]
             for key, value in fields.items():
                 param[key] = value
 
 
-def render_aliases(entry: Entry) -> list[str]:
-    if entry.name != "EEPGetTrainFromTrainyard":
-        return []
-    return [
-        "---@alias EEPTrainyardDepartureOrientation",
-        "---| 0 # Wie im Depot vorgegeben",
-        "---| 1 # Vorwaerts",
-        "---| 2 # Rueckwaerts",
-        "---| 3 # Entgegengesetzt zur Depotvorgabe",
-    ]
+def apply_return_overrides(returns: list[dict[str, str]], entry: Entry) -> None:
+    alias_overrides = ENTRY_TYPE_OVERRIDES.get(entry.name, {}).get("returns", {})
+    for index, fields in alias_overrides.items():
+        if 1 <= index <= len(returns):
+            ret = returns[index - 1]
+            for key, value in fields.items():
+                ret[key] = str(value)
+
+
+def render_aliases(entry: Entry, emitted_aliases: set[str]) -> list[str]:
+    aliases: list[str] = []
+    entry_overrides = ENTRY_TYPE_OVERRIDES.get(entry.name, {})
+    used_aliases: list[str] = []
+    for kind in ("params", "returns"):
+        for fields in entry_overrides.get(kind, {}).values():
+            alias_name = fields.get("type")
+            if isinstance(alias_name, str) and alias_name in ALIAS_DEFINITIONS and alias_name not in used_aliases:
+                used_aliases.append(alias_name)
+    for alias_name in used_aliases:
+        if alias_name in emitted_aliases:
+            continue
+        if aliases:
+            aliases.append("")
+        aliases.extend(ALIAS_DEFINITIONS[alias_name])
+        emitted_aliases.add(alias_name)
+    return aliases
 
 
 def parse_params(entry: Entry) -> list[dict[str, object]]:
@@ -2415,6 +2902,7 @@ def parse_params(entry: Entry) -> list[dict[str, object]]:
     params = [params_by_index[index] for index in sorted(params_by_index)]
     apply_param_hints_from_examples(params, entry)
     apply_param_overrides(params, entry)
+    apply_english_param_names(params, entry)
     apply_param_type_hints_from_names(params)
     return uniquify_params(params)
 
@@ -2472,6 +2960,7 @@ def parse_returns(entry: Entry) -> list[dict[str, str]]:
                     }
                 )
     apply_return_hints_from_examples(returns, entry)
+    apply_return_overrides(returns, entry)
     return returns
 
 
@@ -2521,25 +3010,26 @@ def wrap_doc(text: str, prefix: str) -> list[str]:
     ) or [prefix.rstrip()]
 
 
-def wrap_comment(text: str) -> list[str]:
+def wrap_comment(text: str, indent: int = 0) -> list[str]:
+    prefix = "-- " + (" " * indent)
     return textwrap.wrap(
         text,
         width=WRAP_WIDTH,
-        initial_indent="-- ",
-        subsequent_indent="-- ",
+        initial_indent=prefix,
+        subsequent_indent=prefix,
         break_long_words=False,
         break_on_hyphens=False,
-    ) or ["--"]
+    ) or [prefix.rstrip()]
 
 
-def render_entry(entry: Entry) -> list[str]:
+def render_entry(entry: Entry, emitted_aliases: set[str]) -> list[str]:
     lines: list[str] = []
     purpose = purpose_text(entry)
     version = version_text(entry)
     examples = normalize_examples(entry.examples, entry.name)
     if purpose:
         lines.extend(wrap_doc(purpose, "---"))
-    aliases = render_aliases(entry)
+    aliases = render_aliases(entry, emitted_aliases)
     if aliases:
         lines.extend(aliases)
 
@@ -2566,6 +3056,7 @@ def render_entry(entry: Entry) -> list[str]:
         signature = ", ".join(str(param["name"]) for param in params)
         function_sig = f"{entry.name}({signature})"
         lines.append(f"function {function_sig} end")
+        lines.append("")
         lines.append(f"-- {' ' * (len('function ') - len('-- '))}{'=' * len(function_sig)}")
     else:
         type_name = infer_variable_type(entry)
@@ -2577,15 +3068,23 @@ def render_entry(entry: Entry) -> list[str]:
     if entry.callable and notes:
         lines.append("-- Bemerkungen:")
         for note in notes:
-            lines.extend(wrap_comment(note))
+            lines.extend(wrap_comment(note, indent=2))
     if examples:
         lines.append("-- Beispielaufrufe:")
         for example in examples:
             if example.startswith("-- "):
-                lines.append(example)
+                lines.append(f"--   {example[3:]}")
             else:
-                lines.append(f"-- {example}")
+                lines.append(f"--   {example}")
     return lines
+
+
+def render_block_separator(entry: Entry) -> str:
+    label = f"{entry.name}()" if entry.callable else entry.name
+    prefix = f"-- === {label} "
+    if len(prefix) >= WRAP_WIDTH:
+        return prefix.rstrip()
+    return prefix + ("=" * (WRAP_WIDTH - len(prefix)))
 
 
 def render_entries(entries: list[Entry]) -> str:
@@ -2595,9 +3094,10 @@ def render_entries(entries: list[Entry]) -> str:
         "-- Automatisch erzeugt mit scripts/generate_eep_original_api.py",
         "",
     ]
+    emitted_aliases: set[str] = set()
     for entry in entries:
-        output.append("-- " + ("-" * (WRAP_WIDTH - 3)))
-        output.extend(render_entry(entry))
+        output.append(render_block_separator(entry))
+        output.extend(render_entry(entry, emitted_aliases))
         output.append("")
     return ascii_text("\n".join(output).rstrip() + "\n")
 
