@@ -3,48 +3,37 @@ if AkDebugLoad then print("[#Start] Loading ak.core.eep.EepSimulatorStore ...") 
 local Store = {}
 
 Store.state = {
+    active = {
+        rollingstockName = nil,
+        trainName = ""
+    },
+    camera = {},
+    goods = {},
+    persistence = {
+        valueByStorageSlot = {}
+    },
+    signalQueues = {
+        trainNamesBySignalId = {}
+    },
+    signals = {},
+    structures = {},
+    switches = {},
     tracks = {
+        auxiliary = {},
+        control = {},
         rail = {},
         road = {},
-        tram = {},
-        auxiliary = {},
-        control = {}
+        tram = {}
     },
     trains = {},
     trainyards = {},
-    structures = {},
-    signals = {},
-    switches = {},
-    goods = {},
-    camera = {
-        perspectiveByTrain = {},
-        userRollingstock = {}
-    },
-    signalQueues = {
-        countBySignal = {},
-        namesBySignal = {}
-    },
-    active = {
-        trainName = "",
-        rollingstockName = nil
-    },
-    rollingstock = {
-        hookByName = {},
-        hookGlueByName = {}
-    },
-    persistence = {
-        dataSlots = {}
-    },
-    structureRuntime = {
-        axisByStructure = {}
-    },
     weather = {
-        wind = nil,
+        clouds = nil,
+        fog = nil,
+        hail = nil,
         rain = nil,
         snow = nil,
-        hail = nil,
-        fog = nil,
-        clouds = nil
+        wind = nil
     }
 }
 

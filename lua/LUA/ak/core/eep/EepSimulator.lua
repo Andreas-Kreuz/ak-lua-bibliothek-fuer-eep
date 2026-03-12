@@ -36,75 +36,100 @@ function clearlog() end
 -- Simulate
 ------------------
 
----Add a train and its rollingStock
----@param trainName string Name of the train
----param ... string Name of the rollingstock
+--- Fuegt einen Zug mit den angegebenen Rollmaterialeintraegen in den Simulator ein.
+---@param trainName string Name des Zuges
+---@param ... string Namen der Rollmaterialeintraege
+---@return nil
 function EepSimulator.simulateAddTrain(trainName, ...) return Runtime.simulateAddTrain(trainName, ...) end
 
+--- Trennt einen Zug im Simulator an der angegebenen Fahrzeugposition.
+---@param trainName string Name des Zuges
+---@param index integer Trennposition innerhalb des Zuges
+---@return nil
 function EepSimulator.simulateSplitTrain(trainName, index) return Runtime.simulateSplitTrain(trainName, index) end
 
---- This will add a train to the signals queue
----@param signalId number
----@param trainName string
+--- Haengt einen Zug in die Halteliste eines Signals ein.
+---@param signalId number ID des Signals
+---@param trainName string Name des Zuges
+---@return nil
 function EepSimulator.simulateQueueTrainOnSignal(signalId, trainName)
     return Runtime.simulateQueueTrainOnSignal(signalId,
                                               trainName)
 end
 
---- This will remove a train from the signals queue
----@param signalId number
----@param trainName string
+--- Entfernt einen Zug aus der Halteliste eines Signals.
+---@param signalId number ID des Signals
+---@param trainName string Name des Zuges
+---@return nil
 function EepSimulator.simulateRemoveTrainFromSignal(signalId, trainName)
     return Runtime.simulateRemoveTrainFromSignal(
         signalId, trainName)
 end
 
---- This will remove all trains from the signals queue
----@param signalId number
+--- Leert die Halteliste eines Signals.
+---@param signalId number ID des Signals
+---@return nil
 function EepSimulator.simulateRemoveAllTrainsFromSignal(signalId)
     return Runtime.simulateRemoveAllTrainsFromSignal(
         signalId)
 end
 
+--- Markiert einen Zug als auf einem Strassengleis platziert.
+---@param trackId number ID des Strassengleises
+---@param zugname string Name des Zuges
+---@return nil
 function EepSimulator.simulatePlaceTrainOnRoadTrack(trackId, zugname)
     return Runtime.simulatePlaceTrainOnRoadTrack(
         trackId, zugname)
 end
 
+--- Markiert einen Zug als auf einem Bahngleis platziert.
+---@param trackId number ID des Bahngleises
+---@param zugname string Name des Zuges
+---@return nil
 function EepSimulator.simulatePlaceTrainOnRailTrack(trackId, zugname)
     return Runtime.simulatePlaceTrainOnRailTrack(
         trackId, zugname)
 end
 
----@param rollingStockName string
----@param frontForward boolean
+--- Setzt die relative Ausrichtung eines Rollmaterialeintrags im Zugverband.
+---@param rollingStockName string Name des Rollmaterials
+---@param frontForward boolean Ob die Front nach vorn zeigt
+---@return nil
 function EepSimulator.simulateSetRollingStockOrientation(rollingStockName, frontForward)
     return Runtime
         .simulateSetRollingStockOrientation(rollingStockName, frontForward)
 end
 
----@param oldName string
----@param newName string
----@return boolean
+--- Benennt einen Zug im Simulatorzustand um.
+---@param oldName string Bisheriger Zugname
+---@param newName string Neuer Zugname
+---@return boolean success True, wenn die Umbenennung erfolgreich war
 function EepSimulator.simulateRenameTrain(oldName, newName) return Runtime.simulateRenameTrain(oldName, newName) end
 
----@param oldName string
----@param newName string
----@return boolean
+--- Benennt einen Rollmaterialeintrag im Simulatorzustand um.
+---@param oldName string Bisheriger Rollmaterialname
+---@param newName string Neuer Rollmaterialname
+---@return boolean success True, wenn die Umbenennung erfolgreich war
 function EepSimulator.simulateRenameRollingStock(oldName, newName)
     return Runtime.simulateRenameRollingStock(oldName,
                                               newName)
 end
 
----@param name string
----@param trainName string|nil
----@return boolean
-function EepSimulator.simulateAddRollingStock(name, trainName) return Runtime.simulateAddRollingStock(name, trainName) end
+--- Fuegt ein Rollmaterial hinzu und legt bei Bedarf einen Zielzug an.
+---@param name string Gewuenschter Rollmaterialname
+---@param trainName string|nil Optionaler Name des Zielzuges
+---@return boolean success True, wenn das Rollmaterial hinzugefuegt wurde
+function EepSimulator.simulateAddRollingStock(name, trainName)
+    return Runtime.simulateAddRollingStock(name, trainName)
+end
 
----@param depotId number
----@param trainName string
----@param position number|nil
----@param status number|nil
+--- Fuegt einen Zug mit Statusinformation in ein Zugdepot ein.
+---@param depotId number ID des Zugdepots
+---@param trainName string Name des Zuges
+---@param position number|nil Optionaler Depotplatz
+---@param status number|nil Optionaler Depotstatus
+---@return nil
 function EepSimulator.simulateAddTrainToTrainyard(depotId, trainName, position, status)
     return Runtime
         .simulateAddTrainToTrainyard(depotId, trainName, position, status)
@@ -114,527 +139,479 @@ end
 -- Emit
 ------------------
 
+--- Loest den globalen Callback EEPMain aus.
+---@return boolean invoked True, wenn EEPMain vorhanden und aufgerufen wurde
 function EepSimulator.emitMain() return Runtime.emitMain() end
 
+--- Loest den signalbezogenen Callback EEPOnSignal_<signalId> aus.
+---@param signalId number ID des Signals
+---@param stellung number Signalstellung
+---@return boolean invoked True, wenn der Callback vorhanden und aufgerufen wurde
 function EepSimulator.emitOnSignal(signalId, stellung) return Runtime.emitOnSignal(signalId, stellung) end
 
+--- Loest den weichenbezogenen Callback EEPOnSwitch_<switchId> aus.
+---@param switchId number ID der Weiche
+---@param stellung number Weichenstellung
+---@return boolean invoked True, wenn der Callback vorhanden und aufgerufen wurde
 function EepSimulator.emitOnSwitch(switchId, stellung) return Runtime.emitOnSwitch(switchId, stellung) end
 
-function EepSimulator.emitOnTrainCoupling(zugA, zugB, zugNeu) return Runtime.emitOnTrainCoupling(zugA, zugB, zugNeu) end
+--- Loest den globalen Callback EEPOnTrainCoupling aus.
+---@param zugA string Name des bewegten Zuges
+---@param zugB string Name des stehenden Zuges
+---@param zugNeu string Name des neu gebildeten Zuges
+---@return boolean invoked True, wenn der Callback vorhanden und aufgerufen wurde
+function EepSimulator.emitOnTrainCoupling(zugA, zugB, zugNeu)
+    return Runtime.emitOnTrainCoupling(zugA, zugB, zugNeu)
+end
 
+--- Loest den globalen Callback EEPOnTrainLooseCoupling aus.
+---@param zugA string Name des verbleibenden Zugteils
+---@param zugB string Name des abgetrennten Zugteils
+---@param zugAlt string Name des urspruenglichen Zuges
+---@return boolean invoked True, wenn der Callback vorhanden und aufgerufen wurde
 function EepSimulator.emitOnTrainLooseCoupling(zugA, zugB, zugAlt)
     return Runtime.emitOnTrainLooseCoupling(zugA, zugB,
                                             zugAlt)
 end
 
+--- Loest den globalen Callback EEPOnSaveAnl aus.
+---@param anlagenpfad string Pfad der zu speichernden Anlage
+---@return boolean invoked True, wenn der Callback vorhanden und aufgerufen wurde
 function EepSimulator.emitOnSaveAnl(anlagenpfad) return Runtime.emitOnSaveAnl(anlagenpfad) end
 
+--- Loest den globalen Callback EEPOnBeforeSaveAnl aus.
+---@return boolean invoked True, wenn der Callback vorhanden und aufgerufen wurde
 function EepSimulator.emitOnBeforeSaveAnl() return Runtime.emitOnBeforeSaveAnl() end
 
+--- Loest den globalen Callback EEPOnTrainExitTrainyard aus.
+---@param depotId number ID des Zugdepots
+---@param trainName string Name des Zuges
+---@return boolean invoked True, wenn der Callback vorhanden und aufgerufen wurde
 function EepSimulator.emitOnTrainExitTrainyard(depotId, trainName)
     return Runtime.emitOnTrainExitTrainyard(depotId,
                                             trainName)
 end
 
+--- Loest den globalen Callback EEPOnTrainEnterTrainyard aus.
+---@param depotId number ID des Zugdepots
+---@param trainName string Name des Zuges
+---@return boolean invoked True, wenn der Callback vorhanden und aufgerufen wurde
 function EepSimulator.emitOnTrainEnterTrainyard(depotId, trainName)
     return Runtime.emitOnTrainEnterTrainyard(depotId,
                                              trainName)
 end
 
---- Loest den Callback fuer einen an einem Signal haltenden Zug aus.
---- Der Simulator ruft dazu eine im Test per _G.EEPOnTrainStoppedOnSignal
---- gesetzte Callback-Funktion direkt auf.
----@param signalId number
----@param trainName string
----@return boolean
+--- Loest den globalen Callback EEPOnTrainStoppedOnSignal aus.
+---@param signalId number ID des Signals
+---@param trainName string Name des haltenden Zuges
+---@return boolean invoked True, wenn der Callback vorhanden und aufgerufen wurde
 function EepSimulator.emitOnTrainStoppedOnSignal(signalId, trainName)
     return Runtime.emitOnTrainStoppedOnSignal(signalId,
                                               trainName)
 end
 
+--- Schaltet ein Signal.
+--- Ab: EEP 10.2 - Plugin 2.
 function EEPSetSignal(signalId, signalState, invokeCallback)
     return Runtime.callEEPSetSignal(signalId,
                                     signalState, invokeCallback)
 end
 
---- Liefert die aktuelle Stellung des Signal x
--- @param signalId Id des Signals
--- @return Stellung des Signals, Wenn das abgefragte Signal nicht existiert, ist der Rueckgabewert 0.
+--- Gibt die Stellung eines Signals bezogen auf die herrschende Zugbeeinflussung zurueck (s. letzte Bemerkung).
+--- Ab: EEP 10.2 - Plugin 2.
 function EEPGetSignal(signalId) return Runtime.callEEPGetSignal(signalId) end
 
---- Setzt die Weiche x auf die Stellung y. Der Wert activateEEPOnSwitch sollte den Wert 1 haben.
--- @param switchId Id der Weiche
--- @param switchPosition Stellung der Weiche
--- @param activateEEPOnSwitch (optional) Wenn = 1 dann aktiviere Funktion EEPOnSignal_x()
--- @return ok 1 wenn die Weiche und die gewuenschte Weichenstellung existieren
--- oder 0, wenn eins von beidem nicht existiert.
+--- Schaltet eine Weiche.
+--- Ab: EEP 10.2 - Plugin 2.
 function EEPSetSwitch(switchId, switchPosition, activateEEPOnSwitch)
     return Runtime.callEEPSetSwitch(switchId,
                                     switchPosition, activateEEPOnSwitch)
 end
 
---- Liefert die aktuelle Stellung der Weiche x
+--- Ermittelt die Stellung einer Weiche.
+--- Ab: EEP 10.2 - Plugin 2.
 function EEPGetSwitch(switchId) return Runtime.callEEPGetSwitch(switchId) end
 
+--- Registriert ein Signal fuer den Callback EEPOnSignal_x().
+--- Ab: EEP 10.2 - Plugin 2.
 --- Das Signal x wird intern registriert.
 --- Der Simulator definiert EEPOnSignal_x() bewusst nicht selbst.
 --- Falls ein Test diesen Callback benoetigt, kann er ihn wie in EEP ueber
 --- _G["EEPOnSignal_" .. signalId] = function(stellung) ... end bereitstellen.
 function EEPRegisterSignal(signalId) return Runtime.callEEPRegisterSignal(signalId) end
 
+--- Registriert eine Weiche fuer den Callback EEPOnSwitch_x().
+--- Ab: EEP 10.2 - Plugin 2.
 --- Die Weiche x wird intern registriert.
 --- Der Simulator definiert EEPOnSwitch_x() bewusst nicht selbst.
 --- Falls ein Test diesen Callback benoetigt, kann er ihn wie in EEP ueber
 --- _G["EEPOnSwitch_" .. switchId] = function(stellung) ... end bereitstellen.
 function EEPRegisterSwitch(switchId) return Runtime.callEEPRegisterSwitch(switchId) end
 
---- Aendert die EEP-Zeit auf die gewuenschte Zeit.
+--- Aendert die EEPZeit auf die gewuenschte Zeit.
+--- Ab: EEP 15.
 --- Im Simulator werden EEPTime sowie EEPTimeH, EEPTimeM und EEPTimeS sofort
 --- aus den uebergebenen Werten aktualisiert.
----@param stunde number Stundenangabe zwischen 0 und 23
----@param minute number Minutenangabe zwischen 0 und 59
----@param seconds number Sekundenangabe zwischen 0 und 59
----@return boolean ok True bei erfolgreicher Ausfuehrung, sonst false
 function EEPSetTime(stunde, minute, seconds) return Runtime.callEEPSetTime(stunde, minute, seconds) end
 
---- Liefert die aktuelle Bildrate (fps) zurueck.
+--- Gibt die aktuelle Bildrate (fps) zurueck.
+--- Ab: EEP 17.2 - Plugin 2.
 --- Im Simulator wird dafuer ein fester Rueckgabewert von 60 verwendet.
----@return number fps Bildrate in Frames pro Sekunde
 function EEPGetFramesPerSecond() return Runtime.callEEPGetFramesPerSecond() end
 
---- Liefert den aktuellen Wert des Bildzaehlers seit Anlagenstart zurueck.
+--- Gibt den aktuellen Bildzaehler ohne Bearbeitungs- und Pausenmodus zurueck.
+--- Ab: EEP 17.2 - Plugin 2.
 --- Im Simulator wird dafuer ein fester Rueckgabewert von 15 verwendet.
----@return number frameNummer Aktueller Bildzaehler
 function EEPGetCurrentFrame() return Runtime.callEEPGetCurrentFrame() end
 
---- Liefert die Gesamtanzahl der gerenderten Bilder seit Anlagenstart zurueck.
+--- Gibt den gesamten Bildzaehler inklusive Bearbeitungs- und Pausenmodus zurueck.
+--- Ab: EEP 17.2 - Plugin 2.
 --- Im Simulator wird dafuer ein fester Rueckgabewert von 15948 verwendet.
----@return number frameNummer Aktueller Render-Bildzaehler
 function EEPGetCurrentRenderFrame() return Runtime.callEEPGetCurrentRenderFrame() end
 
---- Liefert den aktuell eingestellten Zeitrafferfaktor zurueck.
+--- Gibt den aktuell in EEP eingestellten Zeitrafferfaktor zurueck.
+--- Ab: EEP 17.2 - Plugin 2.
 --- Im Simulator wird dafuer ein fester Rueckgabewert von 1 verwendet.
----@return number zeitrafferfaktor Aktueller Zeitrafferfaktor
 function EEPGetTimeLapse() return Runtime.callEEPGetTimeLapse() end
 
---- Setzt die Farbfilterparameter voruebergehend.
+--- Setzt die Farbparameter voruebergehend.
+--- Ab: EEP 17.3 - Plugin 3.
 --- Im Simulator ist diese Funktion derzeit nur als Stub ohne Laufzeitwirkung
 --- vorhanden.
----@param farbton number Farbton
----@param saettigung number Saettigung
----@param helligkeit number Helligkeit
----@param kontrast number Kontrast
 function EEPSetColourFilter(hue, saturation, brightness, contrast)
     return Runtime.callEEPSetColourFilter(hue,
                                           saturation, brightness, contrast)
 end
 
---- Geschwindigkeit aendern
--- @param trainName Name des Zuges
--- @param speed Geschwindigkeit
--- @param useTargetSpeed true = Wunschgeschwindigkeit, false/nil = aktuelle Geschwindigkeit
+--- Weist einem Zug eine Geschwindigkeit zu.
+--- Ab: EEP 11.
 function EEPSetTrainSpeed(trainName, speed, useTargetSpeed)
     return Runtime.callEEPSetTrainSpeed(trainName, speed, useTargetSpeed)
 end
 
---- Geschwindigkeit lesen
----@param trainName string Name des Zuges
----@param useTargetSpeed? boolean true = Wunschgeschwindigkeit, false/nil = aktuelle Geschwindigkeit
----@return boolean Ist der Zug vorhanden
----@return number Geschwindigkeit
-function EEPGetTrainSpeed(trainName, useTargetSpeed) return Runtime.callEEPGetTrainSpeed(trainName, useTargetSpeed) end
+--- Ermittelt die aktuelle oder gewuenschte Geschwindigkeit eines Zuges.
+--- Ab: EEP 11.
+function EEPGetTrainSpeed(trainName, useTargetSpeed)
+    return Runtime.callEEPGetTrainSpeed(trainName, useTargetSpeed)
+end
 
---- Setzen der Kupplung (hinten)
--- @param rsName Name des Rollmaterial,
--- @param kupplungsStatus 1-Kupplung aktiv, 2-Kupplung inaktiv, 3-Wagen angekoppelt(nurGet),
--- z.B.: EEPRollingstockSetCouplingRear("DB 212309", 2)
+--- Stellt die hintere Kupplung eines Rollmaterials um.
+--- Ab: EEP 11.0.
 function EEPRollingstockSetCouplingRear(rsName, kupplungsStatus)
     return Runtime.callEEPRollingstockSetCouplingRear(
         rsName, kupplungsStatus)
 end
 
---- Abfragen der Kupplung (hinten)
--- @param rsName Name des Rollmaterial,
--- @param kupplungsStatus 1-Kupplung aktiv, 2-Kupplung inaktiv, 3-Wagen angekoppelt(nurGet),
-function EEPRollingstockGetCouplingRear(rollingstockName) return Runtime.callEEPRollingstockGetCouplingRear(rollingstockName) end
+--- Ermittelt die Stellung der hinteren Kupplung eines Rollmaterials.
+--- Ab: EEP 11.0.
+function EEPRollingstockGetCouplingRear(rollingstockName)
+    return Runtime.callEEPRollingstockGetCouplingRear(rollingstockName)
+end
 
---- Setzen der Kupplung (vorn)
--- @param rollingstockName Name des Rollmaterial,
--- @param kupplungsStatus 1-Kupplung aktiv, 2-Kupplung inaktiv, 3-Wagen angekoppelt(nurGet),
--- z.B.: EEPRollingstockSetCouplingFront("DB212 309", 2)
+--- Stellt die vordere Kupplung eines Rollmaterials um.
+--- Ab: EEP 11.0.
 function EEPRollingstockSetCouplingFront(rsName, kupplungsStatus)
     return Runtime.callEEPRollingstockSetCouplingFront(
         rsName, kupplungsStatus)
 end
 
---- Abfragen der Kupplung (vorn)
--- @param rsName Name des Rollmaterial,
--- @param kupplungsStatus 1-Kupplung aktiv, 2-Kupplung inaktiv, 3-Wagen angekoppelt(nurGet),
-function EEPRollingstockGetCouplingFront(rollingstockName) return Runtime.callEEPRollingstockGetCouplingFront(rollingstockName) end
+--- Ermittelt die Stellung der vorderen Kupplung eines Rollmaterials.
+--- Ab: EEP 11.0.
+function EEPRollingstockGetCouplingFront(rollingstockName)
+    return Runtime.callEEPRollingstockGetCouplingFront(rollingstockName)
+end
 
---------------------------------------------------------------------------
--- Siehe hierzu auch Handbuch EEP 11(Achsgruppen) Setzen einer Achsgruppe,
--- z.B.: EEPRollingstockSetSlot("Loadingkran2Greifer", 1)
--- @param rollingstockName Name des Rollmaterials als String
--- @param slot Slot mit der Achsstellung
---------------------------------------------------------------------------
+--- Bewegt alle Achsen eines Rollmaterials auf eine gespeicherte Achsgruppe.
+--- Ab: EEP 11.0.
 function EEPRollingstockSetSlot(rsName, slot) return Runtime.callEEPRollingstockSetSlot(rsName, slot) end
 
---------------------------------------------------------------------------
---- Setzen einer Achse am Rollmaterial
--- z.B.: EEPRollingstockSetAxis("Bekohlungskranbruecke 1", "Drehung links", 50)
--- @param rsName Name des Rollmaterials als String
--- @param achse Name der Achse
--- @param stellung 0 - 100 - Achsstellung
---------------------------------------------------------------------------
+--- Bewegt die mittels Achsname benannte Achse des benannten Rollmaterials in eine gewuenschte Position.
+--- Ab: EEP 11.0.
 function EEPRollingstockSetAxis(rollingstockName, axisName, axisPosition, useNameFilter)
     return Runtime.callEEPRollingstockSetAxis(rollingstockName, axisName,
                                                  axisPosition, useNameFilter)
 end
 
---- Gibt die Stellung der Achse am Rollmaterial zurueck
--- z.B.: EEPRollingstockSetAxis("Bekohlungskranbr?cke 1", "Drehung links", 50)
--- @param rsName Name des Rollmaterials als String
--- @param achse Name der Achse
-function EEPRollingstockGetAxis(rollingstockName, axisName) return Runtime.callEEPRollingstockGetAxis(rollingstockName, axisName) end
+--- Ermittelt die aktuelle Position einer mittels Achsnamen benannten Achse des benannten Rollmaterials.
+--- Ab: EEP 11.0.
+function EEPRollingstockGetAxis(rollingstockName, axisName)
+    return Runtime.callEEPRollingstockGetAxis(rollingstockName, axisName)
+end
 
---- Laedt Daten aus Slot.
---- Laut EEP-Handbuch kann Rueckgabewert 2 ein Boolean, eine Zahl, ein String oder nil sein.
--- @param slot Slot 1 bis 1000
--- @return true (wenn gefunden), Boolean|Zahl|String|nil
+--- Laedt einen Wert aus einem Datenslot.
+--- Ab: EEP 11.
 function EEPLoadData(slot) return Runtime.callEEPLoadData(slot) end
 
---- Speichert Daten in Slot.
---- Laut EEP-Handbuch akzeptiert EEPSaveData Boolean, Zahl, String oder nil.
---- Falls ein String gespeichert wird, darf er dabei hoechstens 999 Zeichen lang sein.
--- @param slot Slot 1 bis 1000
--- @param data Boolean|Zahl|String|nil
+--- Speichert einen Wert in einem Datenslot.
+--- Ab: EEP 11.
 function EEPSaveData(storageSlot, value) return Runtime.callEEPSaveData(storageSlot, value) end
 
-------------------------------
--- Neu ab EEP 11 - Plugin 1 --
-------------------------------
---- Rauch einschalten
--- @param immoName Name der Immobilie als String.
--- @param onoff true oder false
+--- Schaltet den Rauch der benannten Immobilie an oder aus.
+--- Ab: EEP 11.1 - Plugin 1.
 function EEPStructureSetSmoke(immoName, onoff) return Runtime.callEEPStructureSetSmoke(immoName, onoff) end
 
---- Rauch abfreagen
--- @param immoName Name der Immobilie als String.
+--- Ermittelt, ob der Rauch der benannten Immobilie an- oder ausgeschaltet ist.
+--- Ab: EEP 11.1 - Plugin 1.
 function EEPStructureGetSmoke(luaName) return Runtime.callEEPStructureGetSmoke(luaName) end
 
---- Licht einschalten
--- @param luaName Name der Immobilie als String.
--- @param onoff true oder false
+--- Schaltet das Licht der benannten Immobilie an oder aus.
+--- Ab: EEP 11.1 - Plugin 1.
 function EEPStructureSetLight(name, onoff) return Runtime.callEEPStructureSetLight(name, onoff) end
 
---- Licht abfragen
--- @param immoName Name der Immobilie als String.
+--- Ermittelt, ob das Licht der benannten Immobilie eingeschaltet ist.
+--- Ab: EEP 11.1.
 function EEPStructureGetLight(luaName) return Runtime.callEEPStructureGetLight(luaName) end
 
---- Feuer einschalten
--- @param immoName Name der Immobilie als String.
--- @param onoff true oder false
+--- Schaltet das Feuer der benannten Immobilie an oder aus.
+--- Ab: EEP 11.1 - Plugin 1.
 function EEPStructureSetFire(immoName, onoff) return Runtime.callEEPStructureSetFire(immoName, onoff) end
 
---- Feuer abfragen
--- @param immoName Name der Immobilie als String.
+--- Ermittelt, ob das Feuer der benannten Immobilie an- oder ausgeschaltet ist.
+--- Ab: EEP 11.1 - Plugin 1.
 function EEPStructureGetFire(luaName) return Runtime.callEEPStructureGetFire(luaName) end
 
---- Setzen einer Achse einer Immobilie.
--- @param luaName Name der Immobilie als String.
--- @param achse Name der Achse
--- @param schritte 1000 bzw. -1000: endlos, 0: Stopp, sonst Schritte
+--- Bewegt die Achse einer Immobilie oder eines Gleisobjekts.
+--- Ab: EEP 11.1 - Plugin 1.
 function EEPStructureAnimateAxis(immoName, achse, schritte)
     return Runtime.callEEPStructureAnimateAxis(immoName, achse,
                                                schritte)
 end
 
---- Setzen einer Achse einer Immobilie
--- @param immoName Name der Immobilie als String.
--- @param achse Name der Achse
--- @param stellung position der Achse
-function EEPStructureSetAxis(luaName, axisName, axisPosition) return Runtime.callEEPStructureSetAxis(luaName, axisName, axisPosition) end
+--- Setzt eine Achse einer Immobilie oder eines Gleisobjekts ohne Animation.
+--- Ab: EEP 11.1 - Plugin 1.
+function EEPStructureSetAxis(luaName, axisName, axisPosition)
+    return Runtime.callEEPStructureSetAxis(luaName, axisName, axisPosition)
+end
 
---- Gibt die Stellung der Achse am Rollmaterial zurueck.
--- z.B.: EEPRollingstockSetAxis("Bekohlungskranbruecke 1", "Drehung links", 50)
--- @param luaName Name der Immobilie als String.
--- @param axisName Name der Achse
+--- Ermittelt die Stellung einer mittels Achsnamen definierten Achse der benannten Immobilie oder des Gleisobjekts.
+--- Ab: EEP 11.1 - Plugin 1.
 function EEPStructureGetAxis(immoName, achse) return Runtime.callEEPStructureGetAxis(immoName, achse) end
 
---- Setzen der Position einer Immobilie
--- @param immoName Name der Immobilie als String.
--- @param posX x-Position
--- @param posY y-Position
--- @param posZ z-Position
+--- Versetzt die benannte Immobilie oder das Landschaftselement an eine neue Position.
+--- Ab: EEP 11.1 - Plugin 1.
 function EEPStructureSetPosition(luaName, posX, posY, posZ)
     return Runtime.callEEPStructureSetPosition(luaName, posX,
                                                posY, posZ)
 end
 
---- Setzen der Rotation einer Immobilie
--- @param immoName Name der Immobilie als String.
--- @param rotX x-Position
--- @param rotY y-Position
--- @param rotZ z-Position
+--- Dreht die benannte Immobilie oder das Landschaftselement in eine neue Position.
+--- Ab: EEP 11.1 - Plugin 1.
 function EEPStructureSetRotation(luaName, rotX, rotY, rotZ)
     return Runtime.callEEPStructureSetRotation(luaName, rotX,
                                                rotY, rotZ)
 end
 
-------------------------------
--- Neu ab EEP 11 - Plugin 2 --
-------------------------------
---- Route aendern
----@param trainName string Name des Zuges
----@param route string Name der Route
+--- Weist einem Zug eine Route zu.
+--- Ab: EEP 11.2 - Plugin 2.
 function EEPSetTrainRoute(trainName, routeName) return Runtime.callEEPSetTrainRoute(trainName, routeName) end
 
---- Route abfragen - return ok und Name der Route
----@param trainName string Name des Zuges
----@return boolean, string
+--- Ermittelt die Route eines Zuges.
+--- Ab: EEP 11.2 - Plugin 2.
 function EEPGetTrainRoute(trainName) return Runtime.callEEPGetTrainRoute(trainName) end
 
---- Licht ein oder ausschalten
--- @param trainName Name des Zuges
--- @param onoff true: ein, false: aus
-function EEPSetTrainLight(trainName, enabled, lightSource) return Runtime.callEEPSetTrainLight(trainName, enabled, lightSource) end
+--- Schaltet Licht, Blinker oder Bremslicht-Automatik eines Zuges.
+--- Ab: EEP 11.2 - Plugin 2.
+function EEPSetTrainLight(trainName, enabled, lightSource)
+    return Runtime.callEEPSetTrainLight(trainName, enabled, lightSource)
+end
 
+--- Ermittelt den Zustand von Licht, Blinker oder Bremslicht-Automatik eines Zuges.
+--- Ab: EEP 18.0.
 function EEPGetTrainLight(trainName, quelle) return Runtime.callEEPGetTrainLight(trainName, quelle) end
 
---- Rauch ein oder ausschalten
--- @param trainName Name des Zuges
--- @param onoff true: ein, false: aus
+--- Schaltet den Rauch eines Zuges an oder aus.
+--- Ab: EEP 11.2 - Plugin 2.
 function EEPSetTrainSmoke(trainName, enabled) return Runtime.callEEPSetTrainSmoke(trainName, enabled) end
 
---- Hupen
--- @param trainName Name des Zuges
--- @param enabled true: signal starten, false: signal beenden
+--- Loest den Warnton eines Zuges aus.
+--- Ab: EEP 11.2 - Plugin 2.
 function EEPSetTrainHorn(trainName, onoff) return Runtime.callEEPSetTrainHorn(trainName, onoff) end
 
---- Kupplung vorn setzen
--- @param trainName Name des Zuges
--- @param kupplungOn true: kuppeln, false: abstoßen
+--- Stellt die vordere Kupplung eines Zuges auf Kuppeln oder Abstossen.
+--- Ab: EEP 11.2 - Plugin 2.
 function EEPSetTrainCouplingFront(trainName, couple)
     return Runtime.callEEPSetTrainCouplingFront(trainName,
                                                 couple)
 end
 
+--- Ermittelt den Zustand der vorderen Kupplung eines Zuges.
+--- Ab: EEP 18.0.
 function EEPGetTrainCouplingFront(trainName) return Runtime.callEEPGetTrainCouplingFront(trainName) end
 
---- Kupplung hinten setzen
--- @param trainName Name des Zuges
--- @param kupplungOn true: kuppeln, false: abstoßen
-function EEPSetTrainCouplingRear(trainName, kupplungOn) return Runtime.callEEPSetTrainCouplingRear(trainName, kupplungOn) end
+--- Stellt die hintere Kupplung eines Zuges auf Kuppeln oder Abstossen.
+--- Ab: EEP 11.2 - Plugin 2.
+function EEPSetTrainCouplingRear(trainName, kupplungOn)
+    return Runtime.callEEPSetTrainCouplingRear(trainName, kupplungOn)
+end
 
+--- Ermittelt den Zustand der hinteren Kupplung eines Zuges.
+--- Ab: EEP 18.0.
 function EEPGetTrainCouplingRear(trainName) return Runtime.callEEPGetTrainCouplingRear(trainName) end
 
---- Zugverband an bestimmter Stelle trennen
--- @param trainName Name des Zuges
--- @param countFromFront true: von vorne zaehlen, false: von hinten zaehlen
--- @param position Stelle, die getrennt wird
+--- Trennt einen Zug an der angegebenen Stelle.
+--- Ab: EEP 11.2 - Plugin 2.
 function EEPTrainLooseCoupling(trainName, countFromFront, position)
     return Runtime.callEEPTrainLooseCoupling(trainName,
                                              countFromFront, position)
 end
 
---- Setzen des Gueterhakens an allen Wagen eines Zuges
--- @param trainName Name des Zuges als String
--- @param hookOn true: Haken fuer alle an
+--- Schaltet den Gueterhaken eines Zuges an oder aus.
+--- Ab: EEP 11.2 - Plugin 2.
 function EEPSetTrainHook(trainName, enabled) return Runtime.callEEPSetTrainHook(trainName, enabled) end
 
---- Setzen einer Achse an allen Wagen eines Zuges
--- @param trainName Name des Zuges als String
--- @param achse Name der Achse
--- @param stellung 0 - 100 - Achsstellung
-function EEPSetTrainAxis(trainName, achse, stellung) return Runtime.callEEPSetTrainAxis(trainName, achse, stellung) end
+--- Animiert ausgewaehlte Achsen eines Zuges.
+--- Ab: EEP 11.2 - Plugin 2.
+function EEPSetTrainAxis(trainName, achse, stellung)
+    return Runtime.callEEPSetTrainAxis(trainName, achse, stellung)
+end
 
 ------------------------------
 -- Neu ab EEP 11 - Plugin 2 --
 ------------------------------
 
---- Registriert ein Gleis fuer die Besetztabfrage.
--- @param trackId Id des Gleises
+--- Registriert ein Gleiselement fuer Besetztabfragen.
+--- Ab: EEP 11.3 - Plugin 3.
 function EEPRegisterRailTrack(railTrackId) return Runtime.callEEPRegisterRailTrack(railTrackId) end
 
---- Fragt ab, ob ein Gleis besetzt ist.
--- @param railTrackId Id des Gleises
--- @param returnTrainName wenn true, wird als dritter Wert der Zugname
--- zurueckgegeben
--- @return Erster Wert: true, wenn Gleis existiert und registriert,
--- zweiter Wert: true, wenn besetzt,
--- dritter Wert: Name des Zuges auf dem Gleis
+--- Ermittelt, ob ein Gleiselement besetzt ist, und optional den Zugnamen.
+--- Ab: EEP 11.3 - Plugin 3.
 function EEPIsRailTrackReserved(trackId, returnTrainName)
     return Runtime.callEEPIsRailTrackReserved(trackId,
                                               returnTrainName)
 end
 
---- Registriert ein Gleis fuer die Besetztabfrage.
----@param trackId number Id des Gleises
+--- Registriert ein Strassenelement fuer Besetztabfragen.
+--- Ab: EEP 11.3 - Plugin 3.
 function EEPRegisterRoadTrack(roadTrackId) return Runtime.callEEPRegisterRoadTrack(roadTrackId) end
 
---- Fragt ab, ob ein Gleis besetzt ist.
----@param roadTrackId number Id des Gleises
----@param returnTrainName boolean wenn true, wird als dritter Wert der Zugname
--- @return boolean, boolean, string
--- Erster Wert: true, wenn Gleis existiert und registriert,
--- zweiter Wert: true, wenn besetzt,
--- dritter Wert: Name des Zuges auf dem Gleis
+--- Ermittelt, ob ein Strassenelement besetzt ist, und optional den Zugnamen.
+--- Ab: EEP 11.3 - Plugin 3.
 function EEPIsRoadTrackReserved(trackId, returnTrainName)
     return Runtime.callEEPIsRoadTrackReserved(trackId,
                                               returnTrainName)
 end
 
---- Registriert ein Gleis fuer die Besetztabfrage.
--- @param tramTrackId Id des Gleises
+--- Registriert ein Strassenbahngleis fuer Besetztabfragen.
+--- Ab: EEP 11.3 - Plugin 3.
 function EEPRegisterTramTrack(tramTrackId) return Runtime.callEEPRegisterTramTrack(tramTrackId) end
 
---- Fragt ab, ob ein Gleis besetzt ist.
--- @param tramTrackId Id des Gleises
--- @param returnTrainName wenn true, wird als dritter Wert der Zugname
--- @return Erster Wert: true, wenn Gleis existiert und registriert,
--- zweiter Wert: true, wenn besetzt,
--- dritter Wert: Name des Zuges auf dem Gleis
+--- Ermittelt, ob ein Strassenbahngleis besetzt ist, und optional den Zugnamen.
+--- Ab: EEP 11.3 - Plugin 3.
 function EEPIsTramTrackReserved(tramTrackId, returnTrainName)
     return Runtime.callEEPIsTramTrackReserved(tramTrackId,
                                               returnTrainName)
 end
 
---- Registriert ein Gleis fuer die Besetztabfrage.
--- @param auxTrackId Id des Gleises
-function EEPRegisterAuxiliaryTrack(auxiliaryTrackId) return Runtime.callEEPRegisterAuxiliaryTrack(auxiliaryTrackId) end
+--- Registriert ein Weg-Element der Kategorie "Sonstige" fuer Besetztabfragen.
+--- Ab: EEP 11.3 - Plugin 3.
+function EEPRegisterAuxiliaryTrack(auxiliaryTrackId)
+    return Runtime.callEEPRegisterAuxiliaryTrack(auxiliaryTrackId)
+end
 
---- Fragt ab, ob ein Gleis besetzt ist.
--- @param auxiliaryTrackId Id des Gleises
--- @param returnTrainName wenn true, wird als dritter Wert der Zugname
--- @return Erster Wert: true, wenn Gleis existiert und registriert,
--- zweiter Wert: true, wenn besetzt,
--- dritter Wert: Name des Zuges auf dem Gleis
+--- Ermittelt, ob ein sonstiges Weg-Element besetzt ist, und optional den Zugnamen.
+--- Ab: EEP 11.3 - Plugin 3.
 function EEPIsAuxiliaryTrackReserved(auxTrackId, returnTrainName)
     return Runtime.callEEPIsAuxiliaryTrackReserved(
         auxTrackId, returnTrainName)
 end
 
---- Registriert ein Gleis fuer die Besetztabfrage.
--- @param controlTrackId Id des Gleises
+--- Registriert ein Steuerstrecken-Element fuer Besetztabfragen.
+--- Ab: EEP 11.3 - Plugin 3.
 function EEPRegisterControlTrack(controlTrackId) return Runtime.callEEPRegisterControlTrack(controlTrackId) end
 
---- Fragt ab, ob ein Gleis besetzt ist.
--- @param controlTrackId Id des Gleises
--- @return Erster Wert: true, wenn Gleis existiert und registriert,
--- zweiter Wert: true, wenn besetzt
+--- Ermittelt, ob ein Steuerstrecken-Element besetzt ist, und optional den Zugnamen.
+--- Ab: EEP 11.3 - Plugin 3.
 function EEPIsControlTrackReserved(controlTrackId, returnTrainName)
     return Runtime.callEEPIsControlTrackReserved(
         controlTrackId, returnTrainName)
 end
 
---- Waehlen einer Kamera
--- @param camType 0: statisch, 1: dynamisch, 2: mobile Kamera
--- @param camName Name der Kamera
--- @return true, wenn die Kamera existiert
+--- Waehlt eine der gespeicherten Kameras aus der Liste.
+--- Ab: EEP 11.3 - Plugin 3.
 function EEPSetCamera(cameraType, cameraName) return Runtime.callEEPSetCamera(cameraType, cameraName) end
 
---- Waehlen einer Kameraperspektive
--- @param camPosition Tasten 1 - 9 fuer die Kameraposition
--- @param trainName Name des Zuges
--- @return true, wenn die Kamera existiert
+--- Waehlt eine der Verfolger-Kameras fuer den angegebenen "Fahrzeugverband".
+--- Ab: EEP 11.3.
 function EEPSetPerspectiveCamera(camPosition, trainName)
     return Runtime.callEEPSetPerspectiveCamera(camPosition,
                                                trainName)
 end
 
+--- Gibt an, welche Verfolger-Kamera fuer den angegebenen bzw. aktiven "Fahrzeugverband" ausgewaehlt ist.
+--- Ab: EEP 18.0.
 function EEPGetPerspectiveCamera(trainName) return Runtime.callEEPGetPerspectiveCamera(trainName) end
 
---- Zug aus Depot starten
--- @param depotId Id des Depots (Eigenschaftenfenster)
--- @param trainName Name des Zuges
--- @param depotSlot Wenn kein Zugname angegeben ist, dann der Listenplatz des Zugs im Depot
--- @param departureOrientation Ausrichtung beim Ausfahren aus dem Depot
--- @return true, wenn der Zug existiert
+--- Schickt einen ausgewaehlten "Fahrzeugverband" aus einem ausgewaehlten virtuellen Depot.
+--- Ab: EEP 11.3 - Plugin 2.
 function EEPGetTrainFromTrainyard(depotId, trainName, depotSlot, departureOrientation)
     return Runtime.callEEPGetTrainFromTrainyard(depotId,
                                                 trainName, depotSlot, departureOrientation)
 end
 
+--- Ermittelt, ob sich ein Zug in einem virtuellen Depot befindet.
+--- Ab: EEP 18.1 - Plugin 1.
 function EEPIsTrainInTrainyard(trainName) return Runtime.callEEPIsTrainInTrainyard(trainName) end
 
+--- Verschiebt einen "Fahrzeugverband" oder alle dort registrierten in ein virtuelles Depot.
+--- Ab: EEP 18.1 - Plugin 1.
 function EEPPutTrainToTrainyard(depotId, trainName) return Runtime.callEEPPutTrainToTrainyard(depotId, trainName) end
 
--------------------------------
--- Neu ab EEP 13             --
--------------------------------
---- Zeigen / Verstecken des Tipp-Textes einer Immobilie
--- @param immoName Name der Immobilie als String.
--- @param onOff true: einschalten
+--- Schaltet den Tipp-Text einer Immobilie oder eines Landschaftselements ein oder aus.
+--- Ab: EEP 13.
 function EEPShowInfoStructure(luaName, visible) return Runtime.callEEPShowInfoStructure(luaName, visible) end
 
---- Setzen des Tipp-Textes einer Immobilie
--- @param luaName Name der Immobilie als String.
--- @param text Text fuer die Anzeige
+--- Weist dem Tipp-Text einer Immobilie oder eines Landschaftselements einen neuen Text zu.
+--- Ab: EEP 13.
 function EEPChangeInfoStructure(immoName, text) return Runtime.callEEPChangeInfoStructure(immoName, text) end
 
---- Zeigen / Verstecken des Tipp-Textes einer Immobilie
--- @param switchId Name der Immobilie als String.
--- @param onOff true: einschalten
+--- Schaltet den Tipp-Text eines Signals ein oder aus.
+--- Ab: EEP 13.
 function EEPShowInfoSignal(signalId, visible) return Runtime.callEEPShowInfoSignal(signalId, visible) end
 
---- Setzen des Tipp-Textes einer Immobilie
--- @param switchId Name der Immobilie als String.
--- @param text Text fuer die Anzeige
+--- Weist dem Tipp-Text eines Signals einen neuen Text zu.
+--- Ab: EEP 13.
 function EEPChangeInfoSignal(signalId, text) return Runtime.callEEPChangeInfoSignal(signalId, text) end
 
---- Zeigen / Verstecken des Tipp-Textes einer Weiche
--- @param switchId Name der Weiche als String.
--- @param onOff true: einschalten
+--- Schaltet den Tipp-Text einer Weiche ein oder aus.
+--- Ab: EEP 13.
 function EEPShowInfoSwitch(switchId, visible) return Runtime.callEEPShowInfoSwitch(switchId, visible) end
 
---- Setzen des Tipp-Textes einer Weiche
--- @param switchId Name der Weiche als String.
--- @param text Text fuer die Anzeige
+--- Weist dem Tipp-Text einer Weiche einen neuen Text zu.
+--- Ab: EEP 13.
 function EEPChangeInfoSwitch(switchId, text) return Runtime.callEEPChangeInfoSwitch(switchId, text) end
 
 -------------------------------
 -- Neu ab EEP 13 - Plugin 2  --
 -------------------------------
 
---- Anzahl der Fahrzeuge im Zugverband Name
--- @param zugverband Names des Zugverbandes
---
+--- Gibt die Anzahl der Fahrzeuge eines Zuges zurueck.
+--- Ab: EEP 13.2 - Plugin 2.
 function EEPGetRollingstockItemsCount(trainName) return Runtime.callEEPGetRollingstockItemsCount(trainName) end
 
---- Name des Rollis Nummer im Zugverband Name
--- @param trainName Name des Zugverbandes
--- @param Nummer
---
-function EEPGetRollingstockItemName(zugverband, Nummer) return Runtime.callEEPGetRollingstockItemName(zugverband, Nummer) end
+--- Gibt den Namen eines Fahrzeugs in einem Zug zurueck.
+--- Ab: EEP 13.2 - Plugin 2.
+function EEPGetRollingstockItemName(zugverband, Nummer)
+    return Runtime.callEEPGetRollingstockItemName(zugverband, Nummer)
+end
 
---- Anzahl der Zuege, welche vom Signal Signal_ID gehalten werden
--- @param signalId ID des Signals
---
+--- Gibt die Anzahl der von einem Signal beeinflussten Fahrzeugverbaende zurueck.
+--- Ab: EEP 13.2 - Plugin 2.
 function EEPGetSignalTrainsCount(signalId) return Runtime.callEEPGetSignalTrainsCount(signalId) end
 
---- Name des Zuges Zahl, der vom Signal Signal_ID gehalten wird
--- @param signalId ID des Signals
--- @param position Position des Zuges am Signal
---
+--- Gibt den Namen eines von einem Signal beeinflussten Fahrzeugverbands zurueck.
+--- Ab: EEP 13.2 - Plugin 2.
 function EEPGetSignalTrainName(signalId, position) return Runtime.callEEPGetSignalTrainName(signalId, position) end
 
---- Anzahl der Zuege, welche im Depot ZugdepotId gelistet sind
--- @param depotId ID des Zugdepots
--- @return count Anzahl der Fahrzeugverbaende
+--- Liefert die Anzahl der im virtuellen Depot gefuehrten "Fahrzeugverbaende".
+--- Ab: EEP 13.2 - Plugin 2.
 function EEPGetTrainyardItemsCount(depotId) return Runtime.callEEPGetTrainyardItemsCount(depotId) end
 
---- Name des Zuges am DepotPlatz im Depot depotId
--- @param depotId ID des Zugdepots
--- @param position Position (Zahl) des Zugverbandes im Depot
--- @return trainName Name des Fahrzeugverbands
+--- Liefert den Namen eines "Fahrzeugverbands" im virtuellen Depot.
+--- Ab: EEP 13.2 - Plugin 2.
 function EEPGetTrainyardItemName(depotId, position) return Runtime.callEEPGetTrainyardItemName(depotId, position) end
 
---- Status (wartet/auf Anlage) des Zuges Name am Platz im depotId
--- @param depotId ID des Zugdepots
--- @param zugverband Name des Zugverbandes
--- @param position Position (Zahl) des Zugverbandes im Depot
--- @return status Status des Fahrzeugverbands: 0 = in Fahrt , 1 = warten
+--- Liefert den Status eines "Fahrzeugverbands" im virtuellen Depot.
+--- Ab: EEP 13.2 - Plugin 2.
 function EEPGetTrainyardItemStatus(depotId, trainName, depotSlot)
     return Runtime.callEEPGetTrainyardItemStatus(depotId,
                                                  trainName, depotSlot)
@@ -644,193 +621,179 @@ end
 -- Neu ab EEP 15  --
 -------------------------------
 
---- Argument ist der Name des Fahrzeugs.
--- Rueckgabewert 1 ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
--- Rueckgabewert 2 ist die Laenge des Fahrzeugs von Kupplung zu Kupplung in Metern.
+--- Ermittelt die Laenge des angegebenen Fahrzeugs.
+--- Ab: EEP 15.
 function EEPRollingstockGetLength(rollingstockName) return Runtime.callEEPRollingstockGetLength(rollingstockName) end
 
---- Argument ist der Name des Fahrzeugs.
--- Rueckgabewert 1 ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
--- Rueckgabewert 2 ist true, wenn das angegebene Fahrzeug einen Antrieb besitzt, sonst false.
+--- Ermittelt, ob ein Fahrzeug motorisiert ist.
+--- Ab: EEP 15.
 function EEPRollingstockGetMotor(rollingStockName) return Runtime.callEEPRollingstockGetMotor(rollingStockName) end
 
---- Argument ist der Name des Fahrzeugs.
--- Rueckgabewert 1 ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
--- Rueckgabewert 2 ist die ID des Gleisstuecks, auf dem sich das Fahrzeug befindet.
--- Rueckgabewert 3 ist der Abstand (in Metern) zum Anfang des Gleisstuecks, auf dem sich das
--- Fahrzeug befindet.
--- Rueckgabewert 4 ist die Ausrichtung relativ zur Fahrtrichtung des Gleisstuecks, auf dem sich das
--- Fahrzeug befindet. 1 = in Fahrtrichtung, 0 = entgegen der Fahrtrichtung
--- Rueckgabewert 5 ist die Nummer des Gleissystems, auf dem das Fahrzeug unterwegs ist.
--- 1 = Bahngleise
--- 2 = Straßen
--- 3 = Tramgleise
--- 4 = sonstige Splines/Wasserwege
+--- Ermittelt Gleis, Position, Richtung und System des angegebenen Fahrzeugs.
+--- Ab: EEP 15.
 function EEPRollingstockGetTrack(rollingstockName) return Runtime.callEEPRollingstockGetTrack(rollingstockName) end
 
---- Argument ist der Fahrzeugname.
--- Rueckgabewert 1 ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
--- Rueckgabewert 2 ist die Kategorie, welche der Konstrukteur im Modell eingetragen hat:
--- 1 = Tenderlok
--- 2 = Schlepptenderlok
--- 3 = Tender
--- 4 = Elektrolok
--- 5 = Diesellok
--- 6 = Triebwagen
--- 7 = U- oder S-Bahn
--- 8 = Strassenbahn
--- 9 = Gueterwaggons
--- 10 = Personenwaggons
--- 11 = Luftfahrzeuge
--- 12 = Maschinen (z.B. Kraene)
--- 13 = Wasserfahrzeuge
--- 14 = LKW
--- 15 = PKW
-function EEPRollingstockGetModelType(rollingStockName) return Runtime.callEEPRollingstockGetModelType(rollingStockName) end
+--- Ermittelt die Kategorie, zu welcher das genannte Fahrzeug gehoert.
+--- Ab: EEP 15.
+function EEPRollingstockGetModelType(rollingStockName)
+    return Runtime.callEEPRollingstockGetModelType(rollingStockName)
+end
 
---- Argument ist der Lua-Name der Immobilie oder des LS-Elements.
--- Es genuegt die Nummer mit vorangestelltem #-Zeichen.
--- @return
--- Rueckgabewert 1 ist true, wenn die Ausfuehrung erfolgreich war, ansonsten false.
--- Rueckgabewert 2 ist die X-Position des Objekts.
--- Rueckgabewert 3 ist die Y-Position des Objekts.
--- Rueckgabewert 4 ist die Z-Position des Objekts.
+--- Ermittelt die aktuelle Position einer Immobilie oder eines Landschaftselements.
+--- Ab: EEP 15.
 function EEPStructureGetPosition(luaName) return Runtime.callEEPStructureGetPosition(luaName) end
 
---- Argument ist der Lua-Name der Immobilie oder des LS-Elements.
--- Es genuegt die Nummer mit vorangestelltem #-Zeichen.
--- @return
--- Rueckgabewert 1 ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
--- Rueckgabewert 2 ist die Kategorie, welche der Konstrukteur im Modell eingetragen hat:
--- 16 = Gleise/Gleisobjekte
--- 17 = Schiene/Gleisobjekte
--- 18 = Strassen/Gleisobjekte
--- 19 = Sonstiges/Gleisobjekte
--- 22 = Immobilien
--- 23 = Landschaftselemente/Fauna
+--- Ermittelt die Kategorie, zu welcher die genannte Immobilie oder das genannte Landschaftselement gehoert.
+--- Ab: EEP 15.
 function EEPStructureGetModelType(name) return Runtime.callEEPStructureGetModelType(name) end
 
---- Aendert den Tag-Text einer Immobilie. Jede Immobilie kann jetzt einen individuellen String von
---- maximal 1024 Zeichen Laenge mitfuehren. Diese Strings werden mit der Anlage gespeichert und
---- geladen.
---- Bemerkungen * Argument 1 ist der Lua-Name der Immobilie oder des LS-Elements.
---- Es genuegt die Nummer mit vorangestelltem #-Zeichen.
---- * Argument 2 ist der gewuenschte Text.
---- * Rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false
+--- Setzt den Tag-Text einer Immobilie oder eines Landschaftselements.
+--- Ab: EEP 15.
 function EEPStructureSetTagText(luaName, text) return Runtime.callEEPStructureSetTagText(luaName, text) end
 
---- Liest den Tag-Text einer Immobilie aus. Mittels Tag-Texten können Immobilien als permanente
---- Speicher fuer relevante Informationen genutzt werden.
---- Bemerkungen
---- * Argument 1 ist der Lua-Name der Immobilie oder des LS-Elements.
---- Es genuegt die Nummer mit vorangestelltem #-Zeichen.
---- * Rueckgabewert 1 ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
---- * Rueckgabewert 2 ist der Tag-Text, welcher der Immobilie mitgegeben wurde
+--- Liest den Tag-Text einer Immobilie oder eines Landschaftselements.
+--- Ab: EEP 15.
 function EEPStructureGetTagText(name) return Runtime.callEEPStructureGetTagText(name) end
 
---- Aendert den Tag-Text eines Fahrzeugs. Jedes Fahrzeug kann jetzt einen eigenen String von
---- maximal 1024 Zeichen Laenge mitfuehren. Diese Strings werden mit der Anlage gespeichert und
---- geladen. Da die Texte individuell jedem Fahrzeug zugeordnet sind, gehen sie im Gegensatz zu
---- Routen nicht durch Rangiermanöver etc. verloren.
---- Bemerkungen
---- * Argument 1 ist der Name des Fahrzeugs.
---- * Argument 2 ist der gewuenschte Text als String mit maximal 1024 Zeichen.
---- * Rueckgabewert ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
-function EEPRollingstockSetTagText(rollingstockName, text) return Runtime.callEEPRollingstockSetTagText(rollingstockName, text) end
+--- Setzt den Tag-Text eines Fahrzeugs.
+--- Ab: EEP 15.
+function EEPRollingstockSetTagText(rollingstockName, text)
+    return Runtime.callEEPRollingstockSetTagText(rollingstockName, text)
+end
 
---- Liest den Tag-Text eines Fahrzeugs aus. Mittels Tag-Texten können Fahrzeuge jetzt kategorisiert
---- werden. Beispielsweise kann man dort Waggontypen speichern oder Bestimmungsorte.
---- Bemerkungen
---- * Argument 1 ist der Name des Fahrzeugs.
---- * Rueckgabewert 1 ist true, wenn die Ausfuehrung erfolgreich war, sonst false.
---- * Rueckgabewert 2 ist der Tag-Text als String mit maximal 1024 Zeichen, welcher dem Waggon
----   mitgegeben wurde.
+--- Liest den Tag-Text eines Fahrzeugs.
+--- Ab: EEP 15.
 function EEPRollingstockGetTagText(name) return Runtime.callEEPRollingstockGetTagText(name) end
 
+--- Setzt den Tag-Text eines Signals.
+--- Ab: EEP 17.1 - Plugin 1.
 function EEPSignalSetTagText(signalId, text) return Runtime.callEEPSignalSetTagText(signalId, text) end
 
+--- Liest den Tag-Text eines Signals.
+--- Ab: EEP 17.1 - Plugin 1.
 function EEPSignalGetTagText(id) return Runtime.callEEPSignalGetTagText(id) end
 
+--- Setzt den Tag-Text einer Weiche.
+--- Ab: EEP 18.1 - Plugin 1.
 function EEPSwitchSetTagText(switchId, text) return Runtime.callEEPSwitchSetTagText(switchId, text) end
 
+--- Liest den Tag-Text einer Weiche.
+--- Ab: EEP 18.1 - Plugin 1.
 function EEPSwitchGetTagText(id) return Runtime.callEEPSwitchGetTagText(id) end
 
+--- Setzt den Tag-Text eines Ladeguts.
+--- Ab: EEP 18.0.
 function EEPGoodsSetTagText(luaName, text) return Runtime.callEEPGoodsSetTagText(luaName, text) end
 
+--- Liest den Tag-Text eines Ladeguts.
+--- Ab: EEP 18.0.
 function EEPGoodsGetTagText(name) return Runtime.callEEPGoodsGetTagText(name) end
 
+--- Weist einer beschreibbaren Flaeche einer Immobilie oder eines Landschaftselements einen neuen Text zu.
+--- Ab: EEP 15.
 function EEPStructureSetTextureText(luaName, surfaceNumber, text)
     return Runtime.callEEPStructureSetTextureText(luaName, surfaceNumber,
                                                   text)
 end
 
-function EEPStructureGetTextureText(luaName, surfaceNumber) return Runtime.callEEPStructureGetTextureText(luaName, surfaceNumber) end
+--- Liest den Text einer beschreibbaren Flaeche einer Immobilie oder eines Landschaftselements aus.
+--- Ab: EEP 17.2 - Plugin 2.
+function EEPStructureGetTextureText(luaName, surfaceNumber)
+    return Runtime.callEEPStructureGetTextureText(luaName, surfaceNumber)
+end
 
+--- Weist einer beschreibbaren Flaeche eines Rollmaterials einen neuen Text zu.
+--- Ab: EEP 15.
 function EEPRollingstockSetTextureText(name, flaeche, text)
     return Runtime.callEEPRollingstockSetTextureText(name,
                                                      flaeche, text)
 end
 
-function EEPSignalSetTextureText(signalId, surfaceNumber, text) return Runtime.callEEPSignalSetTextureText(signalId, surfaceNumber, text) end
+--- Weist einer beschreibbaren Flaeche eines Signals einen neuen Text zu.
+--- Ab: EEP 15.
+function EEPSignalSetTextureText(signalId, surfaceNumber, text)
+    return Runtime.callEEPSignalSetTextureText(signalId, surfaceNumber, text)
+end
 
+--- Liest den Text einer beschreibbaren Flaeche eines Signals aus.
+--- Ab: EEP 17.2 - Plugin 2.
 function EEPSignalGetTextureText(id, flaeche) return Runtime.callEEPSignalGetTextureText(id, flaeche) end
 
-function EEPGoodsSetTextureText(luaName, surfaceNumber, text) return Runtime.callEEPGoodsSetTextureText(luaName, surfaceNumber, text) end
+--- Weist einer beschreibbaren Flaeche eines Ladeguts einen neuen Text zu.
+--- Ab: EEP 15.
+function EEPGoodsSetTextureText(luaName, surfaceNumber, text)
+    return Runtime.callEEPGoodsSetTextureText(luaName, surfaceNumber, text)
+end
 
+--- Liest den Text einer beschreibbaren Flaeche eines Ladegutes aus.
+--- Ab: EEP 17.2 - Plugin 2.
 function EEPGoodsGetTextureText(name, flaeche) return Runtime.callEEPGoodsGetTextureText(name, flaeche) end
 
-function EEPRailTrackSetTextureText(railTrackId, surfaceNumber, text) return Runtime.callEEPRailTrackSetTextureText(railTrackId, surfaceNumber, text) end
+--- Weist einer beschreibbaren Flaeche eines Gleisstuecks einen neuen Text zu.
+--- Ab: EEP 15.
+function EEPRailTrackSetTextureText(railTrackId, surfaceNumber, text)
+    return Runtime.callEEPRailTrackSetTextureText(railTrackId, surfaceNumber, text)
+end
 
+--- Liest den Text einer beschreibbaren Flaeche eines Gleisstuecks aus.
+--- Ab: EEP 17.2 - Plugin 2.
 function EEPRailTrackGetTextureText(id, flaeche) return Runtime.callEEPRailTrackGetTextureText(id, flaeche) end
 
-function EEPRoadTrackSetTextureText(roadTrackId, surfaceNumber, text) return Runtime.callEEPRoadTrackSetTextureText(roadTrackId, surfaceNumber, text) end
+--- Weist einer beschreibbaren Flaeche eines Strassenstuecks einen neuen Text zu.
+--- Ab: EEP 15.
+function EEPRoadTrackSetTextureText(roadTrackId, surfaceNumber, text)
+    return Runtime.callEEPRoadTrackSetTextureText(roadTrackId, surfaceNumber, text)
+end
 
+--- Liest den Text einer beschreibbaren Flaeche eines Strassenstuecks aus.
+--- Ab: EEP 17.2 - Plugin 2.
 function EEPRoadTrackGetTextureText(id, flaeche) return Runtime.callEEPRoadTrackGetTextureText(id, flaeche) end
 
-function EEPTramTrackSetTextureText(tramTrackId, surfaceNumber, text) return Runtime.callEEPTramTrackSetTextureText(tramTrackId, surfaceNumber, text) end
+--- Weist einer beschreibbaren Flaeche eines Strassenbahngleisstuecks einen neuen Text zu.
+--- Ab: EEP 15.
+function EEPTramTrackSetTextureText(tramTrackId, surfaceNumber, text)
+    return Runtime.callEEPTramTrackSetTextureText(tramTrackId, surfaceNumber, text)
+end
 
+--- Liest den Text einer beschreibbaren Flaeche eines Strassenbahngleisstuecks aus.
+--- Ab: EEP 17.2 - Plugin 2.
 function EEPTramTrackGetTextureText(id, flaeche) return Runtime.callEEPTramTrackGetTextureText(id, flaeche) end
 
+--- Weist einer beschreibbaren Flaeche eines Weg-Elementes der Kategorie "Sonstige" einen neuen Text zu.
+--- Ab: EEP 15.
 function EEPAuxiliaryTrackSetTextureText(auxiliaryTrackId, surfaceNumber, text)
     return Runtime.callEEPAuxiliaryTrackSetTextureText(auxiliaryTrackId,
                                                        surfaceNumber, text)
 end
 
-function EEPAuxiliaryTrackGetTextureText(auxiliaryTrackId, surfaceNumber) return Runtime.callEEPAuxiliaryTrackGetTextureText(auxiliaryTrackId, surfaceNumber) end
+--- Liest den Text einer beschreibbaren Flaeche eines Weg-Elementes der Kategorie "Sonstige" aus.
+--- Ab: EEP 17.2 - Plugin 2.
+function EEPAuxiliaryTrackGetTextureText(auxiliaryTrackId, surfaceNumber)
+    return Runtime.callEEPAuxiliaryTrackGetTextureText(auxiliaryTrackId, surfaceNumber)
+end
 
---- Ermittelt, welcher Zug derzeit im Steuerdialog ausgewaehlt ist. (EEP 15.1)
--- Befindet sich der Steuerdialog im manuellen Modus, dann wird der Name des Zuges zurueckgegeben,
--- welcher das ausgewaehlte Fahrzeug enthaelt
--- @return trainName Name des Zuges
+--- Ermittelt, welcher "Fahrzeugverband" derzeit im Steuerdialog ausgewaehlt ist.
+--- Ab: EEP 15 - Plugin 1.
 function EEPGetTrainActive() return Runtime.callEEPGetTrainActive() end
 
---- Waehlt den angegebenen Zug im Steuerdialog aus. (EEP 15.1)
--- Stellt den Steuerdialog auf Automatik-Modus um.
--- @param trainName Name des Zuges
--- @return ok Rueckgabewert ist true wenn die Aktion erfolgreich war, sonst false
+--- Waehlt den angegebenen "Fahrzeugverband" im Steuerdialog aus und stellt den Steuerdialog auf Automatik-Modus um.
+--- Ab: EEP 15.1 - Plugin 1.
 function EEPSetTrainActive(trainName) return Runtime.callEEPSetTrainActive(trainName) end
 
---- Ermittelt die Gesamtlaenge des angegebenen Zuges. (EEP 15.1)
----@param trainName string Name des Zuges
----@return boolean ok Rueckgabewert ist true wenn der angesprochene Zug existiert, sonst false
----@return integer length Laenge des Zuges in Meter
+--- Ermittelt die Gesamtlaenge eines Zuges.
+--- Ab: EEP 15.1 - Plugin 1.
 function EEPGetTrainLength(trainName) return Runtime.callEEPGetTrainLength(trainName) end
 
---- Ermittelt, welches Fahrzeug derzeit im Steuerdialog ausgewaehlt ist. (EEP 15.1)
--- Befindet sich der Steuerdialog im Automatikmodus, dann wird ein leerer String zurueckgegeben.
--- @return rollingstockName Name des Rollmaterials
+--- Ermittelt, welches Fahrzeug derzeit im Steuerdialog ausgewaehlt ist.
+--- Ab: EEP 15.1.
 function EEPRollingstockGetActive() return Runtime.callEEPRollingstockGetActive() end
 
---- Waehlt das angegebene Fahrzeug im Steuerdialog aus. (EEP 15.1)
--- Stellt den Steuerdialog auf manuellen Modus um.
--- @param rollingstockName Name des Rollmaterials
--- @return ok Rueckgabewert ist true wenn die Aktion erfolgreich war, sonst false
+--- Waehlt das angegebene Fahrzeug im Steuerdialog aus und stellt den Steuerdialog auf manuellen Modus um.
+--- Ab: EEP 15.1 - Plugin 1.
 function EEPRollingstockSetActive(rollingstockName) return Runtime.callEEPRollingstockSetActive(rollingstockName) end
 
---- Ermittelt, welche relative Ausrichtung das angegebene Fahrzeug im Zugverband hat. (EEP 15.1)
--- @param rollingstockName Name des Rollmaterials
--- @return ok Rueckgabewert ist true wenn der angesprochene Zug existiert, sonst false
--- @return orientation Ausrichtung des Rollmaterials, true, wenn das Fahrzeug vorwaerts ausgerichtet ist, sonst false
+--- Ermittelt, welche relative Ausrichtung das angegebene Fahrzeug im "Fahrzeugverband" hat.
+--- Ab: EEP 15.1 - Plugin 1.
 function EEPRollingstockGetOrientation(rollingstockName)
     return Runtime.callEEPRollingstockGetOrientation(
         rollingstockName)
@@ -840,216 +803,160 @@ end
 -- Neu ab EEP 16.1 --
 ---------------------
 
---- Ruft das Stellpult im Radarfenster auf. (EEP 16.1)
--- @param GBSname
--- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
+--- Ruft ein Gleisbildstellpult (GBS) im Radarfenster auf.
+--- Ab: EEP 16.1 - Plugin 1.
 function EEPActivateCtrlDesk(ctrlDeskName) return Runtime.callEEPActivateCtrlDesk(ctrlDeskName) end
 
---- Laesst bei einem bestimmten Rollmaterial den Warnton (Pfeife, Hupe) ertönen. (EEP 16.1)
--- @param rollingstockName Name des Rollmaterials
--- @param status true = an, false = aus
--- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
+--- Laesst bei einem bestimmten Rollmaterial den Warnton (Pfeife, Hupe) ertoenen.
+--- Ab: EEP 16.1 - Plugin 1.
 function EEPRollingstockSetHorn(rollingstockName, status)
     return Runtime.callEEPRollingstockSetHorn(rollingstockName,
                                               status)
 end
 
---- Schaltet bei einem bestimmten Rollmaterial den Haken an oder aus. (EEP 16.1)
--- @param rollingstockName Name des Rollmaterials
--- @param status true = an, false = aus
--- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
+--- Schaltet bei einem bestimmten Rollmaterial den Haken an oder aus.
+--- Ab: EEP 16.1 - Plugin 1.
 function EEPRollingstockSetHook(rollingstockName, enabled)
     return Runtime.callEEPRollingstockSetHook(rollingstockName,
                                               enabled)
 end
 
---- Ermittelt, ob der Haken eines bestimmten Rollmaterials an oder ausgeschaltet ist (EEP 16.1)
--- @param rollingstockName Name des Rollmaterials
--- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
--- @return status Haken aus = 0, an = 1, in Betrieb = 3
+--- Ermittelt, ob der Haken eines bestimmten Rollmaterials an oder ausgeschaltet ist.
+--- Ab: EEP 16.1 - Plugin 1.
 function EEPRollingstockGetHook(rollingstockName) return Runtime.callEEPRollingstockGetHook(rollingstockName) end
 
---- Beeinflusst das Verhalten von Guetern an einem Kranhaken eines Rollmaterials. (EEP 16.1)
--- @param rollingstockName Name des Rollmaterials
--- @param status true = an, false = aus
--- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
+--- Beeinflusst das Verhalten von Guetern an einem Kranhaken eines Rollmaterials.
+--- Ab: EEP 16.1 - Plugin 1.
 function EEPRollingstockSetHookGlue(rollingstockName, status)
     return Runtime.callEEPRollingstockSetHookGlue(
         rollingstockName, status)
 end
 
---- Ermittelt das Verhalten von Guetern am Kranhaken eines Rollmaterials  (EEP 16.1)
--- @param rollingstockName Name des Rollmaterials
--- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
--- @return status Gueterhaken aus = 0, an = 1, in Betrieb = 3
-function EEPRollingstockGetHookGlue(rollingstockName) return Runtime.callEEPRollingstockGetHookGlue(rollingstockName) end
+--- Ermittelt das Verhalten von Guetern am Kranhaken eines Rollmaterials.
+--- Ab: EEP 16.1 - Plugin 1.
+function EEPRollingstockGetHookGlue(rollingstockName)
+    return Runtime.callEEPRollingstockGetHookGlue(rollingstockName)
+end
 
---- Ermittelt die zurueckgelegte Strecke des Rollmaterials (EEP 16.1)
--- @param rollingstockName Name des Rollmaterials
--- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
--- @return mileage  Die in Metern zurueckgelegte Strecke des Rollmaterials seit dem Einsetzen in EEP
-function EEPRollingstockGetMileage(rollingstockName) return Runtime.callEEPRollingstockGetMileage(rollingstockName) end
+--- Ermittelt die zurueckgelegte Strecke des Rollmaterials.
+--- Ab: EEP 16.1 - Plugin 1.
+function EEPRollingstockGetMileage(rollingstockName)
+    return Runtime.callEEPRollingstockGetMileage(rollingstockName)
+end
 
---- Ermittelt die Position des Rollmaterials im EEP-Koordinatensystem. (EEP 16.1)
--- @param rollingstockName Name des Rollmaterials
--- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
--- @return PosX
--- @return PosY
--- @return PosZ
-function EEPRollingstockGetPosition(rollingstockName) return Runtime.callEEPRollingstockGetPosition(rollingstockName) end
+--- Ermittelt die Position des Rollmaterials im EEP-Koordinatensystem.
+--- Ab: EEP 16.1 - Plugin 1.
+function EEPRollingstockGetPosition(rollingstockName)
+    return Runtime.callEEPRollingstockGetPosition(rollingstockName)
+end
 
--- Liest den Text einer beschreibbaren Fläche eines Rollmaterials aus (EEP 16.3)
--- @param rollingstockName Name des Rollmaterials
--- @param flaeche Nummer der Fläche, welche den Text enthaelt.
--- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
--- @return textureText
+--- Liest den Text einer beschreibbaren Flaeche eines Rollmaterials aus.
+--- Ab: EEP 16.3 - Plugin 3.
 function EEPRollingstockGetTextureText(rollingstockName, fleache)
     return Runtime.callEEPRollingstockGetTextureText(
         rollingstockName, fleache)
 end
 
---- Definiert die Position der Benutzer-definierten Mitfahrkamera in Relation zum Fahrzeug (EEP 16.1)
--- Aufruf ueber Taste 9
--- @param rollingstockName Name des Rollmaterials
--- @param PosX Kameraposition
--- @param PosY Kameraposition
--- @param PosZ Kameraposition
--- @param RotX Kameraausrichtung (Drehung)
--- @param RotY Kameraausrichtung (Drehung)
--- @param RotZ Kameraausrichtung (Drehung)
--- @param setDirectly boolean Soll die Kamera sofort gesetzt werden
--- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
+--- Definiert die benutzerdefinierte Mitfahrkamera eines Rollmaterials.
+--- Ab: EEP 16.1 - Plugin 1.
 function EEPRollingstockSetUserCamera(rollingstockName, posX, posY, posZ, rotH, rotV)
     return Runtime.callEEPRollingstockSetUserCamera(rollingstockName, posX, posY, posZ, rotH, rotV)
 end
 
-function EEPRollingstockGetUserCamera(rollingstockName) return Runtime.callEEPRollingstockGetUserCamera(rollingstockName) end
+--- Liest die benutzerdefinierte Mitfahrkamera eines Rollmaterials aus.
+--- Ab: EEP 17.
+function EEPRollingstockGetUserCamera(rollingstockName)
+    return Runtime.callEEPRollingstockGetUserCamera(rollingstockName)
+end
 
---- Ermittelt die aktuelle Position der Kamera (EEP 16.1)
--- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
--- @return PosX Kameraposition
--- @return PosY Kameraposition
--- @return PosZ Kameraposition
+--- Ermittelt die Position der aktuellen Kamera.
+--- Ab: EEP 16.1 - Plugin 1.
 function EEPGetCameraPosition() return Runtime.callEEPGetCameraPosition() end
 
---- Ermittelt die aktuelle Ausrichtung der Kamera (EEP 16.1)
--- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
--- @return RotX Kameraausrichtung (Drehung)
--- @return RotY Kameraausrichtung (Drehung)
--- @return RotZ Kameraausrichtung (Drehung)
+--- Ermittelt die Ausrichtung der aktuellen Kamera.
+--- Ab: EEP 16.1 - Plugin 1.
 function EEPGetCameraRotation() return Runtime.callEEPGetCameraRotation() end
 
---- Definiert die Kameraposition (EEP 16.1)
--- @param PosX Kameraposition
--- @param PosY Kameraposition
--- @param PosZ Kameraposition
--- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
+--- Definiert die Position der aktuellen Kamera.
+--- Ab: EEP 16.1 - Plugin 1.
 function EEPSetCameraPosition(PosX, PosY, PosZ) return Runtime.callEEPSetCameraPosition(PosX, PosY, PosZ) end
 
---- Definiert die Kameraausrichtung (EEP 16.1)
--- @param RotX Kameraausrichtung (Drehung)
--- @param RotY Kameraausrichtung (Drehung)
--- @param RotZ Kameraausrichtung (Drehung)
--- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
+--- Definiert die Ausrichtung der aktuellen Kamera.
+--- Ab: EEP 16.1 - Plugin 1.
 function EEPSetCameraRotation(rotX, rotY, rotZ) return Runtime.callEEPSetCameraRotation(rotX, rotY, rotZ) end
 
---- Ermittelt, ob der Rauch des benannten Rollmaterials, an- oder ausgeschaltet ist. (EEP 16.1)
--- @param rollingstockName Name des Rollmaterials
--- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
--- @return status Rauch aus = 0, an = 1
+--- Ermittelt, ob der Rauch des benannten Rollmaterials, an- oder ausgeschaltet ist.
+--- Ab: EEP 16.1 - Plugin 1.
 function EEPRollingstockGetSmoke(rollingstockName) return Runtime.callEEPRollingstockGetSmoke(rollingstockName) end
 
---- Schaltet den Rauch des bennanten Rollmaterials an oder aus. (EEP 16.1)
--- @param rollingstockName Name des Rollmaterials
--- @param status Rauch an = true oder aus = false
--- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
+--- Schaltet den Rauch des bennanten Rollmaterials an oder aus.
+--- Ab: EEP 16.1 - Plugin 1.
 function EEPRollingstockSetSmoke(rollingstockName, enabled)
     return Runtime.callEEPRollingstockSetSmoke(rollingstockName,
                                                enabled)
 end
 
---- Ermittelt die Ausrichtung des Ladegutes. (EEP 16.1)
--- @param goodsName Name des Ladeguts
--- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
--- @return RotX Ausrichtung (Drehung)
--- @return RotY Ausrichtung (Drehung)
--- @return RotZ Ausrichtung (Drehung)
+--- Ermittelt die aktuelle Ausrichtung eines Ladeguts auf der Anlage.
+--- Ab: EEP 16.1 - Plugin 1.
 function EEPGoodsGetRotation(luaName) return Runtime.callEEPGoodsGetRotation(luaName) end
 
---- Ermittelt die Ausrichtung der Immobilie/des Landschaftselementes. (EEP 16.1)
--- 0 @param immobilieName Name der Immobilie/des Landschaftselementes.
--- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
--- @return RotX Ausrichtung (Drehung)
--- @return RotY Ausrichtung (Drehung)
--- @return RotZ Ausrichtung (Drehung)
+--- Ermittelt die aktuelle Ausrichtung einer Immobilie oder eines Landschaftselements.
+--- Ab: EEP 11.1 - Plugin 1.
 function EEPStructureGetRotation(immobilieName) return Runtime.callEEPStructureGetRotation(immobilieName) end
 
---- Ermittelt die Windstaerke. (EEP 16.1)
--- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
--- @return intensity Windstaerke in Prozent (%)
+--- Ermittelt die globale Windstaerke (ausserhalb eventueller Wetterzonen).
+--- Ab: EEP 16.1 - Plugin 1.
 function EEPGetWindIntensity() return Runtime.callEEPGetWindIntensity() end
 
---- Ermittelt die Niederschlagintensitaet. (EEP 16.1)
--- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
--- @return intensity Niederschlagintensitaet in Prozent (%)
+--- Ermittelt die globale Regenstaerke (ausserhalb eventueller Wetterzonen).
+--- Ab: EEP 16.1 - Plugin 1.
 function EEPGetRainIntensity() return Runtime.callEEPGetRainIntensity() end
 
---- Ermittelt die Schneeintensitaet (EEP 16.1)
--- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
--- @return intensity Schneeintensitaet in Prozent (%)
+--- Ermittelt die globale Schneeintensitaet (ausserhalb eventueller Wetterzonen).
+--- Ab: EEP 16.1 - Plugin 1.
 function EEPGetSnowIntensity() return Runtime.callEEPGetSnowIntensity() end
 
---- Ermittelt die Hagelintensitaet (EEP 16.1)
--- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
--- @return intensity Hagelintensitaet in Prozent (%)
+--- Ermittelt die globale Hagelstaerke (ausserhalb eventueller Wetterzonen).
+--- Ab: EEP 16.1 - Plugin 1.
 function EEPGetHailIntensity() return Runtime.callEEPGetHailIntensity() end
 
---- Ermittelt die Nebelintensitaet (EEP 16.1)
--- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
--- @return intensity Nebelintensitaet in Prozent (%)
+--- Ermittelt die globale Nebeldichte (ausserhalb eventueller Wetterzonen).
+--- Ab: EEP 16.1 - Plugin 1.
 function EEPGetFogIntensity() return Runtime.callEEPGetFogIntensity() end
 
---- Ermittelt der Wolkenanteil (EEP 16.1)
--- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
--- @return intensity Wolkenanteil in Prozent (%)
+--- Ermittelt den globalen Wolkenanteil (ausserhalb eventueller Wetterzonen).
+--- Ab: EEP 16.1 - Plugin 1.
 function EEPGetCloudsIntensity() return Runtime.callEEPGetCloudsIntensity() end
 
 -- Rueckwaertskompatibel: alter Name.
 function EEPGetCloudIntensity() return Runtime.callEEPGetCloudIntensity() end
 
---- Definiert die Windstaerke (EEP 16.1)
--- @param Windstaerke
--- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
+--- Veraendert die globale Windstaerke (ausserhalb eventueller Wetterzonen) zwischen 10 % und 100 % (entsprechend...
+--- Ab: EEP 16.1 - Plugin 1.
 function EEPSetWindIntensity(intensity) return Runtime.callEEPSetWindIntensity(intensity) end
 
---- Veraendert die Niederschlagintensitaet (EEP 16.1)
--- @param Niederschlagintensitaet
--- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
+--- Veraendert die globale Regenstaerke (ausserhalb eventueller Wetterzonen) zwischen 10 % und 100 % (entsprechend...
+--- Ab: EEP 16.1 - Plugin 1.
 function EEPSetRainIntensity(intensity) return Runtime.callEEPSetRainIntensity(intensity) end
 
---- Veraendert die Schneeintensitaet (EEP 16.1)
--- @param Schneeintensitaet
--- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
+--- Veraendert die globale Schneefallstaerke (ausserhalb eventueller Wetterzonen) zwischen 10 % und 100 %...
+--- Ab: EEP 16.1 - Plugin 1.
 function EEPSetSnowIntensity(intensity) return Runtime.callEEPSetSnowIntensity(intensity) end
 
---- Veraendert die Hagelintensitaet (EEP 16.1)
--- @param Hagelintensitaet
--- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
+--- Veraendert die globale Hagelstaerke (ausserhalb eventueller Wetterzonen) zwischen 10 % und 100 % (entsprechend...
+--- Ab: EEP 16.1 - Plugin 1.
 function EEPSetHailIntensity(intensity) return Runtime.callEEPSetHailIntensity(intensity) end
 
---- Veraendert die Nebelintensitaet (EEP 16.1)
--- @param Nebelintensitaet
--- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
+--- Veraendert die globale Nebeldichte (ausserhalb eventueller Wetterzonen) zwischen 10 % und 100 % (entsprechend...
+--- Ab: EEP 16.1.
 function EEPSetFogIntensity(intensity) return Runtime.callEEPSetFogIntensity(intensity) end
 
---- Veraendert den Wolkenanteil (EEP 16.1)
--- @param Wolkenanteil
--- @return ok Rueckgabewert ist true wenn die Ausfuehrung erfolgreich war, sonst false
+--- Schaltet global (ausserhalb eventueller Wetterzonen) auf ein Wolkenbild mit "blauem" Himmel und veraendert den...
+--- Ab: EEP 16.1 - Plugin 1.
 function EEPSetCloudsIntensity(intensity) return Runtime.callEEPSetCloudsIntensity(intensity) end
 
---- EEP ruft selbstaendig diese Funktion auf, wenn die Anlage gespeichert wird. (EEP 16.1)
--- Im Skript definiert man die zugehoerige Funktion und legt so fest, was beim Speichern der Anlage zu tun ist.
--- @param path Speicherpfad der Anlage einschließlich Dateiname
+--- Aktiviert und deaktiviert die Pause in EEP.
+--- Ab: EEP 14 - Plugin 1.
 function EEPPause(value) return Runtime.callEEPPause(value) end
 
 return EepSimulator
