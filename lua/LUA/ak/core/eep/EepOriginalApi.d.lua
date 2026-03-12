@@ -2537,21 +2537,25 @@ function EEPGetAnlPath() end
 
 -- -------------------------------------------------------------------------------------------------------------------
 ---Schickt einen ausgewaehlten "Fahrzeugverband" aus einem ausgewaehlten virtuellen Depot.
----@overload fun(depotId: number, trainName: string, listenplatz: string): boolean
+---@alias EEPTrainyardDepartureOrientation
+---| 0 # Wie im Depot vorgegeben
+---| 1 # Vorwaerts
+---| 2 # Rueckwaerts
+---| 3 # Entgegengesetzt zur Depotvorgabe
+---@overload fun(depotId: number, trainName: string, depotSlot: number): boolean
 ---@param depotId number parameter ist die ID des virtuellen Depots. Sie steht in der Kopfzeile des
 --- Eigenschaftenfensters.
 ---@param trainName string parameter ist der Name des Fahrzeugverbandes mit vorangestelltem #- Zeichen als String.
 --- Wird ein Leerstring als Name angegeben, dann bestimmt der 3. Parameter den "Fahrzeugverband".
----@param listenplatz string parameter ist der Listenplatz des Fahrzeugverbandes im Depot. Dieser Parameter gilt nur,
+---@param depotSlot number parameter ist der Listenplatz des Fahrzeugverbandes im Depot. Dieser Parameter gilt nur,
 --- wenn kein Name angegeben ist. Bei vorgegebenem Namen ist diese Zahl beliebig, aber dennoch erforderlich. In dem
 --- Fall setzt man ihn am besten auf 0.
----@param fahrtrichtung? number optionale 4. Parameter bestimmt die Fahrtrichtung: 0 (oder ohne 4. Parameter) =
---- Fahrtrichtung wie im Depot vorgegeben, 1 = Fahrtrichtung vorwaerts, 2 = Fahrtrichtung rueckwaerts; 3 =
---- Fahrtrichtung entgegengesetzt zur im Depot vorgegebenen.
+---@param departureOrientation? EEPTrainyardDepartureOrientation optionale 4. Parameter bestimmt die Ausrichtung des
+--- Zuges beim Ausfahren aus dem Depot.
 ---@return boolean ok rueckgabewert ist true, wenn das Depot und der angeforderte "Fahrzeugverband" existieren,
 --- andernfalls false.
-function EEPGetTrainFromTrainyard(depotId, trainName, listenplatz, fahrtrichtung) end
---       ========================================================================
+function EEPGetTrainFromTrainyard(depotId, trainName, depotSlot, departureOrientation) end
+--       =============================================================================
 -- Verfuegbar ab EEP 11.3 - Plugin 2; EEP 15.
 -- Beispielaufrufe:
 -- EEPGetTrainFromTrainyard(Depot_ID, "#Name", Listenplatz [, Fahrtrichtung])

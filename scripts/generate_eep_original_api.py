@@ -2306,17 +2306,43 @@ def uniquify_params(params: list[dict[str, object]]) -> list[dict[str, object]]:
     return params
 
 
-def apply_param_name_overrides(params: list[dict[str, object]], entry: Entry) -> None:
+def apply_param_overrides(params: list[dict[str, object]], entry: Entry) -> None:
     overrides = {
-        "EEPSetTrainSpeed": {3: "useTargetSpeed"},
-        "EEPGetTrainSpeed": {2: "useTargetSpeed"},
+        "EEPSetTrainSpeed": {
+            3: {"name": "useTargetSpeed"},
+        },
+        "EEPGetTrainSpeed": {
+            2: {"name": "useTargetSpeed"},
+        },
+        "EEPGetTrainFromTrainyard": {
+            3: {"name": "depotSlot", "type": "number"},
+            4: {
+                "name": "departureOrientation",
+                "type": "EEPTrainyardDepartureOrientation",
+                "desc": "optionale 4. Parameter bestimmt die Ausrichtung des Zuges beim Ausfahren aus dem Depot.",
+            },
+        },
     }
     entry_overrides = overrides.get(entry.name)
     if not entry_overrides:
         return
-    for index, name in entry_overrides.items():
+    for index, fields in entry_overrides.items():
         if 1 <= index <= len(params):
-            params[index - 1]["name"] = name
+            param = params[index - 1]
+            for key, value in fields.items():
+                param[key] = value
+
+
+def render_aliases(entry: Entry) -> list[str]:
+    if entry.name != "EEPGetTrainFromTrainyard":
+        return []
+    return [
+        "---@alias EEPTrainyardDepartureOrientation",
+        "---| 0 # Wie im Depot vorgegeben",
+        "---| 1 # Vorwaerts",
+        "---| 2 # Rueckwaerts",
+        "---| 3 # Entgegengesetzt zur Depotvorgabe",
+    ]
 
 
 def parse_params(entry: Entry) -> list[dict[str, object]]:
@@ -2388,7 +2414,7 @@ def parse_params(entry: Entry) -> list[dict[str, object]]:
         }
     params = [params_by_index[index] for index in sorted(params_by_index)]
     apply_param_hints_from_examples(params, entry)
-    apply_param_name_overrides(params, entry)
+    apply_param_overrides(params, entry)
     apply_param_type_hints_from_names(params)
     return uniquify_params(params)
 
@@ -2513,6 +2539,9 @@ def render_entry(entry: Entry) -> list[str]:
     examples = normalize_examples(entry.examples, entry.name)
     if purpose:
         lines.extend(wrap_doc(purpose, "---"))
+    aliases = render_aliases(entry)
+    if aliases:
+        lines.extend(aliases)
 
     if entry.callable:
         params = parse_params(entry)

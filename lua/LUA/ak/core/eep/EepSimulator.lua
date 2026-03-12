@@ -548,11 +548,12 @@ function EEPGetPerspectiveCamera(trainName) return Runtime.callEEPGetPerspective
 --- Zug aus Depot starten
 -- @param depotId Id des Depots (Eigenschaftenfenster)
 -- @param trainName Name des Zuges
--- @param trainNumber Wenn kein Zugname angegeben ist, dann die Nummer des Zugs im Depot
+-- @param depotSlot Wenn kein Zugname angegeben ist, dann der Listenplatz des Zugs im Depot
+-- @param departureOrientation Ausrichtung beim Ausfahren aus dem Depot
 -- @return true, wenn der Zug existiert
-function EEPGetTrainFromTrainyard(depotId, trainName, trainNumber)
+function EEPGetTrainFromTrainyard(depotId, trainName, depotSlot, departureOrientation)
     return Runtime.callEEPGetTrainFromTrainyard(depotId,
-                                                trainName, trainNumber)
+                                                trainName, depotSlot, departureOrientation)
 end
 
 function EEPIsTrainInTrainyard(trainName) return Runtime.callEEPIsTrainInTrainyard(trainName) end

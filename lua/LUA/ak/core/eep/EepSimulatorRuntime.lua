@@ -1142,15 +1142,16 @@ end
 --- Zug aus Depot starten
 -- @param depotId Id des Depots (Eigenschaftenfenster)
 -- @param trainName Name des Zuges
--- @param trainNumber Wenn kein Zugname angegeben ist, dann die Nummer des Zugs im Depot
+-- @param depotSlot Wenn kein Zugname angegeben ist, dann der Listenplatz des Zugs im Depot
+-- @param departureOrientation Ausrichtung beim Ausfahren aus dem Depot
 -- @return true, wenn der Zug existiert
-function Runtime.callEEPGetTrainFromTrainyard(depotId, trainName, trainNumber)
+function Runtime.callEEPGetTrainFromTrainyard(depotId, trainName, depotSlot, departureOrientation)
     local entry
 
     if trainName and trainName ~= "" then
         entry = select(1, findTrainyardEntry(depotId, trainName, nil))
     else
-        entry = select(1, findTrainyardEntry(depotId, nil, trainNumber))
+        entry = select(1, findTrainyardEntry(depotId, nil, depotSlot))
     end
 
     if not entry then return false end
