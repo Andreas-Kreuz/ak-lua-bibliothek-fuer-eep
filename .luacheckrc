@@ -1,5 +1,6 @@
 read_globals = {
     "AkDebugLoad",
+    "AkStartWithDebug",
     "EEPChangeInfoStructure",
     "EEPChangeInfoSwitch",
     "EEPGetCameraPosition",
