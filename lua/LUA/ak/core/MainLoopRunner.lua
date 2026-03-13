@@ -90,7 +90,6 @@ function MainLoopRunner.initModules(executionOrderModuleNames, registeredLuaModu
     runTimed("MainLoopRunner.runCycle-1-initModules", function ()
         runInitModulesPhase(executionOrderModuleNames, registeredLuaModules)
     end)
-    return RuntimeRegistry.get("MainLoopRunner.runCycle-1-initModules").lastTime / 1000
 end
 
 function MainLoopRunner.runCycle(cycleCount, executionOrderModuleNames, registeredLuaModules, options)

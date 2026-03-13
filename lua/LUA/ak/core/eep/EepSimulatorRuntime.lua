@@ -302,7 +302,7 @@ local function create(simulator, globals)
 
     ---@param trainName string
     ---@param trainEnd string
-    ---@return boolean, number
+    ---@return boolean, number|nil
     local function getTrainEndCoupling(trainName, trainEnd)
         local train = getTrainState(trainName)
         if not train then return false, 0 end
@@ -1029,9 +1029,9 @@ local function create(simulator, globals)
         local i
 
         if underscoreIndex then
-            i = tonumber(string.sub(name, 2, underscoreIndex - 1))
+            i = tonumber(string.sub(luaName, 2, underscoreIndex - 1))
         else
-            i = tonumber(string.sub(name, 2))
+            i = tonumber(string.sub(luaName, 2))
         end
 
         if (i < 5) then
@@ -1041,14 +1041,14 @@ local function create(simulator, globals)
         end
     end
 
-    function Runtime.callEEPStructureGetModelType(name)
-        local underscoreIndex = string.find(name, "_")
+    function Runtime.callEEPStructureGetModelType(luaName)
+        local underscoreIndex = string.find(luaName, "_")
         local i
 
         if underscoreIndex then
-            i = tonumber(string.sub(name, 2, underscoreIndex - 1))
+            i = tonumber(string.sub(luaName, 2, underscoreIndex - 1))
         else
-            i = tonumber(string.sub(name, 2))
+            i = tonumber(string.sub(luaName, 2))
         end
 
         if (i < 5) then
@@ -1199,7 +1199,7 @@ local function create(simulator, globals)
 
     function Runtime.callEEPRollingstockGetOrientation(rollingstockName)
         local rollingStock = select(1, getRollingStockTrainContext(rollingstockName))
-        if not rollingStock then return false, nil end
+        if not rollingStock then return false, false end
         return true, rollingStock.frontForward == true
     end
 
