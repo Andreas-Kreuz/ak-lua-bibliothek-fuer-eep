@@ -29,16 +29,42 @@
 ---@field name string
 ---@field initialize fun():nil
 ---@field syncState fun():table
+---@class DataSlotsRoomDataGenerator
+---@field toRoomDataSlot fun(slot: table):table
+---@field toRoomDataSlotList fun(slots: table):table
+---@field toRoomDataFilledSlotList fun(filledSlots: table):table
+---@field toRoomDataEmptySlotList fun(emptySlots: table):table
 ---@class DataWebConnector
 ---@field registerStatePublishers fun(activeCollectors: table<string, boolean>|nil):nil
 ---@class SignalStatePublisher
 ---@field name string
 ---@field initialize fun():nil
 ---@field syncState fun():table
+---@class SignalDataCollector
+---@field collectInitialSignals fun():table
+---@field refreshSignals fun(signals: table):nil
+---@field collectWaitingOnSignals fun(signals: table):table
+---@class SignalRoomDataGenerator
+---@field toRoomDataSignal fun(signal: table):table
+---@field toRoomDataSignalList fun(signals: table):table
+---@field toRoomDataWaitingOnSignal fun(waiting: table):table
+---@field toRoomDataWaitingOnSignalList fun(waitingOnSignals: table):table
+---@class SwitchDataCollector
+---@field collectInitialSwitches fun():table
+---@field refreshSwitches fun(switches: table):nil
+---@class SwitchRoomDataGenerator
+---@field toRoomDataSwitch fun(switch: table):table
+---@field toRoomDataSwitchList fun(switches: table):table
 ---@class StructureStatePublisher
 ---@field name string
 ---@field initialize fun():nil
 ---@field syncState fun():table
+---@class StructureDataCollector
+---@field collectInitialStructures fun():table
+---@field refreshDirtyStructures fun(existingStructures: table):table
+---@class StructureRoomDataGenerator
+---@field toRoomDataStructure fun(structure: table):table
+---@field toRoomDataStructureList fun(structures: table):table
 ---@class SwitchStatePublisher
 ---@field name string
 ---@field initialize fun():nil
@@ -47,6 +73,9 @@
 ---@field name string
 ---@field initialize fun():nil
 ---@field syncState fun():table
+---@class TimeRoomDataGenerator
+---@field toRoomDataTime fun(timeData: table):table
+---@field toRoomDataTimeList fun(times: table):table
 ---@class TrackDetection
 ---@field tracks table<string, Track>
 ---@field trackType string

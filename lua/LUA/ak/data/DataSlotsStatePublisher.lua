@@ -1,6 +1,6 @@
 if AkDebugLoad then print("[#Start] Loading ak.data.DataSlotsStatePublisher ...") end
-local TableUtils = require("ak.util.TableUtils")
 local DataChangeBus = require("ak.events.DataChangeBus")
+local DataSlotsRoomDataGenerator = require("ak.data.DataSlotsRoomDataGenerator")
 
 local DataSlotsStatePublisher = {}
 DataSlotsStatePublisher.name = "ak.data.DataSlotsStatePublisher"
@@ -10,14 +10,9 @@ local DataSlotNameResolver = require("ak.data.DataSlotNameResolver")
 local StorageUtility = require("ak.storage.StorageUtility")
 local lastSlots = {}
 
-local function toApiV1(id, name, data)
-    local slotV1 = { id = id, name = name, data = data }
-    return slotV1
-end
-
 local function updateSlot(id, name, data)
     local oldSlot = lastSlots.id
-    local newSlot = toApiV1(id, name, data)
+    local newSlot = { id = id, name = name, data = data }
     if not oldSlot or oldSlot.id ~= id or oldSlot.name ~= name or oldSlot.data ~= data then lastSlots[id] = newSlot end
     return newSlot
 end
@@ -51,10 +46,10 @@ function DataSlotsStatePublisher.syncState()
     end
 
     -- TODO Update on changes only
-    DataChangeBus.fireListChange("save-slots", "id", TableUtils.valuesOfDict(filledSlots));
-    DataChangeBus.fireListChange("free-slots", "id", TableUtils.valuesOfDict(emptySlots));
+    DataChangeBus.fireListChange("save-slots", "id", DataSlotsRoomDataGenerator.toRoomDataFilledSlotList(filledSlots));
+    DataChangeBus.fireListChange("free-slots", "id", DataSlotsRoomDataGenerator.toRoomDataEmptySlotList(emptySlots));
 
-    return {} -- {["save-slots"] = filledSlots, ["free-slots"] = emptySlots}
+    return {}
 end
 
 return DataSlotsStatePublisher

@@ -1,68 +1,19 @@
 if AkDebugLoad then print("[#Start] Loading ak.data.StructureStatePublisher ...") end
 local DataChangeBus = require("ak.events.DataChangeBus")
+local StructureDataCollector = require("ak.data.StructureDataCollector")
+local StructureRoomDataGenerator = require("ak.data.StructureRoomDataGenerator")
 StructureStatePublisher = {}
 local enabled = true
 local initialized = false
 StructureStatePublisher.name = "ak.data.StructureStatePublisher"
 
-local MAX_STRUCTURES = 50000
 local structures = {}
-
-local EEPStructureGetPosition = EEPStructureGetPosition or function () end   -- EEP 14.2
-local EEPStructureGetModelType = EEPStructureGetModelType or function () end -- EEP 14.2
-local EEPStructureGetTagText = EEPStructureGetTagText or function () end     -- EEP 14.2
-
---- Ermittelt die Ausrichtung der Immobilie/des Landschaftselementes in Grad
--- OK, RotX, RotY, RotZ = EEPStructureGetRotation("#aunnel")
-local EEPStructureGetRotation = EEPStructureGetRotation or function () end -- EEP 16.1
 
 function StructureStatePublisher.initialize()
     if not enabled or initialized then return end
 
-    for i = 0, MAX_STRUCTURES do
-        local name = "#" .. tostring(i)
-
-        local hasLight, light = EEPStructureGetLight(name) -- EEP 11.1 Plug-In 1
-        local hasSmoke, smoke = EEPStructureGetSmoke(name) -- EEP 11.1 Plug-In 1
-        local hasFire, fire = EEPStructureGetFire(name)    -- EEP 11.1 Plug-In 1
-
-        if hasLight or hasSmoke or hasFire then
-            local structure = {}
-            structure.id = name
-            structure.name = name
-
-            local _, pos_x, pos_y, pos_z = EEPStructureGetPosition(name)
-            local _, rot_x, rot_y, rot_z = EEPStructureGetRotation(name)
-            local _, modelType = EEPStructureGetModelType(name)
-            local EEPStructureModelTypeText = {
-                [16] = "Gleis/Gleisobjekt",
-                [17] = "Schiene/Gleisobjekt",
-                [18] = "Straße/Gleisobjekt",
-                [19] = "Sonstiges/Gleisobjekt",
-                [22] = "Immobilie",
-                [23] = "Landschaftselement/Fauna",
-                [24] = "Landschaftselement/Flora",
-                [25] = "Landschaftselement/Terra",
-                [38] = "Landschaftselement/Instancing"
-            }
-            local _, tag = EEPStructureGetTagText(name)
-
-            structure.pos_x = pos_x and tonumber(string.format("%.2f", pos_x)) or 0
-            structure.pos_y = pos_y and tonumber(string.format("%.2f", pos_y)) or 0
-            structure.pos_z = pos_z and tonumber(string.format("%.2f", pos_z)) or 0
-            structure.rot_x = rot_x and tonumber(string.format("%.2f", rot_x)) or 0
-            structure.rot_y = rot_y and tonumber(string.format("%.2f", rot_y)) or 0
-            structure.rot_z = rot_z and tonumber(string.format("%.2f", rot_z)) or 0
-            structure.modelType = modelType or 0
-            structure.modelTypeText = EEPStructureModelTypeText[modelType] or ""
-            structure.tag = tag or ""
-            structure.light = light
-            structure.smoke = smoke
-            structure.fire = fire
-            table.insert(structures, structure)
-        end
-    end
-    DataChangeBus.fireListChange("structures", "id", structures)
+    structures = StructureDataCollector.collectInitialStructures()
+    DataChangeBus.fireListChange("structures", "id", StructureRoomDataGenerator.toRoomDataStructureList(structures))
 
     initialized = true
 end
@@ -72,25 +23,11 @@ function StructureStatePublisher.syncState()
 
     if not initialized then StructureStatePublisher.initialize() end
 
-    local dirtyStructures = {}
-    for i = 1, #structures do
-        local structure = structures[i]
-
-        local _, light = EEPStructureGetLight(structure.name) -- EEP 11.1 Plug-In 1
-        local _, smoke = EEPStructureGetSmoke(structure.name) -- EEP 11.1 Plug-In 1
-        local _, fire = EEPStructureGetFire(structure.name)   -- EEP 11.1 Plug-In 1
-
-        if (light ~= structure.light or fire ~= structure.fire or smoke ~= structure.smoke) then
-            structure.light = light
-            structure.smoke = smoke
-            structure.fire = fire
-            table.insert(dirtyStructures, structure)
-        end
-    end
+    local dirtyStructures = StructureDataCollector.refreshDirtyStructures(structures)
 
     if #dirtyStructures > 0 then
-        -- Inform the event broker about all dirty structures
-        DataChangeBus.fireListChange("structures", "id", dirtyStructures)
+        DataChangeBus.fireListChange("structures", "id",
+                                     StructureRoomDataGenerator.toRoomDataStructureList(dirtyStructures))
     end
 
     return {}

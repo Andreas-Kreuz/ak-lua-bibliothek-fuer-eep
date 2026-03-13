@@ -1,5 +1,6 @@
 if AkDebugLoad then print("[#Start] Loading ak.data.TimeStatePublisher ...") end
 local DataChangeBus = require("ak.events.DataChangeBus")
+local TimeRoomDataGenerator = require("ak.data.TimeRoomDataGenerator")
 
 TimeStatePublisher = {}
 local enabled = true
@@ -29,11 +30,9 @@ function TimeStatePublisher.syncState()
     }
 
     -- TODO: Send event only with detected changes
-    DataChangeBus.fireListChange("times", "id", times)
+    DataChangeBus.fireListChange("times", "id", TimeRoomDataGenerator.toRoomDataTimeList(times))
 
-    return {
-        -- ["times"] = times
-    }
+    return {}
 end
 
 return TimeStatePublisher
