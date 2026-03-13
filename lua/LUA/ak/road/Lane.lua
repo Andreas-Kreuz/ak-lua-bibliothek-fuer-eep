@@ -263,7 +263,7 @@ function Lane:getVehicleCountRoutes(routes)
         count = self.vehicleCount
     else
         for i, vehicleName in pairs(self.queue:elements()) do
-            local trainRoute = EEPGetTrainRoute(vehicleName)
+            local _, trainRoute = EEPGetTrainRoute(vehicleName)
             local routeMatches = false
             for _, route in pairs(routes) do
                 if route == trainRoute then

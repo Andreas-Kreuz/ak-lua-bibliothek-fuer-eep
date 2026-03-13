@@ -2,14 +2,16 @@ local EepFunctionWrapper = {}
 
 EepFunctionWrapper.EEPGetTrainLength = EEPGetTrainLength or function (trainName)
     local rollingStockCount = EEPGetRollingstockItemsCount(trainName) -- EEP 13.2 Plug-In 2
-
+    local ok = rollingStockCount > 0
     local length = 0
-    for i = 0, (rollingStockCount - 1) do
-        local rollingStockName = EEPGetRollingstockItemName(trainName, i) -- EEP 13.2 Plug-In 2
-        local _, rslength = EEPRollingstockGetLength(rollingStockName)    -- EEP 15
-        length = length + rslength
+    if ok then
+        for i = 0, (rollingStockCount - 1) do
+            local rollingStockName = EEPGetRollingstockItemName(trainName, i) -- EEP 13.2 Plug-In 2
+            local _, rslength = EEPRollingstockGetLength(rollingStockName)    -- EEP 15
+            length = length + rslength
+        end
     end
-    return length
+    return ok, length
 end
 
 EEPSwitchGetTagText = EEPSwitchGetTagText or function () end -- EEP 18.1
