@@ -18,7 +18,6 @@ local ServerExchangeCoordinator = {}
 ServerExchangeCoordinator.debug = AkStartWithDebug or false
 local initialized = false
 
-
 -- checkServerStatus:
 -- true: Check status of EEP-Web Server before updating the json file
 -- false: Update json file without checking if the EEP-Web Server is ready
@@ -35,54 +34,29 @@ function ServerExchangeCoordinator.initialize()
     initialized = true
 end
 
-local function writeOutgoingEvents(jsonString) ServerExchangeFileIo.writeOutgoingEvents(jsonString) end
-
-local i = -1
+function ServerExchangeCoordinator.isServerReady()
+    return not ServerExchangeCoordinator.checkServerStatus or ServerExchangeFileIo.isServerReady()
+end
 
 --- Main function of this module. Is called by MainLoopRunner.
--- @param modulus Repetition frequency (0: always, 1: every 200 ms, 5: every second, ...)
-function ServerExchangeCoordinator.runServerExchangeCycle(modulus)
-    if not modulus or type(modulus) ~= "number" then modulus = 5 end
-    i = i + 1
-
+function ServerExchangeCoordinator.runServerOutputCycle()
     local overallTime0 = os.clock()
-    local serverIsReady = not ServerExchangeCoordinator.checkServerStatus or ServerExchangeFileIo.isServerReady()
+    local encodedEvents = ServerEventBuffer.drainBufferedEvents()
     local overallTime1 = os.clock()
-
-    ServerExchangeFileIo.readAndExecuteIncomingCommands()
+    ServerExchangeFileIo.writeOutgoingEvents(encodedEvents)
     local overallTime2 = os.clock()
 
-    local publishRuntime = modulus == 0 or i % modulus == 0
-    local overallTime3 = overallTime2
-    local overallTime4 = overallTime2
-    if publishRuntime and serverIsReady then
-        local encodedEvents = ServerEventBuffer.drainBufferedEvents()
-        overallTime3 = os.clock()
-        writeOutgoingEvents(encodedEvents)
-        overallTime4 = os.clock()
-    end
-
-    local waitForServerTime = overallTime1 - overallTime0
-    local commandsTime = overallTime2 - overallTime1
-    local encodeTime = overallTime3 - overallTime2
-    local writeTime = overallTime4 - overallTime3
-    local totalTime = overallTime4 - overallTime0
+    local encodeTime = overallTime1 - overallTime0
+    local writeTime = overallTime2 - overallTime1
+    local totalTime = overallTime2 - overallTime0
 
     if ServerExchangeCoordinator.debug then
-        print(string.format("INFO: [#ServerExchangeCoordinator] runServerExchangeCycle() time is %3.0f ms --- " ..
-                            "waitForServer: %.0f ms, commands: %2.0f ms, encode: %.0f ms, write: %.0f ms",
-                            totalTime * 1000, waitForServerTime * 1000, commandsTime * 1000,
-                            encodeTime * 1000, writeTime * 1000))
+        print(string.format(
+              "INFO: [#ServerExchangeCoordinator] runServerOutputCycle() time is %3.0f ms --- encode: %.0f ms, write: %.0f ms",
+              totalTime * 1000, encodeTime * 1000, writeTime * 1000))
     end
 
-    return {
-        waitForServerTime = waitForServerTime,
-        commandsTime = commandsTime,
-        encodeTime = encodeTime,
-        writeTime = writeTime,
-        totalTime = totalTime,
-        publishRuntime = publishRuntime
-    }
+    return {encodeTime = encodeTime, writeTime = writeTime, totalTime = totalTime}
 end
 
 return ServerExchangeCoordinator

@@ -1,4 +1,5 @@
 if AkDebugLoad then print("[#Start] Loading ak.core.ModuleRegistry ...") end
+require("ak.io.IoInit").initialize()
 local MainLoopRunner = require("ak.core.MainLoopRunner")
 local TableUtils = require("ak.util.TableUtils")
 
@@ -16,7 +17,7 @@ local function updateModuleOrder()
     for moduleName in pairs(registeredLuaModules) do table.insert(executionOrderModuleNames, moduleName) end
     -- sort the modules so that the SchedulerLuaModule is always at the end,
     -- because it must run after all other modules
-    table.sort(executionOrderModuleNames, function (n1, n2)
+    table.sort(executionOrderModuleNames, function(n1, n2)
         if n1 == "ak.scheduler.SchedulerLuaModule" then return true end
         if n2 == "ak.scheduler.SchedulerLuaModule" then return false end
         return n1 < n2
@@ -33,9 +34,10 @@ end
 -- Registers a module to be used in EEP Web
 -- @param module a module of type AkLuaControlModule
 function ModuleRegistry.registerModules(...)
-    assert(not MainLoopRunner.areModulesInitialized(), "All tasks must be registered before ModuleRegistry.initTasks()")
+    assert(not MainLoopRunner.areModulesInitialized(),
+           "All tasks must be registered before ModuleRegistry.initTasks()")
 
-    for _, module in ipairs({ ... }) do
+    for _, module in ipairs({...}) do
         -- Check the module
         assert(module.name and type(module.name) == "string", "A module must have a string name")
         assert(type(module.enabled) == "boolean", string.format("Module %s must have a boolean enabled", module.name))
@@ -58,7 +60,7 @@ end
 -- Unregisters a module
 -- @param module a module of type AkLuaControlModule
 function ModuleRegistry.unregisterModules(...)
-    for _, module in ipairs({ ... }) do
+    for _, module in ipairs({...}) do
         -- Check the module
         assert(module.name and type(module.name) == "string", "A module must have a string name")
 
@@ -98,10 +100,8 @@ function ModuleRegistry.runTasks(cycleCount)
         end
     end
 
-    local totalTime = MainLoopRunner.runCycle(effectiveCycleCount, executionOrderModuleNames, registeredLuaModules, {
-        debug = ModuleRegistry.debug,
-        enableServer = enableServer
-    })
+    local totalTime = MainLoopRunner.runCycle(effectiveCycleCount, executionOrderModuleNames, registeredLuaModules,
+                                              {debug = ModuleRegistry.debug, enableServer = enableServer})
 
     -- resume EEP after initialization
     if resumeEEP then

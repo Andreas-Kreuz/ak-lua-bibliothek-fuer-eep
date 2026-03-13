@@ -74,12 +74,16 @@ function useStatistics() {
           record['MainLoopRunner.runCycle-6-commands'] ? record['MainLoopRunner.runCycle-6-commands'].time : 0,
         ),
         new TimeDesc(
-          'Encode all data',
-          record['MainLoopRunner.runCycle-7-encode'] ? record['MainLoopRunner.runCycle-7-encode'].time : 0,
+          'Server output',
+          record['MainLoopRunner.runCycle-7-serverOutput']
+            ? record['MainLoopRunner.runCycle-7-serverOutput'].time
+            : 0,
         ),
         new TimeDesc(
-          'Write all data',
-          record['MainLoopRunner.runCycle-8-write'] ? record['MainLoopRunner.runCycle-8-write'].time : 0,
+          'DataStore write',
+          record['MainLoopRunner.runCycle-8-dataStoreWrite']
+            ? record['MainLoopRunner.runCycle-8-dataStoreWrite'].time
+            : 0,
         ),
       ]);
     },

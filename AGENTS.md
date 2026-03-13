@@ -97,6 +97,7 @@
 - Lua formatieren, falls lokal installiert:
   - `lua-format -c lua-format.conf -i <datei.lua>`
   - `lua-format -c lua-format.conf --check <datei.lua>`
+  - dabei immer die Projektkonfiguration `lua-format.conf` aus dem Repo verwenden
 
 ## Testing und Verifikation
 

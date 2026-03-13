@@ -1,9 +1,7 @@
-insulate("MainLoopRunner", function ()
+insulate("MainLoopRunner", function()
     require("ak.core.eep.EepSimulator")
 
-    local function clearModule(name)
-        package.loaded[name] = nil
-    end
+    local function clearModule(name) package.loaded[name] = nil end
 
     local function resetCoreModules()
         clearModule("ak.core.ModuleRegistry")
@@ -16,24 +14,35 @@ insulate("MainLoopRunner", function ()
         clearModule("ak.core.VersionInfo")
         clearModule("ak.io.ServerExchangeCoordinator")
         clearModule("ak.io.ServerExchangeFileIo")
+        clearModule("ak.io.IncomingCommandFileReader")
+        clearModule("ak.io.LogOutputFileWriter")
+        clearModule("ak.io.IoInit")
+        clearModule("ak.io.ExchangeDirRegistry")
         clearModule("ak.io.IncomingCommandExecutor")
         clearModule("ak.io.ServerEventBuffer")
+        clearModule("ak.io.DataStoreFileWriter")
         clearModule("ak.events.DataChangeBus")
         clearModule("ak.util.RuntimeRegistry")
     end
 
-    before_each(function ()
+    before_each(function()
         resetCoreModules()
         require("ak.core.eep.EepSimulator")
+        local IoInit = require("ak.io.IoInit")
+        IoInit.initialize = function() end
     end)
 
-    it("runs modules and state publishers on every ModuleRegistry cycle", function ()
+    it("runs modules, state publishers and io on every ModuleRegistry cycle", function()
         local DataChangeBus = require("ak.events.DataChangeBus")
         local ModuleRegistry = require("ak.core.ModuleRegistry")
         local StatePublisherRegistry = require("ak.core.StatePublisherRegistry")
         local ServerExchangeCoordinator = require("ak.io.ServerExchangeCoordinator")
+        local IncomingCommandFileReader = require("ak.io.IncomingCommandFileReader")
+        local DataStoreFileWriter = require("ak.io.DataStoreFileWriter")
         local RuntimeRegistry = require("ak.util.RuntimeRegistry")
         local communicateCalls = 0
+        local commandReadCalls = 0
+        local dataStoreWriteCalls = 0
         local moduleInitCalls = 0
         local moduleRunCalls = 0
         local publisherInitCalls = 0
@@ -44,103 +53,103 @@ insulate("MainLoopRunner", function ()
             id = "spec-test-module-1",
             name = "spec.TestLuaModule",
             enabled = true,
-            init = function () moduleInitCalls = moduleInitCalls + 1 end,
-            run = function () moduleRunCalls = moduleRunCalls + 1 end
+            init = function() moduleInitCalls = moduleInitCalls + 1 end,
+            run = function() moduleRunCalls = moduleRunCalls + 1 end
         }
         local testStatePublisher = {
             name = "spec.TestStatePublisher",
-            initialize = function () publisherInitCalls = publisherInitCalls + 1 end,
-            syncState = function ()
+            initialize = function() publisherInitCalls = publisherInitCalls + 1 end,
+            syncState = function()
                 publisherSyncCalls = publisherSyncCalls + 1
                 return {}
             end
         }
 
-        DataChangeBus.fireListChange = function (room, keyId, list)
+        DataChangeBus.fireListChange = function(room, keyId, list)
             if room ~= "runtime" then return end
             table.insert(capturedRuntimePublishes, {
                 keyId = keyId,
-                overallCount = list["MainLoopRunner.runCycle-OVERALL"] and list["MainLoopRunner.runCycle-OVERALL"].count or 0,
+                overallCount = list["MainLoopRunner.runCycle-OVERALL"] and
+                list["MainLoopRunner.runCycle-OVERALL"].count or 0,
                 syncStateCount = list["MainLoopRunner.runCycle-4-syncState"] and
-                    list["MainLoopRunner.runCycle-4-syncState"].count or 0,
-                encodeCount = list["MainLoopRunner.runCycle-7-encode"] and
-                    list["MainLoopRunner.runCycle-7-encode"].count or 0,
+                list["MainLoopRunner.runCycle-4-syncState"].count or 0,
+                serverOutputCount = list["MainLoopRunner.runCycle-7-serverOutput"] and
+                list["MainLoopRunner.runCycle-7-serverOutput"].count or 0,
                 initModuleCount = list["LuaModule.spec.TestLuaModule.init"] and
-                    list["LuaModule.spec.TestLuaModule.init"].count or 0
+                list["LuaModule.spec.TestLuaModule.init"].count or 0
             })
         end
-        DataChangeBus.printEventCounter = function () end
+        DataChangeBus.printEventCounter = function() end
 
-        ServerExchangeCoordinator.runServerExchangeCycle = function (cycleCount)
-            communicateCalls = communicateCalls + 1
-            assert.equals(5, cycleCount)
-            return {
-                waitForServerTime = 0.001,
-                commandsTime = 0.002,
-                encodeTime = 0.003,
-                writeTime = 0.004,
-                totalTime = 0.01,
-                publishRuntime = true
-            }
+        IncomingCommandFileReader.readAndExecuteIncomingCommands = function()
+            commandReadCalls = commandReadCalls + 1
         end
+        ServerExchangeCoordinator.isServerReady = function() return true end
+        ServerExchangeCoordinator.runServerOutputCycle = function()
+            communicateCalls = communicateCalls + 1
+            return {encodeTime = 0.003, writeTime = 0.004, totalTime = 0.01}
+        end
+        DataStoreFileWriter.write = function() dataStoreWriteCalls = dataStoreWriteCalls + 1 end
 
         ModuleRegistry.registerModules(testModule)
         StatePublisherRegistry.registerStatePublishers(testStatePublisher)
 
-        ModuleRegistry.runTasks(5)
-        ModuleRegistry.runTasks(5)
+        ModuleRegistry.runTasks(0)
+        ModuleRegistry.runTasks(0)
 
         assert.equals(1, moduleInitCalls)
         assert.equals(2, moduleRunCalls)
         assert.equals(1, publisherInitCalls)
         assert.equals(2, publisherSyncCalls)
+        assert.equals(2, commandReadCalls)
         assert.equals(2, communicateCalls)
+        assert.equals(0, dataStoreWriteCalls)
         assert.equals(2, #capturedRuntimePublishes)
         assert.equals("id", capturedRuntimePublishes[1].keyId)
         assert.equals(1, capturedRuntimePublishes[1].overallCount)
         assert.equals(1, capturedRuntimePublishes[1].syncStateCount)
         assert.equals(1, capturedRuntimePublishes[2].overallCount)
         assert.equals(1, capturedRuntimePublishes[2].syncStateCount)
-        assert.equals(1, capturedRuntimePublishes[2].encodeCount)
+        assert.equals(1, capturedRuntimePublishes[2].serverOutputCount)
         assert.equals(1, capturedRuntimePublishes[2].initModuleCount)
         assert.is_true(RuntimeRegistry.get("StatePublisher.spec.TestStatePublisher.syncState").count == 0)
+        assert.equals(0, RuntimeRegistry.get("StatePublisher.spec.TestStatePublisher.syncState").lastTime)
         assert.is_true(RuntimeRegistry.get("LuaModule.spec.TestLuaModule.init").count > 0)
+        assert.is_true(RuntimeRegistry.get("LuaModule.spec.TestLuaModule.init").lastTime >= 0)
     end)
 
-    it("skips runServerExchangeCycle while server is deactivated", function ()
+    it("skips server output while server is deactivated but still reads commands", function()
         local ModuleRegistry = require("ak.core.ModuleRegistry")
         local StatePublisherRegistry = require("ak.core.StatePublisherRegistry")
         local ServerExchangeCoordinator = require("ak.io.ServerExchangeCoordinator")
+        local IncomingCommandFileReader = require("ak.io.IncomingCommandFileReader")
         local RuntimeRegistry = require("ak.util.RuntimeRegistry")
         local communicateCalls = 0
+        local commandReadCalls = 0
         local publisherSyncCalls = 0
 
         local testModule = {
             id = "spec-test-module-2",
             name = "spec.DisabledServerModule",
             enabled = true,
-            init = function () end,
-            run = function () end
+            init = function() end,
+            run = function() end
         }
         local testStatePublisher = {
             name = "spec.DisabledServerPublisher",
-            initialize = function () end,
-            syncState = function ()
+            initialize = function() end,
+            syncState = function()
                 publisherSyncCalls = publisherSyncCalls + 1
                 return {}
             end
         }
 
-        ServerExchangeCoordinator.runServerExchangeCycle = function ()
+        IncomingCommandFileReader.readAndExecuteIncomingCommands = function()
+            commandReadCalls = commandReadCalls + 1
+        end
+        ServerExchangeCoordinator.runServerOutputCycle = function()
             communicateCalls = communicateCalls + 1
-            return {
-                waitForServerTime = 0.001,
-                commandsTime = 0.002,
-                encodeTime = 0.003,
-                writeTime = 0.004,
-                totalTime = 0.01,
-                publishRuntime = true
-            }
+            return {encodeTime = 0.003, writeTime = 0.004, totalTime = 0.01}
         end
 
         ModuleRegistry.registerModules(testModule)
@@ -150,8 +159,80 @@ insulate("MainLoopRunner", function ()
         ModuleRegistry.runTasks(3)
 
         assert.equals(1, publisherSyncCalls)
+        assert.equals(1, commandReadCalls)
         assert.equals(0, communicateCalls)
-        assert.equals(0, RuntimeRegistry.get("MainLoopRunner.runCycle-7-encode").time)
-        assert.equals(0, RuntimeRegistry.get("MainLoopRunner.runCycle-8-write").time)
+        assert.equals(0, RuntimeRegistry.get("MainLoopRunner.runCycle-7-serverOutput").time)
+        assert.equals(0, RuntimeRegistry.get("MainLoopRunner.runCycle-8-dataStoreWrite").time)
+        assert.equals(0, RuntimeRegistry.get("MainLoopRunner.runCycle-7-serverOutput").lastTime)
+        assert.equals(0, RuntimeRegistry.get("MainLoopRunner.runCycle-8-dataStoreWrite").lastTime)
+    end)
+
+    it("writes the DataStore json only on publish cycles when enabled", function()
+        local DataChangeBus = require("ak.events.DataChangeBus")
+        local MainLoopRunner = require("ak.core.MainLoopRunner")
+        local IncomingCommandFileReader = require("ak.io.IncomingCommandFileReader")
+        local ServerExchangeCoordinator = require("ak.io.ServerExchangeCoordinator")
+        local DataStoreFileWriter = require("ak.io.DataStoreFileWriter")
+        local dataStoreWriteCalls = 0
+        local commandReadCalls = 0
+        local communicateCalls = 0
+
+        DataChangeBus.fireListChange = function() end
+        DataChangeBus.printEventCounter = function() end
+
+        IncomingCommandFileReader.readAndExecuteIncomingCommands = function()
+            commandReadCalls = commandReadCalls + 1
+        end
+        ServerExchangeCoordinator.runServerOutputCycle = function()
+            communicateCalls = communicateCalls + 1
+            return {encodeTime = 0.003, writeTime = 0.004, totalTime = 0.01}
+        end
+        DataStoreFileWriter.write = function() dataStoreWriteCalls = dataStoreWriteCalls + 1 end
+
+        MainLoopRunner.runCycle(5, {}, {}, {enableServer = false, enableDataStoreJson = true})
+        MainLoopRunner.runCycle(5, {}, {}, {enableServer = false, enableDataStoreJson = true})
+
+        assert.equals(2, commandReadCalls)
+        assert.equals(0, communicateCalls)
+        assert.equals(1, dataStoreWriteCalls)
+    end)
+
+    it("prints all collected runCycle timings in debug output", function()
+        local DataChangeBus = require("ak.events.DataChangeBus")
+        local MainLoopRunner = require("ak.core.MainLoopRunner")
+        local IncomingCommandFileReader = require("ak.io.IncomingCommandFileReader")
+        local DataStoreFileWriter = require("ak.io.DataStoreFileWriter")
+        local printedMessages = {}
+        local originalPrint = print
+
+        DataChangeBus.fireListChange = function() end
+        DataChangeBus.printEventCounter = function() end
+        IncomingCommandFileReader.readAndExecuteIncomingCommands = function() end
+        DataStoreFileWriter.write = function() end
+
+        _G.print = function(message)
+            table.insert(printedMessages, tostring(message))
+        end
+
+        local ok, err = pcall(function()
+            MainLoopRunner.runCycle(5, {}, {}, {debug = true, enableServer = false, enableDataStoreJson = true})
+        end)
+
+        _G.print = originalPrint
+        if not ok then error(err) end
+
+        local runCycleLog
+        for _, message in ipairs(printedMessages) do
+            if string.find(message, "[#MainLoopRunner] runCycle(5) time:", 1, true) then
+                runCycleLog = message
+                break
+            end
+        end
+
+        assert.is_not_nil(runCycleLog)
+        assert.is_truthy(string.find(runCycleLog, "1%-initModules:") ~= nil)
+        assert.is_truthy(string.find(runCycleLog, "5%-commands:") ~= nil)
+        assert.is_truthy(string.find(runCycleLog, "6%-waitForServer:") ~= nil)
+        assert.is_truthy(string.find(runCycleLog, "8%-dataStoreWrite:") ~= nil)
     end)
 end)

@@ -7,6 +7,16 @@ local RuntimeRegistry = {}
 local runtimeData = {}
 local groupsToKeep = {}
 
+local function executeAndStoreRunTimeInternal(group, func, ...)
+    if not func then return end
+
+    local t0 = os.clock()
+    local result = { func(...) }
+    RuntimeRegistry.storeRunTime(group, os.clock() - t0)
+
+    return table.unpack(result)
+end
+
 --- Store runtime information
 -- @author Frank Buchholz
 function RuntimeRegistry.storeRunTime(group, time)
@@ -15,15 +25,18 @@ function RuntimeRegistry.storeRunTime(group, time)
     if not runtimeData then runtimeData = {} end
     if not runtimeData[group] then
         ---@class RuntimeEntry
-        ---@field group string
+        ---@field id string
         ---@field count number
         ---@field time number
-        local runTimeEntry = { id = group, count = 0, time = 0 }
+        ---@field lastTime number
+        local runTimeEntry = { id = group, count = 0, time = 0, lastTime = 0 }
         runtimeData[group] = runTimeEntry
     end
     local runtime = runtimeData[group]
+    local timeMs = time * 1000
     runtime.count = runtime.count + 1
-    runtime.time = runtime.time + time * 1000
+    runtime.time = runtime.time + timeMs
+    runtime.lastTime = timeMs
 end
 
 function RuntimeRegistry.keepGroup(group)
@@ -31,22 +44,22 @@ function RuntimeRegistry.keepGroup(group)
     groupsToKeep[group] = true
 end
 
+function RuntimeRegistry.runTimed(group, func, ...)
+    return executeAndStoreRunTimeInternal(group, func, ...)
+end
+
+function RuntimeRegistry.runTimedAndKeep(group, func, ...)
+    RuntimeRegistry.keepGroup(group)
+    return executeAndStoreRunTimeInternal(group, func, ...)
+end
+
 --- Indirect call of EEP function (or any other function) including time measurement
 -- @author Frank Buchholz
 function RuntimeRegistry.executeAndStoreRunTime(func, group, ...)
-    if not func then return end
-
-    local t0 = os.clock()
-
-    local result = { func(...) }
-
-    local t1 = os.clock()
-    RuntimeRegistry.storeRunTime(group, t1 - t0)
-
-    return table.unpack(result)
+    return executeAndStoreRunTimeInternal(group, func, ...)
 end
 
-function RuntimeRegistry.get(group) return runtimeData[group] or { id = group, count = 0, time = 0 } end
+function RuntimeRegistry.get(group) return runtimeData[group] or { id = group, count = 0, time = 0, lastTime = 0 } end
 
 function RuntimeRegistry.getAll() return runtimeData end
 
