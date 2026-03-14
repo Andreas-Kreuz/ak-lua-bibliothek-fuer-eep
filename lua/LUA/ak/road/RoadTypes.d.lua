@@ -201,3 +201,18 @@
 ---@field updateLaneTipText fun(self: Crossing):nil
 ---@field initSequences fun():nil
 ---@field switchSequences fun():nil
+
+---@class CrossingDtoFactory
+---@field createIntersectionDto fun(intersection: table):string,string,string|number,IntersectionDto
+---@field createIntersectionDtoList fun(intersections: table):string,string,table
+---@field createIntersectionLaneDto fun(lane: table):string,string,string|number,IntersectionLaneDto
+---@field createIntersectionLaneDtoList fun(lanes: table):string,string,table
+---@field createIntersectionSwitchingDto fun(switching: table):string,string,string|number,IntersectionSwitchingDto
+---@field createIntersectionSwitchingDtoList fun(switchings: table):string,string,table
+---@field createIntersectionTrafficLightDto fun(trafficLight: table):string,string,string|number,IntersectionTrafficLightDto
+---@field createIntersectionTrafficLightDtoList fun(trafficLights: table):string,string,table
+---@field createIntersectionModuleSettingDto fun(setting: table):string,string,string|number,IntersectionModuleSettingDto
+---@field createIntersectionModuleSettingDtoList fun(settings: table):string,string,table
+---@class TrafficLightModelDtoFactory
+---@field createSignalTypeDefinitionDto fun(definition: table):string,string,string|number,SignalTypeDefinitionDto
+---@field createSignalTypeDefinitionDtoList fun(definitions: table):string,string,table

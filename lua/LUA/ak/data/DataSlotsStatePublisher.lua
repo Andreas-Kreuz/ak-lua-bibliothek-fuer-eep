@@ -46,8 +46,8 @@ function DataSlotsStatePublisher.syncState()
     end
 
     -- TODO Update on changes only
-    DataChangeBus.fireListChange("save-slots", "id", DataSlotDtoFactory.createFilledDataSlotDtoList(filledSlots));
-    DataChangeBus.fireListChange("free-slots", "id", DataSlotDtoFactory.createEmptyDataSlotDtoList(emptySlots));
+    DataChangeBus.fireListChange(DataSlotDtoFactory.createFilledDataSlotDtoList(filledSlots));
+    DataChangeBus.fireListChange(DataSlotDtoFactory.createEmptyDataSlotDtoList(emptySlots));
 
     return {}
 end

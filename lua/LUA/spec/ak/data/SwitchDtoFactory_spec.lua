@@ -9,9 +9,16 @@ insulate("ak.data.SwitchDtoFactory", function ()
         local SwitchDtoFactory = require("ak.data.SwitchDtoFactory")
         local switch = { id = 11, position = 1, tag = "Main" }
 
-        local switchDto = SwitchDtoFactory.createSwitchDto(switch)
+        local room, keyId, key, switchDto = SwitchDtoFactory.createSwitchDto(switch)
+        local listRoom, listKeyId, switchDtos = SwitchDtoFactory.createSwitchDtoList({ switch })
         switch.tag = "Changed"
 
+        assert.equals("switches", room)
+        assert.equals("id", keyId)
+        assert.equals(11, key)
         assert.same({ id = 11, position = 1, tag = "Main" }, switchDto)
+        assert.equals("switches", listRoom)
+        assert.equals("id", listKeyId)
+        assert.same({ { id = 11, position = 1, tag = "Main" } }, switchDtos)
     end)
 end)

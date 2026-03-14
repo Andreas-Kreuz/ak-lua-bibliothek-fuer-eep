@@ -1,5 +1,6 @@
 local DataChangeBus = require("ak.events.DataChangeBus")
 local RollingStock = require("ak.train.RollingStock")
+local RollingStockDtoFactory = require("ak.train.RollingStockDtoFactory")
 local RollingStockRegistry = {}
 ---@type table<string,RollingStock>
 local allRollingStock = {}
@@ -33,18 +34,19 @@ end
 ---@param rollingStockName string
 function RollingStockRegistry.rollingStockDisappeared(rollingStockName)
     allRollingStock[rollingStockName] = nil
-    DataChangeBus.fireDataChanged("rolling-stocks", "id", { id = rollingStockName })
+    DataChangeBus.fireDataChanged(RollingStockDtoFactory.createRollingStockReferenceDto(rollingStockName))
 end
 
 function RollingStockRegistry.fireChangeRollingStockEvent()
     local modifiedRollingStock = {}
     for _, rs in pairs(allRollingStock) do
         if rs.valuesUpdated then
-            modifiedRollingStock[rs.id] = rs:toJsonStatic()
+            modifiedRollingStock[rs.id] = rs
             rs.valuesUpdated = false
         end
     end
-    DataChangeBus.fireListChange("rolling-stocks", "id", modifiedRollingStock)
+    DataChangeBus.fireListChange(RollingStockDtoFactory.createRollingStockDtoList(modifiedRollingStock))
 end
 
 return RollingStockRegistry
+

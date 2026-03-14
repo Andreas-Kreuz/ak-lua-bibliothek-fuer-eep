@@ -1,6 +1,7 @@
 if AkDebugLoad then print("[#Start] Loading ak.core.VersionStatePublisher ...") end
 local DataChangeBus = require("ak.events.DataChangeBus")
 local VersionInfo = require("ak.core.VersionInfo")
+local VersionDtoFactory = require("ak.core.VersionDtoFactory")
 VersionStatePublisher = {}
 local enabled = true
 local data = {}
@@ -10,21 +11,11 @@ VersionStatePublisher.name = "ak.core.VersionStatePublisher"
 function VersionStatePublisher.initialize()
     if not enabled or initialized then return end
 
-    local versions = {
-        versionInfo = {
-            -- EEP-Web expects a named entry here
-            id = "versionInfo",                         -- EEP-Web requires that data entries have an id or name tag
-            name = "versionInfo",                       -- EEP-Web requires that data entries have an id or name tag
-            eepVersion = string.format("%.1f", EEPVer), -- show string instead of float
-            luaVersion = _VERSION,
-            singleVersion = VersionInfo.getProgramVersion()
-        }
-    }
-
     -- TODO: Send event only with detected changes
-    DataChangeBus.fireListChange("eep-version", "id", versions)
+    DataChangeBus.fireListChange(
+        VersionDtoFactory.createVersionDtoList(string.format("%.1f", EEPVer), _VERSION, VersionInfo.getProgramVersion()))
     data = {
-        -- ["eep-version"] = versions
+        -- ["eep-version"] = versionDtos
     }
     initialized = true
 end

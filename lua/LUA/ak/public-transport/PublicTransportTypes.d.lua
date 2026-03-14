@@ -87,3 +87,13 @@
 ---@field new fun(self: RoadStation, name: string, eepSaveId: number):RoadStation
 ---@field forName fun(name: string):RoadStation
 ---@field showTippText fun():nil
+
+---@class PublicTransportDtoFactory
+---@field createPublicTransportStationDto fun(station: table):string,string,string|number,PublicTransportStationDto
+---@field createPublicTransportStationDtoList fun(stations: table):string,string,table
+---@field createPublicTransportLineDto fun(line: Line|table):string,string,string|number,PublicTransportLineDto
+---@field createPublicTransportLineDtoList fun(lines: table):string,string,table
+---@field createPublicTransportModuleSettingDto fun(setting: table):string,string,string|number,PublicTransportModuleSettingDto
+---@field createPublicTransportModuleSettingDtoList fun(settings: table):string,string,table
+---@field createPublicTransportLineNameDto fun(line: Line|table):string,string,string|number,PublicTransportLineNameDto
+---@field createPublicTransportLineNameDtoList fun(lines: table):string,string,table

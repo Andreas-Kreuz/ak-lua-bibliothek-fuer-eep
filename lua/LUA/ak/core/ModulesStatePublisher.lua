@@ -1,5 +1,6 @@
 if AkDebugLoad then print("[#Start] Loading ak.core.ModulesStatePublisher ...") end
 local DataChangeBus = require("ak.events.DataChangeBus")
+local ModuleDtoFactory = require("ak.core.ModuleDtoFactory")
 local TableUtils = require("ak.util.TableUtils")
 
 ---@class ModulesStatePublisher
@@ -13,19 +14,18 @@ ModulesStatePublisher.name = "ak.core.ModulesStatePublisher"
 ---@type table<string, LuaModule>|nil
 local registeredLuaModules = nil
 
----@type table<string,LuaModule>
+---@type table<string,ModuleDto>
 local knownModules = {}
-local function toApiV1(moduleName, module) return { id = module.id, name = moduleName, enabled = module.enabled } end
 local function checkModule(moduleName, module)
-    local newModule = toApiV1(moduleName, module)
+    local _, _, _, newModule = ModuleDtoFactory.createModuleDto(moduleName, module)
     local oldModule = knownModules[moduleName]
     if not oldModule then
-        DataChangeBus.fireDataAdded("modules", "id", newModule);
+        DataChangeBus.fireDataAdded(ModuleDtoFactory.createModuleDto(moduleName, module));
     elseif not TableUtils.sameDictEntries(oldModule, newModule) then
-        DataChangeBus.fireDataChanged("modules", "id", newModule);
+        DataChangeBus.fireDataChanged(ModuleDtoFactory.createModuleDto(moduleName, module));
     end
 
-    knownModules[moduleName] = module
+    knownModules[moduleName] = newModule
 end
 
 ---@param modules table<string, LuaModule>
@@ -45,7 +45,8 @@ function ModulesStatePublisher.syncState()
     moduleInfo.modules = {}
 
     assert(registeredLuaModules)
-    for _, v in pairs(registeredLuaModules) do moduleInfo[v.id] = { id = v.id, name = v.name, enabled = v.enabled } end
+    local _, _, moduleDtos = ModuleDtoFactory.createModuleDtoList(registeredLuaModules)
+    for key, value in pairs(moduleDtos) do moduleInfo[key] = value end
 
     return moduleInfo
 end

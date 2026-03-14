@@ -4,7 +4,11 @@ local TableUtils = require("ak.util.TableUtils")
 
 local DataSlotDtoFactory = {}
 
-function DataSlotDtoFactory.createDataSlotDto(slot)
+local KEY_ID = "id"
+local FILLED_ROOM = "save-slots"
+local EMPTY_ROOM = "free-slots"
+
+local function toDataSlotDto(slot)
     return {
         id = slot.id,
         name = slot.name,
@@ -12,20 +16,33 @@ function DataSlotDtoFactory.createDataSlotDto(slot)
     }
 end
 
-function DataSlotDtoFactory.createDataSlotDtoList(slots)
+local function createDataSlotDtoList(room, slots)
     local dataSlotDtos = {}
 
-    for _, slot in pairs(slots) do table.insert(dataSlotDtos, DataSlotDtoFactory.createDataSlotDto(slot)) end
+    for _, slot in pairs(slots) do
+        local dto = toDataSlotDto(slot)
+        table.insert(dataSlotDtos, dto)
+    end
 
-    return dataSlotDtos
+    return room, KEY_ID, dataSlotDtos
+end
+
+function DataSlotDtoFactory.createFilledDataSlotDto(slot)
+    local dto = toDataSlotDto(slot)
+    return FILLED_ROOM, KEY_ID, dto[KEY_ID], dto
 end
 
 function DataSlotDtoFactory.createFilledDataSlotDtoList(filledSlots)
-    return DataSlotDtoFactory.createDataSlotDtoList(TableUtils.valuesOfDict(filledSlots))
+    return createDataSlotDtoList(FILLED_ROOM, TableUtils.valuesOfDict(filledSlots))
+end
+
+function DataSlotDtoFactory.createEmptyDataSlotDto(slot)
+    local dto = toDataSlotDto(slot)
+    return EMPTY_ROOM, KEY_ID, dto[KEY_ID], dto
 end
 
 function DataSlotDtoFactory.createEmptyDataSlotDtoList(emptySlots)
-    return DataSlotDtoFactory.createDataSlotDtoList(TableUtils.valuesOfDict(emptySlots))
+    return createDataSlotDtoList(EMPTY_ROOM, TableUtils.valuesOfDict(emptySlots))
 end
 
 return DataSlotDtoFactory

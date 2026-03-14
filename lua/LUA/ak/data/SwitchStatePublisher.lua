@@ -26,7 +26,7 @@ function SwitchStatePublisher.syncState()
     SwitchDataCollector.refreshSwitches(switches)
 
     -- TODO: Send event only with detected changes
-    DataChangeBus.fireListChange("switches", "id", SwitchDtoFactory.createSwitchDtoList(switches))
+    DataChangeBus.fireListChange(SwitchDtoFactory.createSwitchDtoList(switches))
 
     return {
         -- ["switches"] = switches

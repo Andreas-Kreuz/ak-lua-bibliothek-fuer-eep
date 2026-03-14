@@ -1,5 +1,6 @@
 if AkDebugLoad then print("[#Start] Loading ak.road.TrafficLightModelStatePublisher ...") end
 local DataChangeBus = require("ak.events.DataChangeBus")
+local TrafficLightModelDtoFactory = require("ak.road.TrafficLightModelDtoFactory")
 
 ---@class TrafficLightModelStatePublisher
 TrafficLightModelStatePublisher = {}
@@ -38,7 +39,7 @@ function TrafficLightModelStatePublisher.syncState()
         table.insert(trafficLightModels, o)
     end
 
-    DataChangeBus.fireListChange("signal-type-definitions", "id", trafficLightModels)
+    DataChangeBus.fireListChange(TrafficLightModelDtoFactory.createSignalTypeDefinitionDtoList(trafficLightModels))
 
     return {
         -- ["signal-type-definitions"] = trafficLightModels
@@ -46,3 +47,4 @@ function TrafficLightModelStatePublisher.syncState()
 end
 
 return TrafficLightModelStatePublisher
+

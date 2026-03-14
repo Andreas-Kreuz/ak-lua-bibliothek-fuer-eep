@@ -2,7 +2,10 @@ if AkDebugLoad then print("[#Start] Loading ak.data.SwitchDtoFactory ...") end
 
 local SwitchDtoFactory = {}
 
-function SwitchDtoFactory.createSwitchDto(switch)
+local ROOM = "switches"
+local KEY_ID = "id"
+
+local function toSwitchDto(switch)
     return {
         id = switch.id,
         position = switch.position,
@@ -10,14 +13,20 @@ function SwitchDtoFactory.createSwitchDto(switch)
     }
 end
 
+function SwitchDtoFactory.createSwitchDto(switch)
+    local dto = toSwitchDto(switch)
+    return ROOM, KEY_ID, dto[KEY_ID], dto
+end
+
 function SwitchDtoFactory.createSwitchDtoList(switches)
     local switchDtos = {}
 
     for i = 1, #switches do
-        switchDtos[i] = SwitchDtoFactory.createSwitchDto(switches[i])
+        local _, _, _, dto = SwitchDtoFactory.createSwitchDto(switches[i])
+        switchDtos[i] = dto
     end
 
-    return switchDtos
+    return ROOM, KEY_ID, switchDtos
 end
 
 return SwitchDtoFactory

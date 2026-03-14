@@ -14,14 +14,14 @@ insulate("ak.data.DataStore", function ()
         local DataStore = require("ak.data.DataStore")
         local TableUtils = require("ak.util.TableUtils")
 
-        local addedElement = { id = "signal-a", name = "Alpha", nested = { value = 1 } }
-        DataChangeBus.fireDataAdded("signals", "id", addedElement)
+        local addedElement = { name = "Alpha", nested = { value = 1 } }
+        DataChangeBus.fireDataAdded("signals", "id", "signal-a", addedElement)
         addedElement.name = "mutated outside"
         addedElement.nested.value = 7
 
-        DataChangeBus.fireDataChanged("signals", "id", { id = "signal-a", status = "go" })
+        DataChangeBus.fireDataChanged("signals", "id", "signal-a", { status = "go" })
         DataChangeBus.fireDataAdded("signals", "id", { id = "signal-b", name = "Beta" })
-        DataChangeBus.fireDataRemoved("signals", "id", { id = "signal-b" })
+        DataChangeBus.fireDataRemoved("signals", "id", "signal-b", {})
 
         assert.is_true(TableUtils.deepDictCompare({
             ["signal-a"] = {

@@ -119,3 +119,12 @@
 ---@field closeDoors fun(self: RollingStock):nil
 ---@field toJsonStatic fun(self: RollingStock):table
 ---@field toJsonDynamic fun(self: RollingStock):table
+
+---@class TrainDtoFactory
+---@field createTrainDto fun(train: Train|table):string,string,string|number,TrainDto
+---@field createTrainDtoList fun(trains: table):string,string,table
+---@field createTrainReferenceDto fun(trainId: string):string,string,string|number,TrainDto
+---@class RollingStockDtoFactory
+---@field createRollingStockDto fun(rollingStock: RollingStock|table):string,string,string|number,RollingStockDto
+---@field createRollingStockDtoList fun(rollingStocks: table):string,string,table
+---@field createRollingStockReferenceDto fun(rollingStockId: string):string,string,string|number,RollingStockDto

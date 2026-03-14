@@ -3,6 +3,7 @@ if AkDebugLoad then print("[#Start] Loading ak.core.MainLoopRunner ...") end
 local DataChangeBus = require("ak.events.DataChangeBus")
 local DataStoreFileWriter = require("ak.io.DataStoreFileWriter")
 local IncomingCommandFileReader = require("ak.io.IncomingCommandFileReader")
+local RuntimeDtoFactory = require("ak.core.RuntimeDtoFactory")
 local ServerExchangeCoordinator = require("ak.io.ServerExchangeCoordinator")
 local StatePublisherRegistry = require("ak.core.StatePublisherRegistry")
 local RuntimeRegistry = require("ak.util.RuntimeRegistry")
@@ -176,7 +177,7 @@ function MainLoopRunner.runCycle(cycleCount, executionOrderModuleNames, register
 
     if publishRuntime then
         local values = RuntimeRegistry.getAll()
-        if values then DataChangeBus.fireListChange("runtime", "id", values) end
+        if values then DataChangeBus.fireListChange(RuntimeDtoFactory.createRuntimeDtoList(values)) end
         RuntimeRegistry.resetAll()
         DataChangeBus.printEventCounter()
     end

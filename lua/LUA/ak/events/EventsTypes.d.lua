@@ -59,8 +59,8 @@
 ---@field addListener fun(listener: EventListener):nil
 ---@field initialize fun():nil
 ---@field printEventCounter fun():nil
----@field fireDataChanged fun(room: string, keyId: string, element: table):nil
----@field fireDataAdded fun(room: string, keyId: string, element: table):nil
----@field fireDataRemoved fun(room: string, keyId: string, element: table):nil
+---@field fireDataChanged fun(room: string, keyId: string, keyOrElement: string|number|table, element?: table):nil
+---@field fireDataAdded fun(room: string, keyId: string, keyOrElement: string|number|table, element?: table):nil
+---@field fireDataRemoved fun(room: string, keyId: string, keyOrElement: string|number|table, element?: table):nil
 ---@field fireListChange fun(room: string, keyId: string, list: table):nil
 ---@field fireCompleteReset fun():nil

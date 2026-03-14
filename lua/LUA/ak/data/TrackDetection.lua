@@ -1,6 +1,7 @@
 if AkDebugLoad then print("[#Start] Loading ak.data.TrackCollector ...") end
 
 local DataChangeBus = require("ak.events.DataChangeBus")
+local TrackDtoFactory = require("ak.data.TrackDtoFactory")
 local RuntimeRegistry = require("ak.util.RuntimeRegistry")
 local TrackDetection = {}
 
@@ -61,7 +62,7 @@ function TrackDetection:initialize()
     end
 
     -- TODO: Send event only with detected changes
-    DataChangeBus.fireListChange(self.trackType .. "-" .. "tracks", "id", self.tracks)
+    DataChangeBus.fireListChange(TrackDtoFactory.createTrackDtoList(self.trackType, self.tracks))
     self:updateData()
 end
 

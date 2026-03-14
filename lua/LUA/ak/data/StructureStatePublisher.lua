@@ -13,7 +13,7 @@ function StructureStatePublisher.initialize()
     if not enabled or initialized then return end
 
     structures = StructureDataCollector.collectInitialStructures()
-    DataChangeBus.fireListChange("structures", "id", StructureDtoFactory.createStructureDtoList(structures))
+    DataChangeBus.fireListChange(StructureDtoFactory.createStructureDtoList(structures))
 
     initialized = true
 end
@@ -26,8 +26,7 @@ function StructureStatePublisher.syncState()
     local dirtyStructures = StructureDataCollector.refreshDirtyStructures(structures)
 
     if #dirtyStructures > 0 then
-        DataChangeBus.fireListChange("structures", "id",
-                                     StructureDtoFactory.createStructureDtoList(dirtyStructures))
+        DataChangeBus.fireListChange(StructureDtoFactory.createStructureDtoList(dirtyStructures))
     end
 
     return {}

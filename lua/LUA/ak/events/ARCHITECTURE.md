@@ -48,7 +48,8 @@ Verantwortlichkeiten:
 Wichtig:
 
 - `DataChangeBus` soll die Inhalte von `room`, `keyId`, `element` oder `list` nicht fachlich kennen oder interpretieren
-- diese Felder werden nur validiert und unverändert an Listener weitergereicht
+- diese Felder werden nur validiert und an Listener weitergereicht
+- `room` und `keyId` duerfen von DtoFactories an den Aufrufpunkt geliefert werden; der Bus bleibt trotzdem generisch
 - der einzige Eventtyp, dessen Bedeutung und Payload hier bewusst bekannt sind, ist `CompleteReset`
 
 Unterstützte Eventtypen:
@@ -67,7 +68,7 @@ Erwartetes Listener-Interface:
 
 Der reguläre Ablauf für eine Datenänderung ist:
 
-1. Ein Paket wie `ak.data`, `ak.road`, `ak.core` oder `ak.public-transport` ruft eine der fire-Methoden von `DataChangeBus` auf
+1. Ein Paket wie `ak.data`, `ak.road`, `ak.core` oder `ak.public-transport` ruft eine der fire-Methoden von `DataChangeBus` auf, oft direkt mit Mehrfachrueckgaben einer DtoFactory
 2. `DataChangeBus` validiert die Mindeststruktur der Eingabedaten
 3. `DataChangeBus` erhöht den internen `eventCounter`
 4. `DataChangeBus` erzeugt ein Eventobjekt mit Typ und Payload
@@ -89,6 +90,8 @@ Die häufigsten Payload-Formen sind:
 - Einzelobjekt mit `room`, `keyId` und `element`
 - Listenänderung mit `room`, `keyId` und `list`
 - Reset-Hinweis mit reinem Info-Inhalt
+
+Bei Einzelobjekten ist zusaetzlich ein Aufrufstil mit `room`, `keyId`, `key`, `element` erlaubt. Der Bus stellt dann sicher, dass das Element den Schluessel fuer nachgelagerte Listener enthaelt.
 
 ## Zustand
 
@@ -112,7 +115,7 @@ Das Paket nutzt keine `StorageUtility`-Persistenz. Sein Zustand ist absichtlich 
 
 - Listener müssen eine Methode `fireEvent(event)` besitzen.
 - `eventCounter` muss pro erzeugtem Event genau einmal erhöht werden.
-- `fireDataChanged`, `fireDataAdded` und `fireDataRemoved` erwarten ein `element`, das den Schlüssel `keyId` enthält.
+- `fireDataChanged`, `fireDataAdded` und `fireDataRemoved` erwarten ein `element`, das den Schluessel `keyId` enthaelt oder zusammen mit einem separaten `key` geliefert wird.
 - `fireListChange` erwartet, dass jedes Listenelement den Schlüssel `keyId` enthält.
 - `room`, `keyId`, `element` und `list` bleiben fachlich opaque; das Paket darf daraus keine domänenspezifische Logik ableiten.
 - `CompleteReset` muss vor dem regulären Eventstrom möglich sein, damit externe Empfänger ihren Zustand sauber initialisieren können.

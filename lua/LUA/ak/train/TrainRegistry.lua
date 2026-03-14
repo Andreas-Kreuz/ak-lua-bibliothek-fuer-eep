@@ -1,6 +1,7 @@
 if AkDebugLoad then print("[#Start] Loading ak.data.TrainRegistry ...") end
 local DataChangeBus = require("ak.events.DataChangeBus")
 local Train = require("ak.train.Train")
+local TrainDtoFactory = require("ak.train.TrainDtoFactory")
 local RollingStockRegistry = require("ak.train.RollingStockRegistry")
 
 local TrainRegistry = {}
@@ -71,18 +72,18 @@ end
 function TrainRegistry.trainDisappeared(trainName)
     if TrainRegistry.debug then print(string.format("[#TrainRegistry] train removed: %s", trainName)) end
     allTrains[trainName] = nil
-    DataChangeBus.fireDataRemoved("trains", "id", { id = trainName })
+    DataChangeBus.fireDataRemoved(TrainDtoFactory.createTrainReferenceDto(trainName))
 end
 
 function TrainRegistry.fireChangeTrainsEvent()
     local modifiedTrains = {}
     for _, train in pairs(allTrains) do
         if train.valuesUpdated then
-            modifiedTrains[train.id] = train:toJsonStatic()
+            modifiedTrains[train.id] = train
             train.valuesUpdated = false
         end
     end
-    DataChangeBus.fireListChange("trains", "id", modifiedTrains)
+    DataChangeBus.fireListChange(TrainDtoFactory.createTrainDtoList(modifiedTrains))
 end
 
 function TrainRegistry.getAllTrainNames()
@@ -92,3 +93,4 @@ function TrainRegistry.getAllTrainNames()
 end
 
 return TrainRegistry
+

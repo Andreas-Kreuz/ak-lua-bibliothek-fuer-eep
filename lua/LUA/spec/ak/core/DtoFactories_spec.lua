@@ -1,0 +1,44 @@
+insulate("ak.core.DtoFactories", function ()
+    local function clearModule(name) package.loaded[name] = nil end
+
+    before_each(function ()
+        clearModule("ak.core.ModuleDtoFactory")
+        clearModule("ak.core.VersionDtoFactory")
+        clearModule("ak.core.RuntimeDtoFactory")
+    end)
+
+    it("provides metadata and detached DTOs for core rooms", function ()
+        local ModuleDtoFactory = require("ak.core.ModuleDtoFactory")
+        local VersionDtoFactory = require("ak.core.VersionDtoFactory")
+        local RuntimeDtoFactory = require("ak.core.RuntimeDtoFactory")
+
+        local module = { id = "m-1", enabled = true }
+        local room, keyId, key, moduleDto = ModuleDtoFactory.createModuleDto("mod.name", module)
+        module.enabled = false
+
+        assert.equals("modules", room)
+        assert.equals("id", keyId)
+        assert.equals("m-1", key)
+        assert.same({ id = "m-1", name = "mod.name", enabled = true }, moduleDto)
+
+        local versionRoom, versionKeyId, versionDtos =
+            VersionDtoFactory.createVersionDtoList("18.1", "Lua 5.3", "1.2.3")
+        assert.equals("eep-version", versionRoom)
+        assert.equals("id", versionKeyId)
+        assert.same({
+            versionInfo = {
+                id = "versionInfo",
+                name = "versionInfo",
+                eepVersion = "18.1",
+                luaVersion = "Lua 5.3",
+                singleVersion = "1.2.3"
+            }
+        }, versionDtos)
+
+        local runtimeRoom, runtimeKeyId, runtimeDtos =
+            RuntimeDtoFactory.createRuntimeDtoList({ sample = { id = "sample", count = 2, time = 4, lastTime = 1 } })
+        assert.equals("runtime", runtimeRoom)
+        assert.equals("id", runtimeKeyId)
+        assert.same({ sample = { id = "sample", count = 2, time = 4, lastTime = 1 } }, runtimeDtos)
+    end)
+end)

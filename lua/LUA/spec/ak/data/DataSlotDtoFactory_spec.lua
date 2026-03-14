@@ -5,13 +5,25 @@ insulate("ak.data.DataSlotDtoFactory", function ()
         clearModule("ak.data.DataSlotDtoFactory")
     end)
 
-    it("projects slots to detached DTO tables", function ()
+    it("projects slots to detached DTO tables with room metadata", function ()
         local DataSlotDtoFactory = require("ak.data.DataSlotDtoFactory")
         local slot = { id = 4, name = "Slot 4", data = "abc" }
 
-        local dataSlotDto = DataSlotDtoFactory.createDataSlotDto(slot)
+        local filledRoom, filledKeyId, filledKey, filledDto = DataSlotDtoFactory.createFilledDataSlotDto(slot)
+        local listRoom, listKeyId, filledDtos = DataSlotDtoFactory.createFilledDataSlotDtoList({ slot })
+        local emptyRoom, emptyKeyId, emptyKey, emptyDto = DataSlotDtoFactory.createEmptyDataSlotDto(slot)
         slot.data = "changed"
 
-        assert.same({ id = 4, name = "Slot 4", data = "abc" }, dataSlotDto)
+        assert.equals("save-slots", filledRoom)
+        assert.equals("id", filledKeyId)
+        assert.equals(4, filledKey)
+        assert.same({ id = 4, name = "Slot 4", data = "abc" }, filledDto)
+        assert.equals("save-slots", listRoom)
+        assert.equals("id", listKeyId)
+        assert.same({ { id = 4, name = "Slot 4", data = "abc" } }, filledDtos)
+        assert.equals("free-slots", emptyRoom)
+        assert.equals("id", emptyKeyId)
+        assert.equals(4, emptyKey)
+        assert.same({ id = 4, name = "Slot 4", data = "abc" }, emptyDto)
     end)
 end)

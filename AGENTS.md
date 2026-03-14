@@ -74,6 +74,9 @@
 - EEP-nahe Fehlerpfade sind oft absichtlich `fail-loud`: bestehende `print(... debug.traceback())`-Muster nicht ohne klaren Grund in stilles Fehlerhandling umwandeln.
 - Module unter `lua/LUA/ak` laufen in einer Lua 5.3 Umgebung des Programmes EEP. Das Programm EEP stellt die globalen EEP-Funktionen wie in LUA_Manual.pdf beschrieben zur Verfügung wie `EEPSetSignal`, `EEPLoadData` oder `EEPTime`. Was das Programm kann ist in EEP18_Manual_GER.pdf beschrieben.
 - EEPSimulator.lua soll die Funktionen des Programms EEP abbilden, so dass der Lua Code auch mit dem Simulatur getestet werden kann.
+- Die öffentlichen DTO-Felddefinitionen liegen in `lua/LUA/ak/data/DtoTypes.d.lua`; die Raumverträge mit `room`, `keyId` und verantwortlicher DtoFactory stehen in `lua/LUA/ak/data/DtoTypes.d.md`.
+- Wenn sich ein exportierter Raum, sein `keyId` oder seine DTO-Felder ändern, müssen mindestens `DtoTypes.d.lua`, `DtoTypes.d.md`, die verantwortliche DtoFactory und die betroffene Server-Dokumentation gemeinsam geprüft und synchron gehalten werden.
+- `DtoTypes.d.md` dokumentiert, in welcher Lua-Datei bzw. DtoFactory ein Raum definiert ist. Diese Zuordnung ist die Soll-Quelle für spätere Server-Anpassungen.
 - Viele Module registrieren globale Callbacks über `_G[...]`. Bei Änderungen an Registrierungslogik auf bestehende Namenskonventionen achten.
 - Persistenter Zustand liegt typischerweise in EEP-Datenslots; dafür werden kurze Schlüssel wie `b`, `z`, `r`, `t` verwendet.
 - Hard-Resets und Recovery-Pfade sind wichtig. Wenn neue zustandsbehaftete Objekte eingeführt werden, muss auch deren Reset-Verhalten bedacht werden.

@@ -2,7 +2,10 @@ if AkDebugLoad then print("[#Start] Loading ak.data.StructureDtoFactory ...") en
 
 local StructureDtoFactory = {}
 
-function StructureDtoFactory.createStructureDto(structure)
+local ROOM = "structures"
+local KEY_ID = "id"
+
+local function toStructureDto(structure)
     return {
         id = structure.id,
         name = structure.name,
@@ -21,14 +24,20 @@ function StructureDtoFactory.createStructureDto(structure)
     }
 end
 
+function StructureDtoFactory.createStructureDto(structure)
+    local dto = toStructureDto(structure)
+    return ROOM, KEY_ID, dto[KEY_ID], dto
+end
+
 function StructureDtoFactory.createStructureDtoList(structures)
     local structureDtos = {}
 
     for i = 1, #structures do
-        structureDtos[i] = StructureDtoFactory.createStructureDto(structures[i])
+        local _, _, _, dto = StructureDtoFactory.createStructureDto(structures[i])
+        structureDtos[i] = dto
     end
 
-    return structureDtos
+    return ROOM, KEY_ID, structureDtos
 end
 
 return StructureDtoFactory

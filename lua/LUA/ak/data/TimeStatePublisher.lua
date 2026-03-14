@@ -30,7 +30,7 @@ function TimeStatePublisher.syncState()
     }
 
     -- TODO: Send event only with detected changes
-    DataChangeBus.fireListChange("times", "id", TimeDtoFactory.createTimeDtoList(times))
+    DataChangeBus.fireListChange(TimeDtoFactory.createTimeDtoList(times))
 
     return {}
 end

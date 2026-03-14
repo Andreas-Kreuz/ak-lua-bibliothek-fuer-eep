@@ -24,11 +24,9 @@ function SignalStatePublisher.syncState()
 
     SignalDataCollector.refreshSignals(signals)
     local waitingOnSignals = SignalDataCollector.collectWaitingOnSignals(signals)
-    local signalDtos = SignalDtoFactory.createSignalDtoList(signals)
-    local waitingDtos = SignalDtoFactory.createWaitingOnSignalDtoList(waitingOnSignals)
 
-    DataChangeBus.fireListChange("signals", "id", signalDtos)
-    DataChangeBus.fireListChange("waiting-on-signals", "id", waitingDtos)
+    DataChangeBus.fireListChange(SignalDtoFactory.createSignalDtoList(signals))
+    DataChangeBus.fireListChange(SignalDtoFactory.createWaitingOnSignalDtoList(waitingOnSignals))
 
     return {}
 end

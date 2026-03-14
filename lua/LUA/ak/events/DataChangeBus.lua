@@ -76,43 +76,66 @@ local function fire(eventType, payload)
     for l in pairs(listeners) do l.fireEvent(event) end
 end
 
----Fire a data change event.
----The bus forwards room, keyId and element unchanged and must not interpret them.
----@param room string -- the affected data element, like given in the JSON collectors, e.g. "rail-trains"
----@param keyId string -- name of the field identifying the key, e.g. "trainName" or "id" or "name"
----@param element? table -- complete object with the changed fields or object with updated fields only
-function DataChangeBus.fireDataChanged(room, keyId, element)
+local function normalizeElementArgs(room, keyId, keyOrElement, element)
     assert(room)
     assert(keyId)
-    assert(element)
-    assert(element[keyId], "the element must contain the key")
-    fire(DataChangeBus.eventType.dataChanged, { room = room, keyId = keyId, element = element })
+
+    if element == nil then
+        assert(keyOrElement)
+        assert(type(keyOrElement) == "table", "expected element as table")
+        local normalizedElement = keyOrElement
+        assert(normalizedElement[keyId], "the element must contain the key")
+        return normalizedElement
+    end
+
+    local key = keyOrElement
+    local normalizedElement = element
+    assert(key ~= nil, "expected key")
+    assert(normalizedElement)
+    assert(type(normalizedElement) == "table", "expected element as table")
+    if normalizedElement[keyId] == nil then
+        normalizedElement[keyId] = key
+    else
+        assert(normalizedElement[keyId] == key, "the key must match element[keyId]")
+    end
+
+    return normalizedElement
 end
 
 ---Fire a data change event.
 ---The bus forwards room, keyId and element unchanged and must not interpret them.
+---If a separate key is provided, it is only normalized onto the element for downstream consumers.
 ---@param room string -- the affected data element, like given in the JSON collectors, e.g. "rail-trains"
 ---@param keyId string -- name of the field identifying the key, e.g. "trainName" or "id" or "name"
+---@param keyOrElement string|number|table -- key of the element or the element itself
 ---@param element? table -- complete object with the changed fields or object with updated fields only
-function DataChangeBus.fireDataAdded(room, keyId, element)
-    assert(room)
-    assert(keyId)
-    assert(element)
-    assert(element[keyId], "the element must contain the key")
-    fire(DataChangeBus.eventType.dataAdded, { room = room, keyId = keyId, element = element })
+function DataChangeBus.fireDataChanged(room, keyId, keyOrElement, element)
+    local normalizedElement = normalizeElementArgs(room, keyId, keyOrElement, element)
+    fire(DataChangeBus.eventType.dataChanged, { room = room, keyId = keyId, element = normalizedElement })
 end
 
 ---Fire a data change event.
 ---The bus forwards room, keyId and element unchanged and must not interpret them.
+---If a separate key is provided, it is only normalized onto the element for downstream consumers.
 ---@param room string -- the affected data element, like given in the JSON collectors, e.g. "rail-trains"
 ---@param keyId string -- name of the field identifying the key, e.g. "trainName" or "id" or "name"
+---@param keyOrElement string|number|table -- key of the element or the element itself
 ---@param element? table -- complete object with the changed fields or object with updated fields only
-function DataChangeBus.fireDataRemoved(room, keyId, element)
-    assert(room)
-    assert(keyId)
-    assert(element)
-    assert(element[keyId], "the element must contain the key")
-    fire(DataChangeBus.eventType.dataRemoved, { room = room, keyId = keyId, element = element })
+function DataChangeBus.fireDataAdded(room, keyId, keyOrElement, element)
+    local normalizedElement = normalizeElementArgs(room, keyId, keyOrElement, element)
+    fire(DataChangeBus.eventType.dataAdded, { room = room, keyId = keyId, element = normalizedElement })
+end
+
+---Fire a data change event.
+---The bus forwards room, keyId and element unchanged and must not interpret them.
+---If a separate key is provided, it is only normalized onto the element for downstream consumers.
+---@param room string -- the affected data element, like given in the JSON collectors, e.g. "rail-trains"
+---@param keyId string -- name of the field identifying the key, e.g. "trainName" or "id" or "name"
+---@param keyOrElement string|number|table -- key of the element or the element itself
+---@param element? table -- complete object with the changed fields or object with updated fields only
+function DataChangeBus.fireDataRemoved(room, keyId, keyOrElement, element)
+    local normalizedElement = normalizeElementArgs(room, keyId, keyOrElement, element)
+    fire(DataChangeBus.eventType.dataRemoved, { room = room, keyId = keyId, element = normalizedElement })
 end
 
 ---Fire a data change event.

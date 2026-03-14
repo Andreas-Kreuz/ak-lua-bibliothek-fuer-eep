@@ -1,5 +1,6 @@
 if AkDebugLoad then print("[#Start] Loading ak.road.CrossingStatePublisher ...") end
 local DataChangeBus = require("ak.events.DataChangeBus")
+local CrossingDtoFactory = require("ak.road.CrossingDtoFactory")
 
 ---@class CrossingStatePublisher
 CrossingStatePublisher = {}
@@ -165,10 +166,10 @@ local function collect(allCrossings)
     end)
 
     -- TODO: Send event only with detected changes
-    DataChangeBus.fireListChange("intersections", "id", intersections)
-    DataChangeBus.fireListChange("intersection-lanes", "id", intersectionLanes)
-    DataChangeBus.fireListChange("intersection-switchings", "id", intersectionSwitching)
-    DataChangeBus.fireListChange("intersection-traffic-lights", "id", intersectionTrafficLights)
+    DataChangeBus.fireListChange(CrossingDtoFactory.createIntersectionDtoList(intersections))
+    DataChangeBus.fireListChange(CrossingDtoFactory.createIntersectionLaneDtoList(intersectionLanes))
+    DataChangeBus.fireListChange(CrossingDtoFactory.createIntersectionSwitchingDtoList(intersectionSwitching))
+    DataChangeBus.fireListChange(CrossingDtoFactory.createIntersectionTrafficLightDtoList(intersectionTrafficLights))
 
     return {
         ["intersections"] = intersections,
@@ -214,7 +215,7 @@ local function collectModuleSettings()
     }
 
     -- TODO: Send event only with detected changes
-    DataChangeBus.fireListChange("intersection-module-settings", "name", settings)
+    DataChangeBus.fireListChange(CrossingDtoFactory.createIntersectionModuleSettingDtoList(settings))
     return settings;
 end
 
@@ -238,3 +239,4 @@ function CrossingStatePublisher.syncState()
 end
 
 return CrossingStatePublisher
+

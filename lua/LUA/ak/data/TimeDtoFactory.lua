@@ -2,7 +2,10 @@ if AkDebugLoad then print("[#Start] Loading ak.data.TimeDtoFactory ...") end
 
 local TimeDtoFactory = {}
 
-function TimeDtoFactory.createTimeDto(timeData)
+local ROOM = "times"
+local KEY_ID = "id"
+
+local function toTimeDto(timeData)
     return {
         id = timeData.id,
         name = timeData.name,
@@ -13,14 +16,20 @@ function TimeDtoFactory.createTimeDto(timeData)
     }
 end
 
+function TimeDtoFactory.createTimeDto(timeData)
+    local dto = toTimeDto(timeData)
+    return ROOM, KEY_ID, dto[KEY_ID], dto
+end
+
 function TimeDtoFactory.createTimeDtoList(times)
     local timeDtos = {}
 
     for i = 1, #times do
-        timeDtos[i] = TimeDtoFactory.createTimeDto(times[i])
+        local _, _, _, dto = TimeDtoFactory.createTimeDto(times[i])
+        timeDtos[i] = dto
     end
 
-    return timeDtos
+    return ROOM, KEY_ID, timeDtos
 end
 
 return TimeDtoFactory

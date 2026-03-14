@@ -30,10 +30,10 @@
 ---@field initialize fun():nil
 ---@field syncState fun():table
 ---@class DataSlotDtoFactory
----@field createDataSlotDto fun(slot: table):table
----@field createDataSlotDtoList fun(slots: table):table
----@field createFilledDataSlotDtoList fun(filledSlots: table):table
----@field createEmptyDataSlotDtoList fun(emptySlots: table):table
+---@field createFilledDataSlotDto fun(slot: table):string,string,string|number,DataSlotDto
+---@field createFilledDataSlotDtoList fun(filledSlots: table):string,string,table
+---@field createEmptyDataSlotDto fun(slot: table):string,string,string|number,DataSlotDto
+---@field createEmptyDataSlotDtoList fun(emptySlots: table):string,string,table
 ---@class DataWebConnector
 ---@field registerStatePublishers fun(activeCollectors: table<string, boolean>|nil):nil
 ---@class SignalStatePublisher
@@ -45,16 +45,16 @@
 ---@field refreshSignals fun(signals: table):nil
 ---@field collectWaitingOnSignals fun(signals: table):table
 ---@class SignalDtoFactory
----@field createSignalDto fun(signal: table):table
----@field createSignalDtoList fun(signals: table):table
----@field createWaitingOnSignalDto fun(waiting: table):table
----@field createWaitingOnSignalDtoList fun(waitingOnSignals: table):table
+---@field createSignalDto fun(signal: table):string,string,string|number,SignalDto
+---@field createSignalDtoList fun(signals: table):string,string,table
+---@field createWaitingOnSignalDto fun(waiting: table):string,string,string|number,WaitingOnSignalDto
+---@field createWaitingOnSignalDtoList fun(waitingOnSignals: table):string,string,table
 ---@class SwitchDataCollector
 ---@field collectInitialSwitches fun():table
 ---@field refreshSwitches fun(switches: table):nil
 ---@class SwitchDtoFactory
----@field createSwitchDto fun(switch: table):table
----@field createSwitchDtoList fun(switches: table):table
+---@field createSwitchDto fun(switch: table):string,string,string|number,SwitchDto
+---@field createSwitchDtoList fun(switches: table):string,string,table
 ---@class StructureStatePublisher
 ---@field name string
 ---@field initialize fun():nil
@@ -63,8 +63,8 @@
 ---@field collectInitialStructures fun():table
 ---@field refreshDirtyStructures fun(existingStructures: table):table
 ---@class StructureDtoFactory
----@field createStructureDto fun(structure: table):table
----@field createStructureDtoList fun(structures: table):table
+---@field createStructureDto fun(structure: table):string,string,string|number,StructureDto
+---@field createStructureDtoList fun(structures: table):string,string,table
 ---@class SwitchStatePublisher
 ---@field name string
 ---@field initialize fun():nil
@@ -74,8 +74,11 @@
 ---@field initialize fun():nil
 ---@field syncState fun():table
 ---@class TimeDtoFactory
----@field createTimeDto fun(timeData: table):table
----@field createTimeDtoList fun(times: table):table
+---@field createTimeDto fun(timeData: table):string,string,string|number,TimeDto
+---@field createTimeDtoList fun(times: table):string,string,table
+---@class TrackDtoFactory
+---@field createTrackDto fun(trackType: string, track: table):string,string,string|number,TrackDto
+---@field createTrackDtoList fun(trackType: string, tracks: table):string,string,table
 ---@class TrackDetection
 ---@field tracks table<string, Track>
 ---@field trackType string

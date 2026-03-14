@@ -1,6 +1,7 @@
 if AkDebugLoad then print("[#Start] Loading ak.public-transport.PublicTransportStatePublisher ...") end
 local LineRegistry = require("ak.public-transport.LineRegistry")
 local DataChangeBus = require("ak.events.DataChangeBus")
+local PublicTransportDtoFactory = require("ak.public-transport.PublicTransportDtoFactory")
 
 ---@class PublicTransportStatePublisher
 PublicTransportStatePublisher = {}
@@ -22,7 +23,7 @@ local function collectModuleSettings()
     }
 
     -- TODO: Send event only with detected changes
-    DataChangeBus.fireListChange("public-transport-module-settings", "name", settings)
+    DataChangeBus.fireListChange(PublicTransportDtoFactory.createPublicTransportModuleSettingDtoList(settings))
     return settings;
 end
 
@@ -32,9 +33,9 @@ local function collect()
     local publicTransportSettings = collectModuleSettings()
 
     -- TODO: Send event only with detected changes
-    DataChangeBus.fireListChange("public-transport-stations", "id", publicTransportStations)
-    DataChangeBus.fireListChange("public-transport-lines", "id", publicTransportLines)
-    DataChangeBus.fireListChange("public-transport-module-settings", "name", publicTransportSettings)
+    DataChangeBus.fireListChange(PublicTransportDtoFactory.createPublicTransportStationDtoList(publicTransportStations))
+    DataChangeBus.fireListChange(PublicTransportDtoFactory.createPublicTransportLineDtoList(publicTransportLines))
+    DataChangeBus.fireListChange(PublicTransportDtoFactory.createPublicTransportModuleSettingDtoList(publicTransportSettings))
     LineRegistry.fireChangeLinesEvent()
 
     return {
@@ -62,3 +63,4 @@ function PublicTransportStatePublisher.syncState()
 end
 
 return PublicTransportStatePublisher
+

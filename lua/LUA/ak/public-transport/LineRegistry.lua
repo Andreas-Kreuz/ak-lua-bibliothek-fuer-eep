@@ -1,5 +1,6 @@
 local DataChangeBus = require("ak.events.DataChangeBus")
 local Line = require("ak.public-transport.Line")
+local PublicTransportDtoFactory = require("ak.public-transport.PublicTransportDtoFactory")
 local LineRegistry = {}
 local allLines = {}
 
@@ -36,11 +37,12 @@ function LineRegistry.fireChangeLinesEvent()
     local modifiedLines = {}
     for _, line in pairs(allLines) do
         if line.valuesUpdated then
-            modifiedLines[line.id] = line:toJsonStatic()
+            modifiedLines[line.id] = line
             line.valuesUpdated = false
         end
     end
-    DataChangeBus.fireListChange("public-transport-line-names", "id", modifiedLines)
+    DataChangeBus.fireListChange(PublicTransportDtoFactory.createPublicTransportLineNameDtoList(modifiedLines))
 end
 
 return LineRegistry
+
