@@ -1,12 +1,12 @@
-insulate("ak.data.StructureRoomDataGenerator", function ()
+insulate("ak.data.StructureDtoFactory", function ()
     local function clearModule(name) package.loaded[name] = nil end
 
     before_each(function ()
-        clearModule("ak.data.StructureRoomDataGenerator")
+        clearModule("ak.data.StructureDtoFactory")
     end)
 
-    it("projects structures to detached room data tables", function ()
-        local StructureRoomDataGenerator = require("ak.data.StructureRoomDataGenerator")
+    it("projects structures to detached DTO tables", function ()
+        local StructureDtoFactory = require("ak.data.StructureDtoFactory")
         local structure = {
             id = "#7",
             name = "#7",
@@ -24,7 +24,7 @@ insulate("ak.data.StructureRoomDataGenerator", function ()
             fire = true
         }
 
-        local roomData = StructureRoomDataGenerator.toRoomDataStructure(structure)
+        local structureDto = StructureDtoFactory.createStructureDto(structure)
         structure.tag = "changed"
 
         assert.same({
@@ -42,6 +42,6 @@ insulate("ak.data.StructureRoomDataGenerator", function ()
             light = true,
             smoke = false,
             fire = true
-        }, roomData)
+        }, structureDto)
     end)
 end)

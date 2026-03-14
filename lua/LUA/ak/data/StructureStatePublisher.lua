@@ -1,7 +1,7 @@
 if AkDebugLoad then print("[#Start] Loading ak.data.StructureStatePublisher ...") end
 local DataChangeBus = require("ak.events.DataChangeBus")
 local StructureDataCollector = require("ak.data.StructureDataCollector")
-local StructureRoomDataGenerator = require("ak.data.StructureRoomDataGenerator")
+local StructureDtoFactory = require("ak.data.StructureDtoFactory")
 StructureStatePublisher = {}
 local enabled = true
 local initialized = false
@@ -13,7 +13,7 @@ function StructureStatePublisher.initialize()
     if not enabled or initialized then return end
 
     structures = StructureDataCollector.collectInitialStructures()
-    DataChangeBus.fireListChange("structures", "id", StructureRoomDataGenerator.toRoomDataStructureList(structures))
+    DataChangeBus.fireListChange("structures", "id", StructureDtoFactory.createStructureDtoList(structures))
 
     initialized = true
 end
@@ -27,7 +27,7 @@ function StructureStatePublisher.syncState()
 
     if #dirtyStructures > 0 then
         DataChangeBus.fireListChange("structures", "id",
-                                     StructureRoomDataGenerator.toRoomDataStructureList(dirtyStructures))
+                                     StructureDtoFactory.createStructureDtoList(dirtyStructures))
     end
 
     return {}

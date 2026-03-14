@@ -1,6 +1,6 @@
 if AkDebugLoad then print("[#Start] Loading ak.data.DataSlotsStatePublisher ...") end
 local DataChangeBus = require("ak.events.DataChangeBus")
-local DataSlotsRoomDataGenerator = require("ak.data.DataSlotsRoomDataGenerator")
+local DataSlotDtoFactory = require("ak.data.DataSlotDtoFactory")
 
 local DataSlotsStatePublisher = {}
 DataSlotsStatePublisher.name = "ak.data.DataSlotsStatePublisher"
@@ -46,8 +46,8 @@ function DataSlotsStatePublisher.syncState()
     end
 
     -- TODO Update on changes only
-    DataChangeBus.fireListChange("save-slots", "id", DataSlotsRoomDataGenerator.toRoomDataFilledSlotList(filledSlots));
-    DataChangeBus.fireListChange("free-slots", "id", DataSlotsRoomDataGenerator.toRoomDataEmptySlotList(emptySlots));
+    DataChangeBus.fireListChange("save-slots", "id", DataSlotDtoFactory.createFilledDataSlotDtoList(filledSlots));
+    DataChangeBus.fireListChange("free-slots", "id", DataSlotDtoFactory.createEmptyDataSlotDtoList(emptySlots));
 
     return {}
 end

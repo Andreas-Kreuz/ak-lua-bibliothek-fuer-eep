@@ -1,12 +1,12 @@
-insulate("ak.data.TimeRoomDataGenerator", function ()
+insulate("ak.data.TimeDtoFactory", function ()
     local function clearModule(name) package.loaded[name] = nil end
 
     before_each(function ()
-        clearModule("ak.data.TimeRoomDataGenerator")
+        clearModule("ak.data.TimeDtoFactory")
     end)
 
-    it("projects times to detached room data tables", function ()
-        local TimeRoomDataGenerator = require("ak.data.TimeRoomDataGenerator")
+    it("projects times to detached DTO tables", function ()
+        local TimeDtoFactory = require("ak.data.TimeDtoFactory")
         local timeData = {
             id = "times",
             name = "times",
@@ -16,7 +16,7 @@ insulate("ak.data.TimeRoomDataGenerator", function ()
             timeS = 3
         }
 
-        local roomData = TimeRoomDataGenerator.toRoomDataTime(timeData)
+        local timeDto = TimeDtoFactory.createTimeDto(timeData)
         timeData.timeS = 9
 
         assert.same({
@@ -26,6 +26,6 @@ insulate("ak.data.TimeRoomDataGenerator", function ()
             timeH = 1,
             timeM = 2,
             timeS = 3
-        }, roomData)
+        }, timeDto)
     end)
 end)

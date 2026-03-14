@@ -5,7 +5,7 @@ insulate("ak.data.DataSlotsStatePublisher", function ()
 
     before_each(function ()
         clearModule("ak.data.DataSlotsStatePublisher")
-        clearModule("ak.data.DataSlotsRoomDataGenerator")
+        clearModule("ak.data.DataSlotDtoFactory")
         clearModule("ak.data.DataSlotNameResolver")
         clearModule("ak.storage.StorageUtility")
         clearModule("ak.data.DataStore")

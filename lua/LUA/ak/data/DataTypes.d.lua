@@ -29,11 +29,11 @@
 ---@field name string
 ---@field initialize fun():nil
 ---@field syncState fun():table
----@class DataSlotsRoomDataGenerator
----@field toRoomDataSlot fun(slot: table):table
----@field toRoomDataSlotList fun(slots: table):table
----@field toRoomDataFilledSlotList fun(filledSlots: table):table
----@field toRoomDataEmptySlotList fun(emptySlots: table):table
+---@class DataSlotDtoFactory
+---@field createDataSlotDto fun(slot: table):table
+---@field createDataSlotDtoList fun(slots: table):table
+---@field createFilledDataSlotDtoList fun(filledSlots: table):table
+---@field createEmptyDataSlotDtoList fun(emptySlots: table):table
 ---@class DataWebConnector
 ---@field registerStatePublishers fun(activeCollectors: table<string, boolean>|nil):nil
 ---@class SignalStatePublisher
@@ -44,17 +44,17 @@
 ---@field collectInitialSignals fun():table
 ---@field refreshSignals fun(signals: table):nil
 ---@field collectWaitingOnSignals fun(signals: table):table
----@class SignalRoomDataGenerator
----@field toRoomDataSignal fun(signal: table):table
----@field toRoomDataSignalList fun(signals: table):table
----@field toRoomDataWaitingOnSignal fun(waiting: table):table
----@field toRoomDataWaitingOnSignalList fun(waitingOnSignals: table):table
+---@class SignalDtoFactory
+---@field createSignalDto fun(signal: table):table
+---@field createSignalDtoList fun(signals: table):table
+---@field createWaitingOnSignalDto fun(waiting: table):table
+---@field createWaitingOnSignalDtoList fun(waitingOnSignals: table):table
 ---@class SwitchDataCollector
 ---@field collectInitialSwitches fun():table
 ---@field refreshSwitches fun(switches: table):nil
----@class SwitchRoomDataGenerator
----@field toRoomDataSwitch fun(switch: table):table
----@field toRoomDataSwitchList fun(switches: table):table
+---@class SwitchDtoFactory
+---@field createSwitchDto fun(switch: table):table
+---@field createSwitchDtoList fun(switches: table):table
 ---@class StructureStatePublisher
 ---@field name string
 ---@field initialize fun():nil
@@ -62,9 +62,9 @@
 ---@class StructureDataCollector
 ---@field collectInitialStructures fun():table
 ---@field refreshDirtyStructures fun(existingStructures: table):table
----@class StructureRoomDataGenerator
----@field toRoomDataStructure fun(structure: table):table
----@field toRoomDataStructureList fun(structures: table):table
+---@class StructureDtoFactory
+---@field createStructureDto fun(structure: table):table
+---@field createStructureDtoList fun(structures: table):table
 ---@class SwitchStatePublisher
 ---@field name string
 ---@field initialize fun():nil
@@ -73,9 +73,9 @@
 ---@field name string
 ---@field initialize fun():nil
 ---@field syncState fun():table
----@class TimeRoomDataGenerator
----@field toRoomDataTime fun(timeData: table):table
----@field toRoomDataTimeList fun(times: table):table
+---@class TimeDtoFactory
+---@field createTimeDto fun(timeData: table):table
+---@field createTimeDtoList fun(times: table):table
 ---@class TrackDetection
 ---@field tracks table<string, Track>
 ---@field trackType string

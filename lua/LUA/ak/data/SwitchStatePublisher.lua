@@ -1,7 +1,7 @@
 if AkDebugLoad then print("[#Start] Loading ak.data.SwitchStatePublisher ...") end
 local DataChangeBus = require("ak.events.DataChangeBus")
 local SwitchDataCollector = require("ak.data.SwitchDataCollector")
-local SwitchRoomDataGenerator = require("ak.data.SwitchRoomDataGenerator")
+local SwitchDtoFactory = require("ak.data.SwitchDtoFactory")
 require("ak.core.eep.EepFunctionWrapper")
 SwitchStatePublisher = {}
 local enabled = true
@@ -26,7 +26,7 @@ function SwitchStatePublisher.syncState()
     SwitchDataCollector.refreshSwitches(switches)
 
     -- TODO: Send event only with detected changes
-    DataChangeBus.fireListChange("switches", "id", SwitchRoomDataGenerator.toRoomDataSwitchList(switches))
+    DataChangeBus.fireListChange("switches", "id", SwitchDtoFactory.createSwitchDtoList(switches))
 
     return {
         -- ["switches"] = switches

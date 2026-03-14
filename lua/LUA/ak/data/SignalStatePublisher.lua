@@ -1,7 +1,7 @@
 if AkDebugLoad then print("[#Start] Loading ak.data.SignalStatePublisher ...") end
 local DataChangeBus = require("ak.events.DataChangeBus")
 local SignalDataCollector = require("ak.data.SignalDataCollector")
-local SignalRoomDataGenerator = require("ak.data.SignalRoomDataGenerator")
+local SignalDtoFactory = require("ak.data.SignalDtoFactory")
 local SignalStatePublisher = {}
 local enabled = true
 local initialized = false
@@ -24,11 +24,11 @@ function SignalStatePublisher.syncState()
 
     SignalDataCollector.refreshSignals(signals)
     local waitingOnSignals = SignalDataCollector.collectWaitingOnSignals(signals)
-    local signalRoomData = SignalRoomDataGenerator.toRoomDataSignalList(signals)
-    local waitingRoomData = SignalRoomDataGenerator.toRoomDataWaitingOnSignalList(waitingOnSignals)
+    local signalDtos = SignalDtoFactory.createSignalDtoList(signals)
+    local waitingDtos = SignalDtoFactory.createWaitingOnSignalDtoList(waitingOnSignals)
 
-    DataChangeBus.fireListChange("signals", "id", signalRoomData)
-    DataChangeBus.fireListChange("waiting-on-signals", "id", waitingRoomData)
+    DataChangeBus.fireListChange("signals", "id", signalDtos)
+    DataChangeBus.fireListChange("waiting-on-signals", "id", waitingDtos)
 
     return {}
 end

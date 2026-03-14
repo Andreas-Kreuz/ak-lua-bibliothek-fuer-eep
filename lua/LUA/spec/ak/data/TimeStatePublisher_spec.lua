@@ -8,7 +8,7 @@ insulate("ak.data.TimeStatePublisher", function ()
 
     before_each(function ()
         clearModule("ak.data.TimeStatePublisher")
-        clearModule("ak.data.TimeRoomDataGenerator")
+        clearModule("ak.data.TimeDtoFactory")
         clearModule("ak.data.DataStore")
         clearModule("ak.io.ServerEventBuffer")
         clearModule("ak.events.DataChangeBus")

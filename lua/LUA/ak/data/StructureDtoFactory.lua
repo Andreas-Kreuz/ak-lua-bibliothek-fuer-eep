@@ -1,8 +1,8 @@
-if AkDebugLoad then print("[#Start] Loading ak.data.StructureRoomDataGenerator ...") end
+if AkDebugLoad then print("[#Start] Loading ak.data.StructureDtoFactory ...") end
 
-local StructureRoomDataGenerator = {}
+local StructureDtoFactory = {}
 
-function StructureRoomDataGenerator.toRoomDataStructure(structure)
+function StructureDtoFactory.createStructureDto(structure)
     return {
         id = structure.id,
         name = structure.name,
@@ -21,14 +21,14 @@ function StructureRoomDataGenerator.toRoomDataStructure(structure)
     }
 end
 
-function StructureRoomDataGenerator.toRoomDataStructureList(structures)
-    local roomDataStructures = {}
+function StructureDtoFactory.createStructureDtoList(structures)
+    local structureDtos = {}
 
     for i = 1, #structures do
-        roomDataStructures[i] = StructureRoomDataGenerator.toRoomDataStructure(structures[i])
+        structureDtos[i] = StructureDtoFactory.createStructureDto(structures[i])
     end
 
-    return roomDataStructures
+    return structureDtos
 end
 
-return StructureRoomDataGenerator
+return StructureDtoFactory
