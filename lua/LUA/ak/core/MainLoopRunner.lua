@@ -114,6 +114,7 @@ function MainLoopRunner.runCycle(cycleCount, executionOrderModuleNames, register
         runTimed("MainLoopRunner.runCycle-2-runModules", function ()
             runModulesPhase(executionOrderModuleNames, registeredLuaModules)
         end)
+        ---@diagnostic disable-next-line: cast-local-type
         printFirstTime = runTimed("MainLoopRunner.runCycle-3-initStatePublishers", function ()
             return runInitStatePublishersPhase(statePublishers)
         end)
@@ -127,6 +128,7 @@ function MainLoopRunner.runCycle(cycleCount, executionOrderModuleNames, register
         end)
 
         if publishIo and enableServer then
+            ---@diagnostic disable-next-line: cast-local-type
             serverIsReady = runTimed("MainLoopRunner.runCycle-6-waitForServer", function ()
                 return ServerExchangeCoordinator.isServerReady()
             end)
