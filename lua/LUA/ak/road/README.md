@@ -42,7 +42,7 @@ nicht schon mitgeliefert wird.
 | signalIndexGreen         | number | Signalstellung im Signaldialog für grün                                          |
 | _signalIndexYellow_      | number | Signalstellung im Signaldialog für gelb (optional, sonst rot)                    |
 | _signalIndexRedYellow_   | number | Signalstellung im Signaldialog für rot-gelben (optional, sonst rot)              |
-| _signalIndexPedestrian_  | number | Signalstellung im Signaldialog für Fussgaenger-grün (optional, sonst rot)        |
+| _signalIndexPedestrian_  | number | Signalstellung im Signaldialog für Fußgänger-grün (optional, sonst rot)          |
 | _signalIndexSwitchOff_   | number | Signalstellung im Signaldialog für Ampel aus (optional, sonst grün)              |
 | _signalIndexBlinkYellow_ | number | Signalstellung im Signaldialog für Ampel blinkt gelb                             |
 
@@ -258,9 +258,9 @@ Wird dazu verwendet, mehrere Fahrspuren gleichzeitig zu schalten. Es muss sicher
 
 - `CrossingSequence:new(name)` - legt eine neue Schaltung an
 
-- `CrossingSequence:addCarLights(K1)` fügt eine Ampel hinzu, für die mit den Zyklen Rot, Rot-Gelb, Gruen und Gelb geschaltet wird.
+- `CrossingSequence:addCarLights(K1)` fügt eine Ampel hinzu, für die mit den Zyklen Rot, Rot-Gelb, Grün und Gelb geschaltet wird.
 
-- `CrossingSequence:addTramLights(S1)` fügt eine Ampel hinzu, für die mit den Zyklen Rot, Gruen und Gelb geschaltet wird.
+- `CrossingSequence:addTramLights(S1)` fügt eine Ampel hinzu, für die mit den Zyklen Rot, Grün und Gelb geschaltet wird.
 
 - `CrossingSequence:addPedestrianLights(F1)` fügt eine Ampel hinzu, für die mit den Zyklen Rot, Gruen_Fussgaenger geschaltet wird.
 

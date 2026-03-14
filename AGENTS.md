@@ -16,17 +16,20 @@
 
 - Änderungen möglichst lokal und minimal halten. In diesem Repo sind viele Module zustandsbehaftet; kleine gezielte Patches sind besser als breite Refactorings.
 - Lua-Dateien verwenden das Charset latin1, alle anderen Dateien utf-8 (vergleiche .editorconfig)
+- Markdown-Dateien sollen korrekte deutsche Umlaute verwenden. ASCII-Ersatzschreibungen wie `ae`, `oe` oder `ue` nur beibehalten, wenn sie sich auf Lua-Code oder Lua-Bezeichner beziehen.
 
 ## Dateikodierung
 
-- Alle Dateien mit der Endung `.lua` sind immer als `latin1` / `ISO-8859-1` zu lesen und zu schreiben (für Powershell besser ISO-8859-1).
-- Alle anderen Dateien sind als `UTF-8` zu lesen und zu schreiben.
+- Alle Dateien mit der Endung `.lua` sind immer als `latin1` / `ISO-8859-1` zu lesen und zu schreiben.
 - Bei Shell-Kommandos zum Lesen oder Schreiben von `.lua`-Dateien immer die Kodierung explizit auf `latin1` setzen.
-- Die Kodierung bestehender Dateien muss beim Bearbeiten erhalten bleiben; `.lua`-Dateien duerfen niemals versehentlich als `UTF-8` zurueckgeschrieben werden.
-- Wenn ein Tool keine Kodierung pro Datei explizit setzen kann, fuer Aenderungen an `.lua`-Dateien lieber ein geeignetes Shell-Kommando mit `latin1` verwenden als eine Aenderung mit unklarer Kodierung vorzunehmen.
-- Fuer PowerShell gilt:
-  - `.lua` lesen: `Get-Content -Encoding Latin1`
-  - `.lua` schreiben: `Set-Content -Encoding Latin1`
+- Alle anderen Dateien sind als `UTF-8` zu lesen und zu schreiben.
+- Die Kodierung bestehender Dateien muss beim Bearbeiten erhalten bleiben; `.lua`-Dateien dürfen niemals versehentlich als `UTF-8` zurückgeschrieben werden.
+- Wenn ein Tool keine Kodierung pro Datei explizit setzen kann, für Änderungen an `.lua`-Dateien lieber ein geeignetes Shell-Kommando mit `latin1` verwenden als eine Änderung mit unklarer Kodierung vorzunehmen.
+- Für PowerShell gilt:
+  - `Windows PowerShell 5.1` unterstützt bei `Get-Content` und `Set-Content` weder `-Encoding ISO88591` noch `-Encoding Latin1`.
+  - `.lua` lesen in `Windows PowerShell 5.1`: `[System.IO.File]::ReadAllText($path, [System.Text.Encoding]::GetEncoding('iso-8859-1'))`
+  - `.lua` schreiben in `Windows PowerShell 5.1`: `[System.IO.File]::WriteAllText($path, $content, [System.Text.Encoding]::GetEncoding('iso-8859-1'))`
+  - `PowerShell 7` unterstützt `-Encoding Latin1`; für Repo-Kompatibilität die `Windows PowerShell 5.1`-taugliche Variante bevorzugen.
   - andere Dateien lesen: `Get-Content -Encoding UTF8`
   - andere Dateien schreiben: `Set-Content -Encoding UTF8`
 
@@ -37,7 +40,7 @@
 - Beschreibungen für Funktionen, Parameter und Return-Werte gerne aus dem Lua-Manual übernehmen.
 - `Lua_manual.pdf` wird für `EepOriginalApi.d.lua` in diesem Projekt mit `pdftotext -table` ausgewertet. Der Parser arbeitet blockweise als Tabellenparser und nicht mehr als freier Fließtext-Parser.
 - `lua/LUA/ak/core/eep/EepOriginalApi.d.lua` ist die typsichere Soll-Schnittstelle des originalen Programms EEP. Sie wird aus `Lua_manual.pdf` abgeleitet und nicht aus `EepSimulator.lua`.
-- Der einzig gueltige Generator fuer diese Datei ist `python scripts/generate_eep_original_api.py`. Aeltere Generatorvarianten und Vergleichsausgaben werden nicht mehr verwendet.
+- Der einzig gültige Generator für diese Datei ist `python scripts/generate_eep_original_api.py`. Ältere Generatorvarianten und Vergleichsausgaben werden nicht mehr verwendet.
 - Für `EepOriginalApi.d.lua` gilt bei der Auswertung des Handbuchs:
   - Es gibt zwei Blocktypen:
     - Variablenblock
@@ -60,7 +63,7 @@
 - `EepOriginalApi.d.lua` enthält nur Definitionen: globale Variablen als `---@type` mit Platzhalterwert, Callbacks und Funktionen als leere Funktionsrümpfe. Keine Simulatorlogik in diese Datei schreiben.
 - Wertebereiche aus den Bemerkungen nach Möglichkeit als `---@alias` modellieren. Aliase möglichst direkt über der ersten Funktion platzieren, die sie verwendet. Wenn ein Alias die Details enthält, bleiben Parametertexte kurz.
 - Nach jeder Funktion und jedem Callback die Handbuchbeispiele als Kommentarblock im Format `-- Beispielaufrufe:` übernehmen.
-- Wenn `Lua_manual.pdf` erweitert wird, `python scripts/generate_eep_original_api.py` erneut ausfuehren und anschliessend nur `lua/LUA/ak/core/eep/EepOriginalApi.d.lua` verifizieren mit:
+- Wenn `Lua_manual.pdf` erweitert wird, `python scripts/generate_eep_original_api.py` erneut ausführen und anschließend nur `lua/LUA/ak/core/eep/EepOriginalApi.d.lua` verifizieren mit:
   - `lua -e "assert(loadfile('lua/LUA/ak/core/eep/EepOriginalApi.d.lua')); print('OK')"`
   - einem Konsistenzabgleich zwischen extrahierten Blöcken und der erzeugten Datei:
     - jede Funktion und jeder Callback muss eine Versionszeile und einen Block `-- Beispielaufrufe:` haben

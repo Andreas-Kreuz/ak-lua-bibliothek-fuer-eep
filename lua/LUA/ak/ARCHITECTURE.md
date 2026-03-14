@@ -6,7 +6,7 @@ Diese Bibliothek hat folgende Ziele:
    - Nutzung von EEP-Funktionen
    - Parsen des XMLs von Anlage-Daten, wenn notwendig
 2. Aufbereitung der Daten
-3. Nutzung der extrahierten Daten fuer Steuerung von Fachmodulen
+3. Nutzung der extrahierten Daten für Steuerung von Fachmodulen
 
 ## Datenhaltung
 
