@@ -17,6 +17,8 @@ insulate("VersionInfo", function ()
     it("reads the program version lazily and caches it", function ()
         local openCalls = 0
         io.open = function (fileName, mode)
+            if fileName ~= "LUA/ak/VERSION" then return originalIoOpen(fileName, mode) end
+
             openCalls = openCalls + 1
             assert.equals("LUA/ak/VERSION", fileName)
             assert.equals("r", mode)
