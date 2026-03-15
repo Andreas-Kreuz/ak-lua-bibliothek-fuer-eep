@@ -4,7 +4,6 @@ import * as cors from 'cors';
 import { EventEmitter } from 'events';
 import * as express from 'express';
 import { createServer } from 'http';
-import { networkInterfaces } from 'os';
 import * as path from 'path';
 import { Server } from 'socket.io';
 

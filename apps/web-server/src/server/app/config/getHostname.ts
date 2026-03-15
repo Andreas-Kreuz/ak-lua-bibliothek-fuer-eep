@@ -5,7 +5,7 @@ function getHostName() {
   const networkInterfaces: { [key: string]: [{ address: string; family: string; internal: boolean }] } =
     os.networkInterfaces();
   const addresses: string[] = [];
-  for (const [key, val] of Object.entries(networkInterfaces)) {
+  for (const [, val] of Object.entries(networkInterfaces)) {
     addresses.push(...val.filter((v) => v.internal === false && v.family === 'IPv4').map((v) => v.address));
   }
 

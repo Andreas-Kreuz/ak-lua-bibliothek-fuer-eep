@@ -1,5 +1,5 @@
 import { ServerMain } from './ServerMain';
-import { app, BrowserWindow, shell } from 'electron';
+import { app } from 'electron';
 import * as path from 'path';
 
 console.log('Server will start');
