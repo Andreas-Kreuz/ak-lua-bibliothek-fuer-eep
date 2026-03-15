@@ -1,12 +1,12 @@
 import { defineConfig } from 'cypress';
-import { rm } from 'fs';
+import { rm } from 'node:fs';
 
 export default defineConfig({
   projectId: 'g5rj4e',
   e2e: {
     baseUrl: 'http://localhost:3000',
     testIsolation: false,
-    setupNodeEvents(on, config) {
+    setupNodeEvents(on) {
       on('task', {
         deleteEepLogFile(fileName) {
           rm(fileName, () => {});
