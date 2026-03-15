@@ -12,6 +12,7 @@ jobs:
       - uses: leafo/gh-actions-lua@v9
         with:
           luaVersion: "5.3"
+          buildCache: false
 
       - uses: leafo/gh-actions-luarocks@v4
 
