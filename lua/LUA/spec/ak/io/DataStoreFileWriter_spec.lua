@@ -21,6 +21,12 @@ insulate("ak.io.DataStoreFileWriter", function()
         local openCalls = {}
 
         io.open = function(name, mode)
+            if name ~= "../LUA/ak/io/exchange/ak-eep-version.txt" and
+               name ~= "exchange-dir/ak-eep-version.txt" and
+               name ~= "exchange-dir/ak-eep-lib-store.json" then
+                return originalIoOpen(name, mode)
+            end
+
             table.insert(openCalls, {name = name, mode = mode})
 
             return {

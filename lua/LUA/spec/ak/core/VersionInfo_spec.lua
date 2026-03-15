@@ -37,7 +37,10 @@ insulate("VersionInfo", function ()
     end)
 
     it("returns a fallback text if the version file is missing", function ()
-        io.open = function () return nil end
+        io.open = function (fileName, mode)
+            if fileName == "LUA/ak/VERSION" then return nil end
+            return originalIoOpen(fileName, mode)
+        end
 
         local VersionInfo = require("ak.core.VersionInfo")
 

@@ -16,6 +16,11 @@ insulate("ak.io.ExchangeDirRegistry", function()
         local openCalls = {}
 
         io.open = function(name, mode)
+            if name ~= "../LUA/ak/io/exchange/ak-eep-version.txt" and
+               name ~= "./LUA/ak/io/exchange/ak-eep-version.txt" then
+                return originalIoOpen(name, mode)
+            end
+
             table.insert(openCalls, {name = name, mode = mode})
             if name == "../LUA/ak/io/exchange/ak-eep-version.txt" then return nil end
             return {write = function() end, flush = function() end, close = function() end}
@@ -37,6 +42,12 @@ insulate("ak.io.ExchangeDirRegistry", function()
         local openCalls = {}
 
         io.open = function(name, mode)
+            if name ~= "../LUA/ak/io/exchange/ak-eep-version.txt" and
+               name ~= "./LUA/ak/io/exchange/ak-eep-version.txt" and
+               name ~= "exchange-dir/ak-eep-version.txt" then
+                return originalIoOpen(name, mode)
+            end
+
             table.insert(openCalls, {name = name, mode = mode})
             return {write = function() end, flush = function() end, close = function() end}
         end

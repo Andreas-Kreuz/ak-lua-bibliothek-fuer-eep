@@ -23,6 +23,13 @@ insulate("ak.io.ServerExchangeFileIo", function()
 
         io.close = function() end
         io.open = function(name, mode)
+            if name ~= "../LUA/ak/io/exchange/ak-eep-version.txt" and
+               name ~= "custom-dir/ak-eep-version.txt" and
+               name ~= "custom-dir/ak-server.iswatching" and
+               name ~= "custom-dir/ak-eep-out-json.isfinished" then
+                return originalIoOpen(name, mode)
+            end
+
             table.insert(openCalls, {name = name, mode = mode})
             if mode == "r" then
                 if name == "custom-dir/ak-server.iswatching" then return {close = function() end} end
@@ -51,6 +58,14 @@ insulate("ak.io.ServerExchangeFileIo", function()
 
         io.close = function() end
         io.open = function(name, mode)
+            if name ~= "../LUA/ak/io/exchange/ak-eep-version.txt" and
+               name ~= "custom-dir/ak-eep-version.txt" and
+               name ~= "custom-dir/ak-eep-out.json" and
+               name ~= "custom-dir/ak-server.iswatching" and
+               name ~= "custom-dir/ak-eep-out-json.isfinished" then
+                return originalIoOpen(name, mode)
+            end
+
             table.insert(openCalls, {name = name, mode = mode})
             if mode == "r" then
                 if name == "custom-dir/ak-server.iswatching" then return {close = function() end} end

@@ -18,6 +18,12 @@ insulate("ak.io.FunctionNameWriter", function()
         local writtenContent
 
         io.open = function(name, mode)
+            if name ~= "../LUA/ak/io/exchange/ak-eep-version.txt" and
+               name ~= "exchange-dir/ak-eep-version.txt" and
+               name ~= "exchange-dir/ak-runtime-functions.txt" then
+                return originalIoOpen(name, mode)
+            end
+
             table.insert(openCalls, {name = name, mode = mode})
             return {
                 write = function(_, content)
