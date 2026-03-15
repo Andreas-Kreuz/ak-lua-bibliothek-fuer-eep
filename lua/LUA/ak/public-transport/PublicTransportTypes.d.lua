@@ -33,7 +33,8 @@
 ---@field addStop fun(self: LineSegment, platform: Platform, timeToStation?: number):nil
 ---@field setNextSection fun(self: LineSegment, newLineSegment: LineSegment, timeInMinutes: number):nil
 ---@field getAllSegments fun(self: LineSegment):LineSegment[]
----@field nextStationList fun(self: LineSegment, routeName: string, nextStation?: RoadStation, currentStation?: RoadStation):table[]
+---@field nextStationList
+--- fun(self: LineSegment, routeName: string, nextStation?: RoadStation, currentStation?: RoadStation):table[]
 ---@field getLastStation fun(self: LineSegment):RoadStation|nil
 ---@field getFirstStation fun(self: LineSegment):RoadStation|nil
 ---@field prepareDepartureAt fun(self: LineSegment, train: Train, nextStation: RoadStation, timeInMinutes: number):nil
@@ -77,7 +78,8 @@
 ---@field eepSaveId number
 ---@field debug boolean
 ---@field queueToText fun(queue: StationQueue):string
----@field trainArrivesIn fun(self: RoadStation, trainName: string, destination: string, lineNr: string, timeInMinutes: number):nil
+---@field trainArrivesIn
+--- fun(self: RoadStation, trainName: string, destination: string, lineNr: string, timeInMinutes: number):nil
 ---@field trainLeft fun(self: RoadStation, trainName: string, destination: string, lineNr: string):nil
 ---@field setPlatform fun(self: RoadStation, segment: LineSegment, platform: number):nil
 ---@field updateRoutesOnPlatform fun(self: RoadStation, platformName: string):nil
@@ -93,7 +95,8 @@
 ---@field createPublicTransportStationDtoList fun(stations: table):string,string,table
 ---@field createPublicTransportLineDto fun(line: Line|table):string,string,string|number,PublicTransportLineDto
 ---@field createPublicTransportLineDtoList fun(lines: table):string,string,table
----@field createPublicTransportModuleSettingDto fun(setting: table):string,string,string|number,PublicTransportModuleSettingDto
+---@field createPublicTransportModuleSettingDto
+--- fun(setting: table):string,string,string|number,PublicTransportModuleSettingDto
 ---@field createPublicTransportModuleSettingDtoList fun(settings: table):string,string,table
 ---@field createPublicTransportLineNameDto fun(line: Line|table):string,string,string|number,PublicTransportLineNameDto
 ---@field createPublicTransportLineNameDtoList fun(lines: table):string,string,table

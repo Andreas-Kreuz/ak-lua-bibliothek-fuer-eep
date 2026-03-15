@@ -60,11 +60,10 @@ export default class EepService implements CacheService {
     this.onJsonUpdate = (jsonText: string, lastUpdate: number) => {
       if (this.debug) console.log('Received: ' + jsonText.length + ' bytes of JSON ' + lastUpdate);
     };
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    this.eventLineAppeared = (line) => {
-      if (this.debug) console.log(line);
+    this.eventLineAppeared = (_line) => {
+      if (this.debug) console.log(_line);
     };
-    this.logLineAppeared = (line: string) => {};
+    this.logLineAppeared = (_line: string) => {};
     this.logWasCleared = () => {
       if (this.debug) console.log('Log was cleared');
     };
@@ -77,8 +76,8 @@ export default class EepService implements CacheService {
       const cachedObject = JSON.parse(fileContents.toString());
       if (this.debug) console.log('CACHE FILE READ FROM: ' + FileNames.serverCache);
       return cachedObject;
-    } catch (err) {
-      console.log(err);
+    } catch (_err) {
+      console.log(_err);
       return null;
     }
   }
@@ -96,8 +95,8 @@ export default class EepService implements CacheService {
           fs.writeFileSync(counterFile, data.eventCounter.toString(10));
         }
       }
-    } catch (err) {
-      console.log(err);
+    } catch (_err) {
+      console.log(_err);
     }
     performance.mark('eep:stop-write-cache-file');
     performance.measure(
@@ -110,7 +109,7 @@ export default class EepService implements CacheService {
   private deleteFileIfExists(file: string): void {
     try {
       fs.unlinkSync(file);
-    } catch (err) {
+    } catch (_err) {
       // IGNORED - console.log(err);
     }
   }

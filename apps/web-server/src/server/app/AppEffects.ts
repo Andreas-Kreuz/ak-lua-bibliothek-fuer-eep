@@ -89,7 +89,7 @@ export default class AppEffects {
     if (!this.TESTMODE) {
       try {
         fs.mkdirSync(this.serverConfigPath);
-      } catch (error) {
+      } catch (_error) {
         // IGNORE console.log(error);
       }
       try {

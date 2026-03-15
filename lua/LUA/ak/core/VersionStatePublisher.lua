@@ -13,7 +13,10 @@ function VersionStatePublisher.initialize()
 
     -- TODO: Send event only with detected changes
     DataChangeBus.fireListChange(
-        VersionDtoFactory.createVersionDtoList(string.format("%.1f", EEPVer), _VERSION, VersionInfo.getProgramVersion()))
+        VersionDtoFactory.createVersionDtoList(
+            string.format("%.1f", EEPVer),
+            _VERSION,
+            VersionInfo.getProgramVersion()))
     data = {
         -- ["eep-version"] = versionDtos
     }

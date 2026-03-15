@@ -14,7 +14,7 @@
     "pub-mkdir": "yarn run bash -c \"mkdir -p build/public_html\"",
     "build": "yarn build-shared && yarn build-app && yarn copy-web-app && tsc --build",
     "watch": "tsc -w",
-    "lint": "eslint -c .eslintrc.json --ext .ts src",
+    "lint": "eslint \"src/**/*.ts\"",
     "start": "yarn run build && electron ./build/main/index.js",
     "start-headless": "tsc && node ./build/server/app/HeadlessStart.js",
     "start-with-app": "yarn build && electron ./build/main/index.js",

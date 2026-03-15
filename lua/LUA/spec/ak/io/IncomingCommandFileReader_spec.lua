@@ -19,6 +19,12 @@ insulate("ak.io.IncomingCommandFileReader", function()
         local commands = {}
 
         io.open = function(name, mode)
+            if name ~= "../LUA/ak/io/exchange/ak-eep-version.txt" and
+               name ~= "custom-dir/ak-eep-version.txt" and
+               name ~= "custom-dir/ak-eep-in.commands" then
+                return originalIoOpen(name, mode)
+            end
+
             table.insert(openCalls, {name = name, mode = mode})
             if mode == "r" then
                 return {read = function() return "print|hello" end, close = function() end}
@@ -49,6 +55,14 @@ insulate("ak.io.IncomingCommandFileReader", function()
         local commands = {}
 
         io.open = function(name, mode)
+            if name ~= "../LUA/ak/io/exchange/ak-eep-version.txt" and
+               name ~= "custom-dir/ak-eep-version.txt" and
+               name ~= "custom-dir/ak-eep-in.commands" and
+               name ~= "other-dir/ak-eep-version.txt" and
+               name ~= "other-dir/ak-eep-in.commands" then
+                return originalIoOpen(name, mode)
+            end
+
             table.insert(openCalls, {name = name, mode = mode})
             if mode == "r" then
                 local content = name == "other-dir/ak-eep-in.commands" and "clearlog" or ""

@@ -399,8 +399,10 @@ function AkBlock:leaveBlock(trainName)
     assert(trainName)
     if self.trainName ~= trainName then
         print(
-            "[#Rail] ERROR: Block \"" .. self.name .. "\" left by wrong train:" .. " \n...... expected to leave: " ..
-            (self.trainName and self.trainName or "UNBEKANNT") .. " \n...... left the block:    " .. trainName .. "\n" ..
+            "[#Rail] ERROR: Block \"" .. self.name .. "\" left by wrong train:" ..
+            " \n...... expected to leave: " ..
+            (self.trainName and self.trainName or "UNBEKANNT") ..
+            " \n...... left the block:    " .. trainName .. "\n" ..
             debug.traceback())
     end
     self.taken = false

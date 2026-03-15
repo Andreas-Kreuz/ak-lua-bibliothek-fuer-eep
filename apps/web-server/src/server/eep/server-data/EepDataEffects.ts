@@ -1,6 +1,4 @@
 import SocketService from '../../clientio/SocketService';
-import PublicTransportService from '../../mod/public-transport/PublicTransportService';
-import TrainUpdateService from '../../mod/train/TrainUpdateService';
 import { CacheService } from './CacheService';
 import EepDataEvent from './EepDataEvent';
 import EepDataReducer from './EepDataStore';

@@ -20,7 +20,7 @@ export default class PublicTransportService implements DynamicRoomService {
       roomType: PublicTransportSettingsRoom,
       id: 'PublicTransportSettingsRoom',
       jsonCreator: (room: string): string => {
-        const trackType = PublicTransportSettingsRoom.idOfRoom(room);
+        const _trackType = PublicTransportSettingsRoom.idOfRoom(room);
         const json = JSON.stringify(this.publicTransportSettingsSelector.getSettings());
         return json;
       },
