@@ -35,7 +35,8 @@ local function collect()
     -- TODO: Send event only with detected changes
     DataChangeBus.fireListChange(PublicTransportDtoFactory.createPublicTransportStationDtoList(publicTransportStations))
     DataChangeBus.fireListChange(PublicTransportDtoFactory.createPublicTransportLineDtoList(publicTransportLines))
-    DataChangeBus.fireListChange(PublicTransportDtoFactory.createPublicTransportModuleSettingDtoList(publicTransportSettings))
+    DataChangeBus.fireListChange(
+        PublicTransportDtoFactory.createPublicTransportModuleSettingDtoList(publicTransportSettings))
     LineRegistry.fireChangeLinesEvent()
 
     return {
@@ -63,4 +64,3 @@ function PublicTransportStatePublisher.syncState()
 end
 
 return PublicTransportStatePublisher
-

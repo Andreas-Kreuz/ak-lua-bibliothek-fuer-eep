@@ -108,6 +108,9 @@
 ## Testing und Verifikation
 
 - Für Lua-Änderungen zuerst betroffene Specs unter `lua/LUA/spec` prüfen.
+- Nach Lua-Änderungen, wenn die Laufzeit lokal verfügbar ist, immer zusätzlich ausführen:
+  - `luacheck --config .luacheckrc lua/LUA`
+  - `busted --config-file .busted --verbose --coverage --`
 - Für Änderungen an Web-Typen oder Events mindestens `@ak/web-shared` und den betroffenen Consumer mitdenken.
 - Wenn keine passende Laufzeit verfügbar ist, statisch prüfen und explizit benennen, was nicht ausgeführt werden konnte.
 

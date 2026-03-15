@@ -52,11 +52,12 @@ function ServerExchangeCoordinator.runServerOutputCycle()
 
     if ServerExchangeCoordinator.debug then
         print(string.format(
-              "INFO: [#ServerExchangeCoordinator] runServerOutputCycle() time is %3.0f ms --- encode: %.0f ms, write: %.0f ms",
-              totalTime * 1000, encodeTime * 1000, writeTime * 1000))
+            "INFO: [#ServerExchangeCoordinator] runServerOutputCycle() time is %3.0f ms" ..
+            " --- encode: %.0f ms, write: %.0f ms",
+            totalTime * 1000, encodeTime * 1000, writeTime * 1000))
     end
 
-    return {encodeTime = encodeTime, writeTime = writeTime, totalTime = totalTime}
+    return { encodeTime = encodeTime, writeTime = writeTime, totalTime = totalTime }
 end
 
 return ServerExchangeCoordinator

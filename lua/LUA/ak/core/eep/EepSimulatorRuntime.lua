@@ -599,7 +599,9 @@ local function create(simulator, globals)
 
     function Runtime.callEEPGetSignal(signalId)
         assert(signalId > 0)
-        return state.signals[signalId] and (state.signals[signalId].signalState or state.signals[signalId].stellung) or 2
+        return state.signals[signalId]
+            and (state.signals[signalId].signalState or state.signals[signalId].stellung)
+            or 2
     end
 
     function Runtime.callEEPSetSwitch(switchId, switchPosition, activateEEPOnSwitch)
@@ -710,7 +712,8 @@ local function create(simulator, globals)
 
     function Runtime.callEEPLoadData(slot)
         return
-            ((state.persistence.valueByStorageSlot[slot] or state.persistence.valueByStorageSlot[slot] == false) and true or false),
+            ((state.persistence.valueByStorageSlot[slot]
+                or state.persistence.valueByStorageSlot[slot] == false) and true or false),
             state.persistence.valueByStorageSlot[slot]
     end
 
@@ -1110,7 +1113,9 @@ local function create(simulator, globals)
         return true
     end
 
-    function Runtime.callEEPSwitchGetTagText(id) return true, state.switches[id] and state.switches[id].tagText or nil end
+    function Runtime.callEEPSwitchGetTagText(id)
+        return true, state.switches[id] and state.switches[id].tagText or nil
+    end
 
     function Runtime.callEEPGoodsSetTagText(luaName, text)
         Store.ensurePath(state, { "goods", luaName }, createEmptyTable).tagText = text
@@ -1171,7 +1176,9 @@ local function create(simulator, globals)
         return setTrackTextureText("auxiliary", auxiliaryTrackId, surfaceNumber, text)
     end
 
-    function Runtime.callEEPAuxiliaryTrackGetTextureText(id, flaeche) return getTrackTextureText("auxiliary", id, flaeche) end
+    function Runtime.callEEPAuxiliaryTrackGetTextureText(id, flaeche)
+        return getTrackTextureText("auxiliary", id, flaeche)
+    end
 
     ---------------------
     -- Neu ab EEP 15.1 --
