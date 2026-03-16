@@ -38,4 +38,8 @@ export default class SocketService {
   public addOnSocketConnectedCallback(callback: (socket: Socket) => void): void {
     this.onSocketConnectedCallbacks.push(callback);
   }
+
+  public resetOnSocketConnectedCallbacks(): void {
+    this.onSocketConnectedCallbacks = [];
+  }
 }

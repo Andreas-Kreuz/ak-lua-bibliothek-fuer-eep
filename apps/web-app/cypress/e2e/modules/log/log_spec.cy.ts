@@ -22,7 +22,7 @@ afterEach(() => {
 
 describe('Logger', () => {
   it('has no initial log', () => {
-    cy.visit('/simple');
+    cy.visit('/');
     cy.wait(500).then(() => {
       cy.readFile(simulator.fileNames.eepOutLog).then((a) => cy.log(a));
       getLogList().children().should('have.length', 0);
@@ -32,7 +32,7 @@ describe('Logger', () => {
   describe('displays', () => {
     it('log line "Let us test something"', () => {
       simulator.writeLogLine('Let us test something');
-      cy.visit('/simple');
+      cy.visit('/');
       cy.wait(500).then(() => {
         cy.readFile(simulator.fileNames.eepOutLog).then((a) => cy.log(a));
         getLogList().children().should('have.length', 1).first().contains('Let us test something');
@@ -41,7 +41,7 @@ describe('Logger', () => {
 
     it('latin1 characters correctly: "Äpfel, Überschuss, ÖPNV"', () => {
       simulator.writeLogLine('Äpfel, Überschuss, ÖPNV');
-      cy.visit('/simple');
+      cy.visit('/');
       cy.wait(500).then(() => {
         cy.readFile(simulator.fileNames.eepOutLog).then((a) => cy.log(a));
         getLogList().children().should('have.length', 1).first().contains('Äpfel, Überschuss, ÖPNV');
@@ -50,7 +50,7 @@ describe('Logger', () => {
 
     it('displays log lines 1 to 3', () => {
       simulator.writeLogLine('Line 1\nLine 2\nLine 3');
-      cy.visit('/simple');
+      cy.visit('/');
       cy.wait(500).then(() => {
         cy.readFile(simulator.fileNames.eepOutLog).then((a) => cy.log(a));
         getLogList()
@@ -67,7 +67,7 @@ describe('Logger', () => {
 
     it('displays log lines 1 to 4', () => {
       simulator.writeLogLine('Line 1\nLine 2\nLine 3\nLine 4');
-      cy.visit('/simple');
+      cy.visit('/');
       cy.wait(500).then(() => {
         cy.readFile(simulator.fileNames.eepOutLog).then((a) => cy.log(a));
         getLogList()
@@ -87,7 +87,11 @@ describe('Logger', () => {
   describe('action', () => {
     it('"Reset Button" sends "clearlog" command to EEP', () => {
       cy.writeFile(simulator.fileNames.serverOutCommands, '');
-      cy.get('#delete-log').click();
+      cy.visit('/');
+      cy.wait(500).then(() => {
+        cy.get('#open-log').click();
+        cy.get('#delete-log').click();
+      });
       cy.readFile(simulator.fileNames.serverOutCommands, 'latin1').should('eq', 'clearlog\n');
     });
   });

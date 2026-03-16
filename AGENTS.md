@@ -86,6 +86,8 @@
 - Die Web-App ist React 19 mit Vite und MUI, nicht Angular.
 - Der Web-Server ist eine Electron-/Node-Anwendung in TypeScript.
 - Gemeinsame Typen und Events liegen in `packages/web-shared` und sollten bei API-Änderungen konsistent mit angepasst werden.
+- In Cypress-Specs keine lokalen Hilfsfunktionen wie `chooseDirectory()` einführen, wenn dadurch der Test nicht mehr von oben nach unten lesbar ist.
+- In Cypress-Specs verkettete Aufrufe an `.` umbrechen, statt lange Chains in einer Zeile zu lassen.
 
 ## Nützliche Kommandos
 

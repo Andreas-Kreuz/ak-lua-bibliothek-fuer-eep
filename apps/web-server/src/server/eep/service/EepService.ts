@@ -13,7 +13,9 @@ export default class EepService implements CacheService {
   private dir: string;
   private lastLogFileSize: number;
   private jsonFileWatcher: fs.FSWatcher;
+  private logFileWatcher: fs.FSWatcher;
   private logTail: Tail;
+  private logTailGeneration = 0;
   private eventTail: Tail;
   private onJsonUpdate: (jsonText: string, lastUpdate: number) => void;
   private logLineAppeared: (line: string) => void;
@@ -36,6 +38,10 @@ export default class EepService implements CacheService {
     });
   }
 
+  disconnect(): void {
+    this.disconnectFromFiles();
+  }
+
   private connectToFiles(): void {
     this.attachAkEepOutJsonFile();
     this.attachAkEepOutLogFile();
@@ -48,11 +54,12 @@ export default class EepService implements CacheService {
       this.deleteFileIfExists(path.resolve(this.dir, FileNames.serverWatching));
     }
 
-    if (this.logTail) {
-      this.logTail.unwatch();
-    }
+    this.stopLogTail();
     if (this.eventTail) {
       this.eventTail.unwatch();
+    }
+    if (this.logFileWatcher) {
+      this.logFileWatcher.close();
     }
     if (this.jsonFileWatcher) {
       this.jsonFileWatcher.close();
@@ -165,33 +172,17 @@ export default class EepService implements CacheService {
 
   private attachAkEepOutLogFile(): void {
     const logFile = path.resolve(this.dir, FileNames.eepOutLog);
-    this.onFileAppearance(logFile, () => {
-      const tail = new Tail(logFile, { encoding: 'latin1', fromBeginning: true });
-      tail.on('line', (line: string) => {
-        const stats = fs.statSync(logFile);
-        const fileSizeInBytes = stats['size'];
-        if (this.debug) console.log('NEW LINE 📄', line, ' Size: ', this.lastLogFileSize, ' / ', fileSizeInBytes);
+    if (this.logFileWatcher) {
+      this.logFileWatcher.close();
+    }
 
-        if (this.lastLogFileSize && fileSizeInBytes < this.lastLogFileSize) {
-          if (this.debug) console.log('🟦 Log file is smaller than before');
-          this.logWasCleared(); // TODO: NOT WORKING; BECAUSE TAIL DOES NOT LOOK BACK
-          tail.unwatch();
-          this.lastLogFileSize = 0;
-          setTimeout(() => this.attachAkEepOutLogFile(), 150);
-        }
-        this.lastLogFileSize = fileSizeInBytes;
-        this.logLineAppeared(line);
-      });
-
-      tail.on('error', (error: string) => {
-        if (this.debug) console.log(error);
-        tail.unwatch();
-        this.lastLogFileSize = 0;
-        this.attachAkEepOutLogFile();
-      });
-
-      this.logTail = tail;
+    this.logFileWatcher = fs.watch(path.dirname(logFile), {}, (_eventType: string, filename: string) => {
+      if (filename === path.basename(logFile)) {
+        this.syncLogTail(logFile);
+      }
     });
+
+    this.syncLogTail(logFile);
   }
 
   getCurrentLogLines = (): string => {
@@ -204,20 +195,78 @@ export default class EepService implements CacheService {
     // tslint:disable-next-line: semicolon
   };
 
-  private onFileAppearance(expectedFile: string, callback: () => void): void {
-    if (fs.existsSync(expectedFile)) {
-      if (this.debug) console.log('[FILE] Found: ' + expectedFile);
-      callback();
-    } else {
-      if (this.debug)
-        console.log('[FILE] Wait for: ' + path.basename(expectedFile) + ' in ' + path.dirname(expectedFile));
-      const watcher = fs.watch(path.dirname(expectedFile), {}, (eventType: string, filename: string) => {
-        if (filename === path.basename(expectedFile) && fs.existsSync(expectedFile)) {
-          if (this.debug) console.log('[FILE] Found: ' + expectedFile);
-          callback();
-          watcher.close();
-        }
-      });
+  private syncLogTail(logFile: string): void {
+    if (!fs.existsSync(logFile)) {
+      if (this.debug) console.log('[FILE] Wait for: ' + path.basename(logFile) + ' in ' + path.dirname(logFile));
+      this.stopLogTail();
+      this.lastLogFileSize = 0;
+      return;
+    }
+
+    if (this.logTail) {
+      return;
+    }
+
+    if (this.debug) console.log('[FILE] Found: ' + logFile);
+    this.startLogTail(logFile);
+  }
+
+  private startLogTail(logFile: string): void {
+    this.stopLogTail();
+
+    const generation = ++this.logTailGeneration;
+    const tail = new Tail(logFile, { encoding: 'latin1', fromBeginning: true });
+
+    tail.on('line', (line: string) => {
+      if (generation !== this.logTailGeneration) {
+        return;
+      }
+
+      let fileSizeInBytes = 0;
+      try {
+        fileSizeInBytes = fs.statSync(logFile)['size'];
+      } catch (error) {
+        if (this.debug) console.log(error);
+        this.restartLogTail(logFile);
+        return;
+      }
+
+      if (this.debug) console.log('NEW LINE 📄', line, ' Size: ', this.lastLogFileSize, ' / ', fileSizeInBytes);
+
+      if (this.lastLogFileSize && fileSizeInBytes < this.lastLogFileSize) {
+        if (this.debug) console.log('🟦 Log file is smaller than before');
+        this.logWasCleared();
+        this.restartLogTail(logFile);
+        return;
+      }
+
+      this.lastLogFileSize = fileSizeInBytes;
+      this.logLineAppeared(line);
+    });
+
+    tail.on('error', (error: string) => {
+      if (generation !== this.logTailGeneration) {
+        return;
+      }
+
+      if (this.debug) console.log(error);
+      this.restartLogTail(logFile);
+    });
+
+    this.logTail = tail;
+  }
+
+  private restartLogTail(logFile: string): void {
+    this.stopLogTail();
+    this.lastLogFileSize = 0;
+    setTimeout(() => this.syncLogTail(logFile), 150);
+  }
+
+  private stopLogTail(): void {
+    if (this.logTail) {
+      this.logTailGeneration++;
+      this.logTail.unwatch();
+      this.logTail = null;
     }
   }
 

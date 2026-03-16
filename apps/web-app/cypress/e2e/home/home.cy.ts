@@ -7,20 +7,23 @@ beforeEach(() => {
 });
 
 describe('App Home', () => {
-  it('contains Log and EEP-Web version after reset', () => {
-    cy.visit('/');
+  it('contains the home modules after reset', () => {
+    cy.visit('/simple');
     cy.contains('App für EEP');
-    cy.contains('Kreuzungen');
-    cy.contains('Lua ?');
-    cy.contains('EEP ?');
+    cy.contains('Ampelkreuzungen');
+    cy.contains('ÖPNV-Linien');
+    cy.contains('Fahrzeuge');
+    cy.contains('Statistik');
   });
-  it('contains App, EEP and Lua version', () => {
+
+  it('still renders the home modules after an EEP event', () => {
     simulator.eepEvent('eep-version-complete.json');
-    
-    cy.visit('/');
+
+    cy.visit('/simple');
     cy.contains('App für EEP');
-    cy.contains('Kreuzungen');
-    cy.contains('Lua 5.3');
-    cy.contains('EEP 17.0');
+    cy.contains('Ampelkreuzungen');
+    cy.contains('ÖPNV-Linien');
+    cy.contains('Fahrzeuge');
+    cy.contains('Statistik');
   });
 });

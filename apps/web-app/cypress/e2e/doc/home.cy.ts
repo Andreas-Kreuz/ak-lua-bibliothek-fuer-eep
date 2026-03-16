@@ -17,7 +17,7 @@ function tests(size: string, simulator: EepSimulator) {
     it('/ home', () => {
       cy.visit('/simple/');
       waitForHome();
-      cy.contains('Lua 5.3');
+      cy.contains('Ampelkreuzungen');
       cy.screenshot(`${path}`);
     });
     it('/ home-eep-active', () => {

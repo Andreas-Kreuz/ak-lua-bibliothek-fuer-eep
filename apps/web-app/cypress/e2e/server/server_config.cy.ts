@@ -1,7 +1,6 @@
 import EepSimulator from '../../test-helpers/eep-simulator';
 
 const simulator = new EepSimulator();
-const DIRECTORY = 'ANOTHER_DIRECTORY';
 
 describe('Server Tests "/server"', () => {
   const pwd: { dir: string } = { dir: '-' };
@@ -43,12 +42,13 @@ describe('Server Tests "/server"', () => {
               cy.get('input#dir-dialog-dir')
                 .should('exist')
                 .should('be.visible')
-                .wait(100)
                 .clear()
                 .type(pwd.dir)
-                .then((bla) => {
-                  cy.get('#dir-dialog-choose').click().should('not.exist');
-                });
+                .type('{esc}');
+              cy.get('#dir-dialog-choose')
+                .should('be.enabled')
+                .click();
+              cy.get('#responsive-dialog-title').should('not.exist');
             });
         });
     }
@@ -67,28 +67,33 @@ describe('Server Tests "/server"', () => {
   describe('Changing the directory', () => {
     it('button "Wählen" is enabled', () => {
       cy.get('#choose-dir-button').click();
-      cy.get('input#dir-dialog-dir').should('be.visible').should('contain.value', pwd.dir);
+      cy.get('input#dir-dialog-dir')
+        .should('exist')
+        .should('be.visible')
+        .should('contain.value', pwd.dir);
       cy.get('#dir-dialog-choose').should('be.enabled');
       cy.get('#dir-dialog-cancel').should('be.enabled');
-      cy.get('#dir-dialog-cancel').should('be.enabled').click().should('not.exist');
+      cy.get('input#dir-dialog-dir').type('{esc}');
+      cy.get('#dir-dialog-cancel').should('be.enabled').click();
+      cy.get('#responsive-dialog-title').should('not.exist');
     });
     it('button "Wählen" is disabled', () => {
       cy.get('#choose-dir-button').click();
       cy.get('input#dir-dialog-dir')
+        .should('exist')
         .should('be.visible')
         .should('contain.value', 'io')
-        .wait(100)
         .clear()
         .type('{selectall}{backspace}')
+        .type('{esc}')
         .then(() => {
-          cy.get('#dir-dialog-choose')
-            .should('be.disabled')
-            .then(() => {
-              cy.get('#dir-dialog-cancel').should('be.enabled');
-              cy.get('#dir-dialog-cancel').should('be.enabled').click().should('not.exist');
-            });
+          cy.get('#dir-dialog-choose').should('be.disabled');
+          cy.get('#dir-dialog-cancel').should('be.enabled');
+          cy.get('#dir-dialog-cancel').should('be.enabled').click();
+          cy.get('#responsive-dialog-title').should('not.exist');
         });
     });
+
     describe('Changing to "bad" directory', () => {
       it('Change to non-existing directory error', () => {
         cy.get('#choose-dir-button')
@@ -96,14 +101,15 @@ describe('Server Tests "/server"', () => {
           .click()
           .then(() => {
             cy.get('input#dir-dialog-dir')
-              .wait(100)
+              .should('exist')
+              .should('be.visible')
               .clear()
               .type('non-existing')
-              .then(() => {
-                cy.get('#dir-dialog-choose').click().should('not.exist');
-                cy.wait(1000);
-                cy.contains('Bevor es losgeht, muss Du nur noch den Ordner von EEP angeben.');
-              });
+              .type('{esc}');
+            cy.get('#dir-dialog-choose').should('be.enabled').click();
+            cy.get('#responsive-dialog-title').should('not.exist');
+            cy.wait(1000);
+            cy.contains('Bevor es losgeht, muss Du nur noch den Ordner von EEP angeben.');
           });
       });
 
@@ -115,14 +121,13 @@ describe('Server Tests "/server"', () => {
             cy.get('input#dir-dialog-dir')
               .should('exist')
               .should('be.visible')
-              .wait(100)
               .clear()
               .type(pwd.dir + '-empty')
-              .then(() => {
-                cy.get('#dir-dialog-choose').click().should('not.exist');
-                cy.wait(1000);
-                cy.contains('Es wurden keine Daten von EEP gesammelt');
-              });
+              .type('{esc}');
+            cy.get('#dir-dialog-choose').should('be.enabled').click();
+            cy.get('#responsive-dialog-title').should('not.exist');
+            cy.wait(1000);
+            cy.contains('Es wurden keine Daten von EEP gesammelt');
           });
       });
 
@@ -138,12 +143,13 @@ describe('Server Tests "/server"', () => {
                 cy.get('input#dir-dialog-dir')
                   .should('exist')
                   .should('be.visible')
-                  .wait(100)
                   .clear()
                   .type(pwd.dir)
-                  .then(() => {
-                    cy.get('#dir-dialog-choose').click().should('not.exist');
-                  });
+                  .type('{esc}');
+                cy.get('#dir-dialog-choose')
+                  .should('be.enabled')
+                  .click();
+                cy.get('#responsive-dialog-title').should('not.exist');
               });
           });
       });

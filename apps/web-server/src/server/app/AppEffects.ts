@@ -22,6 +22,7 @@ export default class AppEffects {
   private debug = true;
   private serverConfigFile: string;
   private eepDataEffects: EepDataEffects;
+  private eepService: EepService | null = null;
   private store = new AppReducer();
   private TESTMODE = false;
 
@@ -114,6 +115,9 @@ export default class AppEffects {
   }
 
   public changeEepDirectory(eepDir: string) {
+    this.eepService?.disconnect();
+    this.eepService = null;
+
     // Append the exchange directory to the path
     const completeDir = path.resolve(eepDir, 'LUA/ak/io/exchange/');
 
@@ -125,6 +129,7 @@ export default class AppEffects {
       }
       if (dir) {
         console.log('Directory set to : ' + dir);
+        this.eepService = eepService;
         this.initServices(eepService);
         this.store.setEepDirOk(true);
         this.saveEepDirectory(eepDir);
@@ -141,6 +146,11 @@ export default class AppEffects {
   }
 
   private initServices(eepService: EepService) {
+    // Replacing the EEP service should also replace socket-connected handlers
+    // so new clients do not accumulate duplicate room and command listeners.
+    this.socketService.resetOnSocketConnectedCallbacks();
+    this.socketService.addOnSocketConnectedCallback((socket: Socket) => this.socketConnected(socket));
+
     this.eepDataEffects = new EepDataEffects(this.router, this.io, this.socketService, eepService as CacheService);
 
     // Init event handler
