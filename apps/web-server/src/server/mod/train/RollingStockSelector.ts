@@ -27,12 +27,21 @@ export class RollingStockSelector {
         couplingRear: rsDto.couplingRear,
         length: rsDto.length,
         modelType: rsDto.modelType,
+        modelTypeText: rsDto.modelTypeText,
         positionInTrain: rsDto.positionInTrain,
         propelled: rsDto.propelled,
         tag: rsDto.tag,
+        nr: rsDto.nr,
         trackSystem: rsDto.trackSystem,
         trackType: rsDto.trackType,
+        trackId: rsDto.trackId,
+        trackDistance: rsDto.trackDistance,
+        trackDirection: rsDto.trackDirection,
         trainName: rsDto.trainName,
+        posX: rsDto.posX,
+        posY: rsDto.posY,
+        posZ: rsDto.posZ,
+        mileage: rsDto.mileage,
       };
       const trainRs = this.trainRollingStock.get(rollingStock.trainName) || new Map();
       trainRs.set(rollingStock.positionInTrain, rollingStock);

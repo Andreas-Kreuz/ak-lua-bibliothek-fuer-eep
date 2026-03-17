@@ -8,7 +8,6 @@ interface Train {
   line: string;
   destination: string;
   trainType: TrainType;
-  trackSystem: string;
   trackType: string;
   rollingStock: RollingStock[];
   length: number;

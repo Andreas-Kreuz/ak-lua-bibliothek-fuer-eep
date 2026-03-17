@@ -40,7 +40,6 @@ export class TrainSelector {
 
       const train: Train = {
         ...trainListEntry,
-        trackSystem: trainDto.trackSystem,
         rollingStock,
         length: trainDto.length,
         direction: trainDto.direction,

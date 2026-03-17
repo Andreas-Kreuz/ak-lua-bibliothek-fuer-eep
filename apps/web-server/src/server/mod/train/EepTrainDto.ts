@@ -2,7 +2,6 @@ export default class EepTrainDto {
   constructor(
     public id: string,
     public name: string,
-    public trackSystem: string,
     public trackType: string,
     public rollingStockCount: number,
     public route: string,
@@ -11,6 +10,7 @@ export default class EepTrainDto {
     public destination: string,
     public direction: string,
     public speed: number,
-    public movesForward: boolean
+    public movesForward: boolean,
+    public occupiedTacks: Record<string, number>
   ) {}
 }
