@@ -1,4 +1,4 @@
 export interface CacheService {
-  writeCache(cachedData: undefined): void;
-  readCache(): undefined;
+  writeCache(cachedData: unknown): void;
+  readCache(): unknown;
 }

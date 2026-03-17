@@ -76,7 +76,7 @@ export default class EepService implements CacheService {
     };
   }
 
-  public readCache(): undefined {
+  public readCache(): unknown {
     try {
       const cacheFile = path.resolve(this.dir, FileNames.serverCache);
       const fileContents = fs.readFileSync(cacheFile);
@@ -89,7 +89,8 @@ export default class EepService implements CacheService {
     }
   }
 
-  public writeCache(data: { eventCounter: number }): void {
+  public writeCache(data: unknown): void {
+    const d = data as { eventCounter?: number };
     performance.mark('eep:start-write-cache-file');
     try {
       if (data) {
@@ -97,9 +98,9 @@ export default class EepService implements CacheService {
         const fileContents = JSON.stringify(data);
         fs.writeFileSync(cacheFile, fileContents);
 
-        if (data.eventCounter) {
+        if (d.eventCounter) {
           const counterFile = path.resolve(this.dir, FileNames.serverEventCounter);
-          fs.writeFileSync(counterFile, data.eventCounter.toString(10));
+          fs.writeFileSync(counterFile, d.eventCounter.toString(10));
         }
       }
     } catch (_err) {

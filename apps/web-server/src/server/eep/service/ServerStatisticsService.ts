@@ -56,8 +56,8 @@ export class ServerStatisticsService {
       this.debug &&
       diff > 50 &&
       (diff < 1000 ||
-        this.lastTime[ServerStatisticsService.TimeForEepJsonFile].duration > diff ||
-        this.lastTime[ServerStatisticsService.TimeForJsonParsing].duration > diff)
+        (this.lastTime[ServerStatisticsService.TimeForEepJsonFile]?.duration ?? 0) > diff ||
+        (this.lastTime[ServerStatisticsService.TimeForJsonParsing]?.duration ?? 0) > diff)
     ) {
       const file = this.format('eep-file', ServerStatisticsService.TimeForEepJsonFile);
       const json = this.format('json-parsing', ServerStatisticsService.TimeForJsonParsing);

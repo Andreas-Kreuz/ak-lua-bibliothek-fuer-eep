@@ -21,8 +21,7 @@ export default class JsonApiUpdateService {
     const roomNames = this.reducer.getAllRoomNames();
     for (const roomName of roomNames) {
       // Send datatype events to datatype rooms
-      const room = ApiDataRoom.roomId(roomName);
-      if (room === room) {
+      if (room === ApiDataRoom.roomId(roomName)) {
         const event = ApiDataRoom.eventId(roomName);
         if (this.debug) console.log('🟨 EMIT to ' + socket.id + ': ' + event);
         socket.emit(event, this.reducer.getRoomJsonString(roomName));
@@ -51,7 +50,7 @@ export default class JsonApiUpdateService {
     const oldData: ServerData = this.reducer.getLastAnnouncedData();
     const data: ServerData = JsonApiReducer.calculateData(currentState);
     if (!store.hasInitialState()) {
-      this.cacheService.writeCache(currentState as undefined);
+      this.cacheService.writeCache(currentState);
     }
     this.reducer.setLastAnnouncedData(data);
     this.registerStatsTimeout(data);
