@@ -77,11 +77,11 @@ local function fire(eventType, payload)
 end
 
 local function normalizeElementArgs(room, keyId, keyOrElement, element)
-    assert(room)
-    assert(keyId)
+    assert(room, "expected room")
+    assert(keyId, "expected keyId")
 
     if element == nil then
-        assert(keyOrElement)
+        assert(keyOrElement, "expected keyOrElement")
         assert(type(keyOrElement) == "table", "expected element as table")
         local normalizedElement = keyOrElement
         assert(normalizedElement[keyId], "the element must contain the key")
@@ -91,7 +91,7 @@ local function normalizeElementArgs(room, keyId, keyOrElement, element)
     local key = keyOrElement
     local normalizedElement = element
     assert(key ~= nil, "expected key")
-    assert(normalizedElement)
+    assert(normalizedElement, "expected element")
     assert(type(normalizedElement) == "table", "expected element as table")
     if normalizedElement[keyId] == nil then
         normalizedElement[keyId] = key
@@ -144,9 +144,9 @@ end
 ---@param keyId string -- name of the field identifying the key, e.g. "trainName" or "id" or "name"
 ---@param list table dictionary  -- complete array with the changed objects
 function DataChangeBus.fireListChange(room, keyId, list)
-    assert(room)
-    assert(keyId)
-    assert(list)
+    assert(room, "expected room")
+    assert(keyId, "expected keyId")
+    assert(list, "expected list")
     for _, v in pairs(list) do assert(v[keyId], "each element must contain the key") end
     fire(DataChangeBus.eventType.listChanged, { room = room, keyId = keyId, list = list })
 end

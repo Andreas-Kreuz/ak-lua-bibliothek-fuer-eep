@@ -51,13 +51,8 @@ function IncomingCommandExecutor.executeCommandSafely(functionAndArgs)
     local f = allowedCommands[fName]
 
     assert(f, fName)
-
-    if f then
-        local status, error = pcall(f, table.unpack(args))
-        if not status then print(error) end
-    else
-        print("[#IncomingCommandExecutor] Aufruf von " .. fName .. " nicht erlaubt")
-    end
+    local status, error = pcall(f, table.unpack(args))
+    if not status then print(error) end
 end
 
 function IncomingCommandExecutor.executeIncomingCommands(commands)
