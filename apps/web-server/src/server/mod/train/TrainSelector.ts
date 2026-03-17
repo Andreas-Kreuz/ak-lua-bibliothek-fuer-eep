@@ -40,7 +40,6 @@ export class TrainSelector {
 
       const train: Train = {
         ...trainListEntry,
-        trainType: TrainType.Bike, // FIXME
         trackSystem: trainDto.trackSystem,
         rollingStock,
         length: trainDto.length,
