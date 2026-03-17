@@ -3,7 +3,7 @@ if AkDebugLoad then print("[#Start] Loading ak.storage.StorageUtility ...") end
 local saveSlots = {}
 local savedValues = {}
 local StorageUtility = {}
-StorageUtility.debugDatei = "StorageUtilityValues.txt"
+StorageUtility.debugFile = "StorageUtilityValues.txt"
 StorageUtility.debug = AkStartWithDebug or false
 StorageUtility.maxSaveDataStringLength = 999
 StorageUtility.maxRollingStockTagLength = 1024
@@ -207,9 +207,9 @@ function StorageUtility.calcEepLuaData()
 end
 
 function StorageUtility.updateDebugFile()
-    local datei = assert(io.open(StorageUtility.debugDatei, "w"))
-    datei:write(StorageUtility.calcEepLuaData())
-    datei:close()
+    local file = assert(io.open(StorageUtility.debugFile, "w"))
+    file:write(StorageUtility.calcEepLuaData())
+    file:close()
 end
 
 function StorageUtility.reset()

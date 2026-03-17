@@ -348,7 +348,7 @@ function Crossing:updateLaneTipText()
     end
 end
 
-local aufbauHilfeErzeugt = CrossingSettings.showSignalIdOnSignal
+local setupHelpCreated = CrossingSettings.showSignalIdOnSignal
 
 --- Init all crossing lanes and traffic lights according to their sequences' traffic lights
 --- ----
@@ -382,8 +382,8 @@ end
 
 --- Switch all sequences according to the current crossing settings
 function Crossing.switchSequences()
-    if aufbauHilfeErzeugt ~= CrossingSettings.showSignalIdOnSignal then
-        aufbauHilfeErzeugt = CrossingSettings.showSignalIdOnSignal
+    if setupHelpCreated ~= CrossingSettings.showSignalIdOnSignal then
+        setupHelpCreated = CrossingSettings.showSignalIdOnSignal
         for signalId = 1, 1000 do
             EEPShowInfoSignal(signalId, CrossingSettings.showSignalIdOnSignal)
             if CrossingSettings.showSignalIdOnSignal then

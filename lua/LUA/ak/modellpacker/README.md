@@ -21,17 +21,17 @@ Das Skript liegt in `ak.modellpacker.AkModellPacker`.
 
 - Klasse `AkModellInstaller` - legt einen Modell-Installer an, welchem Modell-Pakete hinzugefügt werden können.
 
-  - `AkModellInstaller:new(verzeichnisname)` - Legt einen neuen Modell-Installer an. Der Modell-Installer kann mehrere Modell-Pakete enthalten. Der `verzeichnisname` bestimmt, in welches Unterverzeichnis das Modellpaket installiert werden soll - dieses Verzeichnis wird new angelegt.
+  - `AkModellInstaller:new(directoryName)` - Legt einen neuen Modell-Installer an. Der Modell-Installer kann mehrere Modell-Pakete enthalten. Der `directoryName` bestimmt, in welches Unterverzeichnis das Modellpaket installiert werden soll - dieses Verzeichnis wird new angelegt.
 
-  - `AkModellInstaller:fuegeModellPaketHinzu(paket)` - fügt dem Installer ein weiteres Paket hinzu
+  - `AkModellInstaller:addModelPackage(paket)` - fügt dem Installer ein weiteres Paket hinzu
 
-  - `AkModellInstaller:erzeugePaket(ausgabeverzeichnis)` - erstellt das Paket als Unterordner im Ausgabeverzeichnis.
+  - `AkModellInstaller:generatePackage(outputDirectory)` - erstellt das Paket als Unterordner im Ausgabeverzeichnis.
 
 - Klasse `AkModellPaket` - legt ein Modell-Paket an, welches zum AkModellInstaller hinzugefügt wird.
 
-  - `AkModellPaket:new(eepVersion, deutscherName, deutscheBeschreibung)` - erzeugt ein neues Modell-Paket mit Mindest-EEP-Version, sowie einem deutschen Namen und einer deutschen Beschreibung.
+  - `AkModellPaket:new(eepVersion, germanName, germanDescription)` - erzeugt ein neues Modell-Paket mit Mindest-EEP-Version, sowie einem deutschen Namen und einer deutschen Beschreibung.
 
-  - `AkModellPaket:fuegeDateienHinzu(verzeichnis, praefix, unterverzeichnis)` - Fügt alle Dateien im Unterverzeichnis `verzeichnis\unterverzeichnis` hinzu. Die Dateien werden mit dem Namen `praefix\unterverzeichnis\...\dateiname` erzeugt.
+  - `AkModellPaket:addFiles(baseDirectory, prefix, subdirectory)` - Fügt alle Dateien im Unterverzeichnis `baseDirectory\subdirectory` hinzu. Die Dateien werden mit dem Namen `prefix\subdirectory\...\fileName` erzeugt.
 
 # Beispiel
 

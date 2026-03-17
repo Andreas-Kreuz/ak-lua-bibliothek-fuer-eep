@@ -1,64 +1,64 @@
 local AkModellPacker = require("ak.modellpacker.AkModellPacker")
 
 local AkModellPaket = {}
-function AkModellPaket:new(eepVersion, deutscherName, deutscheBeschreibung)
+function AkModellPaket:new(eepVersion, germanName, germanDescription)
     local o = {}
     setmetatable(o, self)
     self.__index = self
     o.eepVersion = eepVersion
-    o.deutscherName = deutscherName
-    o.deutscheBeschreibung = deutscheBeschreibung
-    o:setzeName()
-    o:setzeBeschreibung()
-    o.modellPfade = {}
-    o.installationsPfade = {}
+    o.germanName = germanName
+    o.germanDescription = germanDescription
+    o:setName()
+    o:setDescription()
+    o.modelPaths = {}
+    o.installationPaths = {}
     return o
 end
 
-function AkModellPaket:setzeName(englischerName, franzoesischerName, polnischerName)
-    self.englischerName = englischerName or self.deutscherName
-    self.franzoesischerName = franzoesischerName or self.englischerName
-    self.polnischerName = polnischerName or self.englischerName
+function AkModellPaket:setName(englishName, frenchName, polishName)
+    self.englishName = englishName or self.germanName
+    self.frenchName = frenchName or self.englishName
+    self.polishName = polishName or self.englishName
 end
 
-function AkModellPaket:setzeBeschreibung(englisch, franzoesisch, polnisch)
-    self.englischeBeschreibung = englisch or self.deutscheBeschreibung
-    self.franzoesischeBeschreibung = franzoesisch or self.englischeBeschreibung
-    self.polnischeBeschreibung = polnisch or self.englischeBeschreibung
+function AkModellPaket:setDescription(englisch, franzoesisch, polnisch)
+    self.englishDescription = englisch or self.germanDescription
+    self.frenchDescription = franzoesisch or self.englishDescription
+    self.polishDescription = polnisch or self.englishDescription
 end
 
 --- Sucht im Unterordner des Basisordners nach Modellen
--- Alle erkannten Dateien werden als "praefix\unterOrdner\...\Datei" erkannt und installiert
--- @param basisOrdner
--- @param praefix
--- @param unterOrdner
+-- Alle erkannten Dateien werden als "prefix\subdirectory\...\Datei" erkannt und installiert
+-- @param baseDirectory
+-- @param prefix
+-- @param subdirectory
 -- @param excludePattern
 --
-function AkModellPaket:fuegeDateienHinzu(basisOrdner, praefix, unterOrdner, pfadAusschlussMuster)
-    assert(type(basisOrdner) == "string", "Need 'basisOrdner' as string")
-    assert(type(praefix) == "string", "Need 'praefix' as string")
-    assert(type(unterOrdner) == "string", "Need 'unterOrdner' as string")
-    local neuePfade = {}
-    print(string.format("[#ModellPaket] Durchsuche \"%s\" in Unterordner \"%s\"", basisOrdner, unterOrdner))
-    local _, dateiGefunden = AkModellPacker.dateienSuchen(neuePfade, basisOrdner, unterOrdner)
-    assert(dateiGefunden,
-           string.format("Keine Datei gefunden: \"%s\" in Unterordner \"%s\"", basisOrdner, unterOrdner))
+function AkModellPaket:addFiles(baseDirectory, prefix, subdirectory, pathExclusionPattern)
+    assert(type(baseDirectory) == "string", "Need 'baseDirectory' as string")
+    assert(type(prefix) == "string", "Need 'prefix' as string")
+    assert(type(subdirectory) == "string", "Need 'subdirectory' as string")
+    local newPaths = {}
+    print(string.format("[#ModellPaket] Durchsuche \"%s\" in Unterordner \"%s\"", baseDirectory, subdirectory))
+    local _, fileFound = AkModellPacker.searchFiles(newPaths, baseDirectory, subdirectory)
+    assert(fileFound,
+           string.format("Keine Datei gefunden: \"%s\" in Unterordner \"%s\"", baseDirectory, subdirectory))
 
-    for pfad, datei in pairs(neuePfade) do
-        if pfadAusschlussMuster and AkModellPaket.pfadAusschliessen(pfad, pfadAusschlussMuster) then
-            print("[#ModellPaket] Ueberspringe: " .. pfad)
+    for path, file in pairs(newPaths) do
+        if pathExclusionPattern and AkModellPaket.excludePath(path, pathExclusionPattern) then
+            print("[#ModellPaket] Ueberspringe: " .. path)
         else
-            print("[#ModellPaket] Fuege Datei hinzu: " .. pfad)
-            self.installationsPfade[praefix .. pfad] = datei
-            self.modellPfade[basisOrdner .. "\\" .. pfad] = datei
+            print("[#ModellPaket] Fuege Datei hinzu: " .. path)
+            self.installationPaths[prefix .. path] = file
+            self.modelPaths[baseDirectory .. "\\" .. path] = file
         end
     end
 end
 
-function AkModellPaket.pfadAusschliessen(pfad, pfadAusschlussMuster)
-    if not pfadAusschlussMuster then return false end
+function AkModellPaket.excludePath(path, pathExclusionPattern)
+    if not pathExclusionPattern then return false end
 
-    for _, muster in ipairs(pfadAusschlussMuster) do if string.find(pfad, muster, 1, true) then return true end end
+    for _, pattern in ipairs(pathExclusionPattern) do if string.find(path, pattern, 1, true) then return true end end
     return false
 end
 

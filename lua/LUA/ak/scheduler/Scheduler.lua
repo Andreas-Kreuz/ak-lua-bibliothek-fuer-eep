@@ -100,8 +100,8 @@ end
 ---@param offsetInSeconds number Zeitspanne nach der die einzuplanende Aktion ausgeführt werden soll kann nicht
 ---                              groesser sein als AkSekundenProTag
 ---@param newTask Task the new action to be performed
----@param precedingTask? Task optional - wenn angegeben, wird die neue Aktion eingeplant, wenn die zeitspanneInSekunden
--- nach Ausfuehren der vorgaengerAktion vergangen ist
+---@param precedingTask? Task optional - when given, the new action is scheduled after the delayInSeconds
+-- of the preceding task have passed
 function Scheduler:scheduleTask(offsetInSeconds, newTask, precedingTask)
     assert(offsetInSeconds, "Specify offsetInSeconds")
     assert(newTask, "Specify newTask")

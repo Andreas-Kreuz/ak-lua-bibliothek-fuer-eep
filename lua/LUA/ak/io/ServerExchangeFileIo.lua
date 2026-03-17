@@ -16,10 +16,10 @@ local function fileExists(name)
 end
 
 --- Schreibe Datei.
-local function writeFile(fileName, inhalt)
+local function writeFile(fileName, content)
     local file = io.open(fileName, "w")
     assert(file, fileName)
-    file:write(inhalt)
+    file:write(content)
     file:flush()
     file:close()
 end

@@ -19,8 +19,8 @@ function Task:new(f, name)
     return setmetatable(o, self)
 end
 
-function Task:addSubsequentTask(folgeAktion, zeitspanneInSekunden)
-    self.subsequentTask[folgeAktion] = zeitspanneInSekunden
+function Task:addSubsequentTask(subsequentAction, delayInSeconds)
+    self.subsequentTask[subsequentAction] = delayInSeconds
 end
 
 function Task:starteAktion() self.f() end

@@ -33,7 +33,7 @@ Nimmt Aktionen für die Planung entgegen und führt diese nach Ablauf einer best
 
 - Variable: `Scheduler.debug = false` schaltet Ausgabefunktionen zu eingeplanten Aktionen aus, `Scheduler.debug = true` schaltet sie ein.
 
-- Funktion `Scheduler:scheduleTask(offsetInSeconds, einzuplanendeAktion, vorgaengerAktion)`
+- Funktion `Scheduler:scheduleTask(offsetInSeconds, newTask, precedingTask)`
 
   Der erste Parameter `offsetInSeconds` ist eine Wartezeit in Sekunden, bevor die Aktion gestartet wird.
 

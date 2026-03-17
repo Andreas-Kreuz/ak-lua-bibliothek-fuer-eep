@@ -2,72 +2,72 @@ local AkModellPacker = require("ak.modellpacker.AkModellPacker")
 
 local AkModellInstaller = {}
 
-function AkModellInstaller:new(verzeichnisname)
-    assert(type(verzeichnisname) == "string", "Need 'verzeichnisname' as string")
+function AkModellInstaller:new(directoryName)
+    assert(type(directoryName) == "string", "Need 'directoryName' as string")
     local o = {}
     setmetatable(o, self)
     self.__index = self
-    o.modellPakete = {}
+    o.modelPackages = {}
     o.index = 0
-    o.verzeichnisname = verzeichnisname
+    o.directoryName = directoryName
     return o
 end
 
-function AkModellInstaller:fuegeModellPaketHinzu(modellPaket)
-    self.modellPakete[self.index] = modellPaket
+function AkModellInstaller:addModelPackage(modelPackage)
+    self.modelPackages[self.index] = modelPackage
     self.index = self.index + 1
 end
 
-function AkModellInstaller:erzeugePaket(ausgabeverzeichnis)
+function AkModellInstaller:generatePackage(outputDirectory)
     -- Unterverzeichnis erzeugen
-    local installation_verzeichnis = ausgabeverzeichnis .. "\\" .. self.verzeichnisname
-    os.execute([[rmdir "]] .. installation_verzeichnis .. [["  /S /Q]])
-    os.execute([[mkdir "]] .. installation_verzeichnis .. [["]])
+    local installationDirectory = outputDirectory .. "\\" .. self.directoryName
+    os.execute([[rmdir "]] .. installationDirectory .. [["  /S /Q]])
+    os.execute([[mkdir "]] .. installationDirectory .. [["]])
 
-    local inhalt = ""
+    local content = ""
     for index = 0, (self.index - 1) do
-        local modellPaket = self.modellPakete[index]
-        inhalt = inhalt .. self.erzeugeKonfigurationsAbschnitt(index, modellPaket)
+        local modelPackage = self.modelPackages[index]
+        content = content .. self.generateConfigurationSection(index, modelPackage)
 
         -- Modellpaket anlegen
-        local modellPaketVerzeichnis = string.format(installation_verzeichnis .. "\\Install_%02d", index)
-        os.execute([[mkdir "]] .. modellPaketVerzeichnis .. [["]])
+        local modelPackageDirectory = string.format(installationDirectory .. "\\Install_%02d", index)
+        os.execute([[mkdir "]] .. modelPackageDirectory .. [["]])
 
         -- Dateien des Modellpakets kopieren
-        for pfad, dateiname in pairs(modellPaket.modellPfade) do
-            if not os.execute([[copy "]] .. pfad .. [[" "]] .. modellPaketVerzeichnis .. "\\" .. dateiname ..
+        for path, fileName in pairs(modelPackage.modelPaths) do
+            if not os.execute([[copy "]] .. path .. [[" "]] .. modelPackageDirectory .. "\\" .. fileName ..
                     [[" >nul]]) then
-                print([[copy "]] .. pfad .. [[" "]] .. modellPaketVerzeichnis .. "\\" .. dateiname .. [["]])
-                os.execute([[copy "]] .. pfad .. [[" "]] .. modellPaketVerzeichnis .. "\\" .. dateiname .. [[" ]])
+                print([[copy "]] .. path .. [[" "]] .. modelPackageDirectory .. "\\" .. fileName .. [["]])
+                os.execute([[copy "]] .. path .. [[" "]] .. modelPackageDirectory .. "\\" .. fileName .. [[" ]])
                 os.exit(1)
             end
         end
 
         -- Install ini schreiben
-        local installIniDatei = modellPaketVerzeichnis .. "\\install.ini"
-        AkModellPacker.schreibeDatei(installIniDatei, AkModellPacker.erzeugeInstallIniInhalt(
-            modellPaket.installationsPfade, modellPaket.eepVersion))
+        local installIniFile = modelPackageDirectory .. "\\install.ini"
+        AkModellPacker.writeFile(installIniFile, AkModellPacker.generateInstallIniContent(
+            modelPackage.installationPaths, modelPackage.eepVersion))
     end
-    local installation_eep_datei = string.format(installation_verzeichnis .. "\\Installation.eep")
-    AkModellPacker.schreibeDatei(installation_eep_datei, inhalt)
+    local installationEepFile = string.format(installationDirectory .. "\\Installation.eep")
+    AkModellPacker.writeFile(installationEepFile, content)
 
     if os.execute([[dir "C:\Program Files\7-Zip\7z.exe" > nul 2> nul]]) then
-        os.execute([[del /F "]] .. ausgabeverzeichnis .. "\\" .. self.verzeichnisname .. [[.zip"]])
-        os.execute([["C:\Program Files\7-Zip\7z.exe" a ]] .. ausgabeverzeichnis .. "\\" .. self.verzeichnisname ..
-            [[.zip ]] .. installation_verzeichnis .. [[\*]])
+        os.execute([[del /F "]] .. outputDirectory .. "\\" .. self.directoryName .. [[.zip"]])
+        os.execute([["C:\Program Files\7-Zip\7z.exe" a ]] .. outputDirectory .. "\\" .. self.directoryName ..
+            [[.zip ]] .. installationDirectory .. [[\*]])
     end
 end
 
-function AkModellInstaller.erzeugeKonfigurationsAbschnitt(index, modellPaket)
+function AkModellInstaller.generateConfigurationSection(index, modelPackage)
     local t = string.format("[Install_%02d]" .. "\n", index)
-    t = t .. string.format([[Name_GER	 = "%s"]] .. "\n", modellPaket.deutscherName)
-    t = t .. string.format([[Name_ENG	 = "%s"]] .. "\n", modellPaket.englischerName)
-    t = t .. string.format([[Name_FRA	 = "%s"]] .. "\n", modellPaket.franzoesischerName)
-    t = t .. string.format([[Name_POL	 = "%s"]] .. "\n", modellPaket.polnischerName)
-    t = t .. string.format([[Desc_GER	 = "%s"]] .. "\n", modellPaket.deutscheBeschreibung)
-    t = t .. string.format([[Desc_ENG	 = "%s"]] .. "\n", modellPaket.englischeBeschreibung)
-    t = t .. string.format([[Desc_FRA	 = "%s"]] .. "\n", modellPaket.franzoesischeBeschreibung)
-    t = t .. string.format([[Desc_POL	 = "%s"]] .. "\n", modellPaket.polnischeBeschreibung)
+    t = t .. string.format([[Name_GER	 = "%s"]] .. "\n", modelPackage.germanName)
+    t = t .. string.format([[Name_ENG	 = "%s"]] .. "\n", modelPackage.englishName)
+    t = t .. string.format([[Name_FRA	 = "%s"]] .. "\n", modelPackage.frenchName)
+    t = t .. string.format([[Name_POL	 = "%s"]] .. "\n", modelPackage.polishName)
+    t = t .. string.format([[Desc_GER	 = "%s"]] .. "\n", modelPackage.germanDescription)
+    t = t .. string.format([[Desc_ENG	 = "%s"]] .. "\n", modelPackage.englishDescription)
+    t = t .. string.format([[Desc_FRA	 = "%s"]] .. "\n", modelPackage.frenchDescription)
+    t = t .. string.format([[Desc_POL	 = "%s"]] .. "\n", modelPackage.polishDescription)
     t = t .. string.format([[Script	 = "Install_%02d\Install.ini"]] .. "\n", index)
     return t
 end
