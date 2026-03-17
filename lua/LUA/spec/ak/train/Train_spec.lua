@@ -3,7 +3,7 @@ describe("ak.train.Train", function()
     EepSimulator.simulateAddTrain("#EepTrain1", "RollingStock 1", "RollingStock 2")
 
     insulate("new Train is empty", function()
-        local TrainRegistry = require "ak.train.TrainRegistry"
+        local TrainRegistry = require("ak.train.TrainRegistry")
 
         local tram = TrainRegistry.forName("#EepTrain1");
 
@@ -18,7 +18,7 @@ describe("ak.train.Train", function()
     EepSimulator.simulateAddTrain("#EepTrain1", "RollingStock 1", "RollingStock 2")
 
     insulate("Destination is set", function()
-        local TrainRegistry = require "ak.train.TrainRegistry"
+        local TrainRegistry = require("ak.train.TrainRegistry")
 
         local tram = TrainRegistry.forName("#EepTrain1");
         tram:setDestination("DEST")
@@ -32,7 +32,7 @@ describe("ak.train.Train", function()
     EepSimulator.simulateAddTrain("#EepTrain1", "RollingStock 1", "RollingStock 2")
 
     insulate("Line is set", function()
-        local TrainRegistry = require "ak.train.TrainRegistry"
+        local TrainRegistry = require("ak.train.TrainRegistry")
 
         local tram = TrainRegistry.forName("#EepTrain1");
         tram:setLine("Line")
@@ -46,7 +46,7 @@ describe("ak.train.Train", function()
     EepSimulator.simulateAddTrain("#EepTrain1", "RollingStock 1", "RollingStock 2")
 
     insulate("Line is string", function()
-        local TrainRegistry = require "ak.train.TrainRegistry"
+        local TrainRegistry = require("ak.train.TrainRegistry")
 
         local tram = TrainRegistry.forName("#EepTrain1");
         tram:setLine(12)

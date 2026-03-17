@@ -1,4 +1,4 @@
-local TippTextFormatter = require "ak.core.eep.TippTextFormatter"
+local TippTextFormatter = require("ak.core.eep.TippTextFormatter")
 if AkDebugLoad then print("[#Start] Loading ak.road.Crossing ...") end
 
 local Task = require("ak.scheduler.Task")

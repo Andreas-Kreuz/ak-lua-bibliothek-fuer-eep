@@ -206,7 +206,7 @@ end)
 
 insulate("Line Management", function()
     local EepSimulator = require("ak.core.eep.EepSimulator")
-    local TrainRegistry = require "ak.train.TrainRegistry"
+    local TrainRegistry = require("ak.train.TrainRegistry")
     local Line = require("ak.public-transport.Line")
     local RoadStation = require("ak.public-transport.RoadStation")
 
