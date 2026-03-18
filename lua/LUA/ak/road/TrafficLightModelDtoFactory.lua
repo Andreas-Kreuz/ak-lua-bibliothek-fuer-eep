@@ -1,14 +1,33 @@
 if AkDebugLoad then print("[#Start] Loading ak.road.TrafficLightModelDtoFactory ...") end
 
-local DtoFactoryUtils = require("ak.data.DtoFactoryUtils")
-
 local TrafficLightModelDtoFactory = {}
 
 local ROOM = "signal-type-definitions"
 local KEY_ID = "id"
 
+local function toSignalTypeDefinitionPositionsDto(positions)
+    return {
+        positionRed = positions.positionRed,
+        positionGreen = positions.positionGreen,
+        positionYellow = positions.positionYellow,
+        positionRedYellow = positions.positionRedYellow,
+        positionPedestrians = positions.positionPedestrians,
+        positionOff = positions.positionOff,
+        positionOffBlinking = positions.positionOffBlinking
+    }
+end
+
+local function toSignalTypeDefinitionDto(definition)
+    return {
+        id = definition.id,
+        name = definition.name,
+        type = definition.type,
+        positions = toSignalTypeDefinitionPositionsDto(definition.positions or {})
+    }
+end
+
 function TrafficLightModelDtoFactory.createSignalTypeDefinitionDto(definition)
-    local dto = DtoFactoryUtils.toDto(definition)
+    local dto = toSignalTypeDefinitionDto(definition)
     return ROOM, KEY_ID, dto[KEY_ID], dto
 end
 

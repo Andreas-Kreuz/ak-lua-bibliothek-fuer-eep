@@ -8,8 +8,9 @@ insulate("ak.data.TrackDtoFactory", function ()
     it("provides room metadata for track DTOs", function ()
         local TrackDtoFactory = require("ak.data.TrackDtoFactory")
 
-        local room, keyId, key, trackDto = TrackDtoFactory.createTrackDto("rail", { id = 5 })
-        local listRoom, listKeyId, trackDtos = TrackDtoFactory.createTrackDtoList("rail", { ["5"] = { id = 5 } })
+        local room, keyId, key, trackDto = TrackDtoFactory.createTrackDto("rail", { id = 5, name = "ignored" })
+        local listRoom, listKeyId, trackDtos =
+            TrackDtoFactory.createTrackDtoList("rail", { ["5"] = { id = 5, name = "ignored" } })
 
         assert.equals("rail-tracks", room)
         assert.equals("id", keyId)

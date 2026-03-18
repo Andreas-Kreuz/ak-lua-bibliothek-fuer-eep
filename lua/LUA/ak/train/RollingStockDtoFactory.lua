@@ -1,14 +1,38 @@
 if AkDebugLoad then print("[#Start] Loading ak.train.RollingStockDtoFactory ...") end
 
-local DtoFactoryUtils = require("ak.data.DtoFactoryUtils")
-
 local RollingStockDtoFactory = {}
 
 local ROOM = "rolling-stocks"
 local KEY_ID = "id"
 
+local function toRollingStockDto(rollingStock)
+    return {
+        id = rollingStock.rollingStockName,
+        name = rollingStock.rollingStockName,
+        trainName = rollingStock:getTrainName(),
+        positionInTrain = rollingStock:getPositionInTrain(),
+        couplingFront = rollingStock:getCouplingFront(),
+        couplingRear = rollingStock:getCouplingRear(),
+        length = rollingStock:getLength(),
+        propelled = rollingStock:getPropelled(),
+        modelType = rollingStock:getModelType(),
+        modelTypeText = rollingStock:getModelTypeText(),
+        tag = rollingStock:getTag(),
+        nr = rollingStock:getWagonNr(),
+        trackId = rollingStock:getTrackId(),
+        trackDistance = rollingStock:getTrackDistance(),
+        trackDirection = rollingStock:getTrackDirection(),
+        trackSystem = rollingStock:getTrackSystem(),
+        trackType = rollingStock:getTrackType(),
+        posX = rollingStock:getX(),
+        posY = rollingStock:getY(),
+        posZ = rollingStock:getZ(),
+        mileage = rollingStock:getMileage()
+    }
+end
+
 function RollingStockDtoFactory.createRollingStockDto(rollingStock)
-    local dto = DtoFactoryUtils.toDto(rollingStock)
+    local dto = toRollingStockDto(rollingStock)
     return ROOM, KEY_ID, dto[KEY_ID], dto
 end
 

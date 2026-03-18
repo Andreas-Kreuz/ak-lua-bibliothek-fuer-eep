@@ -1,14 +1,21 @@
 if AkDebugLoad then print("[#Start] Loading ak.core.RuntimeDtoFactory ...") end
 
-local DtoFactoryUtils = require("ak.data.DtoFactoryUtils")
-
 local RuntimeDtoFactory = {}
 
 local ROOM = "runtime"
 local KEY_ID = "id"
 
+local function toRuntimeDto(runtimeEntry)
+    return {
+        id = runtimeEntry.id,
+        count = runtimeEntry.count,
+        time = runtimeEntry.time,
+        lastTime = runtimeEntry.lastTime
+    }
+end
+
 function RuntimeDtoFactory.createRuntimeDto(runtimeEntry)
-    local dto = DtoFactoryUtils.toDto(runtimeEntry)
+    local dto = toRuntimeDto(runtimeEntry)
     return ROOM, KEY_ID, dto[KEY_ID], dto
 end
 

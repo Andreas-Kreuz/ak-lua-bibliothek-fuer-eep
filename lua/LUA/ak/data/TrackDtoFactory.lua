@@ -1,7 +1,5 @@
 if AkDebugLoad then print("[#Start] Loading ak.data.TrackDtoFactory ...") end
 
-local DtoFactoryUtils = require("ak.data.DtoFactoryUtils")
-
 local TrackDtoFactory = {}
 
 local KEY_ID = "id"
@@ -10,8 +8,14 @@ local function roomForTrackType(trackType)
     return trackType .. "-tracks"
 end
 
+local function toTrackDto(track)
+    return {
+        id = track.id
+    }
+end
+
 function TrackDtoFactory.createTrackDto(trackType, track)
-    local dto = DtoFactoryUtils.toDto(track)
+    local dto = toTrackDto(track)
     return roomForTrackType(trackType), KEY_ID, dto[KEY_ID], dto
 end
 

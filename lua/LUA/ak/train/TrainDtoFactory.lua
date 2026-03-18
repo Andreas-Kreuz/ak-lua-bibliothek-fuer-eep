@@ -1,14 +1,34 @@
 if AkDebugLoad then print("[#Start] Loading ak.train.TrainDtoFactory ...") end
 
-local DtoFactoryUtils = require("ak.data.DtoFactoryUtils")
-
 local TrainDtoFactory = {}
 
 local ROOM = "trains"
 local KEY_ID = "id"
 
+local function copyTable(values)
+    local copy = {}
+    for key, value in pairs(values or {}) do copy[key] = value end
+    return copy
+end
+
+local function toTrainDto(train)
+    return {
+        id = train:getName(),
+        route = train:getRoute(),
+        rollingStockCount = train:getRollingStockCount(),
+        length = train:getLength(),
+        line = train:getLine(),
+        destination = train:getDestination(),
+        direction = train:getDirection(),
+        trackType = train:getTrackType(),
+        movesForward = train:getMovesForward(),
+        speed = train:getSpeed(),
+        occupiedTacks = copyTable(train:getOnTrack())
+    }
+end
+
 function TrainDtoFactory.createTrainDto(train)
-    local dto = DtoFactoryUtils.toDto(train)
+    local dto = toTrainDto(train)
     return ROOM, KEY_ID, dto[KEY_ID], dto
 end
 

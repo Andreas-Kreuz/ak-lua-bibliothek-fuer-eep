@@ -36,7 +36,7 @@ insulate("ak.core.DtoFactories", function ()
         }, versionDtos)
 
         local runtimeRoom, runtimeKeyId, runtimeDtos =
-            RuntimeDtoFactory.createRuntimeDtoList({ sample = { id = "sample", count = 2, time = 4, lastTime = 1 } })
+            RuntimeDtoFactory.createRuntimeDtoList({ sample = { id = "sample", count = 2, time = 4, lastTime = 1, extra = true } })
         assert.equals("runtime", runtimeRoom)
         assert.equals("id", runtimeKeyId)
         assert.same({ sample = { id = "sample", count = 2, time = 4, lastTime = 1 } }, runtimeDtos)
