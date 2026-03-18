@@ -50,12 +50,14 @@ export class TrainSelector {
 
       this.trainMap.set(train.id, train);
     });
+
+    this.state = state;
   };
 
   getTrainList(trackType: string): TrainListEntry[] {
     return Array.from(this.trainListEntryMap.values())
       .filter((v: TrainListEntry) => v.trackType === trackType)
-      .sort();
+      .sort((a, b) => a.id.localeCompare(b.id, 'de'));
   }
 
   getTrain(trainId: string): Train {
@@ -66,7 +68,7 @@ export class TrainSelector {
     if (this.rollingStockSelector.rollingStockInTrain(train.id, 0)) {
       return calcTrainType(
         this.rollingStockSelector.rollingStockInTrain(train.id, 0).modelType,
-        train.rollingStockCount
+        train.rollingStockCount,
       );
     } else {
       return TrainType.TrainElectric;

@@ -52,7 +52,7 @@ export const TrainProvider = (props: { children: ReactNode }) => {
   const trainDispatcher = (payload: string) => {
     if (debug) console.log('                 |⚠️ FIRED ---', '🚂 TRAINS UPDATED');
     const data: Record<string, TrainListEntry> = JSON.parse(payload);
-    const trains = Object.values(data).sort((a, b) => (a.id < b.id ? -1 : 1));
+    const trains = Object.values(data).sort((a, b) => a.id.localeCompare(b.id, 'de'));
     dispatch({ type: 'trains updated', trains: trains });
   };
   useDynamicRoomHandler(TrainListRoom, state.trackType, trainDispatcher);

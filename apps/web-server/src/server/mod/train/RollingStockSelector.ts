@@ -24,7 +24,7 @@ export class RollingStockSelector {
         id: rsDto.id,
         name: rsDto.name,
         couplingFront: rsDto.couplingFront,
-        couplingRear: rsDto.couplingFront,
+        couplingRear: rsDto.couplingRear,
         length: rsDto.length,
         modelType: rsDto.modelType,
         positionInTrain: rsDto.positionInTrain,
@@ -39,12 +39,13 @@ export class RollingStockSelector {
       this.trainRollingStock.set(rollingStock.trainName, trainRs);
       this.allRollingStock.set(rollingStock.id, rollingStock);
     });
+    this.lastState = state;
   }
 
   rollingStockListOfTrain(trainId: string): RollingStock[] {
     const rsList: RollingStock[] = [];
     const trainRollingStock = this.trainRollingStock.get(trainId) || new Map<number, RollingStock>();
-    const sortedKeys: number[] = Array.from(trainRollingStock.keys()).sort();
+    const sortedKeys: number[] = Array.from(trainRollingStock.keys()).sort((a, b) => a - b);
     for (const key of sortedKeys) {
       rsList.push(trainRollingStock.get(key));
     }

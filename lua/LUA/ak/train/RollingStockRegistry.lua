@@ -34,7 +34,7 @@ end
 ---@param rollingStockName string
 function RollingStockRegistry.rollingStockDisappeared(rollingStockName)
     allRollingStock[rollingStockName] = nil
-    DataChangeBus.fireDataChanged(RollingStockDtoFactory.createRollingStockReferenceDto(rollingStockName))
+    DataChangeBus.fireDataRemoved(RollingStockDtoFactory.createRollingStockReferenceDto(rollingStockName))
 end
 
 function RollingStockRegistry.fireChangeRollingStockEvent()
