@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { fn } from '@storybook/test';
+import { fn } from 'storybook/test';
 import { OldPublicTransportLineCard as MyOldPublicTransportLineCard } from './OldPublicTransportLineCard.component';
 import Line from '../../../mod/lines/model/Line';
 import StationInfo from '../../../mod/lines/model/StationInfo';

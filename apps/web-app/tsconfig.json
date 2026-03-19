@@ -16,6 +16,5 @@
     "noEmit": true,
     "sourceMap": true
   },
-  "include": ["src"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "include": ["src"]
 }

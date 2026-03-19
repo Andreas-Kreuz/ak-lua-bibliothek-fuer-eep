@@ -9,9 +9,9 @@ const dirname = typeof __dirname !== 'undefined' ? __dirname : path.dirname(file
 
 // More info at: https://storybook.js.org/docs/writing-tests/integrations/vitest-addon
 export default defineWorkspace([
-  'vite.config.ts',
+  'vite.config.mjs',
   {
-    extends: 'vite.config.ts',
+    extends: 'vite.config.mjs',
     plugins: [
       // The plugin will run tests for the stories defined in your Storybook config
       // See options at: https://storybook.js.org/docs/writing-tests/integrations/vitest-addon#manual-setup-advanced

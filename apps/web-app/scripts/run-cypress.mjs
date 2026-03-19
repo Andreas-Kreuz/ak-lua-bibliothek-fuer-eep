@@ -1,13 +1,16 @@
 import { spawn } from 'node:child_process';
+import { resolve } from 'node:path';
 import process from 'node:process';
+import { fileURLToPath } from 'node:url';
 
 const env = { ...process.env };
 delete env.ELECTRON_RUN_AS_NODE;
 
 const args = process.argv.slice(2);
-const command = process.platform === 'win32' ? 'cypress.cmd' : 'cypress';
+const scriptDir = fileURLToPath(new URL('.', import.meta.url));
+const cypressBin = resolve(scriptDir, '../../../node_modules/cypress/bin/cypress');
 
-const child = spawn(command, args, {
+const child = spawn(process.execPath, [cypressBin, ...args], {
   cwd: process.cwd(),
   stdio: 'inherit',
   env,
