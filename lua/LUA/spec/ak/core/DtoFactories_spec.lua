@@ -26,17 +26,26 @@ insulate("ak.core.DtoFactories", function ()
         assert.equals("eep-version", versionRoom)
         assert.equals("id", versionKeyId)
         assert.same({
-            versionInfo = {
-                id = "versionInfo",
-                name = "versionInfo",
-                eepVersion = "18.1",
-                luaVersion = "Lua 5.3",
-                singleVersion = "1.2.3"
-            }
-        }, versionDtos)
+                        versionInfo = {
+                            id = "versionInfo",
+                            name = "versionInfo",
+                            eepVersion = "18.1",
+                            luaVersion = "Lua 5.3",
+                            singleVersion = "1.2.3"
+                        }
+                    }, versionDtos)
 
         local runtimeRoom, runtimeKeyId, runtimeDtos =
-            RuntimeDtoFactory.createRuntimeDtoList({ sample = { id = "sample", count = 2, time = 4, lastTime = 1, extra = true } })
+            RuntimeDtoFactory.createRuntimeDtoList(
+                {
+                    sample = {
+                        id = "sample",
+                        count = 2,
+                        time = 4,
+                        lastTime = 1,
+                        extra = true
+                    }
+                })
         assert.equals("runtime", runtimeRoom)
         assert.equals("id", runtimeKeyId)
         assert.same({ sample = { id = "sample", count = 2, time = 4, lastTime = 1 } }, runtimeDtos)
