@@ -133,7 +133,7 @@ files["lua/LUA/ak/road/Road.lua"].ignore = {"131"}
 files["lua/LUA/ak/road/RoadTypes.d.lua"].ignore = {"631"}
 files["lua/LUA/ak/data/TrackCollector.lua"].ignore = {"121", "211"}
 files["lua/LUA/ak/data/TrainDetection.lua"].ignore = {"121", "211"}
-files["lua/LUA/ak/io/LogOutputFileWriter.lua"].ignore = {"121"}
+files["lua/LUA/ak/io/LogOutputFileWriter.lua"].ignore = {"111", "113", "121"}
 files["lua/LUA/ak/public-transport/PublicTransportTypes.d.lua"].ignore = {"631"}
 files["lua/LUA/ak/train/TrainTypes.d.lua"].ignore = {"631"}
 files["lua/LUA/spec/ak/core/VersionInfo_spec.lua"].ignore = {"122"}
@@ -141,7 +141,7 @@ files["lua/LUA/spec/ak/io/DataStoreFileWriter_spec.lua"].ignore = {"122"}
 files["lua/LUA/spec/ak/io/ExchangeDirRegistry_spec.lua"].ignore = {"122"}
 files["lua/LUA/spec/ak/io/FunctionNameWriter_spec.lua"].ignore = {"122"}
 files["lua/LUA/spec/ak/io/IncomingCommandFileReader_spec.lua"].ignore = {"122"}
-files["lua/LUA/spec/ak/io/LogOutputFileWriter_spec.lua"].ignore = {"121", "122"}
+files["lua/LUA/spec/ak/io/LogOutputFileWriter_spec.lua"].ignore = {"111", "113", "121", "122"}
 files["lua/LUA/spec/ak/io/ServerExchangeFileIo_spec.lua"].ignore = {"122"}
 
 exclude_files = {
