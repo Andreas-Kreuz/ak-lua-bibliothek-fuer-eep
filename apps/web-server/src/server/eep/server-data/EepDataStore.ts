@@ -22,9 +22,10 @@ export default class EepDataStore {
     this.state = EepDataStore.updateStateOnEepEvent(event, this.state);
   }
 
-  init(previousState: State) {
-    if (previousState && previousState.eventCounter && previousState.rooms) {
-      this.state = previousState;
+  init(previousState: unknown) {
+    const state = previousState as State;
+    if (state && state.eventCounter && state.rooms) {
+      this.state = state;
     } else {
       this.state = initialState;
     }
@@ -40,7 +41,7 @@ export default class EepDataStore {
         };
       case 'DataAdded':
       case 'DataChanged': {
-        const payload: DataChangePayload<unknown> = event.payload;
+        const payload = event.payload as DataChangePayload<unknown>;
         const roomName = payload.room;
         const key = payload.element[payload.keyId];
         return {
@@ -50,7 +51,7 @@ export default class EepDataStore {
         };
       }
       case 'DataRemoved': {
-        const payload: DataChangePayload<unknown> = event.payload;
+        const payload = event.payload as DataChangePayload<unknown>;
         const roomName = payload.room;
         const key = payload.element[payload.keyId];
         const { [key]: _, ...remainingEntries } = state.rooms[roomName];
@@ -61,7 +62,7 @@ export default class EepDataStore {
         };
       }
       case 'ListChanged': {
-        const payload: ListChangePayload<unknown> = event.payload;
+        const payload = event.payload as ListChangePayload<unknown>;
         const roomName = payload.room;
         const newEntries: Record<string, unknown> = {};
         for (const element of Object.values(payload.list)) {
