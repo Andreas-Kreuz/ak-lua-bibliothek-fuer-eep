@@ -22,7 +22,7 @@ import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { useState } from 'react';
-import QRCode from 'react-qr-code';
+import { QRCode } from 'react-qr-code';
 
 function ServerHome() {
   const [serverHost, setServerHost] = useState<string>();

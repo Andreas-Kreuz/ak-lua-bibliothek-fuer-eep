@@ -60,7 +60,7 @@ export class ServerMain {
     });
     app.use('/', express.static(appDir));
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    app.get('/*', (req: any, res: any) => {
+    app.get('/{*splat}', (req: any, res: any) => {
       res.sendFile(path.join(appDir, '/index.html'));
     });
     httpServer.listen(this.port, () => {
