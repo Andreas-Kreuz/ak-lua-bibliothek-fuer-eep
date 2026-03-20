@@ -2,8 +2,10 @@
 from __future__ import annotations
 
 """
-Generiert die modernisierte Iconfamilie der Control Extension aus
-`assets/img/ce-logo.svg`.
+Generiert die modernisierte Iconfamilie der Control Extension.
+
+Favicons werden aus `assets/img/ce-logo-simple.svg` erzeugt.
+App- und Server-Icons werden aus `assets/img/ce-logo.svg` erzeugt.
 
 Ausgabedateien:
 - `assets/favicon.ico`
@@ -36,7 +38,8 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE_SVG = ROOT / "assets" / "img" / "ce-logo.svg"
+APP_ICON_SOURCE_SVG = ROOT / "assets" / "img" / "ce-logo.svg"
+FAVICON_SOURCE_SVG = ROOT / "assets" / "img" / "ce-logo-simple.svg"
 
 PNG_OUTPUTS: list[tuple[Path, int]] = [
     (ROOT / "assets" / "img" / "ce-logo-72.png", 72),
@@ -47,9 +50,12 @@ PNG_OUTPUTS: list[tuple[Path, int]] = [
     (ROOT / "apps" / "web-server" / "resources" / "icon.png", 1024),
 ]
 
-ICO_OUTPUTS: list[tuple[Path, list[int]]] = [
+FAVICON_ICO_OUTPUTS: list[tuple[Path, list[int]]] = [
     (ROOT / "assets" / "favicon.ico", [16, 24, 32, 48]),
     (ROOT / "apps" / "web-app" / "public" / "favicon.ico", [16, 24, 32, 48]),
+]
+
+APP_ICON_ICO_OUTPUTS: list[tuple[Path, list[int]]] = [
     (ROOT / "apps" / "web-server" / "resources" / "icon.ico", [16, 24, 32, 48, 64, 128, 256]),
 ]
 
@@ -63,10 +69,16 @@ ICNS_OUTPUT = ROOT / "apps" / "web-server" / "resources" / "icon.icns"
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Generiert die Control-Extension-Icondateien.")
     parser.add_argument(
-        "--source",
+        "--app-icon-source",
         type=Path,
-        default=SOURCE_SVG,
-        help="Quelldatei als SVG. Standard: assets/img/ce-logo.svg",
+        default=APP_ICON_SOURCE_SVG,
+        help="Quelldatei fuer App- und Server-Icons. Standard: assets/img/ce-logo.svg",
+    )
+    parser.add_argument(
+        "--favicon-source",
+        type=Path,
+        default=FAVICON_SOURCE_SVG,
+        help="Quelldatei fuer Favicons. Standard: assets/img/ce-logo-simple.svg",
     )
     parser.add_argument(
         "--skip-icns",
@@ -164,25 +176,32 @@ def build_icns(cairosvg, svg_bytes: bytes, target: Path) -> None:
 
 def main() -> int:
     args = parse_args()
-    source = args.source.resolve()
-    if not source.is_file():
-        raise SystemExit(f"SVG-Datei nicht gefunden: {source}")
+    app_icon_source = args.app_icon_source.resolve()
+    favicon_source = args.favicon_source.resolve()
+    if not app_icon_source.is_file():
+        raise SystemExit(f"SVG-Datei nicht gefunden: {app_icon_source}")
+    if not favicon_source.is_file():
+        raise SystemExit(f"SVG-Datei nicht gefunden: {favicon_source}")
 
     cairosvg = import_cairosvg()
     Image = import_pillow_image()
-    svg_bytes = source.read_bytes()
+    app_icon_svg_bytes = app_icon_source.read_bytes()
+    favicon_svg_bytes = favicon_source.read_bytes()
 
     for target in SVG_COPIES:
-        copy_svg(source, target)
+        copy_svg(favicon_source, target)
 
     for target, size in PNG_OUTPUTS:
-        render_png(cairosvg, svg_bytes, target, size)
+        render_png(cairosvg, app_icon_svg_bytes, target, size)
 
-    for target, sizes in ICO_OUTPUTS:
-        build_ico(cairosvg, Image, svg_bytes, target, sizes)
+    for target, sizes in FAVICON_ICO_OUTPUTS:
+        build_ico(cairosvg, Image, favicon_svg_bytes, target, sizes)
+
+    for target, sizes in APP_ICON_ICO_OUTPUTS:
+        build_ico(cairosvg, Image, app_icon_svg_bytes, target, sizes)
 
     if not args.skip_icns:
-        build_icns(cairosvg, svg_bytes, ICNS_OUTPUT)
+        build_icns(cairosvg, app_icon_svg_bytes, ICNS_OUTPUT)
 
     print("Control-Extension-Icons erzeugt.")
     return 0
