@@ -12,7 +12,7 @@ function Server() {
         <AppBar>
           <Toolbar>
             <Typography variant="h6" component="div" sx={{ flexGrow: 1, display: 'block' }}>
-              Web-Server für EEP
+              CE Server
             </Typography>
           </Toolbar>
         </AppBar>

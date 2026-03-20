@@ -1,6 +1,6 @@
 {
-  "short_name": "Control Extension",
-  "name": "Control Extension Web App für EEP",
+  "short_name": "CE Server",
+  "name": "CE Server",
   "icons": [
     {
       "src": "icon-192.png",

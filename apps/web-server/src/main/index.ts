@@ -7,10 +7,14 @@ import * as path from 'path';
 let mainWindow: Electron.BrowserWindow;
 
 function createWindow() {
+  const icon = app.isPackaged ? undefined : path.resolve(__dirname, '../../resources/icon.ico');
+
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 800,
     height: 700,
+    title: 'CE Server',
+    icon,
     webPreferences: {
       preload: path.join(__dirname, '/preload/index.js'),
     },

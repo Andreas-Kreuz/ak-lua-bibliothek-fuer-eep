@@ -64,6 +64,7 @@ end
 | `ModuleRegistry.activateServer()`                    | `ControlExtension.activateServer()`                      | Benutzerpfad                                                    |
 | `ModuleRegistry.debug = true`                        | `ControlExtension.setDebug(true)`                        | Setter statt Feldzugriff                                        |
 | `ModuleRegistry.pauseEepDuringInitialization = true` | `ControlExtension.setPauseEepDuringInitialization(true)` | Setter statt Feldzugriff                                        |
+| `ModuleRegistry.useDlls(true)`                       | entfällt                                                 | In `ce.ControlExtension` gibt es dafür keinen öffentlichen Ersatz |
 
 ## Ersetzte `*LuaModule`-Requires
 
@@ -75,6 +76,7 @@ Diese alten Modul-Wrapper sind die häufigsten Stellen, an denen deine bestehend
 | `require("ak.data.DataLuaModule")`                        | `require("ce.hub.mods.DataCeModule")`                         | Für Hub-Datenexport                                        |
 | `require("ak.scheduler.SchedulerLuaModule")`              | `require("ce.hub.mods.SchedulerCeModule")`                    | Meist nur bei direkter Scheduler-Nutzung nötig             |
 | `require("ak.road.CrossingLuaModule")`                    | `require("ce.mods.road.CrossingCeModule")`                    | Straßenverkehrsmodul                                       |
+| `require("ak.road.CrossingLuaModul")`                     | `require("ce.mods.road.CrossingCeModule")`                    | Alter Tippfehler in einigen Anlagen-Dateien                |
 | `require("ak.public-transport.PublicTransportLuaModule")` | `require("ce.mods.public-transport.PublicTransportCeModule")` | ÖPNV-Modul                                                 |
 
 ## Direkte `require()`-Ersetzungen nach Bereich
@@ -87,20 +89,37 @@ Die folgenden Ersetzungen decken die typischen direkten Modulzugriffe aus besteh
 | `require("ak.io.ServerExchangeCoordinator")`   | `require("ce.databridge.ServerExchangeCoordinator")` |
 | `require("ak.io.DataStoreFileWriter")`         | `require("ce.databridge.DataStoreFileWriter")`       |
 | `require("ak.core.eep.EepSimulator")`          | `require("ce.hub.eep.EepSimulator")`                 |
+| `require("ak.core.eep.TippTextFormatter")`     | `require("ce.hub.eep.TippTextFormatter")`            |
 | `require("ak.events.DataChangeBus")`           | `require("ce.hub.publish.DataChangeBus")`            |
 | `require("ak.data.DataStore")`                 | `require("ce.hub.publish.InternalDataStore")`        |
 | `require("ak.storage.StorageUtility")`         | `require("ce.hub.util.StorageUtility")`              |
 | `require("ak.util.TableUtils")`                | `require("ce.hub.util.TableUtils")`                  |
 | `require("ak.util.Queue")`                     | `require("ce.hub.util.Queue")`                       |
 | `require("ak.util.RuntimeRegistry")`           | `require("ce.hub.util.RuntimeRegistry")`             |
+| `require("ak.scheduler.Scheduler")`            | `require("ce.hub.scheduler.Scheduler")`              |
+| `require("ak.scheduler.Task")`                 | `require("ce.hub.scheduler.Task")`                   |
 | `require("ak.modellpacker.AkModellInstaller")` | `require("ce.modellpacker.AkModellInstaller")`       |
 | `require("ak.modellpacker.AkModellPaket")`     | `require("ce.modellpacker.AkModellPaket")`           |
 | `require("ak.modellpacker.AkModellPacker")`    | `require("ce.modellpacker.AkModellPacker")`          |
 | `require("ak.third-party.json")`               | `require("ce.third-party.json")`                     |
 | `require("ak.third-party.BetterContacts_BH2")` | `require("ce.third-party.BetterContacts_BH2")`       |
 | `require("ak.demo-anlagen...")`                | `require("ce.demo-anlagen...")`                      |
+| `require("ak.anlagen...")`                     | `require("ce.anlagen...")`                           |
 | `require("ak.template...")`                    | `require("ce.template...")`                          |
 | `require("ak.rail.Rail")`                      | `require("ce.rail.Rail")`                            |
+| `require("ak.road.TramSwitch")`                | `require("ce.mods.road.TramSwitch")`                 |
+| `require("ak.road.TrafficLightModel")`         | `require("ce.mods.road.TrafficLightModel")`          |
+| `require("ak.road.AxisStructureTrafficLight")` | `require("ce.mods.road.AxisStructureTrafficLight")`  |
+| `require("ak.road.LightStructureTrafficLight")`| `require("ce.mods.road.LightStructureTrafficLight")` |
+| `require("ak.road.TrafficLight")`              | `require("ce.mods.road.TrafficLight")`               |
+| `require("ak.road.Lane")`                      | `require("ce.mods.road.Lane")`                       |
+| `require("ak.road.Crossing")`                  | `require("ce.mods.road.Crossing")`                   |
+| `require("ak.road.CrossingSequence")`          | `require("ce.mods.road.CrossingSequence")`           |
+| `require("ak.public-transport.Line")`          | `require("ce.mods.public-transport.Line")`           |
+| `require("ak.public-transport.LineRegistry")`  | `require("ce.mods.public-transport.LineRegistry")`   |
+| `require("ak.public-transport.RoadStation")`   | `require("ce.mods.public-transport.RoadStation")`    |
+| `require("ak.public-transport.RoadStationDisplayModel")` | `require("ce.mods.public-transport.models.RoadStationDisplayModel")` |
+| `require("ak.train.TrainRegistry")`            | `require("ce.hub.data.trains.TrainRegistry")`        |
 
 ## Fachmodule: alte Pfade zu neuen Pfaden
 
