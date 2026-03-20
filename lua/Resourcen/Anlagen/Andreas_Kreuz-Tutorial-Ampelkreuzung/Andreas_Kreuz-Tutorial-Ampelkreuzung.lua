@@ -8,7 +8,7 @@ for signalId = 1, 1000 do
 -----------------------------------------------------------------------
 -- Um mit dem Tutorial zu starten, schreibe Deine eigene LUA-Befehle
 -----------------------------------------------------------------------
-require("ak.demo-anlagen.tutorial-ampel.meine-ampel-main")
+require("ce.demo-anlagen.tutorial-ampel.meine-ampel-main")
 [EEPLuaData]
 DS_100 = "f=0,p=Rot,w=3,"
 DS_101 = "f=0,p=Rot,w=0,"

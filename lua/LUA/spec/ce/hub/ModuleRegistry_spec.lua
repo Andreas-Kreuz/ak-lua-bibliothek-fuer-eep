@@ -1,0 +1,13 @@
+insulate("Check traffic light sequence", function ()
+    require("ce.hub.eep.EepSimulator")
+    local ModuleRegistry = require("ce.hub.ModuleRegistry")
+    local crossingCeModule = require("ce.mods.road.CrossingCeModule")
+    local schedulerCeModule = require("ce.hub.mods.SchedulerCeModule")
+    ModuleRegistry.registerModules(crossingCeModule, schedulerCeModule)
+
+    local modNames = ModuleRegistry.getModuleNames()
+    it("modNames size   ", function () assert.equals(3, #modNames) end)
+    it("Scheduler first!", function () assert.equals("ce.hub.mods.SchedulerCeModule", modNames[1]) end)
+    it("Core second!    ", function () assert.equals("ce.hub.mods.CoreCeModule", modNames[2]) end)
+    it("Crossing second!", function () assert.equals("ce.mods.road.CrossingCeModule", modNames[3]) end)
+end)

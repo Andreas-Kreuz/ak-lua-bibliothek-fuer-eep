@@ -23,8 +23,8 @@ tags: [Fortgeschrittene, Entwickler]
 
 * Starte die Kommandozeile als Administrator (`<Windows>`-Taste drücken, `cmd` eintippen, ein Rechtsklick auf `Eingabeaufforderung` und dann _Als Administrator ausführen_.
 
-* Erstelle nun einen Verzeichnis-Link (Verknüpfung) des `ak`-Verzeichnisses im Unterverzeichnis `LUA` Deiner EEP-Installation (z.B. in `C:\Trend\EEP14\LUA`):
+* Erstelle nun einen Verzeichnis-Link (Verknüpfung) des `ce`-Verzeichnisses im Unterverzeichnis `LUA` Deiner EEP-Installation (z.B. in `C:\Trend\EEP14\LUA`):
 
-    `mklink /D C:\Trend\EEP14\LUA\ak C:\GitHub\ak-lua-bibliothek-fuer-eep\LUA\ak\`
+    `mklink /D C:\Trend\EEP14\LUA\ce C:\GitHub\ak-lua-bibliothek-fuer-eep\lua\LUA\ce\`
 
-* Fertig: Nun ist die Bibliothek im Ordner `ak` auch in EEP unter `ak` verfügbar und Du kannst nun eine Demo-Anlage aus `C:\GitHub\ak-lua-bibliothek-fuer-eep\Resourcen\Anlagen\` öffnen. Wenn alles geklappt hat, wird die automatische Steuerung der Demo-Anlage funktionieren.
+* Fertig: Nun ist die Bibliothek im Ordner `ce` auch in EEP unter `ce` verfügbar und Du kannst nun eine Demo-Anlage aus `C:\GitHub\ak-lua-bibliothek-fuer-eep\lua\Resourcen\Anlagen\` öffnen. Wenn alles geklappt hat, wird die automatische Steuerung der Demo-Anlage funktionieren.

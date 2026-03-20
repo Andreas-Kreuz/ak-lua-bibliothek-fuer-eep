@@ -18,17 +18,17 @@ Wichtig:
 
 | Collector                        | Datei                                                          | Effektive Ausgabe                                                                |
 | -------------------------------- | -------------------------------------------------------------- | -------------------------------------------------------------------------------- |
-| `ModulesStatePublisher`           | `lua/LUA/ak/core/ModulesStatePublisher.lua`                     | direkte Rückgabe; zusätzlich `DataAdded`/`DataChanged` für `modules`             |
-| `VersionStatePublisher`           | `lua/LUA/ak/core/VersionStatePublisher.lua`                     | `ListChanged` für `eep-version`; Rückgabe leer                                   |
-| `SignalStatePublisher`            | `lua/LUA/ak/data/SignalStatePublisher.lua`                      | `ListChanged` für `signals` und `waiting-on-signals`; Rückgabe leer              |
-| `SwitchStatePublisher`            | `lua/LUA/ak/data/SwitchStatePublisher.lua`                      | `ListChanged` für `switches`; Rückgabe leer                                      |
-| `TimeStatePublisher`              | `lua/LUA/ak/data/TimeStatePublisher.lua`                        | `ListChanged` für `times`; Rückgabe leer                                         |
-| `DataSlotsStatePublisher`         | `lua/LUA/ak/data/DataSlotsStatePublisher.lua`                   | `ListChanged` für `save-slots` und `free-slots`; Rückgabe leer                   |
-| `StructureStatePublisher`         | `lua/LUA/ak/data/StructureStatePublisher.lua`                   | `ListChanged` für `structures`; Rückgabe leer                                    |
-| `TrainsAndTracksStatePublisher`   | `lua/LUA/ak/data/TrainsAndTracksStatePublisher.lua`             | indirekte Events für `trains` und `rolling-stocks`; Rückgabe leer                |
-| `TrafficLightModelStatePublisher` | `lua/LUA/ak/road/TrafficLightModelStatePublisher.lua`           | `ListChanged` für `signal-type-definitions`; Rückgabe leer                       |
-| `CrossingStatePublisher`          | `lua/LUA/ak/road/CrossingStatePublisher.lua`                    | Events für Kreuzungsdaten; internes Datenobjekt wird derzeit nicht zurückgegeben |
-| `PublicTransportStatePublisher`   | `lua/LUA/ak/public-transport/PublicTransportStatePublisher.lua` | Events für ÖPNV-Daten; internes Datenobjekt wird derzeit nicht zurückgegeben     |
+| `ModulesStatePublisher`           | `lua/LUA/ce/hub/data/modules/ModulesStatePublisher.lua`               | direkte Rückgabe; zusätzlich `DataAdded`/`DataChanged` für `modules`             |
+| `VersionStatePublisher`           | `lua/LUA/ce/hub/data/version/VersionStatePublisher.lua`               | `ListChanged` für `eep-version`; Rückgabe leer                                   |
+| `SignalStatePublisher`            | `lua/LUA/ce/hub/data/signals/SignalStatePublisher.lua`                | `ListChanged` für `signals` und `waiting-on-signals`; Rückgabe leer              |
+| `SwitchStatePublisher`            | `lua/LUA/ce/hub/data/switches/SwitchStatePublisher.lua`               | `ListChanged` für `switches`; Rückgabe leer                                      |
+| `TimeStatePublisher`              | `lua/LUA/ce/hub/data/time/TimeStatePublisher.lua`                     | `ListChanged` für `times`; Rückgabe leer                                         |
+| `DataSlotsStatePublisher`         | `lua/LUA/ce/hub/data/slots/DataSlotsStatePublisher.lua`               | `ListChanged` für `save-slots` und `free-slots`; Rückgabe leer                   |
+| `StructureStatePublisher`         | `lua/LUA/ce/hub/data/structures/StructureStatePublisher.lua`          | `ListChanged` für `structures`; Rückgabe leer                                    |
+| `TrainsAndTracksStatePublisher`   | `lua/LUA/ce/hub/data/trains/TrainsAndTracksStatePublisher.lua`        | indirekte Events für `trains` und `rolling-stocks`; Rückgabe leer                |
+| `TrafficLightModelStatePublisher` | `lua/LUA/ce/mods/road/data/TrafficLightModelStatePublisher.lua`       | `ListChanged` für `signal-type-definitions`; Rückgabe leer                       |
+| `CrossingStatePublisher`          | `lua/LUA/ce/mods/road/data/CrossingStatePublisher.lua`                | Events für Kreuzungsdaten; internes Datenobjekt wird derzeit nicht zurückgegeben |
+| `PublicTransportStatePublisher`   | `lua/LUA/ce/mods/public-transport/data/PublicTransportStatePublisher.lua` | Events für ÖPNV-Daten; internes Datenobjekt wird derzeit nicht zurückgegeben     |
 
 ## Transportform
 

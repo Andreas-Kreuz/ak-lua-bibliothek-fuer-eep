@@ -125,35 +125,30 @@ allow_defined_top = true
 -- 131 - global assignment
 -- 212 - unused argument
 -- 631 - line is too long
-files["lua/LUA/ak/core/eep"].ignore = {"212", "131"}
-files["lua/LUA/ak/demo-anlagen"].ignore = {"131"}
-files["lua/LUA/ak/data/AkSlotNamesParser.lua"].ignore = {"212"}
-files["lua/LUA/ak/core/LuaModule.d.lua"].ignore = {"631"}
-files["lua/LUA/ak/road/Road.lua"].ignore = {"131"}
-files["lua/LUA/ak/road/RoadTypes.d.lua"].ignore = {"631"}
-files["lua/LUA/ak/data/TrackCollector.lua"].ignore = {"121", "211"}
-files["lua/LUA/ak/data/TrainDetection.lua"].ignore = {"121", "211"}
-files["lua/LUA/ak/io/LogOutputFileWriter.lua"].ignore = {"111", "113", "121"}
-files["lua/LUA/ak/public-transport/PublicTransportTypes.d.lua"].ignore = {"631"}
-files["lua/LUA/ak/train/TrainTypes.d.lua"].ignore = {"631"}
-files["lua/LUA/spec/ak/core/VersionInfo_spec.lua"].ignore = {"122"}
-files["lua/LUA/spec/ak/io/DataStoreFileWriter_spec.lua"].ignore = {"122"}
-files["lua/LUA/spec/ak/io/ExchangeDirRegistry_spec.lua"].ignore = {"122"}
-files["lua/LUA/spec/ak/io/FunctionNameWriter_spec.lua"].ignore = {"122"}
-files["lua/LUA/spec/ak/io/IncomingCommandFileReader_spec.lua"].ignore = {"122"}
-files["lua/LUA/spec/ak/io/LogOutputFileWriter_spec.lua"].ignore = {"111", "113", "121", "122"}
-files["lua/LUA/spec/ak/io/ServerExchangeFileIo_spec.lua"].ignore = {"122"}
+files["lua/LUA/ce/hub/eep"].ignore = {"212", "131"}
+files["lua/LUA/ce/demo-anlagen"].ignore = {"131"}
+files["lua/LUA/ce/hub/mods/CeModule.d.lua"].ignore = {"631"}
+files["lua/LUA/ce/mods/road/RoadTypes.d.lua"].ignore = {"631"}
+files["lua/LUA/ce/hub/data/rollingstock/TagKeys.lua"].ignore = {"631"}
+files["lua/LUA/ce/hub/data/tracks/TrackDetection.lua"].ignore = {"121", "211"}
+files["lua/LUA/ce/hub/data/trains/TrainDetection.lua"].ignore = {"121", "211"}
+files["lua/LUA/ce/databridge/LogOutputFileWriter.lua"].ignore = {"111", "113", "121"}
+files["lua/LUA/ce/mods/public-transport/PublicTransportTypes.d.lua"].ignore = {"631"}
+files["lua/LUA/ce/hub/data/trains/TrainTypes.d.lua"].ignore = {"631"}
+files["lua/LUA/spec/ce/hub/data/version/VersionInfo_spec.lua"].ignore = {"122"}
+files["lua/LUA/spec/ce/databridge/DataStoreFileWriter_spec.lua"].ignore = {"122"}
+files["lua/LUA/spec/ce/databridge/ExchangeDirRegistry_spec.lua"].ignore = {"122"}
+files["lua/LUA/spec/ce/databridge/FunctionNameWriter_spec.lua"].ignore = {"122"}
+files["lua/LUA/spec/ce/databridge/IncomingCommandFileReader_spec.lua"].ignore = {"122"}
+files["lua/LUA/spec/ce/databridge/LogOutputFileWriter_spec.lua"].ignore = {"111", "113", "121", "122"}
+files["lua/LUA/spec/ce/databridge/ServerExchangeFileIo_spec.lua"].ignore = {"122"}
 
 exclude_files = {
     ".vscode",
     "assets",
     "docs",
     "lua/LUA/SlotNames_BH2.lua",
-    "lua/LUA/ak/anlagen/**",
-    "lua/LUA/ak/io/crc32lua.lua",
-    "lua/LUA/ak/io/dkjson.lua",
-    "lua/LUA/ak/io/json.lua",
-    "lua/LUA/ak/third-party/**",
+    "lua/LUA/ce/third-party/**",
     "lua/Resourcen/Anlagen/Andreas_Kreuz-Demo-Ampel/Andreas_Kreuz-Demoanlage-Ampel-Grundmodelle.lua",
     "lua/Resourcen/Anlagen/Andreas_Kreuz-Demo-Testen/Andreas_Kreuz-Lua-Testbeispiel.lua",
     "lua/Resourcen/Anlagen/Andreas_Kreuz-Tutorial-Ampelkreuzung/Andreas_Kreuz-Tutorial-Ampelkreuzung.lua",

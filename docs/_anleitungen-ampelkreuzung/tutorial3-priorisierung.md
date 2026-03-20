@@ -19,7 +19,7 @@ date: 2017-09-03
 
 - Lade und installiere Dir die Beispielanlagen für die Ampeln "Installer-AK-Tutorial-Ampelkreuzung.zip"
 - Öffne die Beispielanlage "_Andreas_Kreuz_Tutorial_Ampelkreuzung-2.anl3_" in EEP
-- Öffne die Datei `Andreas_Kreuz-Tutorial-Ampelkreuzung-2-main.lua` in einem Editor - Du findest sie unter `C:\Trend\EEP\LUA\ak\demo-anlagen\tutorial-ampel\`.
+- Öffne die Datei `Andreas_Kreuz-Tutorial-Ampelkreuzung-2-main.lua` in einem Editor - Du findest sie unter `C:\Trend\EEP\LUA\ce\demo-anlagen\tutorial-ampel\`.
 
 # So funktioniert Priorisierung
 

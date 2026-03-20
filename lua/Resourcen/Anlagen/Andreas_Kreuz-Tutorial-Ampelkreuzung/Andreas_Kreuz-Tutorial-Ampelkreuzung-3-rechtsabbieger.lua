@@ -1,5 +1,5 @@
 -- Lade das Hauptskript
-require("ak.demo-anlagen.tutorial-ampel.code-video-tutorial-3")
+require("ce.demo-anlagen.tutorial-ampel.code-video-tutorial-3")
 
 [EEPLuaData]
 DS_100 = "f=0,p=Rot,q=,w=1,"

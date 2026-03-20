@@ -1,8 +1,8 @@
 --------------------------------------------------------------------------------------
 -- Erstellt Installationsverzeichnisse für Skripte und Demo-Anlagen in modell-pakete
 --------------------------------------------------------------------------------------
-local AkModellInstaller = require("ak.modellpacker.AkModellInstaller")
-local AkModellPaket = require("ak.modellpacker.AkModellPaket")
+local AkModellInstaller = require("ce.modellpacker.AkModellInstaller")
+local AkModellPaket = require("ce.modellpacker.AkModellPaket")
 
 local currentDirectory = ".."
 if arg and arg[1] then currentDirectory = arg[1] end
@@ -13,7 +13,7 @@ print("[#ModellInstallation] Suche Installationsdateien in Verzeichnis \"" .. cu
 -----------------------------------------
 local paket0 = AkModellPaket:new("13,2", "Lua-Bibliothek von Andreas Kreuz",
                                  "Lua-Bibliothek mit Verkehrssteuerung, Aufgabenplanung und Modell-Installation")
-paket0:addFiles(currentDirectory, "", "LUA\\ak", {
+paket0:addFiles(currentDirectory, "", "LUA\\ce", {
     "README.md", "ak-eep-in.commands", "ak-eep-out.json", "ak-eep-out-json.isfinished", "ak-eep-out.log",
     "ak-eep-out.socket", "ak-eep-version.txt", "ak-server.iswatching", "anlagen", "desktop.ini"
 })
@@ -28,10 +28,10 @@ end
 -- Paket: Demo-Anlage Ampelkreuzung
 -----------------------------------------
 local paket1 = AkModellPaket:new("13,2", "Demo-Anlage (Ampel, ÖPNV)", "Die Demo-Anlagen für Ampeln und ÖPNV")
-paket1:addFiles(currentDirectory, "", "LUA\\ak\\demo-anlagen\\ampel", { "README.md", "desktop.ini" })
+paket1:addFiles(currentDirectory, "", "LUA\\ce\\demo-anlagen\\ampel", { "README.md", "desktop.ini" })
 paket1:addFiles(currentDirectory, "", "Resourcen\\Anlagen\\Andreas_Kreuz-Demo-Ampel",
                          { ".dds", "README.md", "desktop.ini" })
-paket1:addFiles(currentDirectory, "", "LUA\\ak\\demo-anlagen\\demo-linien",
+paket1:addFiles(currentDirectory, "", "LUA\\ce\\demo-anlagen\\demo-linien",
                          { ".dds", "README.md", "desktop.ini" })
 paket1:addFiles(currentDirectory, "", "Resourcen\\Anlagen\\Andreas_Kreuz-Demo-Linien",
                          { ".dds", "README.md", "desktop.ini" })
@@ -41,7 +41,7 @@ paket1:addFiles(currentDirectory, "", "Resourcen\\Anlagen\\Andreas_Kreuz-Demo-Li
 -----------------------------------------
 local paket2 = AkModellPaket:new("13,2", "Demo-Anlage Testen mit EEP (Erweiterte Modelle)",
                                  "Eine Anlage mit Shop-Modellen - mit zwei komplexen Kreuzungen und Ampel-Skripten")
-paket2:addFiles(currentDirectory, "", "LUA\\ak\\demo-anlagen\\testen", { "README.md", "desktop.ini" })
+paket2:addFiles(currentDirectory, "", "LUA\\ce\\demo-anlagen\\testen", { "README.md", "desktop.ini" })
 paket2:addFiles(currentDirectory, "", "Resourcen\\Anlagen\\Andreas_Kreuz-Demo-Testen",
                          { ".dds", "README.md", "desktop.ini" })
 
@@ -50,7 +50,7 @@ paket2:addFiles(currentDirectory, "", "Resourcen\\Anlagen\\Andreas_Kreuz-Demo-Te
 -----------------------------------------
 local paket3 = AkModellPaket:new("13,2", "Tutorial - Aufbau einer Ampelkreuzung",
                                  "Eine Anlage mit einer Kreuzung, die die Verwendung der Lua-Bibliothek erklärt")
-paket3:addFiles(currentDirectory, "", "LUA\\ak\\demo-anlagen\\tutorial-ampel", { "README.md", "desktop.ini" })
+paket3:addFiles(currentDirectory, "", "LUA\\ce\\demo-anlagen\\tutorial-ampel", { "README.md", "desktop.ini" })
 paket3:addFiles(currentDirectory, "", "Resourcen\\Anlagen\\Andreas_Kreuz-Tutorial-Ampelkreuzung",
                          { ".dds", "README.md", "desktop.ini" })
 

@@ -115,7 +115,7 @@ Wenn Du Server und Web-App getrennt starten willst, benutze:
 Wenn Du möchtest, kannst Du das Lua-Verzeichnis aus Git direkt in EEP nutzen. Erstelle dazu einen Link mit der Kommandozeile:
 
 ```cmd
-mklink /D C:\Trend\EEP15\LUA\ak C:\GitHub\ak-lua-bibliothek-fuer-eep\lua\LUA\ak
+mklink /D C:\Trend\EEP15\LUA\ce C:\GitHub\ak-lua-bibliothek-fuer-eep\lua\LUA\ce
 ```
 
 ### Webseite bearbeiten

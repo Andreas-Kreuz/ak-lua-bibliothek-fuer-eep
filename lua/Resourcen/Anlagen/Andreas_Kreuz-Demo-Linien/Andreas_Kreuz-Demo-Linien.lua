@@ -1,24 +1,24 @@
-clearlog()
-require("ak.demo-anlagen.demo-linien.demo-linien-main")
-
--- Diese Zeile lädt die Modulverwaltung der Lua-Bibliothek
-local ModuleRegistry = require("ak.core.ModuleRegistry")
-
--- Diese Zeilen aktivieren die folgenden Module in der Modulverwaltung
--- * Core (immer benötigt)
--- * Data (Export der Daten für EEP)
--- * Crossing (für die Ampelsteuerung notwendig)
-ModuleRegistry.registerModules(require("ak.core.CoreLuaModule"),
-                               require("ak.data.DataLuaModule"),
-                               require("ak.road.CrossingLuaModule"),
-                               require("ak.public-transport.PublicTransportLuaModule"))
-
--- Die EEPMain Methode wird von EEP genutzt. Sie muss immer 1 zurückgeben.
-function EEPMain()
-    -- Die Modulverwaltung startet die Aufgaben in allen Modulen bei jedem fünften EEPMain-Aufruf
-    ModuleRegistry.runTasks(5)
-    return 1
-end
-
--- Nutze einen Speicherslot in EEP um die Einstellungen für Kreuzungen zu laden und zu speichern
--- Crossing.loadSettingsFromSlot(1)
+clearlog()
+require("ce.demo-anlagen.demo-linien.demo-linien-main")
+
+-- Diese Zeile lädt den Einstiegspunkt der Lua-Bibliothek
+local ControlExtension = require("ce.ControlExtension")
+
+-- Diese Zeilen registrieren die folgenden Module
+-- * Core (immer benötigt)
+-- * Data (Export der Daten für EEP)
+-- * Crossing (für die Ampelsteuerung notwendig)
+ControlExtension.addModules(require("ce.hub.mods.CoreCeModule"),
+                               require("ce.hub.mods.DataCeModule"),
+                               require("ce.mods.road.CrossingCeModule"),
+                               require("ce.mods.public-transport.PublicTransportCeModule"))
+
+-- Die EEPMain Methode wird von EEP genutzt. Sie muss immer 1 zurückgeben.
+function EEPMain()
+    -- ControlExtension startet die Aufgaben in allen Modulen bei jedem fünften EEPMain-Aufruf
+    ControlExtension.runTasks(5)
+    return 1
+end
+
+-- Nutze einen Speicherslot in EEP um die Einstellungen für Kreuzungen zu laden und zu speichern
+-- Crossing.loadSettingsFromSlot(1)

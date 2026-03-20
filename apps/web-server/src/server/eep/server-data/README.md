@@ -11,8 +11,8 @@ Dieser Observer wandelt die von EEP gesammelten Daten 1:1 in JSON-Daten um und s
 
 - **`/xxx`** enthält den Key der eigentlichen von EEP eingesammelten Einträge, z.B. `structures` oder `signals`. Der Inhalt hängt vom geladenen Lua-Modul ab.
 
-- Der öffentliche Lua-Vertrag für diese Räume ist aktuell in `lua/LUA/ak/data/DtoTypes.d.lua` und `lua/LUA/ak/data/DtoTypes.d.md` dokumentiert.
-  Diese Datei wird vom Server derzeit noch nicht zur Laufzeit eingelesen, ist aber die Soll-Quelle für Room-Namen, `keyId` und DTO-Formen.
+- Der öffentliche Lua-Vertrag für diese Räume ist aktuell in den bereichsspezifischen Dateien `lua/LUA/ce/hub/data/**/*DtoTypes.d.lua` und `lua/LUA/ce/hub/data/**/*DtoTypes.d.md` dokumentiert.
+  Diese Dateien werden vom Server derzeit noch nicht zur Laufzeit eingelesen, sind aber die Soll-Quelle für Room-Namen, `keyId` und DTO-Formen.
 
 ### Zugriff über API
 

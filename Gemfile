@@ -1,12 +1,4 @@
 source 'https://rubygems.org'
-gem 'bigdecimal'
-gem 'csv'
-gem 'faraday-retry'
-gem 'jekyll', '~> 4.4'
-gem 'jekyll-github-metadata'
-gem 'jekyll-paginate'
-gem 'jekyll-seo-tag'
-gem 'jemoji'
-gem 'liquid', '~> 4.0.4'
-gem 'webrick'
-gem 'wdm', '>= 0.1.0' if Gem.win_platform?
+
+gem 'github-pages'
+gem 'ffi', '~> 1.15.5'

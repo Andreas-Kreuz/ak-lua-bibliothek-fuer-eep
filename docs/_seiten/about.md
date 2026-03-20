@@ -7,4 +7,4 @@ img: "/assets/headers/Titelbild-Simulator.jpg"
 hide: true
 ---
 
-<em>Andreas Kreuz' Lua-Bibliothek für EEP</em> ist ein freies Open-Source Projekt, welches unter der MIT Licence veröffentlicht wird.
+<em>Andreas Kreuz' Control Extension für EEP</em> ist ein freies Open-Source Projekt, welches unter der MIT Licence veröffentlicht wird.

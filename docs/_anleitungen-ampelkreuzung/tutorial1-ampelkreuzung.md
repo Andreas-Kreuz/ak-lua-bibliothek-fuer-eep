@@ -70,23 +70,23 @@ Dafür benötigst Du folgendes:
 - Ergänze das Lua-Haupt-Skript um die folgenden Zeilen.
 
   ```lua
-  local Scheduler = require("ak.scheduler.Scheduler")
-  local TrafficLight = require("ak.road.TrafficLight")
-  local TrafficLightModel = require("ak.road.TrafficLightModel")
-  local Crossing = require("ak.road.Crossing")
-  local CrossingSequence = require("ak.road.CrossingSequence")
-  local Lane = require("ak.road.Lane")
+  local Scheduler = require("ce.hub.scheduler.Scheduler")
+  local TrafficLight = require("ce.mods.road.TrafficLight")
+  local TrafficLightModel = require("ce.mods.road.TrafficLightModel")
+  local Crossing = require("ce.mods.road.Crossing")
+  local CrossingSequence = require("ce.mods.road.CrossingSequence")
+  local Lane = require("ce.mods.road.Lane")
 
   -- Hier kommt der Code
 
-  local ModuleRegistry = require("ak.core.ModuleRegistry")
-  ModuleRegistry.registerModules(
-      require("ak.core.CoreLuaModule"),
-      require("ak.road.CrossingLuaModule")
+  local ControlExtension = require("ce.ControlExtension")
+  ControlExtension.addModules(
+      require("ce.hub.mods.CoreCeModule"),
+      require("ce.mods.road.CrossingCeModule")
   )
 
   function EEPMain()
-      ModuleRegistry.runTasks()
+      ControlExtension.runTasks()
       return 1
   end
   ```
@@ -97,10 +97,10 @@ Dafür benötigst Du folgendes:
 
 **Was ist grade passiert?**
 
-- Die ersten Zeilen `local XXX = require("ak.road.XXX")` sorgt dafür, daß die einzelnen Dateien z.B. `ak/road/Crossing.lua` einmal eingelesen wird. Nach diesem Aufruf stehen Dir alle Funktionen dieser Datei zur Verfügung.
-- Die Zeile `local ModuleRegistry = require("ak.core.ModuleRegistry")` ist für das Laden der Modulverwaltung notwendig.
-- Mit den Zeilen `ModuleRegistry.registerModules(require("ak.core.CoreLuaModule"), require("ak.road.CrossingLuaModule"))` werden das "CoreLuaModul" und das "CrossingLuaModule" in der Anwendung bekannt gemacht.
-- Die Zeile `ModuleRegistry.runTasks()` ist für das wiederkehrende Ausführen aller Aufgaben, dadurch werden die Kreuzungsschaltungen und die geplanten Aktionen durchgeführt.
+- Die ersten Zeilen `local XXX = require("ce.mods.road.XXX")` sorgt dafür, daß die einzelnen Dateien z.B. `ce/mods/road/Crossing.lua` einmal eingelesen wird. Nach diesem Aufruf stehen Dir alle Funktionen dieser Datei zur Verfügung.
+- Die Zeile `local ControlExtension = require("ce.ControlExtension")` lädt den öffentlichen Einstiegspunkt der Bibliothek.
+- Mit den Zeilen `ControlExtension.addModules(require("ce.hub.mods.CoreCeModule"), require("ce.mods.road.CrossingCeModule"))` werden das "CoreCeModule" und das "CrossingCeModule" in der Anwendung bekannt gemacht.
+- Die Zeile `ControlExtension.runTasks()` ist für das wiederkehrende Ausführen aller Aufgaben, dadurch werden die Kreuzungsschaltungen und die geplanten Aktionen durchgeführt.
 - Wichtig ist auch, dass die Funktion EEPMain mit `return 1` beendet wird, damit sie alle 200 ms aufgerufen wird.
 
 ## Alle Signale mit Tipp-Text markieren
@@ -163,7 +163,7 @@ Erst im nächsten Schritt werden mehrere Ampeln der _Fahrspuren_ in Schaltungen 
 
 ## Schreibe die Ampeln und Fahrspuren in das Haupt-Skript
 
-⭐ _**Tipp:** In EEP sind viele Signalmodelle "Ampel" unterschiedlich gesteuert, was die Rot-, Grün- und Gelb-Schaltung angeht. Damit jede Ampel Deiner Kreuzung verwendet werden kann und automatisch funktioniert, gibt es_ `TrafficLightModel` _. In diesem Lua-Skript sind die Signalstellungen der Ampeln hinterlegt. Weitere Informationen findest Du unter: [Unterstütze weitere Ampeln in TrafficLightModel](../lua/ak/road/)_
+⭐ _**Tipp:** In EEP sind viele Signalmodelle "Ampel" unterschiedlich gesteuert, was die Rot-, Grün- und Gelb-Schaltung angeht. Damit jede Ampel Deiner Kreuzung verwendet werden kann und automatisch funktioniert, gibt es_ `TrafficLightModel` _. In diesem Lua-Skript sind die Signalstellungen der Ampeln hinterlegt. Weitere Informationen findest Du unter: [Unterstütze weitere Ampeln in TrafficLightModel](../lua/ce/mods/road/)_
 
 Schreibe nun die Ampeln in das Haupt-Skript.
 

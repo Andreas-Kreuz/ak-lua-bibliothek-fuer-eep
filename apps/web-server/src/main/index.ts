@@ -1,4 +1,5 @@
 import { ServerMain } from '../server/app/ServerMain';
+import APP_IDENTIFIER from '../server/app/config/AppIdentifier';
 import { app, BrowserWindow, shell } from 'electron';
 import * as electron from 'electron';
 import * as path from 'path';
@@ -19,7 +20,7 @@ function createWindow() {
   mainWindow.removeMenu();
 
   // User App Code
-  const server = new ServerMain(path.resolve(electron.app.getPath('appData'), 'eep-web-server'));
+  const server = new ServerMain(path.resolve(electron.app.getPath('appData'), APP_IDENTIFIER));
   server.start();
 
   mainWindow.webContents.session.clearCache();

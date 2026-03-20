@@ -1,0 +1,33 @@
+---@meta
+
+---@alias DataStoreElement table
+---@alias DataStoreList table<any, DataStoreElement>
+---@alias DataStoreRoom table<string, DataStoreElement>
+---@alias DataStoreRooms table<string, DataStoreRoom>
+---@alias InternalDataStoreElement DataStoreElement
+---@alias InternalDataStoreList DataStoreList
+---@alias InternalDataStoreRoom DataStoreRoom
+---@alias InternalDataStoreRooms DataStoreRooms
+---@alias TrainNameSet table<string, boolean>
+---@alias TrainTrackIds table<string, number>
+---@alias TrainTracksByTrain table<string, TrainTrackIds>
+---@alias TrainTracksByType table<string, TrainTracksByTrain>
+---@alias TrainUpdateInfos table<string, TrainUpdateInfo>
+---@alias TrainInfosFn fun(d: TrainNameSet, dt: TrainNameSet, m: TrainNameSet, tt: TrainTracksByType):TrainUpdateInfos
+---@class InternalDataStore: EventListener
+---@field rooms InternalDataStoreRooms
+---@field reset fun():nil
+---@field getRoom fun(room: string):DataStoreRoom|nil
+---@field get fun(room: string, key: string|number):DataStoreElement|nil
+---@field fireEvent fun(event: DataChangeEvent):nil
+
+---@class DataCeModule
+---@field id string
+---@field enabled boolean
+---@field name string
+---@field init fun():nil
+---@field run fun():nil
+---@field setOptions fun(options: table):nil
+
+---@class DataBridgeConnector
+---@field registerStatePublishers fun(activeCollectors: table<string, boolean>|nil):nil

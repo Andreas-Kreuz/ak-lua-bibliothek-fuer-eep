@@ -44,7 +44,7 @@
   "prettier.singleQuote": true,
   "prettier.trailingComma": "all",
   "search.exclude": {
-    "/lua/LUA/ak/io/exchange": true,
+    "/lua/LUA/ce/databridge/exchange": true,
     "/lua/modell-pakete": true,
     "/web-app/dist": true,
     "/web-app/node_modules": true,

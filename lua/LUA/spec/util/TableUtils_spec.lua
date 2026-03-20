@@ -1,5 +1,5 @@
-describe("ak.util.TableUtils", function()
-    local TableUtils = require("ak.util.TableUtils")
+describe("ce.hub.util.TableUtils", function()
+    local TableUtils = require("ce.hub.util.TableUtils")
     describe("sameArrayEntries()", function()
         describe("empty are equal", function()
             local t1 = {}

@@ -119,7 +119,7 @@ export default class AppEffects {
     this.eepService = null;
 
     // Append the exchange directory to the path
-    const completeDir = path.resolve(eepDir, 'LUA/ak/io/exchange/');
+    const completeDir = path.resolve(eepDir, 'LUA/ce/databridge/exchange/');
 
     // Check the directory and register handlers on success
     const eepService = new EepService(this.debug);

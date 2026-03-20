@@ -148,7 +148,7 @@ Laden Dir nun die Testanlage aus dem EEP-Shop, damit das Projekt ein paar Dateie
 Nun versuchst Du das Lua-Skript auszuführen.
 Das wird voraussichtlich noch nicht funktionieren, da die Lua-Umgebung noch fehlt.
 
-* Klappe nun den Ordner `ak.demo-anlagen.testen` auf und öffne die Datei `Andreas_Kreuz-Lua-Testbeispiel-test.lua` <br>
+* Klappe nun den Ordner `ce.demo-anlagen.testen` auf und öffne die Datei `Andreas_Kreuz-Lua-Testbeispiel-test.lua` <br>
 <img src="../assets/tutorial/intellij/29.png" class="img-fluid img-thumbnail" style="border: 1 solid #aaaaaa;" alt="">
 
 * Klicke mit der rechten Maustaste auf die Datei  `Andreas_Kreuz-Lua-Testbeispiel-test.lua` und wähle **Run ...**<br>

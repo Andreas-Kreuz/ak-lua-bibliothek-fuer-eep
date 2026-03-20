@@ -1,8 +1,8 @@
 import { useState } from 'react';
 
-const dataLuaModuleId = 'e538a124-3f0a-4848-98cf-02b08563bf32'; // "ak.data.DataLuaModule"
-const kreuzungLuaModuleId = 'c5a3e6d3-0f9b-4c89-a908-ed8cf8809362'; // "ak.road.CrossingLuaModule"
-const publicTransportLuaModuleId = '83ce6b42-1bda-45e0-8b4a-e8daeed047ab'; // "ak.public-transport.PublicTransportLuaModule"
+const dataCeModuleId = 'e538a124-3f0a-4848-98cf-02b08563bf32'; // "ce.hub.mods.DataCeModule"
+const kreuzungCeModuleId = 'c5a3e6d3-0f9b-4c89-a908-ed8cf8809362'; // "ce.mods.road.CrossingCeModule"
+const publicTransportCeModuleId = '83ce6b42-1bda-45e0-8b4a-e8daeed047ab'; // "ce.mods.public-transport.PublicTransportCeModule"
 
 function useNavState(): {
   name: string;
@@ -55,7 +55,7 @@ function useNavState(): {
           image: 'card-img-intersection.jpg',
           description: 'Schalte Deine Kreuzungen oder setze die passende Kamera.',
           linkDescription: 'Kreuzungen zeigen',
-          requiredModuleId: kreuzungLuaModuleId,
+          requiredModuleId: kreuzungCeModuleId,
         },
         {
           available: availPublicTransport,
@@ -66,7 +66,7 @@ function useNavState(): {
           image: 'card-img-traffic.jpg',
           description: 'Schaue Deine Nahverkehrslinien und -Haltestellen an.',
           linkDescription: 'ÖNPV anzeigen',
-          requiredModuleId: publicTransportLuaModuleId,
+          requiredModuleId: publicTransportCeModuleId,
         },
         {
           available: availLuaData,
@@ -77,7 +77,7 @@ function useNavState(): {
           image: 'card-img-trains-all.jpg',
           description: 'Hier findest Du auch Trams, die auf der Straße fahren.',
           linkDescription: 'Fahrzeuge zeigen',
-          requiredModuleId: dataLuaModuleId,
+          requiredModuleId: dataCeModuleId,
         },
         // {
         //   available: availLuaData,
@@ -88,7 +88,7 @@ function useNavState(): {
         //   image: 'card-img-trains-road.jpg',
         //   description: 'Hier findest Du auch Trams, die auf der Straße fahren.',
         //   linkDescription: 'Autos zeigen',
-        //   requiredModuleId: dataLuaModuleId,
+        //   requiredModuleId: dataCeModuleId,
         // },
         // {
         //   available: availLuaData,
@@ -99,7 +99,7 @@ function useNavState(): {
         //   image: 'card-img-trains-tram.jpg',
         //   description: 'Trams, die auf der Straße fahren, findest Du unter Autos.',
         //   linkDescription: 'Trams zeigen',
-        //   requiredModuleId: dataLuaModuleId,
+        //   requiredModuleId: dataCeModuleId,
         // },
         // {
         //   available: availLuaData,
@@ -110,7 +110,7 @@ function useNavState(): {
         //   image: 'card-img-trains-rail.jpg',
         //   description: 'Fahrzeuge, die auf Bahngleisen unterwegs sind.',
         //   linkDescription: 'Züge zeigen',
-        //   requiredModuleId: dataLuaModuleId,
+        //   requiredModuleId: dataCeModuleId,
         // },
       ],
     },
@@ -138,7 +138,7 @@ function useNavState(): {
           image: undefined,
           description: 'Mit EEPSaveData gespeicherte Felder',
           linkDescription: 'Zu den Daten',
-          requiredModuleId: dataLuaModuleId,
+          requiredModuleId: dataCeModuleId,
         },
         {
           available: availLuaData,
@@ -149,7 +149,7 @@ function useNavState(): {
           image: undefined,
           description: 'Enthält Signale, Ampeln und Schranken',
           linkDescription: 'Zu den Signalen',
-          requiredModuleId: dataLuaModuleId,
+          requiredModuleId: dataCeModuleId,
         },
         {
           available: availModules,

@@ -7,7 +7,7 @@
   "scripts": {
     "build-shared": "yarn workspace @ak/web-shared run build",
     "dev": "yarn run build-shared && yarn vite --host --configLoader native",
-    "build": "yarn run build-shared && yarn vite build --configLoader native && yarn run version",
+    "build": "node ../../scripts/sync-control-extension-version.mjs && yarn run build-shared && yarn vite build --configLoader native",
     "preview": "vite preview --configLoader native",
     "start-server-for-playing": "yarn workspace @ak/web-server run start",
     "start-playing": "node ./scripts/run-parallel.mjs \"yarn run start-server-for-playing\" \"yarn run dev\"",
@@ -20,7 +20,7 @@
     "smoke-tests-run-headless": "node ./scripts/local-headless-smoke.mjs",
     "cypress:open": "node ./scripts/run-cypress.mjs open",
     "cypress:run": "node ./scripts/run-cypress.mjs run",
-    "version": "echo $npm_package_version > VERSION",
+    "version": "node ../../scripts/sync-control-extension-version.mjs",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },

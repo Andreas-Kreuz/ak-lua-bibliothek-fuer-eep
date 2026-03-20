@@ -2,10 +2,10 @@
 
 ## Projektkontext
 
-- Dieses Repository enthält eine Lua-Bibliothek für EEP (`lua/LUA/ak`) sowie eine optionale Web-Oberfläche mit Server.
+- Dieses Repository enthält eine Lua-Bibliothek für EEP (`lua/LUA/ce`) sowie eine optionale Web-Oberfläche mit Server.
 - Die Lua-Module sind der Kern des Projekts. Web-Server und Web-App sind Zusatzwerkzeuge für Anzeige, Steuerung und Tests.
 - Wichtige Bereiche:
-  - `lua/LUA/ak`: produktiver Lua-Code für EEP
+  - `lua/LUA/ce`: produktiver Lua-Code für EEP
   - `lua/LUA/spec`: Lua-Tests
   - `apps/web-app`: React/Vite-Frontend
   - `apps/web-server`: Electron- und Headless-Server
@@ -39,7 +39,7 @@
 - Bestehende deutsche Bezeichner, Kommentare und Logmeldungen beibehalten, wenn du vorhandenen Lua-Code änderst.
 - Beschreibungen für Funktionen, Parameter und Return-Werte gerne aus dem Lua-Manual übernehmen.
 - `Lua_manual.pdf` wird für `EepOriginalApi.d.lua` in diesem Projekt mit `pdftotext -table` ausgewertet. Der Parser arbeitet blockweise als Tabellenparser und nicht mehr als freier Fließtext-Parser.
-- `lua/LUA/ak/core/eep/EepOriginalApi.d.lua` ist die typsichere Soll-Schnittstelle des originalen Programms EEP. Sie wird aus `Lua_manual.pdf` abgeleitet und nicht aus `EepSimulator.lua`.
+- `lua/LUA/ce/hub/eep/EepOriginalApi.d.lua` ist die typsichere Soll-Schnittstelle des originalen Programms EEP. Sie wird aus `Lua_manual.pdf` abgeleitet und nicht aus `EepSimulator.lua`.
 - Der einzig gültige Generator für diese Datei ist `python scripts/generate_eep_original_api.py`. Ältere Generatorvarianten und Vergleichsausgaben werden nicht mehr verwendet.
 - Für `EepOriginalApi.d.lua` gilt bei der Auswertung des Handbuchs:
   - Es gibt zwei Blocktypen:
@@ -63,8 +63,8 @@
 - `EepOriginalApi.d.lua` enthält nur Definitionen: globale Variablen als `---@type` mit Platzhalterwert, Callbacks und Funktionen als leere Funktionsrümpfe. Keine Simulatorlogik in diese Datei schreiben.
 - Wertebereiche aus den Bemerkungen nach Möglichkeit als `---@alias` modellieren. Aliase möglichst direkt über der ersten Funktion platzieren, die sie verwendet. Wenn ein Alias die Details enthält, bleiben Parametertexte kurz.
 - Nach jeder Funktion und jedem Callback die Handbuchbeispiele als Kommentarblock im Format `-- Beispielaufrufe:` übernehmen.
-- Wenn `Lua_manual.pdf` erweitert wird, `python scripts/generate_eep_original_api.py` erneut ausführen und anschließend nur `lua/LUA/ak/core/eep/EepOriginalApi.d.lua` verifizieren mit:
-  - `lua -e "assert(loadfile('lua/LUA/ak/core/eep/EepOriginalApi.d.lua')); print('OK')"`
+- Wenn `Lua_manual.pdf` erweitert wird, `python scripts/generate_eep_original_api.py` erneut ausführen und anschließend nur `lua/LUA/ce/hub/eep/EepOriginalApi.d.lua` verifizieren mit:
+  - `lua -e "assert(loadfile('lua/LUA/ce/hub/eep/EepOriginalApi.d.lua')); print('OK')"`
   - einem Konsistenzabgleich zwischen extrahierten Blöcken und der erzeugten Datei:
     - jede Funktion und jeder Callback muss eine Versionszeile und einen Block `-- Beispielaufrufe:` haben
     - die Anzahl der Parameter und Rückgabewerte muss innerhalb des im Handbuch angegebenen Bereichs liegen
@@ -72,9 +72,9 @@
 - Bei Änderungen an Zustandslogik in Lua immer auf Persistenz achten `StorageUtility.loadTable()` und `StorageUtility.saveTable()` akzeptieren nur String-Werte
   - Optionale Felder beim Speichern lieber weglassen als `"nil"` oder andere Platzhalter-Strings zu schreiben.
 - EEP-nahe Fehlerpfade sind oft absichtlich `fail-loud`: bestehende `print(... debug.traceback())`-Muster nicht ohne klaren Grund in stilles Fehlerhandling umwandeln.
-- Module unter `lua/LUA/ak` laufen in einer Lua 5.3 Umgebung des Programmes EEP. Das Programm EEP stellt die globalen EEP-Funktionen wie in LUA_Manual.pdf beschrieben zur Verfügung wie `EEPSetSignal`, `EEPLoadData` oder `EEPTime`. Was das Programm kann ist in EEP18_Manual_GER.pdf beschrieben.
+- Module unter `lua/LUA/ce` laufen in einer Lua 5.3 Umgebung des Programmes EEP. Das Programm EEP stellt die globalen EEP-Funktionen wie in LUA_Manual.pdf beschrieben zur Verfügung wie `EEPSetSignal`, `EEPLoadData` oder `EEPTime`. Was das Programm kann ist in EEP18_Manual_GER.pdf beschrieben.
 - EEPSimulator.lua soll die Funktionen des Programms EEP abbilden, so dass der Lua Code auch mit dem Simulatur getestet werden kann.
-- Die öffentlichen DTO-Felddefinitionen liegen in `lua/LUA/ak/data/DtoTypes.d.lua`; die Raumverträge mit `room`, `keyId` und verantwortlicher DtoFactory stehen in `lua/LUA/ak/data/DtoTypes.d.md`.
+- Die öffentlichen DTO-Felddefinitionen liegen in `lua/LUA/ce/hub/data/**/*.d.lua` sowie `lua/LUA/ce/mods/**/data/*DtoTypes.d.lua`; die Raumverträge mit `room`, `keyId` und verantwortlicher DtoFactory stehen in den jeweiligen `*DtoTypes.d.md`.
 - Wenn sich ein exportierter Raum, sein `keyId` oder seine DTO-Felder ändern, müssen mindestens `DtoTypes.d.lua`, `DtoTypes.d.md`, die verantwortliche DtoFactory und die betroffene Server-Dokumentation gemeinsam geprüft und synchron gehalten werden.
 - `DtoTypes.d.md` dokumentiert, in welcher Lua-Datei bzw. DtoFactory ein Raum definiert ist. Diese Zuordnung ist die Soll-Quelle für spätere Server-Anpassungen.
 - Viele Module registrieren globale Callbacks über `_G[...]`. Bei Änderungen an Registrierungslogik auf bestehende Namenskonventionen achten.

@@ -16,9 +16,9 @@ function StatisticsOverview() {
       <AppCardGridContainer>
         <VersionInfoWrapper />
         <StatisticsCard title="Ausführung der Publisher" times={publisherSyncTimes} />
-        <StatisticsCard title="Ausführung Lua Module" times={publisherInitTimes} />
+        <StatisticsCard title="Ausführung CeModule" times={publisherInitTimes} />
         <StatisticsCard title="Server" times={controllerUpdateTimes} />
-        <StatisticsCard title="Initialisierung Lua Module" times={moduleInitTimes} maxEntries={1} />
+        <StatisticsCard title="Initialisierung CeModule" times={moduleInitTimes} maxEntries={1} />
         <StatisticsCard title="Initialisierung der Publisher" times={initializationTimes} maxEntries={1} />
       </AppCardGridContainer>
     </AppPage>

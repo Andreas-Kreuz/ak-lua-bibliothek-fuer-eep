@@ -1,4 +1,4 @@
-require("ak.demo-anlagen.ampel.Ampeldemo-Grundmodelle-main")
+require("ce.demo-anlagen.ampel.Ampeldemo-Grundmodelle-main")
 [EEPLuaData]
 DS_100 = "reqInfo=false,seqInfo=false,sigInfo=false,"
 DS_101 = "f=0,p=Rot,q=,w=2,"

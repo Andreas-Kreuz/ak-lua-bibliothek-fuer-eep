@@ -1,7 +1,7 @@
 {
   "name": "@ak/web-server",
   "version": "0.13.2",
-  "description": "Lua Server für EEP - ein Server im Fenster",
+  "description": "Control Extension Server für EEP",
   "type": "commonjs",
   "private": true,
   "scripts": {
@@ -12,7 +12,7 @@
     "pub-copy": "yarn run bash -c \"cp -r ../web-app/dist/* build/public_html/\"",
     "pub-del": "yarn run bash -c \"test -d build/public_html && rm -rf build/public_html\"",
     "pub-mkdir": "yarn run bash -c \"mkdir -p build/public_html\"",
-    "build": "yarn build-shared && yarn build-app && yarn copy-web-app && tsc --build",
+    "build": "node ../../scripts/sync-control-extension-version.mjs && yarn build-shared && yarn build-app && yarn copy-web-app && tsc --build",
     "watch": "tsc -w",
     "lint": "eslint \"src/**/*.ts\"",
     "start": "yarn run build && electron ./build/main/index.js",
@@ -20,9 +20,9 @@
     "start-with-app": "yarn build && electron ./build/main/index.js",
     "start-e2e-headless": "tsc && node ./build/server/app/HeadlessStart.js --testmode --exchange-dir ../web-app/cypress/io",
     "start-e2e-electron": "tsc && electron ./build/main/index.js --testmode --exchange-dir ../web-app/cypress/io",
-    "package-win": "yarn build && electron-builder build --win --x64",
-    "pack": "electron-builder --dir",
-    "dist": "electron-builder",
+    "package-win": "node ../../scripts/sync-control-extension-version.mjs && yarn build && electron-builder build --win --x64",
+    "pack": "node ../../scripts/sync-control-extension-version.mjs && electron-builder --dir",
+    "dist": "node ../../scripts/sync-control-extension-version.mjs && electron-builder",
     "persist-eep-state": "tsc && node ./build/server/eep-service/eep-state-reader.js"
   },
   "repository": "https://github.com/ak-lua-bibliothek-fuer-eep",
@@ -33,7 +33,7 @@
   "main": "./build/main/index.js",
   "build": {
     "electronVersion": "35.1.2",
-    "appId": "io.github.andreas-kreuz.ak-lua-library-for-eep",
+    "appId": "io.github.andreas-kreuz.control-extention-for-eep",
     "files": [
       "build/**/*",
       "node_modules/**/*",
@@ -61,7 +61,7 @@
         "portable"
       ],
       "compression": "maximum",
-      "artifactName": "lua-server-for-eep.${ext}"
+      "artifactName": "control-extension-server.${ext}"
     }
   },
   "author": "Andreas-Kreuz",

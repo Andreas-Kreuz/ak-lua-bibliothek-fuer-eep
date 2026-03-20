@@ -1,12 +1,14 @@
 <p align="center">
   <a href="http://andreas-kreuz.github.io/ak-lua-bibliothek-fuer-eep">
-    <img src="assets/img/eep-web-logo-shadow-72.png" alt="" width=72 height=72>
+    <img src="assets/img/ce-logo-72@2x.png" alt="" width=72 height=72>
   </a>
 
-  <h3 align="center">Lua-Bibliothek für EEP</h3>
+  <h3 align="center">Control Extension für EEP</h3>
 
   <p align="center">
-    Eine Sammlung von Lua-Skripten für die einfache Verkehrssteuerung in EEP.
+    Eine modulare Steuerungserweiterung für EEP mit<br> 
+    <b>Lua Hub</b> | <b>Data Bridge</b> | <b>Web App</b>
+    <br>
     <br>
     <a href="http://andreas-kreuz.github.io/ak-lua-bibliothek-fuer-eep"><strong>Anleitungen und Dokumentation</strong></a>
   </p>
@@ -16,21 +18,24 @@
 
 # Überblick
 
-Die bereitgestellte Bibliothek übernimmt für Dich die _Steuerung des Verkehrs_, damit Du Dich andere Aspekte konzentrieren kannst. Beschreibe in Lua, wie Deine Kreuzungen aussehen und die Skripte kümmern sich um den Rest der Steuerung.
+Die Control Extension für EEP erweitert EEP um einen strukturierten Laufzeitkern für Lua-Module. Damit kannst Du Anlagenlogik in wiederverwendbare Module aufteilen und bei Bedarf Daten und Steuerfunktionen über zusätzliche Werkzeuge nach außen bereitstellen.
 
-Du erhältst mit diesem Paket:
+Das Paket besteht aus vier Bausteinen:
 
-1. **Lua-Bibliothek** - verschiedene Lua-Module für die Verkehrssteuerung
-2. **Server und Web-App _(optional)_** - steuere oder betrachte bestimmte Aspekte im Browser
+1. **Lua Hub** in `ce.hub` als Laufzeitkern für registrierte `CeModule`
+2. **Data Bridge _(optional)_** in `ce.databridge` für den Datenaustausch mit externen Werkzeugen
+3. **Control Extension Server _(optional)_** zur Aufbereitung und Bereitstellung der Daten
+4. **Control Extension Web App _(optional)_** als Browser-Oberfläche für Anzeige und Bedienung
 
 ## Grundprinzipien
 
-- Für die Steuerung ist nur Lua notwendig, d.h. Web-Server und Web-App sind immer optional.
-- Die App wird in erster Linie für ein Zweitgerät entwickelt und ermöglicht die Steuerung einzelner Module von Lua.
+- Für die Anlagensteuerung genügt die Lua-Seite der Control Extension; Server und Web App sind optional.
+- Der öffentliche Einstiegspunkt in EEP ist `ce.ControlExtension`.
+- Zusätzliche Werkzeuge bauen auf den Daten der Data Bridge auf und sind nicht Voraussetzung für die Lua-Module.
 
 ## Ausführliche Dokumentation
 
-- Die Webseite enthält [Anleitungen und Dokumentation](http://andreas-kreuz.github.io/ak-lua-bibliothek-fuer-eep) zur Verwendung der Skript-Sammlung.
+- Die Webseite enthält [Anleitungen und Dokumentation](http://andreas-kreuz.github.io/ak-lua-bibliothek-fuer-eep/lua/ce/) zur Verwendung der Control Extension für EEP.
 
 ## Beiträge sind Willkommen
 

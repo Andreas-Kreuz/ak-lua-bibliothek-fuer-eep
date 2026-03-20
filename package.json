@@ -8,11 +8,12 @@
     "services/*"
   ],
   "scripts": {
+    "sync-control-extension-version": "node ./scripts/sync-control-extension-version.mjs",
     "storybook": "yarn workspace @ak/web-app run storybook",
     "start-app": "yarn workspace @ak/web-app run dev",
     "start-playing": "yarn workspace @ak/web-app run start-playing",
     "start-server": "yarn workspace @ak/web-server run start-headless",
-    "build": "yarn workspace @ak/web-server run build"
+    "build": "yarn run sync-control-extension-version && yarn workspace @ak/web-server run build"
   },
   "packageManager": "yarn@4.9.1",
   "devDependencies": {

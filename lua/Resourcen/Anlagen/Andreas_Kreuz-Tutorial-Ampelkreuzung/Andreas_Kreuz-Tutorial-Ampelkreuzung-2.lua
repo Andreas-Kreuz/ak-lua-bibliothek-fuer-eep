@@ -1,8 +1,8 @@
 -- Lade das Hauptskript
-require("ak.demo-anlagen.tutorial-ampel.Andreas_Kreuz-Tutorial-Ampelkreuzung-2-main")
+require("ce.demo-anlagen.tutorial-ampel.Andreas_Kreuz-Tutorial-Ampelkreuzung-2-main")
 
 -- Schalte Tipp-Texte ein
-local CrossingSetting = require("ak.road.CrossingSetting")
+local CrossingSetting = require("ce.mods.road.CrossingSetting")
 CrossingSetting.showSignalIdOnSignal = true
 CrossingSetting.showSequenceOnSignal = true
 CrossingSetting.showRequestsOnSignal = true

@@ -23,7 +23,7 @@ const ConnectingScreen = (props: ConnectingScreenProps) => {
         <MuiDivider sx={{ my: 2 }} />
         <MuiTypography gutterBottom>
           <img
-            src={'assets/web-server-for-eep-icon.png'}
+            src={'/icon-192.png'}
             style={{ height: 48, float: 'left', marginRight: '1rem' }}
           ></img>
           <strong>Hast Du den Server für EEP beendet?</strong>

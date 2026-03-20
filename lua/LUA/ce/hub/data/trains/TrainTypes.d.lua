@@ -1,0 +1,122 @@
+---@meta
+
+---@class Train
+---@field id string
+---@field name string
+---@field type string
+---@field values table<string, string>
+---@field route string
+---@field rollingStockCount number
+---@field speed number
+---@field length number
+---@field movesForward boolean
+---@field trackType string|nil
+---@field onTracks table<string, number>
+---@field occupiedTracks table
+---@field valuesUpdated boolean
+---@field new fun(self: Train, o: Train):Train
+---@field load fun(self: Train):table<string, string>
+---@field save fun(self: Train, clearCurrentInfo?: boolean):nil
+---@field getName fun(self: Train):string
+---@field getLength fun(self: Train):number
+---@field setValue fun(self: Train, key: string, value: string):nil
+---@field getValue fun(self: Train, key: string):string
+---@field changeDestination fun(self: Train, destination: string, line: string):nil
+---@field setRoute fun(self: Train, routeName: string):nil
+---@field getRoute fun(self: Train):string
+---@field setRollingStockCount fun(self: Train, count: integer):nil
+---@field getRollingStockCount fun(self: Train):number
+---@field setSpeed fun(self: Train, speed: number):nil
+---@field getSpeed fun(self: Train):number
+---@field setMovesForward fun(self: Train, movesForward: boolean):nil
+---@field getMovesForward fun(self: Train):boolean
+---@field setOnTrack fun(self: Train, onTracks: table<string, number>):nil
+---@field getOnTrack fun(self: Train):table<string, number>
+---@field setTrackType fun(self: Train, trackType: string):nil
+---@field getTrackType fun(self: Train):string|nil
+---@field setDirection fun(self: Train, direction: string):nil
+---@field getDirection fun(self: Train):string
+---@field setDestination fun(self: Train, destination: string):nil
+---@field getDestination fun(self: Train):string
+---@field setLine fun(self: Train, line: string):nil
+---@field getLine fun(self: Train):string
+---@field openDoors fun(self: Train):nil
+---@field closeDoors fun(self: Train):nil
+---@field toJsonStatic fun(self: Train):table
+---@field toJsonDynamic fun(self: Train):table
+
+---@class RollingStockModel
+---@field new fun(self: RollingStockModel, o?: table):RollingStockModel
+---@field setLine fun(self: RollingStockModel, rollingStockName: string, line: string):nil
+---@field setDestination fun(self: RollingStockModel, rollingStockName: string, destination: string):nil
+---@field setStations fun(self: RollingStockModel, rollingStockName: string, stations: string):nil
+---@field setWagonNr fun(self: RollingStockModel, rollingStockName: string, wagonNumber: string):nil
+---@field openDoors fun(self: RollingStockModel, rollingStockName: string):nil
+---@field closeDoors fun(self: RollingStockModel, rollingStockName: string):nil
+
+---@class RollingStock
+---@field values table<string, string>
+---@field id string
+---@field rollingStockName string
+---@field trainName string
+---@field positionInTrain integer
+---@field couplingFront integer
+---@field couplingRear integer
+---@field modelType integer
+---@field modelTypeText string
+---@field propelled boolean
+---@field length number
+---@field mileage number
+---@field trackId integer
+---@field trackDistance number
+---@field trackDirection integer
+---@field trackSystem integer
+---@field x number
+---@field y number
+---@field z number
+---@field model RollingStockModel
+---@field tag string
+---@field textureText string
+---@field trackType string|nil
+---@field valuesUpdated boolean
+---@field type string
+---@field new fun(self: RollingStock, o: RollingStock):RollingStock
+---@field setValue fun(self: RollingStock, key: string, value: string):nil
+---@field getValue fun(self: RollingStock, key: string):string
+---@field save fun(self: RollingStock, clearCurrentInfo?: boolean):nil
+---@field setLine fun(self: RollingStock, line: string):nil
+---@field setDestination fun(self: RollingStock, destination: string):nil
+---@field setStations fun(self: RollingStock, stations: string):nil
+---@field setWagonNr fun(self: RollingStock, nr: string):nil
+---@field getWagonNr fun(self: RollingStock):string
+---@field setTrainName fun(self: RollingStock, trainName: string):nil
+---@field getTrainName fun(self: RollingStock):string
+---@field setPositionInTrain fun(self: RollingStock, positionInTrain: number):nil
+---@field getPositionInTrain fun(self: RollingStock):number
+---@field getLength fun(self: RollingStock):number
+---@field getModelType fun(self: RollingStock):number
+---@field getModelTypeText fun(self: RollingStock):string
+---@field getTag fun(self: RollingStock):string
+---@field getPropelled fun(self: RollingStock):boolean
+---@field setCouplingFront fun(self: RollingStock, couplingFront: number):nil
+---@field getCouplingFront fun(self: RollingStock):number
+---@field setCouplingRear fun(self: RollingStock, couplingRear: number):nil
+---@field getCouplingRear fun(self: RollingStock):number
+---@field getTrackId fun(self: RollingStock):number
+---@field setTrack fun(self: RollingStock, trackId: number,
+---trackDistance: number, trackDirection: number, trackSystem: number):nil
+---@field getTrackDistance fun(self: RollingStock):number
+---@field getTrackDirection fun(self: RollingStock):number
+---@field getTrackSystem fun(self: RollingStock):number
+---@field setTrackType fun(self: RollingStock, trackType: string):nil
+---@field getTrackType fun(self: RollingStock):string|nil
+---@field setPosition fun(self: RollingStock, x: number, y: number, z: number):nil
+---@field getX fun(self: RollingStock):number
+---@field getY fun(self: RollingStock):number
+---@field getZ fun(self: RollingStock):number
+---@field setMileage fun(self: RollingStock, mileage: number):nil
+---@field getMileage fun(self: RollingStock):number
+---@field openDoors fun(self: RollingStock):nil
+---@field closeDoors fun(self: RollingStock):nil
+---@field toJsonStatic fun(self: RollingStock):table
+---@field toJsonDynamic fun(self: RollingStock):table

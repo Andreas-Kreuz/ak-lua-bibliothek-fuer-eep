@@ -1,6 +1,6 @@
-describe("ak.util.Queue", function()
+describe("ce.hub.util.Queue", function()
     insulate("new Queue is empty", function()
-        local Queue = require("ak.util.Queue")
+        local Queue = require("ce.hub.util.Queue")
 
         local myQueue = Queue:new();
         it("Queue is empty", function() assert.is_true(myQueue:isEmpty()) end)
@@ -9,7 +9,7 @@ describe("ak.util.Queue", function()
     end)
 
     insulate("Queue with elements is not empty", function()
-        local Queue = require("ak.util.Queue")
+        local Queue = require("ce.hub.util.Queue")
 
         local myQueue = Queue:new()
         myQueue:push("ELEMENT")
@@ -20,7 +20,7 @@ describe("ak.util.Queue", function()
     end)
 
     insulate("Queue will returm elements in correct order", function()
-        local Queue = require("ak.util.Queue")
+        local Queue = require("ce.hub.util.Queue")
 
         local myQueue = Queue:new()
         myQueue:push("ELEMENT 0")

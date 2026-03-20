@@ -1,0 +1,21 @@
+---@meta
+
+---@class StructureDto
+---@field id string
+---@field name string
+---@field pos_x number
+---@field pos_y number
+---@field pos_z number
+---@field rot_x number
+---@field rot_y number
+---@field rot_z number
+---@field modelType number
+---@field modelTypeText string
+---@field tag string
+---@field light boolean
+---@field smoke boolean
+---@field fire boolean
+
+---@class StructureDtoFactory
+---@field createStructureDto fun(structure: table):string,string,string|number,StructureDto
+---@field createStructureDtoList fun(structures: table):string,string,table

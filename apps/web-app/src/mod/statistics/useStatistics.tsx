@@ -43,12 +43,12 @@ function useStatistics() {
       for (const suffix of ['.run', '.init']) {
         const times = [];
         for (const collector of [
-          'core.CoreLuaModule',
-          'data.DataLuaModule',
-          'scheduler.SchedulerLuaModule',
-          'road.CrossingLuaModule',
+          'core.CoreCeModule',
+          'data.DataCeModule',
+          'scheduler.SchedulerCeModule',
+          'road.CrossingCeModule',
         ]) {
-          const collectorName = 'LuaModule.ak.' + collector + suffix;
+          const collectorName = 'CeModule.ak.' + collector + suffix;
           if (record[collectorName]) {
             times.push(new TimeDesc(collector, record[collectorName].time));
           } else {

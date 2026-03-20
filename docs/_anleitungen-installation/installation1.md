@@ -37,10 +37,10 @@ tags: [Installation]
 
 Du hast die Installation abgeschlossen.
 
-Die Bibliothek wurde in das Unterverzeichnis `LUA\ak` Deiner EEP-Installation installiert, z.B. in `C:\Trend\EEP16\LUA\`.
+Die Bibliothek wurde in das Unterverzeichnis `LUA\ce` Deiner EEP-Installation installiert, z.B. in `C:\Trend\EEP16\LUA\`.
 
 Jetzt kannst Du:
 
 - [EEP-Web einrichten](../anleitungen-installation/einrichten-von-eep-web)
 - die [Anleitung für eine automatische Ampelkreuzung](../anleitungen-ampelkreuzung/ampelkreuzung) starten
-- die [Dokumentation der Bibliothek](../lua/ak/) lesen.
+- die [Dokumentation der Bibliothek](../lua/ce/) lesen.

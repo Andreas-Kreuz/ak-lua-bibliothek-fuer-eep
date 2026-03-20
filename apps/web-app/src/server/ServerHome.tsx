@@ -36,11 +36,11 @@ function ServerHome() {
   const webAppUrl =
     window.location.protocol + '//' + (serverHost ? serverHost : window.location.hostname) + ':' + window.location.port;
 
-  const code = `local ModuleRegistry = require("ak.core.ModuleRegistry")
-ModuleRegistry.registerModules(require("ak.core.CoreLuaModule"))
+  const code = `local ControlExtension = require("ce.ControlExtension")
+ControlExtension.addModules(require("ce.hub.mods.CoreCeModule"))
 
 function EEPMain()
-    ModuleRegistry.runTasks()
+    ControlExtension.runTasks()
     return 1
 end`;
 
@@ -179,7 +179,7 @@ end`;
                     </Typography>
                     <Typography variant="body2" gutterBottom>
                       Gib den Ordner an, in dem EEP installiert ist. <br />
-                      Der Server sucht nach dem Verzeichnis &quot;LUA/ak/io/exchange&quot;.
+                      Der Server sucht nach dem Verzeichnis &quot;LUA/ce/databridge/exchange&quot;.
                       <br />
                       Die Lua-Bibliothek muss installiert sein. <br />
                     </Typography>

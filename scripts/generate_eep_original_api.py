@@ -2,10 +2,10 @@
 from __future__ import annotations
 
 """
-Generator fuer `lua/LUA/ak/core/eep/EepOriginalApi.d.lua`.
+Generator fuer `lua/LUA/ce/hub/eep/EepOriginalApi.d.lua`.
 
 Referenz fuer den semantischen Tabellenaufbau im PDF:
-`lua/LUA/ak/core/eep/Aufbau_Lua_Manual.md`
+`lua/LUA/ce/hub/eep/Aufbau_Lua_Manual.md`
 
 Wichtige Layout-Regeln:
 - Funktionsbloecke haben drei Spalten.
@@ -29,7 +29,7 @@ from statistics import median
 
 ROOT = Path(__file__).resolve().parents[1]
 MANUAL = ROOT / "Lua_manual.pdf"
-OUTPUT = ROOT / "lua" / "LUA" / "ak" / "core" / "eep" / "EepOriginalApi.d.lua"
+OUTPUT = ROOT / "lua" / "LUA" / "ce" / "hub" / "eep" / "EepOriginalApi.d.lua"
 LUA_FORMAT_CONFIG = ROOT / "lua-format.conf"
 PDFMINER_ROW_TOLERANCE = 4.0
 HEADER_BAND_Y_TOLERANCE = 3.0

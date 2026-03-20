@@ -1,0 +1,29 @@
+---@meta
+
+---@class RollingStockDto
+---@field id string
+---@field name string
+---@field trainName string
+---@field positionInTrain number
+---@field couplingFront number
+---@field couplingRear number
+---@field length number
+---@field propelled boolean
+---@field modelType number
+---@field modelTypeText string
+---@field tag string
+---@field nr string|nil
+---@field trackId number
+---@field trackDistance number
+---@field trackDirection number
+---@field trackSystem number
+---@field trackType string|nil
+---@field posX number
+---@field posY number
+---@field posZ number
+---@field mileage number
+
+---@class RollingStockDtoFactory
+---@field createRollingStockDto fun(rollingStock: RollingStock|table):string,string,string|number,RollingStockDto
+---@field createRollingStockDtoList fun(rollingStocks: table):string,string,table
+---@field createRollingStockReferenceDto fun(rollingStockId: string):string,string,string|number,RollingStockDto

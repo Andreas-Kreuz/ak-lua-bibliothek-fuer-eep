@@ -12,7 +12,12 @@
 
 setlocal
 SET oldDir=%CD%
-SET projectPath="%~dp0.."
+SET projectPath=%~dp0..
+
+node "%~dp0sync-control-extension-version.mjs"
+IF %ERRORLEVEL% NEQ 0 (
+    exit /b %ERRORLEVEL%
+)
 
 @REM rebuild the server
 call "%~dp0build-server-with-app.cmd"
@@ -20,18 +25,13 @@ IF %ERRORLEVEL% NEQ 0 (
     exit /b %ERRORLEVEL%
 )
 
-xcopy /Y %projectPath%\apps\web-app\VERSION %projectPath%\lua\LUA\ak
-IF %ERRORLEVEL% NEQ 0 (
-    exit /b %ERRORLEVEL%
-)
-
-xcopy /Y %projectPath%\apps\web-server\dist\lua-server-for-eep.exe %projectPath%\lua\LUA\ak
+xcopy /Y "%projectPath%\apps\web-server\dist\control-extension-server.exe" "%projectPath%\lua\LUA\ce"
 IF %ERRORLEVEL% NEQ 0 (
     exit /b %ERRORLEVEL%
 )
 
 @REM Create the installation package for EEP
-cd %projectPath%\lua\LUA
+cd "%projectPath%\lua\LUA"
 IF %ERRORLEVEL% NEQ 0 (
     exit /b %ERRORLEVEL%
 )
@@ -41,5 +41,5 @@ IF %ERRORLEVEL% NEQ 0 (
     exit /b %ERRORLEVEL%
 )
 
-cd %oldDir%
+cd "%oldDir%"
 endlocal

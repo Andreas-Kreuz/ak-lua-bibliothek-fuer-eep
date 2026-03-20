@@ -164,25 +164,25 @@
   - ~~`ak.core.eep.AkTippTextFormat`~~ => `ak.core.eep.TippTextFormatter`
   - ~~`ak.planer.AkAktion`~~ => `ak.scheduler.Task`
   - ~~`ak.planer.AkPlaner`~~ => `ak.scheduler.Scheduler`
-  - ~~`ak.planer.PlanerLuaModul`~~ => `ak.scheduler.SchedulerLuaModule`
+  - ~~`ak.planer.PlanerLuaModul`~~ => `ak.scheduler.SchedulerCeModule`
   - ~~`ak.schiene.AkSchiene`~~ => `ak.rail.Rail`
   - ~~`ak.speicher.AkSpeicher.lua`~~ => `ak.storage.StorageUtility.lua`
   - ~~`ak.speicher.AkSpeicherTest.lua`~~ => `ak.storage.StorageUtilityTest.lua`
-  - ~~`ak.strasse.AkAchsenImmoAmpel`~~ => `ak.road.AxisStructureTrafficLight`
-  - ~~`ak.strasse.AkAmpelModell`~~ => `ak.road.TrafficLightModel`
-  - ~~`ak.strasse.AkAmpel`~~ => `ak.road.TrafficLight`
+  - ~~`ak.strasse.AkAchsenImmoAmpel`~~ => `ce.mods.road.AxisStructureTrafficLight`
+  - ~~`ak.strasse.AkAmpelModell`~~ => `ce.mods.road.TrafficLightModel`
+  - ~~`ak.strasse.AkAmpel`~~ => `ce.mods.road.TrafficLight`
   - ~~`ak.strasse.AkBus`~~ => `road.Bus`
-  - ~~`ak.strasse.AkKreuzung`~~ => `ak.road.Crossing`
-  - ~~`ak.strasse.AkKreuzungsSchaltung`~~ => `ak.road.CrossingSequence`
-  - ~~`ak.strasse.AkLichtImmoAmpel`~~ => `ak.road.LightStructureTrafficLight`
-  - ~~`ak.strasse.AkPhase`~~ => `ak.road.TrafficLightState`
-  - ~~`ak.strasse.AkRichtung`~~ => `ak.road.Lane` ℹ Das Konzept Richtung wurde komplett überarbeitet!
-  - ~~`ak.strasse.AkStrabWeiche`~~ => `ak.road.TramSwitch`
+  - ~~`ak.strasse.AkKreuzung`~~ => `ce.mods.road.Crossing`
+  - ~~`ak.strasse.AkKreuzungsSchaltung`~~ => `ce.mods.road.CrossingSequence`
+  - ~~`ak.strasse.AkLichtImmoAmpel`~~ => `ce.mods.road.LightStructureTrafficLight`
+  - ~~`ak.strasse.AkPhase`~~ => `ce.mods.road.TrafficLightState`
+  - ~~`ak.strasse.AkRichtung`~~ => `ce.mods.road.Lane` ℹ Das Konzept Richtung wurde komplett überarbeitet!
+  - ~~`ak.strasse.AkStrabWeiche`~~ => `ce.mods.road.TramSwitch`
   - ~~`ak.strasse.AkStrasse`~~ wurde entfernt
-  - ~~`ak.strasse.AmpelModellStatePublisher`~~ => `ak.road.TrafficLightModelStatePublisher`
-  - ~~`ak.strasse.KreuzungStatePublisher`~~ => `ak.road.CrossingStatePublisher`
-  - ~~`ak.strasse.KreuzungLuaModul`~~ => `ak.road.CrossingLuaModule`
-  - ~~`ak.strasse.KreuzungWebConnector`~~ => `ak.road.CrossingWebConnector`
+  - ~~`ak.strasse.AmpelModellStatePublisher`~~ => `ce.mods.road.data.TrafficLightModelStatePublisher`
+  - ~~`ak.strasse.KreuzungStatePublisher`~~ => `ce.mods.road.data.CrossingStatePublisher`
+  - ~~`ak.strasse.KreuzungLuaModul`~~ => `ce.mods.road.CrossingCeModule`
+  - ~~`ak.strasse.KreuzungWebConnector`~~ => `ce.mods.road.web.CrossingWebConnector`
 
 ## 0.9.0
 
@@ -217,8 +217,8 @@ Der Code wurde wie folgt geändert:
   ```lua
   local ModuleRegistry = require("ak.core.ModuleRegistry")
   ModuleRegistry.registerModules(
-      require("ak.core.CoreLuaModule"),
-      require("ak.data.DataLuaModule"),
+      require("ak.core.CoreCeModule"),
+      require("ak.data.DataCeModule"),
       require("ak.strasse.KreuzungLuaModul")
   )
 
@@ -306,7 +306,7 @@ Der Code wurde wie folgt geändert:
     - Lade AkStatistik mit require - dies machst Du in der Lua-Datei mit der `EEPMain()`-Methode:
 
     ```lua
-    local AkStatistik = require("ak.io.AkStatistik")
+    local AkStatistik = require("ce.databridge.AkStatistik")
     ```
 
     - Schreibe `AkStatistik.statistikAusgabe()` vor das `return 1` in Deiner `EEPMain()`-Methode:
