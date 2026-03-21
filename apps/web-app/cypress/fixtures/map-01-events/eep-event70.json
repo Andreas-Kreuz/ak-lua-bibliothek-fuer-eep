@@ -1,1 +1,1 @@
-{"eventCounter":70,"payload":{"keyId":"id","room":"public-transport-line-names","list":[]},"type":"ListChanged"}
+{"eventCounter":70,"payload":{"keyId":"id","room":"transit-line-names","list":[]},"type":"ListChanged"}

@@ -21,7 +21,7 @@ ModuleRegistry.pauseEepDuringInitialization = true
 ModuleRegistry.registerModules(
     require("ak.data.DataLuaModule"),
     require("ak.road.CrossingLuaModule"),
-    require("ak.public-transport.PublicTransportLuaModule")
+    require("ak.transit.TransitLuaModule")
 )
 
 function EEPMain()
@@ -40,7 +40,7 @@ ControlExtension.setPauseEepDuringInitialization(true)
 ControlExtension.addModules(
     require("ce.hub.mods.DataCeModule"),
     require("ce.mods.road.CrossingCeModule"),
-    require("ce.mods.public-transport.PublicTransportCeModule")
+    require("ce.mods.transit.TransitCeModule")
 )
 
 function EEPMain()
@@ -77,7 +77,7 @@ Diese alten Modul-Wrapper sind die häufigsten Stellen, an denen deine bestehend
 | `require("ak.scheduler.SchedulerLuaModule")`              | `require("ce.hub.mods.SchedulerCeModule")`                    | Meist nur bei direkter Scheduler-Nutzung nötig             |
 | `require("ak.road.CrossingLuaModule")`                    | `require("ce.mods.road.CrossingCeModule")`                    | Straßenverkehrsmodul                                       |
 | `require("ak.road.CrossingLuaModul")`                     | `require("ce.mods.road.CrossingCeModule")`                    | Alter Tippfehler in einigen Anlagen-Dateien                |
-| `require("ak.public-transport.PublicTransportLuaModule")` | `require("ce.mods.public-transport.PublicTransportCeModule")` | ÖPNV-Modul                                                 |
+| `require("ak.transit.TransitLuaModule")` | `require("ce.mods.transit.TransitCeModule")` | ÖPNV-Modul                                                 |
 
 ## Direkte `require()`-Ersetzungen nach Bereich
 
@@ -115,10 +115,10 @@ Die folgenden Ersetzungen decken die typischen direkten Modulzugriffe aus besteh
 | `require("ak.road.Lane")`                      | `require("ce.mods.road.Lane")`                       |
 | `require("ak.road.Crossing")`                  | `require("ce.mods.road.Crossing")`                   |
 | `require("ak.road.CrossingSequence")`          | `require("ce.mods.road.CrossingSequence")`           |
-| `require("ak.public-transport.Line")`          | `require("ce.mods.public-transport.Line")`           |
-| `require("ak.public-transport.LineRegistry")`  | `require("ce.mods.public-transport.LineRegistry")`   |
-| `require("ak.public-transport.RoadStation")`   | `require("ce.mods.public-transport.RoadStation")`    |
-| `require("ak.public-transport.RoadStationDisplayModel")` | `require("ce.mods.public-transport.models.RoadStationDisplayModel")` |
+| `require("ak.transit.Line")`          | `require("ce.mods.transit.Line")`           |
+| `require("ak.transit.LineRegistry")`  | `require("ce.mods.transit.LineRegistry")`   |
+| `require("ak.transit.RoadStation")`   | `require("ce.mods.transit.RoadStation")`    |
+| `require("ak.transit.RoadStationDisplayModel")` | `require("ce.mods.transit.models.RoadStationDisplayModel")` |
 | `require("ak.train.TrainRegistry")`            | `require("ce.hub.data.trains.TrainRegistry")`        |
 
 ## Fachmodule: alte Pfade zu neuen Pfaden
@@ -136,8 +136,8 @@ Viele bisher flache `ak.*`-Bereiche wurden beim Refactoring fachlich aufgeteilt.
 | `ak.data.*`             | `ce.hub.data.*`, `ce.hub.publish.*` und `ce.hub.mods.*`            | Slots, Signale, Strukturen, Zeit, Tracks, Züge |
 | `ak.train.*`            | `ce.hub.data.trains.*` und `ce.hub.data.rollingstock.*`            | Zug- und Rollmaterialdaten                     |
 | `ak.road.*`             | `ce.mods.road.*` und `ce.mods.road.data.*`                         | Kreuzungen, Ampeln, Road-Daten                 |
-| `ak.public-transport.*` | `ce.mods.public-transport.*` und `ce.mods.public-transport.data.*` | Linien, Haltestellen, ÖPNV-Daten               |
-| `ak.roadline.*`         | `ce.mods.public-transport.*`                                       | Frühere Linien-Tests und Linienlogik           |
+| `ak.transit.*` | `ce.mods.transit.*` und `ce.mods.transit.data.*` | Linien, Haltestellen, ÖPNV-Daten               |
+| `ak.roadline.*`         | `ce.mods.transit.*`                                       | Frühere Linien-Tests und Linienlogik           |
 
 ## Häufige 1:1-Dateiwechsel
 
@@ -157,7 +157,7 @@ Die folgenden Dateien wurden nicht nur umbenannt, sondern oft auch in die neue f
 | `ak/train/RollingStock.lua`                         | `ce/hub/data/rollingstock/RollingStock.lua`                      |
 | `ak/road/CrossingDtoFactory.lua`                    | `ce/mods/road/data/CrossingDtoFactory.lua`                       |
 | `ak/road/TrafficLightModelDtoFactory.lua`           | `ce/mods/road/data/TrafficLightModelDtoFactory.lua`              |
-| `ak/public-transport/PublicTransportDtoFactory.lua` | `ce/mods/public-transport/data/PublicTransportDtoFactory.lua`    |
+| `ak/transit/TransitDtoFactory.lua` | `ce/mods/transit/data/TransitDtoFactory.lua`    |
 
 ## Praktische Regel für deine bestehende Anlage
 
@@ -167,7 +167,7 @@ Wenn bei dir eine Fehlermeldung wie `module 'ak.core.ModuleRegistry' not found` 
 2. Bei alten Benutzer-Einstiegspunkten `ModuleRegistry` oder `LuaForEEP` auf `ce.ControlExtension` umstellen.
 3. Bei alten `*LuaModule`-Dateien auf die neuen `*CeModule`-Dateien wechseln.
 4. Bei Daten- und Infrastrukturmodulen prüfen, ob der Pfad jetzt unter `ce.hub` oder `ce.databridge` liegt.
-5. Bei Straßenverkehr und ÖPNV prüfen, ob der Pfad jetzt unter `ce.mods.road` oder `ce.mods.public-transport` liegt.
+5. Bei Straßenverkehr und ÖPNV prüfen, ob der Pfad jetzt unter `ce.mods.road` oder `ce.mods.transit` liegt.
 
 ## Nicht jede Änderung ist 1:1
 
@@ -179,6 +179,6 @@ Einige alte Sammelmodule wurden bewusst aufgeteilt:
 | `ak.core.CoreWebConnector`                     | `ce.hub.bridge.CoreBridgeConnector` und `ce.hub.bridge.DataBridgeConnector`                                                              |
 | `ak.data.DataLuaModule`                        | `ce.hub.mods.DataCeModule` mit `ce.hub.bridge.DataBridgeConnector`                                                                       |
 | `ak.road.CrossingLuaModule`                    | `ce.mods.road.CrossingCeModule` mit `ce.mods.road.bridge.CrossingBridgeConnector`                                                        |
-| `ak.public-transport.PublicTransportLuaModule` | `ce.mods.public-transport.PublicTransportCeModule` mit `ce.mods.public-transport.bridge.PublicTransportBridgeConnector`                  |
+| `ak.transit.TransitLuaModule` | `ce.mods.transit.TransitCeModule` mit `ce.mods.transit.bridge.TransitBridgeConnector`                  |
 
 Für deine bestehenden Skripte ist der sichere Weg daher: Verwende nur `ce.ControlExtension` und die neuen `*CeModule` direkt und greife nicht mehr auf alte interne `ak.*`-Pfade zurück.

@@ -6,7 +6,7 @@ const ConnectionWrapper = lazy(() => import('./ConnectionWrapper'));
 const IntersectionDetails = lazy(() => import('../mod/intersections/IntersectionDetails'));
 const IntersectionOverview = lazy(() => import('../mod/intersections/IntersectionOverview'));
 const MainMenu = lazy(() => import('../home/MainMenu'));
-const PublicTransportOverview = lazy(() => import('../mod/lines/PublicTransportOverview'));
+const TransitOverview = lazy(() => import('../mod/lines/TransitOverview'));
 const Server = lazy(() => import('../server/Server'));
 const StatisticsOverview = lazy(() => import('../mod/statistics/StatisticsMod'));
 const StatusGrid = lazy(() => import('../status/StatusGrid'));
@@ -14,7 +14,7 @@ const Trains = lazy(() => import('../mod/trains/TrainMod'));
 
 const homeRoutes = [
   { path: '/', element: <MainMenu /> },
-  { path: '/public-transport', element: <PublicTransportOverview /> },
+  { path: '/transit', element: <TransitOverview /> },
   { path: '/intersections', element: <IntersectionOverview /> },
   { path: '/intersection/:intersectionId', element: <IntersectionDetails /> },
   { path: '/statistics', element: <StatisticsOverview /> },

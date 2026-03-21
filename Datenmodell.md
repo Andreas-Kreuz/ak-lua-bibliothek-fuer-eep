@@ -28,7 +28,7 @@ Wichtig:
 | `TrainsAndTracksStatePublisher`   | `lua/LUA/ce/hub/data/trains/TrainsAndTracksStatePublisher.lua`        | indirekte Events für `trains` und `rolling-stocks`; Rückgabe leer                |
 | `TrafficLightModelStatePublisher` | `lua/LUA/ce/mods/road/data/TrafficLightModelStatePublisher.lua`       | `ListChanged` für `signal-type-definitions`; Rückgabe leer                       |
 | `CrossingStatePublisher`          | `lua/LUA/ce/mods/road/data/CrossingStatePublisher.lua`                | Events für Kreuzungsdaten; internes Datenobjekt wird derzeit nicht zurückgegeben |
-| `PublicTransportStatePublisher`   | `lua/LUA/ce/mods/public-transport/data/PublicTransportStatePublisher.lua` | Events für ÖPNV-Daten; internes Datenobjekt wird derzeit nicht zurückgegeben     |
+| `TransitStatePublisher`   | `lua/LUA/ce/mods/transit/data/TransitStatePublisher.lua` | Events für ÖPNV-Daten; internes Datenobjekt wird derzeit nicht zurückgegeben     |
 
 ## Transportform
 
@@ -51,10 +51,10 @@ Wichtig:
 | Kreuzungs-Schaltungen               | `intersection-switchings`          | `id`      |
 | Kreuzungs-Ampeln                    | `intersection-traffic-lights`      | `id`      |
 | Kreuzungs-Moduleinstellungen        | `intersection-module-settings`     | `name`    |
-| ÖPNV-Linien                         | `public-transport-lines`           | `id`      |
-| ÖPNV-Stationen                      | `public-transport-stations`        | `id`      |
-| ÖPNV-Moduleinstellungen             | `public-transport-module-settings` | `name`    |
-| Änderungsereignisse für Liniennamen | `public-transport-line-names`      | `id`      |
+| ÖPNV-Linien                         | `transit-lines`           | `id`      |
+| ÖPNV-Stationen                      | `transit-stations`        | `id`      |
+| ÖPNV-Moduleinstellungen             | `transit-module-settings` | `name`    |
+| Änderungsereignisse für Liniennamen | `transit-line-names`      | `id`      |
 
 ## Datenschemata
 
@@ -429,7 +429,7 @@ Elementtyp: Kreuzungs-Moduloption
 | `value`       | `boolean` | `true`, `false`      | aktueller Wert                 |
 | `eepFunction` | `string`  | Lua-Funktionsname    | Setter-Funktion für die Option |
 
-### `public-transport-lines`
+### `transit-lines`
 
 Elementtyp: ÖPNV-Linie
 
@@ -457,7 +457,7 @@ Unterobjekt `stations[*]`:
 | `station.name`  | `string` | Stationsname    | Name der Zielstation     |
 | `timeToStation` | `number` | Minuten, `>= 0` | Fahrzeit bis zur Station |
 
-### `public-transport-stations`
+### `transit-stations`
 
 Elementtyp: ÖPNV-Station
 
@@ -466,7 +466,7 @@ Aktueller Stand:
 - Der Collector erzeugt derzeit immer eine leere Liste.
 - Es gibt aktuell kein JSON-Schema, weil noch keine Stationseinträge erzeugt werden.
 
-### `public-transport-module-settings`
+### `transit-module-settings`
 
 Elementtyp: ÖPNV-Moduloption
 
@@ -479,13 +479,13 @@ Elementtyp: ÖPNV-Moduloption
 | `value`       | `boolean` | `true`, `false`      | aktueller Wert                 |
 | `eepFunction` | `string`  | Lua-Funktionsname    | Setter-Funktion für die Option |
 
-### `public-transport-line-names`
+### `transit-line-names`
 
 Elementtyp: Änderungsereignis für Linien
 
 Schema:
 
-- identisch zu `public-transport-lines`
+- identisch zu `transit-lines`
 - wird von `LineRegistry.fireChangeLinesEvent()` gesendet
 
 ## Rückgabewerte der `syncState()`-Funktionen
@@ -502,7 +502,7 @@ Schema:
 | `TrainsAndTracksStatePublisher.syncState()`   | leeres `data`              | Nutzdaten über Registries               |
 | `TrafficLightModelStatePublisher.syncState()` | `{}`                       | Nutzdaten nur im Event                  |
 | `CrossingStatePublisher.syncState()`          | `{}`                       | internes Datenobjekt wird verworfen     |
-| `PublicTransportStatePublisher.syncState()`   | `{}`                       | internes Datenobjekt wird verworfen     |
+| `TransitStatePublisher.syncState()`   | `{}`                       | internes Datenobjekt wird verworfen     |
 
 ## Verwendete EEP-Funktionen und Handbuchbezug
 

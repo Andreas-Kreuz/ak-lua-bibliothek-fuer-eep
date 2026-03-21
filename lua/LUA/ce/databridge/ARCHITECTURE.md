@@ -194,7 +194,7 @@ Wenn StatePublisher ihre Events nicht mehr wie erwartet erzeugen oder nicht seri
 `ce/databridge` arbeitet eng mit diesen Paketen zusammen:
 
 - `ce.hub`: typischer Aufruf von `runServerOutputCycle(...)`
-- `ce.hub.data`, `ce.mods.road`, `ce.mods.public-transport`: liefern Collector und Remote-Funktionen
+- `ce.hub.data`, `ce.mods.road`, `ce.mods.transit`: liefern Collector und Remote-Funktionen
 - `ce.hub.publish.DataChangeBus`: erzeugt Events, die über den `ServerEventBuffer` gesammelt werden
 - `ce.hub.data.runtime.RuntimeMetrics`: sammelt Laufzeitmetriken des Kommunikationszyklus
 

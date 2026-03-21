@@ -162,7 +162,7 @@ Unter `modules` soll die Fachlogik liegen. Hierzu gehören insbesondere:
 
 - `road`
 - `rail`
-- `public-transport`
+- `transit`
 
 Jedes Fachmodul soll intern mindestens zwischen zwei Rollen unterscheiden:
 
@@ -176,7 +176,7 @@ Jedes Fachmodul soll intern mindestens zwischen zwei Rollen unterscheiden:
 Das bedeutet insbesondere:
 
 - `Crossing`, `Line`, `RoadStation` oder `Rail` gehören zur Domänenlogik
-- `CrossingStatePublisher` oder `PublicTransportStatePublisher` bleiben beim jeweiligen Modul
+- `CrossingStatePublisher` oder `TransitStatePublisher` bleiben beim jeweiligen Modul
 - modulbezogene DtoFactories bleiben ebenfalls beim jeweiligen Modul
 
 Die Module sollen ihre Fachdaten besitzen und veröffentlichen, aber keine generische Server-Infrastruktur nachbauen.
@@ -241,7 +241,7 @@ lua/LUA/ce/
   modules/
     road/
     rail/
-    public-transport/
+    transit/
 ```
 
 Diese Darstellung ist bewusst kompakt gehalten. Sie soll die Verantwortlichkeiten zeigen und nicht jede einzelne Datei vollständig aufzählen.
@@ -252,7 +252,7 @@ Stabil gehalten werden sollen nur wenige öffentliche Einstiegspunkte:
 
 - `ce.ControlExtension`
 - `ce.modules.road.CrossingCeModule`
-- `ce.modules.public-transport.PublicTransportCeModule`
+- `ce.modules.transit.TransitCeModule`
 - perspektivisch weitere Einstiegspunkte unter `ce.modules.rail.*`
 
 Interne Pfade unter `ce.hub.*` und `ce.bridge.*` sind Infrastruktur und sollen nicht als stabile öffentliche API behandelt werden.

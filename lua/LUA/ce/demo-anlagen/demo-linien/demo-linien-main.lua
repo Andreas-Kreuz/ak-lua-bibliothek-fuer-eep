@@ -1,12 +1,12 @@
 -- Linienführung
-local Line = require("ce.mods.public-transport.Line")
-local PublicTransportSettings = require("ce.mods.public-transport.PublicTransportSettings")
-local RoadStation = require("ce.mods.public-transport.RoadStation")
-local RoadStationDisplayModel = require("ce.mods.public-transport.models.RoadStationDisplayModel")
+local Line = require("ce.mods.transit.Line")
+local TransitSettings = require("ce.mods.transit.TransitSettings")
+local RoadStation = require("ce.mods.transit.RoadStation")
+local RoadStationDisplayModel = require("ce.mods.transit.models.RoadStationDisplayModel")
 local BetterContacts = require("ce.third-party.BetterContacts_BH2")
-local LineSegment = require("ce.mods.public-transport.LineSegment")
+local LineSegment = require("ce.mods.transit.LineSegment")
 BetterContacts.setOptions({ varname = "trainName", varnameTrackID = "trackId" })
-PublicTransportSettings.setShowDepartureTippText(true)
+TransitSettings.setShowDepartureTippText(true)
 LineSegment.debug = false
 RoadStation.debug = false
 

@@ -11,7 +11,7 @@ local ControlExtension = require("ce.ControlExtension")
 ControlExtension.addModules(require("ce.hub.mods.CoreCeModule"),
                                require("ce.hub.mods.DataCeModule"),
                                require("ce.mods.road.CrossingCeModule"),
-                               require("ce.mods.public-transport.PublicTransportCeModule"))
+                               require("ce.mods.transit.TransitCeModule"))
 
 -- Die EEPMain Methode wird von EEP genutzt. Sie muss immer 1 zurückgeben.
 function EEPMain()

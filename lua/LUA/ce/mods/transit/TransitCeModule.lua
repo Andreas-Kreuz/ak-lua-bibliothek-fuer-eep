@@ -1,0 +1,29 @@
+if AkDebugLoad then print("[#Start] Loading ce.mods.transit.TransitCeModule ...") end
+---@class TransitCeModule
+TransitCeModule = {}
+TransitCeModule.id = "83ce6b42-1bda-45e0-8b4a-e8daeed047ab"
+TransitCeModule.enabled = true
+local initialized = false
+TransitCeModule.name = "ce.mods.transit.TransitCeModule"
+
+function TransitCeModule.init()
+    if not TransitCeModule.enabled or initialized then return end
+
+    local TransitBridgeConnector = require("ce.mods.transit.bridge.TransitBridgeConnector")
+    TransitBridgeConnector.registerStatePublishers()
+    TransitBridgeConnector.registerFunctions()
+
+    initialized = true
+end
+
+function TransitCeModule.run()
+    if not TransitCeModule.enabled then return end
+end
+
+do
+    local ModuleRegistry = require("ce.hub.ModuleRegistry")
+    local schedulerCeModule = require("ce.hub.mods.SchedulerCeModule")
+    ModuleRegistry.registerModules(schedulerCeModule)
+end
+
+return TransitCeModule

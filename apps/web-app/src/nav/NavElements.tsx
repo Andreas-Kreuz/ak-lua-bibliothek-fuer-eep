@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 const dataCeModuleId = 'e538a124-3f0a-4848-98cf-02b08563bf32'; // "ce.hub.mods.DataCeModule"
 const kreuzungCeModuleId = 'c5a3e6d3-0f9b-4c89-a908-ed8cf8809362'; // "ce.mods.road.CrossingCeModule"
-const publicTransportCeModuleId = '83ce6b42-1bda-45e0-8b4a-e8daeed047ab'; // "ce.mods.public-transport.PublicTransportCeModule"
+const publicTransportCeModuleId = '83ce6b42-1bda-45e0-8b4a-e8daeed047ab'; // "ce.mods.transit.TransitCeModule"
 
 function useNavState(): {
   name: string;
@@ -21,7 +21,7 @@ function useNavState(): {
 }[] {
   const [availLuaData, setAvailLuaData] = useState(false);
   const [availIntersection, setAvailIntersection] = useState(false);
-  const [availPublicTransport, setAvailPublicTransport] = useState(false);
+  const [availTransit, setAvailTransit] = useState(false);
   const [availModules, setAvailModules] = useState(false);
 
   const navigation = [
@@ -44,7 +44,7 @@ function useNavState(): {
     },
     {
       name: 'Verkehr',
-      available: availLuaData && (availIntersection || availPublicTransport),
+      available: availLuaData && (availIntersection || availTransit),
       values: [
         {
           available: availIntersection,
@@ -58,11 +58,11 @@ function useNavState(): {
           requiredModuleId: kreuzungCeModuleId,
         },
         {
-          available: availPublicTransport,
+          available: availTransit,
           icon: 'route',
           title: 'ÖPNV-Linien',
           subtitle: 'Nahverkehr mit der Lua-Bibliothek',
-          link: '/public-transport',
+          link: '/transit',
           image: 'card-img-traffic.jpg',
           description: 'Schaue Deine Nahverkehrslinien und -Haltestellen an.',
           linkDescription: 'ÖNPV anzeigen',

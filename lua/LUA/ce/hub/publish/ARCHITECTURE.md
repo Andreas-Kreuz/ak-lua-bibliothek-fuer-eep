@@ -68,7 +68,7 @@ Erwartetes Listener-Interface:
 
 Der reguläre Ablauf für eine Datenänderung ist:
 
-1. Ein Paket wie `ce.hub.data`, `ce.hub`, `ce.mods.road` oder `ce.mods.public-transport` ruft eine der fire-Methoden von `DataChangeBus` auf, oft direkt mit Mehrfachrueckgaben einer DtoFactory
+1. Ein Paket wie `ce.hub.data`, `ce.hub`, `ce.mods.road` oder `ce.mods.transit` ruft eine der fire-Methoden von `DataChangeBus` auf, oft direkt mit Mehrfachrueckgaben einer DtoFactory
 2. `DataChangeBus` validiert die Mindeststruktur der Eingabedaten
 3. `DataChangeBus` erhöht den internen `eventCounter`
 4. `DataChangeBus` erzeugt ein Eventobjekt mit Typ und Payload
@@ -144,7 +144,7 @@ Listener werden synchron im selben Lauf aufgerufen. Ein fehlerhafter oder langsa
 `ce.hub.publish` arbeitet eng mit diesen Paketen zusammen:
 
 - `ce.databridge`: `ServerEventBuffer` zeichnet die verteilten Ereignisse auf
-- `ce.hub`, `ce.hub.data`, `ce.mods.road`, `ce.mods.public-transport`, `ce.rail`: erzeugen Datenänderungen
+- `ce.hub`, `ce.hub.data`, `ce.mods.road`, `ce.mods.transit`, `ce.rail`: erzeugen Datenänderungen
 - `ce.hub.util.TableUtils`: unterstützt die Debug-Ausgabe für Listen
 
 ## Empfehlung für KI-Agenten

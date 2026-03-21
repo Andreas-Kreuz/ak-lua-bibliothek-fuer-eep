@@ -1,4 +1,4 @@
-describe("ce.mods.public-transport.StationQueue", function ()
+describe("ce.mods.transit.StationQueue", function ()
     local EepSimulator = require("ce.hub.eep.EepSimulator")
     EepSimulator.simulateAddTrain("train1", "RollingStock 1a", "RollingStock 2b")
     EepSimulator.simulateAddTrain("train2", "RollingStock 2a", "RollingStock 2b")

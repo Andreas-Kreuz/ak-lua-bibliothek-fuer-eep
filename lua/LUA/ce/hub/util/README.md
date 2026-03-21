@@ -11,7 +11,7 @@ img: "/docs/assets/headers/SourceCode.png"
 
 Dieses Paket enthält Hilfsfunktionen für die persistente Ablage kleiner Zustände in EEP-Datenslots und in Rollingstock-Tags.
 
-Es wird produktiv in mehreren Paketen der Bibliothek verwendet, z.B. in `ce.mods.road`, `ce.mods.public-transport`, `ce.rail` sowie in den Hub-Datenbereichen unter `ce.hub.data.*`.
+Es wird produktiv in mehreren Paketen der Bibliothek verwendet, z.B. in `ce.mods.road`, `ce.mods.transit`, `ce.rail` sowie in den Hub-Datenbereichen unter `ce.hub.data.*`.
 
 ## Dateien
 

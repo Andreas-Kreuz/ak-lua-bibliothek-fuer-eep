@@ -6,7 +6,7 @@ import { ServerStatisticsService } from '../eep/service/ServerStatisticsService'
 import { registerCommandMod } from '../mod/command/registerCommandMod';
 import { registerIntersectionMod } from '../mod/intersection/registerIntersectionMod';
 import { registerLogMod } from '../mod/log/registerLogMod';
-import PublicTransportService from '../mod/public-transport/PublicTransportService';
+import TransitService from '../mod/transit/TransitService';
 import TrainUpdateService from '../mod/train/TrainUpdateService';
 import AppConfig from './config/AppConfig';
 import AppReducer from './config/AppData';
@@ -173,7 +173,7 @@ export default class AppEffects {
   private registerMods(eepDataEffects: EepDataEffects, eepService: EepService) {
     // register dynamic rooms services
     eepDataEffects.registerDynamicRoom(new TrainUpdateService(this.io));
-    eepDataEffects.registerDynamicRoom(new PublicTransportService(this.io));
+    eepDataEffects.registerDynamicRoom(new TransitService(this.io));
 
     // register mods
     registerLogMod(this.io, this.socketService, eepService, this.debug);
