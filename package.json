@@ -1,7 +1,7 @@
 {
   "name": "@ak/root",
   "private": true,
-  "version": "0.13.2",
+  "version": "0.0.1",
   "workspaces": [
     "apps/*",
     "packages/*",

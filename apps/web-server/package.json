@@ -1,6 +1,6 @@
 {
   "name": "@ak/web-server",
-  "version": "0.13.2",
+  "version": "0.0.1",
   "description": "Control Extension Server für EEP",
   "type": "commonjs",
   "private": true,

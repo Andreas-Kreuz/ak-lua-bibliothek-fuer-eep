@@ -1,4 +1,4 @@
-import { cpSync, mkdirSync, readdirSync, rmSync, writeFileSync } from "node:fs";
+import { cpSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { execSync } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -6,6 +6,8 @@ import { fileURLToPath } from "node:url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(__dirname, "..");
 const luaDir = path.join(repoRoot, "lua");
+const rootPackageJson = JSON.parse(readFileSync(path.join(repoRoot, "package.json"), "utf8"));
+const version = rootPackageJson.version;
 
 // ---------------------------------------------------------------------------
 // File scanning
@@ -48,7 +50,7 @@ function searchFiles(baseDir, subdirectory, excludePatterns) {
 // Package definitions
 // ---------------------------------------------------------------------------
 
-const INSTALLER_NAME = "Installer-AK-Lua-Bibliothek-fuer-EEP";
+const INSTALLER_NAME = `control-extension-for-eep-${version}`;
 
 const packages = [
     {
