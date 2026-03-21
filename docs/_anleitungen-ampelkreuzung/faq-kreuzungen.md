@@ -212,7 +212,7 @@ local lane4Sig = TrafficLight:new("lane4Sig", 89, TrafficLightModel.Unsichtbar_2
 -- Anlegen von Ampel K4 (Normal mit Fußgängern) gerade und rechts
 local K4 = TrafficLight:new("K4", 142, TrafficLightModel.JS2_3er_mit_FG)
 -- Anlegen von Ampel K5 (Normal mit Fußgängern) gerade und rechts
-local K5 = TrafficLight:new("K5", 142, TrafficLightModel.JS2_3er_mit_FG)
+local K5 = TrafficLight:new("K5", 143, TrafficLightModel.JS2_3er_mit_FG)
 -- Anlegen von Ampel K6 (Rechtsabbiegerpfeil) nur rechts
 local K6 = TrafficLight:new("K6", 140, TrafficLightModel.JS2_2er_OFF_YELLOW_GREEN)
 
@@ -220,7 +220,7 @@ local K6 = TrafficLight:new("K6", 140, TrafficLightModel.JS2_2er_OFF_YELLOW_GREE
 lane4 = Lane:new("K1 - Fahrspur 4", 4, lane4Sig, {Lane.Directions.STRAIGHT, Lane.Directions.RIGHT})
 
 -- Hier wird eingestellt, dass das Signal der Fahrspur "lane4" durch K4 und K6 gesteuert wird
-K5:applyToLane(lane4)                         -- K4 gilt für Fahrspur 4 (alle)
+K4:applyToLane(lane4)                         -- K4 gilt für Fahrspur 4 (alle)
 K6:applyToLane(lane4, "Rechtsabbieger")       -- K6 gilt für Fahrspur 4 (nur Route "Rechtsabbieger")
 
 -- Kreuzung mit zwei Schaltungen anlegen und die Ampeln K4 und K6 verwenden
