@@ -2,12 +2,12 @@ insulate("ce.mods.road.RoadDtoFactories", function ()
     local function clearModule(name) package.loaded[name] = nil end
 
     before_each(function ()
-        clearModule("ce.mods.road.data.CrossingDtoFactory")
+        clearModule("ce.mods.road.data.RoadDtoFactory")
         clearModule("ce.mods.road.data.TrafficLightModelDtoFactory")
     end)
 
     it("provides metadata for road DTO lists", function ()
-        local CrossingDtoFactory = require("ce.mods.road.data.CrossingDtoFactory")
+        local RoadDtoFactory = require("ce.mods.road.data.RoadDtoFactory")
         local TrafficLightModelDtoFactory = require("ce.mods.road.data.TrafficLightModelDtoFactory")
 
         local intersection = {
@@ -74,17 +74,17 @@ insulate("ce.mods.road.RoadDtoFactories", function ()
             description = "Show requests",
             type = "boolean",
             value = true,
-            eepFunction = "CrossingSettings.setShowRequestsOnSignal",
+            eepFunction = "IntersectionSettings.setShowRequestsOnSignal",
             hidden = true
         }
-        local room, keyId, key, intersectionDto = CrossingDtoFactory.createIntersectionDto(intersection)
-        local laneRoom, laneKeyId, laneKey, laneDto = CrossingDtoFactory.createIntersectionLaneDto(lane)
+        local room, keyId, key, intersectionDto = RoadDtoFactory.createRoadIntersectionDto(intersection)
+        local laneRoom, laneKeyId, laneKey, laneDto = RoadDtoFactory.createRoadIntersectionLaneDto(lane)
         local switchingRoom, switchingKeyId, switchingKey, switchingDto =
-            CrossingDtoFactory.createIntersectionSwitchingDto(switching)
+            RoadDtoFactory.createRoadIntersectionSwitchingDto(switching)
         local tlRoom, tlKeyId, tlKey, trafficLightDto =
-            CrossingDtoFactory.createIntersectionTrafficLightDto(trafficLight)
+            RoadDtoFactory.createRoadIntersectionTrafficLightDto(trafficLight)
         local moduleRoom, moduleKeyId, moduleKey, moduleDto =
-            CrossingDtoFactory.createIntersectionModuleSettingDto(moduleSetting)
+            RoadDtoFactory.createRoadIntersectionModuleSettingDto(moduleSetting)
         local defsRoom, defsKeyId, defs =
             TrafficLightModelDtoFactory.createSignalTypeDefinitionDtoList({
                 {
@@ -108,7 +108,7 @@ insulate("ce.mods.road.RoadDtoFactories", function ()
         intersection.name = "B"
         intersection.staticCams[2] = "Cam 2"
 
-        assert.equals("intersections", room)
+        assert.equals("road-intersections", room)
         assert.equals("id", keyId)
         assert.equals(1, key)
         assert.same({
@@ -121,7 +121,7 @@ insulate("ce.mods.road.RoadDtoFactories", function ()
             timeForGreen = 15,
             staticCams = { "Cam 1" }
         }, intersectionDto)
-        assert.equals("intersection-lanes", laneRoom)
+        assert.equals("road-intersection-lanes", laneRoom)
         assert.equals("id", laneKeyId)
         assert.equals("1-L1", laneKey)
         assert.same({
@@ -139,11 +139,11 @@ insulate("ce.mods.road.RoadDtoFactories", function ()
             switchings = { "S1" },
             tracks = { 10 }
         }, laneDto)
-        assert.equals("intersection-switchings", switchingRoom)
+        assert.equals("road-intersection-switchings", switchingRoom)
         assert.equals("id", switchingKeyId)
         assert.equals("A-S1", switchingKey)
         assert.same({ id = "A-S1", intersectionId = "A", name = "S1", prio = 1 }, switchingDto)
-        assert.equals("intersection-traffic-lights", tlRoom)
+        assert.equals("road-intersection-traffic-lights", tlRoom)
         assert.equals("id", tlKeyId)
         assert.equals(2, tlKey)
         assert.same({
@@ -173,7 +173,7 @@ insulate("ce.mods.road.RoadDtoFactories", function ()
                 }
             }
         }, trafficLightDto)
-        assert.equals("intersection-module-settings", moduleRoom)
+        assert.equals("road-module-settings", moduleRoom)
         assert.equals("name", moduleKeyId)
         assert.equals("Show", moduleKey)
         assert.same({
@@ -182,7 +182,7 @@ insulate("ce.mods.road.RoadDtoFactories", function ()
             description = "Show requests",
             type = "boolean",
             value = true,
-            eepFunction = "CrossingSettings.setShowRequestsOnSignal"
+            eepFunction = "IntersectionSettings.setShowRequestsOnSignal"
         }, moduleDto)
         assert.equals("signal-type-definitions", defsRoom)
         assert.equals("id", defsKeyId)

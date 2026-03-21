@@ -26,23 +26,49 @@ EepSimulator.simulatePlaceTrainOnRoadTrack(4, "Tram")
 EepSimulator.simulatePlaceTrainOnRoadTrack(5, "Tram")
 EepSimulator.simulatePlaceTrainOnRoadTrack(6, "Tram")
 
+-- Initialisiere notwendige Immobilien
+EEPStructureSetLight("#5433_Straba Signal A", false)
+EEPStructureSetLight("#5434_Straba Signal links", false)
+EEPStructureSetLight("#5435_Straba Signal Halt", false)
+EEPStructureSetLight("#5436_Straba Signal rechts", false)
+EEPStructureSetLight("#5518_Straba Signal A", false)
+EEPStructureSetLight("#5520_Straba Signal anhalten", false)
+EEPStructureSetLight("#5521_Straba Signal geradeaus", false)
+EEPStructureSetLight("#5522_Straba Signal anhalten", false)
+EEPStructureSetLight("#5523_Straba Signal Halt", false)
+EEPStructureSetLight("#5524_Straba Signal A", false)
+EEPStructureSetLight("#5525_Straba Signal Halt", false)
+EEPStructureSetLight("#5526_Straba Signal anhalten", false)
+EEPStructureSetLight("#5528_Straba Signal Halt", false)
+EEPStructureSetLight("#5529_Straba Signal anhalten", false)
+EEPStructureSetLight("#5530_Straba Signal A", false)
+EEPStructureSetLight("#5531_Straba Signal geradeaus", false)
+EEPStructureSetLight("#5533_Straba Signal A", false)
+EEPStructureSetLight("#5534_Straba Signal anhalten", false)
+EEPStructureSetLight("#5535_Straba Signal Halt", false)
+EEPStructureSetLight("#5536_Straba Signal rechts", false)
+EEPStructureSetLight("#5537_Straba Signal Halt", false)
+EEPStructureSetLight("#5538_Straba Signal links", false)
+EEPStructureSetLight("#5539_Straba Signal anhalten", false)
+EEPStructureSetLight("#5540_Straba Signal A", false)
+
 ------------------------------------------------------------------------------------
 -- Es folge der Import der Anlage, die getestet werden soll.
 -- Ändere die folgende Zeile, wenn Du eine andere Anlage testen möchtest
 ------------------------------------------------------------------------------------
-require("ce.template.crossing-simple")
+require("ce.template.crossing-with-tram")
 
 -- Zeige erweiterte Informationen an                              --
 local Scheduler = require("ce.hub.scheduler.Scheduler")
 Scheduler.debug = false
 local TrafficLight = require("ce.mods.road.TrafficLight")
 TrafficLight.debug = false
-local Crossing = require("ce.mods.road.Crossing")
-local CrossingSettings = require("ce.mods.road.CrossingSettings")
-Crossing.debug = false
-CrossingSettings.showSignalIdOnSignal = false
-CrossingSettings.showRequestsOnSignal = false
-CrossingSettings.showSequenceOnSignal = false
+local Intersection = require("ce.mods.road.Intersection")
+local IntersectionSettings = require("ce.mods.road.IntersectionSettings")
+Intersection.debug = false
+IntersectionSettings.showSignalIdOnSignal = false
+IntersectionSettings.showRequestsOnSignal = false
+IntersectionSettings.showSequenceOnSignal = false
 local StorageUtility = require("ce.hub.util.StorageUtility")
 StorageUtility.debug = false
 

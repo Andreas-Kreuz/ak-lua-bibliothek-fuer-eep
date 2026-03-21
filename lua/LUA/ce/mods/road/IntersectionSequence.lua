@@ -1,26 +1,26 @@
-if AkDebugLoad then print("[#Start] Loading ce.mods.road.CrossingSequence ...") end
+if AkDebugLoad then print("[#Start] Loading ce.mods.road.IntersectionSequence ...") end
 
 local Task = require("ce.hub.scheduler.Task")
 -- local Lane = require("ce.mods.road.Lane")
 -- local LaneSettings = require("ce.mods.road.LaneSettings")
 
 ------------------------------------------------------
--- Klasse CrossingSequence (schaltet mehrere Ampeln)
+-- Klasse IntersectionSequence (schaltet mehrere Ampeln)
 ------------------------------------------------------
-local CrossingSequence = {}
-CrossingSequence.debug = AkStartWithDebug or false
+local IntersectionSequence = {}
+IntersectionSequence.debug = AkStartWithDebug or false
 ---@type table<string, TrafficLightType>
-CrossingSequence.Type = { BUS = "BUS", CAR = "CAR", TRAM = "TRAM", PEDESTRIAN = "PEDESTRIAN", BICYCLE = "BICYCLE" }
+IntersectionSequence.Type = { BUS = "BUS", CAR = "CAR", TRAM = "TRAM", PEDESTRIAN = "PEDESTRIAN", BICYCLE = "BICYCLE" }
 
-function CrossingSequence.getType() return "CrossingSequence" end
+function IntersectionSequence.getType() return "IntersectionSequence" end
 
-function CrossingSequence:getName() return self.name end
+function IntersectionSequence:getName() return self.name end
 
-function CrossingSequence:new(name, greenPhaseSeconds)
+function IntersectionSequence:new(name, greenPhaseSeconds)
     local o = {}
     setmetatable(o, self)
     self.__index = self
-    o.type = "CrossingSequence"
+    o.type = "IntersectionSequence"
     o.name = name
     o.crossing = nil
     o.prio = 0
@@ -29,20 +29,20 @@ function CrossingSequence:new(name, greenPhaseSeconds)
     return o
 end
 
-function CrossingSequence:initSequence()
+function IntersectionSequence:initSequence()
     ---@type table<Lane,boolean>
     self.lanes = {}
     for trafficLight, type in pairs(self.trafficLights) do
-        if type ~= CrossingSequence.Type.PEDESTRIAN then
+        if type ~= IntersectionSequence.Type.PEDESTRIAN then
             for lane in pairs(trafficLight.lanes) do self.lanes[lane] = true end
         end
     end
 end
 
 ---This will calculate all trafficLights to turn red and green
----@param oldSequence? CrossingSequence optional currentSequence if known
+---@param oldSequence? IntersectionSequence optional currentSequence if known
 ---@return table<TrafficLight,TrafficLightType>, table<TrafficLight,TrafficLightType>
-function CrossingSequence:trafficLightsToTurnRedAndGreen(oldSequence)
+function IntersectionSequence:trafficLightsToTurnRedAndGreen(oldSequence)
     local turnRed = {}
     local turnGreen = {}
 
@@ -76,7 +76,7 @@ local function switchTask(tlList, tlFilter, tlState, reason)
     return Task:new(function () TrafficLight.switchAll(toTurn, tlState, reason) end, reason)
 end
 
-function CrossingSequence:tasksForSwitchingFrom(oldSequence, afterRedTask)
+function IntersectionSequence:tasksForSwitchingFrom(oldSequence, afterRedTask)
     local TrafficLightState = require("ce.mods.road.TrafficLightState")
     local taskList = {}
 
@@ -86,28 +86,28 @@ function CrossingSequence:tasksForSwitchingFrom(oldSequence, afterRedTask)
     if oldSequence then
         -- Schedule the task where the old pedestrian lights get yellow
         local reasonPed = "Schalte " .. oldSequence.name .. " auf Fussgaenger Rot"
-        local oldRedPedestrian = switchTask(toRed, CrossingSequence.Type.PEDESTRIAN, TrafficLightState.RED, reasonPed)
+        local oldRedPedestrian = switchTask(toRed, IntersectionSequence.Type.PEDESTRIAN, TrafficLightState.RED, reasonPed)
         table.insert(taskList, { offset = 0, task = oldRedPedestrian, precedingTask = nil })
 
-        -- * Hier könnte noch die DDR-Schaltung rein (2 Sekunden grün-gelb)
+        -- * Hier kï¿½nnte noch die DDR-Schaltung rein (2 Sekunden grï¿½n-gelb)
 
         -- Schedule the task where the old traffic lights get yellow
         local reasonYelTram = "Schalte " .. oldSequence.name .. " auf gelb (Tram)"
-        local oldYellowTram = switchTask(toRed, CrossingSequence.Type.TRAM, TrafficLightState.YELLOW, reasonYelTram)
+        local oldYellowTram = switchTask(toRed, IntersectionSequence.Type.TRAM, TrafficLightState.YELLOW, reasonYelTram)
         table.insert(taskList, { offset = 0, task = oldYellowTram, precedingTask = oldRedPedestrian })
 
         local reasonYelCar = "Schalte " .. oldSequence.name .. " auf gelb (Auto)"
-        local oldYellowCars = switchTask(toRed, CrossingSequence.Type.CAR, TrafficLightState.YELLOW, reasonYelCar)
+        local oldYellowCars = switchTask(toRed, IntersectionSequence.Type.CAR, TrafficLightState.YELLOW, reasonYelCar)
         table.insert(taskList, { offset = 0, task = oldYellowCars, precedingTask = oldRedPedestrian })
 
         -- Schedule the task where the old traffic lights get red (CAR)
         local reasonRedCars = "Schalte " .. oldSequence.name .. " auf rot (Auto)"
-        oldRedCars = switchTask(toRed, CrossingSequence.Type.CAR, TrafficLightState.RED, reasonRedCars)
+        oldRedCars = switchTask(toRed, IntersectionSequence.Type.CAR, TrafficLightState.RED, reasonRedCars)
         table.insert(taskList, { offset = 2, task = oldRedCars, precedingTask = oldYellowCars })
 
         -- Schedule the task where the old traffic lights get red (TRAM)
         local reasonRedTram = "Schalte " .. oldSequence.name .. " auf rot (Tram)"
-        local oldRedTram = switchTask(toRed, CrossingSequence.Type.TRAM, TrafficLightState.RED, reasonRedTram)
+        local oldRedTram = switchTask(toRed, IntersectionSequence.Type.TRAM, TrafficLightState.RED, reasonRedTram)
         table.insert(taskList, { offset = 2, task = oldRedTram, precedingTask = oldYellowCars })
     else
         -- Schedule the task where all traffic lights get red
@@ -120,65 +120,65 @@ function CrossingSequence:tasksForSwitchingFrom(oldSequence, afterRedTask)
 
     -- Schedule the task where the new traffic lights are red-yellow
     local reasonYel = "Schalte " .. self.name .. " auf rot-gelb"
-    local nextYel = switchTask(toGreen, CrossingSequence.Type.CAR, TrafficLightState.REDYELLOW, reasonYel)
+    local nextYel = switchTask(toGreen, IntersectionSequence.Type.CAR, TrafficLightState.REDYELLOW, reasonYel)
     table.insert(taskList, { offset = 3, task = nextYel, precedingTask = oldRedCars })
 
     -- Schedule the task where the new traffic lights are green (TRAM)
     local reasonGreenTram = "Schalte " .. self.name .. " auf gruen (Tram)"
-    local nextGreenTram = switchTask(toGreen, CrossingSequence.Type.TRAM, TrafficLightState.GREEN, reasonGreenTram)
+    local nextGreenTram = switchTask(toGreen, IntersectionSequence.Type.TRAM, TrafficLightState.GREEN, reasonGreenTram)
     table.insert(taskList, { offset = 1, task = nextGreenTram, precedingTask = nextYel })
 
     -- Schedule the task where the new pedestrian lights are green (PEDESTRIAN)
-    local nextPed = switchTask(toGreen, CrossingSequence.Type.PEDESTRIAN, TrafficLightState.PEDESTRIAN, reasonYel)
+    local nextPed = switchTask(toGreen, IntersectionSequence.Type.PEDESTRIAN, TrafficLightState.PEDESTRIAN, reasonYel)
     table.insert(taskList, { offset = 3, task = nextPed, precedingTask = oldRedCars })
 
     -- Schedule the task where the new traffic lights are green (CAR)
     local reasonGreenCar = "Schalte " .. self.name .. " auf gruen (Auto)"
-    local nextGreenCar = switchTask(toGreen, CrossingSequence.Type.CAR, TrafficLightState.GREEN, reasonGreenCar)
+    local nextGreenCar = switchTask(toGreen, IntersectionSequence.Type.CAR, TrafficLightState.GREEN, reasonGreenCar)
     table.insert(taskList, { offset = 1, task = nextGreenCar, precedingTask = nextYel })
 
     return taskList
 end
 
-function CrossingSequence:getLanes() return self.lanes end
+function IntersectionSequence:getLanes() return self.lanes end
 
-function CrossingSequence:lanesNamesText()
+function IntersectionSequence:lanesNamesText()
     local s = ""
     for lane in pairs(self.lanes) do s = s .. ", " .. lane.name end
     s = s:sub(3)
     return s
 end
 
-function CrossingSequence:addCarLights(...)
+function IntersectionSequence:addCarLights(...)
     for _, trafficLight in pairs({ ... }) do
         assert(trafficLight and trafficLight.signalId)
-        self.trafficLights[trafficLight] = CrossingSequence.Type.CAR
+        self.trafficLights[trafficLight] = IntersectionSequence.Type.CAR
     end
     return self
 end
 
-function CrossingSequence:addPedestrianLights(...)
+function IntersectionSequence:addPedestrianLights(...)
     for _, trafficLight in pairs({ ... }) do
         assert(trafficLight and trafficLight.signalId)
-        self.trafficLights[trafficLight] = CrossingSequence.Type.PEDESTRIAN
+        self.trafficLights[trafficLight] = IntersectionSequence.Type.PEDESTRIAN
     end
     return self
 end
 
-function CrossingSequence:addTramLights(...)
+function IntersectionSequence:addTramLights(...)
     for _, trafficLight in pairs({ ... }) do
         assert(trafficLight and trafficLight.signalId)
-        self.trafficLights[trafficLight] = CrossingSequence.Type.TRAM
+        self.trafficLights[trafficLight] = IntersectionSequence.Type.TRAM
     end
     return self
 end
 
---- Gibt alle Fahrspuren nach Prioritaet zurueck, sowie deren Anzahl und deren Durchschnittspriorität
+--- Gibt alle Fahrspuren nach Prioritaet zurueck, sowie deren Anzahl und deren Durchschnittsprioritï¿½t
 -- @return sortierteFahrspuren, anzahlDerFahrspuren, durchschnittsPrio
-function CrossingSequence:lanesSortedByPriority()
+function IntersectionSequence:lanesSortedByPriority()
     local trafficLightArray = {}
     for trafficLight, type in pairs(self.trafficLights) do
-        if type ~= CrossingSequence.Type.PEDESTRIAN then table.insert(trafficLightArray, trafficLight) end
+        if type ~= IntersectionSequence.Type.PEDESTRIAN then table.insert(trafficLightArray, trafficLight) end
     end
 
     local sortedLanes = {}
@@ -205,7 +205,7 @@ end
 
 ------ Gibt alle Fahrspuren nach Name sortiert zurueck
 -- @return sortierteFahrspuren
-function CrossingSequence:lanesSortedByName()
+function IntersectionSequence:lanesSortedByName()
     local sortedLanes = {}
     for lane in pairs(self.lanes) do table.insert(sortedLanes, lane) end
     local sortierFunktion = function (lane1, lane2) return (lane1.name < lane2.name) end
@@ -217,7 +217,7 @@ end
 -- @param schaltung1 erste Schaltung
 -- @param schaltung2 zweite Schaltung
 --
-function CrossingSequence.sequencePriorityComparator(schaltung1, schaltung2)
+function IntersectionSequence.sequencePriorityComparator(schaltung1, schaltung2)
     if schaltung1 and schaltung2 then
         local _, tableSize1, avg1 = schaltung1:lanesSortedByPriority()
         local _, tableSize2, avg2 = schaltung2:lanesSortedByPriority()
@@ -238,11 +238,11 @@ function CrossingSequence.sequencePriorityComparator(schaltung1, schaltung2)
     end
 end
 
-function CrossingSequence:calculatePriority()
+function IntersectionSequence:calculatePriority()
     local _, _, prio = self:lanesSortedByPriority()
     return prio
 end
 
-function CrossingSequence:resetWaitCount() for lane in pairs(self.lanes) do lane:resetWaitCount() end end
+function IntersectionSequence:resetWaitCount() for lane in pairs(self.lanes) do lane:resetWaitCount() end end
 
-return CrossingSequence
+return IntersectionSequence

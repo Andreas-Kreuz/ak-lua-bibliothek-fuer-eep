@@ -3,13 +3,13 @@ print("ce.demo-anlagen.tutorial-ampel.meine-ampel-main")
 local TrafficLightModel = require("ce.mods.road.TrafficLightModel")
 local TrafficLight = require("ce.mods.road.TrafficLight")
 local Lane = require("ce.mods.road.Lane")
-local Crossing = require("ce.mods.road.Crossing")
-local CrossingSettings = require("ce.mods.road.CrossingSettings")
-local CrossingSequence = require("ce.mods.road.CrossingSequence")
+local Intersection = require("ce.mods.road.Intersection")
+local IntersectionSettings = require("ce.mods.road.IntersectionSettings")
+local IntersectionSequence = require("ce.mods.road.IntersectionSequence")
 
 -- Hier kommt der Code
-CrossingSettings.showSignalIdOnSignal = false
-CrossingSettings.showSequenceOnSignal = false
+IntersectionSettings.showSignalIdOnSignal = false
+IntersectionSettings.showSequenceOnSignal = false
 
 local K1 = TrafficLight:new("K1", 12, TrafficLightModel.JS2_3er_mit_FG)
 local K2 = TrafficLight:new("K2", 17, TrafficLightModel.JS2_3er_ohne_FG)
@@ -69,14 +69,14 @@ w2 = Lane:new("W2", 112, K12, { "LEFT" }) -- Zus�tzlich in der Schaltung K11
 -- gr�n geschaltet werden d�rfen, alle anderen sind rot
 
 --- Tutorial 1: Schaltung 1
-local sch1 = CrossingSequence:new("Schaltung 1")
+local sch1 = IntersectionSequence:new("Schaltung 1")
 sch1:addCarLights(K1)
 sch1:addCarLights(K7)
 sch1:addPedestrianLights(F5, F6)
 sch1:addPedestrianLights(F11, F12)
 
 --- Tutorial 1: Schaltung 2
-local sch2 = CrossingSequence:new("Schaltung 2")
+local sch2 = IntersectionSequence:new("Schaltung 2")
 sch2:addCarLights(K2, K3)
 sch2:addCarLights(K8, K9)
 sch2:addPedestrianLights(F3, F4)
@@ -85,7 +85,7 @@ sch2:addPedestrianLights(F11, F12)
 sch2:addPedestrianLights(F9, F10)
 
 --- Tutorial 1: Schaltung 3
-local sch3 = CrossingSequence:new("Schaltung 3")
+local sch3 = IntersectionSequence:new("Schaltung 3")
 sch3:addCarLights(K4)
 sch3:addCarLights(K10)
 sch3:addPedestrianLights(F1, F2)
@@ -94,20 +94,20 @@ sch3:addPedestrianLights(F7, F8)
 sch3:addPedestrianLights(F9, F10)
 
 --- Tutorial 1: Schaltung 4
-local sch4 = CrossingSequence:new("Schaltung 4")
+local sch4 = IntersectionSequence:new("Schaltung 4")
 sch4:addCarLights(K5, K6)
 sch4:addCarLights(K11, K12)
 sch4:addPedestrianLights(F1, F2)
 sch4:addPedestrianLights(F7, F8)
 
 -- --- Tutorial 1: Schaltung 5
--- local sch5 = CrossingSequence:new("Schaltung 5")
+-- local sch5 = IntersectionSequence:new("Schaltung 5")
 -- sch5:addCarLights(K1)
 -- sch5:addCarLights(K2, K3)
 -- sch5:addPedestrianLights(F11, F12)
 --
 -- --- Tutorial 1: Schaltung 6
--- local sch6 = CrossingSequence:new("Schaltung 6")
+-- local sch6 = IntersectionSequence:new("Schaltung 6")
 -- sch6:addCarLights(K4)
 -- sch6:addCarLights(K5, K6)
 -- sch6:addPedestrianLights(F1, F2)
@@ -115,20 +115,20 @@ sch4:addPedestrianLights(F7, F8)
 -- sch6:addPedestrianLights(F7, F8)
 --
 -- --- Tutorial 1: Schaltung 7
--- local sch7 = CrossingSequence:new("Schaltung 7")
+-- local sch7 = IntersectionSequence:new("Schaltung 7")
 -- sch7:addCarLights(K7)
 -- sch7:addCarLights(K8, K9)
 -- sch7:addPedestrianLights(F5, F6)
 --
 -- --- Tutorial 1: Schaltung 6
--- local sch8 = CrossingSequence:new("Schaltung 8")
+-- local sch8 = IntersectionSequence:new("Schaltung 8")
 -- sch8:addCarLights(K4)
 -- sch8:addCarLights(K5, K6)
 -- sch8:addPedestrianLights(F1, F2)
 -- sch8:addPedestrianLights(F7, F8)
 -- sch8:addPedestrianLights(F9, F10)
 
-k1 = Crossing:new("Tutorial 1")
+k1 = Intersection:new("Tutorial 1")
 k1:addSequence(sch1)
 k1:addSequence(sch2)
 k1:addSequence(sch3)

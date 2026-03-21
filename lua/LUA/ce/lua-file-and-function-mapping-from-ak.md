@@ -113,8 +113,8 @@ Die folgenden Ersetzungen decken die typischen direkten Modulzugriffe aus besteh
 | `require("ak.road.LightStructureTrafficLight")`| `require("ce.mods.road.LightStructureTrafficLight")` |
 | `require("ak.road.TrafficLight")`              | `require("ce.mods.road.TrafficLight")`               |
 | `require("ak.road.Lane")`                      | `require("ce.mods.road.Lane")`                       |
-| `require("ak.road.Crossing")`                  | `require("ce.mods.road.Crossing")`                   |
-| `require("ak.road.CrossingSequence")`          | `require("ce.mods.road.CrossingSequence")`           |
+| `require("ak.road.Crossing")`                  | `require("ce.mods.road.Intersection")`                   |
+| `require("ak.road.CrossingSequence")`          | `require("ce.mods.road.IntersectionSequence")`           |
 | `require("ak.transit.Line")`          | `require("ce.mods.transit.Line")`           |
 | `require("ak.transit.LineRegistry")`  | `require("ce.mods.transit.LineRegistry")`   |
 | `require("ak.transit.RoadStation")`   | `require("ce.mods.transit.RoadStation")`    |
@@ -155,7 +155,7 @@ Die folgenden Dateien wurden nicht nur umbenannt, sondern oft auch in die neue f
 | `ak/core/VersionInfo.lua`                           | `ce/hub/data/version/VersionInfo.lua`                            |
 | `ak/train/Train.lua`                                | `ce/hub/data/trains/Train.lua`                                   |
 | `ak/train/RollingStock.lua`                         | `ce/hub/data/rollingstock/RollingStock.lua`                      |
-| `ak/road/CrossingDtoFactory.lua`                    | `ce/mods/road/data/CrossingDtoFactory.lua`                       |
+| `ak/road/CrossingDtoFactory.lua`                    | `ce/mods/road/data/RoadDtoFactory.lua`                       |
 | `ak/road/TrafficLightModelDtoFactory.lua`           | `ce/mods/road/data/TrafficLightModelDtoFactory.lua`              |
 | `ak/transit/TransitDtoFactory.lua` | `ce/mods/transit/data/TransitDtoFactory.lua`    |
 
@@ -178,7 +178,7 @@ Einige alte Sammelmodule wurden bewusst aufgeteilt:
 | `ak.core.ModuleRegistry`                       | Öffentlicher Einstieg über `ce.ControlExtension`, Laufzeit über `ce.hub.ControlExtensionHub`, Registry intern in `ce.hub.ModuleRegistry` |
 | `ak.core.CoreWebConnector`                     | `ce.hub.bridge.CoreBridgeConnector` und `ce.hub.bridge.DataBridgeConnector`                                                              |
 | `ak.data.DataLuaModule`                        | `ce.hub.mods.DataCeModule` mit `ce.hub.bridge.DataBridgeConnector`                                                                       |
-| `ak.road.CrossingLuaModule`                    | `ce.mods.road.RoadCeModule` mit `ce.mods.road.bridge.CrossingBridgeConnector`                                                            |
+| `ak.road.CrossingLuaModule`                    | `ce.mods.road.RoadCeModule` mit `ce.mods.road.bridge.RoadBridgeConnector`                                                            |
 | `ak.transit.TransitLuaModule` | `ce.mods.transit.TransitCeModule` mit `ce.mods.transit.bridge.TransitBridgeConnector`                  |
 
 Für deine bestehenden Skripte ist der sichere Weg daher: Verwende nur `ce.ControlExtension` und die neuen `*CeModule` direkt und greife nicht mehr auf alte interne `ak.*`-Pfade zurück.

@@ -4,7 +4,7 @@ import EepDataEffects from '../eep/server-data/EepDataEffects';
 import EepService from '../eep/service/EepService';
 import { ServerStatisticsService } from '../eep/service/ServerStatisticsService';
 import { registerCommandMod } from '../mod/command/registerCommandMod';
-import { registerIntersectionMod } from '../mod/intersection/registerIntersectionMod';
+import { registerRoadMod } from '../mod/road/registerRoadMod';
 import { registerLogMod } from '../mod/log/registerLogMod';
 import TransitService from '../mod/transit/TransitService';
 import TrainUpdateService from '../mod/train/TrainUpdateService';
@@ -178,6 +178,6 @@ export default class AppEffects {
     // register mods
     registerLogMod(this.io, this.socketService, eepService, this.debug);
     registerCommandMod(this.io, this.socketService, eepService, this.debug);
-    registerIntersectionMod(this.io, this.socketService, eepService, this.debug);
+    registerRoadMod(this.io, this.socketService, eepService, this.debug);
   }
 }

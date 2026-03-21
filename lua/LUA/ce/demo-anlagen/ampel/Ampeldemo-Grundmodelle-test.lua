@@ -6,8 +6,8 @@ local ModuleRegistry = require("ce.hub.ModuleRegistry")
 local Scheduler = require("ce.hub.scheduler.Scheduler")
 local ServerExchangeCoordinator = require("ce.databridge.ServerExchangeCoordinator")
 local TrafficLight = require("ce.mods.road.TrafficLight")
-local Crossing = require("ce.mods.road.Crossing")
-local CrossingSettings = require("ce.mods.road.CrossingSettings")
+local Intersection = require("ce.mods.road.Intersection")
+local IntersectionSettings = require("ce.mods.road.IntersectionSettings")
 local StorageUtility = require("ce.hub.util.StorageUtility")
 -- endregion
 
@@ -27,10 +27,10 @@ require("ce.demo-anlagen.ampel.Ampeldemo-Grundmodelle-main")
 -- Zeige erweiterte Informationen an                              --
 --------------------------------------------------------------------
 TrafficLight.debug = false
-Crossing.debug = false
-CrossingSettings.showRequestsOnSignal = true
-CrossingSettings.showSequenceOnSignal = true
-CrossingSettings.showSignalIdOnSignal = false
+Intersection.debug = false
+IntersectionSettings.showRequestsOnSignal = true
+IntersectionSettings.showSequenceOnSignal = true
+IntersectionSettings.showSignalIdOnSignal = false
 Scheduler.debug = false
 StorageUtility.debug = false
 ModuleRegistry.debug = false
@@ -39,15 +39,15 @@ ServerExchangeCoordinator.debug = false
 --------------------------------------------------------------------
 -- Erste Hilfe - normalerweise nicht notwendig                    --
 --------------------------------------------------------------------
--- Crossing.resetVehicles()
+-- Intersection.resetVehicles()
 -------------------------------------------------------------------
 
-Crossing.initSequences()
-Crossing.debug = true
+Intersection.initSequences()
+Intersection.debug = true
 enterLane(Zugname, c1Lane8)
 enterLane(Zugname, c1Lane8)
 assert(c1Lane8.vehicleCount == 2, c1Lane8.vehicleCount)
-Crossing.resetVehicles()
+Intersection.resetVehicles()
 assert(c1Lane8.vehicleCount == 0)
 -------------------------------------------------------------------
 local function run()

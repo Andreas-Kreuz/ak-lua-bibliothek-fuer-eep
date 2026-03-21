@@ -3,8 +3,8 @@ require("ce.hub.eep.EepSimulator")
 
 local Scheduler = require("ce.hub.scheduler.Scheduler")
 local TrafficLight = require("ce.mods.road.TrafficLight")
-local Crossing = require("ce.mods.road.Crossing")
-local CrossingSettings = require("ce.mods.road.CrossingSettings")
+local Intersection = require("ce.mods.road.Intersection")
+local IntersectionSettings = require("ce.mods.road.IntersectionSettings")
 local StorageUtility = require("ce.hub.util.StorageUtility")
 
 clearlog()
@@ -35,18 +35,18 @@ require("ce.demo-anlagen.tutorial-ampel.meine-ampel-main")
 Scheduler.debug = true
 StorageUtility.debug = true
 TrafficLight.debug = false
-Crossing.debug = false
-CrossingSettings.showSignalIdOnSignal = false
-CrossingSettings.showRequestsOnSignal = true
-CrossingSettings.showSequenceOnSignal = true
+Intersection.debug = false
+IntersectionSettings.showSignalIdOnSignal = false
+IntersectionSettings.showRequestsOnSignal = true
+IntersectionSettings.showSequenceOnSignal = true
 
 --------------------------------------------------------------------
 -- Erste Hilfe - normalerweise nicht notwendig                    --
 --------------------------------------------------------------------
--- Crossing.resetVehicles()
+-- Intersection.resetVehicles()
 
 -------------------------------------------------------------------
--- Crossing.debug = true
+-- Intersection.debug = true
 -------------------------------------------------------------------
 local function run()
     EEPTime = EEPTime + 20

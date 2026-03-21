@@ -52,7 +52,7 @@ end
 --
 
 local Lane = require("ce.mods.road.Lane")
-local Crossing = require("ce.mods.road.Crossing")
+local Intersection = require("ce.mods.road.Intersection")
 local TrafficLight = require("ce.mods.road.TrafficLight")
 local TrafficLightModel = require("ce.mods.road.TrafficLightModel")
 
@@ -66,7 +66,7 @@ local sequenceA, sequenceB, sequenceC
 local crossing
 
 -- Nutze einen Speicherslot in EEP um die Einstellungen f�r Kreuzungen zu laden und zu speichern
-Crossing.loadSettingsFromSlot(10)
+Intersection.loadSettingsFromSlot(10)
 
 -- Erzeuge immer erst Deine Ampeln
 L1 = TrafficLight:new("L1", 11, TrafficLightModel.Unsichtbar_2er)           -- Signal for Lane 1
@@ -89,7 +89,7 @@ S2 = TrafficLight:new("S2", -1, TrafficLightModel.NONE, "#5435_Straba Signal Hal
                       "#5520_Straba Signal anhalten", "#5518_Straba Signal A")
 
 -- Erzeuge Kreuzung und Fahrspuren
-crossing = Crossing:new("Dein Kreuzungsname")
+crossing = Intersection:new("Dein Kreuzungsname")
 lane1 = Lane:new("Lane 1 N", 1, L1, { Lane.Directions.STRAIGHT, Lane.Directions.RIGHT })
 lane2 = Lane:new("Lane 2 E", 2, L2, { Lane.Directions.LEFT, Lane.Directions.RIGHT })
 lane3 = Lane:new("Lane 3 S", 3, L3, { Lane.Directions.LEFT })

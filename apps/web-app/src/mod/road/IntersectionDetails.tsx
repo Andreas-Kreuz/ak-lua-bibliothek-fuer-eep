@@ -6,7 +6,7 @@ const AppPaper = lazy(() => import('../../ui/AppPaper'));
 import { useSocket } from '../../io/SocketProvider';
 import useIntersection from './useIntersection';
 import useIntersectionSwitching from './useIntersectionSwitching';
-import { CommandEvent, IntersectionEvent } from '@ak/web-shared';
+import { CommandEvent, RoadEvent } from '@ak/web-shared';
 import CamIcon from '@mui/icons-material/Videocam';
 import Alert from '@mui/material/Alert';
 import Chip from '@mui/material/Chip';
@@ -31,14 +31,14 @@ function IntersectionDetails() {
   });
 
   function sendSwitchManually(intersectionName: string, switchingName: string) {
-    socket.emit(IntersectionEvent.SwitchManually, {
+    socket.emit(RoadEvent.SwitchManually, {
       intersectionName,
       switchingName,
     });
   }
 
   function sendSwitchAutomatically(intersectionName: string) {
-    socket.emit(IntersectionEvent.SwitchAutomatically, {
+    socket.emit(RoadEvent.SwitchAutomatically, {
       intersectionName,
     });
   }

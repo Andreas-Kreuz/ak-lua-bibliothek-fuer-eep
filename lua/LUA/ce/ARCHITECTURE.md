@@ -176,7 +176,7 @@ Jedes Fachmodul soll intern mindestens zwischen zwei Rollen unterscheiden:
 Das bedeutet insbesondere:
 
 - `Crossing`, `Line`, `RoadStation` oder `Rail` gehören zur Domänenlogik
-- `CrossingStatePublisher` oder `TransitStatePublisher` bleiben beim jeweiligen Modul
+- `RoadStatePublisher` oder `TransitStatePublisher` bleiben beim jeweiligen Modul
 - modulbezogene DtoFactories bleiben ebenfalls beim jeweiligen Modul
 
 Die Module sollen ihre Fachdaten besitzen und veröffentlichen, aber keine generische Server-Infrastruktur nachbauen.

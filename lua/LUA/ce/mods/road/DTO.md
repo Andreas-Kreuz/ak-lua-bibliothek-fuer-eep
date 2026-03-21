@@ -13,7 +13,7 @@ Diese Datei beschreibt das aktuell aus `lua/LUA/ce/mods/road` erzeugte JSON-Date
 
 Wichtige Vorbemerkungen:
 
-- Primärquellen sind `TrafficLightModelStatePublisher.lua`, `CrossingStatePublisher.lua` und die von ihnen verwendeten Modelle.
+- Primärquellen sind `TrafficLightModelStatePublisher.lua`, `RoadStatePublisher.lua` und die von ihnen verwendeten Modelle.
 - Beide Collector erzeugen ihre Nutzdaten fachlich über `DataChangeBus.fireListChange(...)`. `syncState()` liefert aktuell selbst nur leere Tabellen zurück.
 - Der Lua-Collector sendet Listen. Der Web-Server normalisiert diese Listen danach zu Objekt-Mappings nach `keyId` und speichert sie so in `lua/LUA/ce/databridge/exchange/ak-eep-web-server-state.json`.
 
@@ -42,17 +42,17 @@ Diese Signalstellungen können als `signalIndex` für `EEPSetSignal(signalId, si
 | `positions.positionOff`         | `integer >= 1` oder nicht gesetzt; Beispiel: `7`                 | Signalstellung für ausgeschaltete Ampel.                                                 |
 | `positions.positionOffBlinking` | `integer >= 1` oder nicht gesetzt; Beispiel: `8`                 | Signalstellung für gelb blinkende Ampel.                                                 |
 
-## `CrossingStatePublisher`
+## `RoadStatePublisher`
 
 | Collector               | Raumname                       |
 | ----------------------- | ------------------------------ |
-| `CrossingStatePublisher` | `intersections`                |
-| `CrossingStatePublisher` | `intersection-switchings`      |
-| `CrossingStatePublisher` | `intersection-traffic-lights`  |
-| `CrossingStatePublisher` | `intersection-lanes`           |
-| `CrossingStatePublisher` | `intersection-module-settings` |
+| `RoadStatePublisher` | `road-intersections`                |
+| `RoadStatePublisher` | `road-intersection-switchings`      |
+| `RoadStatePublisher` | `road-intersection-traffic-lights`  |
+| `RoadStatePublisher` | `road-intersection-lanes`           |
+| `RoadStatePublisher` | `road-module-settings` |
 
-### Raum `intersections`
+### Raum `road-intersections`
 
 - Jeder Eintrag beschreibt eine Kreuzung mit eindeutiger `id` und einem `name`.
 - Wird eine Kreuzung manuell geschaltet, dann ist `manualSwitching` gesetzt. Dann steuert der Nutzer über die EEP-Web-App die Schaltung.
@@ -60,15 +60,15 @@ Diese Signalstellungen können als `signalIndex` für `EEPSetSignal(signalId, si
 | Name               | Typ und Wertebereich / Beispiel                   | Beschreibung                                                                                                                      |
 | ------------------ | ------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
 | `id`               | `integer >= 1`; Beispiel: `1`                     | Laufende numerische ID je Kreuzung, erzeugt beim Collect in alphabetischer Reihenfolge der Kreuzungsnamen.                      |
-| `name`             | `string`; Beispiel: `Bahnhofstraße - Hauptstraße` | Kreuzungsname aus `Crossing:new(name, ...)`.                                                                                     |
+| `name`             | `string`; Beispiel: `Bahnhofstraße - Hauptstraße` | Kreuzungsname aus `Intersection:new(name, ...)`.                                                                                     |
 | `currentSwitching` | `string` oder nicht gesetzt; Beispiel: `S1a`      | Name der aktuell aktiven Schaltung aus `crossing:getCurrentSequence().name`. Wegen `nil` kann das Feld im JSON komplett fehlen. |
 | `manualSwitching`  | `string` oder nicht gesetzt; Beispiel: `S3`       | Name der manuell genutzten Schaltung aus `crossing:getManualSequence().name`.                                                    |
 | `nextSwitching`    | `string` oder nicht gesetzt; Beispiel: `S1a`      | Name der als nächstes vorgesehenen Schaltung aus `crossing:getNextSequence().name`.                                              |
 | `ready`            | `boolean`; Beispiel: `false`                      | Status aus `crossing:isGreenPhaseFinished()`: `true`, wenn die Kreuzung wieder umschaltbar ist.                                  |
-| `timeForGreen`     | `number > 0`; Beispiel: `15`                      | Standard-Grünphase in Sekunden aus `Crossing:new(...)` bzw. `CrossingSequence:new(...)`.                                         |
-| `staticCams`       | `string[]`; Beispiel: `["Kreuzung 1 (von oben)"]` | Konfigurierte statische Kameranamen aus `Crossing:addStaticCam(...)`. Diese Namen werden im Web-Server später zu `EEPSetCamera \| 0 \| <staticCam>` umgesetzt. |
+| `timeForGreen`     | `number > 0`; Beispiel: `15`                      | Standard-Grünphase in Sekunden aus `Intersection:new(...)` bzw. `IntersectionSequence:new(...)`.                                         |
+| `staticCams`       | `string[]`; Beispiel: `["Kreuzung 1 (von oben)"]` | Konfigurierte statische Kameranamen aus `Intersection:addStaticCam(...)`. Diese Namen werden im Web-Server später zu `EEPSetCamera \| 0 \| <staticCam>` umgesetzt. |
 
-### Raum `intersection-switchings`
+### Raum `road-intersection-switchings`
 
 - Jeder Eintrag beschreibt eine bestimmte Schaltung für eine Kreuzung.
 - Die Schaltung enthält eine `prio`, die sich aus der Wichtung der wartenden Fahrzeuge in den Fahrspuren, die für diese Schaltung grün bekommen, sowie der Zeit berechnet, in der diese Schaltung nicht grün war.
@@ -78,10 +78,10 @@ Diese Signalstellungen können als `signalIndex` für `EEPSetSignal(signalId, si
 | ---------------- | ----------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
 | `id`             | `string`, pro Schaltung eindeutig; Beispiel: `Bahnhofstraße - Hauptstraße-S1` | Zusammengesetzter Schlüssel aus Kreuzungsname und Schaltungsname.                                                                        |
 | `intersectionId` | `string`; Beispiel: `Bahnhofstraße - Hauptstraße`                             | Referenz auf die Kreuzung. Trotz Feldname ist hier nicht die numerische `intersections.id`, sondern `crossing.name` gespeichert.        |
-| `name`           | `string`; Beispiel: `S1`                                                      | Schaltungsname aus `CrossingSequence.name`.                                                                                               |
-| `prio`           | `number`; Beispiel: `11.25`                                                   | Aktuelle Priorität der Schaltung aus `CrossingSequence.prio`. Sie wird aus der Fahrspur-Logik berechnet, nicht direkt aus EEP gelesen. |
+| `name`           | `string`; Beispiel: `S1`                                                      | Schaltungsname aus `IntersectionSequence.name`.                                                                                               |
+| `prio`           | `number`; Beispiel: `11.25`                                                   | Aktuelle Priorität der Schaltung aus `IntersectionSequence.prio`. Sie wird aus der Fahrspur-Logik berechnet, nicht direkt aus EEP gelesen. |
 
-### Raum `intersection-traffic-lights`
+### Raum `road-intersection-traffic-lights`
 
 - Beschreibt eine Ampel einer Kreuzung.
 - Normalerweise werden EEP-Signale genutzt, die als Ampelmodelle ausgeführt sind und durch Signalstellungen geschaltet werden. Dann ist `signalId` positiv.
@@ -110,7 +110,7 @@ Diese Signalstellungen können als `signalIndex` für `EEPSetSignal(signalId, si
 | `axisStructures[].positionRedYellow`   | `number` oder nicht gesetzt; Beispiel: `50`                                                                                   | Achsstellung für Rot-Gelb.                                                                                                                                                                                         |
 | `axisStructures[].positionPedestrian`  | `number` oder nicht gesetzt; Beispiel: `50`                                                                                   | Achsstellung für Fußgänger-Grün.                                                                                                                                                                                   |
 
-### Raum `intersection-lanes`
+### Raum `road-intersection-lanes`
 
 | Name                         | Typ und Wertebereich / Beispiel                                          | Beschreibung                                                                                                                                                          |
 | ---------------------------- | ------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -128,10 +128,10 @@ Diese Signalstellungen können als `signalIndex` für `EEPSetSignal(signalId, si
 | `switchings`                 | `string[]`; Beispiel: `["S1","S1a"]`                                 | Alle Schaltungen, in denen diese Fahrspur vorkommt. Vom Collector aus den Sequenzen abgeleitet.                                                                      |
 | `tracks`                     | `string[]`; Beispiel: `[]`                                               | Optional konfigurierte Gleis-/Straßennamen für Hervorhebung. Keine direkte EEP-Abfrage im Collector.                                                                 |
 
-### Raum `intersection-module-settings`
+### Raum `road-module-settings`
 
 - Generelle Einstellungen für das Ampelmodul.
-- Hier werden derzeit Anzeigeeinstellungen für Signale und Immobilien hinterlegt, damit man die Schaltungen und Fahrzeugwarteschlangen im Tooltip sehen kann. Diese werden in `CrossingSettings.xxx` abgelegt.
+- Hier werden derzeit Anzeigeeinstellungen für Signale und Immobilien hinterlegt, damit man die Schaltungen und Fahrzeugwarteschlangen im Tooltip sehen kann. Diese werden in `IntersectionSettings.xxx` abgelegt.
 
 | Name          | Typ und Wertebereich / Beispiel                                                                          | Beschreibung                                                                                |
 | ------------- | -------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
@@ -139,25 +139,25 @@ Diese Signalstellungen können als `signalIndex` für `EEPSetSignal(signalId, si
 | `name`        | `string`, pro Setting eindeutig; Beispiel: `Fahrspurzähler einblenden`                                  | Anzeigename des Settings; zugleich Schlüssel des `ListChanged`-Events.                      |
 | `description` | `string`; Beispiel: `Zeigt die Belegung der Fahrspuren an einer Kreuzung`                               | Beschreibung für den Einstellungsdialog.                                                    |
 | `type`        | `string`, aktuell fest `boolean`; Beispiel: `boolean`                                                    | Datentyp für die Web-App.                                                                   |
-| `value`       | `boolean`; Beispiel: `false`                                                                             | Aktueller Wert aus `CrossingSettings`. Persistiert über `StorageUtility.saveTable(...)`.    |
-| `eepFunction` | `string`, Name einer akzeptierten Remote-Funktion; Beispiel: `CrossingSettings.setShowLanesOnStructure` | Funktionsname, den die Web-App über `CommandEvent.ChangeSetting` an den Web-Server sendet. |
+| `value`       | `boolean`; Beispiel: `false`                                                                             | Aktueller Wert aus `IntersectionSettings`. Persistiert über `StorageUtility.saveTable(...)`.    |
+| `eepFunction` | `string`, Name einer akzeptierten Remote-Funktion; Beispiel: `IntersectionSettings.setShowLanesOnStructure` | Funktionsname, den die Web-App über `CommandEvent.ChangeSetting` an den Web-Server sendet. |
 
-#### Verfügbare `CrossingSettings`
+#### Verfügbare `IntersectionSettings`
 
-Alle derzeit verfügbaren `CrossingSettings` sind boolesche Anzeigeeinstellungen. Sie werden über `CrossingSettings.loadSettingsFromSlot(eepSaveId)` geladen und über `CrossingSettings.saveSettings()` mit String-Werten in `StorageUtility` persistiert.
+Alle derzeit verfügbaren `IntersectionSettings` sind boolesche Anzeigeeinstellungen. Sie werden über `IntersectionSettings.loadSettingsFromSlot(eepSaveId)` geladen und über `IntersectionSettings.saveSettings()` mit String-Werten in `StorageUtility` persistiert.
 
 | Setting                | Default / Persistenz / Setter                                                                                 | Beschreibung                                                                                                                                                                                                         |
 | ---------------------- | ------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `showRequestsOnSignal` | Default: `false`; Persistenzschlüssel: `reqInfo`; Setter: `CrossingSettings.setShowRequestsOnSignal(boolean)` | Blendet an Ampeln die aktuellen Anforderungen bzw. Warteschlangeninformationen ein. Zusätzlich werden vorhandene `requestStructure`-Immobilien über `TrafficLight:showRequestOnSignal(...)` sichtbar geschaltet. |
-| `showSequenceOnSignal` | Default: `false`; Persistenzschlüssel: `seqInfo`; Setter: `CrossingSettings.setShowSequenceOnSignal(boolean)` | Zeigt an jeder Ampel die möglichen Schaltungen der Kreuzung und markiert dabei die gerade aktive Schaltung im Tooltip.                                                                                              |
-| `showSignalIdOnSignal` | Default: `false`; Persistenzschlüssel: `sigInfo`; Setter: `CrossingSettings.setShowSignalIdOnSignal(boolean)` | Blendet die Signal-ID bzw. bei virtuellen Signalen die zugeordnete Strukturinformation im Tooltip ein. Das ist vor allem für Aufbau, Diagnose und Mapping der Signale hilfreich.                                   |
-| `showLanesOnStructure` | Default: `false`; Persistenzschlüssel: `laneInfo`; Setter: `CrossingSettings.setShowLanesOnStructure(boolean)` | Zeigt die Belegung der Fahrspuren gesammelt an der für die Kreuzung gesetzten Tipp-Struktur an. Wirksam nur, wenn für die Kreuzung eine `tippStructure` konfiguriert ist.                                          |
+| `showRequestsOnSignal` | Default: `false`; Persistenzschlüssel: `reqInfo`; Setter: `IntersectionSettings.setShowRequestsOnSignal(boolean)` | Blendet an Ampeln die aktuellen Anforderungen bzw. Warteschlangeninformationen ein. Zusätzlich werden vorhandene `requestStructure`-Immobilien über `TrafficLight:showRequestOnSignal(...)` sichtbar geschaltet. |
+| `showSequenceOnSignal` | Default: `false`; Persistenzschlüssel: `seqInfo`; Setter: `IntersectionSettings.setShowSequenceOnSignal(boolean)` | Zeigt an jeder Ampel die möglichen Schaltungen der Kreuzung und markiert dabei die gerade aktive Schaltung im Tooltip.                                                                                              |
+| `showSignalIdOnSignal` | Default: `false`; Persistenzschlüssel: `sigInfo`; Setter: `IntersectionSettings.setShowSignalIdOnSignal(boolean)` | Blendet die Signal-ID bzw. bei virtuellen Signalen die zugeordnete Strukturinformation im Tooltip ein. Das ist vor allem für Aufbau, Diagnose und Mapping der Signale hilfreich.                                   |
+| `showLanesOnStructure` | Default: `false`; Persistenzschlüssel: `laneInfo`; Setter: `IntersectionSettings.setShowLanesOnStructure(boolean)` | Zeigt die Belegung der Fahrspuren gesammelt an der für die Kreuzung gesetzten Tipp-Struktur an. Wirksam nur, wenn für die Kreuzung eine `tippStructure` konfiguriert ist.                                          |
 
 ## Abgleich mit Web-Server-State und Web-App
 
 ### Tatsächlicher Transportpfad
 
-1. `TrafficLightModelStatePublisher` und `CrossingStatePublisher` rufen `DataChangeBus.fireListChange(room, keyId, list)` auf.
+1. `TrafficLightModelStatePublisher` und `RoadStatePublisher` rufen `DataChangeBus.fireListChange(room, keyId, list)` auf.
 2. `ServerEventBuffer` puffert daraus JSON-Zeilen-Events im Speicher.
 3. `ServerExchangeCoordinator.runServerExchangeCycle(...)` schreibt diese Events über `ServerExchangeFileIo.writeOutgoingEvents(...)` in den Austauschkanal; der persistierte State liegt in `lua/LUA/ce/databridge/exchange/ak-eep-web-server-state.json`.
 4. `apps/web-server/src/server/eep/server-data/EepDataStore.ts` normalisiert `ListChanged` zu `rooms[roomName][element[keyId]] = element`.
@@ -171,18 +171,18 @@ Hinweis: Im Auftrag wird `apps/web-app/src/intersections` genannt. Im aktuellen 
 | Raumname                       | Collector-Form in Lua      | Form im Web-Server-State / API | Web-App-Nutzung                                                                                      | Abgleich                                                                                                                                                                                                 |
 | ------------------------------ | -------------------------- | ------------------------------ | ---------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `signal-type-definitions`      | Liste mit Schlüssel `id`   | Objekt-Mapping nach `id`       | Im aktuellen Intersections-Modul ungenutzt                                                           | Inhalt des Snapshots passt zum Collector; die Web-App hat dafür derzeit keinen Consumer.                                                                                                                |
-| `intersections`                | Liste mit Schlüssel `id`   | Objekt-Mapping nach `id`       | `useIntersections.tsx`, `useIntersection.tsx`, `IntersectionOverview.tsx`, `IntersectionDetails.tsx` | Passt weitgehend. Achtung: `currentSwitching`, `manualSwitching` und `nextSwitching` können im JSON fehlen, sind im TS-Modell aber als Pflicht-`string` typisiert.                                     |
-| `intersection-switchings`      | Liste mit Schlüssel `id`   | Objekt-Mapping nach `id`       | `useIntersectionSwitchings.tsx`, `useIntersectionSwitching.tsx`, `IntersectionDetails.tsx`           | Wird aktiv genutzt. Wichtig: `intersectionId` ist hier ein `string` mit dem Kreuzungsnamen, nicht die numerische ID. Die Web-App berücksichtigt das korrekt über `useIntersectionSwitching(i?.name)`. |
-| `intersection-traffic-lights`  | Liste mit Schlüssel `id`   | Objekt-Mapping nach `id`       | Im aktuellen Intersections-Modul ungenutzt                                                           | Snapshot und Collector passen fachlich zusammen. `lightStructures` bleibt auch im Server-State ein Objekt mit String-Indizes.                                                                          |
-| `intersection-lanes`           | Liste mit Schlüssel `id`   | Objekt-Mapping nach `id`       | Im aktuellen Intersections-Modul ungenutzt                                                           | Daten werden erzeugt und im State gehalten, aktuell aber nicht in `src/mod/intersections` dargestellt.                                                                                                 |
-| `intersection-module-settings` | Liste mit Schlüssel `name` | Objekt-Mapping nach `name`     | `useIntersectionSettings.tsx`, `ModuleSettingsButton`, `ModuleSetting.tsx`                           | Passt. Die Web-App behandelt die Daten generisch als `LuaSetting<boolean>`.                                                                                                                            |
+| `road-intersections`                | Liste mit Schlüssel `id`   | Objekt-Mapping nach `id`       | `useIntersections.tsx`, `useIntersection.tsx`, `IntersectionOverview.tsx`, `IntersectionDetails.tsx` | Passt weitgehend. Achtung: `currentSwitching`, `manualSwitching` und `nextSwitching` können im JSON fehlen, sind im TS-Modell aber als Pflicht-`string` typisiert.                                     |
+| `road-intersection-switchings`      | Liste mit Schlüssel `id`   | Objekt-Mapping nach `id`       | `useIntersectionSwitchings.tsx`, `useIntersectionSwitching.tsx`, `IntersectionDetails.tsx`           | Wird aktiv genutzt. Wichtig: `intersectionId` ist hier ein `string` mit dem Kreuzungsnamen, nicht die numerische ID. Die Web-App berücksichtigt das korrekt über `useIntersectionSwitching(i?.name)`. |
+| `road-intersection-traffic-lights`  | Liste mit Schlüssel `id`   | Objekt-Mapping nach `id`       | Im aktuellen Intersections-Modul ungenutzt                                                           | Snapshot und Collector passen fachlich zusammen. `lightStructures` bleibt auch im Server-State ein Objekt mit String-Indizes.                                                                          |
+| `road-intersection-lanes`           | Liste mit Schlüssel `id`   | Objekt-Mapping nach `id`       | Im aktuellen Intersections-Modul ungenutzt                                                           | Daten werden erzeugt und im State gehalten, aktuell aber nicht in `src/mod/intersections` dargestellt.                                                                                                 |
+| `road-module-settings` | Liste mit Schlüssel `name` | Objekt-Mapping nach `name`     | `useIntersectionSettings.tsx`, `ModuleSettingsButton`, `ModuleSetting.tsx`                           | Passt. Die Web-App behandelt die Daten generisch als `LuaSetting<boolean>`.                                                                                                                            |
 
 ### Auffällige Schema- und Integrationsbesonderheiten
 
 - Der Collector liefert Listen, der Web-Server-State speichert dieselben Räume aber als Objekte nach `keyId`. Das ist die Form, die auch die Web-App empfängt.
-- `intersection-switchings.intersectionId` ist ein Kreuzungsname (`string`), während `intersection-lanes.intersectionId` und `intersection-traffic-lights.intersectionId` numerische IDs sind.
-- `intersection-traffic-lights.lightStructures` wird als Objekt mit String-Indizes serialisiert, nicht als JSON-Array.
-- Mehrere Felder in `intersections` sind optional, weil Lua-`nil`-Felder beim JSON-Export nicht erscheinen.
+- `road-intersection-switchings.intersectionId` ist ein Kreuzungsname (`string`), während `road-intersection-lanes.intersectionId` und `road-intersection-traffic-lights.intersectionId` numerische IDs sind.
+- `road-intersection-traffic-lights.lightStructures` wird als Objekt mit String-Indizes serialisiert, nicht als JSON-Array.
+- Mehrere Felder in `road-intersections` sind optional, weil Lua-`nil`-Felder beim JSON-Export nicht erscheinen.
 - Der aktuelle Snapshot in `ak-eep-web-server-state.json` enthält bereits alle sechs Road-Räume.
 - Der Web-Server-Reducer merged `ListChanged` aktuell in vorhandene Raumobjekte hinein. Für die Road-Räume ist das nur dann exakt, wenn Schlüssel nicht verschwinden oder vorher ein `CompleteReset` erfolgt.
 
@@ -193,22 +193,22 @@ Hinweis: Im Auftrag wird `apps/web-app/src/intersections` genannt. Im aktuellen 
 | Ursprung in `ce/mods/road`                          | Eventtyp      | Raum / Schlüssel                        |
 | ---------------------------------------------- | ------------- | --------------------------------------- |
 | `TrafficLightModelStatePublisher.syncState()` | `ListChanged` | `signal-type-definitions` / `id`        |
-| `CrossingStatePublisher.syncState()`          | `ListChanged` | `intersections` / `id`                  |
-| `CrossingStatePublisher.syncState()`          | `ListChanged` | `intersection-lanes` / `id`             |
-| `CrossingStatePublisher.syncState()`          | `ListChanged` | `intersection-switchings` / `id`        |
-| `CrossingStatePublisher.syncState()`          | `ListChanged` | `intersection-traffic-lights` / `id`    |
-| `CrossingStatePublisher.syncState()`          | `ListChanged` | `intersection-module-settings` / `name` |
+| `RoadStatePublisher.syncState()`          | `ListChanged` | `road-intersections` / `id`                  |
+| `RoadStatePublisher.syncState()`          | `ListChanged` | `road-intersection-lanes` / `id`             |
+| `RoadStatePublisher.syncState()`          | `ListChanged` | `road-intersection-switchings` / `id`        |
+| `RoadStatePublisher.syncState()`          | `ListChanged` | `road-intersection-traffic-lights` / `id`    |
+| `RoadStatePublisher.syncState()`          | `ListChanged` | `road-module-settings` / `name` |
 
 ### In `ce/mods/road` ausgewertete Eingangs-Events und Callbacks
 
 | Ursprung                    | Event / Callback                                     | Weiterleitung / Aufruf                                                                                          | Auswertung in `ce/mods/road`                                                 | Wirkung                                                         |
 | --------------------------- | ---------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- | --------------------------------------------------------------- |
-| Web-App Kreuzungsdetail     | `[Intersection Event] Switch Automatically`          | Web-Server erzeugt `AkKreuzungSchalteAutomatisch \| <intersectionName>`                                         | `Crossing.switchAutomatically(crossingName)`                            | Setzt die Kreuzung in den Automatikmodus zurück.                |
-| Web-App Kreuzungsdetail     | `[Intersection Event] Switch Manually`               | Web-Server erzeugt `AkKreuzungSchalteManuell \| <intersectionName> \| <switchingName>`                         | `Crossing.switchManuallyTo(crossingName, sequenceName)`                 | Erzwingt eine bestimmte Schaltung als manuelle Schaltung.       |
-| Web-App Einstellungsdialog  | `[Command Event] Change Setting`                     | Web-Server erzeugt `<eepFunction> \| <newValue>`; Aufruf `CrossingSettings.setShowRequestsOnSignal(param == "true")` | Schaltet Tipptexte für Anforderungen und speichert den Wert.            |
-| Web-App Einstellungsdialog  | `[Command Event] Change Setting`                     | Web-Server erzeugt `<eepFunction> \| <newValue>`; Aufruf `CrossingSettings.setShowSequenceOnSignal(param == "true")` | Schaltet Tipptexte für Schaltungen und speichert den Wert.              |
-| Web-App Einstellungsdialog  | `[Command Event] Change Setting`                     | Web-Server erzeugt `<eepFunction> \| <newValue>`; Aufruf `CrossingSettings.setShowSignalIdOnSignal(param == "true")` | Schaltet Signal-ID-Tipptexte und speichert den Wert.                    |
-| Web-App Einstellungsdialog  | `[Command Event] Change Setting`                     | Web-Server erzeugt `<eepFunction> \| <newValue>`; Aufruf `CrossingSettings.setShowLanesOnStructure(param == "true")` | Schaltet Fahrspurzähler-Tipptexte und speichert den Wert.               |
+| Web-App Kreuzungsdetail     | `[Road Event] Switch Automatically`          | Web-Server erzeugt `AkKreuzungSchalteAutomatisch \| <intersectionName>`                                         | `Intersection.switchAutomatically(crossingName)`                            | Setzt die Kreuzung in den Automatikmodus zurück.                |
+| Web-App Kreuzungsdetail     | `[Road Event] Switch Manually`               | Web-Server erzeugt `AkKreuzungSchalteManuell \| <intersectionName> \| <switchingName>`                         | `Intersection.switchManuallyTo(crossingName, sequenceName)`                 | Erzwingt eine bestimmte Schaltung als manuelle Schaltung.       |
+| Web-App Einstellungsdialog  | `[Command Event] Change Setting`                     | Web-Server erzeugt `<eepFunction> \| <newValue>`; Aufruf `IntersectionSettings.setShowRequestsOnSignal(param == "true")` | Schaltet Tipptexte für Anforderungen und speichert den Wert.            |
+| Web-App Einstellungsdialog  | `[Command Event] Change Setting`                     | Web-Server erzeugt `<eepFunction> \| <newValue>`; Aufruf `IntersectionSettings.setShowSequenceOnSignal(param == "true")` | Schaltet Tipptexte für Schaltungen und speichert den Wert.              |
+| Web-App Einstellungsdialog  | `[Command Event] Change Setting`                     | Web-Server erzeugt `<eepFunction> \| <newValue>`; Aufruf `IntersectionSettings.setShowSignalIdOnSignal(param == "true")` | Schaltet Signal-ID-Tipptexte und speichert den Wert.                    |
+| Web-App Einstellungsdialog  | `[Command Event] Change Setting`                     | Web-Server erzeugt `<eepFunction> \| <newValue>`; Aufruf `IntersectionSettings.setShowLanesOnStructure(param == "true")` | Schaltet Fahrspurzähler-Tipptexte und speichert den Wert.               |
 | EEP-Weichenereignis         | globaler Callback `EEPOnSwitch_<switchId>`           | Registrierung in `TramSwitch.new(...)` über `_G[...]`                                                           | Liest `EEPGetSwitch(switchId)` und schaltet `EEPStructureSetLight(...)` | Spiegelt die Straßenbahnweichenstellung auf Licht-Immobilien.   |
 | EEP-Fahrzeuginitialisierung | globaler Callback `FAHRZEUG_INITIALISIERE(fahrzeug)` | Direkter EEP-Aufruf                                                                                             | `Bus.initialisiere(fahrzeug)`                                           | Schaltet Fahrer- und Fahrgastachsen per `EEPSetTrainAxis(...)`. |
 

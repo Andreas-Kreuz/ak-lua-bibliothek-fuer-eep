@@ -1,6 +1,6 @@
-if AkDebugLoad then print("[#Start] Loading ce.mods.road.data.CrossingDtoFactory ...") end
+if AkDebugLoad then print("[#Start] Loading ce.mods.road.data.RoadDtoFactory ...") end
 
-local CrossingDtoFactory = {}
+local RoadDtoFactory = {}
 
 local function copyTable(values)
     local copy = {}
@@ -119,46 +119,46 @@ local function createDtoList(room, keyId, values, createSingleDto)
     return room, keyId, dtos
 end
 
-function CrossingDtoFactory.createIntersectionDto(intersection)
-    return createDto("intersections", "id", intersection, toIntersectionDto)
+function RoadDtoFactory.createRoadIntersectionDto(intersection)
+    return createDto("road-intersections", "id", intersection, toIntersectionDto)
 end
 
-function CrossingDtoFactory.createIntersectionDtoList(intersections)
-    return createDtoList("intersections", "id", intersections, CrossingDtoFactory.createIntersectionDto)
+function RoadDtoFactory.createRoadIntersectionDtoList(intersections)
+    return createDtoList("road-intersections", "id", intersections, RoadDtoFactory.createRoadIntersectionDto)
 end
 
-function CrossingDtoFactory.createIntersectionLaneDto(lane)
-    return createDto("intersection-lanes", "id", lane, toIntersectionLaneDto)
+function RoadDtoFactory.createRoadIntersectionLaneDto(lane)
+    return createDto("road-intersection-lanes", "id", lane, toIntersectionLaneDto)
 end
 
-function CrossingDtoFactory.createIntersectionLaneDtoList(lanes)
-    return createDtoList("intersection-lanes", "id", lanes, CrossingDtoFactory.createIntersectionLaneDto)
+function RoadDtoFactory.createRoadIntersectionLaneDtoList(lanes)
+    return createDtoList("road-intersection-lanes", "id", lanes, RoadDtoFactory.createRoadIntersectionLaneDto)
 end
 
-function CrossingDtoFactory.createIntersectionSwitchingDto(switching)
-    return createDto("intersection-switchings", "id", switching, toIntersectionSwitchingDto)
+function RoadDtoFactory.createRoadIntersectionSwitchingDto(switching)
+    return createDto("road-intersection-switchings", "id", switching, toIntersectionSwitchingDto)
 end
 
-function CrossingDtoFactory.createIntersectionSwitchingDtoList(switchings)
-    return createDtoList("intersection-switchings", "id", switchings, CrossingDtoFactory.createIntersectionSwitchingDto)
+function RoadDtoFactory.createRoadIntersectionSwitchingDtoList(switchings)
+    return createDtoList("road-intersection-switchings", "id", switchings, RoadDtoFactory.createRoadIntersectionSwitchingDto)
 end
 
-function CrossingDtoFactory.createIntersectionTrafficLightDto(trafficLight)
-    return createDto("intersection-traffic-lights", "id", trafficLight, toIntersectionTrafficLightDto)
+function RoadDtoFactory.createRoadIntersectionTrafficLightDto(trafficLight)
+    return createDto("road-intersection-traffic-lights", "id", trafficLight, toIntersectionTrafficLightDto)
 end
 
-function CrossingDtoFactory.createIntersectionTrafficLightDtoList(trafficLights)
-    return createDtoList("intersection-traffic-lights", "id", trafficLights,
-                         CrossingDtoFactory.createIntersectionTrafficLightDto)
+function RoadDtoFactory.createRoadIntersectionTrafficLightDtoList(trafficLights)
+    return createDtoList("road-intersection-traffic-lights", "id", trafficLights,
+                         RoadDtoFactory.createRoadIntersectionTrafficLightDto)
 end
 
-function CrossingDtoFactory.createIntersectionModuleSettingDto(setting)
-    return createDto("intersection-module-settings", "name", setting, toIntersectionModuleSettingDto)
+function RoadDtoFactory.createRoadIntersectionModuleSettingDto(setting)
+    return createDto("road-module-settings", "name", setting, toIntersectionModuleSettingDto)
 end
 
-function CrossingDtoFactory.createIntersectionModuleSettingDtoList(settings)
-    return createDtoList("intersection-module-settings", "name", settings,
-                         CrossingDtoFactory.createIntersectionModuleSettingDto)
+function RoadDtoFactory.createRoadIntersectionModuleSettingDtoList(settings)
+    return createDtoList("road-module-settings", "name", settings,
+                         RoadDtoFactory.createRoadIntersectionModuleSettingDto)
 end
 
-return CrossingDtoFactory
+return RoadDtoFactory

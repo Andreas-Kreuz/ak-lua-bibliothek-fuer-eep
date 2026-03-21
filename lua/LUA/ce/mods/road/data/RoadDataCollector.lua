@@ -1,16 +1,16 @@
-if AkDebugLoad then print("[#Start] Loading ce.mods.road.data.CrossingsDataCollector ...") end
-local CrossingSettings = require("ce.mods.road.CrossingSettings")
+if AkDebugLoad then print("[#Start] Loading ce.mods.road.data.RoadDataCollector ...") end
+local IntersectionSettings = require("ce.mods.road.IntersectionSettings")
 local Lane = require("ce.mods.road.Lane")
 local TrafficLightState = require("ce.mods.road.TrafficLightState")
 
-local CrossingsDataCollector = {}
+local RoadDataCollector = {}
 
 local function padnum(d)
     local dec, n = string.match(d, "(%.?)0*(.+)")
     return #dec > 0 and ("%.12f"):format(d) or ("%s%03d%s"):format(dec, #n, n)
 end
 
-function CrossingsDataCollector.collectCrossings(allCrossings)
+function RoadDataCollector.collectCrossings(allCrossings)
     local intersections = {}
     local intersectionLanes = {}
     local intersectionSwitchings = {}
@@ -157,41 +157,41 @@ function CrossingsDataCollector.collectCrossings(allCrossings)
     }
 end
 
-function CrossingsDataCollector.collectModuleSettings()
+function RoadDataCollector.collectModuleSettings()
     return {
         {
             category = "Tipp-Texte fuer Kreuzungen",
             name = "Anforderungen einblenden",
             description = "Zeigt fuer alle Ampeln einen TippText mit den Anforderungen",
             type = "boolean",
-            value = CrossingSettings.showRequestsOnSignal,
-            eepFunction = "CrossingSettings.setShowRequestsOnSignal"
+            value = IntersectionSettings.showRequestsOnSignal,
+            eepFunction = "IntersectionSettings.setShowRequestsOnSignal"
         },
         {
             category = "Tipp-Texte fuer Kreuzungen",
             name = "Schaltungen einblenden",
             description = "Zeigt fuer alle Ampeln einen TippText mit den Schaltungen",
             type = "boolean",
-            value = CrossingSettings.showSequenceOnSignal,
-            eepFunction = "CrossingSettings.setShowSequenceOnSignal"
+            value = IntersectionSettings.showSequenceOnSignal,
+            eepFunction = "IntersectionSettings.setShowSequenceOnSignal"
         },
         {
             category = "Tipp-Texte fuer Kreuzungen",
             name = "Fahrspurzaehler einblenden",
             description = "Zeigt die Belegung der Fahrspuren an einer Kreuzung",
             type = "boolean",
-            value = CrossingSettings.showLanesOnStructure,
-            eepFunction = "CrossingSettings.setShowLanesOnStructure"
+            value = IntersectionSettings.showLanesOnStructure,
+            eepFunction = "IntersectionSettings.setShowLanesOnStructure"
         },
         {
             category = "Tipp-Texte fuer Signale (allgemein)",
             name = "Signal-ID einblenden",
             description = "Zeigt an jedem Signal dessen Nummer als TippText",
             type = "boolean",
-            value = CrossingSettings.showSignalIdOnSignal,
-            eepFunction = "CrossingSettings.setShowSignalIdOnSignal"
+            value = IntersectionSettings.showSignalIdOnSignal,
+            eepFunction = "IntersectionSettings.setShowSignalIdOnSignal"
         }
     }
 end
 
-return CrossingsDataCollector
+return RoadDataCollector

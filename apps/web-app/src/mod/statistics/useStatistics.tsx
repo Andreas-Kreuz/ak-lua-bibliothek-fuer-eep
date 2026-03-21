@@ -20,7 +20,7 @@ function useStatistics() {
         for (const collector of [
           'core.ModulesStatePublisher',
           'core.VersionStatePublisher',
-          'data.CrossingStatePublisher',
+          'data.RoadStatePublisher',
           'data.DataSlotsStatePublisher',
           'data.SignalStatePublisher',
           'data.StructureStatePublisher',

@@ -2,10 +2,10 @@ clearlog()
 local TrafficLightModel = require("ce.mods.road.TrafficLightModel")
 local TrafficLight = require("ce.mods.road.TrafficLight")
 local Lane = require("ce.mods.road.Lane")
-local Crossing = require("ce.mods.road.Crossing")
--- local CrossingSequence = require("ce.mods.road.CrossingSequence")
+local Intersection = require("ce.mods.road.Intersection")
+-- local IntersectionSequence = require("ce.mods.road.IntersectionSequence")
 
-Crossing.debug = true
+Intersection.debug = true
 
 ------------------------------------------------
 -- Damit kommt wird die Variable "Zugname" automatisch durch EEP belegt
@@ -116,7 +116,7 @@ ws:useTrackForQueue(2) -- Erfasst Anforderungen, wenn ein Fahrzeug auf Strasse 2
 -- Eine Schaltung bestimmt, welche Fahrspuren gleichzeitig auf
 -- gr�n geschaltet werden d�rfen, alle anderen sind rot
 
-k1 = Crossing:new("Tutorial 2")
+k1 = Intersection:new("Tutorial 2")
 
 --- Tutorial 2: Schaltung 1
 local sch1 = k1:newSequence("Schaltung 1")

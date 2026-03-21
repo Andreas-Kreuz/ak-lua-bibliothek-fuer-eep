@@ -1,7 +1,7 @@
 import EepSimulator from '../../test-helpers/eep-simulator';
 import { createScreenshots } from './createScreenshots';
 
-describe('Intersections Screenshots', () => createScreenshots(tests));
+describe('Road Screenshots', () => createScreenshots(tests));
 
 function tests(size: string, simulator: EepSimulator) {
   function waitForHome() {
@@ -13,15 +13,15 @@ function tests(size: string, simulator: EepSimulator) {
     simulator.reset();
   });
   describe('screenshot', () => {
-    const path = `assets/doc/${size}-intersections`;
-    it('/ intersections', () => {
-      cy.visit('/simple/intersections');
+    const path = `assets/doc/${size}-road`;
+    it('/ road', () => {
+      cy.visit('/simple/road');
       waitForHome();
       cy.contains('Kreuzung 2');
       cy.screenshot(`${path}`);
     });
-    it('/ intersections', () => {
-      cy.visit('/simple/intersection/1');
+    it('/ road details', () => {
+      cy.visit('/simple/road/1');
       waitForHome();
       cy.contains('Bahnhofstr.');
       cy.screenshot(`${path}-kreuzung1`);

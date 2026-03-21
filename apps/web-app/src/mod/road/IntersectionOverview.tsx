@@ -27,7 +27,7 @@ function IntersectionOverview() {
               title={`Kreuzung ${i.id}`}
               id={i.name}
               image="/assets/card-img-intersection.jpg"
-              to={`/intersection/${i.id}`}
+              to={`/road/${i.id}`}
             />
           </AppCardGrid>
         ))}

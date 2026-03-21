@@ -3,8 +3,8 @@ import { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, RouterProvider, createBrowserRouter, Outlet } from 'react-router-dom';
 
 const ConnectionWrapper = lazy(() => import('./ConnectionWrapper'));
-const IntersectionDetails = lazy(() => import('../mod/intersections/IntersectionDetails'));
-const IntersectionOverview = lazy(() => import('../mod/intersections/IntersectionOverview'));
+const IntersectionDetails = lazy(() => import('../mod/road/IntersectionDetails'));
+const IntersectionOverview = lazy(() => import('../mod/road/IntersectionOverview'));
 const MainMenu = lazy(() => import('../home/MainMenu'));
 const TransitOverview = lazy(() => import('../mod/lines/TransitOverview'));
 const Server = lazy(() => import('../server/Server'));
@@ -15,8 +15,8 @@ const Trains = lazy(() => import('../mod/trains/TrainMod'));
 const homeRoutes = [
   { path: '/', element: <MainMenu /> },
   { path: '/transit', element: <TransitOverview /> },
-  { path: '/intersections', element: <IntersectionOverview /> },
-  { path: '/intersection/:intersectionId', element: <IntersectionDetails /> },
+  { path: '/road', element: <IntersectionOverview /> },
+  { path: '/road/:intersectionId', element: <IntersectionDetails /> },
   { path: '/statistics', element: <StatisticsOverview /> },
   { path: '/trains', element: <Trains /> },
 ];

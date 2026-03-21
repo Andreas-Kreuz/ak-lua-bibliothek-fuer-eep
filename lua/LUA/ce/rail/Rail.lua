@@ -2,6 +2,8 @@ if AkDebugLoad then print("[#Start] Loading ce.rail.Rail ...") end
 local StorageUtility = require("ce.hub.util.StorageUtility")
 local fmt = require("ce.hub.eep.TippTextFormatter")
 
+-- TODO extract all classes, not belonging to Rail itself, to separate files
+-- TODO create a RailCeModule so we can use it in the hub.
 dbg = {
     anforderung = false,
     bahnhof = false,
@@ -170,8 +172,8 @@ end
 
 --- Schranken fuer Bahnuebergang
 --
-AkCrossing = {}
-AkCrossing.__index = AkCrossing
+RailCrossing = {}
+RailCrossing.__index = RailCrossing
 
 --- Neuen Bahnuebergang
 -- @param signalId1 EEP Weichen-ID
@@ -180,7 +182,7 @@ AkCrossing.__index = AkCrossing
 -- @param standardPosition Stellung fuer die Weiche, wenn die Fahrstrasse aufgeloest werden soll
 -- @param requiredClosingTime Zeit, die die Schranken zum Schliessen brauchen
 --
-function AkCrossing.new(signalId1, signalId2, stellungFahrstrasse, stellungStandard, requiredClosingTime)
+function RailCrossing.new(signalId1, signalId2, stellungFahrstrasse, stellungStandard, requiredClosingTime)
     assert(type(signalId1) == "number", "Need 'signalId1' as number")
     assert(type(signalId2) == "number", "Need 'signalId2' as number")
     assert(type(stellungFahrstrasse) == "number",
@@ -191,7 +193,7 @@ function AkCrossing.new(signalId1, signalId2, stellungFahrstrasse, stellungStand
     registerSignal(signalId1)
     registerSignal(signalId2)
 
-    local self = setmetatable({}, AkCrossing)
+    local self = setmetatable({}, RailCrossing)
     self.signalId1 = signalId1
     self.signalId2 = signalId2
     self.positionForRoute = stellungFahrstrasse
@@ -202,7 +204,7 @@ function AkCrossing.new(signalId1, signalId2, stellungFahrstrasse, stellungStand
     return self
 end
 
-function AkCrossing:closeForRoute(trainName, route)
+function RailCrossing:closeForRoute(trainName, route)
     assert(trainName)
     assert(route)
     local alreadyBlocked = false
@@ -229,7 +231,7 @@ function AkCrossing:closeForRoute(trainName, route)
     return self.currentClosingTime
 end
 
-function AkCrossing:openForRoute(trainName, route)
+function RailCrossing:openForRoute(trainName, route)
     assert(trainName)
     assert(route)
     self.routen[route] = nil
@@ -256,7 +258,7 @@ function AkCrossing:openForRoute(trainName, route)
     return 0
 end
 
-function AkCrossing:reset()
+function RailCrossing:reset()
     self.routen = {}
     self.currentClosingTime = -1
     EEPSetSignal(self.signalId1, self.defaultPosition)

@@ -27,8 +27,8 @@ insulate("Crossing", function()
     --
     require("ce.hub.eep.EepSimulator")
     local Lane = require("ce.mods.road.Lane")
-    local Crossing = require("ce.mods.road.Crossing")
-    -- local CrossingSequence = require("ce.mods.road.CrossingSequence")
+    local Intersection = require("ce.mods.road.Intersection")
+    -- local IntersectionSequence = require("ce.mods.road.IntersectionSequence")
     -- local LaneSettings = require("ce.mods.road.LaneSettings")
     local TrafficLight = require("ce.mods.road.TrafficLight")
     local TrafficLightModel = require("ce.mods.road.TrafficLightModel")
@@ -86,7 +86,7 @@ insulate("Crossing", function()
         S2 = TrafficLight:new("S2", -1, TrafficLightModel.NONE, "#5435_Straba Signal Halt",
                               "#5521_Straba Signal geradeaus", "#5520_Straba Signal anhalten", "#5518_Straba Signal A")
 
-        crossing = Crossing:new("My Crossing")
+        crossing = Intersection:new("My Crossing")
         lane1 = Lane:new("Lane 1 N", 1, L1, {Lane.Directions.STRAIGHT, Lane.Directions.RIGHT})
         lane2 = Lane:new("Lane 2 E", 2, L2, {Lane.Directions.LEFT, Lane.Directions.RIGHT})
         lane3 = Lane:new("Lane 3 S", 3, L3, {Lane.Directions.LEFT})
@@ -98,7 +98,7 @@ insulate("Crossing", function()
         K8:applyToLane(lane3)
         K9:applyToLane(lane4)
 
-        ---@type CrossingSequence
+        ---@type IntersectionSequence
         sequenceA = crossing:newSequence("Sequence A - North South")
         sequenceA:addCarLights(K1)
         sequenceA:addCarLights(K2)
@@ -123,7 +123,7 @@ insulate("Crossing", function()
         sequenceC:addPedestrianLights(K9)
 
         -- Not neccessary on ModuleRegistry Tasks
-        Crossing.initSequences()
+        Intersection.initSequences()
     end)
 
     after_each(function() StorageUtility.reset() end)
@@ -281,8 +281,8 @@ insulate("Check traffic light sequence", function()
     --
     require("ce.hub.eep.EepSimulator")
     local Lane = require("ce.mods.road.Lane")
-    local Crossing = require("ce.mods.road.Crossing")
-    local CrossingSequence = require("ce.mods.road.CrossingSequence")
+    local Intersection = require("ce.mods.road.Intersection")
+    local IntersectionSequence = require("ce.mods.road.IntersectionSequence")
     -- local LaneSettings = require("ce.mods.road.LaneSettings")
     local TrafficLight = require("ce.mods.road.TrafficLight")
     local TrafficLightModel = require("ce.mods.road.TrafficLightModel")
@@ -293,7 +293,7 @@ insulate("Check traffic light sequence", function()
     local c1Lane1Signal, c1Lane2Signal, c1Lane3Signal, c1Lane4Signal
     ---@type TrafficLight
     local K1, K2, K3, K5, K6, K7, K8, K9
-    ---@type CrossingSequence
+    ---@type IntersectionSequence
     local sequenceA, sequenceB, sequenceC
     ---@type Crossing
     local crossing
@@ -314,7 +314,7 @@ insulate("Check traffic light sequence", function()
     K8 = TrafficLight:new("K8", 30, TrafficLightModel.JS2_3er_mit_FG) -- SOUTH LEFT (left)
     K9 = TrafficLight:new("K9", 31, TrafficLightModel.JS2_3er_mit_FG) -- SOUTH STRAIGHT (right)
 
-    crossing = Crossing:new("My Crossing")
+    crossing = Intersection:new("My Crossing")
     lane1 = Lane:new("Lane 1 N", 1, c1Lane1Signal, {Lane.Directions.STRAIGHT, Lane.Directions.RIGHT})
     lane2 = Lane:new("Lane 2 E", 2, c1Lane2Signal, {Lane.Directions.LEFT, Lane.Directions.RIGHT})
     lane3 = Lane:new("Lane 3 S", 3, c1Lane3Signal, {Lane.Directions.LEFT})
@@ -326,7 +326,7 @@ insulate("Check traffic light sequence", function()
     K8:applyToLane(lane3)
     K9:applyToLane(lane4)
 
-    ---@type CrossingSequence
+    ---@type IntersectionSequence
     sequenceA = crossing:newSequence("Sequence A - North South")
     sequenceA:addCarLights(K1)
     sequenceA:addCarLights(K2)
@@ -334,13 +334,13 @@ insulate("Check traffic light sequence", function()
     sequenceA:addPedestrianLights(K3)
     sequenceA:addPedestrianLights(K6)
 
-    ---@type CrossingSequence
+    ---@type IntersectionSequence
     sequenceB = crossing:newSequence("Sequence B - South + East Right")
     sequenceB:addCarLights(K7)
     sequenceB:addCarLights(K8)
     sequenceB:addCarLights(K9)
 
-    ---@type CrossingSequence
+    ---@type IntersectionSequence
     sequenceC = crossing:newSequence("Sequence C - East only")
     sequenceC:addCarLights(K3)
     sequenceC:addCarLights(K5)
@@ -351,7 +351,7 @@ insulate("Check traffic light sequence", function()
     sequenceC:addPedestrianLights(K9)
 
     -- Not neccessary on ModuleRegistry Tasks
-    Crossing.initSequences()
+    Intersection.initSequences()
 
     local ControlExtension = require("ce.ControlExtension")
     local Scheduler = require("ce.hub.scheduler.Scheduler")
@@ -360,8 +360,8 @@ insulate("Check traffic light sequence", function()
 
     ControlExtension.setDebug(false)
     Scheduler.debug = false
-    Crossing.debug = false
-    CrossingSequence.debug = false
+    Intersection.debug = false
+    IntersectionSequence.debug = false
     local crossingCeModule = require("ce.mods.road.RoadCeModule")
     ControlExtension.addModules(crossingCeModule)
 

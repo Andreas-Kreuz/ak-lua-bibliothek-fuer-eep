@@ -1,5 +1,5 @@
 export { CommandEvent } from './CommandEvent';
-export { IntersectionEvent } from './IntersectionEvent';
+export { RoadEvent } from './RoadEvent';
 export { LogEvent } from './LogEvent';
 export { RoomEvent } from './RoomEvent';
 export { ServerInfoEvent } from './ServerInfoEvent';

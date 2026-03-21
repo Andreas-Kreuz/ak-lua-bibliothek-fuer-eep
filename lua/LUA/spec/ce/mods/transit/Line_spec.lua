@@ -70,7 +70,7 @@ insulate("Line Management 4 Line segments", function()
 
     -- Intersections
     local RoadCeModule = require("ce.mods.road.RoadCeModule")
-    local Crossing = require("ce.mods.road.Crossing")
+    local Intersection = require("ce.mods.road.Intersection")
 
     -- Public Transport
     local TransitCeModule = require("ce.mods.transit.TransitCeModule")
@@ -82,7 +82,7 @@ insulate("Line Management 4 Line segments", function()
     ---------------------------------------------------------------------------------------------------------------
     -- Register the required modules
     ControlExtension.addModules(CoreCeModule, DataCeModule, RoadCeModule, TransitCeModule)
-    Crossing.loadSettingsFromSlot(1)
+    Intersection.loadSettingsFromSlot(1)
     TransitSettings.loadSettingsFromSlot(2)
     ---------------------------------------------------------------------------------------------------------------
     -- Die folgende Methode wird von EEP mind. alle 200 ms ausgef�hrt

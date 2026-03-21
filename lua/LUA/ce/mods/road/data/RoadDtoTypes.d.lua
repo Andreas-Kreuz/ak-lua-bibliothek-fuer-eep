@@ -79,7 +79,7 @@
 ---@field type string
 ---@field positions SignalTypeDefinitionPositionsDto
 
----@class CrossingDtoFactory
+---@class RoadDtoFactory
 ---@field createIntersectionDto fun(intersection: table):string,string,string|number,IntersectionDto
 ---@field createIntersectionDtoList fun(intersections: table):string,string,table
 ---@field createIntersectionLaneDto fun(lane: table):string,string,string|number,IntersectionLaneDto

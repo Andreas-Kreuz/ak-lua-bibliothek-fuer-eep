@@ -8,13 +8,13 @@ function useIntersectionSettings(): LuaSettings | undefined {
   const [settings, setSettings] = useState<LuaSettings | undefined>(undefined);
   const debug = useDebug();
 
-  useApiDataRoomHandler('intersection-module-settings', (payload: string) => {
+  useApiDataRoomHandler('road-module-settings', (payload: string) => {
     const data: LuaSetting<any>[] = Object.values(JSON.parse(payload));
     const mySettings = {
       moduleName: 'Einstellungen für Kreuzungen',
       settings: data,
     };
-    if (debug) console.log('                 |⚠️ FIRED ---', 'API: intersection-module-settings', mySettings);
+    if (debug) console.log('                 |⚠️ FIRED ---', 'API: road-module-settings', mySettings);
     setSettings(mySettings);
   });
 

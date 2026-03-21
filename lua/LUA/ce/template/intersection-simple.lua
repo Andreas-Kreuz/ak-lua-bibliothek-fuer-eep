@@ -52,8 +52,8 @@ end
 --
 
 local Lane = require("ce.mods.road.Lane")
-local Crossing = require("ce.mods.road.Crossing")
--- local CrossingSequence = require("ce.mods.road.CrossingSequence")
+local Intersection = require("ce.mods.road.Intersection")
+-- local IntersectionSequence = require("ce.mods.road.IntersectionSequence")
 -- local LaneSettings = require("ce.mods.road.LaneSettings")
 local TrafficLight = require("ce.mods.road.TrafficLight")
 local TrafficLightModel = require("ce.mods.road.TrafficLightModel")
@@ -66,14 +66,14 @@ local sequenceA, sequenceB
 local crossing
 
 -- Nutze einen Speicherslot in EEP um die Einstellungen f�r Kreuzungen zu laden und zu speichern
-Crossing.loadSettingsFromSlot(10)
+Intersection.loadSettingsFromSlot(10)
 
 -- Erzeuge immer erst Deine Ampeln
 K1 = TrafficLight:new("K1", 23, TrafficLightModel.JS2_3er_mit_FG) -- NORTH STRAIGHT 1 (right)
 K2 = TrafficLight:new("K2", 24, TrafficLightModel.JS2_3er_mit_FG) -- NORTH STRAIGHT 2 (left)
 
 -- Erzeuge Kreuzung und Fahrspuren
-crossing = Crossing:new("Dein Kreuzungsname")
+crossing = Intersection:new("Dein Kreuzungsname")
 lane1 = Lane:new("Lane 1 N", 1, K1, { Lane.Directions.STRAIGHT, Lane.Directions.RIGHT })
 lane2 = Lane:new("Lane 2 S", 2, K2, { Lane.Directions.STRAIGHT, Lane.Directions.RIGHT })
 

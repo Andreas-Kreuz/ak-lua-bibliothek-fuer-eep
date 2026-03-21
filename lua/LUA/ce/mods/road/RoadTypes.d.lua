@@ -139,82 +139,82 @@
 ---@field vehicleLeft fun(self: Lane, trainName: string):nil
 ---@field waitCount number
 
----@class CrossingSequence
+---@class IntersectionSequence
 ---@field type string
 ---@field name string
 ---@field trafficLights table<TrafficLight, TrafficLightType>
 ---@field greenPhaseSeconds number
----@field crossing Crossing|nil
+---@field crossing Intersection|nil
 ---@field prio number
 ---@field lanes table<Lane, boolean>
 ---@field debug boolean
 ---@field Type table<string, TrafficLightType>
 ---@field getType fun():string
----@field getName fun(self: CrossingSequence):string
----@field new fun(self: CrossingSequence, name: string, greenPhaseSeconds?: number):CrossingSequence
----@field initSequence fun(self: CrossingSequence):nil
+---@field getName fun(self: IntersectionSequence):string
+---@field new fun(self: IntersectionSequence, name: string, greenPhaseSeconds?: number):IntersectionSequence
+---@field initSequence fun(self: IntersectionSequence):nil
 ---@field trafficLightsToTurnRedAndGreen
---- fun(self: CrossingSequence, oldSequence?: CrossingSequence):
+--- fun(self: IntersectionSequence, oldSequence?: IntersectionSequence):
 --- (table<TrafficLight, TrafficLightType>, table<TrafficLight, TrafficLightType>)
----@field tasksForSwitchingFrom fun(self: CrossingSequence, oldSequence?: CrossingSequence, afterRedTask?: any):table
----@field getLanes fun(self: CrossingSequence):table<Lane, boolean>
----@field lanesNamesText fun(self: CrossingSequence):string
----@field addCarLights fun(self: CrossingSequence, ...: TrafficLight):nil
----@field addPedestrianLights fun(self: CrossingSequence, ...: TrafficLight):nil
----@field addTramLights fun(self: CrossingSequence, ...: TrafficLight):nil
----@field lanesSortedByPriority fun(self: CrossingSequence):Lane[]
----@field lanesSortedByName fun(self: CrossingSequence):Lane[]
----@field sequencePriorityComparator fun(schaltung1: CrossingSequence, schaltung2: CrossingSequence):boolean
----@field calculatePriority fun(self: CrossingSequence):number
----@field resetWaitCount fun(self: CrossingSequence):nil
+---@field tasksForSwitchingFrom fun(self: IntersectionSequence, oldSequence?: IntersectionSequence, afterRedTask?: any):table
+---@field getLanes fun(self: IntersectionSequence):table<Lane, boolean>
+---@field lanesNamesText fun(self: IntersectionSequence):string
+---@field addCarLights fun(self: IntersectionSequence, ...: TrafficLight):nil
+---@field addPedestrianLights fun(self: IntersectionSequence, ...: TrafficLight):nil
+---@field addTramLights fun(self: IntersectionSequence, ...: TrafficLight):nil
+---@field lanesSortedByPriority fun(self: IntersectionSequence):Lane[]
+---@field lanesSortedByName fun(self: IntersectionSequence):Lane[]
+---@field sequencePriorityComparator fun(schaltung1: IntersectionSequence, schaltung2: IntersectionSequence):boolean
+---@field calculatePriority fun(self: IntersectionSequence):number
+---@field resetWaitCount fun(self: IntersectionSequence):nil
 
----@class Crossing
+---@class Intersection
 ---@field name string
 ---@field lanes table<string, Lane>
 ---@field trafficLights table<string, TrafficLight>
----@field currentSequence CrossingSequence
----@field sequences CrossingSequence[]
+---@field currentSequence IntersectionSequence
+---@field sequences IntersectionSequence[]
 ---@field greenPhaseFinished boolean
 ---@field greenPhaseReached boolean
 ---@field greenPhaseSeconds number
 ---@field staticCams string[]
----@field nextSequence CrossingSequence|nil
+---@field nextSequence IntersectionSequence|nil
 ---@field manualSequence string|nil
 ---@field tippStructure string|nil
 ---@field switchInStrictOrder boolean
 ---@field debug boolean
----@field allCrossings table<string, Crossing>
+---@field allIntersections table<string, Intersection>
 ---@field loadSettingsFromSlot fun(eepSaveId: number):any
 ---@field switchManuallyTo fun(crossingName: string, sequenceName: string):nil
 ---@field switchAutomatically fun(crossingName: string):nil
 ---@field getType fun():string
----@field getName fun(self: Crossing):string
----@field getSequences fun(self: Crossing):CrossingSequence[]
----@field getCurrentSequence fun(self: Crossing):CrossingSequence
----@field getNextSequence fun(self: Crossing):CrossingSequence|nil
----@field getManualSequence fun(self: Crossing):string|nil
----@field onSwitchedToSequence fun(self: Crossing, currentSequence: CrossingSequence):nil
----@field calculateNextSequence fun(self: Crossing):CrossingSequence|nil
----@field setManualSequence fun(self: Crossing, sequenceName: string):nil
----@field setAutomaticSequence fun(self: Crossing):nil
----@field setSwitchInStrictOrder fun(self: Crossing, value: boolean):nil
----@field getGreenPhaseSeconds fun(self: Crossing):number
----@field setGreenPhaseFinished fun(self: Crossing, greenPhaseFinished: boolean):nil
----@field isGreenPhaseFinished fun(self: Crossing):boolean
----@field setGreenPhaseReached fun(self: Crossing, greenPhaseReached: boolean):nil
----@field isGreenPhaseReached fun(self: Crossing):boolean
----@field setTippStructure fun(self: Crossing, tippStructure: string):nil
----@field getStaticCams fun(self: Crossing):string[]
----@field addStaticCam fun(self: Crossing, kameraName: string):nil
+---@field getName fun(self: Intersection):string
+---@field getSequences fun(self: Intersection):IntersectionSequence[]
+---@field getCurrentSequence fun(self: Intersection):IntersectionSequence
+---@field getNextSequence fun(self: Intersection):IntersectionSequence|nil
+---@field getManualSequence fun(self: Intersection):string|nil
+---@field onSwitchedToSequence fun(self: Intersection, currentSequence: IntersectionSequence):nil
+---@field calculateNextSequence fun(self: Intersection):IntersectionSequence|nil
+---@field setManualSequence fun(self: Intersection, sequenceName: string):nil
+---@field setAutomaticSequence fun(self: Intersection):nil
+---@field setSwitchInStrictOrder fun(self: Intersection, value: boolean):nil
+---@field getGreenPhaseSeconds fun(self: Intersection):number
+---@field setGreenPhaseFinished fun(self: Intersection, greenPhaseFinished: boolean):nil
+---@field isGreenPhaseFinished fun(self: Intersection):boolean
+---@field setGreenPhaseReached fun(self: Intersection, greenPhaseReached: boolean):nil
+---@field isGreenPhaseReached fun(self: Intersection):boolean
+---@field setTippStructure fun(self: Intersection, tippStructure: string):nil
+---@field getStaticCams fun(self: Intersection):string[]
+---@field addStaticCam fun(self: Intersection, kameraName: string):nil
 ---@field resetVehicles fun():nil
----@field new fun(self: Crossing, name: string, greenPhaseSeconds?: number):Crossing
----@field newSequence fun(self: Crossing, name: string, greenPhaseSeconds?: number):CrossingSequence
----@field addSequence fun(self: Crossing, sequence: CrossingSequence):CrossingSequence
----@field updateLaneTipText fun(self: Crossing):nil
+---@field new fun(self: Intersection, name: string, greenPhaseSeconds?: number):Intersection
+---@field newSequence fun(self: Intersection, name: string, greenPhaseSeconds?: number):IntersectionSequence
+---@field addSequence fun(self: Intersection, sequence: IntersectionSequence):IntersectionSequence
+---@field updateLaneTipText fun(self: Intersection):nil
 ---@field initSequences fun():nil
 ---@field switchSequences fun():nil
 
----@class CrossingDtoFactory
+---@class RoadDtoFactory
 ---@field createIntersectionDto fun(intersection: table):string,string,string|number,IntersectionDto
 ---@field createIntersectionDtoList fun(intersections: table):string,string,table
 ---@field createIntersectionLaneDto fun(lane: table):string,string,string|number,IntersectionLaneDto

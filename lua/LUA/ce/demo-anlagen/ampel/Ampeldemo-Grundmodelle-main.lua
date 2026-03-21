@@ -5,8 +5,8 @@
 local TrafficLightModel = require("ce.mods.road.TrafficLightModel")
 local TrafficLight = require("ce.mods.road.TrafficLight")
 local Lane = require("ce.mods.road.Lane")
-local Crossing = require("ce.mods.road.Crossing")
-Crossing.loadSettingsFromSlot(100)
+local Intersection = require("ce.mods.road.Intersection")
+Intersection.loadSettingsFromSlot(100)
 TrafficLight.zeigeAnforderungen = true
 
 ------------------------------------------------
@@ -101,7 +101,7 @@ do
     -------------------------------------------------------------------------------------------------------------------
     -- Eine Schaltung bestimmt, welche Fahrspuren gleichzeitig auf gr�n geschaltet werden d�rfen, alle anderen sind rot
 
-    c2 = Crossing:new("Kreuzung 2")
+    c2 = Intersection:new("Kreuzung 2")
 
     --- Kreuzung 2: Schaltung 1
     local c2Sequence1 = c2:newSequence("Schaltung 1")
@@ -175,7 +175,7 @@ do
     -------------------------------------------------------------------------------------------------------------------
     -- Eine Schaltung bestimmt, welche Fahrspuren gleichzeitig auf gr�n geschaltet werden d�rfen, alle anderen sind rot
 
-    c1 = Crossing:new("Kreuzung 1")
+    c1 = Intersection:new("Kreuzung 1")
 
     --- Kreuzung 1: Schaltung 1
     local c1Sequence1 = c1:newSequence("Schaltung 1")

@@ -36,7 +36,7 @@ Wichtig:
 | `StructureStatePublisher`         | `lua/LUA/ce/hub/data/structures/StructureStatePublisher.lua`          | `ListChanged` für `structures`; Rückgabe leer                                    |
 | `TrainsAndTracksStatePublisher`   | `lua/LUA/ce/hub/data/trains/TrainsAndTracksStatePublisher.lua`        | indirekte Events für `trains` und `rolling-stocks`; Rückgabe leer                |
 | `TrafficLightModelStatePublisher` | `lua/LUA/ce/mods/road/data/TrafficLightModelStatePublisher.lua`       | `ListChanged` für `signal-type-definitions`; Rückgabe leer                       |
-| `CrossingStatePublisher`          | `lua/LUA/ce/mods/road/data/CrossingStatePublisher.lua`                | Events für Kreuzungsdaten; internes Datenobjekt wird derzeit nicht zurückgegeben |
+| `RoadStatePublisher`          | `lua/LUA/ce/mods/road/data/RoadStatePublisher.lua`                | Events für Kreuzungsdaten; internes Datenobjekt wird derzeit nicht zurückgegeben |
 | `TransitStatePublisher`   | `lua/LUA/ce/mods/transit/data/TransitStatePublisher.lua` | Events für ÖPNV-Daten; internes Datenobjekt wird derzeit nicht zurückgegeben     |
 
 ## Transportform
@@ -55,11 +55,11 @@ Wichtig:
 | Züge                                | `trains`                           | `id`      |
 | RollingStock                        | `rolling-stocks`                   | `id`      |
 | Ampelmodell-Definitionen            | `signal-type-definitions`          | `id`      |
-| Kreuzungen                          | `intersections`                    | `id`      |
-| Kreuzungs-Fahrspuren                | `intersection-lanes`               | `id`      |
-| Kreuzungs-Schaltungen               | `intersection-switchings`          | `id`      |
-| Kreuzungs-Ampeln                    | `intersection-traffic-lights`      | `id`      |
-| Kreuzungs-Moduleinstellungen        | `intersection-module-settings`     | `name`    |
+| Kreuzungen                          | `road-intersections`                    | `id`      |
+| Kreuzungs-Fahrspuren                | `road-intersection-lanes`               | `id`      |
+| Kreuzungs-Schaltungen               | `road-intersection-switchings`          | `id`      |
+| Kreuzungs-Ampeln                    | `road-intersection-traffic-lights`      | `id`      |
+| Kreuzungs-Moduleinstellungen        | `road-module-settings`     | `name`    |
 | ÖPNV-Linien                         | `transit-lines`           | `id`      |
 | ÖPNV-Stationen                      | `transit-stations`        | `id`      |
 | ÖPNV-Moduleinstellungen             | `transit-module-settings` | `name`    |
@@ -343,7 +343,7 @@ Elementtyp: Ampelmodell-Definition
 | `positions.positionOff`         | `integer` \| `nil` | Signalzustandsindex | ausgeschaltet                          |
 | `positions.positionOffBlinking` | `integer` \| `nil` | Signalzustandsindex | Blinkbetrieb                           |
 
-### `intersections`
+### `road-intersections`
 
 Elementtyp: Kreuzung
 
@@ -358,14 +358,14 @@ Elementtyp: Kreuzung
 | `timeForGreen`     | `number`          | Sekunden               | Grünphasenlänge                                |
 | `staticCams`       | `string[]`        | Kameranamen            | Liste statischer Kameras der Kreuzung          |
 
-### `intersection-lanes`
+### `road-intersection-lanes`
 
 Elementtyp: Fahrspur einer Kreuzung
 
 | Name                         | Typ                | Wertebereich                                                 | Beschreibung                                     |
 | ---------------------------- | ------------------ | ------------------------------------------------------------ | ------------------------------------------------ |
 | `id`                         | `string`           | `<intersectionId>-<laneName>`                                | technischer Schlüssel                            |
-| `intersectionId`             | `integer`          | referenziert `intersections.id`                              | zugehörige Kreuzung                              |
+| `intersectionId`             | `integer`          | referenziert `road-intersections.id`                              | zugehörige Kreuzung                              |
 | `name`                       | `string`           | freier Text                                                  | Fahrspurname                                     |
 | `phase`                      | `string`           | `NONE`, `YELLOW`, `RED`, `RED_YELLOW`, `GREEN`, `PEDESTRIAN` | aus der Ampelphasenlogik der Bibliothek          |
 | `vehicleMultiplier`          | `number`           | projektabhängig                                              | Gewichtungsfaktor für Zähler                     |
@@ -378,18 +378,18 @@ Elementtyp: Fahrspur einer Kreuzung
 | `switchings`                 | `string[]`         | Sequenznamen                                                 | Schaltungen, die diese Fahrspur freigeben        |
 | `tracks`                     | `table`            | Track-IDs oder Highlight-Daten                               | für Hervorhebung genutzte Tracks                 |
 
-### `intersection-switchings`
+### `road-intersection-switchings`
 
 Elementtyp: Kreuzungs-Schaltung
 
 | Name             | Typ             | Wertebereich                    | Beschreibung                                                                     |
 | ---------------- | --------------- | ------------------------------- | -------------------------------------------------------------------------------- |
 | `id`             | `string`        | `<crossingName>-<sequenceName>` | technischer Schlüssel                                                            |
-| `intersectionId` | `string`        | Kreuzungsname                   | aktueller Code verwendet hier den Namen, nicht die numerische `intersections.id` |
+| `intersectionId` | `string`        | Kreuzungsname                   | aktueller Code verwendet hier den Namen, nicht die numerische `road-intersections.id` |
 | `name`           | `string`        | Sequenzname                     | Name der Schaltung                                                               |
 | `prio`           | `number \| nil` | projektabhängig                 | Priorität der Schaltung                                                          |
 
-### `intersection-traffic-lights`
+### `road-intersection-traffic-lights`
 
 Elementtyp: Ampel innerhalb einer Kreuzung
 
@@ -399,7 +399,7 @@ Elementtyp: Ampel innerhalb einer Kreuzung
 | `signalId`        | `integer`                     | Signal-ID                       | referenziertes EEP-Signal   |
 | `modelId`         | `string`                      | Modellname                      | referenziertes Ampelmodell  |
 | `currentPhase`    | `number` \| `string` \| `nil` | projektabhängig                 | aktuelle interne Ampelphase |
-| `intersectionId`  | `integer`                     | referenziert `intersections.id` | zugehörige Kreuzung         |
+| `intersectionId`  | `integer`                     | referenziert `road-intersections.id` | zugehörige Kreuzung         |
 | `lightStructures` | `table<string, object>`       | indexierte Map                  | zugehörige Lichtstrukturen  |
 | `axisStructures`  | `object[]`                    | Liste                           | zugehörige Achsstrukturen   |
 
@@ -425,7 +425,7 @@ Unterobjekt `axisStructures[*]`:
 | `positionPedestrian` | `number \| nil` | projektabhängig | Position bei Fußgängerphase |
 | `positionRedYellow`  | `number \| nil` | projektabhängig | Position bei Rot-Gelb       |
 
-### `intersection-module-settings`
+### `road-module-settings`
 
 Elementtyp: Kreuzungs-Moduloption
 
@@ -510,7 +510,7 @@ Schema:
 | `StructureStatePublisher.syncState()`         | `{}`                       | Nutzdaten nur im Event                  |
 | `TrainsAndTracksStatePublisher.syncState()`   | leeres `data`              | Nutzdaten über Registries               |
 | `TrafficLightModelStatePublisher.syncState()` | `{}`                       | Nutzdaten nur im Event                  |
-| `CrossingStatePublisher.syncState()`          | `{}`                       | internes Datenobjekt wird verworfen     |
+| `RoadStatePublisher.syncState()`          | `{}`                       | internes Datenobjekt wird verworfen     |
 | `TransitStatePublisher.syncState()`   | `{}`                       | internes Datenobjekt wird verworfen     |
 
 ## Verwendete EEP-Funktionen und Handbuchbezug
