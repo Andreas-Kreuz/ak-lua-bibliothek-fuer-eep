@@ -149,6 +149,7 @@ exclude_files = {
     "docs",
     "lua/LUA/SlotNames_BH2.lua",
     "lua/LUA/ce/third-party/**",
+    "lua/LUA/ce/anlagen/**",
     "lua/Resourcen/Anlagen/Andreas_Kreuz-Demo-Ampel/Andreas_Kreuz-Demoanlage-Ampel-Grundmodelle.lua",
     "lua/Resourcen/Anlagen/Andreas_Kreuz-Demo-Testen/Andreas_Kreuz-Lua-Testbeispiel.lua",
     "lua/Resourcen/Anlagen/Andreas_Kreuz-Tutorial-Ampelkreuzung/Andreas_Kreuz-Tutorial-Ampelkreuzung.lua",

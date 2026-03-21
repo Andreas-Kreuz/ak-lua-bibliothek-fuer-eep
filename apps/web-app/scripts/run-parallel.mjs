@@ -16,10 +16,19 @@ const children = new Set();
 let completedChildren = 0;
 let shutdownState = null;
 
+const killChild = (child) => {
+  if (isWindows && child.pid) {
+    // On Windows, kill the entire process tree so orphaned node processes are cleaned up
+    spawn('taskkill', ['/T', '/F', '/PID', String(child.pid)], { stdio: 'ignore' });
+  } else {
+    child.kill('SIGTERM');
+  }
+};
+
 const killOthers = (currentChild) => {
   for (const child of children) {
     if (child !== currentChild && !child.killed) {
-      child.kill('SIGTERM');
+      killChild(child);
     }
   }
 };
@@ -68,7 +77,9 @@ for (const signal of ['SIGINT', 'SIGTERM']) {
   process.on(signal, () => {
     if (!shutdownState) {
       shutdownState = { code: 1 };
-      killOthers(null);
+      for (const child of children) {
+        killChild(child);
+      }
     }
   });
 }

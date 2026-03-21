@@ -16,4 +16,4 @@ interface Train {
 }
 
 export default Train;
-export { Train };
+export type { Train };

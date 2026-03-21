@@ -19,7 +19,7 @@
 - **`scripts`** - enthält Hilfsskripte für Entwicklung, Build und Tests
 - **`apps/web-app`** - das Frontend, geschrieben mit React und Vite
 - **`apps/web-server`** - eine Electron- und Node-Anwendung
-- **`packages/web-shared`** - geteilte Typen und Events von Web-App und Web-Server
+- **`apps/web-shared`** - geteilte Typen und Events von Web-App und Web-Server
 
 Weitere Verzeichnisse sind:
 

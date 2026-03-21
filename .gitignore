@@ -36,7 +36,7 @@ __pycache__
 /apps/web-server/target
 
 # @ak/web-shared
-/packages/web-shared/resources/public
+/apps/web-shared/resources/public
 
 # compiled output
 /web-app/cypress/io/ak*
@@ -151,7 +151,8 @@ luac.out
 *.x86_64
 *.hex
 
-
+# Other
+.claude
 web-app/src/app/client/modules/intersection/intersection-lane-display/example-svg.ts
 Lua_manual.pdf
 EEP18_Manual_GER.pdf

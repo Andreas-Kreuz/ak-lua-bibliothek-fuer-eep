@@ -8,11 +8,11 @@ export { SettingsEvent } from './SettingsEvent';
 export { DataType } from './data/model/DataType';
 
 export { calcTrainType } from './model/trains/calcTrainType';
-export { RollingStock } from './model/trains/RollingStock';
-export { Train } from './model/trains/Train';
+export type { RollingStock } from './model/trains/RollingStock';
+export type { Train } from './model/trains/Train';
 export { TrainType } from './model/trains/TrainType';
 export { TrackType } from './model/trains/TrackType';
-export { TrainListEntry } from './model/trains/TrainListEntry';
+export type { TrainListEntry } from './model/trains/TrainListEntry';
 
 export { LuaSetting } from './model/settings/LuaSetting';
 export { LuaSettings } from './model/settings/LuaSettings';

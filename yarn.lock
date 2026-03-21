@@ -107,9 +107,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@ak/web-shared@workspace:*, @ak/web-shared@workspace:^, @ak/web-shared@workspace:packages/web-shared":
+"@ak/web-shared@workspace:*, @ak/web-shared@workspace:^, @ak/web-shared@workspace:apps/web-shared":
   version: 0.0.0-use.local
-  resolution: "@ak/web-shared@workspace:packages/web-shared"
+  resolution: "@ak/web-shared@workspace:apps/web-shared"
   dependencies:
     typescript: "npm:^5.9.3"
   languageName: unknown

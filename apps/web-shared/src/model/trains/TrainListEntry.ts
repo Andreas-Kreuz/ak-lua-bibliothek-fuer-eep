@@ -16,4 +16,4 @@ interface TrainListEntry {
 }
 
 export default TrainListEntry;
-export { TrainListEntry };
+export type { TrainListEntry };

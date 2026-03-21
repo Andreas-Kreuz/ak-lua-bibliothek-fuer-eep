@@ -9,7 +9,7 @@
   - `lua/LUA/spec`: Lua-Tests
   - `apps/web-app`: React/Vite-Frontend
   - `apps/web-server`: Electron- und Headless-Server
-  - `packages/web-shared`: gemeinsam genutzte TypeScript-Typen und Events
+  - `apps/web-shared`: gemeinsam genutzte TypeScript-Typen und Events
   - `docs`: statische Dokumentation / Website
 
 ## Arbeitsregeln
@@ -85,7 +85,7 @@
 
 - Die Web-App ist React 19 mit Vite und MUI, nicht Angular.
 - Der Web-Server ist eine Electron-/Node-Anwendung in TypeScript.
-- Gemeinsame Typen und Events liegen in `packages/web-shared` und sollten bei API-Änderungen konsistent mit angepasst werden.
+- Gemeinsame Typen und Events liegen in `apps/web-shared` und sollten bei API-Änderungen konsistent mit angepasst werden.
 - In Cypress-Specs keine lokalen Hilfsfunktionen wie `chooseDirectory()` einführen, wenn dadurch der Test nicht mehr von oben nach unten lesbar ist.
 - In Cypress-Specs verkettete Aufrufe an `.` umbrechen, statt lange Chains in einer Zeile zu lassen.
 

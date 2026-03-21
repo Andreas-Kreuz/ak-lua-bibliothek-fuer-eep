@@ -23,4 +23,4 @@ interface RollingStock {
 }
 
 export default RollingStock;
-export { RollingStock };
+export type { RollingStock };
