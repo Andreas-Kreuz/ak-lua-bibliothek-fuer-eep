@@ -31,8 +31,8 @@ function EEPMain()
     return 1
 end
 
--- Zï¿½hler kommen spï¿½ter hier
+-- Zähler kommen später hier
 
--- Noch nicht fï¿½r die Verwendung vorgesehen
+-- Noch nicht für die Verwendung vorgesehen
 sequenceA.greenPhaseSeconds = 5
 sequenceB.greenPhaseSeconds = 5

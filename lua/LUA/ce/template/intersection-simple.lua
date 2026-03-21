@@ -1,25 +1,25 @@
 -----------------------------------------------------------------------------------------------------------------------
--- Diese Skript ist eine kleine Vorlage fï¿½r das Verwenden von Kreuzungen, WENN DU NOCH KEIN LUA IN DER ANLAGE BENUTZT
+-- Diese Skript ist eine kleine Vorlage für das Verwenden von Kreuzungen, WENN DU NOCH KEIN LUA IN DER ANLAGE BENUTZT
 -- 1) Kopiere dieses Skript in das LUA-Verzeichnis von EEP
 -- 2) Benenne die Kopie um, z.B. "anlage1.lua"
 -- 3) Verwende die folgende Zeile im Lua-Editor von EEP, um Deine Kopie in EEP mit der Anlage zu laden
 --    require("anlage1")
 -----------------------------------------------------------------------------------------------------------------------
--- Diese Zeile lï¿½dt den Einstiegspunkt der Lua-Bibliothek
+-- Diese Zeile lädt den Einstiegspunkt der Lua-Bibliothek
 local ControlExtension = require("ce.ControlExtension")
 local coreCeModule = require("ce.hub.mods.CoreCeModule")
 local dataCeModule = require("ce.hub.mods.DataCeModule")
 local crossingCeModule = require("ce.mods.road.RoadCeModule")
 
 -- Diese Zeilen registrieren die folgenden Module
--- * Core (immer benï¿½tigt)
--- * Data (Export der Daten fï¿½r EEP)
--- * Crossing (fï¿½r die Ampelsteuerung notwendig)
+-- * Core (immer benötigt)
+-- * Data (Export der Daten für EEP)
+-- * Crossing (für die Ampelsteuerung notwendig)
 ControlExtension.addModules(coreCeModule, dataCeModule, crossingCeModule)
 
--- Die EEPMain Methode wird von EEP genutzt. Sie muss immer 1 zurï¿½ckgeben.
+-- Die EEPMain Methode wird von EEP genutzt. Sie muss immer 1 zurückgeben.
 function EEPMain()
-    -- ControlExtension startet die Aufgaben in allen Modulen bei jedem fï¿½nften EEPMain-Aufruf
+    -- ControlExtension startet die Aufgaben in allen Modulen bei jedem fünften EEPMain-Aufruf
     ControlExtension.runTasks(5)
     return 1
 end
@@ -58,15 +58,15 @@ local Intersection = require("ce.mods.road.Intersection")
 local TrafficLight = require("ce.mods.road.TrafficLight")
 local TrafficLightModel = require("ce.mods.road.TrafficLightModel")
 
--- Ampeln fï¿½r den Kraftfahrverkehr (K) und Strassenbahnen (S)
+-- Ampeln für den Kraftfahrverkehr (K) und Strassenbahnen (S)
 local K1, K2
 -- 3 Schaltungen
 local sequenceA, sequenceB
 -- die Kreuzung
 local crossing
 
--- Nutze einen Speicherslot in EEP um die Einstellungen fï¿½r Kreuzungen zu laden und zu speichern
-Intersection.loadSettingsFromSlot(10)
+-- Nutze einen Speicherslot in EEP um die Einstellungen für Kreuzungen zu laden und zu speichern
+crossingCeModule.loadSettingsFromSlot(10)
 
 -- Erzeuge immer erst Deine Ampeln
 K1 = TrafficLight:new("K1", 23, TrafficLightModel.JS2_3er_mit_FG) -- NORTH STRAIGHT 1 (right)
@@ -77,7 +77,7 @@ crossing = Intersection:new("Dein Kreuzungsname")
 lane1 = Lane:new("Lane 1 N", 1, K1, { Lane.Directions.STRAIGHT, Lane.Directions.RIGHT })
 lane2 = Lane:new("Lane 2 S", 2, K2, { Lane.Directions.STRAIGHT, Lane.Directions.RIGHT })
 
--- Lege die Schaltungen an und fï¿½ge Ampeln fï¿½r Fahrzeuge, Tram und Fuï¿½gï¿½nger hinzu
+-- Lege die Schaltungen an und füge Ampeln für Fahrzeuge, Tram und Fußgänger hinzu
 sequenceA = crossing:newSequence("Schaltung Fahrzeuge")
 sequenceA:addCarLights(K1)
 sequenceA:addPedestrianLights(K2)

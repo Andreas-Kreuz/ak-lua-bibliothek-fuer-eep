@@ -24,8 +24,8 @@ local K10 = TrafficLight:new("K10", 13, TrafficLightModel.JS2_3er_mit_FG)
 local K11 = TrafficLight:new("K11", 15, TrafficLightModel.JS2_3er_mit_FG)
 local K12 = TrafficLight:new("K12", 24, TrafficLightModel.JS2_3er_ohne_FG)
 
-local F1 = K1 -- K1 wird spï¿½ter auch als Fussgaenger-Ampel F1 verwendet
-local F2 = K3 -- K3 wird spï¿½ter auch als Fussgaenger-Ampel F2 verwendet
+local F1 = K1 -- K1 wird später auch als Fussgaenger-Ampel F1 verwendet
+local F2 = K3 -- K3 wird später auch als Fussgaenger-Ampel F2 verwendet
 local F3 = TrafficLight:new("F3", 20, TrafficLightModel.JS2_2er_nur_FG)
 local F4 = TrafficLight:new("F4", 21, TrafficLightModel.JS2_2er_nur_FG)
 local F5 = K4
@@ -48,25 +48,25 @@ local F12 = K11
 --   |        |     |      |           +------ Signal-ID dieser Ampel
 --   |        |     |      |           |   +-- Modell kann rot, gelb, gruen und FG schalten
 n1 = Lane:new("N1", 100, K1, { "STRAIGHT", "RIGHT" })
-n2 = Lane:new("N2", 101, K3, { "LEFT" }) -- zusï¿½tzlich in der Schaltung K2
+n2 = Lane:new("N2", 101, K3, { "LEFT" }) -- zusätzlich in der Schaltung K2
 
 -- Fahrspuren im Osten
 o1 = Lane:new("O1", 104, K4, { "STRAIGHT", "RIGHT" })
-o2 = Lane:new("O2", 105, K6, { "LEFT" }) -- zusï¿½tlich in der Schaltung K5
+o2 = Lane:new("O2", 105, K6, { "LEFT" }) -- zusätlich in der Schaltung K5
 
 -- Fahrspuren im Sueden
 s1 = Lane:new("S1", 107, K7, { "STRAIGHT", "RIGHT" })
-s2 = Lane:new("S2", 108, K8, { "LEFT" }) -- zusï¿½tlich in der Schaltung K9
+s2 = Lane:new("S2", 108, K8, { "LEFT" }) -- zusätlich in der Schaltung K9
 
 -- Fahrspuren im Westen
 w1 = Lane:new("W1", 111, K10, { "STRAIGHT", "RIGHT" })
-w2 = Lane:new("W2", 112, K12, { "LEFT" }) -- Zusï¿½tzlich in der Schaltung K11
+w2 = Lane:new("W2", 112, K12, { "LEFT" }) -- Zusätzlich in der Schaltung K11
 
 --------------------------------------------------------------
 -- Definiere die Schaltungen und die Kreuzung
 --------------------------------------------------------------
 -- Eine Schaltung bestimmt, welche Fahrspuren gleichzeitig auf
--- grï¿½n geschaltet werden dï¿½rfen, alle anderen sind rot
+-- grün geschaltet werden dürfen, alle anderen sind rot
 
 --- Tutorial 1: Schaltung 1
 local sch1 = IntersectionSequence:new("Schaltung 1")
@@ -140,7 +140,7 @@ k1:addSequence(sch4)
 
 k1:addStaticCam("Richtung Norden")
 k1:addStaticCam("Richtung Ost")
-k1:addStaticCam("ï¿½bersicht")
+k1:addStaticCam("Übersicht")
 
 local ControlExtension = require("ce.ControlExtension")
 local coreCeModule = require("ce.hub.mods.CoreCeModule")

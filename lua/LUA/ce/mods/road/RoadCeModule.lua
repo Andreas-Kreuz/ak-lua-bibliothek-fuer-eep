@@ -6,6 +6,9 @@ RoadCeModule.enabled = true
 local initialized = false
 RoadCeModule.name = "ce.mods.road.RoadCeModule"
 local Intersection = require("ce.mods.road.Intersection")
+local IntersectionSettings = require("ce.mods.road.IntersectionSettings")
+
+function RoadCeModule.loadSettingsFromSlot(eepSaveId) return IntersectionSettings.loadSettingsFromSlot(eepSaveId) end
 
 function RoadCeModule.init()
     if not RoadCeModule.enabled or initialized then return end

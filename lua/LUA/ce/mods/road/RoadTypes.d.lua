@@ -184,7 +184,6 @@
 ---@field switchInStrictOrder boolean
 ---@field debug boolean
 ---@field allIntersections table<string, Intersection>
----@field loadSettingsFromSlot fun(eepSaveId: number):any
 ---@field switchManuallyTo fun(crossingName: string, sequenceName: string):nil
 ---@field switchAutomatically fun(crossingName: string):nil
 ---@field getType fun():string

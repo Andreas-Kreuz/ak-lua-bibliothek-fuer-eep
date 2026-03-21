@@ -1,25 +1,25 @@
 -----------------------------------------------------------------------------------------------------------------------
--- Diese Skript ist eine kleine Vorlage fï¿½r das Verwenden von Kreuzungen, WENN DU NOCH KEIN LUA IN DER ANLAGE BENUTZT
+-- Diese Skript ist eine kleine Vorlage für das Verwenden von Kreuzungen, WENN DU NOCH KEIN LUA IN DER ANLAGE BENUTZT
 -- 1) Kopiere dieses Skript in das LUA-Verzeichnis von EEP
 -- 2) Benenne die Kopie um, z.B. "anlage1.lua"
 -- 3) Verwende die folgende Zeile im Lua-Editor von EEP, um Deine Kopie in EEP mit der Anlage zu laden
 --    require("anlage1")
 -----------------------------------------------------------------------------------------------------------------------
--- Diese Zeile lï¿½dt den Einstiegspunkt der Lua-Bibliothek
+-- Diese Zeile lädt den Einstiegspunkt der Lua-Bibliothek
 local ControlExtension = require("ce.ControlExtension")
 local coreCeModule = require("ce.hub.mods.CoreCeModule")
 local dataCeModule = require("ce.hub.mods.DataCeModule")
 local crossingCeModule = require("ce.mods.road.RoadCeModule")
 
 -- Diese Zeilen registrieren die folgenden Module
--- * Core (immer benï¿½tigt)
--- * Data (Export der Daten fï¿½r EEP)
--- * Crossing (fï¿½r die Ampelsteuerung notwendig)
+-- * Core (immer benötigt)
+-- * Data (Export der Daten für EEP)
+-- * Crossing (für die Ampelsteuerung notwendig)
 ControlExtension.addModules(coreCeModule, dataCeModule, crossingCeModule)
 
--- Die EEPMain Methode wird von EEP genutzt. Sie muss immer 1 zurï¿½ckgeben.
+-- Die EEPMain Methode wird von EEP genutzt. Sie muss immer 1 zurückgeben.
 function EEPMain()
-    -- ControlExtension startet die Aufgaben in allen Modulen bei jedem fï¿½nften EEPMain-Aufruf
+    -- ControlExtension startet die Aufgaben in allen Modulen bei jedem fünften EEPMain-Aufruf
     ControlExtension.runTasks(5)
     return 1
 end
@@ -58,15 +58,15 @@ local TrafficLightModel = require("ce.mods.road.TrafficLightModel")
 
 -- Fahrspur-Ampeln (L) regeln den Verkehr der Fahrspur
 local L1, L2, L3, L4
--- Ampeln fï¿½r den Kraftfahrverkehr (K) und Strassenbahnen (S)
+-- Ampeln für den Kraftfahrverkehr (K) und Strassenbahnen (S)
 local K1, K2, K3, K5, K6, K7, K8, K9, S1, S2
 -- 3 Schaltungen
 local sequenceA, sequenceB, sequenceC
 -- die Kreuzung
 local crossing
 
--- Nutze einen Speicherslot in EEP um die Einstellungen fï¿½r Kreuzungen zu laden und zu speichern
-Intersection.loadSettingsFromSlot(10)
+-- Nutze einen Speicherslot in EEP um die Einstellungen für Kreuzungen zu laden und zu speichern
+crossingCeModule.loadSettingsFromSlot(10)
 
 -- Erzeuge immer erst Deine Ampeln
 L1 = TrafficLight:new("L1", 11, TrafficLightModel.Unsichtbar_2er)           -- Signal for Lane 1
@@ -82,7 +82,7 @@ K7 = TrafficLight:new("K7", 29, TrafficLightModel.JS2_2er_OFF_YELLOW_GREEN) -- E
 K8 = TrafficLight:new("K8", 30, TrafficLightModel.JS2_3er_mit_FG)           -- SOUTH LEFT (left)
 K9 = TrafficLight:new("K9", 31, TrafficLightModel.JS2_3er_mit_FG)           -- SOUTH STRAIGHT (right)
 
--- Straï¿½enbahn-Ampeln mit Immobilien OHNE echtes Signal
+-- Straßenbahn-Ampeln mit Immobilien OHNE echtes Signal
 S1 = TrafficLight:new("S1", -1, TrafficLightModel.NONE, "#5528_Straba Signal Halt", "#5531_Straba Signal geradeaus",
                       "#5529_Straba Signal anhalten", "#5530_Straba Signal A")
 S2 = TrafficLight:new("S2", -1, TrafficLightModel.NONE, "#5435_Straba Signal Halt", "#5521_Straba Signal geradeaus",
@@ -95,14 +95,14 @@ lane2 = Lane:new("Lane 2 E", 2, L2, { Lane.Directions.LEFT, Lane.Directions.RIGH
 lane3 = Lane:new("Lane 3 S", 3, L3, { Lane.Directions.LEFT })
 lane4 = Lane:new("Lane 4 S", 4, L4, { Lane.Directions.STRAIGHT })
 
--- Lege fest, welche Ampeln fï¿½r eine Kreuzung gelten
+-- Lege fest, welche Ampeln für eine Kreuzung gelten
 K1:applyToLane(lane1)
 K6:applyToLane(lane2)
 K7:applyToLane(lane2, "Rechtsabbieger")
 K8:applyToLane(lane3)
 K9:applyToLane(lane4)
 
--- Lege die Schaltungen an und fï¿½ge Ampeln fï¿½r Fahrzeuge, Tram und Fuï¿½gï¿½nger hinzu
+-- Lege die Schaltungen an und füge Ampeln für Fahrzeuge, Tram und Fußgänger hinzu
 sequenceA = crossing:newSequence("Sequence A - North South")
 sequenceA:addCarLights(K1)
 sequenceA:addCarLights(K2)

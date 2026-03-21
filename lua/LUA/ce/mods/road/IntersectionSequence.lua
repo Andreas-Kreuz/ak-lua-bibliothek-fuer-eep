@@ -89,7 +89,7 @@ function IntersectionSequence:tasksForSwitchingFrom(oldSequence, afterRedTask)
         local oldRedPedestrian = switchTask(toRed, IntersectionSequence.Type.PEDESTRIAN, TrafficLightState.RED, reasonPed)
         table.insert(taskList, { offset = 0, task = oldRedPedestrian, precedingTask = nil })
 
-        -- * Hier kï¿½nnte noch die DDR-Schaltung rein (2 Sekunden grï¿½n-gelb)
+        -- * Hier könnte noch die DDR-Schaltung rein (2 Sekunden grün-gelb)
 
         -- Schedule the task where the old traffic lights get yellow
         local reasonYelTram = "Schalte " .. oldSequence.name .. " auf gelb (Tram)"
@@ -173,7 +173,7 @@ function IntersectionSequence:addTramLights(...)
     return self
 end
 
---- Gibt alle Fahrspuren nach Prioritaet zurueck, sowie deren Anzahl und deren Durchschnittsprioritï¿½t
+--- Gibt alle Fahrspuren nach Prioritaet zurueck, sowie deren Anzahl und deren Durchschnittsprioritýt
 -- @return sortierteFahrspuren, anzahlDerFahrspuren, durchschnittsPrio
 function IntersectionSequence:lanesSortedByPriority()
     local trafficLightArray = {}

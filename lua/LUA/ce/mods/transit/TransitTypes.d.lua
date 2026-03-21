@@ -3,7 +3,6 @@
 ---@class TransitSettings
 ---@field showDepartureTippText boolean
 ---@field saveSlot number|nil
----@field loadSettingsFromSlot fun(eepSaveId: number):nil
 ---@field saveSettings fun():nil
 ---@field setShowDepartureTippText fun(value: boolean):nil
 

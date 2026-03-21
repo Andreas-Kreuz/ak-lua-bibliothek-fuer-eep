@@ -18,8 +18,6 @@ Intersection.debug = AkStartWithDebug or false
 ---@type table<string,Intersection>
 Intersection.allIntersections = {}
 
-function Intersection.loadSettingsFromSlot(eepSaveId) return IntersectionSettings.loadSettingsFromSlot(eepSaveId) end
-
 function Intersection.switchManuallyTo(crossingName, sequenceName)
     if Intersection.debug then print("[#Intersection] switchManuallyTo:" .. crossingName .. "/" .. sequenceName) end
     ---@type Intersection
@@ -223,11 +221,11 @@ local function switch(crossing)
     -- After the sequence is ready, the current sequence is active
     local greenPhaseReachedTask = Task:new(function ()
                                                if Intersection.debug then
-                                                   local msg = "[#Intersection] %s: Kreuzung ist auf grï¿½n geschaltet."
+                                                   local msg = "[#Intersection] %s: Kreuzung ist auf grün geschaltet."
                                                    print(string.format(msg, crossing.name))
                                                end
                                                crossing.greenPhaseReached = true
-                                           end, crossing.name .. " ist nun auf grï¿½n geschaltet)")
+                                           end, crossing.name .. " ist nun auf grün geschaltet)")
     Scheduler:scheduleTask(0, greenPhaseReachedTask, lastTask)
 
     -- Schedule the finishing task
@@ -242,7 +240,7 @@ local function switch(crossing)
                                           end,
                                           crossing.name ..
                                           " ist nun bereit zum Umschalten (war " ..
-                                          greenPhaseSeconds .. "s auf grï¿½n geschaltet)")
+                                          greenPhaseSeconds .. "s auf grün geschaltet)")
     Scheduler:scheduleTask(greenPhaseSeconds, crossingFinishedTask, greenPhaseReachedTask)
 end
 

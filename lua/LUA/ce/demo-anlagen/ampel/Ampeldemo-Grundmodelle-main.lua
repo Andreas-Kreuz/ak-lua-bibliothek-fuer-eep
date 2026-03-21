@@ -6,7 +6,8 @@ local TrafficLightModel = require("ce.mods.road.TrafficLightModel")
 local TrafficLight = require("ce.mods.road.TrafficLight")
 local Lane = require("ce.mods.road.Lane")
 local Intersection = require("ce.mods.road.Intersection")
-Intersection.loadSettingsFromSlot(100)
+local RoadCeModule = require("ce.mods.road.RoadCeModule")
+RoadCeModule.loadSettingsFromSlot(100)
 TrafficLight.zeigeAnforderungen = true
 
 ------------------------------------------------
@@ -99,7 +100,7 @@ do
     -------------------------------------------------------------------------------------------------------------------
     -- Definiere alle Schaltungen fuer Kreuzung 2
     -------------------------------------------------------------------------------------------------------------------
-    -- Eine Schaltung bestimmt, welche Fahrspuren gleichzeitig auf grï¿½n geschaltet werden dï¿½rfen, alle anderen sind rot
+    -- Eine Schaltung bestimmt, welche Fahrspuren gleichzeitig auf grün geschaltet werden dürfen, alle anderen sind rot
 
     c2 = Intersection:new("Kreuzung 2")
 
@@ -173,7 +174,7 @@ do
     -------------------------------------------------------------------------------------------------------------------
     -- Definiere alle Schaltungen fuer Kreuzung 1
     -------------------------------------------------------------------------------------------------------------------
-    -- Eine Schaltung bestimmt, welche Fahrspuren gleichzeitig auf grï¿½n geschaltet werden dï¿½rfen, alle anderen sind rot
+    -- Eine Schaltung bestimmt, welche Fahrspuren gleichzeitig auf grün geschaltet werden dürfen, alle anderen sind rot
 
     c1 = Intersection:new("Kreuzung 1")
 
