@@ -86,7 +86,10 @@ function IntersectionSequence:tasksForSwitchingFrom(oldSequence, afterRedTask)
     if oldSequence then
         -- Schedule the task where the old pedestrian lights get yellow
         local reasonPed = "Schalte " .. oldSequence.name .. " auf Fussgaenger Rot"
-        local oldRedPedestrian = switchTask(toRed, IntersectionSequence.Type.PEDESTRIAN, TrafficLightState.RED, reasonPed)
+        local oldRedPedestrian = switchTask(toRed,
+                                            IntersectionSequence.Type.PEDESTRIAN,
+                                            TrafficLightState.RED,
+                                            reasonPed)
         table.insert(taskList, { offset = 0, task = oldRedPedestrian, precedingTask = nil })
 
         -- * Hier könnte noch die DDR-Schaltung rein (2 Sekunden grün-gelb)

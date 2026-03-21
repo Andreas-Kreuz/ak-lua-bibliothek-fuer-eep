@@ -140,7 +140,11 @@ function RoadDtoFactory.createRoadIntersectionSwitchingDto(switching)
 end
 
 function RoadDtoFactory.createRoadIntersectionSwitchingDtoList(switchings)
-    return createDtoList("road-intersection-switchings", "id", switchings, RoadDtoFactory.createRoadIntersectionSwitchingDto)
+    return createDtoList(
+        "road-intersection-switchings",
+        "id",
+        switchings,
+        RoadDtoFactory.createRoadIntersectionSwitchingDto)
 end
 
 function RoadDtoFactory.createRoadIntersectionTrafficLightDto(trafficLight)
