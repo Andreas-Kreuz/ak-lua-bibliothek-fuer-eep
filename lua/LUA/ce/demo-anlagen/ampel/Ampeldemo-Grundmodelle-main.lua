@@ -99,7 +99,7 @@ do
     -------------------------------------------------------------------------------------------------------------------
     -- Definiere alle Schaltungen fuer Kreuzung 2
     -------------------------------------------------------------------------------------------------------------------
-    -- Eine Schaltung bestimmt, welche Fahrspuren gleichzeitig auf grün geschaltet werden dürfen, alle anderen sind rot
+    -- Eine Schaltung bestimmt, welche Fahrspuren gleichzeitig auf grï¿½n geschaltet werden dï¿½rfen, alle anderen sind rot
 
     c2 = Crossing:new("Kreuzung 2")
 
@@ -173,7 +173,7 @@ do
     -------------------------------------------------------------------------------------------------------------------
     -- Definiere alle Schaltungen fuer Kreuzung 1
     -------------------------------------------------------------------------------------------------------------------
-    -- Eine Schaltung bestimmt, welche Fahrspuren gleichzeitig auf grün geschaltet werden dürfen, alle anderen sind rot
+    -- Eine Schaltung bestimmt, welche Fahrspuren gleichzeitig auf grï¿½n geschaltet werden dï¿½rfen, alle anderen sind rot
 
     c1 = Crossing:new("Kreuzung 1")
 
@@ -208,7 +208,7 @@ end
 local ControlExtension = require("ce.ControlExtension")
 local coreCeModule = require("ce.hub.mods.CoreCeModule")
 local dataCeModule = require("ce.hub.mods.DataCeModule")
-local crossingCeModule = require("ce.mods.road.CrossingCeModule")
+local crossingCeModule = require("ce.mods.road.RoadCeModule")
 ControlExtension.addModules(coreCeModule, dataCeModule, crossingCeModule)
 
 function EEPMain()

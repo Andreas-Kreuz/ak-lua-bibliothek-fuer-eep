@@ -46,7 +46,7 @@ function useStatistics() {
           'core.CoreCeModule',
           'data.DataCeModule',
           'scheduler.SchedulerCeModule',
-          'road.CrossingCeModule',
+          'road.RoadCeModule',
         ]) {
           const collectorName = 'CeModule.ak.' + collector + suffix;
           if (record[collectorName]) {

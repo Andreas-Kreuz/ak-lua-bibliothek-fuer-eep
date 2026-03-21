@@ -1,3 +1,12 @@
+---
+layout: page_with_toc
+title: Datenmodell
+subtitle: Alle Räume und Datentypen der Control Extension im Überblick
+permalink: lua/ce/hub/data/dto/
+feature-img: "/docs/assets/headers/SourceCode.png"
+img: "/docs/assets/headers/SourceCode.png"
+---
+
 # Datenmodell der `*StatePublisher.lua`
 
 Diese Datei dokumentiert das aktuell erzeugte Datenmodell der Lua-Collector.

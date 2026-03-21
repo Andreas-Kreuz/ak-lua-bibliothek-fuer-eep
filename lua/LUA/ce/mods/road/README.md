@@ -391,7 +391,7 @@ also mit einem Doppelpunkt und nicht mit einem Punkt.
   local ControlExtension = require("ce.ControlExtension")
   ControlExtension.addModules(
       require("ce.hub.mods.CoreCeModule"),
-      require("ce.mods.road.CrossingCeModule") -- Registriert das Kreuzungsmodul
+      require("ce.mods.road.RoadCeModule") -- Registriert das Kreuzungsmodul
   )
 
   function EEPMain()

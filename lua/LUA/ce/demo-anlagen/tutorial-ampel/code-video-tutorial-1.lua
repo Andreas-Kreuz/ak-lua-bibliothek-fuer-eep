@@ -23,7 +23,7 @@ local ControlExtension = require("ce.ControlExtension")
 ControlExtension.addModules(
     require("ce.hub.mods.CoreCeModule"),
     require("ce.hub.mods.DataCeModule"),
-    require("ce.mods.road.CrossingCeModule")
+    require("ce.mods.road.RoadCeModule")
 )
 
 function EEPMain()
@@ -31,8 +31,8 @@ function EEPMain()
     return 1
 end
 
--- Zähler kommen später hier
+-- Zï¿½hler kommen spï¿½ter hier
 
--- Noch nicht für die Verwendung vorgesehen
+-- Noch nicht fï¿½r die Verwendung vorgesehen
 sequenceA.greenPhaseSeconds = 5
 sequenceB.greenPhaseSeconds = 5

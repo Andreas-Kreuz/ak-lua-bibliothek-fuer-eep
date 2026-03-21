@@ -31,7 +31,7 @@ Registriert die CeModule, die später ausgeführt werden sollen.
 
 Beispiele für zulässige Module:
 
-- `require("ce.mods.road.CrossingCeModule")`
+- `require("ce.mods.road.RoadCeModule")`
 - `require("ce.hub.mods.DataCeModule")`
 - `require("ce.hub.mods.SchedulerCeModule")`
 
@@ -81,7 +81,7 @@ ControlExtension.setPauseEepDuringInitialization(true)
 
 local modules = ControlExtension.addModules(
     require("ce.hub.mods.DataCeModule"),
-    require("ce.mods.road.CrossingCeModule")
+    require("ce.mods.road.RoadCeModule")
 )
 
 modules["ce.hub.mods.DataCeModule"].setOptions({
@@ -110,3 +110,10 @@ Wichtig ist dabei:
 - Du arbeitest gegen `ce.ControlExtension`, nicht gegen interne Hub-Dateien.
 - Hub-Module dürfen als Argumente an `addModules(...)` genannt werden.
 - Die interne Orchestrierung innerhalb von `ce.hub` ist kein Teil der öffentlichen API.
+
+# Unterverzeichnisse
+
+- [data/DTO.md](data/DTO.md) — Alle Datenräume und DTO-Typen der eingebauten Collector
+- [eep/README.md](eep/README.md) — EEP-Simulator für Tests ohne EEP
+- [scheduler/README.md](scheduler/README.md) — Zeitbasierter Task-Planer
+- [util/README.md](util/README.md) — Hilfsfunktionen für persistente Zustandsablage

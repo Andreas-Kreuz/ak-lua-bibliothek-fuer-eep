@@ -39,7 +39,7 @@ ControlExtension.setDebug(true)
 ControlExtension.setPauseEepDuringInitialization(true)
 ControlExtension.addModules(
     require("ce.hub.mods.DataCeModule"),
-    require("ce.mods.road.CrossingCeModule"),
+    require("ce.mods.road.RoadCeModule"),
     require("ce.mods.transit.TransitCeModule")
 )
 
@@ -75,8 +75,8 @@ Diese alten Modul-Wrapper sind die häufigsten Stellen, an denen deine bestehend
 | `require("ak.core.CoreLuaModule")`                        | `require("ce.hub.mods.CoreCeModule")`                         | Wird über `ce.ControlExtension` bereits intern registriert |
 | `require("ak.data.DataLuaModule")`                        | `require("ce.hub.mods.DataCeModule")`                         | Für Hub-Datenexport                                        |
 | `require("ak.scheduler.SchedulerLuaModule")`              | `require("ce.hub.mods.SchedulerCeModule")`                    | Meist nur bei direkter Scheduler-Nutzung nötig             |
-| `require("ak.road.CrossingLuaModule")`                    | `require("ce.mods.road.CrossingCeModule")`                    | Straßenverkehrsmodul                                       |
-| `require("ak.road.CrossingLuaModul")`                     | `require("ce.mods.road.CrossingCeModule")`                    | Alter Tippfehler in einigen Anlagen-Dateien                |
+| `require("ak.road.CrossingLuaModule")`                    | `require("ce.mods.road.RoadCeModule")`                        | Straßenverkehrsmodul                                       |
+| `require("ak.road.CrossingLuaModul")`                     | `require("ce.mods.road.RoadCeModule")`                        | Alter Tippfehler in einigen Anlagen-Dateien                |
 | `require("ak.transit.TransitLuaModule")` | `require("ce.mods.transit.TransitCeModule")` | ÖPNV-Modul                                                 |
 
 ## Direkte `require()`-Ersetzungen nach Bereich
@@ -178,7 +178,7 @@ Einige alte Sammelmodule wurden bewusst aufgeteilt:
 | `ak.core.ModuleRegistry`                       | Öffentlicher Einstieg über `ce.ControlExtension`, Laufzeit über `ce.hub.ControlExtensionHub`, Registry intern in `ce.hub.ModuleRegistry` |
 | `ak.core.CoreWebConnector`                     | `ce.hub.bridge.CoreBridgeConnector` und `ce.hub.bridge.DataBridgeConnector`                                                              |
 | `ak.data.DataLuaModule`                        | `ce.hub.mods.DataCeModule` mit `ce.hub.bridge.DataBridgeConnector`                                                                       |
-| `ak.road.CrossingLuaModule`                    | `ce.mods.road.CrossingCeModule` mit `ce.mods.road.bridge.CrossingBridgeConnector`                                                        |
+| `ak.road.CrossingLuaModule`                    | `ce.mods.road.RoadCeModule` mit `ce.mods.road.bridge.CrossingBridgeConnector`                                                            |
 | `ak.transit.TransitLuaModule` | `ce.mods.transit.TransitCeModule` mit `ce.mods.transit.bridge.TransitBridgeConnector`                  |
 
 Für deine bestehenden Skripte ist der sichere Weg daher: Verwende nur `ce.ControlExtension` und die neuen `*CeModule` direkt und greife nicht mehr auf alte interne `ak.*`-Pfade zurück.

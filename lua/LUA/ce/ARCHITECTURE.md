@@ -251,7 +251,7 @@ Diese Darstellung ist bewusst kompakt gehalten. Sie soll die Verantwortlichkeite
 Stabil gehalten werden sollen nur wenige öffentliche Einstiegspunkte:
 
 - `ce.ControlExtension`
-- `ce.modules.road.CrossingCeModule`
+- `ce.modules.road.RoadCeModule`
 - `ce.modules.transit.TransitCeModule`
 - perspektivisch weitere Einstiegspunkte unter `ce.modules.rail.*`
 

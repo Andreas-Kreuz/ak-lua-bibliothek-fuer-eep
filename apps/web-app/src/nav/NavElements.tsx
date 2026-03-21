@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 const dataCeModuleId = 'e538a124-3f0a-4848-98cf-02b08563bf32'; // "ce.hub.mods.DataCeModule"
-const kreuzungCeModuleId = 'c5a3e6d3-0f9b-4c89-a908-ed8cf8809362'; // "ce.mods.road.CrossingCeModule"
+const kreuzungCeModuleId = 'c5a3e6d3-0f9b-4c89-a908-ed8cf8809362'; // "ce.mods.road.RoadCeModule"
 const publicTransportCeModuleId = '83ce6b42-1bda-45e0-8b4a-e8daeed047ab'; // "ce.mods.transit.TransitCeModule"
 
 function useNavState(): {

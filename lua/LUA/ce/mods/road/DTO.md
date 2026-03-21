@@ -1,3 +1,12 @@
+---
+layout: page_with_toc
+title: Road-Datenmodell
+subtitle: JSON-Datenmodell der Ampel- und Kreuzungssteuerung
+permalink: lua/ce/mods/road/dto/
+feature-img: "/docs/assets/headers/SourceCode.png"
+img: "/docs/assets/headers/SourceCode.png"
+---
+
 # Datenmodell der JSON-Collector in `ce/mods/road`
 
 Diese Datei beschreibt das aktuell aus `lua/LUA/ce/mods/road` erzeugte JSON-Datenmodell.

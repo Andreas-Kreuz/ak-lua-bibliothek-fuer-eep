@@ -50,17 +50,17 @@ end
 --    |    |                +------ Signal-ID dieser Ampel
 --    |    |                |   +-- Modell dieser Ampel - weiss wo rot, gelb und gruen / Fussgaenger ist
 local K1 = TrafficLight:new("K1/F1", 16, TrafficLightModel.JS2_3er_mit_FG)
--- Ampel K1 ist gleichzeitig eine Fußgängerampel
-local K8 = TrafficLight:new("K8", 17, TrafficLightModel.JS2_2er_OFF_YELLOW_GREEN) -- Ampel K8 ist nur für Rechtsabbieger
+-- Ampel K1 ist gleichzeitig eine Fuï¿½gï¿½ngerampel
+local K8 = TrafficLight:new("K8", 17, TrafficLightModel.JS2_2er_OFF_YELLOW_GREEN) -- Ampel K8 ist nur fï¿½r Rechtsabbieger
 local L1 = TrafficLight:new("L1", 07, TrafficLightModel.Unsichtbar_2er)
 local K2 = TrafficLight:new("K2/F2", 08, TrafficLightModel.JS2_3er_mit_FG)
 local K3 = TrafficLight:new("K3/F3", 09, TrafficLightModel.JS2_3er_mit_FG)
 local K4 = TrafficLight:new("K4/F4", 10, TrafficLightModel.JS2_3er_mit_FG)
 local K5 = TrafficLight:new("K5/F5", 12, TrafficLightModel.JS2_3er_mit_FG)
-local K6 = TrafficLight:new("K6", 13, TrafficLightModel.JS2_3er_ohne_FG) -- dies ist keine Fußgängerampel
+local K6 = TrafficLight:new("K6", 13, TrafficLightModel.JS2_3er_ohne_FG) -- dies ist keine Fuï¿½gï¿½ngerampel
 local K7 = TrafficLight:new("K7/F6", 11, TrafficLightModel.JS2_3er_mit_FG)
 
--- Ampeln für die Straßenbahn nutzen die Lichtfunktion der einzelnen Immobilien
+-- Ampeln fï¿½r die Straï¿½enbahn nutzen die Lichtfunktion der einzelnen Immobilien
 local S1 = TrafficLight:new("S1", 14, TrafficLightModel.Unsichtbar_2er,
                             "#29_Straba Signal Halt",      -- rot
                             "#28_Straba Signal geradeaus", --  gruen
@@ -73,7 +73,7 @@ local S2 = TrafficLight:new("S2", 15, TrafficLightModel.Unsichtbar_2er,
                             "#33_Straba Signal A")         --    Anforderung
 
 local F1 =
-    K1 -- Die Fussgängerampel F1 ist die selbe, wie Ampel K1, zeigt aber später "Fußgänger grün"
+    K1 -- Die Fussgï¿½ngerampel F1 ist die selbe, wie Ampel K1, zeigt aber spï¿½ter "Fuï¿½gï¿½nger grï¿½n"
 local F2 = K2
 local F3 = K3
 local F4 = K4
@@ -84,17 +84,17 @@ local F6 = K7
 --   |        +------------------------------- Name der Fahrspur
 --   |        |   +------------------------- Speicher ID - um die Anzahl der Fahrzeuge
 --   |        |   |                                        und die Wartezeit zu speichern
---   |        |   |    +------------------ neue Ampel für diese Fahrspur
+--   |        |   |    +------------------ neue Ampel fï¿½r diese Fahrspur
 --   |        |   |    |           +------ Signal-ID dieser Ampel
 --   |        |   |    |           |   +-- Modell kann rot, gelb, gruen und FG schalten
 -- Die Fahrspur N wird durch die Fahrspur-Ampel L1 (Signal ID 07) gesteuert
--- K1 und K2 müssen später gleichzeitig leuchten (Signal ID 08, 15)
+-- K1 und K2 mï¿½ssen spï¿½ter gleichzeitig leuchten (Signal ID 08, 15)
 n = Lane:new("N", 100, L1)
 K1:applyToLane(n)
 K8:applyToLane(n, "Rechtsabbieger")
 
 -- Die Fahrspur O1 wird durch die Fahrspur-Ampel K2 (Signal 09) gesteuert
--- K4 muss später gleichzeitig leuchten (Signal ID 10)
+-- K4 muss spï¿½ter gleichzeitig leuchten (Signal ID 10)
 o1 = Lane:new("O1", 102, K3)
 
 -- Fahrspuren im Westen
@@ -102,7 +102,7 @@ o1 = Lane:new("O1", 102, K3)
 w1 = Lane:new("W1", 104, K5)
 
 -- Die Fahrspur W2 wird durch die Fahrspur-Ampel K6 (Signal 13) gesteuert
--- K7 muss später gleichzeitig leuchten (Signal ID 11)
+-- K7 muss spï¿½ter gleichzeitig leuchten (Signal ID 11)
 w2 = Lane:new("W2", 105, K6)
 
 -- Fahrspuren fuer Strassenbahnen:
@@ -118,7 +118,7 @@ ws:useTrackForQueue(2) -- Erfasst Anforderungen, wenn ein Fahrzeug auf Strasse 2
 -- Definiere die Schaltungen und die Kreuzung
 --------------------------------------------------------------
 -- Eine Schaltung bestimmt, welche Fahrspuren gleichzeitig auf
--- grün geschaltet werden dürfen, alle anderen sind rot
+-- grï¿½n geschaltet werden dï¿½rfen, alle anderen sind rot
 
 k1 = Crossing:new("Tutorial 2")
 
@@ -151,7 +151,7 @@ k1:setSwitchInStrictOrder(true)
 local ControlExtension = require("ce.ControlExtension")
 ControlExtension.addModules(
     require("ce.hub.mods.CoreCeModule"),
-    require("ce.mods.road.CrossingCeModule")
+    require("ce.mods.road.RoadCeModule")
 )
 
 function EEPMain()

@@ -45,3 +45,23 @@ Wenn ein Modul Daten bereitstellen möchte, kann es das über den Datenbus tun. 
 
 Die Konvention, an die sich die integrierten Module des Hubs halten ist folgender Ablauf: \
 Die gesammelten Daten werden vom `*StatePublisher` des Moduls mit `*DataCollector` eingesammelt und mittels `*DtoFactory` in Datentransferobjekte (DTOs) umgewandelt. Damit die Summe aller DTOs eindeutig ist, werden alle Daten in Datenabschnitte (`room`) einsortiert und jeder dieser Datenabschnitte enthält eine Liste von Daten, für jeden Typ von DTOs ist klar festgelegt, anhand welches Feldes, die DTOs eindeutig in der Tabelle aufgefunden werden. Dies erlaubt die Ablage in Map-Strukturen `room:string` -> `dtoId:string|number` -> `dto:table`
+
+## Dokumentation
+
+### Für Anwender
+
+- [hub/README.md](hub/README.md) — Öffentliche API: `ControlExtension.addModules`, `runTasks`, `setDebug` u.a.
+- [databridge/README.md](databridge/README.md) — Dateibasierte Kommunikation mit dem Web-Server
+- [mods/README.md](mods/README.md) — Verfügbare Erweiterungsmodule (Ampel, ÖPNV)
+- [template/README.md](template/README.md) — Vorlagen für eigene Anlagen
+
+### Für Entwickler
+
+- [DEVELOP.md](DEVELOP.md) — Eigene CeModule entwickeln und integrieren
+- [hub/data/DTO.md](hub/data/DTO.md) — Alle Datenräume und DTO-Typen im Überblick
+
+### Weitere Pakete
+
+- [rail/README.md](rail/README.md) — Zugsteuerung (in Arbeit)
+- [modellpacker/README.md](modellpacker/README.md) — EEP-Installer erstellen
+- [demo-anlagen/README.md](demo-anlagen/README.md) — Fertige Beispielanlagen

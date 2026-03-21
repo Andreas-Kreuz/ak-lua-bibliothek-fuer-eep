@@ -35,7 +35,7 @@ local ControlExtension = require("ce.ControlExtension")
 ControlExtension.addModules(
     require("ce.hub.mods.CoreCeModule"),
     require("ce.hub.mods.DataCeModule"),
-    require("ce.mods.road.CrossingCeModule")
+    require("ce.mods.road.RoadCeModule")
 )
 
 function EEPMain()

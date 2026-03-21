@@ -82,7 +82,7 @@ Dafür benötigst Du folgendes:
   local ControlExtension = require("ce.ControlExtension")
   ControlExtension.addModules(
       require("ce.hub.mods.CoreCeModule"),
-      require("ce.mods.road.CrossingCeModule")
+      require("ce.mods.road.RoadCeModule")
   )
 
   function EEPMain()
@@ -99,7 +99,7 @@ Dafür benötigst Du folgendes:
 
 - Die ersten Zeilen `local XXX = require("ce.mods.road.XXX")` sorgt dafür, daß die einzelnen Dateien z.B. `ce/mods/road/Crossing.lua` einmal eingelesen wird. Nach diesem Aufruf stehen Dir alle Funktionen dieser Datei zur Verfügung.
 - Die Zeile `local ControlExtension = require("ce.ControlExtension")` lädt den öffentlichen Einstiegspunkt der Bibliothek.
-- Mit den Zeilen `ControlExtension.addModules(require("ce.hub.mods.CoreCeModule"), require("ce.mods.road.CrossingCeModule"))` werden das "CoreCeModule" und das "CrossingCeModule" in der Anwendung bekannt gemacht.
+- Mit den Zeilen `ControlExtension.addModules(require("ce.hub.mods.CoreCeModule"), require("ce.mods.road.RoadCeModule"))` werden das "CoreCeModule" und das "RoadCeModule" in der Anwendung bekannt gemacht.
 - Die Zeile `ControlExtension.runTasks()` ist für das wiederkehrende Ausführen aller Aufgaben, dadurch werden die Kreuzungsschaltungen und die geplanten Aktionen durchgeführt.
 - Wichtig ist auch, dass die Funktion EEPMain mit `return 1` beendet wird, damit sie alle 200 ms aufgerufen wird.
 

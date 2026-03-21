@@ -69,7 +69,7 @@ insulate("Line Management 4 Line segments", function()
     local DataCeModule = require("ce.hub.mods.DataCeModule")
 
     -- Intersections
-    local CrossingCeModule = require("ce.mods.road.CrossingCeModule")
+    local RoadCeModule = require("ce.mods.road.RoadCeModule")
     local Crossing = require("ce.mods.road.Crossing")
 
     -- Public Transport
@@ -81,11 +81,11 @@ insulate("Line Management 4 Line segments", function()
 
     ---------------------------------------------------------------------------------------------------------------
     -- Register the required modules
-    ControlExtension.addModules(CoreCeModule, DataCeModule, CrossingCeModule, TransitCeModule)
+    ControlExtension.addModules(CoreCeModule, DataCeModule, RoadCeModule, TransitCeModule)
     Crossing.loadSettingsFromSlot(1)
     TransitSettings.loadSettingsFromSlot(2)
     ---------------------------------------------------------------------------------------------------------------
-    -- Die folgende Methode wird von EEP mind. alle 200 ms ausgeführt
+    -- Die folgende Methode wird von EEP mind. alle 200 ms ausgefï¿½hrt
     function EEPMain()
         ControlExtension.runTasks(1)
         return 1
@@ -95,11 +95,11 @@ insulate("Line Management 4 Line segments", function()
     local linie10 = Line.forName("10")
     local linie12 = Line.forName("12")
 
-    -- Linie mit Hin- und Rückweg
+    -- Linie mit Hin- und Rï¿½ckweg
     ---@type LineSegment
     local linie10Messe = linie10:addSection("Linie 10: Tram in Richtung Messe Dresden", "Messe Dresden")
-    linie10Messe:addStop(RoadStation.forName("Ludwig-Hartmann-Straße"):platform(1), 0)
-    linie10Messe:addStop(RoadStation.forName("Straßbuger Platz"):platform(1), 2)
+    linie10Messe:addStop(RoadStation.forName("Ludwig-Hartmann-Straï¿½e"):platform(1), 0)
+    linie10Messe:addStop(RoadStation.forName("Straï¿½buger Platz"):platform(1), 2)
     linie10Messe:addStop(RoadStation.forName("Hauptbahnhof"):platform(1), 2)
     -- linie10Messe:addStop(RoadStation.forName("Messe Dresden"):platform(1), 2)
 
@@ -107,29 +107,29 @@ insulate("Line Management 4 Line segments", function()
     local linie10Striesen = linie10:addSection("Linie 10: Tram in Richtung Striesen", "Striesen")
     linie10Striesen:addStop(RoadStation.forName("Messe Dresden"):platform(1), 0)
     linie10Striesen:addStop(RoadStation.forName("Hauptbahnhof"):platform(2), 2)
-    linie10Striesen:addStop(RoadStation.forName("Straßbuger Platz"):platform(2), 2)
-    -- linie10Striesen:addStop(RoadStation.forName("Ludwig-Hartmann-Straße"):platform(1), 2)
+    linie10Striesen:addStop(RoadStation.forName("Straï¿½buger Platz"):platform(2), 2)
+    -- linie10Striesen:addStop(RoadStation.forName("Ludwig-Hartmann-Straï¿½e"):platform(1), 2)
 
     ---@type LineSegment
     local linie12Leutewitz = linie12:addSection("Linie 12: Tram in Richtung Leutewitz", "Leutewitz")
-    linie12Leutewitz:addStop(RoadStation.forName("Ludwig-Hartmann-Straße"):platform(2), 0)
-    linie12Leutewitz:addStop(RoadStation.forName("Straßbuger Platz"):platform(1), 2)
+    linie12Leutewitz:addStop(RoadStation.forName("Ludwig-Hartmann-Straï¿½e"):platform(2), 0)
+    linie12Leutewitz:addStop(RoadStation.forName("Straï¿½buger Platz"):platform(1), 2)
     linie12Leutewitz:addStop(RoadStation.forName("Irgendwo"):platform(1), 2)
 
     ---@type LineSegment
     local linie12Striesen = linie12:addSection("Linie 12: Tram in Richtung Striesen", "Striesen")
     linie12Striesen:addStop(RoadStation.forName("Leutewitz"):platform(2), 2)
     linie12Striesen:addStop(RoadStation.forName("Irgendwo"):platform(2), 2)
-    linie12Striesen:addStop(RoadStation.forName("Straßbuger Platz"):platform(2), 2)
+    linie12Striesen:addStop(RoadStation.forName("Straï¿½buger Platz"):platform(2), 2)
 
     linie10Messe:setNextSection(linie10Striesen, 6)
     linie10Striesen:setNextSection(linie12Leutewitz, 7)
     linie12Leutewitz:setNextSection(linie12Striesen, 8)
     linie12Striesen:setNextSection(linie10Messe, 9)
 
-    RoadStation.forName("Ludwig-Hartmann-Straße"):platform(1):addDisplay("#1", RSDM.SimpleStructure)
-    RoadStation.forName("Straßbuger Platz"):platform(1):addDisplay("#2", RSDM.SimpleStructure)
-    RoadStation.forName("Straßbuger Platz"):platform(2):addDisplay("#3", RSDM.SimpleStructure)
+    RoadStation.forName("Ludwig-Hartmann-Straï¿½e"):platform(1):addDisplay("#1", RSDM.SimpleStructure)
+    RoadStation.forName("Straï¿½buger Platz"):platform(1):addDisplay("#2", RSDM.SimpleStructure)
+    RoadStation.forName("Straï¿½buger Platz"):platform(2):addDisplay("#3", RSDM.SimpleStructure)
     RoadStation.forName("Hauptbahnhof"):platform(1):addDisplay("#4", RSDM.SimpleStructure)
     RoadStation.forName("Hauptbahnhof"):platform(2):addDisplay("#5", RSDM.SimpleStructure)
     RoadStation.forName("Messe Dresden"):platform(1):addDisplay("#6", RSDM.SimpleStructure)
@@ -162,7 +162,7 @@ insulate("Line Management 4 Line segments", function()
             local LineSegment = require("ce.mods.transit.LineSegment")
 
             -- Depart from 1st station
-            Line.trainDeparted("train4", RoadStation.forName("Straßbuger Platz"))
+            Line.trainDeparted("train4", RoadStation.forName("Straï¿½buger Platz"))
             local route = train4:getRoute()
             it("", function() assert.are.equal("Linie 10: Tram in Richtung Messe Dresden", route) end)
 
@@ -183,7 +183,7 @@ insulate("Line Management 4 Line segments", function()
             -- Depart for last Line Change
             train4:setRoute(linie12Striesen.routeName)
             train4:changeDestination(linie12Striesen.destination, linie12Striesen.line.nr)
-            Line.trainDeparted("train4", RoadStation.forName("Straßbuger Platz"))
+            Line.trainDeparted("train4", RoadStation.forName("Straï¿½buger Platz"))
             local route5 = train4:getRoute()
             it("", function() assert.are.equal("Linie 10: Tram in Richtung Messe Dresden", route5) end)
         end)
