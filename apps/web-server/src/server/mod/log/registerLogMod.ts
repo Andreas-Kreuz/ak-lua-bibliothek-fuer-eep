@@ -16,7 +16,13 @@ export const registerLogMod = (io: Server, socketService: SocketService, eepServ
     }
   });
 
-  eepService.setOnNewLogLine((logLines: string) => logLinesSubject.next(logLines));
+  eepService.setOnNewLogLine((logLines: string) => {
+    const filtered = logLines
+      .split('\n')
+      .filter((line) => line.trim().length > 0)
+      .join('\n');
+    if (filtered) logLinesSubject.next(filtered);
+  });
 
   eepService.setOnLogCleared(() => {
     if (debug) console.log('⚠️ Clear log 📄');

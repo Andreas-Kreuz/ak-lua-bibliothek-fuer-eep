@@ -189,7 +189,11 @@ export default class EepService implements CacheService {
   getCurrentLogLines = (): string => {
     try {
       if (this.debug) console.log('Read: ' + path.resolve(this.dir, FileNames.eepOutLog));
-      return fs.readFileSync(path.resolve(this.dir, FileNames.eepOutLog), { encoding: 'latin1' });
+      const raw = fs.readFileSync(path.resolve(this.dir, FileNames.eepOutLog), { encoding: 'latin1' });
+      return raw
+        .split('\n')
+        .filter((line) => line.trim().length > 0)
+        .join('\n');
     } catch (e) {
       console.log(e);
     }
