@@ -145,7 +145,6 @@ k1:setSwitchInStrictOrder(true)
 
 local ControlExtension = require("ce.ControlExtension")
 ControlExtension.addModules(
-    require("ce.hub.mods.CoreCeModule"),
     require("ce.mods.road.RoadCeModule")
 )
 

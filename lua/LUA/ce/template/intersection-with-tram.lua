@@ -7,15 +7,9 @@
 -----------------------------------------------------------------------------------------------------------------------
 -- Diese Zeile lädt den Einstiegspunkt der Lua-Bibliothek
 local ControlExtension = require("ce.ControlExtension")
-local coreCeModule = require("ce.hub.mods.CoreCeModule")
-local dataCeModule = require("ce.hub.mods.DataCeModule")
 local crossingCeModule = require("ce.mods.road.RoadCeModule")
 
--- Diese Zeilen registrieren die folgenden Module
--- * Core (immer benötigt)
--- * Data (Export der Daten für EEP)
--- * Crossing (für die Ampelsteuerung notwendig)
-ControlExtension.addModules(coreCeModule, dataCeModule, crossingCeModule)
+ControlExtension.addModules(crossingCeModule)
 
 -- Die EEPMain Methode wird von EEP genutzt. Sie muss immer 1 zurückgeben.
 function EEPMain()

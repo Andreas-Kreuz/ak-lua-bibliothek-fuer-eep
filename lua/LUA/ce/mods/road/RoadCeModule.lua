@@ -28,10 +28,4 @@ function RoadCeModule.run()
     Intersection.switchSequences()
 end
 
-do
-    local ModuleRegistry = require("ce.hub.ModuleRegistry")
-    local schedulerCeModule = require("ce.hub.mods.SchedulerCeModule")
-    ModuleRegistry.registerModules(schedulerCeModule)
-end
-
 return RoadCeModule

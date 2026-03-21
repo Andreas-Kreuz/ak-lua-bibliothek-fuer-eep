@@ -143,9 +143,8 @@ k1:addStaticCam("Richtung Ost")
 k1:addStaticCam("Übersicht")
 
 local ControlExtension = require("ce.ControlExtension")
-local coreCeModule = require("ce.hub.mods.CoreCeModule")
 local crossingCeModule = require("ce.mods.road.RoadCeModule")
-ControlExtension.addModules(coreCeModule, crossingCeModule)
+ControlExtension.addModules(crossingCeModule)
 
 function EEPMain()
     ControlExtension.runTasks()

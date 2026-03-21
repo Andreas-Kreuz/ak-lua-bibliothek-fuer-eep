@@ -23,10 +23,4 @@ function TransitCeModule.run()
     if not TransitCeModule.enabled then return end
 end
 
-do
-    local ModuleRegistry = require("ce.hub.ModuleRegistry")
-    local schedulerCeModule = require("ce.hub.mods.SchedulerCeModule")
-    ModuleRegistry.registerModules(schedulerCeModule)
-end
-
 return TransitCeModule

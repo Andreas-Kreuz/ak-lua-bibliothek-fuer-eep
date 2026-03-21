@@ -65,8 +65,6 @@ insulate("Line Management 4 Line segments", function()
 
     -- Core Stuff
     local ControlExtension = require("ce.ControlExtension")
-    local CoreCeModule = require("ce.hub.mods.CoreCeModule")
-    local DataCeModule = require("ce.hub.mods.DataCeModule")
 
     -- Intersections
     local RoadCeModule = require("ce.mods.road.RoadCeModule")
@@ -79,7 +77,7 @@ insulate("Line Management 4 Line segments", function()
 
     ---------------------------------------------------------------------------------------------------------------
     -- Register the required modules
-    ControlExtension.addModules(CoreCeModule, DataCeModule, RoadCeModule, TransitCeModule)
+    ControlExtension.addModules(RoadCeModule, TransitCeModule)
     RoadCeModule.loadSettingsFromSlot(1)
     TransitCeModule.loadSettingsFromSlot(2)
     ---------------------------------------------------------------------------------------------------------------

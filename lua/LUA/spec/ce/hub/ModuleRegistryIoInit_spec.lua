@@ -8,7 +8,7 @@ insulate("ControlExtensionHub IO init", function()
         clearModule("ce.hub.ControlExtensionHub")
         clearModule("ce.hub.ModuleRegistry")
         clearModule("ce.hub.MainLoopRunner")
-        clearModule("ce.hub.mods.CoreCeModule")
+        clearModule("ce.hub.mods.HubCeModule")
         clearModule("ce.databridge.IoInit")
     end)
 

@@ -207,10 +207,8 @@ end
 -- endregion
 
 local ControlExtension = require("ce.ControlExtension")
-local coreCeModule = require("ce.hub.mods.CoreCeModule")
-local dataCeModule = require("ce.hub.mods.DataCeModule")
 local crossingCeModule = require("ce.mods.road.RoadCeModule")
-ControlExtension.addModules(coreCeModule, dataCeModule, crossingCeModule)
+ControlExtension.addModules(crossingCeModule)
 
 function EEPMain()
     -- print("[#Anlage] Speicher: " .. collectgarbage("count"))
