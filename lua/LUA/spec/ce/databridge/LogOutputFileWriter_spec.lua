@@ -9,6 +9,7 @@ insulate("ce.databridge.LogOutputFileWriter", function()
     local originalPrint = print
     local originalWarn = warn
     local originalClearlog = clearlog
+    local originalOsDate = os.date
 
     local function installSimpleGlobals()
         assert = function(v, message)
@@ -31,6 +32,7 @@ insulate("ce.databridge.LogOutputFileWriter", function()
         print = originalPrint
         warn = originalWarn
         clearlog = originalClearlog
+        os.date = originalOsDate
     end)
 
     after_each(function()
@@ -40,12 +42,15 @@ insulate("ce.databridge.LogOutputFileWriter", function()
         print = originalPrint
         warn = originalWarn
         clearlog = originalClearlog
+        os.date = originalOsDate
     end)
 
-    it("wraps print and clearlog and writes to the log file", function()
-        local openCalls = {}
+    it("writes newline-terminated log entries and reset markers", function()
+        local logWrites = {}
+        local logOpenModes = {}
 
         installSimpleGlobals()
+        os.date = function() return "" end
         io.open = function(name, mode)
             if name ~= "../LUA/ce/databridge/exchange/ak-eep-version.txt" and
                name ~= "exchange-dir/ak-eep-version.txt" and
@@ -53,26 +58,33 @@ insulate("ce.databridge.LogOutputFileWriter", function()
                 return originalIoOpen(name, mode)
             end
 
-            table.insert(openCalls, {name = name, mode = mode})
-            return {write = function() end, flush = function() end, close = function() end}
+            if name == "exchange-dir/ak-eep-out.log" then
+                table.insert(logOpenModes, mode)
+            end
+
+            return {
+                write = function(_, content)
+                    if name == "exchange-dir/ak-eep-out.log" then table.insert(logWrites, content) end
+                end,
+                flush = function() end,
+                close = function() end
+            }
         end
 
         local ExchangeDirRegistry = require("ce.databridge.ExchangeDirRegistry")
         local LogOutputFileWriter = require("ce.databridge.LogOutputFileWriter")
 
-        openCalls = {}
         ExchangeDirRegistry.setExchangeDirectory("exchange-dir")
         LogOutputFileWriter.initialize()
 
-        _G.print("")
+        _G.print("Line 1\nLine 2")
         _G.clearlog()
 
-        originalAssert.same({
-            {name = "exchange-dir/ak-eep-version.txt", mode = "w"},
-            {name = "exchange-dir/ak-eep-out.log", mode = "w+"}, {name = "exchange-dir/ak-eep-out.log", mode = "a"},
-            {name = "exchange-dir/ak-eep-out.log", mode = "a"}, {name = "exchange-dir/ak-eep-out.log", mode = "w+"},
-            {name = "exchange-dir/ak-eep-out.log", mode = "a"}
-        }, openCalls)
+        originalAssert.same({"w+", "a", "a"}, logOpenModes)
+        originalAssert.same({"Line 1\n       . Line 2\n", "@@CE_LOG_RESET@@\n"}, logWrites)
+        for _, content in ipairs(logWrites) do
+            originalAssert.equals("\n", content:sub(-1))
+        end
     end)
 
     it("registers wrapped print and keeps assert fail-loud", function()

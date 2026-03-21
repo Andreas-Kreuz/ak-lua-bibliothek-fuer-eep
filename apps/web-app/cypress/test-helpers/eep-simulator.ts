@@ -8,6 +8,8 @@ export enum FileNames {
   serverWatching = 'cypress/io/LUA/ce/databridge/exchange/ak-server.iswatching',
 }
 
+const resetMarker = '@@CE_LOG_RESET@@';
+
 export default class EepSimulator {
   private eventCounter = 0;
   fileNames = FileNames;
@@ -19,7 +21,7 @@ export default class EepSimulator {
     cy.task('deleteEepLogFile', FileNames.eepOutLog);
     cy.readFile(FileNames.eepOutLog).should('not.exist');
     cy.readFile(FileNames.serverWatching).should('exist');
-    cy.writeFile(FileNames.eepOutLog, '\n');
+    cy.writeFile(FileNames.eepOutLog, '', 'latin1');
     cy.writeFile(FileNames.serverOutCommands, '');
     this.eepEvent('reset.json');
   };
@@ -57,13 +59,18 @@ export default class EepSimulator {
     });
   }
 
-  // This will rewrite THE WHOLE LOG FILE and fire all oldLines and the new line
+  // Append complete log lines like LogOutputFileWriter does.
   writeLogLine(line: string) {
     cy.readFile(FileNames.eepOutLog, 'latin1').then((oldLines) => {
       cy.log(oldLines);
-      cy.writeFile(FileNames.eepOutLog, oldLines + '\n' + line, 'latin1');
+      const prefix = oldLines.length > 0 && !oldLines.endsWith('\n') ? oldLines + '\n' : oldLines;
+      cy.writeFile(FileNames.eepOutLog, prefix + line + '\n', 'latin1');
       cy.wait(100); // Give the web server some time to read new log lines
     });
+  }
+
+  appendLogResetMarker() {
+    this.writeLogLine(resetMarker);
   }
 
   private writeNewEepEventFile(eventLines: string) {

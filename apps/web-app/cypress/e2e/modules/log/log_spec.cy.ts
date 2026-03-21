@@ -3,7 +3,11 @@ import EepSimulator from '../../../test-helpers/eep-simulator';
 const simulator = new EepSimulator();
 
 const getLogList = () => {
-  cy.get('#open-log').click();
+  cy.get('#open-log').then(($button) => {
+    if ($button.text().includes('Log anzeigen')) {
+      cy.wrap($button).click();
+    }
+  });
   return cy.get('ul');
 };
 
@@ -93,6 +97,26 @@ describe('Logger', () => {
         cy.get('#delete-log').click();
       });
       cy.readFile(simulator.fileNames.serverOutCommands, 'latin1').should('eq', 'clearlog\n');
+    });
+  });
+
+  describe('reset marker', () => {
+    it('clears the visible log when @@CE_LOG_RESET@@ is appended at runtime', () => {
+      simulator.writeLogLine('Before reset');
+      cy.visit('/');
+      cy.wait(500).then(() => {
+        getLogList().children().should('have.length', 1).first().contains('Before reset');
+      });
+
+      simulator.appendLogResetMarker();
+      cy.wait(500).then(() => {
+        getLogList().children().should('have.length', 0);
+      });
+
+      simulator.writeLogLine('After reset');
+      cy.wait(500).then(() => {
+        getLogList().children().should('have.length', 1).first().contains('After reset');
+      });
     });
   });
 });

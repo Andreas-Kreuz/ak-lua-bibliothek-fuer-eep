@@ -5,6 +5,7 @@ local os = require("os")
 
 local LogOutputFileWriter = {}
 local initialized = false
+local resetMarker = "@@CE_LOG_RESET@@"
 
 local originalAssert
 local originalError
@@ -14,27 +15,26 @@ local originalClearlog
 
 local function logFileName() return ExchangeDirRegistry.getExchangeDirectory() .. "/ak-eep-out.log" end
 
+local function appendRawLine(text)
+    local file = originalAssert(io.open(logFileName(), "a"))
+    file:write(text .. "\n")
+    file:close()
+end
+
 local function printToFile(...)
     if ... then
-        -- We open the file for every write, so EEP will not keep this file open all the time
-        local file = originalAssert(io.open(logFileName(), "a"))
         local time = ""
         if os.date then time = tostring(os.date("%X ")) end
         local text = "" .. time
         local args = { ... }
         for _, arg in ipairs(args) do text = text .. tostring(arg):gsub("\n", "\n       . ") end
-        file:write(text .. "\n")
-        file:close()
+        appendRawLine(text)
     end
 end
 
 local function deleteLogFile()
-    local fileName = logFileName()
-    local file = io.open(fileName, "w+")
-    originalAssert(file, fileName)
-    file:close()
-    file = originalAssert(io.open(fileName, "a"))
-    file:write("")
+    local file = io.open(logFileName(), "w+")
+    originalAssert(file, logFileName())
     file:close()
 end
 
@@ -69,7 +69,7 @@ function LogOutputFileWriter.initialize()
     end
 
     function clearlog()
-        deleteLogFile()
+        appendRawLine(resetMarker)
         originalClearlog()
     end
 

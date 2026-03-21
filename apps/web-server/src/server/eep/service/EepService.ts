@@ -1,5 +1,6 @@
 import { CacheService } from '../server-data/CacheService';
 import { FileNames } from './FileNames';
+import { LogFileMonitor } from './LogFileMonitor';
 import { ServerStatisticsService } from './ServerStatisticsService';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -11,18 +12,23 @@ import { Tail } from 'tail';
  */
 export default class EepService implements CacheService {
   private dir: string;
-  private lastLogFileSize: number;
   private jsonFileWatcher: fs.FSWatcher;
-  private logFileWatcher: fs.FSWatcher;
-  private logTail: Tail;
-  private logTailGeneration = 0;
+  private readonly logFileMonitor: LogFileMonitor;
   private eventTail: Tail;
   private onJsonUpdate: (jsonText: string, lastUpdate: number) => void;
   private logLineAppeared: (line: string) => void;
   private eventLineAppeared: (line: string) => void;
   private logWasCleared: () => void;
 
-  constructor(private debug = false) {}
+  constructor(private debug = false) {
+    this.logFileMonitor = new LogFileMonitor(
+      {
+        onCleared: () => this.logWasCleared(),
+        onLinesAppeared: (lines) => this.logLineAppeared(lines),
+      },
+      debug,
+    );
+  }
 
   reInit(dir: string, callback: (err: string, dir: string) => void): void {
     this.disconnectFromFiles();
@@ -54,12 +60,9 @@ export default class EepService implements CacheService {
       this.deleteFileIfExists(path.resolve(this.dir, FileNames.serverWatching));
     }
 
-    this.stopLogTail();
+    this.logFileMonitor.detach();
     if (this.eventTail) {
       this.eventTail.unwatch();
-    }
-    if (this.logFileWatcher) {
-      this.logFileWatcher.close();
     }
     if (this.jsonFileWatcher) {
       this.jsonFileWatcher.close();
@@ -172,107 +175,11 @@ export default class EepService implements CacheService {
   }
 
   private attachAkEepOutLogFile(): void {
-    const logFile = path.resolve(this.dir, FileNames.eepOutLog);
-    if (this.logFileWatcher) {
-      this.logFileWatcher.close();
-    }
-
-    this.logFileWatcher = fs.watch(path.dirname(logFile), {}, (_eventType: string, filename: string) => {
-      if (filename === path.basename(logFile)) {
-        this.syncLogTail(logFile);
-      }
-    });
-
-    this.syncLogTail(logFile);
+    this.logFileMonitor.attach(path.resolve(this.dir, FileNames.eepOutLog));
   }
 
   getCurrentLogLines = (): string => {
-    try {
-      if (this.debug) console.log('Read: ' + path.resolve(this.dir, FileNames.eepOutLog));
-      const raw = fs.readFileSync(path.resolve(this.dir, FileNames.eepOutLog), { encoding: 'latin1' });
-      return raw
-        .split('\n')
-        .filter((line) => line.trim().length > 0)
-        .join('\n');
-    } catch (e) {
-      console.log(e);
-    }
-    // tslint:disable-next-line: semicolon
-  };
-
-  private syncLogTail(logFile: string): void {
-    if (!fs.existsSync(logFile)) {
-      if (this.debug) console.log('[FILE] Wait for: ' + path.basename(logFile) + ' in ' + path.dirname(logFile));
-      this.stopLogTail();
-      this.lastLogFileSize = 0;
-      return;
-    }
-
-    if (this.logTail) {
-      return;
-    }
-
-    if (this.debug) console.log('[FILE] Found: ' + logFile);
-    this.startLogTail(logFile);
-  }
-
-  private startLogTail(logFile: string): void {
-    this.stopLogTail();
-
-    const generation = ++this.logTailGeneration;
-    const tail = new Tail(logFile, { encoding: 'latin1', fromBeginning: true });
-
-    tail.on('line', (line: string) => {
-      if (generation !== this.logTailGeneration) {
-        return;
-      }
-
-      let fileSizeInBytes = 0;
-      try {
-        fileSizeInBytes = fs.statSync(logFile)['size'];
-      } catch (error) {
-        if (this.debug) console.log(error);
-        this.restartLogTail(logFile);
-        return;
-      }
-
-      if (this.debug) console.log('NEW LINE 📄', line, ' Size: ', this.lastLogFileSize, ' / ', fileSizeInBytes);
-
-      if (this.lastLogFileSize && fileSizeInBytes < this.lastLogFileSize) {
-        if (this.debug) console.log('🟦 Log file is smaller than before');
-        this.logWasCleared();
-        this.restartLogTail(logFile);
-        return;
-      }
-
-      this.lastLogFileSize = fileSizeInBytes;
-      this.logLineAppeared(line);
-    });
-
-    tail.on('error', (error: string) => {
-      if (generation !== this.logTailGeneration) {
-        return;
-      }
-
-      if (this.debug) console.log(error);
-      this.restartLogTail(logFile);
-    });
-
-    this.logTail = tail;
-  }
-
-  private restartLogTail(logFile: string): void {
-    this.stopLogTail();
-    this.lastLogFileSize = 0;
-    setTimeout(() => this.syncLogTail(logFile), 150);
-  }
-
-  private stopLogTail(): void {
-    if (this.logTail) {
-      this.logTailGeneration++;
-      this.logTail.unwatch();
-      this.logTail = null;
-    }
+    return this.logFileMonitor.readCurrentLogLines();
   }
 
   public createAkServerFile() {
