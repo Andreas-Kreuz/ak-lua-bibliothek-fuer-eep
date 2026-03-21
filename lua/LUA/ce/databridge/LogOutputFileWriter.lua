@@ -13,10 +13,10 @@ local originalPrint
 local originalWarn
 local originalClearlog
 
-local function logFileName() return ExchangeDirRegistry.getExchangeDirectory() .. "/ak-eep-out.log" end
+local function logFromCeFileName() return ExchangeDirRegistry.getExchangeDirectory() .. "/log-from-ce" end
 
 local function appendRawLine(text)
-    local file = originalAssert(io.open(logFileName(), "a"))
+    local file = originalAssert(io.open(logFromCeFileName(), "a"))
     file:write(text .. "\n")
     file:close()
 end
@@ -33,8 +33,8 @@ local function printToFile(...)
 end
 
 local function deleteLogFile()
-    local file = io.open(logFileName(), "w+")
-    originalAssert(file, logFileName())
+    local file = io.open(logFromCeFileName(), "w+")
+    originalAssert(file, logFromCeFileName())
     file:close()
 end
 

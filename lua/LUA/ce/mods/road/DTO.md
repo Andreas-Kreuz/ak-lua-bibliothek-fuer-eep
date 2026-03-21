@@ -15,7 +15,7 @@ Wichtige Vorbemerkungen:
 
 - Primärquellen sind `TrafficLightModelStatePublisher.lua`, `RoadStatePublisher.lua` und die von ihnen verwendeten Modelle.
 - Beide Collector erzeugen ihre Nutzdaten fachlich über `DataChangeBus.fireListChange(...)`. `syncState()` liefert aktuell selbst nur leere Tabellen zurück.
-- Der Lua-Collector sendet Listen. Der Web-Server normalisiert diese Listen danach zu Objekt-Mappings nach `keyId` und speichert sie so in `lua/LUA/ce/databridge/exchange/ak-eep-web-server-state.json`.
+- Der Lua-Collector sendet Listen. Der Web-Server normalisiert diese Listen danach zu Objekt-Mappings nach `keyId` und speichert sie so in `lua/LUA/ce/databridge/exchange/server-state.json`.
 
 ## `TrafficLightModelStatePublisher`
 
@@ -159,7 +159,7 @@ Alle derzeit verfügbaren `IntersectionSettings` sind boolesche Anzeigeeinstellu
 
 1. `TrafficLightModelStatePublisher` und `RoadStatePublisher` rufen `DataChangeBus.fireListChange(room, keyId, list)` auf.
 2. `ServerEventBuffer` puffert daraus JSON-Zeilen-Events im Speicher.
-3. `ServerExchangeCoordinator.runServerExchangeCycle(...)` schreibt diese Events über `ServerExchangeFileIo.writeOutgoingEvents(...)` in den Austauschkanal; der persistierte State liegt in `lua/LUA/ce/databridge/exchange/ak-eep-web-server-state.json`.
+3. `ServerExchangeCoordinator.runServerExchangeCycle(...)` schreibt diese Events über `ServerExchangeFileIo.writeOutgoingEvents(...)` in den Austauschkanal; der persistierte State liegt in `lua/LUA/ce/databridge/exchange/server-state.json`.
 4. `apps/web-server/src/server/eep/server-data/EepDataStore.ts` normalisiert `ListChanged` zu `rooms[roomName][element[keyId]] = element`.
 5. `apps/web-server/src/server/eep/server-data/static/ServerData.ts` serialisiert diese Objekt-Mappings für REST und Socket-API.
 6. Die Web-App hört mit `useApiDataRoomHandler(...)` auf den API-Datenräumen und macht daraus per `Object.values(JSON.parse(payload))` wieder Listen.
@@ -183,7 +183,7 @@ Hinweis: Im Auftrag wird `apps/web-app/src/intersections` genannt. Im aktuellen 
 - `road-intersection-switchings.intersectionId` ist ein Kreuzungsname (`string`), während `road-intersection-lanes.intersectionId` und `road-intersection-traffic-lights.intersectionId` numerische IDs sind.
 - `road-intersection-traffic-lights.lightStructures` wird als Objekt mit String-Indizes serialisiert, nicht als JSON-Array.
 - Mehrere Felder in `road-intersections` sind optional, weil Lua-`nil`-Felder beim JSON-Export nicht erscheinen.
-- Der aktuelle Snapshot in `ak-eep-web-server-state.json` enthält bereits alle sechs Road-Räume.
+- Der aktuelle Snapshot in `server-state.json` enthält bereits alle sechs Road-Räume.
 - Der Web-Server-Reducer merged `ListChanged` aktuell in vorhandene Raumobjekte hinein. Für die Road-Räume ist das nur dann exakt, wenn Schlüssel nicht verschwinden oder vorher ein `CompleteReset` erfolgt.
 
 ## Events in `ce/mods/road`

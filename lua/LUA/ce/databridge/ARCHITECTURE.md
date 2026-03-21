@@ -73,7 +73,7 @@ Dieses Modul ist bewusst infrastrukturell. Es kennt keine Json-Collector und kei
 
 ### [IncomingCommandExecutor.lua](./IncomingCommandExecutor.lua)
 
-Damit EEP auch auf Eingaben reagieren kann, ist es möglich über den EEP-Web-Server Remote-Kommandos zu hinterlegen. Diese schreibt der EEP-Web-Server in die Datei `ak-eep-in.commands`. IncomingCommandExecutor nimmt die Kommandos aus dieser Datei und führt sie aus, wenn sie erlaubt sind.
+Damit EEP auch auf Eingaben reagieren kann, ist es möglich über den EEP-Web-Server Remote-Kommandos zu hinterlegen. Diese schreibt der EEP-Web-Server in die Datei `commands-to-ce`. IncomingCommandExecutor nimmt die Kommandos aus dieser Datei und führt sie aus, wenn sie erlaubt sind.
 
 Verantwortlichkeiten:
 
@@ -122,11 +122,11 @@ Der reguläre Ablauf pro Kommunikationszyklus ist:
 
 Die zentrale Infrastruktur basiert auf Dateisignalen im Austauschordner:
 
-- `ak-server.iswatching`: Server ist aktiv
-- `ak-eep-out-json.isfinished`: EEP hat geschrieben, Server hat noch nicht bestätigt
-- `ak-eep-in.commands`: Eingabekanal für Kommandos, wird vom Server geschrieben
-- `ak-eep-out.json`: Exportkanal für Daten als Eventzeilen
-- `ak-eep-out.log`: Spiegelung von `print`, `warn`, `error`
+- `commands-to-ce`: Eingabekanal für Kommandos, wird vom Server geschrieben
+- `events-from-ce.pending`: EEP hat geschrieben und wartet auf den Server zur Bearbeitung
+- `events-from-ce`: Exportkanal für Daten als Eventzeilen
+- `log-from-ce`: Spiegelung von `print`, `warn`, `error`
+- `server-is-running`: Server ist aktiv
 
 Wichtig: Das aktuelle Paket behandelt die Ausgabedatei als generischen Textkanal. Der `ServerExchangeCoordinator` übergibt den Rückgabewert von `ServerEventBuffer.drainBufferedEvents()` direkt an `ServerExchangeFileIo.writeOutgoingEvents(...)`. Änderungen an Format oder Dateiverwendung müssen deshalb Ende-zu-Ende betrachtet werden.
 
@@ -139,7 +139,6 @@ Wichtig: Das aktuelle Paket behandelt die Ausgabedatei als generischen Textkanal
 - das Debug-Flag des Moduls
 - die Option `checkServerStatus` für den Readiness-Check
 - einen zyklischen Zähler zur Steuerung des Exportintervalls
-
 
 `IncomingCommandExecutor` hält:
 
@@ -168,7 +167,7 @@ Das Paket nutzt keine `StorageUtility`-Persistenz. Sein Zustand ist absichtlich 
 - Alle StatePublisher müssen `name`, `initialize()` und `syncState()` besitzen; validiert wird das im `StatePublisherRegistry`.
 - Remote-Kommandos dürfen nur über `allowedCommands` laufen.
 - `ServerExchangeFileIo` muss `print` und `clearlog` erst überschreiben und danach als Remote-Funktionen registrieren.
-- Das Dateihandshake über `ak-server.iswatching` und `ak-eep-out-json.isfinished` darf nicht still geändert werden; Web-Server und Lua-Seite müssen dasselbe Protokoll sprechen.
+- Das Dateihandshake über `server-is-running` und `events-from-ce.pending` darf nicht still geändert werden; Web-Server und Lua-Seite müssen dasselbe Protokoll sprechen.
 - `ce/databridge` ist ein Infrastrukturpaket; Fachmodule sollten hier keine domainspezifische Logik einbauen.
 
 ## Typische Änderungsrisiken

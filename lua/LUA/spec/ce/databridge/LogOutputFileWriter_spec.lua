@@ -52,19 +52,19 @@ insulate("ce.databridge.LogOutputFileWriter", function()
         installSimpleGlobals()
         os.date = function() return "" end
         io.open = function(name, mode)
-            if name ~= "../LUA/ce/databridge/exchange/ak-eep-version.txt" and
-               name ~= "exchange-dir/ak-eep-version.txt" and
-               name ~= "exchange-dir/ak-eep-out.log" then
+            if name ~= "../LUA/ce/databridge/exchange/ce-version.txt" and
+               name ~= "exchange-dir/ce-version.txt" and
+               name ~= "exchange-dir/log-from-ce" then
                 return originalIoOpen(name, mode)
             end
 
-            if name == "exchange-dir/ak-eep-out.log" then
+            if name == "exchange-dir/log-from-ce" then
                 table.insert(logOpenModes, mode)
             end
 
             return {
                 write = function(_, content)
-                    if name == "exchange-dir/ak-eep-out.log" then table.insert(logWrites, content) end
+                    if name == "exchange-dir/log-from-ce" then table.insert(logWrites, content) end
                 end,
                 flush = function() end,
                 close = function() end
@@ -92,9 +92,9 @@ insulate("ce.databridge.LogOutputFileWriter", function()
 
         installSimpleGlobals()
         io.open = function(name, mode)
-            if name ~= "../LUA/ce/databridge/exchange/ak-eep-version.txt" and
-               name ~= "exchange-dir/ak-eep-version.txt" and
-               name ~= "exchange-dir/ak-eep-out.log" then
+            if name ~= "../LUA/ce/databridge/exchange/ce-version.txt" and
+               name ~= "exchange-dir/ce-version.txt" and
+               name ~= "exchange-dir/log-from-ce" then
                 return originalIoOpen(name, mode)
             end
 
@@ -116,7 +116,7 @@ insulate("ce.databridge.LogOutputFileWriter", function()
 
         originalAssert.is_true(#openCalls >= 2)
         for _, openCall in ipairs(openCalls) do
-            originalAssert.same({name = "exchange-dir/ak-eep-out.log", mode = "a"}, openCall)
+            originalAssert.same({name = "exchange-dir/log-from-ce", mode = "a"}, openCall)
         end
         originalAssert.is_false(ok)
         originalAssert.is_not_nil(string.find(err, "boom", 1, true))

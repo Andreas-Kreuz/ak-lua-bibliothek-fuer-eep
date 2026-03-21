@@ -4,8 +4,8 @@ local IncomingCommandExecutor = require("ce.databridge.IncomingCommandExecutor")
 
 local IncomingCommandFileReader = {}
 
-local inFileCommands
-local inFileNameCommands
+local commandsToCeFile
+local commandsToCeFileName
 
 local function writeFile(fileName, content)
     local file = io.open(fileName, "w")
@@ -16,21 +16,21 @@ local function writeFile(fileName, content)
 end
 
 local function prepareCommandFile()
-    local nextInFileNameCommands = ExchangeDirRegistry.getExchangeDirectory() .. "/ak-eep-in.commands"
+    local nextCommandsToCeFileName = ExchangeDirRegistry.getExchangeDirectory() .. "/commands-to-ce"
 
-    if inFileCommands and inFileNameCommands == nextInFileNameCommands then return inFileCommands end
+    if commandsToCeFile and commandsToCeFileName == nextCommandsToCeFileName then return commandsToCeFile end
 
-    if inFileCommands then pcall(function() inFileCommands:close() end) end
-    writeFile(nextInFileNameCommands, "")
-    inFileCommands = io.open(nextInFileNameCommands, "r")
-    assert(inFileCommands, nextInFileNameCommands)
-    inFileNameCommands = nextInFileNameCommands
-    return inFileCommands
+    if commandsToCeFile then pcall(function() commandsToCeFile:close() end) end
+    writeFile(nextCommandsToCeFileName, "")
+    commandsToCeFile = io.open(nextCommandsToCeFileName, "r")
+    assert(commandsToCeFile, nextCommandsToCeFileName)
+    commandsToCeFileName = nextCommandsToCeFileName
+    return commandsToCeFile
 end
 
 function IncomingCommandFileReader.readAndExecuteIncomingCommands()
     local commandFile = prepareCommandFile()
-    local commands = commandFile:read("*all") -- file: ak-eep-in.commands
+    local commands = commandFile:read("*all") -- file: commands-to-ce
     if commands and commands ~= "" then IncomingCommandExecutor.executeIncomingCommands(commands) end
 end
 

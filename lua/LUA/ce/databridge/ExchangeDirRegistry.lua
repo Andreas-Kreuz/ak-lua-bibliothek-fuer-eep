@@ -5,9 +5,9 @@ if AkDebugLoad then print("[#Start] Loading ce.databridge.ExchangeDirRegistry ..
 ---@param dir string
 ---@return boolean
 local function dirExists(dir)
-    local fileName = dir .. "/" .. "ak-eep-version.txt"
-    local file = io.open(fileName, "w")
-    assert(file, fileName)
+    local ceVersionFileName = dir .. "/" .. "ce-version.txt"
+    local file = io.open(ceVersionFileName, "w")
+    assert(file, ceVersionFileName)
     file:write(string.format("%.1f", EEPVer))
     file:flush()
     file:close()
@@ -25,7 +25,7 @@ end
 --- Ermittelt das Default-Austauschverzeichnis.
 ---@return string
 local function resolveDefaultExchangeDirectory()
-    return existingDirOf({"../LUA/ce/databridge/exchange", "./LUA/ce/databridge/exchange"}) or "."
+    return existingDirOf({ "../LUA/ce/databridge/exchange", "./LUA/ce/databridge/exchange" }) or "."
 end
 
 local ExchangeDirRegistry = {}

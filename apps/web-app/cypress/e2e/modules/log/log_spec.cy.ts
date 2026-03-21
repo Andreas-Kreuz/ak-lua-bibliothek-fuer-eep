@@ -28,7 +28,7 @@ describe('Logger', () => {
   it('has no initial log', () => {
     cy.visit('/');
     cy.wait(500).then(() => {
-      cy.readFile(simulator.fileNames.eepOutLog).then((a) => cy.log(a));
+      cy.readFile(simulator.fileNames.logFromCe).then((a) => cy.log(a));
       getLogList().children().should('have.length', 0);
     });
   });
@@ -38,7 +38,7 @@ describe('Logger', () => {
       simulator.writeLogLine('Let us test something');
       cy.visit('/');
       cy.wait(500).then(() => {
-        cy.readFile(simulator.fileNames.eepOutLog).then((a) => cy.log(a));
+        cy.readFile(simulator.fileNames.logFromCe).then((a) => cy.log(a));
         getLogList().children().should('have.length', 1).first().contains('Let us test something');
       });
     });
@@ -47,7 +47,7 @@ describe('Logger', () => {
       simulator.writeLogLine('Äpfel, Überschuss, ÖPNV');
       cy.visit('/');
       cy.wait(500).then(() => {
-        cy.readFile(simulator.fileNames.eepOutLog).then((a) => cy.log(a));
+        cy.readFile(simulator.fileNames.logFromCe).then((a) => cy.log(a));
         getLogList().children().should('have.length', 1).first().contains('Äpfel, Überschuss, ÖPNV');
       });
     });
@@ -56,7 +56,7 @@ describe('Logger', () => {
       simulator.writeLogLine('Line 1\nLine 2\nLine 3');
       cy.visit('/');
       cy.wait(500).then(() => {
-        cy.readFile(simulator.fileNames.eepOutLog).then((a) => cy.log(a));
+        cy.readFile(simulator.fileNames.logFromCe).then((a) => cy.log(a));
         getLogList()
           .children()
           .should('have.length', 3)
@@ -73,7 +73,7 @@ describe('Logger', () => {
       simulator.writeLogLine('Line 1\nLine 2\nLine 3\nLine 4');
       cy.visit('/');
       cy.wait(500).then(() => {
-        cy.readFile(simulator.fileNames.eepOutLog).then((a) => cy.log(a));
+        cy.readFile(simulator.fileNames.logFromCe).then((a) => cy.log(a));
         getLogList()
           .children()
           .should('have.length', 4)
@@ -90,13 +90,13 @@ describe('Logger', () => {
   });
   describe('action', () => {
     it('"Reset Button" sends "clearlog" command to EEP', () => {
-      cy.writeFile(simulator.fileNames.serverOutCommands, '');
+      cy.writeFile(simulator.fileNames.commandsToCe, '');
       cy.visit('/');
       cy.wait(500).then(() => {
         cy.get('#open-log').click();
         cy.get('#delete-log').click();
       });
-      cy.readFile(simulator.fileNames.serverOutCommands, 'latin1').should('eq', 'clearlog\n');
+      cy.readFile(simulator.fileNames.commandsToCe, 'latin1').should('eq', 'clearlog\n');
     });
   });
 

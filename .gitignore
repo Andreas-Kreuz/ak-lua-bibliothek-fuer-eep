@@ -25,8 +25,21 @@ __pycache__
 
 # @ak/web-app
 /apps/web-app/VERSION
-/apps/web-app/cypress/io-empty/LUA/ce/databridge/exchange/ak*
+/apps/web-app/cypress/io-empty/LUA/ce/databridge/exchange/ce-*
+/apps/web-app/cypress/io-empty/LUA/ce/databridge/exchange/events-from-ce
+/apps/web-app/cypress/io-empty/LUA/ce/databridge/exchange/events-from-ce.pending
+/apps/web-app/cypress/io-empty/LUA/ce/databridge/exchange/log-from-ce
+/apps/web-app/cypress/io-empty/LUA/ce/databridge/exchange/commands-to-ce
+/apps/web-app/cypress/io-empty/LUA/ce/databridge/exchange/server-is-running
+/apps/web-app/cypress/io-empty/LUA/ce/databridge/exchange/server-state.*
 /apps/web-app/cypress/io/LUA/ce/databridge/exchange/ak*
+/apps/web-app/cypress/io/LUA/ce/databridge/exchange/ce-*
+/apps/web-app/cypress/io/LUA/ce/databridge/exchange/events-from-ce
+/apps/web-app/cypress/io/LUA/ce/databridge/exchange/events-from-ce.pending
+/apps/web-app/cypress/io/LUA/ce/databridge/exchange/log-from-ce
+/apps/web-app/cypress/io/LUA/ce/databridge/exchange/commands-to-ce
+/apps/web-app/cypress/io/LUA/ce/databridge/exchange/server-is-running
+/apps/web-app/cypress/io/LUA/ce/databridge/exchange/server-state.*
 /apps/web-app/cypress/io/ak*
 /apps/web-app/cypress/screenshots
 /apps/web-app/cypress/videos
@@ -39,9 +52,21 @@ __pycache__
 /apps/web-shared/resources/public
 
 # compiled output
-/web-app/cypress/io/ak*
-/web-app/cypress/io/LUA/ce/databridge/exchange/ak*
+/web-app/cypress/io/LUA/ce/databridge/exchange/ce-*
+/web-app/cypress/io/LUA/ce/databridge/exchange/events-from-ce
+/web-app/cypress/io/LUA/ce/databridge/exchange/events-from-ce.pending
+/web-app/cypress/io/LUA/ce/databridge/exchange/log-from-ce
+/web-app/cypress/io/LUA/ce/databridge/exchange/commands-to-ce
+/web-app/cypress/io/LUA/ce/databridge/exchange/server-is-running
+/web-app/cypress/io/LUA/ce/databridge/exchange/server-state.*
 /web-app/cypress/io-empty/LUA/ce/databridge/exchange/ak*
+/web-app/cypress/io-empty/LUA/ce/databridge/exchange/ce-*
+/web-app/cypress/io-empty/LUA/ce/databridge/exchange/events-from-ce
+/web-app/cypress/io-empty/LUA/ce/databridge/exchange/events-from-ce.pending
+/web-app/cypress/io-empty/LUA/ce/databridge/exchange/log-from-ce
+/web-app/cypress/io-empty/LUA/ce/databridge/exchange/commands-to-ce
+/web-app/cypress/io-empty/LUA/ce/databridge/exchange/server-is-running
+/web-app/cypress/io-empty/LUA/ce/databridge/exchange/server-state.*
 /web-app/cypress/videos
 /web-app/cypress/screenshots
 /web-app/dist
@@ -76,7 +101,14 @@ __pycache__
 /lua/LUA/StorageUtilityValues.txt
 /lua/LUA/ce/anlagen
 /lua/LUA/ce/VERSION
-/lua/LUA/ce/databridge/exchange/ak*
+/lua/LUA/ce/databridge/exchange/ce-*
+/lua/LUA/ce/databridge/exchange/events-from-ce
+/lua/LUA/ce/databridge/exchange/events-from-ce.pending
+/lua/LUA/ce/databridge/exchange/log-from-ce
+/lua/LUA/ce/databridge/exchange/commands-to-ce
+/lua/LUA/ce/databridge/exchange/ce-version.txt
+/lua/LUA/ce/databridge/exchange/server-is-running
+/lua/LUA/ce/databridge/exchange/server-state.*
 /lua/LUA/comm_*
 /lua/modell-pakete
 

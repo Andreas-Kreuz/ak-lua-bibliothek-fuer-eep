@@ -23,16 +23,16 @@ insulate("ce.databridge.ServerExchangeFileIo", function()
 
         io.close = function() end
         io.open = function(name, mode)
-            if name ~= "../LUA/ce/databridge/exchange/ak-eep-version.txt" and
-               name ~= "custom-dir/ak-eep-version.txt" and
-               name ~= "custom-dir/ak-server.iswatching" and
-               name ~= "custom-dir/ak-eep-out-json.isfinished" then
+            if name ~= "../LUA/ce/databridge/exchange/ce-version.txt" and
+               name ~= "custom-dir/ce-version.txt" and
+               name ~= "custom-dir/server-is-running" and
+               name ~= "custom-dir/events-from-ce.pending" then
                 return originalIoOpen(name, mode)
             end
 
             table.insert(openCalls, {name = name, mode = mode})
             if mode == "r" then
-                if name == "custom-dir/ak-server.iswatching" then return {close = function() end} end
+                if name == "custom-dir/server-is-running" then return {close = function() end} end
                 return nil
             end
             return {write = function() end, flush = function() end, close = function() end}
@@ -46,9 +46,9 @@ insulate("ce.databridge.ServerExchangeFileIo", function()
 
         assert.is_true(ServerExchangeFileIo.isServerReady())
         assert.same({
-            {name = "custom-dir/ak-eep-version.txt", mode = "w"},
-            {name = "custom-dir/ak-server.iswatching", mode = "r"},
-            {name = "custom-dir/ak-eep-out-json.isfinished", mode = "r"}
+            {name = "custom-dir/ce-version.txt", mode = "w"},
+            {name = "custom-dir/server-is-running", mode = "r"},
+            {name = "custom-dir/events-from-ce.pending", mode = "r"}
         }, openCalls)
     end)
 
@@ -58,17 +58,17 @@ insulate("ce.databridge.ServerExchangeFileIo", function()
 
         io.close = function() end
         io.open = function(name, mode)
-            if name ~= "../LUA/ce/databridge/exchange/ak-eep-version.txt" and
-               name ~= "custom-dir/ak-eep-version.txt" and
-               name ~= "custom-dir/ak-eep-out.json" and
-               name ~= "custom-dir/ak-server.iswatching" and
-               name ~= "custom-dir/ak-eep-out-json.isfinished" then
+            if name ~= "../LUA/ce/databridge/exchange/ce-version.txt" and
+               name ~= "custom-dir/ce-version.txt" and
+               name ~= "custom-dir/events-from-ce" and
+               name ~= "custom-dir/server-is-running" and
+               name ~= "custom-dir/events-from-ce.pending" then
                 return originalIoOpen(name, mode)
             end
 
             table.insert(openCalls, {name = name, mode = mode})
             if mode == "r" then
-                if name == "custom-dir/ak-server.iswatching" then return {close = function() end} end
+                if name == "custom-dir/server-is-running" then return {close = function() end} end
                 return nil
             end
             return {
@@ -86,12 +86,12 @@ insulate("ce.databridge.ServerExchangeFileIo", function()
         ServerExchangeFileIo.writeOutgoingEvents("{\"kind\":\"event\"}")
 
         assert.same({
-            {name = "custom-dir/ak-eep-version.txt", mode = "w"}, {name = "custom-dir/ak-eep-out.json", mode = "w"},
-            {name = "custom-dir/ak-server.iswatching", mode = "r"},
-            {name = "custom-dir/ak-eep-out-json.isfinished", mode = "w"}
+            {name = "custom-dir/ce-version.txt", mode = "w"}, {name = "custom-dir/events-from-ce", mode = "w"},
+            {name = "custom-dir/server-is-running", mode = "r"},
+            {name = "custom-dir/events-from-ce.pending", mode = "w"}
         }, openCalls)
-        assert.equals("{\"kind\":\"event\"}\n", writtenFiles["custom-dir/ak-eep-out.json"])
-        assert.equals("", writtenFiles["custom-dir/ak-eep-out-json.isfinished"])
-        assert.equals("custom-dir/ak-eep-web-server-state.counter", ServerExchangeFileIo.inFileNameEventCounter)
+        assert.equals("{\"kind\":\"event\"}\n", writtenFiles["custom-dir/events-from-ce"])
+        assert.equals("", writtenFiles["custom-dir/events-from-ce.pending"])
+        assert.equals("custom-dir/server-state.counter", ServerExchangeFileIo.serverStateCounterFileName)
     end)
 end)

@@ -18,8 +18,8 @@ insulate("ce.databridge.FunctionNameWriter", function()
         local writtenContent
 
         io.open = function(name, mode)
-            if name ~= "../LUA/ce/databridge/exchange/ak-eep-version.txt" and
-               name ~= "exchange-dir/ak-eep-version.txt" and
+            if name ~= "../LUA/ce/databridge/exchange/ce-version.txt" and
+               name ~= "exchange-dir/ce-version.txt" and
                name ~= "exchange-dir/ak-runtime-functions.txt" then
                 return originalIoOpen(name, mode)
             end
@@ -46,7 +46,7 @@ insulate("ce.databridge.FunctionNameWriter", function()
         writtenContent = "\n" .. writtenContent
 
         assert.same({
-            {name = "exchange-dir/ak-eep-version.txt", mode = "w"},
+            {name = "exchange-dir/ce-version.txt", mode = "w"},
             {name = "exchange-dir/ak-runtime-functions.txt", mode = "w"}
         }, openCalls)
         assert.is_not_nil(string.find(writtenContent, "\nEEPVer\n", 1, true))

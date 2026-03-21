@@ -5,7 +5,7 @@ import * as path from 'node:path';
 import { setTimeout as delay } from 'node:timers/promises';
 import { LogFileMonitor } from './LogFileMonitor';
 
-const logFileName = 'ak-eep-out.log';
+const logFileName = 'log-from-ce';
 const resetMarker = '@@CE_LOG_RESET@@';
 
 async function waitFor(check: () => void, timeoutMs = 2000): Promise<void> {

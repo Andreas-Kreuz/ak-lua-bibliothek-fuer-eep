@@ -40,7 +40,7 @@ date: 2017-09-08
 
 3. **Einrichtung in Lua prüfen**
 
-   Prüfe in der EEP-Installation, ob die Datei `LUA\ce\databridge\exchange\ak-eep-out.json` geschrieben wird.
+   Prüfe in der EEP-Installation, ob die Datei `LUA\ce\databridge\exchange\events-from-ce` geschrieben wird.
 
    _Hinweis_: Diese Datei wird angelegt wenn die Anlage im 3D-Modus läuft.
 

@@ -16,13 +16,13 @@ insulate("ce.databridge.ExchangeDirRegistry", function()
         local openCalls = {}
 
         io.open = function(name, mode)
-            if name ~= "../LUA/ce/databridge/exchange/ak-eep-version.txt" and
-               name ~= "./LUA/ce/databridge/exchange/ak-eep-version.txt" then
+            if name ~= "../LUA/ce/databridge/exchange/ce-version.txt" and
+               name ~= "./LUA/ce/databridge/exchange/ce-version.txt" then
                 return originalIoOpen(name, mode)
             end
 
             table.insert(openCalls, {name = name, mode = mode})
-            if name == "../LUA/ce/databridge/exchange/ak-eep-version.txt" then return nil end
+            if name == "../LUA/ce/databridge/exchange/ce-version.txt" then return nil end
             return {write = function() end, flush = function() end, close = function() end}
         end
 
@@ -31,10 +31,10 @@ insulate("ce.databridge.ExchangeDirRegistry", function()
         assert.equals("./LUA/ce/databridge/exchange", ExchangeDirRegistry.getExchangeDirectory())
         assert.equals("./LUA/ce/databridge/exchange", ExchangeDirRegistry.resolveDefaultExchangeDirectory())
         assert.same({
-            {name = "../LUA/ce/databridge/exchange/ak-eep-version.txt", mode = "w"},
-            {name = "./LUA/ce/databridge/exchange/ak-eep-version.txt", mode = "w"},
-            {name = "../LUA/ce/databridge/exchange/ak-eep-version.txt", mode = "w"},
-            {name = "./LUA/ce/databridge/exchange/ak-eep-version.txt", mode = "w"}
+            {name = "../LUA/ce/databridge/exchange/ce-version.txt", mode = "w"},
+            {name = "./LUA/ce/databridge/exchange/ce-version.txt", mode = "w"},
+            {name = "../LUA/ce/databridge/exchange/ce-version.txt", mode = "w"},
+            {name = "./LUA/ce/databridge/exchange/ce-version.txt", mode = "w"}
         }, openCalls)
     end)
 
@@ -42,9 +42,9 @@ insulate("ce.databridge.ExchangeDirRegistry", function()
         local openCalls = {}
 
         io.open = function(name, mode)
-            if name ~= "../LUA/ce/databridge/exchange/ak-eep-version.txt" and
-               name ~= "./LUA/ce/databridge/exchange/ak-eep-version.txt" and
-               name ~= "exchange-dir/ak-eep-version.txt" then
+            if name ~= "../LUA/ce/databridge/exchange/ce-version.txt" and
+               name ~= "./LUA/ce/databridge/exchange/ce-version.txt" and
+               name ~= "exchange-dir/ce-version.txt" then
                 return originalIoOpen(name, mode)
             end
 
@@ -57,6 +57,6 @@ insulate("ce.databridge.ExchangeDirRegistry", function()
         openCalls = {}
         assert.equals("exchange-dir", ExchangeDirRegistry.setExchangeDirectory("exchange-dir"))
         assert.equals("exchange-dir", ExchangeDirRegistry.getExchangeDirectory())
-        assert.same({{name = "exchange-dir/ak-eep-version.txt", mode = "w"}}, openCalls)
+        assert.same({{name = "exchange-dir/ce-version.txt", mode = "w"}}, openCalls)
     end)
 end)

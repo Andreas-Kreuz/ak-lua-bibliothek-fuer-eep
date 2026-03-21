@@ -21,8 +21,8 @@ insulate("ce.databridge.DataStoreFileWriter", function()
         local openCalls = {}
 
         io.open = function(name, mode)
-            if name ~= "../LUA/ce/databridge/exchange/ak-eep-version.txt" and
-               name ~= "exchange-dir/ak-eep-version.txt" and
+            if name ~= "../LUA/ce/databridge/exchange/ce-version.txt" and
+               name ~= "exchange-dir/ce-version.txt" and
                name ~= "exchange-dir/ak-eep-lib-store.json" then
                 return originalIoOpen(name, mode)
             end
@@ -61,8 +61,8 @@ insulate("ce.databridge.DataStoreFileWriter", function()
         local returnedContent = DataStoreFileWriter.write()
 
         assert.same({
-            {name = "../LUA/ce/databridge/exchange/ak-eep-version.txt", mode = "w"},
-            {name = "exchange-dir/ak-eep-version.txt", mode = "w"},
+            {name = "../LUA/ce/databridge/exchange/ce-version.txt", mode = "w"},
+            {name = "exchange-dir/ce-version.txt", mode = "w"},
             {name = "exchange-dir/ak-eep-lib-store.json", mode = "w"}
         }, openCalls)
         assert.equals(writtenContent, returnedContent)

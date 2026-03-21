@@ -49,15 +49,15 @@ export default class EepService implements CacheService {
   }
 
   private connectToFiles(): void {
-    this.attachAkEepOutJsonFile();
-    this.attachAkEepOutLogFile();
-    this.createAkServerFile();
+    this.attachEventsFromCeFile();
+    this.attachLogFromCeFile();
+    this.createServerIsRunningFile();
     this.deleteFileOnExit(FileNames.serverEventCounter);
   }
 
   private disconnectFromFiles(): void {
     if (this.dir) {
-      this.deleteFileIfExists(path.resolve(this.dir, FileNames.serverWatching));
+      this.deleteFileIfExists(path.resolve(this.dir, FileNames.serverIsRunning));
     }
 
     this.logFileMonitor.detach();
@@ -125,9 +125,9 @@ export default class EepService implements CacheService {
     }
   }
 
-  private attachAkEepOutJsonFile(): void {
-    const jsonFile = path.resolve(this.dir, FileNames.eepOutJsonOut);
-    const jsonReadyFile = path.resolve(this.dir, FileNames.eepOutJsonOutFinished);
+  private attachEventsFromCeFile(): void {
+    const jsonFile = path.resolve(this.dir, FileNames.eventsFromCe);
+    const jsonReadyFile = path.resolve(this.dir, FileNames.eventsFromCePending);
 
     // First start: Read the JSON file - ignore if EEP is ready
     if (!this.jsonFileWatcher) {
@@ -141,7 +141,7 @@ export default class EepService implements CacheService {
     // Watch in the directory, if the file is recreated
     this.jsonFileWatcher = fs.watch(this.dir, {}, (eventType: string, filename: string) => {
       // If the jsonReadyFile exists: Read the data and remove the file
-      if (filename === FileNames.eepOutJsonOutFinished && fs.existsSync(jsonReadyFile)) {
+      if (filename === FileNames.eventsFromCePending && fs.existsSync(jsonReadyFile)) {
         // console.log('Reading: ', jsonFile);
         this.readJsonFile(jsonFile, jsonReadyFile);
       }
@@ -174,19 +174,19 @@ export default class EepService implements CacheService {
     }
   }
 
-  private attachAkEepOutLogFile(): void {
-    this.logFileMonitor.attach(path.resolve(this.dir, FileNames.eepOutLog));
+  private attachLogFromCeFile(): void {
+    this.logFileMonitor.attach(path.resolve(this.dir, FileNames.logFromCe));
   }
 
   getCurrentLogLines = (): string => {
     return this.logFileMonitor.readCurrentLogLines();
   }
 
-  public createAkServerFile() {
-    const watchFile = path.resolve(this.dir, FileNames.serverWatching);
-    // Create the serverWatchingFile
+  public createServerIsRunningFile() {
+    const watchFile = path.resolve(this.dir, FileNames.serverIsRunning);
+    // Create the server-is-running marker file
     fs.closeSync(fs.openSync(watchFile, 'w'));
-    this.deleteFileOnExit(FileNames.serverWatching);
+    this.deleteFileOnExit(FileNames.serverIsRunning);
   }
 
   private deleteFileOnExit(fileName: string) {
@@ -219,7 +219,7 @@ export default class EepService implements CacheService {
   }
 
   queueCommand = (command: string) => {
-    const file = path.resolve(this.dir, FileNames.serverOutCommands);
+    const file = path.resolve(this.dir, FileNames.commandsToCe);
     try {
       if (this.debug) console.log('Queuing: ' + command);
       fs.appendFileSync(file, command + '\n', { encoding: 'latin1' });

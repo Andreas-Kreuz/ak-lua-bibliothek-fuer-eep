@@ -28,8 +28,11 @@ local serverWasReadyLastTime = true
 local serverWasListeningLastTime = true
 --- Pruefe Status des Web Servers.
 function ServerExchangeFileIo.isServerReady()
-    if fileExists(ExchangeDirRegistry.getExchangeDirectory() .. "/ak-server.iswatching") then
-        if fileExists(ExchangeDirRegistry.getExchangeDirectory() .. "/ak-eep-out-json.isfinished") then
+    local serverIsRunningFileName = ExchangeDirRegistry.getExchangeDirectory() .. "/server-is-running"
+    local eventsFromCePendingFileName = ExchangeDirRegistry.getExchangeDirectory() .. "/events-from-ce.pending"
+
+    if fileExists(serverIsRunningFileName) then
+        if fileExists(eventsFromCePendingFileName) then
             if ServerExchangeFileIo.debug and serverWasReadyLastTime then
                 print("[#ServerExchangeFileIo] SERVER IS NOT READY")
             end
@@ -56,20 +59,23 @@ local writing = false
 --- Schreibe Datei.
 ---@param jsonData string Dateiinhalt als JSON-formatierter String
 function ServerExchangeFileIo.writeOutgoingEvents(jsonData)
-    ServerExchangeFileIo.inFileNameEventCounter = ExchangeDirRegistry.getExchangeDirectory() ..
-                                                  "/ak-eep-web-server-state.counter"
+    local eventsFromCeFileName = ExchangeDirRegistry.getExchangeDirectory() .. "/events-from-ce"
+    local eventsFromCePendingFileName = ExchangeDirRegistry.getExchangeDirectory() .. "/events-from-ce.pending"
+    local serverIsRunningFileName = ExchangeDirRegistry.getExchangeDirectory() .. "/server-is-running"
+
+    ServerExchangeFileIo.serverStateCounterFileName = ExchangeDirRegistry.getExchangeDirectory() ..
+                                                      "/server-state.counter"
 
     if not writing then
         writing = true
-        if not pcall(writeFile, ExchangeDirRegistry.getExchangeDirectory() .. "/ak-eep-out.json", jsonData .. "\n") then
-            print("[#ServerExchangeFileIo] CANNOT WRITE TO " .. ExchangeDirRegistry.getExchangeDirectory() ..
-                  "/ak-eep-out.json")
+        if not pcall(writeFile, eventsFromCeFileName, jsonData .. "\n") then
+            print("[#ServerExchangeFileIo] CANNOT WRITE TO " .. eventsFromCeFileName)
         end
         writing = false
     end
 
-    if fileExists(ExchangeDirRegistry.getExchangeDirectory() .. "/ak-server.iswatching") then
-        writeFile(ExchangeDirRegistry.getExchangeDirectory() .. "/ak-eep-out-json.isfinished", "")
+    if fileExists(serverIsRunningFileName) then
+        writeFile(eventsFromCePendingFileName, "")
     end
 end
 

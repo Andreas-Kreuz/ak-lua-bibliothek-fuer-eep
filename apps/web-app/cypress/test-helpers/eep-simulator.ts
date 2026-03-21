@@ -1,11 +1,11 @@
 import { version } from '../../package.json';
 
 export enum FileNames {
-  eepOutJsonOut = 'cypress/io/LUA/ce/databridge/exchange/ak-eep-out.json',
-  eepOutJsonOutFinished = 'cypress/io/LUA/ce/databridge/exchange/ak-eep-out-json.isfinished',
-  eepOutLog = 'cypress/io/LUA/ce/databridge/exchange/ak-eep-out.log',
-  serverOutCommands = 'cypress/io/LUA/ce/databridge/exchange/ak-eep-in.commands',
-  serverWatching = 'cypress/io/LUA/ce/databridge/exchange/ak-server.iswatching',
+  eventsFromCe = 'cypress/io/LUA/ce/databridge/exchange/events-from-ce',
+  eventsFromCePending = 'cypress/io/LUA/ce/databridge/exchange/events-from-ce.pending',
+  logFromCe = 'cypress/io/LUA/ce/databridge/exchange/log-from-ce',
+  commandsToCe = 'cypress/io/LUA/ce/databridge/exchange/commands-to-ce',
+  serverIsRunning = 'cypress/io/LUA/ce/databridge/exchange/server-is-running',
 }
 
 const resetMarker = '@@CE_LOG_RESET@@';
@@ -18,19 +18,19 @@ export default class EepSimulator {
 
   reset = () => {
     this.eventCounter = 0;
-    cy.task('deleteEepLogFile', FileNames.eepOutLog);
-    cy.readFile(FileNames.eepOutLog).should('not.exist');
-    cy.readFile(FileNames.serverWatching).should('exist');
-    cy.writeFile(FileNames.eepOutLog, '', 'latin1');
-    cy.writeFile(FileNames.serverOutCommands, '');
+    cy.task('deleteEepLogFile', FileNames.logFromCe);
+    cy.readFile(FileNames.logFromCe).should('not.exist');
+    cy.readFile(FileNames.serverIsRunning).should('exist');
+    cy.writeFile(FileNames.logFromCe, '', 'latin1');
+    cy.writeFile(FileNames.commandsToCe, '');
     this.eepEvent('reset.json');
   };
 
-  loadFixtures = (fixtures: string[]) => {
-    const res = <any>[];
+  loadFixtures = (fixtures: string[]): Cypress.Chainable<any[]> => {
+    const res: any[] = [];
     // could also use `res.push(f)` they should be equivalent
     fixtures.map((name, i) => cy.fixture(name).then((f) => (res[i] = f)));
-    return cy.wrap(res);
+    return cy.wrap<any[]>(res);
   };
 
   simulateMap(mapName: string, startEvent: number, endEvent: number) {
@@ -41,7 +41,7 @@ export default class EepSimulator {
     }
     const eventJsons = this.loadFixtures(eventFileNames).then((jsons) => {
       cy.log(jsons.length.toLocaleString());
-      cy.writeFile(FileNames.serverOutCommands, '');
+      cy.writeFile(FileNames.commandsToCe, '');
       this.writeNewEepEventFile(jsons.map((x) => JSON.stringify(x)).join('\n'));
     });
   }
@@ -61,10 +61,10 @@ export default class EepSimulator {
 
   // Append complete log lines like LogOutputFileWriter does.
   writeLogLine(line: string) {
-    cy.readFile(FileNames.eepOutLog, 'latin1').then((oldLines) => {
+    cy.readFile(FileNames.logFromCe, 'latin1').then((oldLines) => {
       cy.log(oldLines);
       const prefix = oldLines.length > 0 && !oldLines.endsWith('\n') ? oldLines + '\n' : oldLines;
-      cy.writeFile(FileNames.eepOutLog, prefix + line + '\n', 'latin1');
+      cy.writeFile(FileNames.logFromCe, prefix + line + '\n', 'latin1');
       cy.wait(100); // Give the web server some time to read new log lines
     });
   }
@@ -74,8 +74,8 @@ export default class EepSimulator {
   }
 
   private writeNewEepEventFile(eventLines: string) {
-    cy.writeFile(FileNames.eepOutJsonOut, eventLines, 'latin1');
-    cy.writeFile(FileNames.eepOutJsonOutFinished, '');
-    cy.readFile(FileNames.eepOutJsonOutFinished).should('not.exist');
+    cy.writeFile(FileNames.eventsFromCe, eventLines, 'latin1');
+    cy.writeFile(FileNames.eventsFromCePending, '');
+    cy.task('waitForFileMissing', FileNames.eventsFromCePending);
   }
 }

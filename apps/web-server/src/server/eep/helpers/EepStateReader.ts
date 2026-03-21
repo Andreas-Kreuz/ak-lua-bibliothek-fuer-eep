@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 
 const persistState = () => {
-  const jsonFile = path.resolve('../lua/LUA/ce/databridge/exchange/ak-eep-out.json');
+  const jsonFile = path.resolve('../lua/LUA/ce/databridge/exchange/events-from-ce');
   const data: string = fs.readFileSync(jsonFile, { encoding: 'latin1' });
   const eventLines: string[] = data.split('\n');
   for (const line of eventLines) {
