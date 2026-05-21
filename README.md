@@ -1,3 +1,19 @@
+<div align="center">
+
+# ⚠️ Dieses Projekt ist nicht mehr aktiv
+
+### Die **Lua-Bibliothek für EEP** wird nicht mehr gepflegt.
+
+Die Entwicklung geht im neuen Projekt weiter:
+
+# 👉 [Control Extension](https://github.com/Andreas-Kreuz/control-extension)
+
+Dieses Repository bleibt nur noch als Archiv und Referenz online.
+
+</div>
+<hr>
+
+
 <p align="center">
   <a href="http://andreas-kreuz.github.io/ak-lua-bibliothek-fuer-eep">
     <img src="assets/img/eep-web-logo-shadow-72.png" alt="" width=72 height=72>
@@ -8,7 +24,7 @@
   <p align="center">
     Eine Sammlung von Lua-Skripten für die einfache Verkehrssteuerung in EEP.
     <br>
-    <a href="http://andreas-kreuz.github.io/ak-lua-bibliothek-fuer-eep"><strong>Anleitungen und Dokumentation</strong></a>
+    <a href="http://andreas-kreuz.github.io/ak-lua-bibliothek-fuer-eep"><strong>Anleitungen und Dokumentation</strong></a>    
   </p>
 </p>
 <br>
